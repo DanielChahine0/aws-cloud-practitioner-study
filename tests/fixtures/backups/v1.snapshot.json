@@ -1,0 +1,143 @@
+{
+  "answers": [
+    [
+      "q-7k2m9p",
+      [
+        {
+          "at": "2026-10-10T08:01:00.000Z",
+          "correct": true,
+          "day": "2026-10-10",
+          "mode": "check",
+          "picked": [
+            "b"
+          ],
+          "qid": "q-7k2m9p",
+          "qv": 1,
+          "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+          "sure": true
+        }
+      ]
+    ],
+    [
+      "q-8n3p4r",
+      [
+        {
+          "at": "2026-10-10T08:02:00.000Z",
+          "correct": false,
+          "day": "2026-10-10",
+          "mode": "check",
+          "picked": [
+            [
+              "l1",
+              "r2"
+            ],
+            [
+              "l2",
+              "r1"
+            ],
+            [
+              "l3",
+              "r3"
+            ]
+          ],
+          "qid": "q-8n3p4r",
+          "qv": 1,
+          "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+          "sure": false
+        }
+      ]
+    ]
+  ],
+  "checkScores": [
+    [
+      "m01/what-a-bakery-cloud-is",
+      {
+        "at": "2026-10-10T08:03:00.000Z",
+        "correct": 1,
+        "total": 2
+      }
+    ]
+  ],
+  "eventCount": 6,
+  "flags": 1,
+  "lastShown": [
+    [
+      "per-minute-rental",
+      "q-8n3p4r"
+    ],
+    [
+      "shared-kitchen",
+      "q-7k2m9p"
+    ]
+  ],
+  "lessonsDone": [
+    [
+      "m01/what-a-bakery-cloud-is",
+      "2026-10-10T08:03:00.000Z"
+    ]
+  ],
+  "sessions": [
+    [
+      "01JA9X0000AAAAAAAAAAAAAAS1",
+      {
+        "abandoned": false,
+        "answers": [
+          [
+            "q-7k2m9p",
+            {
+              "at": "2026-10-10T08:01:00.000Z",
+              "correct": true,
+              "day": "2026-10-10",
+              "mode": "check",
+              "picked": [
+                "b"
+              ],
+              "qid": "q-7k2m9p",
+              "qv": 1,
+              "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+              "sure": true
+            }
+          ],
+          [
+            "q-8n3p4r",
+            {
+              "at": "2026-10-10T08:02:00.000Z",
+              "correct": false,
+              "day": "2026-10-10",
+              "mode": "check",
+              "picked": [
+                [
+                  "l1",
+                  "r2"
+                ],
+                [
+                  "l2",
+                  "r1"
+                ],
+                [
+                  "l3",
+                  "r3"
+                ]
+              ],
+              "qid": "q-8n3p4r",
+              "qv": 1,
+              "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+              "sure": false
+            }
+          ]
+        ],
+        "mode": "check",
+        "qids": [
+          "q-7k2m9p",
+          "q-8n3p4r"
+        ],
+        "scope": "m01/what-a-bakery-cloud-is",
+        "seed": 3141592653,
+        "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+        "startedAt": "2026-10-10T08:00:00.000Z",
+        "submittedAt": "2026-10-10T08:03:00.000Z"
+      }
+    ]
+  ],
+  "unknownEvents": 0
+}

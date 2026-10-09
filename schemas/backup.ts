@@ -1,8 +1,9 @@
 import * as z from 'zod/mini';
 import { StudyEvent } from './events.ts';
+import { BACKUP_FORMAT } from './version.ts';
 
 /** The backup file (spec 8.3): the event log itself plus the `kv` records, validated with `zod/mini` on import. */
-export const BACKUP_FORMAT = 'ccp-study-backup';
+export { BACKUP_FORMAT };
 
 export const KvValue = z.strictObject({ value: z.unknown(), updatedAt: z.string() });
 export type KvValue = z.infer<typeof KvValue>;
