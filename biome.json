@@ -54,7 +54,10 @@
                   "indexedDB": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
                   "localStorage": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
                   "sessionStorage": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
-                  "fetch": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)"
+                  "fetch": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "globalThis": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "self": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "crypto": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)"
                 }
               }
             }

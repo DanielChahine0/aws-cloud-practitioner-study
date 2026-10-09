@@ -2,13 +2,11 @@
  * ULIDs for event ids: 10 Crockford base32 characters of milliseconds, then 16 random ones,
  * so ids sort by time as plain strings.
  * Within one millisecond the random part counts up, so ids stay strictly increasing.
+ * The time never goes backwards: if the clock steps back, ids keep the last time and count up,
+ * so replay order matches the order the events were made in.
  */
 const ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 const TIME_LEN = 10;
-
-let lastNow = -1;
-let lastTime = -1;
-let lastRandom: number[] = [];
 
 function encodeTime(now: number): string {
   let rest = now;
@@ -51,17 +49,26 @@ function increment(digits: number[]): boolean {
   return false;
 }
 
-export function ulid(
-  now: number = Date.now(),
-  random: (bytes: Uint8Array) => Uint8Array = (b) => crypto.getRandomValues(b as Uint8Array<ArrayBuffer>),
-): string {
-  if (now === lastNow) {
-    // The 80-bit count wrapped: borrow the next millisecond rather than repeat an id.
-    if (!increment(lastRandom)) lastTime += 1;
-  } else {
-    lastNow = now;
-    lastTime = now;
-    lastRandom = randomDigits(random);
-  }
-  return encodeTime(lastTime) + lastRandom.map((d) => ALPHABET.charAt(d)).join('');
+type Random = (bytes: Uint8Array) => Uint8Array;
+type Ulid = (now?: number, random?: Random) => string;
+
+const cryptoRandom: Random = (b) => crypto.getRandomValues(b as Uint8Array<ArrayBuffer>);
+
+/** A generator with its own monotonic state; tests use fresh ones, the app shares `ulid`. */
+export function monotonicUlid(): Ulid {
+  let lastTime = -1;
+  let lastRandom: number[] = [];
+  return (now = Date.now(), random = cryptoRandom) => {
+    if (now <= lastTime) {
+      // Same millisecond, or the clock stepped back: count up within the last time.
+      // The 80-bit count wrapped: borrow the next millisecond rather than repeat an id.
+      if (!increment(lastRandom)) lastTime += 1;
+    } else {
+      lastTime = now;
+      lastRandom = randomDigits(random);
+    }
+    return encodeTime(lastTime) + lastRandom.map((d) => ALPHABET.charAt(d)).join('');
+  };
 }
+
+export const ulid: Ulid = monotonicUlid();
