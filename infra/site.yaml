@@ -1,0 +1,124 @@
+# CCP Study hosting (spec 1.4, Mission 1): a private S3 bucket that only this CloudFront distribution can read.
+# Long-form intrinsics only (Ref, Fn::GetAtt, Fn::Sub), so plain YAML parsers and tests/unit/infra.test.ts can read it.
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CCP Study site, a private S3 bucket behind CloudFront with Origin Access Control.
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: ccp:keep
+          Value: site
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name:
+          Fn::Sub: "${AWS::StackName}-oac"
+        Description: Signs every CloudFront request to the site bucket.
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  HeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name:
+          Fn::Sub: "${AWS::StackName}-headers"
+        Comment: The CSP of scripts/csp.ts plus HSTS, nosniff, DENY framing and no referrer.
+        SecurityHeadersConfig:
+          ContentSecurityPolicy:
+            ContentSecurityPolicy: "default-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"
+            Override: true
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 63072000
+            IncludeSubdomains: true
+            Override: true
+          ContentTypeOptions:
+            Override: true
+          FrameOptions:
+            FrameOption: DENY
+            Override: true
+          ReferrerPolicy:
+            ReferrerPolicy: no-referrer
+            Override: true
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: CCP Study site
+        Enabled: true
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: site-bucket
+            DomainName:
+              Fn::GetAtt: [SiteBucket, RegionalDomainName]
+            OriginAccessControlId:
+              Fn::GetAtt: [OriginAccessControl, Id]
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: site-bucket
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          ResponseHeadersPolicyId:
+            Ref: HeadersPolicy
+      Tags:
+        - Key: ccp:keep
+          Value: site
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource:
+              Fn::Sub: "${SiteBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn:
+                  Fn::Sub: "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+Outputs:
+  BucketName:
+    Description: The private bucket that pnpm site:deploy uploads to.
+    Value:
+      Ref: SiteBucket
+  DistributionId:
+    Description: The distribution that pnpm site:deploy invalidates.
+    Value:
+      Ref: Distribution
+  SiteUrl:
+    Description: The address of the site.
+    Value:
+      Fn::Sub: "https://${Distribution.DomainName}"
