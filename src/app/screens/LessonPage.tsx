@@ -5,10 +5,11 @@ import { Html } from '../../ui/Html.tsx';
 import { showTermPopover } from '../../ui/TermPopover.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { ensureModule, glossary, modules } from '../content.ts';
+import { findEvidence } from '../evidence.ts';
 import { neighbors } from '../nav.ts';
 import { progress, record, storeReady } from '../progress.ts';
 import { pad2 } from '../router.ts';
-import { collapseSpace, homedConcepts } from '../runner.ts';
+import { homedConcepts } from '../runner.ts';
 import { highlight, openTerm } from '../state.ts';
 import { NotFound } from './NotFound.tsx';
 
@@ -49,10 +50,7 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
   useLayoutEffect(() => {
     const root = body.current;
     if (root === null || lesson === undefined || wanted === null) return;
-    const target = collapseSpace(wanted);
-    const found = [...root.querySelectorAll<HTMLElement>('p, li, td, .update-text')].find(
-      (el) => collapseSpace(el.textContent ?? '') === target,
-    );
+    const found = findEvidence(root, wanted)[0];
     if (found !== undefined) {
       found.classList.add('evidence');
       found.scrollIntoView({ block: 'center' });
