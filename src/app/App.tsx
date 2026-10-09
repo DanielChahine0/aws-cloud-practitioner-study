@@ -4,6 +4,7 @@ import { useKeyboard } from './keyboard.ts';
 import { initStore, saveError } from './progress.ts';
 import { Help } from './screens/Help.tsx';
 import { Palette } from './screens/Palette.tsx';
+import { Progress } from './screens/Progress.tsx';
 import { Screen } from './screens/Screen.tsx';
 import { overlay, route } from './state.ts';
 
@@ -23,6 +24,7 @@ export function App() {
       </main>
       {overlay.value === 'palette' && <Palette />}
       {overlay.value === 'help' && <Help />}
+      {overlay.value === 'progress' && <Progress />}
     </>
   );
 }
