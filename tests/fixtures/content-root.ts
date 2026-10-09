@@ -22,3 +22,10 @@ export function makeFixtureRoot(): string {
   writeFileSync(join(out, 'allow.txt'), allowFile([source], ''));
   return root;
 }
+
+/** Replaces the first occurrence of `from` in a fixture file, failing loudly when the fixture has changed. */
+export function replaceIn(root: string, file: string, from: string, to: string): void {
+  const text = readFileSync(join(root, file), 'utf8');
+  if (!text.includes(from)) throw new Error(`${file} does not contain ${from}`);
+  writeFileSync(join(root, file), text.replace(from, to));
+}

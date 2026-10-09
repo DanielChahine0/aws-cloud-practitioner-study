@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
-import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 
 const LESSON = 'resources/01-baking-basics/01-what-a-bakery-cloud-is.md';
 const CONCEPTS = 'content/concepts.yaml';
@@ -13,12 +13,6 @@ function r06(edit: (root: string) => void): string[] {
   edit(root);
   return runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R6']).findings.map((f) => f.message);
 }
-
-const replaceIn = (root: string, file: string, from: string, to: string): void => {
-  const text = readFileSync(join(root, file), 'utf8');
-  if (!text.includes(from)) throw new Error(`${file} does not contain ${from}`);
-  writeFileSync(join(root, file), text.replace(from, to));
-};
 
 describe('R6 references', () => {
   it('reports a broken relative link', () => {
@@ -68,6 +62,35 @@ describe('R6 references', () => {
     ).toEqual([
       "[per-minute-rental] confusableWith 'per-minute-rental' is not another registered concept",
       "[per-minute-rental] confusableWith 'rye-bread' is not another registered concept",
+    ]);
+  });
+
+  it('reports module, lesson and mission numbers that disagree with the file path', () => {
+    expect(
+      r06((root) => replaceIn(root, 'resources/01-baking-basics/README.md', 'module: 1\n', 'module: 2\n')),
+    ).toEqual(['frontmatter module 2 does not match the folder']);
+    expect(r06((root) => replaceIn(root, LESSON, 'lesson: 1\n', 'lesson: 3\n'))).toEqual([
+      'frontmatter lesson 3 does not match the file number',
+    ]);
+    expect(
+      r06((root) =>
+        replaceIn(root, 'content/missions/mission-00-guardrails.md', 'id: mission-00', 'id: mission-01'),
+      ),
+    ).toEqual(["id 'mission-01' does not match the file name"]);
+  });
+
+  it('reports two lessons with one note id and still checks the tags of both', () => {
+    const root = makeFixtureRoot();
+    const text = readFileSync(join(root, LESSON), 'utf8');
+    writeFileSync(
+      join(root, 'resources/01-baking-basics/02-what-a-bakery-cloud-is.md'),
+      text.replace('lesson: 1\n', 'lesson: 2\n'),
+    );
+    replaceIn(root, LESSON, '  - per-minute-rental\n', '  - per-minute-rental\n  - sourdough-starter\n');
+    const findings = runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R6']).findings;
+    expect(findings.map((f) => `${f.file} ${f.message}`)).toEqual([
+      `${LESSON} concept tag 'sourdough-starter' is not registered in ${CONCEPTS}`,
+      `resources/01-baking-basics/02-what-a-bakery-cloud-is.md note id 'm01/what-a-bakery-cloud-is' is already used by ${LESSON}`,
     ]);
   });
 });

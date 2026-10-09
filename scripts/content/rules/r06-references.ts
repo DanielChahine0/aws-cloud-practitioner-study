@@ -51,9 +51,15 @@ export const r06: Rule = {
     const ids = new Set(ctx.concepts.map((c) => c.id));
     const aliases = new Set(ctx.concepts.flatMap((c) => c.aliases ?? []));
     const lessons = new Map<string, LessonNote>();
-    for (const note of ctx.notes) if (note.kind === 'lesson') lessons.set(note.id, note);
+    for (const note of ctx.notes) {
+      if (note.kind !== 'lesson') continue;
+      const first = lessons.get(note.id);
+      if (first === undefined) lessons.set(note.id, note);
+      else out.push(finding('R6', note.path, `note id '${note.id}' is already used by ${first.path}`));
+    }
 
-    for (const note of lessons.values()) {
+    for (const note of ctx.notes) {
+      if (note.kind !== 'lesson') continue;
       for (const tag of note.fm?.concepts ?? []) {
         if (!ids.has(tag) && !aliases.has(tag)) {
           out.push(finding('R6', note.path, `concept tag '${tag}' is not registered in ${CONCEPTS_FILE}`, 1));

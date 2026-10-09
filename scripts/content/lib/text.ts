@@ -1,7 +1,10 @@
 /**
  * Tokenizing, masking and line checks shared by the fingerprint script and rules R7 and R8.
- * `words`, `stripMarkdown` and `mask` match overlap_check.py, and `multiSentenceLines` matches
- * lint_notes.py, so the site's checks agree with the notes workflow's tools (spec 2.5 and 2.9).
+ * `words`, `stripMarkdown` and `mask` match overlap_check.py (spec 2.5).
+ * `multiSentenceLines` uses lint_notes.py's sentence regex and abbreviation list (spec 2.9), with two deliberate differences:
+ * it strips a list marker first, so `1. Install the CLI` is one sentence, and it reads code fences as CommonMark does,
+ * so a fence closes only with a bare fence of the same character that is at least as long.
+ * Both functions accept CRLF text.
  */
 
 /** Stands in for a masked word, so no shingle that touches it can count as copied. */
@@ -71,7 +74,7 @@ export function fencedLines(lines: readonly string[]): boolean[] {
   const inside: boolean[] = [];
   let open: string | null = null;
   for (const line of lines) {
-    const fence = FENCE.exec(line);
+    const fence = FENCE.exec(line.replace(/\r$/, ''));
     const marker = fence?.[1] ?? '';
     if (open === null) {
       inside.push(fence !== null);
@@ -95,7 +98,8 @@ export function emDashLines(text: string): number[] {
 }
 
 /** 1-based numbers of Markdown lines that hold more than one sentence; frontmatter, code blocks and table rows are exempt. */
-export function multiSentenceLines(markdown: string): number[] {
+export function multiSentenceLines(text: string): number[] {
+  const markdown = text.replaceAll('\r\n', '\n');
   const lines = markdown.split('\n');
   const frontmatter = FRONTMATTER.exec(markdown);
   const start = frontmatter ? frontmatter[0].split('\n').length - 1 : 0;

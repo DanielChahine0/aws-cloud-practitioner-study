@@ -50,7 +50,9 @@ export function pack(values: ReadonlySet<number>, b: number): PackedSet {
 export function unpack(set: PackedSet): HashSet {
   const buf = Buffer.from(set.data, 'base64');
   if (buf.length !== set.count * 3)
-    throw new Error(`packed set holds ${buf.length / 3} values, not ${set.count}`);
+    throw new Error(
+      `packed set holds ${buf.length} bytes, not ${set.count * 3} for its count of ${set.count}`,
+    );
   const values = new Set<number>();
   for (let i = 0; i < buf.length; i += 3) values.add(buf.readUIntBE(i, 3));
   return { b: set.b, f: set.f, values };

@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { FingerprintFile } from '../../schemas/fingerprint.ts';
-import { unpack } from '../../scripts/content/lib/fingerprint.ts';
+import { hashShingle, shingleWindows, unpack } from '../../scripts/content/lib/fingerprint.ts';
+import { words } from '../../scripts/content/lib/text.ts';
 
 const dir = fileURLToPath(new URL('../../content/fingerprints/', import.meta.url));
 const load = (m: number) =>
@@ -25,6 +26,22 @@ describe('committed fingerprints', () => {
     const ids = MODULES.flatMap((m) => Object.keys(load(m).items));
     expect(ids.filter((id) => id.startsWith('kc-'))).toHaveLength(119);
     expect(ids.filter((id) => id.startsWith('quiz-'))).toHaveLength(133);
+  });
+
+  // Ties the committed sets to today's tokenizer, shingle join and hash: a module title is source text, so every shingle of it must hit.
+  it('still match the hashing code, so every shingle of a long module title hits its module', () => {
+    const allow = readFileSync(join(dir, 'allow.txt'), 'utf8').split('\n');
+    const checked = allow.flatMap((line) => {
+      const m = /^Module (\d+): /.exec(line);
+      if (m === null) return [];
+      const set = unpack(load(Number(m[1])).text);
+      return shingleWindows(words(line)).map((s) => ({
+        s,
+        hit: s !== null && set.values.has(hashShingle(s, set.b)),
+      }));
+    });
+    expect(checked).toHaveLength(11);
+    expect(checked.filter((c) => !c.hit)).toEqual([]);
   });
 
   it('ship an allow list that starts with the generated header', () => {

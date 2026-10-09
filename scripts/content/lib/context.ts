@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { Blueprint } from '../../../schemas/blueprint.ts';
 import { Concept } from '../../../schemas/concept.ts';
-import { FingerprintFile } from '../../../schemas/fingerprint.ts';
+import { FingerprintFile, type PackedSet } from '../../../schemas/fingerprint.ts';
 import { MissionFrontmatter } from '../../../schemas/mission.ts';
 import { LessonFrontmatter, ModuleFrontmatter } from '../../../schemas/note.ts';
 import { type RuleId, ValidateConfig } from '../../../schemas/validate-config.ts';
@@ -245,8 +245,21 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       errors.push({ rule: 'R1', file: path, message: `holds module ${parsed.data.module}, not ${module}` });
       return;
     }
-    const items = new Map(Object.entries(parsed.data.items).map(([id, set]) => [id, unpack(set)] as const));
-    fingerprints.set(module, { text: unpack(parsed.data.text), items });
+    let complete = true;
+    const unpacked = (key: string, set: PackedSet): HashSet => {
+      try {
+        return unpack(set);
+      } catch (error) {
+        errors.push({ rule: 'R1', file: path, message: `${key}: ${errorText(error)}` });
+        complete = false;
+        return { b: set.b, f: set.f, values: new Set() };
+      }
+    };
+    const text = unpacked('text', parsed.data.text);
+    const items = new Map(
+      Object.entries(parsed.data.items).map(([id, set]) => [id, unpacked(`items.${id}`, set)] as const),
+    );
+    if (complete) fingerprints.set(module, { text, items });
   };
 
   let config: ValidateConfig | null = null;
@@ -301,7 +314,17 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       continue;
     }
     const prints = PRINTS.exec(path);
-    if (prints) loadPrints(path, Number(prints[1]));
+    if (prints) {
+      loadPrints(path, Number(prints[1]));
+      continue;
+    }
+    if (path.startsWith('resources/') && path.endsWith('.md')) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message: 'not a note path (resources/NN-module/NN-lesson.md or README.md), so no rule checks it',
+      });
+    }
   }
   notes.sort((a, b) => a.module - b.module || a.number - b.number);
 

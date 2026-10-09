@@ -1,4 +1,4 @@
-import { unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
@@ -42,5 +42,51 @@ describe('loadContext', () => {
       '[half-done].tasks',
     ]);
     expect(ctx.concepts.map((c) => c.id)).toEqual(['shared-kitchen']);
+  });
+
+  it('reports a fingerprint file whose count disagrees with its data as an R1 finding', () => {
+    const root = makeFixtureRoot();
+    const file = join(root, 'content', 'fingerprints', 'm01.json');
+    const prints = JSON.parse(readFileSync(file, 'utf8'));
+    prints.text.count += 1;
+    writeFileSync(file, JSON.stringify(prints));
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(ctx.loadErrors).toEqual([
+      {
+        rule: 'R1',
+        file: 'content/fingerprints/m01.json',
+        message: `text: packed set holds ${(prints.text.count - 1) * 3} bytes, not ${prints.text.count * 3} for its count of ${prints.text.count}`,
+      },
+    ]);
+    expect(ctx.fingerprints.has(1)).toBe(false);
+  });
+
+  it('reports invalid YAML and invalid frontmatter YAML as R1 findings', () => {
+    const root = makeFixtureRoot();
+    writeFileSync(join(root, 'content', 'concepts.yaml'), '- id: a\n  name: [unclosed\n');
+    const lesson = join(root, 'resources', '01-baking-basics', '01-what-a-bakery-cloud-is.md');
+    writeFileSync(lesson, readFileSync(lesson, 'utf8').replace('module: 1', 'module: [1'));
+    const errors = loadContext(root, { today: FIXTURE_TODAY }).loadErrors;
+    expect(errors.map((f) => `${f.file} ${f.message.split(':')[0]}`)).toEqual([
+      'content/concepts.yaml YAML',
+      'resources/01-baking-basics/01-what-a-bakery-cloud-is.md frontmatter YAML',
+    ]);
+  });
+
+  it('reports a resources Markdown file that is not a note path, so no file escapes the checks', () => {
+    const root = makeFixtureRoot();
+    mkdirSync(join(root, 'resources', '01-baking-basics', 'extra'));
+    for (const path of [
+      'resources/01-baking-basics/07-AWS-Lambda.md',
+      'resources/01-baking-basics/7-aws-lambda.md',
+      'resources/01-baking-basics/extra/notes.md',
+    ])
+      writeFileSync(join(root, path), '# Stray\n');
+    const errors = loadContext(root, { today: FIXTURE_TODAY }).loadErrors;
+    expect(errors.map((f) => `${f.rule} ${f.file}`)).toEqual([
+      'R1 resources/01-baking-basics/07-AWS-Lambda.md',
+      'R1 resources/01-baking-basics/7-aws-lambda.md',
+      'R1 resources/01-baking-basics/extra/notes.md',
+    ]);
   });
 });

@@ -91,3 +91,13 @@ describe('multiSentenceLines', () => {
     expect(multiSentenceLines(md)).toEqual([5, 15]);
   });
 });
+
+describe('CRLF files', () => {
+  it('find fences and frontmatter in CRLF text as in LF text', () => {
+    const lf = '---\ntitle: x\n---\n# T\n\n```\nfoo. Bar\n```\n\nOne. Two\n';
+    const crlf = lf.replaceAll('\n', '\r\n');
+    expect(multiSentenceLines(crlf)).toEqual(multiSentenceLines(lf));
+    expect(multiSentenceLines(lf)).toEqual([10]);
+    expect(fencedLines(crlf.split('\n'))).toEqual(fencedLines(lf.split('\n')));
+  });
+});

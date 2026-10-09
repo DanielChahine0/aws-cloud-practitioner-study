@@ -17,12 +17,19 @@ describe('R7 originality', () => {
     expect(findings.some((f) => f.message.startsWith('copies a 16-word run'))).toBe(true);
   });
 
-  it('masks titles, so a lesson title is never a copied run', () => {
+  it('masks titles, so a line built from course titles is never a copied run', () => {
     const root = makeFixtureRoot();
     appendFileSync(
       join(root, 'resources', '01-baking-basics', '01-what-a-bakery-cloud-is.md'),
-      '\n- What a Bakery Cloud Is, Module 1: Baking Basics, and What a Bakery Cloud Is again.\n',
+      '\n- Module 1: Baking Basics, Section Getting Started, Lesson 1: What a Bakery Cloud Is.\n',
     );
-    expect(runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R7']).findings).toEqual([]);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(runRules(ctx, ['R7']).findings).toEqual([]);
+    // The same line without masking copies a run, so the empty result above comes from the masking.
+    const unmasked = runRules({ ...ctx, allow: [['no', 'such', 'phrase']] }, ['R7']).findings;
+    expect(unmasked.map((f) => f.message.split(' from')[0])).toEqual([
+      'copies a 14-word run',
+      '9.7% of its 6-word sequences come',
+    ]);
   });
 });

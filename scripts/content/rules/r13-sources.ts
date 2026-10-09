@@ -1,5 +1,6 @@
 import { BLUEPRINT_FILE, type Finding } from '../lib/context.ts';
-import { parseUpdateLine, UPDATE_PREFIX } from '../lib/update-line.ts';
+import { fencedLines } from '../lib/text.ts';
+import { looksLikeUpdateLine, parseUpdateLine } from '../lib/update-line.ts';
 import { finding, type Rule } from './rule.ts';
 
 const HOSTS = new Set(['aws.amazon.com', 'docs.aws.amazon.com']);
@@ -16,7 +17,12 @@ export function sourceProblem(url: string, verifiedOn: string, today: string): s
     return `'${url}' is not a URL`;
   }
   if (!HOSTS.has(host)) return `source ${url} is not on aws.amazon.com or docs.aws.amazon.com`;
-  const age = (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${verifiedOn}T00:00:00Z`)) / DAY_MS;
+  const day = (date: string): number => {
+    const ms = Date.parse(`${date}T00:00:00Z`);
+    // Date.parse rolls an impossible day such as 2026-02-30 over into the next month, so round-trip it.
+    return Number.isNaN(ms) || new Date(ms).toISOString().slice(0, 10) !== date ? Number.NaN : ms;
+  };
+  const age = (day(today) - day(verifiedOn)) / DAY_MS;
   if (Number.isNaN(age)) return `verified_on '${verifiedOn}' is not a date`;
   if (age < 0) return `verified_on ${verifiedOn} is in the future`;
   if (age > MAX_AGE_DAYS) {
@@ -37,8 +43,10 @@ export const r13: Rule = {
     };
 
     for (const note of ctx.notes) {
-      for (const [i, line] of note.text.split('\n').entries()) {
-        if (!line.trimStart().startsWith(UPDATE_PREFIX)) continue;
+      const lines = note.text.split('\n');
+      const code = fencedLines(lines);
+      for (const [i, line] of lines.entries()) {
+        if (code[i] || !looksLikeUpdateLine(line)) continue;
         const update = parseUpdateLine(line);
         if (update === null) {
           out.push(
