@@ -149,16 +149,22 @@ function Session({ idx, chunk, session, mode, module, slug }: SessionProps) {
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const shownQid = feedback?.qid ?? qids.find((id) => !session.answers.has(id)) ?? null;
   const finished = shownQid === null;
-  const submitting = useRef(false);
+  const submitted = useRef(session.submittedAt !== null);
 
-  useEffect(() => {
-    if (!finished || session.submittedAt !== null || submitting.current) return;
-    submitting.current = true;
+  // Submits once every question has an answer: right after the last answer, or on resuming such a session.
+  const finish = (): void => {
+    if (submitted.current) return;
+    submitted.current = true;
     void record({ t: 'session', sid: session.sid, mode, phase: 'submit', seed: session.seed });
     if (mode === 'check' && !progress.peek().lessonsDone.has(session.scope)) {
       void record({ t: 'lesson.done', note: session.scope });
     }
-  }, [finished, session, mode]);
+  };
+  const finishRef = useRef(finish);
+  finishRef.current = finish;
+  useEffect(() => {
+    if (finished) finishRef.current();
+  }, [finished]);
 
   if (shownQid === null) {
     const correct = qids.filter((id) => session.answers.get(id)?.correct === true).length;
@@ -175,7 +181,10 @@ function Session({ idx, chunk, session, mode, module, slug }: SessionProps) {
       position={qids.indexOf(q.id) + 1}
       total={qids.length}
       feedback={feedback}
-      onAnswered={setFeedback}
+      onAnswered={(f) => {
+        setFeedback(f);
+        if (qids.every((id) => id === f.qid || session.answers.has(id))) finish();
+      }}
       onNext={() => setFeedback(null)}
     />
   );
@@ -264,8 +273,8 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
   const submit = (sure: boolean): void => {
     if (answered || !ready) return;
     const correct = isCorrect(q, picked);
-    onAnswered({ qid: q.id, picked, correct });
-    void record({
+    // The answer joins the log first, so a session submit that follows it scores this answer too.
+    const saved = record({
       t: 'answer',
       sid: session.sid,
       mode,
@@ -276,7 +285,10 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
       correct,
       sure,
       ms: Date.now() - shownAt.current,
-    }).then(() => nextButton.current?.focus());
+    });
+    onAnswered({ qid: q.id, picked, correct });
+    // Next takes focus once the answer is stored (spec 8.1 waits for the commit before showing Next).
+    void saved.then(() => nextButton.current?.focus());
   };
 
   const choose = (id: string): void => {

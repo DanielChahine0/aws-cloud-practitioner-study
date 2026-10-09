@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import type { OptionView, QuestionView } from '../../schemas/chunks.ts';
-import { canSubmit, displayOrder, endLine, isCorrect, modeLabel } from '../../src/app/runner.ts';
+import {
+  canSubmit,
+  collapseSpace,
+  displayOrder,
+  endLine,
+  isCorrect,
+  modeLabel,
+  quizAvailability,
+} from '../../src/app/runner.ts';
 
 const option = (id: string, correct = false): OptionView => ({
   id,
@@ -132,5 +140,20 @@ describe('labels', () => {
     expect(endLine(9, 12)).toBe('9/12 correct');
     expect(modeLabel('check')).toBe('Lesson check');
     expect(modeLabel('quiz')).toBe('Module quiz');
+  });
+});
+
+describe('quizAvailability', () => {
+  it('opens once a lesson is done and the module has questions', () => {
+    expect(quizAvailability({ anyLessonDone: true, questionCount: 3 })).toBe('open');
+    expect(quizAvailability({ anyLessonDone: false, questionCount: 3 })).toBe('locked');
+    expect(quizAvailability({ anyLessonDone: true, questionCount: 0 })).toBe('empty');
+    expect(quizAvailability({ anyLessonDone: false, questionCount: 0 })).toBe('empty');
+  });
+});
+
+describe('collapseSpace', () => {
+  it('trims and collapses runs of whitespace, as the highlight compares text', () => {
+    expect(collapseSpace('  You pay\n  for   compute time. ')).toBe('You pay for compute time.');
   });
 });

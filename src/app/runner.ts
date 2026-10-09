@@ -51,6 +51,23 @@ export function homedConcepts(idx: ContentIndex, chunk: ModuleChunk, noteId: str
     .map((c) => c.id);
 }
 
+/** Whether the module quiz can start: it opens after one lesson of the module is done (spec 4.1). */
+export function quizAvailability({
+  anyLessonDone,
+  questionCount,
+}: {
+  anyLessonDone: boolean;
+  questionCount: number;
+}): 'open' | 'locked' | 'empty' {
+  if (questionCount === 0) return 'empty';
+  return anyLessonDone ? 'open' : 'locked';
+}
+
+/** Text as "Read in notes" compares it: trimmed, with each run of whitespace as one space. */
+export function collapseSpace(text: string): string {
+  return text.replace(/\s+/g, ' ').trim();
+}
+
 export function endLine(correct: number, total: number): string {
   return `${correct}/${total} correct`;
 }

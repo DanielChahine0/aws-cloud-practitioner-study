@@ -1006,3 +1006,63 @@ dialog.sheet {
     display: none;
   }
 }
+
+/* Lesson end, module marks and the evidence highlight (spec 2.8). */
+.check {
+  margin-top: 40px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.check h2 {
+  margin-top: 16px;
+}
+
+.check-last {
+  margin-left: 16px;
+}
+
+.check-sentinel {
+  height: 1px;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  color: var(--pane);
+  text-decoration: none;
+  background: var(--active);
+  border-radius: 6px;
+}
+
+.button-link:hover {
+  text-decoration: underline;
+}
+
+.row-marks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0 12px;
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* The page itself is --surface, so the highlighted line sits on --pane to stand out. */
+.evidence {
+  padding: 2px 8px;
+  background: var(--pane);
+  border-left: 3px solid var(--active);
+  scroll-margin-top: 60px;
+}
+
+.home-line {
+  margin: -8px 0 24px;
+}
