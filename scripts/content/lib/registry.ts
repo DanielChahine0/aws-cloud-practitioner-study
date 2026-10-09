@@ -26,6 +26,9 @@ export interface PendingEntry {
   listedIn: string[];
 }
 
+/** The most confusables one entry may list, as the schema allows. */
+const MAX_CONFUSABLES = 3;
+
 /** What a registry-writer agent returns in .results/registry/mNN.json; the alias-only review file has no module. */
 export const RegistryResult = z.strictObject({
   module: ModuleNumber.optional(),
@@ -37,7 +40,7 @@ export const RegistryResult = z.strictObject({
       anchor: Slug,
       tasks: z.array(TaskId).max(3),
       tested: z.literal(false).optional(),
-      confusableWith: z.array(ConceptId).max(3).optional(),
+      confusableWith: z.array(ConceptId).max(MAX_CONFUSABLES).optional(),
     }),
   ),
   aliases: z
@@ -68,17 +71,39 @@ const sentenceCase = (tag: string): string => {
   return words.charAt(0).toUpperCase() + words.slice(1);
 };
 
-/** Reads the raw registry, keeping entries that the schema would still reject; no file or a blank file is an empty registry. */
+/** The shape every entry needs before the tools can read it; the schema's stricter checks wait for rule R1. */
+const RawShape = z.object({
+  id: z.string(),
+  name: z.string(),
+  home: z.string(),
+  anchor: z.string(),
+  tasks: z.array(z.string()).optional(),
+  tested: z.boolean().optional(),
+  confusableWith: z.array(z.string()).optional(),
+  aliases: z.array(z.string()).optional(),
+  splitFrom: z.string().optional(),
+});
+
+/**
+ * Reads the raw registry, keeping entries that the schema would still reject, such as a seeded entry with an empty anchor;
+ * no file or a blank file is an empty registry. Throws one line per entry field the tools cannot read.
+ */
 export function readConcepts(text: string | null): RawConcept[] {
   if (text === null || text.trim() === '') return [];
   const data: unknown = parseYaml(text);
   if (data === null) return [];
   if (!Array.isArray(data)) throw new Error(`${CONCEPTS_FILE} must be a YAML list`);
+  const problems: string[] = [];
   for (const [i, entry] of data.entries()) {
-    if (!isRecord(entry) || typeof entry.id !== 'string') {
-      throw new Error(`${CONCEPTS_FILE}: entry ${i + 1} has no id`);
+    const parsed = RawShape.safeParse(entry);
+    if (parsed.success) continue;
+    const id = isRecord(entry) && typeof entry.id === 'string' ? ` (${entry.id})` : '';
+    for (const issue of parsed.error.issues) {
+      const field = issue.path.length > 0 ? `${issue.path.map(String).join('.')}: ` : '';
+      problems.push(`${CONCEPTS_FILE}: entry ${i + 1}${id}: ${field}${issue.message}`);
     }
   }
+  if (problems.length > 0) throw new Error(problems.join('\n'));
   return data as RawConcept[];
 }
 
@@ -211,11 +236,12 @@ export function checkResult(
 /**
  * Fills entries from the results, then merges aliases (resolving chains such as a into b into c),
  * then rewrites every confusableWith through the merges. Entries keep their positions.
+ * A merged entry's confusables move to its survivor, which keeps the first 3 and logs any it drops.
  */
 export function applyResults(
   entries: readonly RawConcept[],
   results: readonly RegistryResult[],
-): { entries: RawConcept[]; log: string[] } {
+): { entries: RawConcept[]; log: string[]; merged: number } {
   const byId = new Map(entries.map((entry) => [entry.id, entry] as const));
   for (const result of results) {
     for (const c of result.concepts) {
@@ -246,6 +272,7 @@ export function applyResults(
     return current;
   };
   const log: string[] = [];
+  let merged = 0;
   for (const result of results) {
     for (const { alias, of, reason } of result.aliases) {
       const gone = resolve(alias);
@@ -258,9 +285,15 @@ export function applyResults(
       }
       byId.delete(gone);
       const aliases = [...new Set([...(survivorEntry.aliases ?? []), gone, ...(goneEntry.aliases ?? [])])];
-      byId.set(survivor, { ...survivorEntry, aliases });
+      const confusableWith = [...(survivorEntry.confusableWith ?? []), ...(goneEntry.confusableWith ?? [])];
+      byId.set(survivor, {
+        ...survivorEntry,
+        aliases,
+        ...(confusableWith.length > 0 ? { confusableWith } : {}),
+      });
       mergedInto.set(gone, survivor);
       log.push(`${gone} is now an alias of ${survivor}: ${reason}`);
+      merged += 1;
     }
   }
 
@@ -268,7 +301,11 @@ export function applyResults(
   for (const entry of byId.values()) {
     const { confusableWith, ...rest } = entry;
     const targets = [...new Set((confusableWith ?? []).map(resolve))].filter((id) => id !== entry.id);
+    const dropped = targets.splice(MAX_CONFUSABLES);
+    if (dropped.length > 0) {
+      log.push(`${entry.id} keeps ${MAX_CONFUSABLES} confusables and drops ${dropped.join(', ')}`);
+    }
     out.push(targets.length > 0 ? { ...rest, confusableWith: targets } : rest);
   }
-  return { entries: out, log };
+  return { entries: out, log, merged };
 }

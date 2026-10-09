@@ -12,7 +12,7 @@ const EXPECTED: Record<string, readonly string[]> = {
   '1.1': ['speed of deployment'],
   '1.3': [
     'reduced business risk',
-    'improved environmental, social, and governance (ESG) performance',
+    'improved ESG performance',
     'increased revenue',
     'increased operational efficiency',
     'database replication',
