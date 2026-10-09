@@ -70,7 +70,7 @@ questions:
 
   - id: q-r96y1p
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: on-demand-delivery
@@ -78,7 +78,8 @@ questions:
     task: "1.1"
     level: 2
     stem: >-
-      For a holiday promotion, the cafe runs extra servers on AWS, is billed for the hours they run, and lets its staff manage them from home.
+      For a holiday promotion, the cafe adds servers, storage and a database on AWS.
+      They are ready within seconds of the request, the bill covers only the hours they run, and staff manage them from home through a browser.
       Which detail of this setup shows on-demand delivery?
     options:
       - id: a
@@ -88,20 +89,25 @@ questions:
         text: The bill covers only the hours the servers actually run.
         why: Paying only for the hours consumed is pay-as-you-go pricing, not how the servers are delivered.
       - id: c
-        text: The extra servers are ready in seconds, with no long setup.
+        text: The servers are ready within seconds of the request.
         correct: true
-        why: Getting capacity within seconds and dropping it again without lengthy setup is on-demand delivery.
+        why: Getting capacity within seconds, without a long setup, is what on-demand delivery means.
       - id: d
-        text: The promotion runs on servers, storage and a database.
+        text: The promotion uses servers, storage and a database.
         why: Servers, storage and databases are the IT resources being delivered, not the on-demand way they arrive.
     evidence:
       - "On-demand delivery: resources in seconds, scaled up or down without long setup, the idea AWS began with."
     takeaway: On-demand delivery is about how fast resources arrive and leave, apart from where they are used from or how they are billed.
     history: []
+    verified:
+      keyHash: 91fdaa7273db
+      fullHash: 6786dcaff3f0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-d3jmvj
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: on-demand-delivery
@@ -133,6 +139,11 @@ questions:
       - "On-demand delivery: resources within seconds, whenever needed."
     takeaway: On-demand delivery means resources in seconds and easy scaling, which is separate from how the bill is calculated.
     history: []
+    verified:
+      keyHash: f36bcf8b85f3
+      fullHash: 0f77d2a4e131
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-525s43
     version: 1
@@ -170,7 +181,7 @@ questions:
 
   - id: q-xh0w3d
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: data-center
@@ -179,25 +190,30 @@ questions:
     level: 2
     stem: >-
       The cafe chain runs its own server room, and its IT staff spend most weeks fixing the cooling, testing backup power and checking door locks.
-      What changes most when the chain moves to data centers that AWS runs?
+      After the chain moves to data centers that AWS runs, what happens to those weekly chores?
     options:
       - id: a
-        text: The staff rent space in a shared facility and keep running the hardware there.
-        why: Renting space in a shared facility is co-location, where the chain still runs the hardware itself.
+        text: The chain is billed for what it consumes, not for a fixed contract.
+        why: Consumption billing is true of AWS, but it says nothing about who now fixes cooling or tests power.
       - id: b
-        text: AWS takes over the facility upkeep, and the staff spend that time on new features.
+        text: AWS handles the facility upkeep, so staff can work on new features.
         correct: true
         why: AWS looks after the buildings it owns, which frees the staff from repetitive chores for innovation.
       - id: c
-        text: The staff keep doing the facility upkeep, but now inside a building that AWS owns.
-        why: AWS looks after the facilities it owns, so the chain's staff no longer run the cooling or power there.
+        text: The chain can add servers within seconds when an order rush starts.
+        why: Fast capacity is a real AWS benefit, but it does not answer who now does the facility chores.
       - id: d
-        text: AWS takes over the facility upkeep, and the chain no longer pays for its compute.
-        why: The chain still pays for what it consumes, so moving to AWS data centers does not make compute free.
+        text: The chain can run its apps in data centers in many parts of the world.
+        why: Global reach is true of AWS, but it does not say what happens to the cooling and power checks.
     evidence:
       - Firms once ran their own or co-located, but AWS lets them use data centers they do not own, trading upkeep and repetitive chores for innovation.
     takeaway: Using AWS data centers swaps the upkeep of your own facility for time spent on innovation.
     history: []
+    verified:
+      keyHash: 2513afc243b0
+      fullHash: c63d5d86208c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-t9h3cy
     version: 1
@@ -343,7 +359,7 @@ questions:
 
   - id: q-4k7ydm
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: hybrid-deployment
@@ -351,30 +367,35 @@ questions:
     task: "3.1"
     level: 2
     stem: >-
-      The cafe chain has an older inventory system in its back-office server room and is launching a new loyalty app.
-      Which plan gives the chain a hybrid deployment?
+      The cafe chain keeps its older inventory system in its back-office server room for upkeep by its own technicians.
+      It builds its new loyalty app on AWS, its only cloud provider. Which deployment type is this?
     options:
       - id: a
-        text: Every system runs on AWS, and staff open them from laptops in the back office.
-        why: Using cloud systems from an office laptop is still all cloud, which makes it a cloud-based deployment.
+        text: Cloud-based deployment
+        why: Cloud-based puts everything in the cloud, but the inventory system stays in the server room.
       - id: b
-        text: The inventory system stays in the server room, and the loyalty app runs on AWS.
+        text: Multi-cloud deployment
+        why: Multi-cloud spreads work across several cloud providers, but the chain uses AWS alone.
+      - id: c
+        text: On-premises deployment
+        why: On-premises keeps everything in-house, but the loyalty app runs on AWS.
+      - id: d
+        text: Hybrid deployment
         correct: true
         why: Keeping a legacy system in-house while new work runs in the cloud mixes the two, which is hybrid.
-      - id: c
-        text: Every system stays in the server room, and staff reach them from home by browser.
-        why: Remote access to servers that all stay in-house is still an on-premises deployment, not hybrid.
-      - id: d
-        text: The inventory system moves to AWS, and the loyalty app is built on AWS as well.
-        why: Moving the old system out and building the new app in the cloud leaves nothing in-house, so it is cloud-based.
     evidence:
       - "Hybrid: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
     takeaway: In-house legacy systems running alongside new cloud workloads make a hybrid deployment.
     history: []
+    verified:
+      keyHash: b4e864c4e255
+      fullHash: d05c329ffccc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-zs219x
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: hybrid-deployment
@@ -382,26 +403,33 @@ questions:
     task: "3.1"
     level: 2
     select: 2
-    stem: Which situations point the cafe toward a hybrid deployment?
+    stem: >-
+      The cafe plans to move most of its systems to the cloud.
+      Which situations point it toward a hybrid deployment rather than a fully cloud-based one?
     options:
       - id: a
-        text: A regulation keeps payroll in-house, and the other systems run in the cloud.
+        text: A regulation says staff payroll records must be held on premises.
         correct: true
-        why: Regulation that holds some systems on site while others go to the cloud calls for a hybrid mix.
+        why: Regulation that holds some records on site while the rest moves to the cloud calls for a hybrid mix.
       - id: b
-        text: A regulation once kept payroll in-house, and now every system runs in the cloud.
-        why: Compliance shapes the choice but is not a deployment type, and an all-cloud setup is cloud-based.
+        text: The weekend rush needs extra capacity that is ready within seconds.
+        why: Fast capacity is something a fully cloud-based deployment already gives, so it does not call for hybrid.
       - id: c
-        text: The older ordering system stays in-house, and new apps run in-house, not in the cloud.
-        why: With the old system and the new apps all kept in-house, nothing runs in the cloud, so it is on-premises.
+        text: The owner wants dedicated servers with very low latency for every app.
+        why: Dedicated, low-latency resources for every app point to keeping everything in-house, which is on-premises rather than a mix.
       - id: d
-        text: The older ordering system stays in-house for upkeep, and new apps run in the cloud.
+        text: The older ordering system is maintained by the cafe's own technicians.
         correct: true
         why: A legacy system kept in-house for maintenance next to new cloud apps is the classic hybrid case.
       - id: e
-        text: The older ordering system leaves its in-house servers, and new apps run in the cloud.
-        why: Moving the old system out of its in-house servers leaves everything in the cloud, which is cloud-based.
+        text: Every new app must be built and run in the cafe's own server room.
+        why: Keeping all new work in-house as well leaves nothing in the cloud, which is on-premises rather than hybrid.
     evidence:
       - "Hybrid: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
     takeaway: Hybrid fits when maintenance or regulation keeps some systems in-house while other work runs in the cloud.
     history: []
+    verified:
+      keyHash: 5e22aa6abe5f
+      fullHash: 41fe31bb4e1f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

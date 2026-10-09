@@ -1,7 +1,7 @@
 questions:
   - id: q-azv9sz
     version: 1
-    status: draft
+    status: live
     type: match
     pool: practice
     concept: client-server-model
@@ -9,23 +9,28 @@ questions:
     task: "3.1"
     level: 2
     stem: >-
-      The cafe plans how to deploy and run its loyalty app in the AWS Cloud, with a phone app for guests and a back end hosted by AWS.
-      Match each piece of the plan to where it runs or how it is reached.
+      The cafe deploys its loyalty program on AWS, and guests check their points from their own devices.
+      Match each part of the deployment to the job it does when a guest asks for a balance.
     pairs:
-      - left: The guest-facing loyalty app
-        right: Runs on each guest's own phone
-        why: The app guests hold is the client side of the deployment, so it stays on their devices rather than in AWS.
-      - left: The back end that checks and saves points
-        right: Runs on a virtual server in an AWS data center
-        why: On AWS the server side is deployed as a virtual server in AWS data centers instead of the cafe's own hardware.
-      - left: Each request for a points balance
-        right: Reaches the back end over the internet
-        why: In this deployment, clients reach the scalable servers in AWS over the internet.
+      - left: A guest's phone
+        right: Sends the request and displays the reply
+        why: The phone is the client, so it asks for the balance and shows what comes back.
+      - left: A virtual server in an AWS data center
+        right: Validates the request and works out the balance
+        why: The virtual server is the server side, which checks the request and processes the stored points.
+      - left: The internet
+        right: Carries the request and the reply between them
+        why: In cloud computing, clients reach the servers in AWS over the internet, which links the two sides.
     evidence:
       - Cloud computing is one version of it, supplying the server side as scalable servers that clients reach over the internet.
       - In the coffee shop, the customer is the client and the barista is the server, which on AWS would be a virtual server.
-    takeaway: Deploying an app on AWS puts the server side on virtual servers in AWS data centers, which client devices reach over the internet.
+    takeaway: On AWS the guest's device stays the client, a virtual server in AWS is the server, and the internet links them.
     history: []
+    verified:
+      keyHash: 8ba36cbeb11a
+      fullHash: 5ff58380eca9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-e81xws
     version: 1
     status: draft
@@ -38,27 +43,29 @@ questions:
     stem: >-
       The cafe moves the back end of its ordering app from a computer in the back room to AWS.
       Guests keep placing orders from the same app on their phones.
-      After the move, what checks and fulfils each order a guest sends?
+      After the move, what does each guest's phone do when an order is placed?
     options:
       - id: a
-        text: The computer in the cafe's back room
-        why: The back end has left the back room, so that computer no longer answers the app's orders.
+        text: Validates the order and shows the reply
+        why: Showing the reply is the phone's part, but validating the order is server work that now runs in AWS.
       - id: b
-        text: The phone each guest orders from
-        why: The phone sends the order and shows the reply, which is the client's part, not the work of fulfilling it.
-      - id: c
-        text: A virtual machine in an AWS data center
+        text: Sends the order and shows the reply
         correct: true
-        why: Once the back end runs on AWS, a virtual server there takes the server role and answers each request.
+        why: The phone is still the client, so it sends the request and displays whatever the server returns.
+      - id: c
+        text: Sends the order and stores the result
+        why: Sending is the phone's part, but storing the result is server work that the back end in AWS does.
       - id: d
-        text: The network link that carries the order
-        why: The internet only carries the exchange, and it neither checks nor fulfils the order.
+        text: Validates the order and stores the result
+        why: Validating and storing are both the server's work, which moved to a virtual server in AWS, not the phone.
     evidence:
       - In the coffee shop, the customer is the client and the barista is the server, which on AWS would be a virtual server.
-      - The client depends on the server to fulfil requests, and the server does nothing until a client asks.
-      - Cloud computing is one version of it, supplying the server side as scalable servers that clients reach over the internet.
-    takeaway: Moving a back end to AWS keeps the client-server model, with a virtual server in AWS answering the client's requests.
+      - A server usually both stores and processes data, while the client sends requests and shows the replies, and cloud servers scale for both kinds of demand.
+    takeaway: Moving a back end to AWS keeps the client-server model, so the guest's phone stays the client that sends requests and shows replies.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Task 3.1 is about methods of deploying and operating in AWS, but the question tests which role the client plays in the client-server model, not a deployment or operating method."
   - id: q-2k67rk
     version: 1
     status: draft
@@ -70,27 +77,30 @@ questions:
     level: 3
     stem: >-
       The cafe tries an online gift-card service on AWS for one month.
-      It signs no contract and agrees to no term, and every server hour it runs is billed at the same rate however few or many it uses.
-      Which AWS pricing approach is the cafe using?
+      It pays nothing upfront, agrees to no term, and is charged only for the server hours the service actually consumes.
+      Which pricing approach is the cafe using?
     options:
       - id: a
-        text: Pay less by using more
-        why: That approach lowers the rate as usage grows, but here every hour costs the same.
+        text: Fixed monthly pricing
+        why: A fixed monthly price is owed whether or not the servers run, but the cafe pays only for hours consumed.
       - id: b
-        text: Save when you commit
-        why: Committing to a term earns a discount, and the cafe agreed to no term at all.
+        text: Term commitment pricing
+        why: A term commitment such as a Savings Plan earns a lower rate, and the cafe agreed to no term at all.
       - id: c
         text: Pay-as-you-go pricing
         correct: true
-        why: Paying a set rate only for the hours that actually run, with no contract or prepayment, is pay-as-you-go.
+        why: Paying only for the hours actually consumed, with no term or prepayment, is pay-as-you-go.
       - id: d
-        text: Tiered pricing
-        why: Tiers change the unit price as volume crosses each step, but here the rate never changes with usage.
+        text: All-upfront pricing
+        why: All-upfront pricing pays for capacity before it runs, and the cafe paid nothing upfront.
     evidence:
       - You pay only for the AWS resources you consume, just as staff earn wages only for hours on shift.
       - On AWS there is no prepayment, and you need not worry about capacity constraints.
-    takeaway: No contract, no term and a flat charge only for what runs is pay-as-you-go pricing.
+    takeaway: No prepayment, no term and a charge only for what is consumed is pay-as-you-go pricing.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 'Pay-as-you-go' is the signature cloud pricing phrase; the other three all describe commitment or fixed pricing, so it stands out as the odd one.)"
   - id: q-9wx5re
     version: 1
     status: draft
@@ -103,33 +113,36 @@ questions:
     select: 2
     stem: >-
       The cafe's owner asks what pay-as-you-go pricing on AWS would mean for a new ordering site.
-      Which statements are accurate?
+      Which statements describe pay-as-you-go pricing itself?
     options:
       - id: a
-        text: Unused hours in one month carry over as credit to the next
-        why: Pay-as-you-go charges only for what was consumed, so there are no banked hours to carry forward.
+        text: A one-year commitment can lower the hourly rate
+        why: That is a Savings Plans discount for committing ahead, while pay-as-you-go asks for no term at all.
       - id: b
-        text: Nothing is paid before the site uses any resources
+        text: No payment is due before any resource is used
         correct: true
         why: AWS asks for no prepayment, so the site can start without an upfront charge.
       - id: c
-        text: The hourly rate drops after the first year of steady use
-        why: Pay-as-you-go needs no term and gives no loyalty discount, since the site pays only for what it uses.
+        text: Heavier storage use can lower the per-unit rate
+        why: That is volume-based pricing, a separate discount from simply paying for what is consumed.
       - id: d
-        text: Each month's bill depends on what the site consumed
+        text: The bill rises and falls with resources consumed
         correct: true
         why: Charges track real consumption, much like wages paid only for hours on shift.
       - id: e
-        text: A server that is removed keeps billing until the month ends
-        why: Paying only for what you consume means a removed server stops adding charges right away.
+        text: Released servers stop adding to the next bill
+        why: That is true of deprovisioning, which ends a resource's charges, not a trait of the pricing model itself.
     evidence:
       - You pay only for the AWS resources you consume, just as staff earn wages only for hours on shift.
       - On AWS there is no prepayment, and you need not worry about capacity constraints.
     takeaway: Pay-as-you-go means no upfront payment and a bill that follows actual consumption.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: Pay-as-you-go means no upfront payment and a bill that tracks consumption; options 1 and 5 describe commitment and volume discounts. Option 2 is also a direct consequence of paying only for use, so it competes with 3 and 4 for the two picks."
   - id: q-va2dze
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: resource-provisioning
@@ -137,28 +150,34 @@ questions:
     task: "1.4"
     level: 2
     stem: >-
-      The cafe ran extra servers on AWS for a holiday promotion.
-      When the promotion closes, the owner releases those extra servers.
-      When do the charges for them end?
+      The cafe ran extra servers on AWS for a holiday promotion that closed on Friday evening.
+      The last promotion orders were delivered on Saturday morning, and the owner released the extra servers on Sunday evening.
+      The month's bill arrives on Monday morning.
+      When did the charges for the extra servers end?
     options:
       - id: a
-        text: At the end of the current billing month
-        why: AWS does not bill a released server to the end of the month, because its charges have already stopped.
+        text: Friday evening
+        why: The promotion closing does not stop billing, because the servers kept running until Sunday.
       - id: b
-        text: Right when the servers are released
+        text: Sunday evening
         correct: true
-        why: Billing for a resource ends the moment it is deprovisioned, so releasing the servers ends the charges at once.
+        why: Billing for a resource ends the moment it is deprovisioned, so the charges stopped when the servers were released.
       - id: c
-        text: Once the last promotion orders are settled
-        why: Charges follow the servers themselves, not the orders, so settling orders has no effect on their billing.
+        text: Saturday morning
+        why: Charges follow the servers themselves, not the orders, so the last deliveries did not end them.
       - id: d
-        text: After a set notice period for removals
-        why: There is no notice period on AWS, since a released resource stops billing straight away.
+        text: Monday morning
+        why: The bill only reports past charges, and those had already stopped when the servers were released.
     evidence:
       - Billing for a resource ends the moment it is deprovisioned.
       - "**Deprovisioning**: releasing unneeded resources, which ends their charges immediately."
     takeaway: A resource's charges stop the moment it is deprovisioned, with no wait for a billing cycle to end.
     history: []
+    verified:
+      keyHash: d4930223e157
+      fullHash: 2876fe2d6cd7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-cec23m
     version: 1
     status: draft
@@ -169,24 +188,28 @@ questions:
     task: "1.1"
     level: 2
     stem: >-
-      During a local festival week, orders on the cafe's website spike on some days and stay normal on others, and nobody knows in advance which days will be busy.
+      The cafe joins a local festival for the first time, so it has no past traffic to learn from.
+      Its website will be busy on some festival days and quiet on others, and nobody knows in advance which.
       The owner wants the site to keep up without paying for capacity that sits unused.
       Which approach on AWS fits?
     options:
       - id: a
-        text: Add servers before festival week and remove them when it ends
-        why: Extra servers held for the whole week sit idle, yet still billed, on the festival's quiet days.
+        text: Scheduled scaling at set times each day
+        why: A schedule suits a load that repeats at known times, but these busy days cannot be predicted.
       - id: b
-        text: Add servers as orders climb and remove them when the week ends
-        why: Keeping the added servers until the week is over pays for them through every quiet day after a spike.
+        text: Predictive scaling from past traffic history
+        why: Predictive scaling forecasts from history, and the cafe has no past festival traffic to learn from.
       - id: c
-        text: Add servers as orders climb and remove them as orders drop
+        text: Dynamic scaling that follows live demand
         correct: true
-        why: Provisioning as demand rises and deprovisioning as it fades keeps capacity matched to each busy day.
+        why: Adding servers as demand appears and removing them as it fades keeps capacity matched to each busy day.
       - id: d
-        text: Keep the usual servers and add more only if the site fails
-        why: Waiting for a failure means the site falls behind during each spike instead of keeping up.
+        text: Fixed capacity sized for the busiest day
+        why: Capacity held for the peak sits idle and still billed on the quiet days, which the owner wants to avoid.
     evidence:
       - You provision resources when demand appears and deprovision them as fast when it fades, by hand or automatically through configuration.
     takeaway: Provision resources as demand rises and deprovision them as it falls, so capacity follows the load.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The key (option 2, dynamic scaling) and distractors 1 and 3 (scheduled and predictive scaling) test EC2 Auto Scaling policy types, while the concept and the cited m01 note cover only general resource provisioning, so the question drifts off its one concept."

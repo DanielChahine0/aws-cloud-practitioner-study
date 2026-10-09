@@ -120,7 +120,7 @@ questions:
       on: 2026-10-09
   - id: q-ffkrg4
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: lambda-triggers
@@ -148,9 +148,14 @@ questions:
       - They range from simple events, like an upload or a finished classification, to heavier ones like a live data stream or resizing one image into several resolutions.
     takeaway: A Lambda trigger is the event that starts a function, from a file upload to a data stream.
     history: []
+    verified:
+      keyHash: 7f4c72e82c1d
+      fullHash: cb9c16773725
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-aax7kk
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: lambda-triggers
@@ -162,22 +167,27 @@ questions:
       In this setup, what starts each run of the function?
     options:
       - id: a
-        text: The developer saving a new version of the code
-        why: Saving code updates the function, but it is not the event that starts each ticket run.
+        text: A web request coming in
+        why: A web request can invoke a function, but in this setup the tills feed SQS, not a website.
       - id: b
-        text: The cafe granting the function access to the queue
-        why: Granting access lets the function read the queue, but it happens once and starts no runs.
+        text: A file being uploaded
+        why: An upload can invoke a function, but no file is involved in printing a kitchen ticket here.
       - id: c
-        text: The function finishing the run before it
-        why: One run ending does not invoke the next one, since each run waits for its own event.
+        text: A scheduled timer firing
+        why: A schedule could invoke a function, but tickets must print for each sale, not on a timer.
       - id: d
-        text: A new order message landing in the queue
+        text: A new message landing
         correct: true
         why: Each new SQS message is the event that invokes the function, so it is the trigger.
     evidence:
       - Each new SQS message invokes a function built from an SQS blueprint.
     takeaway: When a queue feeds Lambda, each new message is the trigger that invokes the function.
     history: []
+    verified:
+      keyHash: 927921cf581f
+      fullHash: 378b8672e132
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-w0fp96
     version: 1
     status: live
@@ -214,7 +224,7 @@ questions:
       on: 2026-10-09
   - id: q-5zkc17
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: lambda-runtimes
@@ -227,22 +237,27 @@ questions:
       What should the developer do?
     options:
       - id: a
-        text: Rewrite the code in Python before uploading it
-        why: Rewriting in Python keeps Lambda but gives up the language the developer wants to keep.
+        text: Pick a built-in runtime for the function
+        why: Every built-in runtime serves a language Lambda already has, so choosing one means giving up the language the developer wants.
       - id: b
-        text: Move the code onto an Amazon EC2 instance
-        why: EC2 can run any language, but moving there means leaving Lambda, which the developer wants to keep.
-      - id: c
-        text: Build a custom runtime for the language
+        text: Build a custom runtime for the function
         correct: true
         why: Lambda accepts runtimes you build yourself, so a language outside the built-in set can still run there.
-      - id: d
-        text: Start from a blueprint written in the language
+      - id: c
+        text: Start the function from a ready-made blueprint
         why: A blueprint presets code for a runtime Lambda already has, so it adds no new language.
+      - id: d
+        text: Raise the memory allocated to the function
+        why: More memory tunes speed and price, but it does nothing to let Lambda run a new language.
     evidence:
       - "The course says Lambda supports any language: Java, Python and Node.js come built in, and you can build a custom runtime."
     takeaway: When no built-in Lambda runtime covers a language, a custom runtime fills the gap.
     history: []
+    verified:
+      keyHash: e0651f97c00e
+      fullHash: 753d9d9248a3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-8t8v26
     version: 1
     status: live
@@ -317,7 +332,7 @@ questions:
 
   - id: q-kbhg01
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: lambda-pricing
@@ -332,7 +347,7 @@ questions:
         why: The trigger decides when a run starts, and it does not change what each millisecond costs.
       - id: b
         text: The runtime its code uses
-        why: The runtime only picks the language bridge, and the course ties the price to another setting.
+        why: The runtime only links the code to its language, so it does not change what each millisecond costs.
       - id: c
         text: The memory allocated to it
         correct: true
@@ -341,12 +356,17 @@ questions:
         text: The execution role it has
         why: The execution role only grants access to other services, and it has no effect on price.
     evidence:
-      - 4) You pay for compute time only, per millisecond, priced by allocated memory.
+      - You pay for compute time only, per millisecond, priced by allocated memory.
     takeaway: Lambda compute is billed per millisecond of run time, at a rate set by the memory you allocate.
     history: []
+    verified:
+      keyHash: 9bbec77b683a
+      fullHash: c3f1c1247ef7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-dvjppr
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: lambda-pricing
@@ -354,24 +374,29 @@ questions:
     task: "4.1"
     level: 2
     stem: >-
-      The cafe runs several jobs on AWS.
-      Which job gains the most from AWS Lambda billing only for the time its code runs?
+      The cafe's receipt function on AWS Lambda runs often on busy mornings and sits idle overnight.
+      Which billing basis sets what the cafe pays to run this function?
     options:
       - id: a
-        text: Serving a stock database at full load day and night
-        why: A job that is busy every hour leaves no idle time, so paying only for run time saves nothing.
+        text: Each second that a virtual server instance runs
+        why: This is how EC2 On-Demand Instances bill, but the receipt function runs on Lambda, with no instance kept running.
       - id: b
-        text: Sending receipts as orders arrive, with none overnight
+        text: Each millisecond of code run, priced by memory
         correct: true
-        why: Receipts run only when orders arrive, so the quiet overnight hours add nothing to the bill.
+        why: Lambda bills only the milliseconds the code runs, priced by the memory allocated to the function.
       - id: c
-        text: Running a stock audit that takes hours in one go
-        why: One run stops at 15 minutes, so an unbroken job lasting hours cannot run on Lambda at all.
+        text: A set monthly price for a bundled server plan
+        why: This is how Lightsail bills, but the receipt function has no server plan, so idle nights cost nothing.
       - id: d
-        text: Hosting an old app that needs full control of its server
-        why: Lambda gives the cafe no server to control, so this app needs a different compute service.
+        text: The vCPU and memory a container task requests
+        why: This is how Fargate bills container tasks, but the receipt function is Lambda code, not a container task.
     evidence:
-      - 3) Code runs only on events, while Lambda handles servers and scaling.
-      - 4) You pay for compute time only, per millisecond, priced by allocated memory.
+      - Code runs only on events, while Lambda handles servers and scaling.
+      - You pay for compute time only, per millisecond, priced by allocated memory.
     takeaway: With Lambda's pay-per-use billing, only the time code spends running adds to the compute bill.
     history: []
+    verified:
+      keyHash: 019574c2e829
+      fullHash: 93d788733580
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -236,7 +236,7 @@ questions:
       on: 2026-10-09
   - id: q-hbhw20
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fully-managed-services
@@ -255,9 +255,9 @@ questions:
         text: The cafe's ops staff
         why: With a fully managed service there are no servers for the cafe to provision, so its ops staff have nothing to add.
       - id: c
-        text: AWS, through Lambda
+        text: AWS on its own
         correct: true
-        why: Under a fully managed service like Lambda, AWS covers scaling, so the extra orders get capacity without the cafe acting.
+        why: Under a fully managed service like Lambda, AWS alone covers scaling, so the extra orders get capacity without the cafe acting.
       - id: d
         text: The cafe and AWS jointly
         why: Scaling is not shared here, since a fully managed service puts it wholly with AWS.
@@ -265,6 +265,11 @@ questions:
       - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
     takeaway: With a fully managed service like Lambda, AWS handles scaling for demand spikes, so the customer provisions no capacity.
     history: []
+    verified:
+      keyHash: 6d83db02ebe5
+      fullHash: 67c140a04dc9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-wqxf4j
     version: 1
     status: live

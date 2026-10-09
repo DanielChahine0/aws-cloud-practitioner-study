@@ -1,7 +1,7 @@
 questions:
   - id: q-58az7v
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: benefits-of-the-aws-cloud
@@ -10,31 +10,35 @@ questions:
     level: 1
     select: 2
     stem: >-
-      The cafe's owner is listing what moving its systems to AWS would give the business.
-      Which two items belong on that list as AWS Cloud benefits?
+      The cafe's owner is listing the six benefits of the AWS Cloud for a planning meeting, and has mixed in some other AWS principles by mistake.
+      Which two items on the list are among the six benefits?
     options:
       - id: a
-        text: Server capacity that scales with actual demand
+        text: Stop guessing capacity
         correct: true
-        why: Scaling with actual demand instead of a forecast is the stop guessing capacity benefit.
+        why: Scaling with real demand instead of a forecast is one of the six cloud benefits.
       - id: b
-        text: Prices locked in for the life of the account
-        why: An AWS bill follows usage month by month, so a locked lifetime price is not one of the benefits.
+        text: Pay less by using more
+        why: Volume discounts as usage grows are a pricing principle, not one of the six benefits.
       - id: c
-        text: Apps running in other countries within minutes
+        text: Go global in minutes
         correct: true
-        why: Reaching a Region abroad without building facilities is the go global in minutes benefit.
+        why: Deploying to a Region abroad instead of building facilities there is one of the six benefits.
       - id: d
-        text: Physical access to the servers it rents
-        why: AWS runs the physical layer, so the cafe gives up hands-on server access rather than gaining it.
+        text: Grant least privilege
+        why: Allowing only the access someone needs is a security principle, not one of the six benefits.
       - id: e
-        text: Security handled entirely by AWS for it
-        why: The cafe still owns part of its security on AWS, so this is not a promised benefit.
+        text: Enable MFA on the root user
+        why: Protecting the root user is a security practice, not one of the six benefits of the cloud.
     evidence:
-      - "On AWS, spending follows usage and capacity follows demand."
-      - A US company expanding to India can deploy to an AWS-managed Region there instead of building its own data centers, in minutes rather than months or years.
-    takeaway: The cloud's benefits replace upfront buying and capacity guesswork with usage-based spending, demand-based scaling and fast global reach.
+      - "The six benefits by their course names: trade fixed expense for variable expense, benefit from massive economies of scale, stop guessing capacity, increase speed and agility, stop spending money running and maintaining data centers, and go global in minutes."
+    takeaway: Stop guessing capacity and go global in minutes sit among the six cloud benefits, while volume pricing and least privilege are other AWS principles.
     history: []
+    verified:
+      keyHash: f4810e18f99c
+      fullHash: 638553b9153a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-bk0ykx
     version: 1
@@ -111,7 +115,7 @@ questions:
 
   - id: q-6vyd19
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: trade-fixed-expense-for-variable-expense
@@ -120,35 +124,41 @@ questions:
     level: 2
     select: 3
     stem: >-
-      The cafe is sorting last month's technology costs into fixed and variable expenses.
-      Which three costs are variable expenses?
+      The cafe runs its ordering system on AWS.
+      Its loyalty system runs on servers and storage the cafe bought outright, over a network line with a flat monthly fee.
+      Which three of these costs are variable expenses?
     options:
       - id: a
-        text: The charge for compute hours it ran last month
+        text: Ordering system compute
         correct: true
-        why: Compute hours are billed as they are used, so this charge follows consumption.
+        why: Compute on AWS is billed by the time it runs, so this cost follows the cafe's use.
       - id: b
-        text: The charge for its yearly server room lease
-        why: A lease costs the same whether the room is busy or empty, which makes it fixed.
+        text: Loyalty system storage
+        why: Storage bought outright was paid for up front and costs the same however much is kept.
       - id: c
-        text: The charge for receipts it stored this month
-        correct: true
-        why: Storage is billed on how much the cafe keeps, so the charge moves with its use.
+        text: Loyalty system compute
+        why: The loyalty servers were bought outright, so their cost does not change with how busy they are.
       - id: d
-        text: The charge for servers it bought before opening
-        why: Paying for hardware up front, whatever the later usage, is a fixed expense.
-      - id: e
-        text: The charge for data it sent to online orders
+        text: Ordering system storage
         correct: true
-        why: Data transfer is billed by the amount sent, so it rises and falls with orders.
+        why: Storage on AWS is billed by how much the cafe keeps, so the charge moves with its use.
+      - id: e
+        text: Ordering system network traffic
+        correct: true
+        why: Data sent from AWS is billed by the amount, so it rises and falls with orders.
       - id: f
-        text: The charge for its yearly hardware service plan
-        why: A flat contract price does not change with usage, so it is a fixed expense.
+        text: Loyalty system network traffic
+        why: The flat monthly fee for the line stays the same whatever traffic it carries.
     evidence:
       - "**Variable expense**: a cost that follows consumption, like an AWS bill."
       - "**Fixed expense**: a cost that does not change with usage."
     takeaway: A variable expense follows consumption, while a fixed expense stays the same whatever the usage.
     history: []
+    verified:
+      keyHash: 031a60172790
+      fullHash: 73156b5f9ef7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-wgwkn6
     version: 1
@@ -189,7 +199,7 @@ questions:
 
   - id: q-wfz00n
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: economies-of-scale
@@ -199,10 +209,10 @@ questions:
     stem: >-
       A small cafe startup runs its ordering app on the same kind of advanced hardware that large enterprises use, at a price it can afford.
       AWS can offer that price because it buys hardware in bulk for data centers around the world.
-      Which benefit does this show?
+      Which advantage of the AWS Cloud does this show?
     options:
       - id: a
-        text: Trade fixed for variable expense
+        text: Trade fixed expense for variable expense
         why: Usage-based billing changes when the cafe pays, but the stem credits AWS's bulk buying for the low price.
       - id: b
         text: Stop guessing capacity
@@ -212,13 +222,18 @@ questions:
         correct: true
         why: AWS's huge purchase volumes lower unit prices, and the startup gets those savings.
       - id: d
-        text: Increase speed and agility
-        why: Fast experiments help the team ship sooner, but they do not lower the price of the hardware.
+        text: Stop spending money on data centers
+        why: Handing upkeep to AWS frees the cafe's time and money, but it does not explain the low hardware price.
     evidence:
       - AWS buys hardware in bulk for its worldwide data centers and passes the lower prices on.
       - So startups, not only big enterprises, can afford advanced technology.
     takeaway: Economies of scale means AWS's bulk hardware buying lowers prices enough for startups to afford advanced technology.
     history: []
+    verified:
+      keyHash: 1d0908813f53
+      fullHash: e239322741e7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-y1nwv1
     version: 1
@@ -260,7 +275,7 @@ questions:
 
   - id: q-z15f54
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: stop-guessing-capacity
@@ -270,30 +285,35 @@ questions:
     select: 2
     stem: >-
       The cafe used to buy its servers based on a sales forecast.
-      Which two problems does scaling with real demand on AWS help it avoid?
+      Which problems does scaling with real demand on AWS help it avoid?
     options:
       - id: a
-        text: Servers it paid for sitting idle most of the year
+        text: Paid-for servers sitting unused most of the year
         correct: true
-        why: Scaling with real demand means the cafe never pays for hardware nobody uses.
+        why: Scaling with real demand means the cafe stops paying for hardware nobody uses.
       - id: b
-        text: Servers waiting months to be set up in another country
+        text: Months spent building a server room abroad
         why: Slow launches abroad are what going global in minutes addresses, not scaling with demand.
       - id: c
-        text: Servers too few to keep checkout fast during a rush
+        text: Weeks spent waiting for extra servers to arrive
         correct: true
-        why: Adding capacity in minutes when demand rises keeps performance up instead of degrading.
+        why: On AWS the cafe adds capacity in minutes when demand rises instead of waiting weeks for hardware.
       - id: d
-        text: Servers needing staff to rack and power them by hand
+        text: Staff time spent racking and powering servers
         why: Physical server upkeep is what stopping spending on data centers removes, not scaling.
       - id: e
-        text: Servers costing more because it buys only a few at once
+        text: Higher unit prices from buying servers a few at a time
         why: Low prices from bulk buying come from AWS's economies of scale, not from scaling.
     evidence:
       - "On premises you buy hardware for a forecast: plan for 10 million users over three years and get about 500,000, and the excess sits idle, while underestimating means a scramble for servers, degraded service and lost customers."
       - On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning.
-    takeaway: Guessing capacity fails both ways, idle servers or degraded service, and scaling with real demand avoids both.
+    takeaway: Scaling with real demand ends both idle hardware bought for a forecast and the long wait for extra servers when demand grows.
     history: []
+    verified:
+      keyHash: 37129a5e5d61
+      fullHash: a8358e65bc81
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-z5kgg6
     version: 1

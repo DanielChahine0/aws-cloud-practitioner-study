@@ -205,27 +205,30 @@ questions:
       Which descriptions match that term?
     options:
       - id: a
-        text: Processes data on rugged devices far from any Region
-        why: Working on data with a rugged device away from a Region describes edge computing, not batch computing.
+        text: Adds instances as daytime visitor traffic climbs
+        why: Adding instances as visitor traffic rises is scaling a live site to demand, not running large compute-heavy jobs in bulk.
       - id: b
-        text: Handles large tasks that each need heavy processing
+        text: Works through large jobs that need heavy processing
         correct: true
         why: Batch computing is about large, compute-heavy work, such as simulations or huge datasets.
       - id: c
-        text: Streams desktops and apps to staff on any device
-        why: Giving staff remote desktops and apps describes end-user computing, not batch computing.
+        text: Moves very large datasets to AWS on a rugged device
+        why: Shipping large datasets on a rugged device is data transfer to AWS, not the compute-heavy processing of those jobs.
       - id: d
-        text: Runs many pieces at once so the whole finishes sooner
+        text: Splits one workload so its pieces run at the same time
         correct: true
         why: Batch work is often split into pieces that run in parallel, so a large workload ends sooner.
       - id: e
-        text: Runs apps on servers that AWS provisions and maintains
-        why: Running apps on servers that AWS provisions and maintains describes serverless computing, not batch computing.
+        text: Answers each customer request with very low delay
+        why: Answering each request quickly is interactive, low-latency work, while batch work runs large jobs in bulk.
     evidence:
       - "**Batch computing**: running large, compute-heavy jobs, often in parallel."
       - A fully managed service for heavy compute such as huge datasets, simulations and complex math.
     takeaway: Batch computing is large, compute-heavy work, often split into jobs that run in parallel.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 both describe heavy parallel processing and form an obvious pair, while 2, 4 and 5 each name a different, unrelated use case.)"
 
   - id: q-wz0hrz
     version: 1
@@ -302,7 +305,7 @@ questions:
 
   - id: q-a16vhy
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-outposts
@@ -333,10 +336,15 @@ questions:
       - It fits compliance, data residency, low latency, remote sites and legacy app modernization.
     takeaway: Outposts runs AWS compute and storage inside your own data center, so data that must stay on site can stay there.
     history: []
+    verified:
+      keyHash: eebf22357a93
+      fullHash: 0baee6b9c1b6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-haawrq
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-outposts
@@ -366,3 +374,8 @@ questions:
       - Outposts is the only one of the four on premises.
     takeaway: When AWS services must run on site for low latency, Outposts is the on-premises choice.
     history: []
+    verified:
+      keyHash: ecf72e3493b2
+      fullHash: 7cc59fa8fa4f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

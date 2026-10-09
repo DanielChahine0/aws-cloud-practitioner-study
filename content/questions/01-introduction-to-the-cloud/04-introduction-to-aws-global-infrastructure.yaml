@@ -173,7 +173,7 @@ questions:
       on: 2026-10-09
   - id: q-9nxypw
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-global-infrastructure
@@ -181,27 +181,32 @@ questions:
     task: "3.2"
     level: 1
     stem: >-
-      The cafe's owner is learning how the AWS Global Infrastructure is put together.
-      Which part sits inside an Availability Zone, with one or more of them in each zone?
+      The cafe's owner is sketching the AWS Global Infrastructure as a set of nested boxes, from the largest level down.
+      Which level belongs in the innermost box?
     options:
       - id: a
         text: AWS Region
-        why: A Region is the geographic area that holds the zones, so it sits above an Availability Zone rather than inside one.
+        why: A Region is the outermost box, the geographic area that holds all the other levels.
       - id: b
         text: Edge location
-        why: Edge locations cache content near viewers and are not a part that each Availability Zone contains.
+        why: Edge locations cache content near viewers and are not one of the nested boxes of Region, zone and data center.
       - id: c
         text: Data center
         correct: true
-        why: Each Availability Zone holds one or more data centers, the part nested inside the zone.
+        why: Data centers sit inside each Availability Zone, so they are the innermost level of the nesting.
       - id: d
         text: Availability Zone
-        why: Another Availability Zone sits beside this one in the same Region, kept apart from it rather than inside it.
+        why: An Availability Zone is the middle box, since it sits inside a Region and itself holds data centers.
     evidence:
       - "Availability Zone (AZ): an isolated location in a Region, with one or more data centers."
       - A Region holds three or more AZs, and each AZ is an isolated part of one Region holding one or more data centers.
     takeaway: Regions hold Availability Zones, and each Availability Zone holds one or more data centers.
     history: []
+    verified:
+      keyHash: f6e5028dd35e
+      fullHash: 9014aef7525e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-arybmq
     version: 1
     status: live
@@ -324,21 +329,21 @@ questions:
     task: "3.2"
     level: 3
     stem: >-
-      The cafe's ordering app runs in one Availability Zone of the Dublin Region, and its data must stay in Dublin.
+      The cafe's ordering app runs in one Availability Zone of the Dublin Region, and its data must stay in the Dublin Region.
       The cafe wants the app to keep serving if a flood cuts off that zone.
       Where should it place a second copy of the app and its data?
     options:
       - id: a
-        text: In a second data center inside the same zone
+        text: A second data center in the same zone in Dublin
         why: A data center in the same zone is cut off by the same flood, so both copies would stop together.
       - id: b
-        text: In an Availability Zone of the Paris Region
-        why: A zone in Paris would survive the flood, but it moves the data out of Dublin, which the cafe cannot do.
+        text: A larger server in the same zone in Dublin
+        why: A bigger server adds capacity, but it sits in the flooded zone and goes down with the first copy.
       - id: c
-        text: In an edge location close to Dublin
-        why: An edge location caches content for nearby viewers and is not a place to run the app and keep its data.
+        text: An Availability Zone in the Paris Region
+        why: A zone in Paris would survive the flood, but it moves the data out of the Dublin Region, which the cafe cannot do.
       - id: d
-        text: In another Availability Zone of the Dublin Region
+        text: A different Availability Zone in the Dublin Region
         correct: true
         why: Another zone in Dublin is isolated from the flooded one and keeps the data inside the Region the cafe must use.
     evidence:
@@ -346,3 +351,6 @@ questions:
       - Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ
     takeaway: To survive one zone's outage without leaving a Region, replicate across another Availability Zone in that Region.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one using 'different' and is the textbook high-availability choice; 1 and 4 repeat 'same zone' and 2 jumps Regions, so 3 stands out as the balanced middle option.)"

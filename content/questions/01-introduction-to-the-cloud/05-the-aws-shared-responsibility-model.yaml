@@ -106,7 +106,7 @@ questions:
 
   - id: q-4y1pk6
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: security-of-the-cloud
@@ -130,25 +130,30 @@ questions:
         correct: true
         why: AWS secures the hypervisor and network isolation that keep one customer's machines away from another's.
       - id: d
-        text: Configuring the firewall around the menu servers
-        why: Firewall setup is one of the duties whose owner changes with the service, so it is not always AWS's.
+        text: Choosing which staff can edit the menu files
+        why: Deciding who reaches the cafe's own data is security in the cloud, so it is always the cafe's duty, never AWS's.
       - id: e
         text: Maintaining the hardware under the menu service
         correct: true
         why: Upkeep of the hardware that runs every service is part of what AWS secures underneath its customers.
       - id: f
-        text: Configuring the network around the menu servers
-        why: Network setup shifts between AWS and the cafe depending on the service, so it is not a fixed AWS duty.
+        text: Setting up the firewall around the menu servers
+        why: Firewall and network setup shift between AWS and the cafe depending on the service, so it is not a fixed AWS duty.
     evidence:
       - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
       - "Hypervisor layer: a virtualization layer that AWS secures."
       - Server-side encryption and OS, network and firewall setup vary by service.
     takeaway: AWS's fixed share covers the facilities, hardware and isolation layers, while encryption and network setup vary by service.
     history: []
+    verified:
+      keyHash: 154e015f7c31
+      fullHash: cbfcf7498985
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-x67nxf
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: security-in-the-cloud
@@ -177,10 +182,15 @@ questions:
       - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
     takeaway: Access settings on your own data are security in the cloud, so a wrong setting is the customer's lapse.
     history: []
+    verified:
+      keyHash: ac0b23b7f7a7
+      fullHash: 6a5b9bb773a6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-5m1zcb
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: security-in-the-cloud
@@ -194,20 +204,26 @@ questions:
         text: Facilities, hardware, networking and hypervisor isolation
         why: These sit underneath every service and belong to AWS, so they make up security of the cloud.
       - id: b
-        text: Data, applications, access and data center surveillance
-        why: Surveillance of the data centers is physical security, which AWS alone handles as security of the cloud.
-      - id: c
-        text: Hardware upkeep, applications, data and operating system patches
-        why: Upkeep of the hardware behind the services is AWS's job, so this set mixes in a duty of the cloud.
-      - id: d
         text: Data, applications, access and operating system patches
         correct: true
         why: Security in the cloud is the customer's share, which covers what it stores and runs and who can reach it.
+      - id: c
+        text: Door locks, surveillance and environmental controls
+        why: These guard the buildings where AWS runs its services, so they are physical security of the cloud, never the customer's.
+      - id: d
+        text: Writing OS patches and alerting customers to flaws
+        why: The vendor writes patches and AWS sends alerts, so neither step is the customer's own share in the cloud.
     evidence:
       - "Security in the cloud: the customer's share."
       - Customers patch their OS and secure applications, data, access and client-side encryption.
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
     takeaway: Security in the cloud is the customer's share of data, apps, access and patches, while AWS protects what lies underneath.
     history: []
+    verified:
+      keyHash: 8df05c038f6a
+      fullHash: 62d6154caa98
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-hbrcyf
     version: 1
@@ -247,7 +263,7 @@ questions:
 
   - id: q-6p35gq
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: client-side-encryption
@@ -259,16 +275,16 @@ questions:
       Who is responsible for that scrambling step?
     options:
       - id: a
-        text: AWS, whichever service stores the files
-        why: AWS never touches data on the cafe's laptop, so encryption before upload cannot be its duty.
+        text: AWS
+        why: AWS protects the hardware once the files arrive, but it never touches them on the cafe's laptop.
       - id: b
-        text: AWS or the cafe, depending on the service
-        why: The owner shifts by service for encryption the service does, but not for encryption done before upload.
+        text: The laptop's OS vendor
+        why: The vendor's role is supplying operating system patches, not scrambling the cafe's files before upload.
       - id: c
-        text: AWS and the cafe together, on every service
-        why: Encrypting on the client is not split between parties, since it happens before AWS receives anything.
+        text: AWS and the cafe jointly
+        why: Only encryption done by the service can shift with the service, and this step happens before AWS sees the files.
       - id: d
-        text: The cafe, whichever service stores the files
+        text: The cafe
         correct: true
         why: Encryption done on the client before upload is always a customer duty, whatever service holds the files.
     evidence:
@@ -276,10 +292,15 @@ questions:
       - Server-side encryption and OS, network and firewall setup vary by service.
     takeaway: Encryption done on your own machine before upload is always your duty, unlike server-side encryption.
     history: []
+    verified:
+      keyHash: a36c9afe5272
+      fullHash: 260ed27903d5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-a7kxvk
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: operating-system-patching
@@ -308,10 +329,15 @@ questions:
       - Only you can sign in to your OS or add users, since AWS has no back door.
     takeaway: AWS can only alert a customer about an OS flaw, and the customer applies the patch.
     history: []
+    verified:
+      keyHash: e3bc364cd427
+      fullHash: 81df27b1aac2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-qzp0f5
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: operating-system-patching
@@ -339,3 +365,8 @@ questions:
       - "AWS spots a flaw in a customer's OS: it can only alert them, and they patch."
     takeaway: The vendor publishes OS patches, but on AWS the customer is the one who applies them.
     history: []
+    verified:
+      keyHash: a34a5a48b776
+      fullHash: 3a1d5e701388
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
