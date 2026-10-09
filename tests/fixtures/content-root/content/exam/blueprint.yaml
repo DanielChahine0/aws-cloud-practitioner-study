@@ -1,0 +1,28 @@
+# Fixture blueprint for the content-check tests.
+exam: CLF-C02
+guide: { url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02.html", verified_on: "2026-10-01" }
+domains:
+  - { id: "1", name: Cloud Concepts, weight: 24, url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html", verified_on: "2026-10-01" }
+  - { id: "2", name: Security and Compliance, weight: 30, url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html", verified_on: "2026-10-01" }
+  - { id: "3", name: Cloud Technology and Services, weight: 34, url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "4", name: "Billing, Pricing, and Support", weight: 12, url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html", verified_on: "2026-10-01" }
+tasks:
+  - { id: "1.1", text: Fixture task statement 1.1, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html", verified_on: "2026-10-01" }
+  - { id: "1.2", text: Fixture task statement 1.2, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html", verified_on: "2026-10-01" }
+  - { id: "1.3", text: Fixture task statement 1.3, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html", verified_on: "2026-10-01" }
+  - { id: "1.4", text: Fixture task statement 1.4, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html", verified_on: "2026-10-01" }
+  - { id: "2.1", text: Fixture task statement 2.1, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html", verified_on: "2026-10-01" }
+  - { id: "2.2", text: Fixture task statement 2.2, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html", verified_on: "2026-10-01" }
+  - { id: "2.3", text: Fixture task statement 2.3, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html", verified_on: "2026-10-01" }
+  - { id: "2.4", text: Fixture task statement 2.4, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html", verified_on: "2026-10-01" }
+  - { id: "3.1", text: Fixture task statement 3.1, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "3.2", text: Fixture task statement 3.2, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "3.3", text: Fixture task statement 3.3, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "3.4", text: Fixture task statement 3.4, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "3.5", text: Fixture task statement 3.5, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "3.6", text: Fixture task statement 3.6, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "3.7", text: Fixture task statement 3.7, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "3.8", text: Fixture task statement 3.8, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html", verified_on: "2026-10-01" }
+  - { id: "4.1", text: Fixture task statement 4.1, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html", verified_on: "2026-10-01" }
+  - { id: "4.2", text: Fixture task statement 4.2, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html", verified_on: "2026-10-01" }
+  - { id: "4.3", text: Fixture task statement 4.3, terms: [], url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html", verified_on: "2026-10-01" }
