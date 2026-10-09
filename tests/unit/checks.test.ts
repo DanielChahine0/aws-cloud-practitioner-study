@@ -95,7 +95,7 @@ function answerAll(
           : b.kind === 'solve-notes'
             ? { id, picked, quote: `- ${q.evidence[0] ?? ''}` }
             : b.kind === 'critic-cue'
-              ? { id, guess: wrongGuess(q, order) }
+              ? { id, guess: wrongGuess(q, order), basis: 'guess' }
               : { id, distractorsWrong: true, noTell: true, taskFits: true, styleHolds: true, problems: [] };
       return override(b.batch, id, base);
     });
@@ -215,6 +215,32 @@ describe('lintAnswers', () => {
     writeAnswers(root, 'solve-closed-01', [{ id: first?.id, picked: 'a' }]);
     expect(lintAnswers(root, file).length).toBeGreaterThan(0);
   });
+
+  it('needs a basis on every cue answer and a reason unless the basis is a guess', () => {
+    const root = setup();
+    prepare(load(root), [1], 1);
+    answerAll(root);
+    const file = join(root, RESULTS_DIR, 'answers', 'critic-cue-01.json');
+    expect(lintAnswers(root, file)).toEqual([]);
+    const { answers } = readJson<{ answers: { id: string; guess: number[] }[] }>(
+      root,
+      'answers/critic-cue-01.json',
+    );
+    const rewrite = (extra: object) =>
+      writeAnswers(
+        root,
+        'critic-cue-01',
+        answers.map((a) => ({ id: a.id, guess: a.guess, ...extra })),
+      );
+    rewrite({});
+    expect(lintAnswers(root, file).some((p) => p.includes('basis'))).toBe(true);
+    rewrite({ basis: 'tell' });
+    expect(lintAnswers(root, file).some((p) => p.includes('reason'))).toBe(true);
+    rewrite({ basis: 'knowledge', reason: ' ' });
+    expect(lintAnswers(root, file).some((p) => p.includes('reason'))).toBe(true);
+    rewrite({ basis: 'tell', reason: 'It is the longest option.' });
+    expect(lintAnswers(root, file)).toEqual([]);
+  });
 });
 
 describe('grade', () => {
@@ -241,7 +267,13 @@ describe('grade', () => {
       if (id === 'q-7k2m9p' && batch.startsWith('solve-closed'))
         return { ...answer, picked: [order.indexOf('b') + 1] };
       if (id === 'q-5n4w8x' && batch.startsWith('solve-closed')) return { ...answer, secondDefensible: true };
-      if (id === 'q-7k2m9p' && batch.startsWith('critic-cue')) return { id, guess: [order.indexOf('a') + 1] };
+      if (id === 'q-7k2m9p' && batch.startsWith('critic-cue'))
+        return {
+          id,
+          guess: [order.indexOf('a') + 1],
+          basis: 'tell',
+          reason: 'It is the only hedged option.',
+        };
       if (id === 'q-3h8r2t' && batch.startsWith('solve-notes'))
         return { ...answer, quote: 'Ovens are free.' };
       return answer;
@@ -261,8 +293,37 @@ describe('grade', () => {
       'q-3h8r2t solve-notes: the quote is not a line of the given notes',
       'q-5n4w8x critic: no answer',
       'q-5n4w8x solve-closed: a second option is defensible: Only one option fits.',
-      'q-7k2m9p critic: the cue round found the key from the options alone',
+      'q-7k2m9p critic: the cue round found the key from the options alone (tell: It is the only hedged option.)',
       'q-7k2m9p solve-closed: picked b, the key is a',
+    ]);
+  });
+});
+
+describe('grade cue round', () => {
+  /** Grades with q-7k2m9p's cue answer hitting the key on the given basis. */
+  const gradeCueHit = (extra: object): string[] => {
+    const root = setup();
+    prepare(load(root), [1], 1);
+    const keys = readJson<KeyFile>(root, 'keys.json');
+    answerAll(root, (batch, id, answer) => {
+      const order = keys[batch]?.[id]?.order ?? [];
+      if (id === 'q-7k2m9p' && batch.startsWith('critic-cue'))
+        return { id, guess: [order.indexOf('a') + 1], ...extra };
+      return answer;
+    });
+    return grade(root, FIXTURE_TODAY).failures.map((f) => `${f.id} ${f.check}: ${f.reason}`);
+  };
+
+  it('passes a cue hit that was only a guess', () => {
+    expect(gradeCueHit({ basis: 'guess' })).toEqual([]);
+  });
+
+  it('fails a cue hit that names a tell or knowledge basis, with its reason', () => {
+    expect(gradeCueHit({ basis: 'tell', reason: 'It is the longest option.' })).toEqual([
+      'q-7k2m9p critic: the cue round found the key from the options alone (tell: It is the longest option.)',
+    ]);
+    expect(gradeCueHit({ basis: 'knowledge', reason: 'Only it is true of AWS.' })).toEqual([
+      'q-7k2m9p critic: the cue round found the key from the options alone (knowledge: Only it is true of AWS.)',
     ]);
   });
 });

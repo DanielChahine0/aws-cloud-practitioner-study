@@ -343,7 +343,21 @@ export const SolveClosedAnswer = z.strictObject({
   reason: z.string(),
 });
 export const SolveNotesAnswer = z.strictObject({ id: z.string(), picked: Picked, quote: z.string() });
-export const CueAnswer = z.strictObject({ id: z.string(), guess: z.array(z.number().int().min(1)) });
+/**
+ * A cue round guess and what it rests on: a `tell` in the wording, `knowledge` because only the key is true of AWS,
+ * or a plain `guess`; only a hit with a real basis fails the question, so a lucky guess does not.
+ */
+export const CueAnswer = z
+  .strictObject({
+    id: z.string(),
+    guess: z.array(z.number().int().min(1)),
+    basis: z.enum(['tell', 'knowledge', 'guess']),
+    reason: z.string().trim().min(1).optional(),
+  })
+  .refine((a) => a.basis === 'guess' || a.reason !== undefined, {
+    path: ['reason'],
+    message: 'give a reason when the basis is tell or knowledge',
+  });
 export const CriticAnswer = z.strictObject({
   id: z.string(),
   distractorsWrong: z.boolean(),
@@ -515,13 +529,18 @@ export function grade(root: string, today = localDate()): { passes: number; fail
     answers.set(batch, byId);
   }
 
-  const cueGuess = new Map<string, string[] | null>();
+  const cueGuess = new Map<string, (Omit<z.infer<typeof CueAnswer>, 'guess'> & { guess: string[] }) | null>();
   for (const [batch, entries] of Object.entries(keys)) {
     if (kindOf(batch) !== 'critic-cue') continue;
     for (const [id, { order }] of Object.entries(entries)) {
       const q = questions.get(id);
       const parsed = CueAnswer.safeParse(answers.get(batch)?.get(id));
-      cueGuess.set(id, q !== undefined && parsed.success ? mapPick(q, order, parsed.data.guess) : null);
+      cueGuess.set(
+        id,
+        q !== undefined && parsed.success
+          ? { ...parsed.data, guess: mapPick(q, order, parsed.data.guess) }
+          : null,
+      );
     }
   }
 
@@ -556,11 +575,11 @@ export function grade(root: string, today = localDate()): { passes: number; fail
       }
       if (kind === 'critic') {
         const a = parsed.data as z.infer<typeof CriticAnswer>;
-        const guess = q.type === 'match' ? null : cueGuess.get(id);
-        if (q.type !== 'match' && (guess === undefined || guess === null))
+        const cue = q.type === 'match' ? null : cueGuess.get(id);
+        if (q.type !== 'match' && (cue === undefined || cue === null))
           fail('no answer in the cue round', false);
-        else if (guess !== null && guess !== undefined && sameSet(guess, keyOf(q))) {
-          fail('the cue round found the key from the options alone');
+        else if (cue !== null && cue !== undefined && cue.basis !== 'guess' && sameSet(cue.guess, keyOf(q))) {
+          fail(`the cue round found the key from the options alone (${cue.basis}: ${cue.reason ?? ''})`);
         } else if (CRITIC_FLAGS.some(([flag]) => !a[flag])) {
           const first = CRITIC_FLAGS.find(([flag]) => !a[flag]);
           fail(a.problems.length > 0 ? a.problems.join(' ') : (first?.[1] ?? 'the critic rejected it'));

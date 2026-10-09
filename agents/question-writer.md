@@ -85,6 +85,9 @@ When your task says to revise, read each draft's `review.lastFailure`, which nam
 - Fix that cause in the question, keep its `id`, and leave its `review` block for the tools to update.
 - A `solve-closed` failure is tied to the stem, the option texts and which options are correct, so its fix must change at least one of them.
 - An edit to only a `why`, the `evidence` or the `takeaway` leaves a `solve-closed` failure in place, and the question is never checked again.
+- A cue failure, `the cue round found the key from the options alone (<basis>: <reason>)`, names what gave the key away without the stem.
+- For a `tell` basis, remove the tell the reason names, such as a longer, hedged, more specific or repeated-word key.
+- For a `knowledge` basis, rewrite the distractors as statements that are also true about AWS but do not answer the stem.
 - Revise only drafts whose `review.attempts` is below 3, and never touch a `live` or `retired` question.
 - Loop on `pnpm --silent content:validate --draft <file>` until it ends with `0 problems` again.
 
