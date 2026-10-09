@@ -135,6 +135,13 @@ describe('note and blueprint edits', () => {
       '- Branches use ovens from one central kitchen when their queues grow.\n- NEW LINE\n\n### Paying',
     );
     expect(() => insertUpdateLine(text, 'nowhere', '- x')).toThrow("no H3 'nowhere'");
+    const table = text.replace(
+      '- Branches use ovens from one central kitchen when their queues grow.',
+      '| Branch | Ovens |\n| --- | --- |\n| Harbour | Shared |',
+    );
+    expect(insertUpdateLine(table, 'shared-kitchen', '- NEW LINE')).toContain(
+      '| Harbour | Shared |\n\n- NEW LINE\n\n### Paying',
+    );
     const tagged = addConceptTag(text, 'speed-of-baking');
     expect(tagged).toContain('  - per-minute-rental\n  - speed-of-baking\n---');
     expect(addConceptTag(tagged, 'speed-of-baking')).toBe(tagged);

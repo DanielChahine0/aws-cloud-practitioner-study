@@ -37,30 +37,29 @@ Each update line is registered as one tested concept homed at the line's H3.
 
 ## Output
 
-Write `.results/updates/<task>.json`, for example `.results/updates/3.5.json`:
+Write `.results/updates/<task>.json`, for example `.results/updates/3.7.json`:
 
 ```json
 {
-  "task": "3.5",
+  "task": "3.7",
   "updates": [
     {
       "terms": ["Amazon Quick Sight"],
-      "note": "m08/data-analytics-and-ai-ml",
-      "anchor": "business-intelligence-dashboards",
+      "note": "m08/data-pipelines-on-aws",
+      "anchor": "services-by-phase",
       "sentence": "The exam guide spells the business intelligence service Amazon Quick Sight, which builds interactive dashboards from your data.",
       "title": "CLF-C02 Domain 3",
       "url": "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html",
       "verified_on": "2026-10-09",
-      "concept": { "id": "amazon-quick-sight", "name": "Amazon Quick Sight", "tasks": ["3.7"], "confusableWith": ["amazon-athena"] }
+      "concept": { "id": "amazon-quicksight", "name": "Amazon Quick Sight", "tasks": ["3.7"], "confusableWith": ["amazon-athena"] }
     }
   ],
-  "coveredBy": [
-    { "term": "AWS VPN", "concept": "aws-site-to-site-vpn", "reason": "The notes teach AWS VPN as Site-to-Site VPN and Client VPN." }
-  ]
+  "coveredBy": []
 }
 ```
 
 - `note` is the note id `mNN/<slug>` of a lesson note, and `anchor` is the slug of an H3 under its `## Notes`.
+- A `coveredBy` entry has the shape `{ "term": "AWS VPN", "concept": "aws-site-to-site-vpn", "reason": "The notes teach AWS VPN as Site-to-Site VPN and Client VPN." }`, which would belong in the result for task 3.5, the task that lists AWS VPN.
 - `sentence` is one sentence of 20 to 300 characters, with no em dash and no second sentence.
 - Every missing term of your task appears exactly once, in one update's `terms` or in one `coveredBy` entry, and no other term appears.
 

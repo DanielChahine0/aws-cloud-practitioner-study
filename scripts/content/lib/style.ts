@@ -16,7 +16,8 @@ const BANNED: readonly (readonly [RegExp, string])[] = [
 ];
 const NEGATIVE = /\b(?:not|except)\b/i;
 const BOLD_NEGATIVE = /\*\*(?:NOT|EXCEPT)\*\*/g;
-const NUMBER = /\d[\d,.]*%?/g;
+// A digit run that starts a word, so the 3 in "S3" and the 2 in "EC2" are names, not numbers.
+const NUMBER = /(?<![A-Za-z0-9])\d[\d,.]*%?/g;
 const OLD_PLANS = /\bDeveloper Support\b|\bBusiness Support\b(?!\+)|\bEnterprise On-Ramp\b/;
 
 const numbersIn = (text: string): string[] => (text.match(NUMBER) ?? []).map((n) => n.replace(/[.,]+$/, ''));
@@ -47,7 +48,7 @@ export function styleProblems(q: Question, note: LessonNote | undefined): string
   if (isNegativeStem(q.stem.replace(BOLD_NEGATIVE, ''))) {
     problems.push('a negative stem must write NOT in bold capitals');
   }
-  const stated = new Set(numbersIn(note?.text ?? ''));
+  const stated = new Set(numbersIn(note?.body ?? ''));
   const reported = new Set<string>();
   for (const n of visible.flatMap(numbersIn)) {
     if (n === '' || stated.has(n) || reported.has(n)) continue;

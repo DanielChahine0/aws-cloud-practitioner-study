@@ -170,7 +170,7 @@ questions:
     concept: economies-of-scale
     note: m01/benefits-of-the-aws-cloud
     task: "1.1"
-    level: 3
+    level: 1
     stem: >-
       Which statement explains the economies of scale benefit of the AWS Cloud?
     options:
@@ -430,7 +430,7 @@ questions:
     concept: go-global-in-minutes
     note: m01/benefits-of-the-aws-cloud
     task: "1.1"
-    level: 3
+    level: 1
     stem: >-
       What lets a company start serving users in another country in minutes rather than months?
     options:

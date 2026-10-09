@@ -132,7 +132,9 @@ export function insertUpdateLine(noteText: string, anchor: string, line: string)
   const lines = noteText.split('\n');
   let end = (headings[at + 1]?.line ?? lines.length + 1) - 1;
   while (end > heading.line && (lines[end - 1] ?? '').trim() === '') end -= 1;
-  lines.splice(end, 0, line);
+  // After a table, a paragraph or the heading itself, a blank line keeps the bullet its own list in plain CommonMark.
+  const afterList = /^\s*(?:[-*+]|\d+[.)])\s/.test(lines[end - 1] ?? '');
+  lines.splice(end, 0, ...(afterList ? [line] : ['', line]));
   return lines.join('\n');
 }
 

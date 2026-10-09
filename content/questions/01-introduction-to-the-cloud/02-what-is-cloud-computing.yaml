@@ -97,7 +97,7 @@ questions:
     concept: on-demand-delivery
     note: m01/what-is-cloud-computing
     task: "1.1"
-    level: 3
+    level: 1
     select: 2
     stem: Which statements describe on-demand delivery in cloud computing?
     options:
@@ -345,7 +345,7 @@ questions:
     concept: hybrid-deployment
     note: m01/what-is-cloud-computing
     task: "3.1"
-    level: 3
+    level: 2
     select: 2
     stem: Which situations point the cafe toward a hybrid deployment?
     options:

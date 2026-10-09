@@ -97,7 +97,7 @@ questions:
     concept: fault-tolerance
     note: m01/introduction-to-aws-global-infrastructure
     task: "3.2"
-    level: 3
+    level: 1
     stem: >-
       Which statement describes fault tolerance rather than high availability?
     options:
@@ -216,7 +216,7 @@ questions:
     concept: aws-regions
     note: m01/introduction-to-aws-global-infrastructure
     task: "3.2"
-    level: 3
+    level: 1
     stem: >-
       Which statement about an AWS Region is accurate?
     options:
@@ -245,7 +245,7 @@ questions:
     concept: availability-zones
     note: m01/introduction-to-aws-global-infrastructure
     task: "3.2"
-    level: 3
+    level: 1
     select: 2
     stem: >-
       The cafe's developer is explaining Availability Zones to the owner before deploying the ordering app.
