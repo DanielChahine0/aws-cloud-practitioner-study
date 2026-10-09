@@ -1,0 +1,118 @@
+import { appendFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import type { ContentIndex, ModuleChunk, SearchChunk } from '../../schemas/chunks.ts';
+import { buildContent } from '../../scripts/content/build.ts';
+import { loadContext } from '../../scripts/content/lib/context.ts';
+import { normalize } from '../../src/app/search.ts';
+import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+
+const LESSON_ROUTE = '#/m/01/l/what-a-bakery-cloud-is';
+
+function build(root = makeFixtureRoot()) {
+  const built = buildContent(loadContext(root, { today: FIXTURE_TODAY }));
+  const json = <T>(name: string): T => JSON.parse(built.files.get(name) ?? 'null') as T;
+  const index = json<ContentIndex>(built.indexFile);
+  return { built, index, json };
+}
+
+describe('buildContent on the fixture tree', () => {
+  it('names every file by its content hash and records the index name', () => {
+    const { built, index } = build();
+    expect(built.indexFile).toMatch(/^content\/index\.[0-9a-f]{8}\.json$/);
+    expect(built.contentVersion).toMatch(/^c-[0-9a-f]{6}$/);
+    expect(index.contentVersion).toBe(built.contentVersion);
+    expect(index.modules.map((m) => [m.n, m.short, m.lessons.length])).toEqual([[1, 'Baking Basics', 1]]);
+    expect(index.modules[0]?.chunk).toMatch(/^content\/m01\.[0-9a-f]{8}\.json$/);
+    expect(index.search).toMatch(/^content\/search\.[0-9a-f]{8}\.json$/);
+    expect([...built.files.keys()].sort()).toEqual(
+      [built.indexFile, index.modules[0]?.chunk, index.search].sort(),
+    );
+  });
+
+  it('renders the lesson with its H1 and update line, and the README by sections', () => {
+    const { index, json } = build();
+    const chunk = json<ModuleChunk>(index.modules[0]?.chunk ?? '');
+    const lesson = chunk.lessons['what-a-bakery-cloud-is'];
+    expect(lesson?.html).toContain('<h1>What a Bakery Cloud Is</h1>');
+    expect(lesson?.html).toContain('<li class="update"><span class="update-label">Exam guide update</span>');
+    expect(lesson?.headings.filter((h) => h.depth === 3).map((h) => h.id)).toEqual([
+      'shared-kitchen',
+      'paying-by-the-minute',
+    ]);
+    expect(chunk.readme.map((s) => s.id)).toEqual([
+      '',
+      'what-this-module-covers',
+      'lessons',
+      'key-takeaways',
+      'what-the-assessment-focuses-on',
+      'summary',
+      'further-reading',
+    ]);
+    expect(chunk.readme[2]?.html).toContain(`<a href="${LESSON_ROUTE}">What a Bakery Cloud Is</a>`);
+  });
+
+  it('indexes concepts, the glossary and missions with their routes', () => {
+    const { index } = build();
+    expect(index.concepts).toEqual([
+      {
+        id: 'shared-kitchen',
+        name: 'Shared kitchen',
+        home: 'm01/what-a-bakery-cloud-is',
+        anchor: 'shared-kitchen',
+        tested: true,
+      },
+      {
+        id: 'per-minute-rental',
+        name: 'Per-minute rental',
+        home: 'm01/what-a-bakery-cloud-is',
+        anchor: 'paying-by-the-minute',
+        tested: true,
+      },
+    ]);
+    expect(index.glossary).toEqual([
+      {
+        id: 'shared-kitchen',
+        term: 'Shared kitchen',
+        html: 'A pool of ovens that many branches use.',
+        refs: [{ label: 'Module 1, What a Bakery Cloud Is', route: LESSON_ROUTE }],
+      },
+    ]);
+    expect(index.missions.map((m) => [m.id, m.gate, m.maxLiveHours])).toEqual([['mission-00', true, null]]);
+    expect(index.missions[0]?.html).toContain('<h2 id="goal">Goal</h2>');
+  });
+
+  it('writes a search chunk with a normalized entry per module, lesson, concept, term and mission', () => {
+    const { index, json } = build();
+    const { entries } = json<SearchChunk>(index.search);
+    expect(entries.map((e) => `${e.kind} ${e.route}`)).toEqual([
+      'module #/m/01',
+      `lesson ${LESSON_ROUTE}`,
+      `concept ${LESSON_ROUTE}/shared-kitchen`,
+      `concept ${LESSON_ROUTE}/paying-by-the-minute`,
+      `term ${LESSON_ROUTE}`,
+      'mission #/missions/mission-00',
+    ]);
+    expect(entries[1]).toEqual({
+      kind: 'lesson',
+      title: 'What a Bakery Cloud Is',
+      detail: 'Module 1: Baking Basics',
+      route: LESSON_ROUTE,
+      text: 'what a bakery cloud is shared kitchen paying by the minute',
+    });
+    expect(normalize('  AWS Business Support+ (Auto-Scaling)! ')).toBe('aws business support+ auto scaling');
+  });
+
+  it('gives the same names when built twice', () => {
+    expect(build().built.indexFile).toBe(build().built.indexFile);
+  });
+
+  it('fails on a link to a page the site does not have', () => {
+    const root = makeFixtureRoot();
+    appendFileSync(
+      join(root, 'resources', '01-baking-basics', '01-what-a-bakery-cloud-is.md'),
+      '\n- See [later](02-gone.md).\n',
+    );
+    expect(() => build(root)).toThrow('link to 02-gone.md has no page on the site');
+  });
+});

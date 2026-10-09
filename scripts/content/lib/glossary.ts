@@ -39,3 +39,32 @@ export function termForms(term: string): string[] {
     .filter((part) => part.length >= 3);
   return [term, ...parts];
 }
+
+/** Finds glossary terms in note text: one case-insensitive pattern and the glossary id behind each lowercased form. */
+export interface TermMatcher {
+  pattern: RegExp;
+  idByForm: ReadonlyMap<string, string>;
+}
+
+const escapeRegExp = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** Full terms claim their form first, so a short form such as "Amazon EC2" never steals a term of its own. */
+export function termMatcher(entries: readonly GlossaryEntry[]): TermMatcher {
+  const idByForm = new Map<string, string>();
+  for (const entry of entries) {
+    const form = entry.term.toLowerCase();
+    if (!idByForm.has(form)) idByForm.set(form, entry.id);
+  }
+  for (const entry of entries) {
+    for (const extra of termForms(entry.term)) {
+      const form = extra.toLowerCase();
+      if (!idByForm.has(form)) idByForm.set(form, entry.id);
+    }
+  }
+  if (idByForm.size === 0) return { pattern: /(?!)/g, idByForm };
+  const alts = [...idByForm.keys()]
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRegExp)
+    .join('|');
+  return { pattern: new RegExp(`(?<![A-Za-z0-9-])(?:${alts})(?![A-Za-z0-9-])`, 'gi'), idByForm };
+}
