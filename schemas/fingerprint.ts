@@ -1,6 +1,5 @@
 import { z } from 'zod';
-
-const ModuleNumber = z.number().int().min(1).max(13);
+import { ModuleNumber } from './common.ts';
 
 /** One truncated-hash shingle set; `f` is its false-positive rate, count / 2^b (spec 2.5). */
 export const PackedSet = z.strictObject({
