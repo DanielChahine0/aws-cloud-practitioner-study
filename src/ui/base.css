@@ -363,11 +363,13 @@ kbd {
   text-decoration: underline;
 }
 
+/* A long meta, such as a mission's credits, wraps at 40% of the row instead of squeezing the title on a phone. */
 .row-meta {
   flex: none;
+  max-width: 40%;
   margin-left: auto;
   font-size: 0.875rem;
-  white-space: nowrap;
+  text-align: right;
   color: var(--muted);
 }
 
@@ -428,6 +430,10 @@ kbd {
 
 .sources a {
   overflow-wrap: anywhere;
+}
+
+.sources .muted {
+  white-space: nowrap;
 }
 
 /* Dialogs: the palette and the help sheet */
