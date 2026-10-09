@@ -1,0 +1,53 @@
+questions:
+  - id: q-7k2m9p
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: shared-kitchen
+    note: m01/what-a-bakery-cloud-is
+    task: "1.1"
+    level: 2
+    stem: >-
+      A chain of bakeries sees long lines at three branches every Saturday and wants extra baking
+      capacity without owning more equipment. Which approach fits best?
+    options:
+      - id: a
+        text: Draw on the central kitchen's ovens while the lines last
+        correct: true
+        why: The central kitchen lends spare ovens to any branch whose line grows, then takes them back.
+      - id: b
+        text: Install a permanent oven in each busy branch
+        why: A permanent oven is owned equipment that sits idle on quiet weekdays.
+      - id: c
+        text: Close the busy branches early on Saturdays
+        why: Closing early turns customers away instead of adding baking capacity.
+      - id: d
+        text: Move all baking to the slowest branch
+        why: One slow branch has no spare ovens to cover three busy ones.
+    evidence:
+      - Branches use ovens from one central kitchen when their queues grow.
+    takeaway: Borrow shared capacity for a rush and hand it back afterwards.
+  - id: q-8n3p4r
+    version: 1
+    status: draft
+    pool: practice
+    type: match
+    concept: per-minute-rental
+    note: m01/what-a-bakery-cloud-is
+    task: "4.1"
+    level: 1
+    stem: Match each proofing situation at the bakery to what the bakery pays for it.
+    pairs:
+      - left: Dough rising for forty minutes
+        right: Forty minutes of cabinet time
+        why: Cabinet time is counted only while the dough is inside rising.
+      - left: An empty cabinet overnight
+        right: Nothing at all
+        why: An empty cabinet that was handed back costs the bakery nothing.
+      - left: Two batches rising together for ten minutes
+        right: Twenty minutes of cabinet time
+        why: Each cabinet in use is counted, so two cabinets for ten minutes add up to twenty.
+    evidence:
+      - Cabinets are billed only while dough proofs.
+    takeaway: Rented cabinets cost money only while dough is proofing in them.

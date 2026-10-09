@@ -68,11 +68,47 @@ export interface LessonChunk {
   headings: HeadingMeta[];
 }
 
+export interface OptionView {
+  id: string;
+  text: string;
+  correct: boolean;
+  why: string;
+}
+
+export interface PairView {
+  left: string;
+  right: string;
+  why: string;
+}
+
+/** A live practice question as the runner shows it (spec 2.6); raw ids show only in the report panel (spec 2.8). */
+export interface QuestionView {
+  id: string;
+  version: number;
+  type: 'single' | 'multi' | 'match';
+  concept: string;
+  note: string;
+  task: string;
+  level: 1 | 2 | 3;
+  /** The stem, with ` (Select TWO.)` or ` (Select THREE.)` added to a multi. */
+  stem: string;
+  select: 2 | 3 | null;
+  /** Single and multi only; empty for a match. */
+  options: OptionView[];
+  /** Match only, in authored order; empty otherwise. */
+  pairs: PairView[];
+  takeaway: string;
+  /** "Read in notes": the section route that holds the first evidence line, and that line's text. */
+  read: { route: string; text: string };
+}
+
 /** content/mNN.<hash>.json */
 export interface ModuleChunk {
   module: number;
   readme: Section[];
   lessons: Record<string, LessonChunk>;
+  /** Live practice questions of the module's lessons, in note order then id. */
+  questions: QuestionView[];
 }
 
 export interface SearchEntry {
@@ -96,6 +132,8 @@ export interface ContentIndex {
   concepts: ConceptMeta[];
   glossary: GlossaryItem[];
   missions: MissionMeta[];
+  /** Every live practice question id to its version, so replay can count events about unknown questions. */
+  questionVersions: Record<string, number>;
   /** Path of the search chunk from the site root. */
   search: string;
 }

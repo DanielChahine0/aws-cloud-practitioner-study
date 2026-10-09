@@ -43,7 +43,15 @@ describe('buildContent on the real notes', () => {
     expect(html.split('<li class="update">').length - 1).toBeGreaterThanOrEqual(7);
   });
 
-  it('keeps every module chunk within 120 KB gzipped', () => {
+  it('ships exactly the questions that questionVersions lists', () => {
+    const shipped = [...chunks.values()].flatMap((chunk) =>
+      chunk.questions.map((q) => [q.id, q.version] as const),
+    );
+    expect(Object.fromEntries(shipped)).toEqual(index.questionVersions);
+    expect(new Set(shipped.map(([id]) => id)).size).toBe(shipped.length);
+  });
+
+  it('keeps every module chunk, questions included, within 120 KB gzipped', () => {
     for (const m of index.modules) {
       const size = gzipSync(built.files.get(m.chunk) ?? '', { level: 9 }).length;
       expect(size, m.chunk).toBeLessThanOrEqual(CHUNK_BUDGET);

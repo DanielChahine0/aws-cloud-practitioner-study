@@ -1,12 +1,13 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { parse as parseYaml } from 'yaml';
+import { isNode, isSeq, LineCounter, parseDocument, parse as parseYaml } from 'yaml';
 import { Blueprint } from '../../../schemas/blueprint.ts';
 import { Concept } from '../../../schemas/concept.ts';
 import { FingerprintFile } from '../../../schemas/fingerprint.ts';
 import { MissionFrontmatter } from '../../../schemas/mission.ts';
 import { LessonFrontmatter, ModuleFrontmatter } from '../../../schemas/note.ts';
+import { Question, QuestionFile } from '../../../schemas/question.ts';
 import { type RuleId, ValidateConfig } from '../../../schemas/validate-config.ts';
 import { type HashSet, unpack } from './fingerprint.ts';
 import { type Heading, headingsOf, splitFrontmatter } from './markdown.ts';
@@ -60,6 +61,17 @@ export interface ModulePrints {
   items: readonly string[];
 }
 
+/** One question that passed the schema, with where it sits. */
+export interface QuestionEntry {
+  path: string;
+  /** 1-based file line of the item. */
+  line: number;
+  index: number;
+  /** The note the file belongs to, `mNN/<slug>` from its path. */
+  noteId: string;
+  q: Question;
+}
+
 /** Everything the rules and the build read, loaded once; parse and schema errors become R1 findings instead of exceptions. */
 export interface Context {
   root: string;
@@ -71,6 +83,8 @@ export interface Context {
   concepts: readonly Concept[];
   blueprint: Blueprint | null;
   missions: readonly Mission[];
+  /** Questions that passed the schema, in file then item order. */
+  questions: readonly QuestionEntry[];
   fingerprints: ReadonlyMap<number, ModulePrints>;
   allow: readonly (readonly string[])[];
   loadErrors: readonly Finding[];
@@ -82,6 +96,8 @@ export const CONFIG_FILE = 'content/validate.yaml';
 export const CONCEPTS_FILE = 'content/concepts.yaml';
 export const BLUEPRINT_FILE = 'content/exam/blueprint.yaml';
 export const ALLOW_FILE = 'content/fingerprints/allow.txt';
+export const QUESTIONS_DIR = 'content/questions';
+const QUESTION = /^content\/questions\/(\d{2})-[a-z0-9-]+\/(\d{2})-([a-z0-9-]+)\.yaml$/;
 const NOTE = /^resources\/(\d{2})-([a-z0-9-]+)\/(?:(\d{2})-([a-z0-9-]+)|README)\.md$/;
 const SHARED = /^resources\/[^/]+\.md$/;
 const MISSION = /^content\/missions\/(mission-\d{2})-[a-z0-9-]+\.md$/;
@@ -253,6 +269,42 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     }
   };
 
+  const questions: QuestionEntry[] = [];
+  const loadQuestions = (path: string, match: RegExpExecArray): void => {
+    const lineCounter = new LineCounter();
+    const doc = parseDocument(read(path) ?? '', { lineCounter });
+    const yamlError = doc.errors[0];
+    if (yamlError) {
+      const line = yamlError.linePos?.[0].line;
+      errors.push({
+        rule: 'R1',
+        file: path,
+        ...(line === undefined ? {} : { line }),
+        message: `YAML: ${yamlError.message}`,
+      });
+      return;
+    }
+    const file = QuestionFile.safeParse(doc.toJS());
+    if (!file.success) {
+      schemaErrors(path, file.error.issues);
+      return;
+    }
+    const seq = doc.get('questions');
+    const noteId = `m${match[1]}/${match[3]}`;
+    for (const [index, item] of file.data.questions.entries()) {
+      const node = isSeq(seq) ? seq.items[index] : undefined;
+      const start = isNode(node) ? node.range?.[0] : undefined;
+      const line = start === undefined ? 1 : lineCounter.linePos(start).line;
+      const parsed = Question.safeParse(item);
+      if (parsed.success) {
+        questions.push({ path, line, index, noteId, q: parsed.data });
+        continue;
+      }
+      const label = isRecord(item) && typeof item.id === 'string' ? item.id : `#${index + 1}`;
+      schemaErrors(path, parsed.error.issues, `questions[${index}] (${label})`, line);
+    }
+  };
+
   let config: ValidateConfig | null = null;
   const configData = yamlFile(CONFIG_FILE);
   if (configData !== undefined) {
@@ -309,6 +361,20 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       loadPrints(path, Number(prints[1]));
       continue;
     }
+    const question = QUESTION.exec(path);
+    if (question) {
+      loadQuestions(path, question);
+      continue;
+    }
+    if (path.startsWith(`${QUESTIONS_DIR}/`) && path.endsWith('.yaml')) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message:
+          'not a question file path (content/questions/NN-module/NN-lesson.yaml), so no rule checks it',
+      });
+      continue;
+    }
     if (path.startsWith('resources/') && path.endsWith('.md')) {
       errors.push({
         rule: 'R1',
@@ -336,6 +402,7 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     concepts,
     blueprint,
     missions,
+    questions,
     fingerprints,
     allow: allowText === null ? [] : phrasesFrom(allowText.split('\n')),
     loadErrors: errors,
