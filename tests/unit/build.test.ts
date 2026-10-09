@@ -5,9 +5,33 @@ import type { ContentIndex, ModuleChunk, SearchChunk } from '../../schemas/chunk
 import { buildContent } from '../../scripts/content/build.ts';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { normalize } from '../../src/app/search.ts';
-import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 
 const LESSON_ROUTE = '#/m/01/l/what-a-bakery-cloud-is';
+const QUESTIONS_FILE = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
+
+const MULTI = `
+  - id: q-9q4r5s
+    version: 3
+    status: live
+    pool: practice
+    type: multi
+    concept: per-minute-rental
+    note: m01/what-a-bakery-cloud-is
+    task: "4.1"
+    level: 2
+    select: 2
+    stem: Which two habits keep the proofing bill of a small bakery low?
+    options:
+      - { id: a, text: Return each cabinet once its dough has risen, correct: true, why: Returned cabinets stop counting. }
+      - { id: b, text: Rent cabinets only while dough is inside, correct: true, why: Only proofing time is billed. }
+      - { id: c, text: Keep every cabinet booked all week, why: A booked empty cabinet still counts. }
+      - { id: d, text: Buy a cabinet for every baker, why: Owned cabinets cost money while idle. }
+      - { id: e, text: Proof all dough twice, why: Twice the proofing is twice the cabinet time. }
+    evidence:
+      - The fixture guide names a newer billing term.
+    takeaway: Pay for proofing time, not for idle cabinets.
+`;
 
 function build(root = makeFixtureRoot()) {
   const built = buildContent(loadContext(root, { today: FIXTURE_TODAY }));
@@ -101,6 +125,87 @@ describe('buildContent on the fixture tree', () => {
       text: 'what a bakery cloud is shared kitchen paying by the minute',
     });
     expect(normalize('  AWS Business Support+ (Auto-Scaling)! ')).toBe('aws business support+ auto scaling');
+  });
+
+  it('ships the live practice question in its module chunk with a Read in notes target', () => {
+    const { index, json } = build();
+    const chunk = json<ModuleChunk>(index.modules[0]?.chunk ?? '');
+    expect(chunk.questions.map((q) => q.id)).toEqual(['q-b4k7m2']);
+    const single = chunk.questions[0];
+    expect(single).toMatchObject({
+      id: 'q-b4k7m2',
+      version: 1,
+      type: 'single',
+      concept: 'shared-kitchen',
+      note: 'm01/what-a-bakery-cloud-is',
+      task: '1.1',
+      level: 2,
+      select: null,
+      pairs: [],
+      takeaway: 'Borrow central ovens for a busy day instead of buying ovens that sit idle.',
+      read: {
+        route: `${LESSON_ROUTE}/shared-kitchen`,
+        text: 'Branches use ovens from one central kitchen when their queues grow.',
+      },
+    });
+    expect(single?.options.map((o) => [o.id, o.correct])).toEqual([
+      ['a', true],
+      ['b', false],
+      ['c', false],
+      ['d', false],
+    ]);
+    expect(single?.stem).toMatch(/^A harbour branch sells out .* Which choice fits the bakery cloud\?$/);
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1 });
+  });
+
+  it('ships the draft match only once it is live, with its pairs in authored order', () => {
+    expect(build().index.questionVersions).not.toHaveProperty('q-c8n3p5');
+    const root = makeFixtureRoot();
+    replaceIn(root, QUESTIONS_FILE, 'status: draft', 'status: live');
+    const { index, json } = build(root);
+    const chunk = json<ModuleChunk>(index.modules[0]?.chunk ?? '');
+    const match = chunk.questions.find((q) => q.id === 'q-c8n3p5');
+    expect(match?.options).toEqual([]);
+    expect(match?.pairs.map((p) => p.left)).toEqual([
+      'Dough rising for forty minutes',
+      'An empty cabinet overnight',
+      'Two cabinets for ten minutes each',
+    ]);
+    expect(match?.read.route).toBe(`${LESSON_ROUTE}/paying-by-the-minute`);
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-c8n3p5': 1 });
+  });
+
+  it('adds the Select suffix to a multi stem and cites an update line by its sentence', () => {
+    const root = makeFixtureRoot();
+    appendFileSync(join(root, QUESTIONS_FILE), MULTI);
+    const { index, json } = build(root);
+    const chunk = json<ModuleChunk>(index.modules[0]?.chunk ?? '');
+    const multi = chunk.questions.find((q) => q.id === 'q-9q4r5s');
+    expect(multi?.stem).toBe('Which two habits keep the proofing bill of a small bakery low? (Select TWO.)');
+    expect(multi?.select).toBe(2);
+    expect(multi?.read).toEqual({
+      route: `${LESSON_ROUTE}/paying-by-the-minute`,
+      text: 'The fixture guide names a newer billing term.',
+    });
+    expect(chunk.questions.map((q) => q.id)).toEqual(['q-9q4r5s', 'q-b4k7m2']);
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-9q4r5s': 3 });
+  });
+
+  it('never ships a retired question or one from the exam pool', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, QUESTIONS_FILE, 'status: live', 'status: retired');
+    expect(build(root).index.questionVersions).toEqual({});
+    const exam = makeFixtureRoot();
+    replaceIn(exam, QUESTIONS_FILE, 'pool: practice', 'pool: exam');
+    expect(build(exam).index.questionVersions).toEqual({});
+  });
+
+  it('fails when a live question cites a line its note does not have', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, QUESTIONS_FILE, 'when their queues grow.', 'when their queues grow long.');
+    expect(() => build(root)).toThrow(
+      'q-b4k7m2 cites a line m01/what-a-bakery-cloud-is does not have; run pnpm content:validate',
+    );
   });
 
   it('gives the same names when built twice', () => {

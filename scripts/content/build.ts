@@ -8,11 +8,20 @@ import type {
   MissionMeta,
   ModuleChunk,
   ModuleMeta,
+  QuestionView,
   SearchChunk,
   SearchEntry,
 } from '../../schemas/chunks.ts';
 import { normalize } from '../../src/app/search.ts';
-import { CONCEPTS_FILE, type Context, type LessonNote, type ModuleNote } from './lib/context.ts';
+import {
+  CONCEPTS_FILE,
+  type Context,
+  type LessonNote,
+  type ModuleNote,
+  type Note,
+  type QuestionEntry,
+} from './lib/context.ts';
+import { evidenceForm, noteLines, sectionAt } from './lib/evidence.ts';
 import { parseGlossary, termMatcher } from './lib/glossary.ts';
 import { renderDoc, renderInline, routeOf } from './lib/render.ts';
 
@@ -23,6 +32,44 @@ export interface BuiltContent {
   contentVersion: string;
   indexFile: string;
   files: Map<string, string>;
+}
+
+const SELECT_SUFFIX = { 2: ' (Select TWO.)', 3: ' (Select THREE.)' } as const;
+
+/** The runner's view of a live question; "Read in notes" points at the section of its first evidence line. */
+function questionView({ q }: QuestionEntry, note: Note): QuestionView {
+  const evidence = evidenceForm(q.evidence[0] ?? '');
+  const line = noteLines(note).get(evidence);
+  const section = line === undefined ? null : sectionAt(note, line);
+  if (section === null) {
+    throw new Error(`${q.id} cites a line ${note.id} does not have; run pnpm content:validate`);
+  }
+  const common = {
+    id: q.id,
+    version: q.version,
+    concept: q.concept,
+    note: q.note,
+    task: q.task,
+    level: q.level,
+    takeaway: q.takeaway,
+    read: { route: `${routeOf(note)}/${section.slug}`, text: evidence },
+  };
+  if (q.type === 'match') {
+    const pairs = q.pairs.map(({ left, right, why }) => ({ left, right, why }));
+    return { ...common, type: 'match', stem: q.stem, select: null, options: [], pairs };
+  }
+  const options = q.options.map(({ id, text, correct, why }) => ({ id, text, correct, why }));
+  if (q.type === 'multi') {
+    return {
+      ...common,
+      type: 'multi',
+      stem: q.stem + SELECT_SUFFIX[q.select],
+      select: q.select,
+      options,
+      pairs: [],
+    };
+  }
+  return { ...common, type: 'single', stem: q.stem, select: null, options, pairs: [] };
 }
 
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
@@ -48,6 +95,15 @@ export function buildContent(ctx: Context): BuiltContent {
   const routes = new Map(ctx.notes.map((note) => [note.path, routeOf(note)] as const));
   const notesById = new Map(ctx.notes.map((note) => [note.id, note] as const));
   const search: SearchEntry[] = [];
+  const noteOrder = new Map(ctx.notes.map((note, i) => [note.id, i] as const));
+  const live = ctx.questions
+    .filter(({ q }) => q.status === 'live' && q.pool === 'practice')
+    .sort(
+      (a, b) =>
+        (noteOrder.get(a.noteId) ?? 0) - (noteOrder.get(b.noteId) ?? 0) ||
+        (a.q.id < b.q.id ? -1 : a.q.id > b.q.id ? 1 : 0),
+    );
+  const questionVersions: Record<string, number> = {};
 
   const modules: ModuleMeta[] = [];
   for (const n of [...new Set(ctx.notes.map((note) => note.module))].sort((a, b) => a - b)) {
@@ -93,7 +149,15 @@ export function buildContent(ctx: Context): BuiltContent {
       });
     }
     const readmeSections = renderDoc(readme.body, { path: readme.path, routes, terms: null }).sections;
-    const chunk: ModuleChunk = { module: n, readme: readmeSections, lessons: chunkLessons };
+    const questions = live
+      .filter((entry) => notesById.get(entry.noteId)?.module === n)
+      .map((entry) => {
+        const note = notesById.get(entry.noteId);
+        if (note === undefined) throw new Error(`${entry.path}: ${entry.noteId} is not a note`);
+        questionVersions[entry.q.id] = entry.q.version;
+        return questionView(entry, note);
+      });
+    const chunk: ModuleChunk = { module: n, readme: readmeSections, lessons: chunkLessons, questions };
     modules.push({
       n,
       slug: readme.fm.slug,
@@ -167,7 +231,14 @@ export function buildContent(ctx: Context): BuiltContent {
     });
 
   const searchChunk: SearchChunk = { entries: search };
-  const body = { modules, concepts, glossary, missions, search: emit('search', searchChunk) };
+  const body = {
+    modules,
+    concepts,
+    glossary,
+    missions,
+    questionVersions,
+    search: emit('search', searchChunk),
+  };
   const contentVersion = `c-${sha256(JSON.stringify(body)).slice(0, 6)}`;
   const index: ContentIndex = { contentVersion, ...body };
   return { contentVersion, indexFile: emit('index', index), files };

@@ -1,0 +1,87 @@
+{
+  "format": "ccp-study-backup",
+  "schemaVersion": 1,
+  "appVersion": "0.2.0",
+  "contentVersion": "c-0a1b2c",
+  "exportedAt": "2026-10-10T09:00:00.000Z",
+  "events": [
+    {
+      "id": "01JA9X0000AAAAAAAAAAAAAAA1",
+      "at": "2026-10-10T08:00:00.000Z",
+      "tz": 120,
+      "day": "2026-10-10",
+      "t": "session",
+      "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+      "mode": "check",
+      "phase": "start",
+      "seed": 3141592653,
+      "scope": "m01/what-a-bakery-cloud-is",
+      "qids": ["q-7k2m9p", "q-8n3p4r"]
+    },
+    {
+      "id": "01JA9X0000AAAAAAAAAAAAAAA2",
+      "at": "2026-10-10T08:01:00.000Z",
+      "tz": 120,
+      "day": "2026-10-10",
+      "t": "answer",
+      "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+      "mode": "check",
+      "qid": "q-7k2m9p",
+      "qv": 1,
+      "concept": "shared-kitchen",
+      "picked": ["b"],
+      "correct": true,
+      "sure": true,
+      "ms": 8200
+    },
+    {
+      "id": "01JA9X0000AAAAAAAAAAAAAAA3",
+      "at": "2026-10-10T08:02:00.000Z",
+      "tz": 120,
+      "day": "2026-10-10",
+      "t": "answer",
+      "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+      "mode": "check",
+      "qid": "q-8n3p4r",
+      "qv": 1,
+      "concept": "per-minute-rental",
+      "picked": [["l1", "r2"], ["l2", "r1"], ["l3", "r3"]],
+      "correct": false,
+      "sure": false,
+      "ms": 15400
+    },
+    {
+      "id": "01JA9X0000AAAAAAAAAAAAAAA4",
+      "at": "2026-10-10T08:02:30.000Z",
+      "tz": 120,
+      "day": "2026-10-10",
+      "t": "flag",
+      "qid": "q-8n3p4r",
+      "qv": 1,
+      "reason": "ambiguous",
+      "note": "the second and third ovens read alike"
+    },
+    {
+      "id": "01JA9X0000AAAAAAAAAAAAAAA5",
+      "at": "2026-10-10T08:03:00.000Z",
+      "tz": 120,
+      "day": "2026-10-10",
+      "t": "session",
+      "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
+      "mode": "check",
+      "phase": "submit",
+      "seed": 3141592653
+    },
+    {
+      "id": "01JA9X0000AAAAAAAAAAAAAAA6",
+      "at": "2026-10-10T08:03:00.000Z",
+      "tz": 120,
+      "day": "2026-10-10",
+      "t": "lesson.done",
+      "note": "m01/what-a-bakery-cloud-is"
+    }
+  ],
+  "kv": {
+    "lastExportAt": { "value": "2026-10-10T09:00:00.000Z", "updatedAt": "2026-10-10T09:00:00.000Z" }
+  }
+}

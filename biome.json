@@ -2,7 +2,14 @@
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
-    "includes": ["**", "!resources", "!docs", "!content/fingerprints", "!tests/content/bad"]
+    "includes": [
+      "**",
+      "!resources",
+      "!docs",
+      "!content/fingerprints",
+      "!tests/content/bad",
+      "!tests/fixtures/backups/*.snapshot.json"
+    ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 110 },
   "javascript": { "formatter": { "quoteStyle": "single" } },
@@ -13,5 +20,47 @@
       "correctness": { "useImportExtensions": "error" },
       "style": { "useImportType": "error" }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/engine/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "preact": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "preact/hooks": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "@preact/signals": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)"
+                },
+                "patterns": [
+                  {
+                    "group": ["**/app/**", "**/ui/**", "**/store/**"],
+                    "message": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)"
+                  }
+                ]
+              }
+            },
+            "noRestrictedGlobals": {
+              "level": "error",
+              "options": {
+                "deniedGlobals": {
+                  "window": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "document": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "navigator": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "location": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "indexedDB": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "localStorage": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "sessionStorage": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)",
+                  "fetch": "src/engine is pure: it may not import UI, store or DOM code (spec 1.1)"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
