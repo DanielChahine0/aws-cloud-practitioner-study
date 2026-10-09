@@ -40,6 +40,14 @@ describe('prunable', () => {
     ]);
   });
 
+  it('keeps the build before this one when the same build is deployed again', () => {
+    const log = logOf(['index.html', 'assets/index-prev.js'], ['index.html', 'assets/index-new.js']);
+    expect(prunable(existing, log, ['index.html', 'assets/index-new.js'])).toEqual([
+      'assets/index-old.js',
+      'content/m01.0ld0ld00.json',
+    ]);
+  });
+
   it('never deletes the entry files or the log, even before the first logged deploy', () => {
     expect(prunable(existing, logOf(), ['assets/index-new.js'])).toEqual([
       'assets/index-old.js',
@@ -56,6 +64,14 @@ describe('nextLog', () => {
       deploys: [{ at: '2026-10-11T08:00:00.000Z', files: ['b.js'] }, third],
     });
     expect(nextLog(logOf(), third)).toEqual({ deploys: [third] });
+  });
+
+  it('replaces the last deploy instead of adding the same build twice', () => {
+    const again = { at: '2026-10-12T08:00:00.000Z', files: ['b.js'] };
+    expect(nextLog(logOf(['a.js'], ['b.js']), again)).toEqual({
+      deploys: [{ at: '2026-10-10T08:00:00.000Z', files: ['a.js'] }, again],
+    });
+    expect(nextLog(logOf(['b.js']), again)).toEqual({ deploys: [again] });
   });
 });
 

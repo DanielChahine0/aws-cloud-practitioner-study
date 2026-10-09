@@ -1,21 +1,26 @@
 import { describe, expect, it } from 'vitest';
-import { type GlossaryEntry, termMatcher } from '../../scripts/content/lib/glossary.ts';
+import { type GlossaryEntry, termAt, termMatcher } from '../../scripts/content/lib/glossary.ts';
 import { renderDoc, renderInline } from '../../scripts/content/lib/render.ts';
 
 const PATH = 'resources/01-baking-basics/01-what-a-bakery-cloud-is.md';
+const OVENS = 'resources/01-baking-basics/02-ovens.md';
 const ROUTES = new Map([
   [PATH, '#/m/01/l/what-a-bakery-cloud-is'],
-  ['resources/01-baking-basics/02-ovens.md', '#/m/01/l/ovens'],
+  [OVENS, '#/m/01/l/ovens'],
   ['resources/01-baking-basics/README.md', '#/m/01'],
 ]);
-const entry = (term: string, id: string): GlossaryEntry => ({
+const entry = (term: string, id: string, path = PATH): GlossaryEntry => ({
   id,
   term,
   definition: `Fixture definition of ${term}.`,
-  refs: [{ label: 'Module 1, What a Bakery Cloud Is', path: PATH }],
+  refs: [{ label: 'Module 1, a lesson', path }],
 });
 const TERMS = termMatcher([entry('Amazon S3', 'amazon-s3'), entry('Shared kitchen', 'shared-kitchen')]);
-const BUTTON_S3 = '<button type="button" class="term" data-term="amazon-s3">Amazon S3</button>';
+const button = (id: string, text: string): string =>
+  `<button type="button" class="term" data-term="${id}" aria-haspopup="dialog" aria-expanded="false">${text}</button>`;
+const BUTTON_S3 = button('amazon-s3', 'Amazon S3');
+const UPDATE_LINE =
+  '- **Exam guide update** (verified_on 2026-10-01, [CLF-C02 Domain 1](https://docs.aws.amazon.com/d1.html)): The guide says so.';
 
 const BODY = [
   '# What a Bakery Cloud Is',
@@ -84,7 +89,43 @@ describe('renderDoc', () => {
     expect(html).toContain(
       '<li class="update"><span class="update-label">Exam guide update</span> ' +
         '<span class="update-meta">verified 2026-10-01, <a href="https://docs.aws.amazon.com/d1.html" rel="noopener noreferrer" target="_blank">CLF-C02 Domain 1</a></span> ' +
-        '<span class="update-text">The guide calls the <button type="button" class="term" data-term="shared-kitchen">shared kitchen</button> a commissary.</span></li>',
+        `<span class="update-text">The guide calls the ${button('shared-kitchen', 'shared kitchen')} a commissary.</span></li>`,
+    );
+  });
+
+  it('refuses an Exam guide update line that goes on in a nested list or a continuation line', () => {
+    const message = `${PATH}: an Exam guide update line must stand alone, with no nested list or continuation line`;
+    expect(() => render(`${UPDATE_LINE}\n  - A detail.\n`)).toThrow(message);
+    expect(() => render(`${UPDATE_LINE}\nAnd it goes on.\n`)).toThrow(message);
+    expect(() => render(`${UPDATE_LINE}\n\n  A second paragraph.\n`)).toThrow(message);
+    for (const list of [`${UPDATE_LINE}\n- Next item.\n`, `${UPDATE_LINE}\n\n- Next item.\n`]) {
+      expect(render(list).sections[0]?.html).toContain('<li class="update"><span class="update-label">');
+    }
+  });
+
+  it('refuses two headings with the same id', () => {
+    expect(() => render('## Notes\n\n### Same\n\nText.\n\n### Same\n')).toThrow(
+      `${PATH}: two headings share the id same`,
+    );
+    expect(() => render('## Key takeaways\n\n### Key takeaways\n')).toThrow(
+      `${PATH}: two headings share the id key-takeaways`,
+    );
+  });
+
+  it('wraps each table and code block in a focusable region that scrolls sideways', () => {
+    const out =
+      render(
+        '## Notes\n\n### Plans compared\n\n| Plan | Price |\n| --- | --- |\n| Basic | Free |\n\n```bash\naws s3 ls --profile ccp-admin\n```\n',
+      ).sections[0]?.html ?? '';
+    expect(out).toContain(
+      '<div class="table-scroll" tabindex="0" role="region" aria-label="Plans compared, scrolls sideways"><table>',
+    );
+    expect(out).toContain('</table>\n</div>');
+    expect(out).toContain(
+      '<pre tabindex="0" role="region" aria-label="Plans compared, code"><code class="language-bash">aws s3 ls --profile ccp-admin\n</code></pre>',
+    );
+    expect(render('```\nls\n```\n').sections[0]?.html).toBe(
+      '<pre tabindex="0" role="region" aria-label="Code"><code>ls\n</code></pre>\n',
     );
   });
 
@@ -93,7 +134,13 @@ describe('renderDoc', () => {
     const out = renderDoc('Read the AWS Cost & Usage Report <3 times.', { path: PATH, routes: ROUTES, terms })
       .sections[0]?.html;
     expect(out).toBe(
-      '<p>Read the <button type="button" class="term" data-term="aws-cost-usage-report">AWS Cost &amp; Usage Report</button> &lt;3 times.</p>\n',
+      `<p>Read the ${button('aws-cost-usage-report', 'AWS Cost &amp; Usage Report')} &lt;3 times.</p>\n`,
+    );
+  });
+
+  it('keeps the character references that marked passes through, as its own renderer does', () => {
+    expect(render('Show the &lt;bucket&gt; placeholder, &#169; &amp; R&D.').sections[0]?.html).toBe(
+      '<p>Show the &lt;bucket&gt; placeholder, \u00a9 &amp; R&amp;D.</p>\n',
     );
   });
 
@@ -105,14 +152,50 @@ describe('renderDoc', () => {
   });
 });
 
+describe('renderDoc with one-word terms', () => {
+  // One-word glossary terms as the real glossary has them, each defined in the Ovens lesson.
+  const terms = termMatcher([
+    entry('Route', 'route', OVENS),
+    entry('Root', 'root', OVENS),
+    entry('Tier', 'tier', OVENS),
+    entry('Node', 'node', OVENS),
+    entry('Amazon Machine Image (AMI)', 'amazon-machine-image-ami', OVENS),
+  ]);
+  const html = (body: string, path: string): string =>
+    renderDoc(body, { path, routes: ROUTES, terms }).sections[0]?.html ?? '';
+
+  it('links an ordinary word only in the lessons that define it, so another sense of it gets no popover', () => {
+    const body = 'Route 53 answers. Secure the root user. The Free Tier covers it. Node.js runs.';
+    expect(html(body, PATH)).toBe(`<p>${body}</p>\n`);
+  });
+
+  it('links an ordinary word in its own lesson in either initial case, but never as part of a dotted name', () => {
+    expect(html('Node.js apps run. Add a route, and each node reports.', OVENS)).toBe(
+      `<p>Node.js apps run. Add a ${button('route', 'route')}, and each ${button('node', 'node')} reports.</p>\n`,
+    );
+    expect(html('Tier one. ROOT stays plain.', OVENS)).toBe(
+      `<p>${button('tier', 'Tier')} one. ROOT stays plain.</p>\n`,
+    );
+  });
+
+  it('links acronyms and phrases in every lesson, an acronym only as the glossary writes it', () => {
+    expect(html('Pick an ami, then an AMI.', PATH)).toBe(
+      `<p>Pick an ami, then an ${button('amazon-machine-image-ami', 'AMI')}.</p>\n`,
+    );
+    expect(html('An amazon machine image.', PATH)).toBe(
+      `<p>An ${button('amazon-machine-image-ami', 'amazon machine image')}.</p>\n`,
+    );
+  });
+});
+
 describe('termMatcher', () => {
   const matcher = termMatcher([
     entry('Amazon Elastic Compute Cloud (Amazon EC2)', 'amazon-elastic-compute-cloud-amazon-ec2'),
     entry('Amazon EC2 Auto Scaling', 'amazon-ec2-auto-scaling'),
     entry('Availability Zone (AZ)', 'availability-zone-az'),
   ]);
-  const ids = (text: string): (string | undefined)[] =>
-    [...text.matchAll(matcher.pattern)].map((m) => matcher.idByForm.get(m[0].toLowerCase()));
+  const ids = (text: string): (string | null)[] =>
+    [...text.matchAll(matcher.pattern)].map((m) => termAt(matcher, m[0], PATH));
 
   it('matches the full term, its short forms of 3 or more characters, and the longest form first', () => {
     expect(ids('Amazon EC2 Auto Scaling grows Amazon EC2 fleets; see Amazon Elastic Compute Cloud.')).toEqual(

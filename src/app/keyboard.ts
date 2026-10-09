@@ -1,7 +1,7 @@
 import { useEffect } from 'preact/hooks';
 import { index } from './content.ts';
-import { keyCommand } from './keys.ts';
-import { closeTerm, openTerm, overlay, route } from './state.ts';
+import { keyStep } from './keys.ts';
+import { closeTerm, navigate, openTerm, overlay, route } from './state.ts';
 
 const isTyping = (target: EventTarget | null): boolean =>
   target instanceof HTMLElement &&
@@ -12,7 +12,7 @@ export function useKeyboard(): void {
   useEffect(() => {
     let gAt: number | null = null;
     const onKeyDown = (event: KeyboardEvent): void => {
-      const command = keyCommand(
+      const step = keyStep(
         {
           key: event.key,
           meta: event.metaKey,
@@ -29,7 +29,8 @@ export function useKeyboard(): void {
           gAt,
         },
       );
-      gAt = command?.kind === 'g' ? command.at : null;
+      gAt = step.gAt;
+      const command = step.command;
       if (command === null) return;
       event.preventDefault();
       switch (command.kind) {
@@ -43,7 +44,7 @@ export function useKeyboard(): void {
           closeTerm();
           break;
         case 'navigate':
-          location.hash = command.hash;
+          navigate(command.hash);
           break;
         case 'g':
           break;

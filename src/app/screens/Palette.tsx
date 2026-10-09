@@ -3,7 +3,7 @@ import type { SearchEntry } from '../../../schemas/chunks.ts';
 import { closeOnBackdrop } from '../../ui/backdrop.ts';
 import { ensureSearch, searchEntries } from '../content.ts';
 import { rank } from '../search.ts';
-import { overlay } from '../state.ts';
+import { navigate, overlay } from '../state.ts';
 
 /** Enough rows for the 13 modules that an empty query lists. */
 const MAX_RESULTS = 13;
@@ -36,7 +36,7 @@ export function Palette() {
   }, [active]);
 
   const go = (entry: SearchEntry | undefined): void => {
-    if (entry !== undefined) location.hash = entry.route;
+    if (entry !== undefined) navigate(entry.route);
   };
 
   return (
@@ -65,7 +65,8 @@ export function Palette() {
     >
       <input
         class="palette-input"
-        type="search"
+        type="text"
+        enterkeyhint="search"
         role="combobox"
         aria-label="Search"
         aria-autocomplete="list"
@@ -85,7 +86,8 @@ export function Palette() {
         <div id="palette-results" class="results" role="listbox" aria-label="Results">
           {results.map((entry, i) => (
             <div
-              key={`${entry.kind} ${entry.route}`}
+              // Kind and route alone repeat, since many terms and concepts share a lesson; the title tells them apart.
+              key={`${entry.kind} ${entry.route} ${entry.title}`}
               id={optionId(i)}
               class="result"
               role="option"

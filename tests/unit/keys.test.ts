@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ModuleMeta } from '../../schemas/chunks.ts';
-import { type KeyContext, type KeyInput, keyCommand } from '../../src/app/keys.ts';
+import { type KeyCommand, type KeyContext, type KeyInput, keyCommand, keyStep } from '../../src/app/keys.ts';
 
 const lesson = (n: number, slug: string) => ({ n, slug, title: slug, concepts: [] });
 const MODULES: ModuleMeta[] = [
@@ -61,6 +61,28 @@ describe('keyCommand', () => {
     expect(keyCommand(key('h'), ctx({ gAt: 9_200 }))).toEqual({ kind: 'navigate', hash: '#/' });
     expect(keyCommand(key('H'), ctx({ gAt: 8_900 }))).toBeNull();
     expect(keyCommand(key('h'), ctx())).toBeNull();
+  });
+
+  it('goes Home with g then Shift+H, whose Shift sends a keydown of its own first', () => {
+    // The keydowns a browser sends, fed through keyStep the way keyboard.ts carries the pending g.
+    const press = (...inputs: KeyInput[]): (KeyCommand | null)[] => {
+      let gAt: number | null = null;
+      return inputs.map((input) => {
+        const step = keyStep(input, ctx({ gAt }));
+        gAt = step.gAt;
+        return step.command;
+      });
+    };
+    expect(press(key('g', { at: 10_000 }), key('Shift', { at: 10_200 }), key('H', { at: 10_300 }))).toEqual([
+      { kind: 'g', at: 10_000 },
+      null,
+      { kind: 'navigate', hash: '#/' },
+    ]);
+    expect(press(key('g', { at: 10_000 }), key('x', { at: 10_100 }), key('h', { at: 10_200 }))).toEqual([
+      { kind: 'g', at: 10_000 },
+      null,
+      null,
+    ]);
   });
 
   it('closes an open term popover before Escape goes up a level', () => {

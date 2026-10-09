@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 import type { ContentIndex } from '../../../schemas/chunks.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { Html } from '../../ui/Html.tsx';
-import { TermPopover } from '../../ui/TermPopover.tsx';
-import { scrollableTables } from '../../ui/tables.ts';
+import { showTermPopover } from '../../ui/TermPopover.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { ensureModule, glossary, modules } from '../content.ts';
 import { neighbors } from '../nav.ts';
@@ -27,10 +26,10 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
   useTitle(lessonMeta?.title ?? 'Not found');
   useEffect(() => ensureModule(module), [module]);
 
-  useEffect(() => {
+  // A layout effect, so the note opens at its anchor and its terms answer clicks from the first frame it shows.
+  useLayoutEffect(() => {
     const root = body.current;
     if (root === null || lesson === undefined) return;
-    scrollableTables(root);
     if (anchor !== null) root.querySelector(`[id="${anchor}"]`)?.scrollIntoView();
     const onClick = (event: MouseEvent): void => {
       const button = event.target instanceof Element ? event.target.closest('button.term') : null;
@@ -41,12 +40,18 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
     return () => root.removeEventListener('click', onClick);
   }, [lesson, anchor]);
 
+  const term = openTerm.value;
+  const item = term === null ? undefined : glossary.value.get(term.id);
+  const termButton = term?.anchor;
+  useLayoutEffect(
+    () => (termButton === undefined || item === undefined ? undefined : showTermPopover(item, termButton)),
+    [termButton, item],
+  );
+
   if (meta === undefined || lessonMeta === undefined) {
     return <NotFound hash={`#/m/${pad2(module)}/l/${slug}`} />;
   }
   const { prev, next } = neighbors(idx.modules, module, slug);
-  const term = openTerm.value;
-  const item = term === null ? undefined : glossary.value.get(term.id);
   return (
     <>
       <Breadcrumbs
@@ -59,21 +64,23 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
       <div ref={body}>
         {lesson === undefined ? <p class="muted">Loading</p> : <Html className="prose" html={lesson.html} />}
       </div>
-      {term !== null && item !== undefined && <TermPopover key={term.id} item={item} anchor={term.anchor} />}
-      <nav class="pager" aria-label="Lessons">
-        {prev !== null && (
-          <a rel="prev" href={`#/m/${pad2(prev.module)}/l/${prev.slug}`}>
-            <span class="pager-label">Previous</span>
-            <span class="pager-title">{prev.title}</span>
-          </a>
-        )}
-        {next !== null && (
-          <a rel="next" href={`#/m/${pad2(next.module)}/l/${next.slug}`}>
-            <span class="pager-label">Next</span>
-            <span class="pager-title">{next.title}</span>
-          </a>
-        )}
-      </nav>
+      {/* The pager waits for the note, so it never shows under "Loading" and then jumps down. */}
+      {lesson !== undefined && (
+        <nav class="pager" aria-label="Lessons">
+          {prev !== null && (
+            <a rel="prev" href={`#/m/${pad2(prev.module)}/l/${prev.slug}`}>
+              <span class="pager-label">Previous</span>
+              <span class="pager-title">{prev.title}</span>
+            </a>
+          )}
+          {next !== null && (
+            <a rel="next" href={`#/m/${pad2(next.module)}/l/${next.slug}`}>
+              <span class="pager-label">Next</span>
+              <span class="pager-title">{next.title}</span>
+            </a>
+          )}
+        </nav>
+      )}
     </>
   );
 }

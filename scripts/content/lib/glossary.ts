@@ -40,31 +40,66 @@ export function termForms(term: string): string[] {
   return [term, ...parts];
 }
 
-/** Finds glossary terms in note text: one case-insensitive pattern and the glossary id behind each lowercased form. */
+/** One way a note may write a glossary term, and where and how it counts as that term. */
+interface TermForm {
+  id: string;
+  /** The form as the glossary writes it. */
+  text: string;
+  /** True for a single word, which must keep the glossary's capitalisation after its first letter. */
+  word: boolean;
+  /** For an ordinary word, the notes that define the term; null means every note. */
+  notes: ReadonlySet<string> | null;
+}
+
+/** Finds glossary terms in note text: one case-insensitive pattern over every form, longest first, and each form by its lowercase. */
 export interface TermMatcher {
   pattern: RegExp;
-  idByForm: ReadonlyMap<string, string>;
+  forms: ReadonlyMap<string, TermForm>;
 }
 
 const escapeRegExp = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** A plain word such as "Route", "tier" or "Lift-and-shift", as opposed to an acronym or name such as "AMI", "SaaS" or "CI/CD". */
+const ORDINARY_WORD = /^[A-Za-z][a-z]*(?:-[a-z]+)*$/;
 
-/** Full terms claim their form first, so a short form such as "Amazon EC2" never steals a term of its own. */
+function formOf(text: string, entry: GlossaryEntry): TermForm {
+  if (/\s/.test(text)) return { id: entry.id, text, word: false, notes: null };
+  const notes = ORDINARY_WORD.test(text) ? new Set(entry.refs.map((ref) => ref.path)) : null;
+  return { id: entry.id, text, word: true, notes };
+}
+
+/**
+ * Phrases and acronyms link anywhere, but an ordinary word such as "Route" or "Tier" links only in the lessons
+ * that define it, since elsewhere it is mostly another sense ("Route 53", "Free Tier"). Full terms claim their
+ * form first, so a short form such as "Amazon EC2" never steals a term of its own.
+ */
 export function termMatcher(entries: readonly GlossaryEntry[]): TermMatcher {
-  const idByForm = new Map<string, string>();
+  const forms = new Map<string, TermForm>();
   for (const entry of entries) {
-    const form = entry.term.toLowerCase();
-    if (!idByForm.has(form)) idByForm.set(form, entry.id);
+    const key = entry.term.toLowerCase();
+    if (!forms.has(key)) forms.set(key, formOf(entry.term, entry));
   }
   for (const entry of entries) {
     for (const extra of termForms(entry.term)) {
-      const form = extra.toLowerCase();
-      if (!idByForm.has(form)) idByForm.set(form, entry.id);
+      const key = extra.toLowerCase();
+      if (!forms.has(key)) forms.set(key, formOf(extra, entry));
     }
   }
-  if (idByForm.size === 0) return { pattern: /(?!)/g, idByForm };
-  const alts = [...idByForm.keys()]
+  if (forms.size === 0) return { pattern: /(?!)/g, forms };
+  const alts = [...forms.keys()]
     .sort((a, b) => b.length - a.length)
     .map(escapeRegExp)
     .join('|');
-  return { pattern: new RegExp(`(?<![A-Za-z0-9-])(?:${alts})(?![A-Za-z0-9-])`, 'gi'), idByForm };
+  // A term stops at a letter, digit or hyphen, and at a dot that joins two words, as in "Node.js".
+  const before = '(?<![A-Za-z0-9-]|[A-Za-z0-9]\\.)';
+  const after = '(?![A-Za-z0-9-]|\\.[A-Za-z0-9])';
+  return { pattern: new RegExp(`${before}(?:${alts})${after}`, 'gi'), forms };
+}
+
+/** The glossary id that a match of the pattern links to in the note at `path`, or null when it is not the term there. */
+export function termAt(matcher: TermMatcher, text: string, path: string): string | null {
+  const form = matcher.forms.get(text.toLowerCase());
+  if (form === undefined) return null;
+  if (form.notes !== null && !form.notes.has(path)) return null;
+  if (form.word && text.slice(1) !== form.text.slice(1)) return null;
+  return form.id;
 }

@@ -1,3 +1,4 @@
+import { render } from 'preact';
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { GlossaryItem } from '../../schemas/chunks.ts';
 import { openTerm } from '../app/state.ts';
@@ -5,10 +6,27 @@ import { Html } from './Html.tsx';
 import { popoverPosition } from './position.ts';
 
 /**
- * The glossary popover for one term button: a non-modal dialog placed under the term,
- * focused once placed, closed by Escape (keyboard.ts), a click elsewhere or focus leaving it.
+ * Shows the popover for a term button until the returned function is called. It lives in the note right after
+ * its button, so Tab and Shift+Tab move from it through the rest of the note in reading order, and the button's
+ * aria-expanded says whether it is open.
  */
-export function TermPopover({ item, anchor }: { item: GlossaryItem; anchor: HTMLElement }) {
+export function showTermPopover(item: GlossaryItem, anchor: HTMLElement): () => void {
+  const host = document.createElement('span');
+  anchor.after(host);
+  anchor.setAttribute('aria-expanded', 'true');
+  render(<TermPopover item={item} anchor={anchor} />, host);
+  return () => {
+    render(null, host);
+    host.remove();
+    anchor.setAttribute('aria-expanded', 'false');
+  };
+}
+
+/**
+ * The glossary popover for one term button: a non-modal dialog placed under the term,
+ * focused once placed, closed by Escape (keyboard.ts), a click elsewhere or focus leaving it by keyboard.
+ */
+function TermPopover({ item, anchor }: { item: GlossaryItem; anchor: HTMLElement }) {
   const ref = useRef<HTMLDivElement>(null);
   const [place, setPlace] = useState<{ top: number; left: number } | null>(null);
 
@@ -55,8 +73,12 @@ export function TermPopover({ item, anchor }: { item: GlossaryItem; anchor: HTML
         place === null ? { top: 0, left: 0, visibility: 'hidden' } : { top: place.top, left: place.left }
       }
       onFocusOut={(event) => {
+        // A press on the term moves focus to it, or in WebKit to the page around it; the mousedown listener and
+        // the term's own click decide those, so a second click on the term closes the popover instead of reopening it.
         const next = event.relatedTarget;
-        if (next instanceof Node && !event.currentTarget.contains(next)) openTerm.value = null;
+        if (next instanceof Node && !event.currentTarget.contains(next) && !next.contains(anchor)) {
+          openTerm.value = null;
+        }
       }}
     >
       <p>

@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+/** The tests' own port, so a `pnpm preview` left running on 4173 never blocks `pnpm verify` or `pnpm site:deploy`. */
+const BASE_URL = 'http://localhost:4317';
+
 /** End-to-end and accessibility tests against the production build, which `vite preview` serves with the site's CSP. */
 export default defineConfig({
   testDir: 'tests/e2e',
@@ -7,12 +10,12 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:4173',
+    baseURL: BASE_URL,
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'pnpm preview',
-    url: 'http://localhost:4173',
+    command: 'pnpm exec vite preview --port 4317 --strictPort',
+    url: BASE_URL,
     reuseExistingServer: false,
     timeout: 60_000,
   },

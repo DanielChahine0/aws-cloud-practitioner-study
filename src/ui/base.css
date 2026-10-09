@@ -144,6 +144,17 @@ kbd {
   border-radius: 6px;
 }
 
+/* A touch screen has no "/" key to show. */
+@media (hover: none) {
+  .search {
+    padding-right: 12px;
+  }
+
+  .search kbd {
+    display: none;
+  }
+}
+
 /* Page */
 .page {
   max-width: calc(68ch + 32px);
@@ -167,8 +178,9 @@ kbd {
   color: var(--muted);
 }
 
-.crumbs li + li::before {
-  margin-right: 8px;
+/* The separator ends the crumb before it, so a trail that wraps never starts its second line with one. */
+.crumbs li:not(:last-child)::after {
+  margin-left: 8px;
   content: "/";
 }
 
@@ -176,48 +188,6 @@ kbd {
   display: inline-block;
   padding: 2px 0;
   color: var(--muted);
-}
-
-/* Glossary popover */
-.popover {
-  position: absolute;
-  z-index: 4;
-  width: max-content;
-  max-width: min(320px, 100vw - 32px);
-  padding: 12px 16px;
-  font-size: 0.9375rem;
-  background: var(--pane);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgb(30 30 30 / 0.08);
-}
-
-.popover p,
-.popover ul {
-  margin: 0 0 8px;
-}
-
-.popover > :last-child {
-  margin-bottom: 0;
-}
-
-.popover-label {
-  font-size: 0.8125rem;
-  color: var(--muted);
-}
-
-.popover-def {
-  margin: 0 0 8px;
-}
-
-.popover-refs {
-  padding: 0;
-  list-style: none;
-}
-
-.popover-refs a {
-  display: inline-block;
-  padding: 2px 0;
 }
 
 /* Notes */
@@ -240,10 +210,13 @@ kbd {
   height: auto;
 }
 
+/* Code keeps each line whole, so a command never breaks inside a token, and scrolls sideways in its focusable region (render.ts). */
 .prose pre {
   padding: 12px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  white-space: pre;
   background: var(--pane);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -251,10 +224,11 @@ kbd {
 
 .prose pre code {
   padding: 0;
+  font-size: inherit;
   border: 0;
 }
 
-/* Tables keep a readable width and scroll sideways on a phone, inside the focusable region of tables.ts. */
+/* Tables keep a readable width and scroll sideways on a phone, inside their focusable region (render.ts). */
 .table-scroll {
   margin: 0 0 16px;
   overflow-x: auto;
@@ -324,6 +298,60 @@ kbd {
   text-decoration-style: solid;
 }
 
+/* Glossary popover: it sits in the note right after its term, so it resets what it would inherit there, such as
+   a table header's weight, and wins over the note's list styles. */
+.popover {
+  position: absolute;
+  z-index: 4;
+  width: max-content;
+  max-width: min(320px, 100vw - 32px);
+  padding: 12px 16px;
+  font-size: 0.9375rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text);
+  text-align: left;
+  white-space: normal;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgb(30 30 30 / 0.08);
+}
+
+.popover p,
+.popover .popover-refs {
+  margin: 0 0 8px;
+}
+
+.popover > :last-child {
+  margin-bottom: 0;
+}
+
+.popover-label {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.popover-def {
+  margin: 0 0 8px;
+}
+
+.popover .popover-refs {
+  padding: 0;
+  list-style: none;
+}
+
+/* Same specificity as .prose li, which it follows. */
+.popover-refs li {
+  margin: 0;
+}
+
+.popover-refs a {
+  display: inline-block;
+  padding: 2px 0;
+}
+
 /* List rows */
 .rows {
   margin: 0 0 24px;
@@ -361,6 +389,21 @@ kbd {
 
 .row:hover .row-title {
   text-decoration: underline;
+}
+
+/* The focus ring stays inside the list and follows its rounded corners. */
+.rows .row:focus-visible {
+  outline-offset: -2px;
+}
+
+.rows li:first-child .row {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+.rows li:last-child .row {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 
 /* A long meta, such as a mission's credits, wraps at 40% of the row instead of squeezing the title on a phone. */
@@ -449,9 +492,11 @@ dialog::backdrop {
   background: rgb(30 30 30 / 0.2);
 }
 
+/* The palette starts 12vh down, so it stops 16px above the bottom of the screen and scrolls inside. */
 dialog.palette {
   width: min(560px, calc(100vw - 32px));
   max-width: none;
+  max-height: calc(100dvh - 12vh - 16px);
   margin: 12vh auto auto;
 }
 
@@ -478,18 +523,6 @@ dialog.sheet {
   outline: none;
   border-bottom-color: var(--active);
   box-shadow: inset 0 -1px 0 var(--active);
-}
-
-/* The native clear button is blue in Chromium; redraw it as a muted cross so the palette keeps no accent colour. */
-.palette-input::-webkit-search-cancel-button {
-  width: 14px;
-  height: 14px;
-  cursor: pointer;
-  background: var(--muted);
-  mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 3l8 8M11 3l-8 8' stroke='black' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  appearance: none;
 }
 
 .palette-status {

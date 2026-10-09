@@ -22,18 +22,29 @@ export interface StackOutputs {
 const Outputs = z.array(z.object({ OutputKey: z.string(), OutputValue: z.string() }));
 const Keys = z.array(z.string()).nullable();
 
+const sameFiles = (a: readonly string[], b: readonly string[]): boolean => {
+  const set = new Set(a);
+  return set.size === new Set(b).size && b.every((file) => set.has(file));
+};
+
+/** The last logged deploy of a different build, the one a browser may still hold; a redeploy of the same build skips its own entry. */
+function previousDeploy(log: DeployLog, current: readonly string[]): Deploy | undefined {
+  return log.deploys.findLast((deploy) => !sameFiles(deploy.files, current));
+}
+
 /**
- * Bucket keys to delete: those in neither this build nor the last logged deploy, so a browser that still
+ * Bucket keys to delete: those in neither this build nor the previous one, so a browser that still
  * holds the previous index.html can load its chunks; entry files and the log are never pruned.
  */
 export function prunable(existing: readonly string[], log: DeployLog, current: readonly string[]): string[] {
-  const keep = new Set<string>([...current, ...(log.deploys.at(-1)?.files ?? []), ...ENTRY_FILES, LOG_FILE]);
+  const previous = previousDeploy(log, current)?.files ?? [];
+  const keep = new Set<string>([...current, ...previous, ...ENTRY_FILES, LOG_FILE]);
   return existing.filter((key) => !keep.has(key));
 }
 
-/** The log to write after a deploy: the previous deploy and this one. */
+/** The log to write after a deploy: the previous build and this one. */
 export function nextLog(log: DeployLog, deploy: Deploy): DeployLog {
-  const previous = log.deploys.at(-1);
+  const previous = previousDeploy(log, deploy.files);
   return { deploys: previous === undefined ? [deploy] : [previous, deploy] };
 }
 
