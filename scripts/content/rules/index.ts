@@ -1,13 +1,14 @@
 import type { RuleId } from '../../../schemas/validate-config.ts';
 import type { Context, Finding } from '../lib/context.ts';
 import { r01 } from './r01-schema.ts';
+import { r02 } from './r02-ids.ts';
 import { r06 } from './r06-references.ts';
 import { r07 } from './r07-originality.ts';
 import { r08 } from './r08-style.ts';
 import type { Rule } from './rule.ts';
 
 /** The implemented rules, in id order; each rule task in this phase adds its rule here. */
-export const RULES: readonly Rule[] = [r01, r06, r07, r08];
+export const RULES: readonly Rule[] = [r01, r02, r06, r07, r08];
 
 const rank = (id: RuleId): number => Number(id.slice(1));
 

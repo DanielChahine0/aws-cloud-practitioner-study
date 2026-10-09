@@ -1,0 +1,16 @@
+# fixture-target: content/concepts.yaml
+- id: shared-kitchen
+  name: Shared kitchen
+  home: m01/what-a-bakery-cloud-is
+  anchor: shared-kitchen
+  tasks: ["1.1"]
+- id: per-minute-rental
+  name: Per-minute rental
+  home: m01/what-a-bakery-cloud-is
+  anchor: paying-by-the-minute
+  tasks: ["4.1"]
+- id: shared-kitchen
+  name: Shared kitchen again
+  home: m01/what-a-bakery-cloud-is
+  anchor: shared-kitchen
+  tasks: ["1.1"]
