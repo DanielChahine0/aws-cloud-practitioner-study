@@ -139,9 +139,8 @@ questions:
     task: "1.4"
     level: 3
     stem: >-
-      The cafe is a small startup with a tiny AWS account, yet it pays low prices for powerful hardware.
-      The reason is that AWS buys equipment in enormous volumes for all of its data centers and shares the savings with every customer.
-      Which benefit is this?
+      The cafe is a small startup with a tiny AWS account, yet the hourly rates it pays for powerful servers are low, even though it uses far too little to earn any volume discount.
+      Which benefit of the AWS Cloud explains this?
     options:
       - id: a
         text: Pay less by using more

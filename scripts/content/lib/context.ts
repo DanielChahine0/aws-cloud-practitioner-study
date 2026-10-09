@@ -71,6 +71,8 @@ export interface ModulePrints {
   items: HashSet;
   /** Knowledge check and assessment item ids, sorted. */
   itemIds: readonly string[];
+  /** Other modules whose `items` sets hold some of this module's knowledge check and assessment item shingles. */
+  itemsFrom: readonly number[];
 }
 
 /** Everything the rules and the build read, loaded once; parse and schema errors become R1 findings instead of exceptions. */
@@ -100,6 +102,11 @@ export const CONCEPTS_FILE = 'content/concepts.yaml';
 export const BLUEPRINT_FILE = 'content/exam/blueprint.yaml';
 export const ALLOW_FILE = 'content/fingerprints/allow.txt';
 export const QUESTIONS_DIR = 'content/questions';
+
+/** The question file of a lesson note: resources/NN-module/LL-lesson.md keeps its questions in content/questions/NN-module/LL-lesson.yaml. */
+export function questionFileOf(lessonPath: string): string {
+  return lessonPath.replace(/^resources\//, `${QUESTIONS_DIR}/`).replace(/\.md$/, '.yaml');
+}
 const QUESTION = /^content\/questions\/(\d{2})-[a-z0-9-]+\/(\d{2})-([a-z0-9-]+)\.yaml$/;
 const NOTE = /^resources\/(\d{2})-([a-z0-9-]+)\/(?:(\d{2})-([a-z0-9-]+)|README)\.md$/;
 const SHARED = /^resources\/[^/]+\.md$/;
@@ -270,7 +277,8 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       const text = unpack(parsed.data.text);
       set = 'items';
       const items = unpack(parsed.data.items);
-      fingerprints.set(module, { text, items, itemIds: parsed.data.itemIds });
+      const { itemIds, itemsFrom } = parsed.data;
+      fingerprints.set(module, { text, items, itemIds, itemsFrom });
     } catch (error) {
       errors.push({ rule: 'R1', file: path, message: `${set}: ${errorText(error)}` });
     }

@@ -250,6 +250,7 @@ Known gaps found so far by an exact-phrase search of the course source text and 
   - Every other shingle goes to the `text` set of the lowest-numbered module that holds it.
   - A shingle stored in two sets would let a guess be tested twice, which cuts the false-positive rate from about 0.5% to about 0.0025% and breaks the one-way property; the rule also drops the cross-module copies that per-module sets stored.
   - `itemIds` lists the ids of the module's knowledge checks and assessment items (`kc-01`, `quiz-01` and so on).
+  - `itemsFrom` lists the other modules whose `items` sets hold some of this module's item shingles, as module numbers only, so the stem check can read a module's items whole.
 - The whole course comes to 135,093 shingles in 26 sets, packed as 3-byte values in base64, about 0.6 MB, with no text and no positions.
 - **Masking:** `allow.txt` holds the phrases `overlap_check.py` masks, namely every module and lesson title from the source's title lines plus the official names and fixed lists in `pipeline/allow.txt` (such as the six Well-Architected pillars).
   - Titles are names that the notes already carry in their `title` frontmatter, not course prose.
@@ -258,11 +259,17 @@ Known gaps found so far by an exact-phrase search of the course source text and 
   - This is a slightly stricter stand-in for the 9-gram test in `overlap_check.py`, because 4 consecutive hits can also come from overlapping phrases in different places of the source.
   - At `f` of about 1% for a module's two sets, 4 consecutive false hits occur with a chance of about 1e-8 per position.
 - **Share:** the share is corrected for false positives: `share = (hits / shingles - f) / (1 - f)`.
-- **Notes:** checked against their own module's `text` and `items` sets, as `overlap_check.py` does: no run, and a corrected share of at most 8%.
-- **Questions, incident steps and capstone key points:** no run against any module's sets (the whole course).
-  - **Stem check:** a live question's stem and option texts (or a match question's lefts and rights) may not share an 8-word run, 3 consecutive hit shingles, with any one module's `items` set.
-  - Their pooled corrected share against any one module's `items` set may not exceed 25% when they hold at least 8 shingles.
-  - The bar is closer than the 9-word run, because knowledge checks are the text a practice question is most likely to echo; at `f` of 0.5%, a false 3-run happens about once in 8 million positions.
+- **Notes:** checked against their own module's `text` and `items` sets: no run, and a corrected share of at most 8%.
+  - Under the one-set rule these two sets no longer hold every shingle of the module, so coverage is narrower than `overlap_check.py`, which reads the whole module source.
+  - Measured on 2026-10-09, 0.1% (Module 1) to 4.1% (Module 10) of a module's distinct shingles sit in other modules' sets, and 14 notes show shorter exact runs than against their own source, though none comes near a limit.
+  - Adding the sets of every module a note's module shares shingles with was tried and rejected: it joins phrases from different places into 17 false runs on notes that `overlap_check.py` passes, the problem the last bullet of this section describes.
+  - `overlap_check.py`, which the notes workflow runs on changed lessons (Appendix A), stays the full-coverage check for notes.
+- **Questions, incident steps and capstone key points:** no run against any one module's two sets, checked module by module across the whole course.
+  - A run whose shingles the one-set rule split between two modules is not seen as one run, for the same reason as for notes; pooling sets would add false runs (2 on the 99 pilot questions).
+  - **Stem check:** a live question's stem and option texts (or a match question's lefts and rights) may not share an 8-word run, 3 consecutive hit shingles, with any one module's knowledge checks and assessment items, read as the module's `items` set together with the `items` sets of its `itemsFrom` modules.
+  - So a run the one-set rule split between two modules' `items` sets is still one run; each run is reported once, under the lowest module that shows it.
+  - Their pooled corrected share against those sets may not exceed 25% when they hold at least 8 shingles; a module whose own `items` set has no hit leaves the share to the module that owns the hits.
+  - The bar is closer than the 9-word run, because knowledge checks are the text a practice question is most likely to echo; at `f` of 0.5%, a false 3-run happens about once in 8 million positions, and with the up to 6 `items` sets of a module and its `itemsFrom` modules (`f` about 3%) about once in 37,000.
 - **Checked on 2026-10-09** against the current notes:
   - With this masking and the Phase 0 truncated sets, every note passed (worst corrected share 3.8%, no run).
   - Checked again in Phase 1 with the modulus-sized sets and the one-set rule: every note passes (worst corrected share 3.6%, no run).
@@ -406,7 +413,7 @@ export const Question = z.discriminatedUnion('type', [
 | R2 Ids | Ids match their patterns and are unique across questions, labs, incidents, missions and concepts; compared with the local `HEAD` commit, no id that is `live` or `retired` in `HEAD` has disappeared (drafts may be deleted, and retiring means `status: retired` in place), a question whose correct options changed has `version` one higher and a `key-fix` history entry, and a form marked `frozen: true` in `HEAD` is unchanged. |
 | R3 Answer counts | `single` has exactly 1 correct of 4; `multi` has a correct count equal to `select` (2 or 3) among 5 or 6 options; `match` has unique lefts and rights and sits only in the practice pool. |
 | R4 Explanations | Every option and pair has a `why`, and every question and incident step has 1 to 3 evidence lines and a takeaway. |
-| R5 Evidence | Every evidence line equals one whole line of the cited note (for a capstone key point, of the home note of one of its concepts), compared after stripping list markers (`-`, `*`, `1.`, `1)`), `**` and link syntax, case-sensitive; for an "Exam guide update" line the evidence is the sentence after the colon, so refreshing `verified_on` never breaks it. |
+| R5 Evidence | Every evidence line equals one whole line of the cited note (for a capstone key point, of the home note of one of its concepts), compared after stripping list markers (`-`, `*`, `1.`, `1)`), `**` and link syntax, case-sensitive; for an "Exam guide update" line the evidence is the sentence after the colon, so refreshing `verified_on` never breaks it; in a table the evidence is one body cell, never a whole row or a header cell, because "Read in notes" highlights one rendered block. |
 | R6 References | Concepts (through aliases), notes, task ids, lab and incident question refs, note links, and the links in `resources/glossary.md` and `resources/concepts.md` resolve; every note tag is a registered concept or alias; every concept's home note lists it and contains its anchor H3; a question's `task` is one of its concept's `tasks`; `confusableWith` targets exist, at most 3. |
 | R7 Originality | Against the committed fingerprints, with the `allow.txt` phrases masked (2.5): notes have no run and a corrected share of at most 8% against their own module, and questions, incident steps and key points have no run against any module; live question stems and options also pass the stem check against each module's knowledge checks and assessment items (no 8-word run, at most 25% shared). |
 | R8 Markdown style | No U+2014 in any tracked file except under `tests/content/bad/`; one sentence per line in all Markdown (the `lint_notes.py` regex and abbreviation list; code and tables exempt); note frontmatter keys and section order as in `lint_notes.py`. |

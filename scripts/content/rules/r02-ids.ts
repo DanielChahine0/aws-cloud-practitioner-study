@@ -62,6 +62,26 @@ function headQuestions(yamlText: string | null): Question[] {
 }
 
 /**
+ * The id of every item in a working-tree question file that has a string id, whether or not it passes the schema;
+ * null when the file does not parse as a list of questions (R1 reports both).
+ */
+function idsIn(yamlText: string | null): string[] | null {
+  if (yamlText === null) return null;
+  let data: unknown;
+  try {
+    data = parseYaml(yamlText);
+  } catch {
+    return null;
+  }
+  const questions =
+    typeof data === 'object' && data !== null ? (data as { questions?: unknown }).questions : undefined;
+  if (!Array.isArray(questions)) return null;
+  return questions.flatMap((item: unknown) =>
+    typeof item === 'object' && item !== null ? strings((item as { id?: unknown }).id) : [],
+  );
+}
+
+/**
  * R2 Ids: ids are unique across concepts, aliases, missions and questions; no concept id in HEAD disappears;
  * a live or retired question in HEAD stays, and a live question whose answer changes takes a key-fix version.
  */
@@ -102,11 +122,21 @@ export const r02: Rule = {
     // The first entry of a repeated id stands for it; the repeat is the uniqueness finding above.
     const current = new Map<string, QuestionEntry>();
     for (const entry of ctx.questions) if (!current.has(entry.q.id)) current.set(entry.q.id, entry);
+    // An item that fails the schema, or a file that does not parse, is R1's finding, not a question that is gone.
+    const present = new Set<string>();
+    const unreadable = new Set<string>();
+    for (const path of ctx.files) {
+      if (!path.startsWith(`${QUESTIONS_DIR}/`) || !path.endsWith('.yaml')) continue;
+      const ids = idsIn(ctx.read(path));
+      if (ids === null) unreadable.add(path);
+      for (const id of ids ?? []) present.add(id);
+    }
     for (const path of ctx.headPaths(`${QUESTIONS_DIR}/`)) {
+      if (unreadable.has(path)) continue;
       for (const head of headQuestions(ctx.head(path))) {
         if (head.status === 'draft') continue;
         const now = current.get(head.id);
-        if (now === undefined) {
+        if (!present.has(head.id)) {
           out.push(
             finding(
               'R2',
@@ -116,7 +146,7 @@ export const r02: Rule = {
           );
           continue;
         }
-        if (head.status !== 'live' || correctKey(head) === correctKey(now.q)) continue;
+        if (now === undefined || head.status !== 'live' || correctKey(head) === correctKey(now.q)) continue;
         const version = head.version + 1;
         const fixed =
           now.q.version === version &&

@@ -204,7 +204,7 @@ questions:
         text: An on-premises server near Tokyo
         why: A server the cafe owns in Japan is not part of AWS and offers no isolated locations to spread across.
     evidence:
-      - "| Region | Geographic area near customers (such as Ohio, Dublin, Tokyo, Paris, Sao Paulo), sited partly for availability, with three or more physically separate AZs |"
+      - Geographic area near customers (such as Ohio, Dublin, Tokyo, Paris, Sao Paulo), sited partly for availability, with three or more physically separate AZs
       - Nearby users get low-latency, fault-tolerant access to services, and advanced components come later.
     takeaway: To run workloads near customers with several isolated locations to use, choose an AWS Region in that geography.
     history: []
@@ -269,7 +269,7 @@ questions:
         text: It is always made up of exactly one data center.
         why: An Availability Zone holds one or more data centers, so it is not limited to exactly one.
     evidence:
-      - "| Availability Zone | Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ |"
+      - Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ
       - "Availability Zone (AZ): an isolated location in a Region, with one or more data centers."
     takeaway: An Availability Zone is an isolated part of one Region with its own power and networking and one or more data centers.
     history: []

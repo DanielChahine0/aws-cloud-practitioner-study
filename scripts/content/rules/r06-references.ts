@@ -1,5 +1,5 @@
 import { posix } from 'node:path';
-import { CONCEPTS_FILE, type Finding, type LessonNote } from '../lib/context.ts';
+import { CONCEPTS_FILE, type Finding, type LessonNote, questionFileOf } from '../lib/context.ts';
 import { notesAnchors } from '../lib/markdown.ts';
 import { fencedLines } from '../lib/text.ts';
 import { finding, type Rule } from './rule.ts';
@@ -116,12 +116,15 @@ export const r06: Rule = {
         continue;
       }
       if (concept.tested === false) report(`concept '${q.concept}' is marked tested: false`);
-      if (q.note !== entry.noteId) {
-        report(`note ${q.note} does not match the file it sits in`);
+      const lesson = lessons.get(q.note);
+      const home = lesson === undefined ? undefined : questionFileOf(lesson.path);
+      if (lesson === undefined) {
+        report(`note ${q.note} does not exist`);
+      } else if (entry.path !== home) {
+        report(`note ${q.note} keeps its questions in ${home}, not in this file`);
       } else {
         const names = [concept.id, ...(concept.aliases ?? [])];
-        const listed = lessons.get(q.note)?.fm?.concepts ?? [];
-        if (!listed.some((tag) => names.includes(tag))) {
+        if (!(lesson.fm?.concepts ?? []).some((tag) => names.includes(tag))) {
           report(`note ${q.note} does not list concept ${q.concept}`);
         }
       }

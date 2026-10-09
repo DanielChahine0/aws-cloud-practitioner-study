@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
@@ -121,7 +121,27 @@ describe('R6 question references', () => {
   it('reports a question note that is not its file, or does not list the concept', () => {
     expect(
       r06(inQuestions('    note: m01/what-a-bakery-cloud-is\n', '    note: m01/another-lesson\n')),
-    ).toEqual(['q-b4k7m2: note m01/another-lesson does not match the file it sits in']);
+    ).toEqual(['q-b4k7m2: note m01/another-lesson does not exist']);
+    expect(
+      r06(inQuestions('    note: m01/what-a-bakery-cloud-is\n', '    note: m01/what-a-bakery-cloud\n')),
+    ).toEqual(['q-b4k7m2: note m01/what-a-bakery-cloud does not exist']);
+  });
+
+  it("reports a question file whose path is not its lesson's path", () => {
+    const moveTo = (to: string) => (root: string) => {
+      mkdirSync(dirname(join(root, to)), { recursive: true });
+      renameSync(join(root, QUESTIONS), join(root, to));
+    };
+    const misplaced = (id: string): string =>
+      `${id}: note m01/what-a-bakery-cloud-is keeps its questions in ${QUESTIONS}, not in this file`;
+    expect(r06(moveTo('content/questions/01-typo/01-what-a-bakery-cloud-is.yaml'))).toEqual([
+      misplaced('q-b4k7m2'),
+      misplaced('q-c8n3p5'),
+    ]);
+    expect(r06(moveTo('content/questions/01-baking-basics/09-what-a-bakery-cloud-is.yaml'))).toEqual([
+      misplaced('q-b4k7m2'),
+      misplaced('q-c8n3p5'),
+    ]);
     expect(r06((root) => replaceIn(root, LESSON, '  - per-minute-rental\n', ''))).toEqual([
       '[per-minute-rental] home note m01/what-a-bakery-cloud-is does not list it in concepts',
       'q-c8n3p5: note m01/what-a-bakery-cloud-is does not list concept per-minute-rental',
