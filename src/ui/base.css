@@ -480,6 +480,18 @@ dialog.sheet {
   box-shadow: inset 0 -1px 0 var(--active);
 }
 
+/* The native clear button is blue in Chromium; redraw it as a muted cross so the palette keeps no accent colour. */
+.palette-input::-webkit-search-cancel-button {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  background: var(--muted);
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 3l8 8M11 3l-8 8' stroke='black' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  appearance: none;
+}
+
 .palette-status {
   margin: 0;
   padding: 12px 16px;
@@ -493,7 +505,6 @@ dialog.sheet {
 
 .result {
   display: flex;
-  flex-wrap: wrap;
   align-items: baseline;
   gap: 0 12px;
   min-height: 44px;
@@ -516,12 +527,22 @@ dialog.sheet {
   color: var(--muted);
 }
 
+/* Title and detail share a line when they fit; otherwise the detail wraps under the title, aligned with it. */
+.result-main {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 12px;
+  min-width: 0;
+}
+
 .result-title {
+  flex: 1 1 8rem;
   min-width: 0;
 }
 
 .result-detail {
-  margin-left: auto;
   font-size: 0.875rem;
   color: var(--muted);
 }
@@ -542,7 +563,7 @@ dialog.sheet {
 
 .keys th,
 .keys td {
-  padding: 6px 0;
+  padding: 6px 16px 6px 0;
   text-align: left;
   border-bottom: 1px solid var(--line);
 }
@@ -551,6 +572,10 @@ dialog.sheet {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--muted);
+}
+
+.keys td:first-child {
+  white-space: nowrap;
 }
 
 .button {
