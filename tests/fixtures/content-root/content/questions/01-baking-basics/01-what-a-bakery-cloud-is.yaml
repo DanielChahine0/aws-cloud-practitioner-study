@@ -1,7 +1,7 @@
 questions:
   - id: q-b4k7m2
     version: 1
-    status: draft
+    status: live
     pool: practice
     type: single
     concept: shared-kitchen
@@ -26,6 +26,11 @@ questions:
     evidence:
       - Branches use ovens from one central kitchen when their queues grow.
     takeaway: Borrow central ovens for a busy day instead of buying ovens that sit idle.
+    verified:
+      keyHash: 69212d380cb1
+      fullHash: 8447f462e2bf
+      checks: [solve-closed@1, solve-notes@1, critic@1]
+      on: "2026-10-10"
   - id: q-c8n3p5
     version: 1
     status: draft

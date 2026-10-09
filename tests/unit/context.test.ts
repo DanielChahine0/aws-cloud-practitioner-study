@@ -97,7 +97,7 @@ describe('loadContext', () => {
     const ctx = loadContext(makeFixtureRoot(), { today: FIXTURE_TODAY });
     expect(ctx.questions.map((e) => [e.path, e.index, e.line, e.noteId, e.q.id, e.q.type])).toEqual([
       [QUESTIONS, 0, 2, 'm01/what-a-bakery-cloud-is', 'q-b4k7m2', 'single'],
-      [QUESTIONS, 1, 29, 'm01/what-a-bakery-cloud-is', 'q-c8n3p5', 'match'],
+      [QUESTIONS, 1, 34, 'm01/what-a-bakery-cloud-is', 'q-c8n3p5', 'match'],
     ]);
   });
 
@@ -105,7 +105,7 @@ describe('loadContext', () => {
     const root = makeFixtureRoot();
     replaceIn(root, QUESTIONS, '    task: "4.1"\n', '    task: "9.9"\n');
     const ctx = loadContext(root, { today: FIXTURE_TODAY });
-    expect(ctx.loadErrors).toEqual([expect.objectContaining({ rule: 'R1', file: QUESTIONS, line: 29 })]);
+    expect(ctx.loadErrors).toEqual([expect.objectContaining({ rule: 'R1', file: QUESTIONS, line: 34 })]);
     expect(ctx.loadErrors[0]?.message.startsWith('questions[1] (q-c8n3p5).task: ')).toBe(true);
     expect(ctx.questions.map((e) => e.q.id)).toEqual(['q-b4k7m2']);
   });

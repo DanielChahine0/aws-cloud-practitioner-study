@@ -7,13 +7,17 @@ import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-r
 
 const QUESTIONS = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
 
-/** R4's messages after the edits, with every fixture question live unless `live` is false. */
+/** R4's messages after the edits, with every fixture question live, or every one a draft when `live` is false. */
 function r04(edits: [from: string, to: string][], live = true): string[] {
   const root = makeFixtureRoot();
-  if (live) {
-    const file = join(root, QUESTIONS);
-    writeFileSync(file, readFileSync(file, 'utf8').replaceAll('status: draft', 'status: live'));
-  }
+  const file = join(root, QUESTIONS);
+  const text = readFileSync(file, 'utf8');
+  writeFileSync(
+    file,
+    live
+      ? text.replaceAll('status: draft', 'status: live')
+      : text.replaceAll('status: live', 'status: draft'),
+  );
   for (const [from, to] of edits) replaceIn(root, QUESTIONS, from, to);
   const ctx = loadContext(root, { today: FIXTURE_TODAY });
   expect(ctx.loadErrors).toEqual([]);
@@ -43,7 +47,7 @@ describe('R4 explanations', () => {
           '        why: "   Free.            "\n',
         ],
       ]),
-    ).toEqual(['29 q-c8n3p5: pair 2 has no why of at least 20 characters']);
+    ).toEqual(['34 q-c8n3p5: pair 2 has no why of at least 20 characters']);
   });
 
   it('reports missing evidence and a blank takeaway', () => {
@@ -55,6 +59,6 @@ describe('R4 explanations', () => {
           '    takeaway: "  "\n',
         ],
       ]),
-    ).toEqual(['29 q-c8n3p5: needs 1 to 3 evidence lines, has 0', '29 q-c8n3p5: takeaway is blank']);
+    ).toEqual(['34 q-c8n3p5: needs 1 to 3 evidence lines, has 0', '34 q-c8n3p5: takeaway is blank']);
   });
 });

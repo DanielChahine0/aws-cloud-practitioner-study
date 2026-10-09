@@ -26,7 +26,7 @@ describe('R3 answer counts', () => {
   it('reports a single with two correct options, and skips it once retired', () => {
     expect(r03(SECOND_CORRECT)).toEqual(['2 q-b4k7m2: single needs exactly 1 correct option of 4, has 2']);
     const retire: [string, string] = [
-      'status: draft\n    pool: practice\n    type: single',
+      'status: live\n    pool: practice\n    type: single',
       'status: retired\n    pool: practice\n    type: single',
     ];
     expect(r03(SECOND_CORRECT, retire)).toEqual([]);
@@ -64,9 +64,9 @@ describe('R3 answer counts', () => {
         ['    pool: practice\n    type: match\n', '    pool: exam\n    type: match\n'],
       ),
     ).toEqual([
-      '29 q-c8n3p5: two pairs share the left "dough rising for forty minutes"',
-      '29 q-c8n3p5: two pairs share the right "forty minutes of cabinet time"',
-      '29 q-c8n3p5: match questions belong to the practice pool only',
+      '34 q-c8n3p5: two pairs share the left "dough rising for forty minutes"',
+      '34 q-c8n3p5: two pairs share the right "forty minutes of cabinet time"',
+      '34 q-c8n3p5: match questions belong to the practice pool only',
     ]);
   });
 });
