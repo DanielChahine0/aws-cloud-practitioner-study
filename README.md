@@ -1,7 +1,8 @@
 # CCP Study
 
 CCP Study is Dani's personal static study site for the AWS Certified Cloud Practitioner exam (CLF-C02).
-It serves the own-words notes in `resources/` as a reader with search, glossary popovers and dated "Exam guide update" lines, and practice, reviews and labs arrive phase by phase.
+It serves the own-words notes in `resources/` as a reader with search, glossary popovers and dated "Exam guide update" lines.
+Lesson checks and module quizzes let Dani practise with saved progress, and reviews and labs arrive phase by phase.
 The design is `docs/superpowers/specs/2026-10-09-aws-cpe-study-site-design.md`, and the implementation plans live in `docs/superpowers/plans/`.
 
 ## Commands
@@ -15,7 +16,28 @@ The design is `docs/superpowers/specs/2026-10-09-aws-cpe-study-site-design.md`, 
 | `pnpm content:validate` | Runs the validator rules switched on in `content/validate.yaml`; `--all` runs every implemented rule |
 | `pnpm content:fingerprint` | Rebuilds `content/fingerprints/` from the course source outside the repo |
 | `pnpm content:concepts` | Works on the concept registry: `--seed`, `--pending NN`, `--check <file>` and `--apply <dir>` |
+| `pnpm content:new-question [count]` | Prints fresh question ids, none used in the working tree or in `HEAD` |
+| `pnpm content:checks <command>` | Runs the agent checks: `prepare --modules 01,03` writes keyless batches, `lint <file>` checks an answer file, `grade` grades every answer |
+| `pnpm content:stamp` | Stamps each question whose three checks passed at its current hashes and sets it live; failed drafts get a `review` block |
+| `pnpm content:report` | Counts and style lines; `--coverage` lists coverage by task and missing blueprint terms, `--needs-dani` lists drafts that failed twice |
+| `pnpm content:updates` | Checks (`--check <file>`) and applies (`--apply <dir>`) the update-writer results for missing blueprint terms |
 | `pnpm site:deploy` | Runs `pnpm verify`, then publishes `dist/` to the Mission 1 bucket and refreshes CloudFront |
+
+## Questions
+
+Practice questions live in `content/questions/NN-module/LL-lesson.yaml`, one file per lesson note, written by agents that follow `content/STYLE.md` and the prompts in `agents/`.
+A question starts as a `draft`, and `pnpm content:validate --draft <file>` checks a draft file as if it were live, with the style checks on top.
+Three checks then run on keyless batches: a closed-book solve, a solve from the notes, and a critic in two rounds.
+`pnpm content:stamp` is the only way to `live`: it writes the `verified` block with the hashes the checks passed at, and rule R9 fails a live question whose text changed since.
+When a note edit breaks a question's evidence line, `pnpm content:validate --demote` sets that question back to `draft` so it goes through the checks again.
+Only live questions ship in the module chunks; drafts and retired questions never reach the site.
+
+## Progress and backups
+
+Progress lives in this browser's IndexedDB as an append-only event log, and everything shown, from check scores to read marks, is replayed from it.
+Open Progress from the top bar or with `g p` to export a backup file, which also carries any problems reported with `!` back to the content pipeline.
+Importing a backup shows a preview first, and Merge, the default, joins the two logs by event id, so importing the same file twice adds nothing.
+Home reminds you to export once at least 50 events are new and the last export is more than 7 days old.
 
 ## Setup
 

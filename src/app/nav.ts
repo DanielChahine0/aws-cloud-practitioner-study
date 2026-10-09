@@ -30,6 +30,10 @@ export function up(route: Route): Route | null {
       return { kind: 'home' };
     case 'mission':
       return { kind: 'missions' };
+    case 'check':
+      return { kind: 'lesson', module: route.module, slug: route.slug, anchor: null };
+    case 'quiz':
+      return { kind: 'module', module: route.module };
     case 'home':
       return null;
   }

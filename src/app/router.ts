@@ -5,6 +5,8 @@ export type Route =
   | { kind: 'lesson'; module: number; slug: string; anchor: string | null }
   | { kind: 'missions' }
   | { kind: 'mission'; id: string }
+  | { kind: 'check'; module: number; slug: string }
+  | { kind: 'quiz'; module: number }
   | { kind: 'not-found'; hash: string };
 
 const MODULE = '(0[1-9]|1[0-3])';
@@ -12,6 +14,8 @@ const SLUG = '([a-z0-9]+(?:-[a-z0-9]+)*)';
 const MODULE_PATH = new RegExp(`^/m/${MODULE}$`);
 const LESSON_PATH = new RegExp(`^/m/${MODULE}/l/${SLUG}(?:/([a-z0-9-]+))?$`);
 const MISSION_PATH = /^\/missions\/(mission-\d{2})$/;
+const CHECK_PATH = new RegExp(`^/s/check/m${MODULE}/${SLUG}$`);
+const QUIZ_PATH = new RegExp(`^/s/quiz/m${MODULE}$`);
 
 export function pad2(n: number): string {
   return String(n).padStart(2, '0');
@@ -30,6 +34,10 @@ export function parseHash(hash: string): Route {
   }
   const mission = MISSION_PATH.exec(path);
   if (mission) return { kind: 'mission', id: mission[1] ?? '' };
+  const check = CHECK_PATH.exec(path);
+  if (check) return { kind: 'check', module: Number(check[1]), slug: check[2] ?? '' };
+  const quiz = QUIZ_PATH.exec(path);
+  if (quiz) return { kind: 'quiz', module: Number(quiz[1]) };
   return { kind: 'not-found', hash };
 }
 
@@ -45,6 +53,10 @@ export function toHash(route: Route): string {
       return '#/missions';
     case 'mission':
       return `#/missions/${route.id}`;
+    case 'check':
+      return `#/s/check/m${pad2(route.module)}/${route.slug}`;
+    case 'quiz':
+      return `#/s/quiz/m${pad2(route.module)}`;
     case 'not-found':
       return route.hash;
   }

@@ -26,6 +26,7 @@ export interface KeyContext {
 export type KeyCommand =
   | { kind: 'palette' }
   | { kind: 'help' }
+  | { kind: 'progress' }
   | { kind: 'close-term' }
   | { kind: 'g'; at: number }
   | { kind: 'navigate'; hash: string };
@@ -45,7 +46,11 @@ export function keyStep(
   return { command, gAt: command?.kind === 'g' ? command.at : null };
 }
 
-/** The global shortcuts of spec 7.4 that Phase 0 has; null means the key is not ours. */
+/** True when `g` was the previous key and came less than a second ago. */
+const gPending = (input: KeyInput, ctx: KeyContext): boolean =>
+  ctx.gAt !== null && input.at - ctx.gAt <= G_WINDOW_MS;
+
+/** The global shortcuts of spec 7.4 built so far; null means the key is not ours. */
 export function keyCommand(input: KeyInput, ctx: KeyContext): KeyCommand | null {
   const key = input.key.length === 1 ? input.key.toLowerCase() : input.key;
   if ((input.meta || input.ctrl) && !input.alt && key === 'k') return { kind: 'palette' };
@@ -60,7 +65,16 @@ export function keyCommand(input: KeyInput, ctx: KeyContext): KeyCommand | null 
     case 'g':
       return { kind: 'g', at: input.at };
     case 'h':
-      return ctx.gAt !== null && input.at - ctx.gAt <= G_WINDOW_MS ? { kind: 'navigate', hash: '#/' } : null;
+      return gPending(input, ctx) ? { kind: 'navigate', hash: '#/' } : null;
+    case 'p':
+      return gPending(input, ctx) ? { kind: 'progress' } : null;
+    case 'c':
+      return ctx.route.kind === 'lesson'
+        ? {
+            kind: 'navigate',
+            hash: toHash({ kind: 'check', module: ctx.route.module, slug: ctx.route.slug }),
+          }
+        : null;
     case 'Escape': {
       const parent = up(ctx.route);
       return parent === null ? null : { kind: 'navigate', hash: toHash(parent) };

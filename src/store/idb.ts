@@ -17,7 +17,12 @@ export function openDb(name: string = DB_NAME): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains(STORES.kv)) db.createObjectStore(STORES.kv, { keyPath: 'key' });
       if (!db.objectStoreNames.contains(STORES.cache)) db.createObjectStore(STORES.cache, { keyPath: 'key' });
     };
-    open.onsuccess = () => resolve(open.result);
+    open.onsuccess = () => {
+      const db = open.result;
+      // Another tab's upgrade or a deletion waits on this connection; let it go instead of blocking it.
+      db.onversionchange = () => db.close();
+      resolve(db);
+    };
     open.onerror = () => reject(open.error);
     open.onblocked = () =>
       reject(new Error('The progress database is open in an older tab; close it and reload'));

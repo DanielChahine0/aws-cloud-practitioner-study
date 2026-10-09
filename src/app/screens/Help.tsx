@@ -6,8 +6,19 @@ const SHORTCUTS: readonly { keys: readonly string[]; joiner: string; action: str
   { keys: ['/', 'Cmd+K'], joiner: 'or', action: 'Search' },
   { keys: ['?'], joiner: '', action: 'This help' },
   { keys: ['g', 'h'], joiner: 'then', action: 'Home' },
+  { keys: ['g', 'p'], joiner: 'then', action: 'Progress' },
   { keys: ['[', ']'], joiner: 'and', action: 'Previous or next lesson' },
+  { keys: ['c'], joiner: '', action: 'Check yourself' },
   { keys: ['Esc'], joiner: '', action: 'Close, or go up one level' },
+  { keys: ['1', '6'], joiner: 'to', action: 'Choose an option (toggle in multi)' },
+  { keys: ['Enter'], joiner: '', action: 'Check (not sure), then Next' },
+  { keys: ['Shift+Enter'], joiner: '', action: 'Sure' },
+  { keys: ['e'], joiner: '', action: 'Expand every explanation' },
+  { keys: ['o'], joiner: '', action: 'Read in notes' },
+  { keys: ['!'], joiner: '', action: 'Report a problem' },
+  { keys: ['1', '5'], joiner: 'to', action: 'Match: pick a left item' },
+  { keys: ['a', 'e'], joiner: 'to', action: 'Match: pair it' },
+  { keys: ['Backspace'], joiner: '', action: 'Match: unpair' },
 ];
 
 /** The keyboard help sheet (`?`). */

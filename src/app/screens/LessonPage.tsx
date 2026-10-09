@@ -1,13 +1,15 @@
 import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
-import type { ContentIndex } from '../../../schemas/chunks.ts';
+import type { ContentIndex, ModuleChunk } from '../../../schemas/chunks.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { Html } from '../../ui/Html.tsx';
 import { showTermPopover } from '../../ui/TermPopover.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { ensureModule, glossary, modules } from '../content.ts';
 import { neighbors } from '../nav.ts';
+import { progress, record, storeReady } from '../progress.ts';
 import { pad2 } from '../router.ts';
-import { openTerm } from '../state.ts';
+import { collapseSpace, homedConcepts } from '../runner.ts';
+import { highlight, openTerm } from '../state.ts';
 import { NotFound } from './NotFound.tsx';
 
 interface Props {
@@ -22,7 +24,8 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
   const body = useRef<HTMLDivElement>(null);
   const meta = idx.modules.find((m) => m.n === module);
   const lessonMeta = meta?.lessons.find((l) => l.slug === slug);
-  const lesson = modules.value.get(module)?.lessons[slug];
+  const chunk = modules.value.get(module);
+  const lesson = chunk?.lessons[slug];
   useTitle(lessonMeta?.title ?? 'Not found');
   useEffect(() => ensureModule(module), [module]);
 
@@ -39,6 +42,23 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
     root.addEventListener('click', onClick);
     return () => root.removeEventListener('click', onClick);
   }, [lesson, anchor]);
+
+  // "Read in notes": mark the first block whose text is the evidence line, bring it into view, and clear the request.
+  const wanted = highlight.value;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useLayoutEffect(() => {
+    const root = body.current;
+    if (root === null || lesson === undefined || wanted === null) return;
+    const target = collapseSpace(wanted);
+    const found = [...root.querySelectorAll<HTMLElement>('p, li, td, .update-text')].find(
+      (el) => collapseSpace(el.textContent ?? '') === target,
+    );
+    if (found !== undefined) {
+      found.classList.add('evidence');
+      found.scrollIntoView({ block: 'center' });
+    }
+    highlight.value = null;
+  }, [lesson, wanted]);
 
   const term = openTerm.value;
   const item = term === null ? undefined : glossary.value.get(term.id);
@@ -64,6 +84,9 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
       <div ref={body}>
         {lesson === undefined ? <p class="muted">Loading</p> : <Html className="prose" html={lesson.html} />}
       </div>
+      {lesson !== undefined && chunk !== undefined && (
+        <CheckYourself idx={idx} chunk={chunk} module={module} slug={slug} />
+      )}
       {/* The pager waits for the note, so it never shows under "Loading" and then jumps down. */}
       {lesson !== undefined && (
         <nav class="pager" aria-label="Lessons">
@@ -82,5 +105,65 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
         </nav>
       )}
     </>
+  );
+}
+
+/** The end of a note (spec 2.8): the link to its lesson check, or, without questions, the sentinel that marks it read. */
+function CheckYourself({
+  idx,
+  chunk,
+  module,
+  slug,
+}: {
+  idx: ContentIndex;
+  chunk: ModuleChunk;
+  module: number;
+  slug: string;
+}) {
+  const noteId = `m${pad2(module)}/${slug}`;
+  const asked = new Set(chunk.questions.map((q) => q.concept));
+  const count = homedConcepts(idx, chunk, noteId, slug).filter((c) => asked.has(c)).length;
+  const last = progress.value.checkScores.get(noteId);
+  const done = progress.value.lessonsDone.has(noteId);
+  const ready = storeReady.value;
+  const sentinel = useRef<HTMLDivElement>(null);
+
+  // Without a check, reaching the end of the note is what marks it read (spec 3.2).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    const el = sentinel.current;
+    if (el === null || count > 0 || done || !ready) return;
+    let recorded = false;
+    const observer = new IntersectionObserver((entries) => {
+      if (recorded || !entries.some((e) => e.isIntersecting)) return;
+      recorded = true;
+      observer.disconnect();
+      void record({ t: 'lesson.done', note: noteId });
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [count, done, ready, noteId]);
+
+  return (
+    <section class="check" aria-labelledby="check-yourself">
+      <h2 id="check-yourself">Check yourself</h2>
+      {count > 0 ? (
+        <p>
+          <a class="button-link" href={`#/s/check/m${pad2(module)}/${slug}`}>
+            Check yourself ({count})
+          </a>
+          {last !== undefined && (
+            <span class="muted check-last">
+              Last check {last.correct}/{last.total}
+            </span>
+          )}
+        </p>
+      ) : (
+        <>
+          <p class="muted">No questions for this lesson yet.</p>
+          <div ref={sentinel} class="check-sentinel" />
+        </>
+      )}
+    </section>
   );
 }

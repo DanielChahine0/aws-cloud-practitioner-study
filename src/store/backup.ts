@@ -119,3 +119,22 @@ export async function parseBackup(text: string): Promise<ParseResult> {
   }
   return { ok: true, data: result.data as BackupData };
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+/** Spec 8.3: remind only after at least this many new events... */
+export const REMINDER_EVENTS = 50;
+/** ...and when the last export is older than this many days, or missing. */
+export const REMINDER_DAYS = 7;
+
+/**
+ * True when Home should show the backup reminder (spec 8.3): at least 50 events newer than the last export
+ * (all events when there is none), and the last export more than 7 days old or missing.
+ */
+export function reminderDue(events: readonly StudyEvent[], lastExportAt: string | null, now: Date): boolean {
+  const since =
+    lastExportAt ?? events.reduce<string | null>((min, e) => (min === null || e.at < min ? e.at : min), null);
+  if (since === null) return false;
+  const fresh = events.filter((e) => e.at > since).length;
+  if (fresh < REMINDER_EVENTS) return false;
+  return lastExportAt === null || now.getTime() - new Date(lastExportAt).getTime() > REMINDER_DAYS * DAY_MS;
+}

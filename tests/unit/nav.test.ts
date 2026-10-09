@@ -55,4 +55,14 @@ describe('up', () => {
     expect(up({ kind: 'not-found', hash: '#/x' })).toEqual({ kind: 'home' });
     expect(up({ kind: 'home' })).toBeNull();
   });
+
+  it('goes from a lesson check to its lesson, and from a module quiz to its module', () => {
+    expect(up({ kind: 'check', module: 3, slug: 'aws-lambda' })).toEqual({
+      kind: 'lesson',
+      module: 3,
+      slug: 'aws-lambda',
+      anchor: null,
+    });
+    expect(up({ kind: 'quiz', module: 3 })).toEqual({ kind: 'module', module: 3 });
+  });
 });
