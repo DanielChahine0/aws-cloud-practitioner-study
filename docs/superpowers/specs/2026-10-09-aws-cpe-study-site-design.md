@@ -377,7 +377,14 @@ export const Question = z.discriminatedUnion('type', [
 |---|---|---|---|---|
 | `solve-closed` | fresh agent, no key, no notes | stem and shuffled options | Picks exactly the key and answers "no" to "is a second option defensible?" | `keyHash` |
 | `solve-notes` | fresh agent, no key, given only the cited note's sections that hold the evidence lines, plus Key takeaways and Terms | stem and options | Picks the key and quotes the line that supports it | `fullHash` |
-| `critic` | fresh agent with the key | options alone first, then the full question | Cannot find the key from the options alone (cue check), every distractor is wrong for its stated `why`, no clue words or length tell, the task tag fits, and `STYLE.md` holds | `fullHash` |
+| `critic` | fresh agent with the key | options alone first, then the full question | Does not find the key from the options alone on a named basis (cue check), every distractor is wrong for its stated `why`, no clue words or length tell, the task tag fits, and `STYLE.md` holds | `fullHash` |
+
+**Cue check:**
+- The cue round guesses every non-match question from its options alone and names the basis of each guess: `tell` (length, grammar, a standout or repeated word, or an option more specific or hedged than the rest), `knowledge` (only the key is a true statement about AWS on its own, so the stem is not needed), or `guess` (nothing stands out).
+- A `tell` or `knowledge` basis carries a one-line `reason`.
+- A hit fails the question only when its basis is `tell` or `knowledge`, with the reason `the cue round found the key from the options alone (<basis>: <reason>)`, so the writer knows what to fix.
+- A hit on a plain `guess` passes, because a forced guess lands on the key by luck about 25% of the time on a four-option `single` and says nothing about tells.
+- The fix for a `knowledge` hit is distractors that are also true statements about AWS but do not answer the stem.
 
 **Hashes:**
 - `keyHash` is the first 12 hex characters of `sha256(canonicalJSON({type, stem, select, options[{id,text,correct}], pairs[{left,right}]}))`.

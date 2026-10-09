@@ -15,16 +15,25 @@ Never read `.results/checks/keys.json`, a question file, a note or the course.
 
 Each question shows only its numbered `options`, with no stem, and a `multi` question says how many are correct in `select`.
 
-- Guess the correct option from the wording alone: length, grammar, a word that stands out, or an option that is more specific than the rest.
-- Guess for every question, even when nothing stands out: one number for a `single`, exactly `select` numbers for a `multi`.
-- A question passes this round when your guess misses the key, so guess as well as you can.
+- Guess the correct option for every question, even when nothing stands out: one number for a `single`, exactly `select` numbers for a `multi`.
+- Then say honestly what your guess rests on, in `basis`:
+  - `tell`: something in the wording points to it, such as length, grammar, a word that stands out or repeats, or an option that is more specific or more hedged than the rest.
+  - `knowledge`: the option you picked is the only one that is a true statement about AWS on its own, so the stem is not needed to find it.
+  - `guess`: nothing stands out and you picked one anyway.
+- For `tell` or `knowledge`, add `reason`: one short line naming the option and what gives it away; leave `reason` out for `guess`.
+- A hit on a `tell` or `knowledge` basis fails the question and your `reason` goes to the writer, so name the real cause.
+- A hit on a plain `guess` passes, so never claim a basis you do not have, and never hide one you do.
+- A `knowledge` hit means the distractors should also be true statements about AWS that simply do not answer the stem.
 
 Write `.results/checks/answers/critic-cue-NN.json`:
 
 ```json
 {
   "batch": "critic-cue-01",
-  "answers": [{ "id": "q-7k2m9p", "guess": [2] }]
+  "answers": [
+    { "id": "q-7k2m9p", "guess": [2], "basis": "tell", "reason": "Option 2 is the only one that is hedged with 'usually'." },
+    { "id": "q-5n4w8x", "guess": [1], "basis": "guess" }
+  ]
 }
 ```
 
