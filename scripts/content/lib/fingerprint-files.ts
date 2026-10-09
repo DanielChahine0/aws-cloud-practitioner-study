@@ -1,12 +1,15 @@
-import type { FingerprintFile, PackedSet } from '../../../schemas/fingerprint.ts';
+import type { FingerprintFile } from '../../../schemas/fingerprint.ts';
 import { buildSet } from './fingerprint.ts';
 import { sourceTitles, splitItems } from './source.ts';
 import { words } from './text.ts';
 
-/** One module's fingerprint file: the whole source text, plus one set per knowledge check and assessment item. */
+/** One module's fingerprint file: the whole source text as one set, plus the sorted ids of its knowledge checks and assessment items. */
 export function fingerprintModule(module: number, source: string): FingerprintFile {
-  const items: Record<string, PackedSet> = {};
-  for (const item of splitItems(source)) items[item.id] = buildSet(words(item.text));
+  const items = splitItems(source)
+    .map((item) => item.id)
+    .sort();
+  const repeated = items.find((id, i) => id === items[i - 1]);
+  if (repeated !== undefined) throw new Error(`module ${module} repeats item ${repeated}`);
   return { module, text: buildSet(words(source)), items };
 }
 

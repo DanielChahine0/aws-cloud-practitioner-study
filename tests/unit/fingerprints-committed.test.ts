@@ -7,23 +7,27 @@ import { hashShingle, shingleWindows, unpack } from '../../scripts/content/lib/f
 import { words } from '../../scripts/content/lib/text.ts';
 
 const dir = fileURLToPath(new URL('../../content/fingerprints/', import.meta.url));
-const load = (m: number) =>
-  FingerprintFile.parse(JSON.parse(readFileSync(join(dir, `m${String(m).padStart(2, '0')}.json`), 'utf8')));
+const raw = (m: number) => readFileSync(join(dir, `m${String(m).padStart(2, '0')}.json`), 'utf8');
+const load = (m: number) => FingerprintFile.parse(JSON.parse(raw(m)));
 const MODULES = Array.from({ length: 13 }, (_, i) => i + 1);
 
 describe('committed fingerprints', () => {
-  it.each(MODULES)('module %i keeps every set at 0.4% <= f <= 1%', (m) => {
+  it.each(MODULES)('module %i keeps its text set at 0.4% <= f <= 1%', (m) => {
     const file = load(m);
     expect(file.module).toBe(m);
-    for (const set of [file.text, ...Object.values(file.items)]) {
-      expect(set.f).toBeGreaterThanOrEqual(0.004);
-      expect(set.f).toBeLessThanOrEqual(0.01);
-      expect(unpack(set).values.size).toBe(set.count);
-    }
+    expect(file.text.f).toBeGreaterThanOrEqual(0.004);
+    expect(file.text.f).toBeLessThanOrEqual(0.01);
+    expect(unpack(file.text).values.size).toBe(file.text.count);
+  });
+
+  // A shingle stored in two sets can be tested twice, which breaks the one-way property (spec 2.5).
+  it.each(MODULES)('module %i stores each shingle in one set only, so items are bare ids', (m) => {
+    expect(raw(m).match(/"data":/g)).toHaveLength(1);
+    expect(load(m).items.every((id) => /^(?:kc|quiz)-\d{2}$/.test(id))).toBe(true);
   });
 
   it('cover 119 knowledge checks and 133 assessment items', () => {
-    const ids = MODULES.flatMap((m) => Object.keys(load(m).items));
+    const ids = MODULES.flatMap((m) => load(m).items);
     expect(ids.filter((id) => id.startsWith('kc-'))).toHaveLength(119);
     expect(ids.filter((id) => id.startsWith('quiz-'))).toHaveLength(133);
   });

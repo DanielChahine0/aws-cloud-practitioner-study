@@ -40,14 +40,34 @@ describe('sourceTitles', () => {
 });
 
 describe('fingerprintModule', () => {
-  it('fingerprints the whole text and each item, and finds a copied run', () => {
+  it('fingerprints the whole text, lists the item ids without hashing them, and finds a copied run', () => {
     const file = fingerprintModule(1, source);
     expect(FingerprintFile.parse(file)).toEqual(file);
-    expect(Object.keys(file.items)).toEqual(['kc-01', 'quiz-01']);
+    expect(file.items).toEqual(['kc-01', 'quiz-01']);
     const copied = words(
       'Bakers rent proofing cabinets by the minute and hand them back once the dough has risen',
     );
     expect(runsAgainst(copied, unpack(file.text))).toHaveLength(1);
+  });
+
+  const block = (marker: string): string => `${marker}\nWhich oven should a branch rent this morning?\n`;
+
+  it('sorts the item ids whatever order the source holds them in', () => {
+    const shuffled = [
+      '[ASSESSMENT Q2 (MULTIPLE_CHOICE)]',
+      '[KNOWLEDGE CHECK]',
+      '[ASSESSMENT Q1 (MULTIPLE_CHOICE)]',
+    ]
+      .map(block)
+      .join('\n');
+    expect(fingerprintModule(1, shuffled).items).toEqual(['kc-01', 'quiz-01', 'quiz-02']);
+  });
+
+  it('refuses a source that repeats an assessment question number', () => {
+    const repeated = ['[ASSESSMENT Q1 (MULTIPLE_CHOICE)]', '[ASSESSMENT Q1 (MULTIPLE_CHOICE)]']
+      .map(block)
+      .join('\n');
+    expect(() => fingerprintModule(1, repeated)).toThrow('module 1 repeats item quiz-01');
   });
 });
 

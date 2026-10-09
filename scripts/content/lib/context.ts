@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { Blueprint } from '../../../schemas/blueprint.ts';
 import { Concept } from '../../../schemas/concept.ts';
-import { FingerprintFile, type PackedSet } from '../../../schemas/fingerprint.ts';
+import { FingerprintFile } from '../../../schemas/fingerprint.ts';
 import { MissionFrontmatter } from '../../../schemas/mission.ts';
 import { LessonFrontmatter, ModuleFrontmatter } from '../../../schemas/note.ts';
 import { type RuleId, ValidateConfig } from '../../../schemas/validate-config.ts';
@@ -56,7 +56,8 @@ export interface TextFile {
 
 export interface ModulePrints {
   text: HashSet;
-  items: ReadonlyMap<string, HashSet>;
+  /** Knowledge check and assessment item ids, sorted; items carry no hashes of their own (spec 2.5). */
+  items: readonly string[];
 }
 
 /** Everything the rules and the build read, loaded once; parse and schema errors become R1 findings instead of exceptions. */
@@ -245,21 +246,11 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       errors.push({ rule: 'R1', file: path, message: `holds module ${parsed.data.module}, not ${module}` });
       return;
     }
-    let complete = true;
-    const unpacked = (key: string, set: PackedSet): HashSet => {
-      try {
-        return unpack(set);
-      } catch (error) {
-        errors.push({ rule: 'R1', file: path, message: `${key}: ${errorText(error)}` });
-        complete = false;
-        return { b: set.b, f: set.f, values: new Set() };
-      }
-    };
-    const text = unpacked('text', parsed.data.text);
-    const items = new Map(
-      Object.entries(parsed.data.items).map(([id, set]) => [id, unpacked(`items.${id}`, set)] as const),
-    );
-    if (complete) fingerprints.set(module, { text, items });
+    try {
+      fingerprints.set(module, { text: unpack(parsed.data.text), items: parsed.data.items });
+    } catch (error) {
+      errors.push({ rule: 'R1', file: path, message: `text: ${errorText(error)}` });
+    }
   };
 
   let config: ValidateConfig | null = null;

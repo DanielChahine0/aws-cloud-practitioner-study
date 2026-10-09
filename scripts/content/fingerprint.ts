@@ -15,13 +15,12 @@ for (let module = 1; module <= 13; module++) {
   const nn = String(module).padStart(2, '0');
   const source = readFileSync(join(home, 'source', `module-${nn}.md`), 'utf8');
   const file = fingerprintModule(module, source);
-  const ids = Object.keys(file.items);
-  const kc = ids.filter((id) => id.startsWith('kc-')).length;
+  const kc = file.items.filter((id) => id.startsWith('kc-')).length;
   checks += kc;
-  quizzes += ids.length - kc;
+  quizzes += file.items.length - kc;
   writeFileSync(join(outDir, `m${nn}.json`), `${JSON.stringify(file)}\n`);
   console.log(
-    `m${nn}: ${file.text.count} shingles at ${file.text.b} bits (f ${file.text.f.toFixed(4)}), ${kc} knowledge checks, ${ids.length - kc} assessment items`,
+    `m${nn}: ${file.text.count} shingles at ${file.text.b} bits (f ${file.text.f.toFixed(4)}), ${kc} knowledge checks, ${file.items.length - kc} assessment items`,
   );
   sources.push(source);
 }

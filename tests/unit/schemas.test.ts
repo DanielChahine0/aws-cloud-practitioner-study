@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Blueprint } from '../../schemas/blueprint.ts';
 import { TASK_IDS } from '../../schemas/common.ts';
 import { Concept } from '../../schemas/concept.ts';
+import { FingerprintFile } from '../../schemas/fingerprint.ts';
 import { MissionFrontmatter } from '../../schemas/mission.ts';
 import { LessonFrontmatter } from '../../schemas/note.ts';
 import { ValidateConfig } from '../../schemas/validate-config.ts';
@@ -87,6 +88,30 @@ describe('Blueprint', () => {
   it('rejects a repeated task that hides a missing one', () => {
     const ids = [...TASK_IDS.slice(0, 18), '1.1'];
     expect(messages(Blueprint.safeParse(blueprint(undefined, ids)))).toEqual(['tasks: task 4.3 is missing']);
+  });
+});
+
+describe('FingerprintFile', () => {
+  const set = { b: 20, count: 1, f: 1 / 2 ** 20, data: 'AAAl' };
+  const file = (items: unknown) => ({ module: 1, text: set, items });
+
+  it('accepts sorted, unique item ids', () => {
+    expect(FingerprintFile.safeParse(file(['kc-01', 'kc-02', 'quiz-01'])).success).toBe(true);
+    expect(FingerprintFile.safeParse(file([])).success).toBe(true);
+  });
+
+  it('rejects unsorted or repeated item ids', () => {
+    expect(messages(FingerprintFile.safeParse(file(['quiz-01', 'kc-01'])))).toEqual([
+      'items: item ids must be sorted and unique',
+    ]);
+    expect(messages(FingerprintFile.safeParse(file(['kc-01', 'kc-01'])))).toEqual([
+      'items: item ids must be sorted and unique',
+    ]);
+  });
+
+  // Item sets would store each item's shingles a second time, so a guess could be tested twice (spec 2.5).
+  it('rejects the old per-item shingle sets', () => {
+    expect(FingerprintFile.safeParse(file({ 'kc-01': set })).success).toBe(false);
   });
 });
 
