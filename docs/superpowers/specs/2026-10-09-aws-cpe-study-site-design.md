@@ -124,7 +124,7 @@ The repository is local only, a pre-commit hook runs the fast checks, and hostin
 - A response headers policy sets `Content-Security-Policy: default-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'`, plus HSTS and `X-Content-Type-Options: nosniff`.
 - Hashed assets, including every `content/*.<hash>.json` chunk, get `Cache-Control: max-age=31536000, immutable`, while `index.html` and `sw.js`, the only unhashed files (2.10), get `no-cache`.
 - The stack outputs `BucketName`, `DistributionId` and `SiteUrl`, and the site lives at the default `*.cloudfront.net` domain with no custom domain and no Route 53.
-- `pnpm site:deploy` runs `pnpm verify` and then, with `AWS_PROFILE=ccp-admin` (the IAM Identity Center admin from Mission 0):
+- `pnpm site:deploy` runs `pnpm verify` and then, with `AWS_PROFILE=ccp-admin` (the IAM admin user from Mission 0, signed in with `aws login`):
   1. **Hashed files:** `aws s3 sync` uploads them with no `--delete`.
   2. **Entry files:** `index.html` and `sw.js` are uploaded with `no-cache`.
   3. **Invalidation:** `/index.html`, `/` and `/sw.js`.
@@ -826,7 +826,7 @@ Core labs by engine: Sort 11, Simulate 6, Place 3, Configure 2, Trace 2 and Inve
 4. **One home Region**, chosen in Mission 0, and never the root user.
 5. **Tags:** every taggable resource is tagged `ccp:mission=<id>`, and Mission 1's kept site resources are tagged `ccp:keep=site` instead.
 6. **Before Start**, the app shows the expected credit use, a "what can use credits" list and `maxLiveHours` (default 2).
-7. **Never create:** NAT gateways; idle public IPv4 addresses or unattached Elastic IPs; RDS or Aurora, EKS, Redshift, OpenSearch or SageMaker endpoints; Shield Advanced or Direct Connect; Route 53 domains or hosted zones; Reserved Instance or Savings Plans purchases, Marketplace subscriptions; root access keys.
+7. **Never create:** NAT gateways; idle public IPv4 addresses or unattached Elastic IPs; RDS or Aurora, EKS, Redshift, OpenSearch or SageMaker endpoints; Shield Advanced or Direct Connect; Route 53 domains or hosted zones; Reserved Instance or Savings Plans purchases, Marketplace subscriptions; root access keys; an AWS organization, including the one that enabling IAM Identity Center creates, because it upgrades a free-plan account to the Paid plan.
 8. **Verify** is an observable result: a URL loads, a log line appears, or the policy simulator returns "denied".
 9. **Cleanup** goes in reverse dependency order and first deletes the mission's untagged leftovers by name, listed in its `leftovers` field.
    - Examples are the `/aws/lambda/<function>` log group that Lambda creates, an execution role and its policy, a detached EBS volume and an SNS subscription.
@@ -854,7 +854,7 @@ sources:
 
 | # | Mission | Modules | Creates | Expected credit use | Verify |
 |---|---|---|---|---|---|
-| 0 | Guardrails: root MFA; an IAM Identity Center admin user with MFA, set up for the CLI with `aws configure sso --profile ccp-admin`; a zero-spend budget plus a $5 monthly budget, both cost budgets with credits excluded so they track usage the credits pay for, alerting at 50/80/100% actual and 100% forecast; Free Tier usage alerts; home Region; the plan status recorded (plan, credit balance, end date, service fit per mission) | 9, 11 | budgets, Identity Center user | $0 | both budgets listed with Dani's email as recipient; root and admin MFA enabled; plan status saved |
+| 0 | Guardrails: root MFA; an IAM admin user `ccp-admin` with MFA, signed in for the CLI with `aws login --profile ccp-admin`; a zero-spend budget plus a $5 monthly budget, both cost budgets with credits excluded so they track usage the credits pay for, alerting at 50/80/100% actual and 100% forecast; Free Tier usage alerts; home Region; the plan status recorded (plan, credit balance, end date, service fit per mission) | 9, 11 | budgets, IAM user | $0 | both budgets listed with Dani's email as recipient; root and admin MFA enabled; plan status saved |
 | 1 | Host this site with private S3, CloudFront and OAC, using `infra/site.yaml` (kept: `keep: true`) | 4, 5, 6 | bucket, distribution | cents per month at most | direct S3 URL returns 403 and the CloudFront URL serves |
 | 2 | Launch, connect to, stop and terminate an EC2 instance, and watch what happens to its EBS volume | 2, 6 | instance, volume, security group | low; public IPv4 is charged hourly | page served from the instance |
 | 3 | An S3 upload triggers Lambda, which logs a "receipt" | 3, 6, 10 | function, bucket, log group | about $0 | log line in CloudWatch Logs |
@@ -1267,6 +1267,7 @@ External facts, each checked on 2026-10-09:
 | A new Free Tier account gets $100 in credits at sign-up and can earn up to $100 more by exploring key services | [AWS Free Tier](https://aws.amazon.com/free/) |
 | The free plan lasts up to 6 months, the account closes at 6 months or when the credits run out (whichever comes first), it covers select services only, and there are no charges unless the account converts to the Paid plan | [AWS Free Tier](https://aws.amazon.com/free/) |
 | When the free plan ends, AWS suspends the account, keeps its data for 90 days during which an upgrade to the Paid plan restores access, and then erases the account and its content | [AWS Free Tier FAQs](https://aws.amazon.com/free/free-tier-faqs/) |
+| On a free-plan account, creating an AWS organization, which enabling IAM Identity Center on a standalone account does, upgrades the account to the Paid plan and the free-plan credits expire at once | [Enable IAM Identity Center](https://docs.aws.amazon.com/singlesignon/latest/userguide/enable-identity-center.html) |
 | AWS Budgets sends an actual-cost alert once per budget per period, when the threshold is first reached; forecast alerts need about 5 weeks of usage data; cost budgets can include or exclude credits | [Best practices for AWS Budgets](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-best-practices.html) |
 | An exam can be rescheduled up to 24 hours before the appointment, and each appointment can be rescheduled twice | [AWS Certification policies, before testing](https://aws.amazon.com/certification/policies/before-testing/) |
 | Cancelling more than 24 hours before the appointment refunds the fee; within 24 hours there is no refund | [AWS Certification policies, before testing](https://aws.amazon.com/certification/policies/before-testing/) |
