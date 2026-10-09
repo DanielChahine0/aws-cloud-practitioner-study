@@ -68,11 +68,43 @@ export interface LessonChunk {
   headings: HeadingMeta[];
 }
 
+export interface OptionView {
+  id: string;
+  text: string;
+  correct: boolean;
+  why: string;
+}
+
+export interface PairView {
+  left: string;
+  right: string;
+  why: string;
+}
+
+/** A live practice question as the runner shows it. */
+export interface QuestionView {
+  id: string;
+  version: number;
+  type: 'single' | 'multi' | 'match';
+  concept: string;
+  note: string;
+  task: string;
+  level: 1 | 2 | 3;
+  stem: string;
+  select: 2 | 3 | null;
+  options: OptionView[];
+  pairs: PairView[];
+  takeaway: string;
+  /** Where "Read in notes" goes, and the evidence line it highlights there. */
+  read: { route: string; text: string };
+}
+
 /** content/mNN.<hash>.json */
 export interface ModuleChunk {
   module: number;
   readme: Section[];
   lessons: Record<string, LessonChunk>;
+  questions: QuestionView[];
 }
 
 export interface SearchEntry {
@@ -98,4 +130,6 @@ export interface ContentIndex {
   missions: MissionMeta[];
   /** Path of the search chunk from the site root. */
   search: string;
+  /** Every live practice question id with its version, for replay's unknown-id count. */
+  questionVersions: Record<string, number>;
 }

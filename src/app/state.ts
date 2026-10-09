@@ -1,7 +1,7 @@
 import { batch, signal } from '@preact/signals';
 import { parseHash, type Route } from './router.ts';
 
-export type Overlay = 'palette' | 'help';
+export type Overlay = 'palette' | 'help' | 'progress';
 
 export interface OpenTerm {
   id: string;
@@ -12,6 +12,8 @@ export interface OpenTerm {
 export const route = signal<Route>(parseHash(location.hash));
 /** The open modal dialog, if any. */
 export const overlay = signal<Overlay | null>(null);
+/** The evidence line that "Read in notes" asks the lesson to highlight once it renders. */
+export const highlight = signal<string | null>(null);
 /** The glossary popover and the term button that opened it. */
 export const openTerm = signal<OpenTerm | null>(null);
 

@@ -93,7 +93,7 @@ export function buildContent(ctx: Context): BuiltContent {
       });
     }
     const readmeSections = renderDoc(readme.body, { path: readme.path, routes, terms: null }).sections;
-    const chunk: ModuleChunk = { module: n, readme: readmeSections, lessons: chunkLessons };
+    const chunk: ModuleChunk = { module: n, readme: readmeSections, lessons: chunkLessons, questions: [] };
     modules.push({
       n,
       slug: readme.fm.slug,
@@ -167,7 +167,15 @@ export function buildContent(ctx: Context): BuiltContent {
     });
 
   const searchChunk: SearchChunk = { entries: search };
-  const body = { modules, concepts, glossary, missions, search: emit('search', searchChunk) };
+  const questionVersions: Record<string, number> = {};
+  const body = {
+    modules,
+    concepts,
+    glossary,
+    missions,
+    search: emit('search', searchChunk),
+    questionVersions,
+  };
   const contentVersion = `c-${sha256(JSON.stringify(body)).slice(0, 6)}`;
   const index: ContentIndex = { contentVersion, ...body };
   return { contentVersion, indexFile: emit('index', index), files };

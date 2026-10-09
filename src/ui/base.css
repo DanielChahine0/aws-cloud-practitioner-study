@@ -122,6 +122,34 @@ kbd {
   text-decoration: underline;
 }
 
+.topbar-button {
+  min-height: 44px;
+  padding: 0;
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.topbar-button:hover {
+  text-decoration: underline;
+}
+
+/* The save-error banner (spec 8.1) sits under the top bar, in the page column. */
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  max-width: calc(68ch + 32px);
+  margin: 0 auto;
+  padding: 10px 16px;
+  background: var(--pane);
+  border-bottom: 1px solid var(--line);
+  box-shadow: inset 3px 0 0 var(--bad);
+}
+
 .topbar .brand {
   font-weight: 700;
   letter-spacing: 0.02em;

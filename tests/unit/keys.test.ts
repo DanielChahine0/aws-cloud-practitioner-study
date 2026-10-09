@@ -98,4 +98,24 @@ describe('keyCommand', () => {
     expect(keyCommand(key('['), ctx({ route: LESSON_A }))).toBeNull();
     expect(keyCommand(key(']'), ctx({ route: { kind: 'module', module: 1 } }))).toBeNull();
   });
+
+  it('opens Progress with g then p, in either case', () => {
+    expect(keyCommand(key('p'), ctx({ gAt: 9_500 }))).toEqual({ kind: 'progress' });
+    expect(keyCommand(key('P'), ctx({ gAt: 9_500 }))).toEqual({ kind: 'progress' });
+    expect(keyCommand(key('p'), ctx({ gAt: 8_000 }))).toBeNull();
+    expect(keyCommand(key('p'), ctx())).toBeNull();
+  });
+
+  it('jumps from a lesson to its check with c, only on a lesson', () => {
+    expect(keyCommand(key('c'), ctx({ route: LESSON_A }))).toEqual({
+      kind: 'navigate',
+      hash: '#/s/check/m01/a',
+    });
+    expect(keyCommand(key('C'), ctx({ route: LESSON_A }))).toEqual({
+      kind: 'navigate',
+      hash: '#/s/check/m01/a',
+    });
+    expect(keyCommand(key('c'), ctx({ route: { kind: 'module', module: 1 } }))).toBeNull();
+    expect(keyCommand(key('c', { typing: true }), ctx({ route: LESSON_A }))).toBeNull();
+  });
 });
