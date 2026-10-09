@@ -7,7 +7,7 @@ External facts are listed with their sources in Appendix B, and course facts wer
 ## Status and decisions
 
 - **Date:** 2026-10-09.
-- **Status:** design approved by Dani in three parts on 2026-10-09; this written spec awaits his review before the implementation plan.
+- **Status:** design approved by Dani in three parts on 2026-10-09, and the written spec approved the same day when he booked the exam and asked to start the implementation.
 
 Decisions:
 
@@ -16,7 +16,7 @@ Decisions:
 3. **Gamification:** "clean progress" as specified in sections 3, 4 and 7, with no "Cafe analogy" note section and no promotion modal (a promotion is one dismissible line).
 4. **Exam drift:** "Course + flagged updates", where the course stays the base and sourced, dated "Exam guide update" lines in notes are the single exception to course-only grounding; questions use the exam's current names.
 5. **Ranks:** four ranks named after the current Support plans (Basic, Business Support+, Enterprise, Unified Operations), never taken away.
-6. **Exam date:** not booked yet; the recommendation is to book Thursday, November 19, 2026 and to reschedule if readiness is not Ready by Thursday, November 12.
+6. **Exam date:** booked for Saturday, November 14, 2026, with the go/no-go check on Saturday, November 7, when the exam is rescheduled if readiness is not Ready.
 7. **Git:** a local repository only (on `master`, already holding the notes commit, no remote yet), and no validator rule compares against a remote branch.
 8. **Course data:** lives in `~/Library/Application Support/ccp-study/` and never enters the repo; committed one-way fingerprints keep the originality check running in CI.
 9. **Notes:** `resources/` holds own-words notes for every content lesson, written by a separate notes workflow in the format of `resources/README.md`, and the build counts them.
@@ -500,17 +500,17 @@ xpForLevel(L) = 50 * L * (L - 1)          // L2 100, L5 1,000, L10 4,500, L20 19
 level(xp)     = floor((1 + sqrt(1 + xp / 12.5)) / 2)
 ```
 
-- At about 600 XP per day, Dani reaches L5 on day 2, L10 around day 8, and about L22 by exam day (41 days, about 24,600 XP); L24 would need about 675 XP per day.
+- At about 600 XP per day, Dani reaches L5 on day 2, L10 around day 8, and about L21 by exam day (36 days, about 21,600 XP); L24 would need about 770 XP per day.
 - Levels show only as the 2 px line in the top bar and as a number in Progress, and they gate nothing.
 
 ### 3.4 Ranks (current Support plans; data in `content/game/ranks.yaml`)
 
-| Rank | Unlock (every condition at the same moment) | Target for a November 19 exam |
+| Rank | Unlock (every condition at the same moment) | Target for the November 14 exam |
 |---|---|---|
 | Basic | Start | day 0, October 9 |
-| Business Support+ | 5 module bosses passed and 5 hexes at 60 or more | about day 20, October 29 (bosses ship October 28) |
-| Enterprise | 13 bosses passed and 13 hexes at 60 or more | about day 30, November 8 |
-| Unified Operations | 2 different unseen mock forms at 80% or more, the latest within 14 days, while readiness reads Ready | by day 34, November 12 (the go/no-go check) |
+| Business Support+ | 5 module bosses passed and 5 hexes at 60 or more | about day 17, October 26 (bosses ship October 24) |
+| Enterprise | 13 bosses passed and 13 hexes at 60 or more | about day 26, November 4 |
+| Unified Operations | 2 different unseen mock forms at 80% or more, the latest within 14 days, while readiness reads Ready | by day 29, November 7 (the go/no-go check) |
 
 ```yaml
 # content/game/ranks.yaml
@@ -635,7 +635,7 @@ Readiness = Mock ? 0.5*Memory + 0.5*Mock : min(Memory, 0.70)
 - Without a mock, the label reads `capped until your first unseen mock`.
 - The app shows raw percentages only and never a fake scaled score, because AWS publishes no mapping from raw to scaled scores.
 - **No exam date yet:** readiness projects 7 days ahead, and the app asks for the date once, after the Module 1 lessons are read (7.5).
-- **Go/no-go:** from `examDate - 7` to `examDate - 2`, while readiness is not Ready, Home shows one line such as `Exam Thu 19 Nov, readiness Close. Rescheduling closes 24 h before the appointment.`
+- **Go/no-go:** from `examDate - 7` to `examDate - 2`, while readiness is not Ready, Home shows one line such as `Exam Sat 14 Nov, readiness Close. Rescheduling closes 24 h before the appointment.`
 
 ### 3.10 Badges (12; no XP; shown in Progress and on the session-end line)
 
@@ -1005,7 +1005,7 @@ Single-letter keys work only inside their context, ignore case, and are off whil
   - Next reads `Start Module 1: Welcome to AWS Cloud Practitioner Essentials`.
   - One line reads `Progress lives in this browser. Import a backup`.
   - There is no tour.
-- **Exam date question:** after the Module 1 lessons are read, Home shows once `No exam date yet. The plan targets Thu 19 Nov.` with a date field prefilled with that date and a dismiss control.
+- **Exam date question:** after the Module 1 lessons are read, Home shows once `No exam date yet. The plan targets Sat 14 Nov.` with a date field prefilled with that date and a dismiss control.
   - The date comes from `TARGET_EXAM_DATE` in `src/app/config.ts`, so the copy never drifts from the plan in 10.2.
   - Setting it writes a `settings` event; dismissing it writes `examAsk: dismissed` to `kv`, and the date stays editable in Progress.
 - **Empty states:**
@@ -1161,43 +1161,43 @@ Playwright with `page.clock` covers multi-day journeys, axe runs on every screen
 ## 10 Build order
 
 **Decisions.**
-Every phase ships something Dani uses that week, and the order follows a November 19 exam: reader first, then practice, the memory loop and exam measurement, with labs after.
+Every phase ships something Dani uses that week, and the order follows the November 14 exam: reader first, then practice, the memory loop and exam measurement, with labs after.
 Phases 0 to 3 are the exam-critical core, and if time runs short scope is cut in this order: Phase 6, then Phase 5, then Phase 4 down to its Sort labs.
-Nothing but fixes ships between the go/no-go check on Thursday, November 12 and the exam.
+Nothing but fixes ships between the go/no-go check on Saturday, November 7 and the exam.
 
 ### 10.1 Phases
 
 | Phase | Target | Ships | Usable outcome | Exit criteria |
 |---|---|---|---|---|
 | 0 Spine | Sun Oct 11 | Node 24 pinned; site scaffold commit; pre-commit hook; `validate.yaml`; fingerprints and `allow.txt`; `concepts.yaml` seeded and completed; `blueprint.yaml` with all 19 tasks and their terms; rules R1, R2, R6, R7, R8 and R13; reader, palette, glossary, update-line rendering; Module 11 update lines; Missions 0 and 1 as read-only pages, done by hand | Read every note on a phone at the CloudFront URL | R1, R2, R6, R7, R8 and R13 on; every note passes R6, R7 and R8; the site serves through CloudFront |
-| 1 Practice | Thu Oct 15 | Question schema, check pipeline and `content:stamp` piloted on Modules 1 and 3; runner (single, multi, match); lesson checks; module quiz; event log; export and import; `content:report --coverage` and the update lines for every missing blueprint term | Practice Modules 1 and 3 with saved progress | R3, R4, R5 and R9 also on; every live pilot question passes them |
-| 2 Memory loop | Thu Oct 22 | Questions for the other 11 modules; FSRS queue, bets, XP, level, streak, top bar; Home with Next (including "Check yourself"), hexes and "Done for today"; exam date question; offline service worker | The daily habit loop across the whole course | R10 on at 2 per concept with `blueprintTerms`, so the coverage report lists no missing term |
-| 3 Exam | Wed Oct 28 | Exam pool under `content/exam/pool/`, quotas, and forms A-D frozen; bosses; mock with focus mode; error review; readiness and go/no-go line; ranks; badges; Progress overlay | Exam measurement and a go/no-go signal | R10 `examQuotas` and R12 on; the leakage test green |
-| 4 Labs I | Wed Nov 4 | Lab contract and the Sort engine with its 11 core labs first, then Configure and Simulate (8 more); incidents; lightning | Hands-on practice offline | R11 on; every shipped lab replays |
+| 1 Practice | Wed Oct 14 | Question schema, check pipeline and `content:stamp` piloted on Modules 1 and 3; runner (single, multi, match); lesson checks; module quiz; event log; export and import; `content:report --coverage` and the update lines for every missing blueprint term | Practice Modules 1 and 3 with saved progress | R3, R4, R5 and R9 also on; every live pilot question passes them |
+| 2 Memory loop | Mon Oct 19 | Questions for the other 11 modules; FSRS queue, bets, XP, level, streak, top bar; Home with Next (including "Check yourself"), hexes and "Done for today"; exam date question; offline service worker | The daily habit loop across the whole course | R10 on at 2 per concept with `blueprintTerms`, so the coverage report lists no missing term |
+| 3 Exam | Sat Oct 24 | Exam pool under `content/exam/pool/`, quotas, and forms A-D frozen; bosses; mock with focus mode; error review; readiness and go/no-go line; ranks; badges; Progress overlay | Exam measurement and a go/no-go signal | R10 `examQuotas` and R12 on; the leakage test green |
+| 4 Labs I | Sat Oct 31 | Lab contract and the Sort engine with its 11 core labs first, then Configure and Simulate (8 more); incidents; lightning | Hands-on practice offline | R11 on; every shipped lab replays |
 | 5 Labs II | after the exam | Place, Trace and Investigate with their 7 core labs; stretch labs | The full core lab catalog | 26 core labs live |
 | 6 Capstone and missions | after the exam, all of it; capstone decisions unlocked earlier wait until then | ADR editor, reference reveal, export; Missions 2-8 and the one-time `Already done` action for Missions 0 and 1; accessibility and visual baselines; 3 questions per concept | The complete product | All e2e green; R10 at 3 per concept |
 
 - If the booked date moves, the targets move with it, and the cut order stays the same.
 
-### 10.2 Study calendar for a November 19 exam
+### 10.2 Study calendar for the November 14 exam
 
 | Week | Dates | Study | Milestones |
 |---|---|---|---|
-| 1 | Oct 9-15 | Modules 1-3; lesson checks and quizzes for Modules 1 and 3 from Oct 15 | Book the exam for Thu Nov 19; Missions 0 and 1 |
-| 2 | Oct 16-22 | Modules 4-6; daily reviews from Oct 22 | All modules have practice questions; "Check yourself" brings back the lessons read before their questions existed |
-| 3 | Oct 23-29 | Modules 7-9 and daily reviews | Bosses ship Oct 28; bosses for Modules 1-8; Business Support+ |
-| 4 | Oct 30-Nov 5 | Modules 10-13; bosses for Modules 9-13 | Form A Sun Nov 1; form B Thu Nov 5 |
-| 5 | Nov 6-12 | Reviews and focus quizzes on the weakest tasks | Enterprise (13 bosses); form C Mon Nov 9; go/no-go Thu Nov 12 |
-| 6 | Nov 13-18 | Form D Sat Nov 14, then reviews only | Exam Thu Nov 19 |
+| 1 | Oct 9-14 | Modules 1-3; lesson checks and quizzes for Modules 1 and 3 from Oct 14 | Exam booked for Sat Nov 14; Missions 0 and 1 |
+| 2 | Oct 15-21 | Modules 4-7; daily reviews from Oct 19 | All modules have practice questions from Oct 19; "Check yourself" brings back the lessons read before their questions existed |
+| 3 | Oct 22-28 | Modules 8-11 and daily reviews | Bosses ship Oct 24; bosses for Modules 1-7; Business Support+; form A Tue Oct 27 |
+| 4 | Oct 29-Nov 4 | Modules 12-13; bosses for Modules 8-13 | Form B Sat Oct 31; form C Wed Nov 4; Enterprise (13 bosses) |
+| 5 | Nov 5-11 | Reviews and focus quizzes on the weakest tasks | Go/no-go Sat Nov 7; form D Mon Nov 9 |
+| 6 | Nov 12-14 | Reviews only | Exam Sat Nov 14 |
 
 - Mocks are at least 3 days apart, matching the extras rule (4.6).
-- Form D on November 14 keeps an unseen mock inside the 21-day readiness window (3.9) even if the exam moves by up to two weeks.
-- **Go/no-go rule:** on Thursday, November 12, if readiness is not Ready, reschedule by one or two weeks; rescheduling is allowed up to 24 hours before the appointment and twice per appointment, and cancelling more than 24 hours ahead refunds the fee.
+- Form D on November 9 keeps an unseen mock inside the 21-day readiness window (3.9) even if the exam moves by up to two weeks.
+- **Go/no-go rule:** on Saturday, November 7, if readiness is not Ready, reschedule by one or two weeks; rescheduling is allowed up to 24 hours before the appointment and twice per appointment, and cancelling more than 24 hours ahead refunds the fee.
 
 ## 11 Risks and open questions
 
 **Decisions.**
-The biggest risks are drift between the course and the exam, the six-week window against build time, and the free-plan account closing with the hosted site on it.
+The biggest risks are drift between the course and the exam, the five-week window against build time, and the free-plan account closing with the hosted site on it.
 Each risk has a mechanism already in this design, and the questions still open for Dani follow, each with a default.
 
 | Id | Risk | Mitigation |
@@ -1207,7 +1207,7 @@ Each risk has a mechanism already in this design, and the questions still open f
 | K3 | About `3C + 260` items times 3 agent checks is a large verification load | Hash-bound stamps make re-verification incremental, and 2 questions per concept come first |
 | K4 | The course data in `~/Library/Application Support/ccp-study/` could be lost | Committed fingerprints keep R7 running without it; Dani includes the folder in his own Mac backups; re-extraction is Appendix A |
 | K5 | Duplicate or near-duplicate tags across notes | One home per concept and aliases in `concepts.yaml`, enforced by R6 |
-| K6 | Six weeks is short for building and studying at once | Phase 0 ships a usable reader in 2 days; the cut order is Phase 6, then 5, then 4 down to its Sort labs; only fixes ship between November 12 and the exam |
+| K6 | Five weeks is short for building and studying at once | Phase 0 ships a usable reader in 2 days; the cut order is Phase 6, then 5, then 4 down to its Sort labs; only fixes ship between November 7 and the exam |
 | K7 | Browser storage can be evicted, especially in Safari | `persist()`, the backup reminder, merge import and home-screen install |
 | K8 | FSRS defaults were tuned on flashcards, not multiple choice | Easy is never used, Not sure rates Hard, variants rotate, and parameters can be fitted offline after about 1,000 reviews |
 | K9 | Mock percentages are not AWS scaled scores | An 80% bar and raw percentages only |
@@ -1218,14 +1218,14 @@ Each risk has a mechanism already in this design, and the questions still open f
 | K14 | The exam pool ships in the bundle and relies on the honor system | A separate lazy chunk that only the mock screen loads |
 
 **Open questions for Dani:**
-1. **Booking:** once the exam is booked, which date and time, and testing center or online proctored?
-   - Default: until a date is entered, readiness projects 7 days ahead and the app asks once after Module 1; the delivery mode does not change the app.
+1. **Booking:** the exam is booked for Saturday, November 14, 2026; is it at a testing center or online proctored?
+   - Default: the delivery mode does not change the app, and until the date is entered in the app, readiness projects 7 days ahead and the app asks once after Module 1.
 2. **After the exam:** keep the site when the free-plan account closes?
    - Default: export a backup and let the account close.
    - If Dani wants it online, he can upgrade this account to the Paid plan within 90 days of the free plan ending, which restores the account and the site in place, or redeploy `infra/site.yaml` to another paid account; after 90 days AWS erases the account and its content.
 3. **FSRS fitting:** fit personal parameters after about 1,000 reviews?
    - Default: no fitting before the exam.
-4. **A late exam move:** if the exam moves more than two weeks past November 19, form D falls outside the 21-day readiness window and Ready cannot be reached.
+4. **A late exam move:** if the exam moves more than two weeks past November 14, form D falls outside the 21-day readiness window and Ready cannot be reached.
    - Default: only then generate one form E of 65 new exam-pool items under the same quotas, which pays the mock XP once like A to D.
 
 ## Appendix A: Re-extracting course content
@@ -1271,7 +1271,7 @@ External facts, each checked on 2026-10-09:
 | An exam can be rescheduled up to 24 hours before the appointment, and each appointment can be rescheduled twice | [AWS Certification policies, before testing](https://aws.amazon.com/certification/policies/before-testing/) |
 | Cancelling more than 24 hours before the appointment refunds the fee; within 24 hours there is no refund | [AWS Certification policies, before testing](https://aws.amazon.com/certification/policies/before-testing/) |
 | AWS documents a console tutorial in which an S3 upload triggers a Lambda function that writes to CloudWatch Logs (Mission 3) | [Tutorial: Using an Amazon S3 trigger to invoke a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html) |
-| November 19, 2026 is a Thursday, 41 days after October 9, 2026, and November 12, 2026 is the Thursday one week before | calendar arithmetic |
+| November 14, 2026 is a Saturday, 36 days after October 9, 2026, and November 7, 2026 is the Saturday one week before | calendar arithmetic |
 
 Course facts, checked against the course source text (`source/module-NN.md`, outside the repo) on 2026-10-09:
 
