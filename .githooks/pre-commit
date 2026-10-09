@@ -23,4 +23,17 @@ git -C "$tree" read-tree --reset -u "$staged"
 # The checks use this checkout's dependencies through a link, so pnpm must not try to install into the worktree.
 ln -s "$root/node_modules" "$tree/node_modules"
 cd "$tree"
+
+# Git can run this hook from a shell where fnm never switched Node, so switch here to the version the snapshot pins.
+pinned=v$(sed 's/^v//' .node-version | tr -d '[:space:]')
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --shell bash)"
+  fnm use --silent-if-unchanged >/dev/null 2>&1 || true
+fi
+active=$(node --version 2>/dev/null || echo none)
+if [ "$active" != "$pinned" ]; then
+  echo "pre-commit: Node $active is active but .node-version pins $pinned; install it with 'fnm install' or switch to it, then commit again." >&2
+  exit 1
+fi
+
 pnpm_config_verify_deps_before_run=false pnpm check
