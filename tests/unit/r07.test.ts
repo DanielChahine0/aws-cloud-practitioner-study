@@ -2,6 +2,7 @@ import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
+import { fingerprintCourse } from '../../scripts/content/lib/fingerprint-files.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 
@@ -30,6 +31,66 @@ describe('R7 originality', () => {
     expect(unmasked.map((f) => f.message.split(' from')[0])).toEqual([
       'copies a 14-word run',
       '9.4% of its 6-word sequences come',
+    ]);
+  });
+});
+
+describe('R7 across the one-set partition', () => {
+  // Module 2's knowledge check shares one 6-word shingle, "a branch borrow ovens only during", with Module 1's check,
+  // and the one-set rule stores that shingle only in Module 1's items set.
+  const MODULE_2 = [
+    '# Module 2: Selling Bread',
+    '## SECTION: Market',
+    '### LESSON 1: Market Stalls (blocks)',
+    '[TEXT]',
+    'Market stalls sell the last loaves at half price just before closing time each evening.',
+    '[KNOWLEDGE CHECK (multiple choice)]',
+    'Why would a branch borrow ovens only during closing time each evening?',
+    '- (CORRECT) To bake fresh loaves for the evening market',
+    '',
+  ].join('\n');
+
+  function twoModuleRoot(): string {
+    const root = makeFixtureRoot();
+    const one = readFileSync(join(import.meta.dirname, '..', 'fixtures', 'source', 'module-01.md'), 'utf8');
+    for (const file of fingerprintCourse(
+      new Map([
+        [1, one],
+        [2, MODULE_2],
+      ]),
+    )) {
+      writeFileSync(join(root, 'content', 'fingerprints', `m0${file.module}.json`), JSON.stringify(file));
+    }
+    return root;
+  }
+
+  it("finds a stem-check run whose shingles the partition split between two modules' items", () => {
+    const root = twoModuleRoot();
+    replaceIn(
+      root,
+      'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml',
+      'Which choice fits the bakery cloud?',
+      'The owner asks, would a branch borrow ovens only during closing rush? Which choice fits the bakery cloud?',
+    );
+    const findings = runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R7']).findings;
+    expect(findings.map((f) => f.message)).toEqual([
+      'q-b4k7m2 shares an 8-word run with a Module 2 knowledge check or assessment item: "would a branch borrow ovens only during closing"',
+    ]);
+  });
+
+  it("reports a copied Module 1 check once, not again for Module 2, which reads Module 1's items too", () => {
+    const root = twoModuleRoot();
+    replaceIn(
+      root,
+      'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml',
+      'Which choice fits the bakery cloud?',
+      'Which feature lets a branch borrow ovens only during the busy morning hours?',
+    );
+    const findings = runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R7']).findings;
+    const copied = 'which feature lets a branch borrow ovens only during the busy morning hours';
+    expect(findings.map((f) => f.message)).toEqual([
+      `q-b4k7m2 copies a 9-word run from the course: "${copied}"`,
+      `q-b4k7m2 shares an 8-word run with a Module 1 knowledge check or assessment item: "${copied}"`,
     ]);
   });
 });

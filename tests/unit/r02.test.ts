@@ -162,6 +162,18 @@ describe('R2 questions', () => {
     expect(withQuestionHead(retired, keep)).toEqual([]);
   });
 
+  it('leaves a live question that only fails the schema, or a file that does not parse, to R1', () => {
+    const stem =
+      'stem: A harbour branch sells out of rolls each Saturday because its two ovens cannot keep up. Which choice fits the bakery cloud?';
+    const shortStem = (root: string): void => replaceIn(root, QUESTIONS, stem, 'stem: Too short?');
+    expect(withQuestionHead(same, shortStem)).toEqual([]);
+    const unknownKey = (root: string): void =>
+      replaceIn(root, QUESTIONS, '    pool: practice\n', '    pool: practice\n    colour: blue\n');
+    expect(withQuestionHead(same, unknownKey)).toEqual([]);
+    const broken = (root: string): void => replaceIn(root, QUESTIONS, 'questions:\n', 'questions:\n  - [\n');
+    expect(withQuestionHead(same, broken)).toEqual([]);
+  });
+
   it('needs a version bump and a key-fix entry when the correct answer of a live question changes', () => {
     const moveKey = (root: string): void => {
       replaceIn(root, QUESTIONS, '        correct: true\n', '');

@@ -476,22 +476,23 @@ questions:
     task: "3.3"
     level: 2
     stem: >-
-      The cafe is planning four container workloads.
+      Four businesses are each planning a container workload.
       Match each workload to the orchestrator and launch type that suits it.
     pairs:
-      - left: A new web app whose traffic rises and falls
+      - left: A startup's new web app whose traffic rises and falls
         right: Amazon ECS with AWS Fargate
-        why: Fargate removes server care and charges only for what is used, which suits uneven traffic with a streamlined orchestrator.
-      - left: An app that needs particular hardware or networking
+        why: A young app with uneven traffic wants the streamlined orchestrator, and Fargate removes server care and charges only for what is used.
+      - left: A small business app that needs particular hardware or networking
         right: Amazon ECS with Amazon EC2
-        why: The EC2 launch type lets the cafe choose and control the instances, which the special hardware needs.
-      - left: Kubernetes work with no servers for the team to run
+        why: A small business without Kubernetes needs gets the streamlined orchestrator, and the EC2 launch type lets it choose and control the instances the hardware needs.
+      - left: A team that wants Kubernetes with no servers to run
         right: Amazon EKS with AWS Fargate
         why: EKS keeps Kubernetes, and Fargate takes the servers off the team's hands.
-      - left: Large, complex workloads that need fine instance tuning
+      - left: An enterprise's large, complex workloads that need deep instance tuning
         right: Amazon EKS with Amazon EC2
-        why: EKS gives extra control for big setups, and EC2 allows the deep instance tuning they ask for.
+        why: EKS suits large enterprise setups, and EC2 allows the deep instance tuning they ask for.
     evidence:
+      - Choose EKS for Kubernetes and large or hybrid setups, and ECS for a streamlined, integrated option.
       - "EC2: you manage the VMs under your containers, for full control plus upkeep."
       - "Fargate: serverless, so AWS runs the servers while ECS or EKS orchestrates, and you pay only for resources used."
     takeaway: Pick Fargate when nobody should manage servers, and EC2 when the workload needs control over its instances.

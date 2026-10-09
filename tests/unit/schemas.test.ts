@@ -94,7 +94,13 @@ describe('Blueprint', () => {
 
 describe('FingerprintFile', () => {
   const set = { range: 200, count: 1, f: 1 / 200, data: 'AAAl' };
-  const file = (itemIds: unknown) => ({ module: 1, text: set, items: set, itemIds });
+  const file = (itemIds: unknown, itemsFrom: unknown = []) => ({
+    module: 1,
+    text: set,
+    items: set,
+    itemIds,
+    itemsFrom,
+  });
 
   it('accepts sorted, unique item ids', () => {
     expect(FingerprintFile.safeParse(file(['kc-01', 'kc-02', 'quiz-01'])).success).toBe(true);
@@ -108,6 +114,14 @@ describe('FingerprintFile', () => {
     expect(messages(FingerprintFile.safeParse(file(['kc-01', 'kc-01'])))).toEqual([
       'itemIds: item ids must be sorted and unique',
     ]);
+  });
+
+  it('takes a sorted, unique list of the modules that hold some of its item shingles', () => {
+    expect(FingerprintFile.safeParse(file([], [2, 5])).success).toBe(true);
+    expect(messages(FingerprintFile.safeParse(file([], [5, 2])))).toEqual([
+      'itemsFrom: module numbers must be sorted and unique',
+    ]);
+    expect(FingerprintFile.safeParse(file([], [14])).success).toBe(false);
   });
 
   // Each course shingle sits in exactly one set, so the old truncated sets and per-item sets are gone (spec 2.5).

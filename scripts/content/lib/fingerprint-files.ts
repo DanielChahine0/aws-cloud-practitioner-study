@@ -37,7 +37,10 @@ export function partitionShingles(sources: ReadonlyMap<number, string>): Map<num
   return out;
 }
 
-/** The fingerprint files of the whole course, one per source module in order, each with its two sets and its sorted item ids. */
+/**
+ * The fingerprint files of the whole course, one per source module in order, each with its two sets, its sorted item ids
+ * and the other modules whose `items` sets hold some of its item shingles.
+ */
 export function fingerprintCourse(sources: ReadonlyMap<number, string>): FingerprintFile[] {
   const parts = partitionShingles(sources);
   return [...sources.keys()]
@@ -49,7 +52,16 @@ export function fingerprintCourse(sources: ReadonlyMap<number, string>): Fingerp
       const repeated = itemIds.find((id, i) => id === itemIds[i - 1]);
       if (repeated !== undefined) throw new Error(`module ${module} repeats item ${repeated}`);
       const part = parts.get(module) ?? { text: new Set<string>(), items: new Set<string>() };
-      return { module, text: packShingles(part.text), items: packShingles(part.items), itemIds };
+      const items = splitItems(sources.get(module) ?? '').flatMap((item) => shinglesOf(item.text));
+      return {
+        module,
+        text: packShingles(part.text),
+        items: packShingles(part.items),
+        itemIds,
+        itemsFrom: [...parts.entries()]
+          .filter(([other, p]) => other !== module && items.some((s) => p.items.has(s)))
+          .map(([other]) => other),
+      };
     });
 }
 

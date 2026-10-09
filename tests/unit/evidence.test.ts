@@ -49,6 +49,14 @@ describe('noteLines', () => {
     expect(lines.has('')).toBe(false);
     expect(lines.get('Twice.')).toBe(6);
   });
+
+  // "Read in notes" marks one p, li or td whose text is the evidence, and no single cell holds a whole row.
+  it('cites each body cell of a table, never a whole row or a header cell', () => {
+    const table = '| Term | Meaning |\n| :--- | ---: |\n| Oven | Bakes **bread** \\| rolls |\n';
+    const lines = noteLines(noteOf(`## Notes\n\n${table}- After.\n`));
+    expect([...lines.keys()]).toEqual(['## Notes', 'Oven', 'Bakes bread | rolls', 'After.']);
+    expect(lines.get('Oven')).toBe((lines.get('After.') ?? 0) - 1);
+  });
 });
 
 describe('sectionAt', () => {

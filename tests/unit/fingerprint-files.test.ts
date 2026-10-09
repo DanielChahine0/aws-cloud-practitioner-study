@@ -77,6 +77,15 @@ describe('fingerprintCourse', () => {
     }
   });
 
+  it("names the other modules whose items sets hold some of a module's item shingles", () => {
+    // Module 2's check repeats a Module 1 lesson sentence, which is still Module 2's own item text.
+    expect(fingerprintCourse(SOURCES).map((f) => f.itemsFrom)).toEqual([[], []]);
+    const check = 'Which cabinet should a baker rent for rye dough on a cold winter morning?';
+    const third = `# Module 3: Delivery\n[KNOWLEDGE CHECK (multiple choice)]\n${check}\n- (CORRECT) Vans\n`;
+    const withThird = fingerprintCourse(new Map([...SOURCES, [3, third]]));
+    expect(withThird.map((f) => f.itemsFrom)).toEqual([[], [], [1]]);
+  });
+
   it('refuses a source that repeats an assessment question number', () => {
     const block = '[ASSESSMENT Q1 (MULTIPLE_CHOICE)]\nWhich oven should a branch rent this morning?\n';
     expect(() => fingerprintCourse(new Map([[1, block + block]]))).toThrow('module 1 repeats item quiz-01');
