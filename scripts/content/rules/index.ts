@@ -4,6 +4,7 @@ import { r01 } from './r01-schema.ts';
 import { r02 } from './r02-ids.ts';
 import { r03 } from './r03-answer-counts.ts';
 import { r04 } from './r04-explanations.ts';
+import { r05 } from './r05-evidence.ts';
 import { r06 } from './r06-references.ts';
 import { r07 } from './r07-originality.ts';
 import { r08 } from './r08-style.ts';
@@ -11,7 +12,7 @@ import { r13 } from './r13-sources.ts';
 import type { Rule } from './rule.ts';
 
 /** The implemented rules, in id order; each rule task in this phase adds its rule here. */
-export const RULES: readonly Rule[] = [r01, r02, r03, r04, r06, r07, r08, r13];
+export const RULES: readonly Rule[] = [r01, r02, r03, r04, r05, r06, r07, r08, r13];
 
 const rank = (id: RuleId): number => Number(id.slice(1));
 
