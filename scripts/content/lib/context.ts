@@ -1,12 +1,13 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { parse as parseYaml } from 'yaml';
+import { isNode, isSeq, LineCounter, parseDocument, parse as parseYaml } from 'yaml';
 import { Blueprint } from '../../../schemas/blueprint.ts';
 import { Concept } from '../../../schemas/concept.ts';
 import { FingerprintFile } from '../../../schemas/fingerprint.ts';
 import { MissionFrontmatter } from '../../../schemas/mission.ts';
 import { LessonFrontmatter, ModuleFrontmatter } from '../../../schemas/note.ts';
+import { Question, QuestionFile } from '../../../schemas/question.ts';
 import { type RuleId, ValidateConfig } from '../../../schemas/validate-config.ts';
 import { type HashSet, unpack } from './fingerprint.ts';
 import { type Heading, headingsOf, splitFrontmatter } from './markdown.ts';
@@ -54,6 +55,16 @@ export interface TextFile {
   text: string;
 }
 
+/** One question that passed the schema, with where it sits: `line` is the 1-based line of its list item. */
+export interface QuestionEntry {
+  path: string;
+  line: number;
+  index: number;
+  /** The note the file belongs to, from its path: m01/what-a-bakery-cloud-is. */
+  noteId: string;
+  q: Question;
+}
+
 export interface ModulePrints {
   text: HashSet;
   /** Knowledge check and assessment item ids, sorted; items carry no hashes of their own (spec 2.5). */
@@ -71,17 +82,23 @@ export interface Context {
   concepts: readonly Concept[];
   blueprint: Blueprint | null;
   missions: readonly Mission[];
+  /** Questions that passed the schema, in file then item order. */
+  questions: readonly QuestionEntry[];
   fingerprints: ReadonlyMap<number, ModulePrints>;
   allow: readonly (readonly string[])[];
   loadErrors: readonly Finding[];
   read: (path: string) => string | null;
   head: (path: string) => string | null;
+  /** Paths in HEAD under the prefix; [] outside git or when HEAD has none. */
+  headPaths: (prefix: string) => string[];
 }
 
 export const CONFIG_FILE = 'content/validate.yaml';
 export const CONCEPTS_FILE = 'content/concepts.yaml';
 export const BLUEPRINT_FILE = 'content/exam/blueprint.yaml';
 export const ALLOW_FILE = 'content/fingerprints/allow.txt';
+export const QUESTIONS_DIR = 'content/questions';
+const QUESTION = /^content\/questions\/(\d{2})-[a-z0-9-]+\/(\d{2})-([a-z0-9-]+)\.yaml$/;
 const NOTE = /^resources\/(\d{2})-([a-z0-9-]+)\/(?:(\d{2})-([a-z0-9-]+)|README)\.md$/;
 const SHARED = /^resources\/[^/]+\.md$/;
 const MISSION = /^content\/missions\/(mission-\d{2})-[a-z0-9-]+\.md$/;
@@ -253,6 +270,41 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     }
   };
 
+  const questions: QuestionEntry[] = [];
+  const loadQuestions = (path: string, match: RegExpExecArray): void => {
+    const lineCounter = new LineCounter();
+    const doc = parseDocument(read(path) ?? '', { lineCounter });
+    const [yamlError] = doc.errors;
+    if (yamlError !== undefined) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        line: lineCounter.linePos(yamlError.pos[0]).line,
+        message: `YAML: ${yamlError.message}`,
+      });
+      return;
+    }
+    const parsed = QuestionFile.safeParse(doc.toJS());
+    if (!parsed.success) {
+      schemaErrors(path, parsed.error.issues);
+      return;
+    }
+    const seq = doc.get('questions', true);
+    const items = isSeq(seq) ? seq.items : [];
+    for (const [index, item] of parsed.data.questions.entries()) {
+      const node = items[index];
+      const start = isNode(node) ? node.range?.[0] : undefined;
+      const line = start === undefined ? undefined : lineCounter.linePos(start).line;
+      const result = Question.safeParse(item);
+      if (!result.success) {
+        const label = isRecord(item) && typeof item.id === 'string' ? item.id : `#${index + 1}`;
+        schemaErrors(path, result.error.issues, `questions[${index}] (${label})`, line);
+        continue;
+      }
+      questions.push({ path, line: line ?? 1, index, noteId: `m${match[1]}/${match[3]}`, q: result.data });
+    }
+  };
+
   let config: ValidateConfig | null = null;
   const configData = yamlFile(CONFIG_FILE);
   if (configData !== undefined) {
@@ -309,6 +361,20 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       loadPrints(path, Number(prints[1]));
       continue;
     }
+    const questionFile = QUESTION.exec(path);
+    if (questionFile) {
+      loadQuestions(path, questionFile);
+      continue;
+    }
+    if (path.startsWith(`${QUESTIONS_DIR}/`) && path.endsWith('.yaml')) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message:
+          'not a question file path (content/questions/NN-module/NN-lesson.yaml), so no rule checks it',
+      });
+      continue;
+    }
     if (path.startsWith('resources/') && path.endsWith('.md')) {
       errors.push({
         rule: 'R1',
@@ -325,6 +391,14 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     const result = spawnSync('git', ['show', `HEAD:${path}`], { cwd: root, encoding: 'utf8' });
     return result.status === 0 ? result.stdout : null;
   };
+  const headPaths = (prefix: string): string[] => {
+    if (!isGit) return [];
+    const result = spawnSync('git', ['ls-tree', '-r', '--name-only', 'HEAD', '--', prefix], {
+      cwd: root,
+      encoding: 'utf8',
+    });
+    return result.status === 0 ? result.stdout.split('\n').filter((p) => p !== '') : [];
+  };
 
   return {
     root,
@@ -336,10 +410,12 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     concepts,
     blueprint,
     missions,
+    questions,
     fingerprints,
     allow: allowText === null ? [] : phrasesFrom(allowText.split('\n')),
     loadErrors: errors,
     read,
     head,
+    headPaths,
   };
 }

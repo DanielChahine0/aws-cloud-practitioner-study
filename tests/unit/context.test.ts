@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
-import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 
 describe('loadContext', () => {
   it('loads the fixture tree with no errors', () => {
@@ -20,6 +20,7 @@ describe('loadContext', () => {
       'resources/glossary.md',
     ]);
     expect(ctx.head('content/concepts.yaml')).toBeNull();
+    expect(ctx.headPaths('content/questions/')).toEqual([]);
   });
 
   it('reports a missing required file as an R1 finding', () => {
@@ -87,6 +88,39 @@ describe('loadContext', () => {
       'R1 resources/01-baking-basics/07-AWS-Lambda.md',
       'R1 resources/01-baking-basics/7-aws-lambda.md',
       'R1 resources/01-baking-basics/extra/notes.md',
+    ]);
+  });
+
+  const QUESTIONS = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
+
+  it('loads the fixture questions with their note id and item lines', () => {
+    const ctx = loadContext(makeFixtureRoot(), { today: FIXTURE_TODAY });
+    expect(ctx.questions.map((e) => [e.path, e.index, e.line, e.noteId, e.q.id, e.q.type])).toEqual([
+      [QUESTIONS, 0, 2, 'm01/what-a-bakery-cloud-is', 'q-b4k7m2', 'single'],
+      [QUESTIONS, 1, 29, 'm01/what-a-bakery-cloud-is', 'q-c8n3p5', 'match'],
+    ]);
+  });
+
+  it('reports a broken question item once, with its index and line, and keeps the other item', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, QUESTIONS, '    task: "4.1"\n', '    task: "9.9"\n');
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(ctx.loadErrors).toEqual([expect.objectContaining({ rule: 'R1', file: QUESTIONS, line: 29 })]);
+    expect(ctx.loadErrors[0]?.message.startsWith('questions[1] (q-c8n3p5).task: ')).toBe(true);
+    expect(ctx.questions.map((e) => e.q.id)).toEqual(['q-b4k7m2']);
+  });
+
+  it('reports question YAML errors, a file without a questions list and stray question paths', () => {
+    const root = makeFixtureRoot();
+    writeFileSync(join(root, QUESTIONS), 'questions:\n  - id: [unclosed\n');
+    writeFileSync(join(root, 'content', 'questions', 'notes.yaml'), 'questions: []\n');
+    mkdirSync(join(root, 'content', 'questions', '02-more'));
+    writeFileSync(join(root, 'content', 'questions', '02-more', '01-lists.yaml'), '- id: q-b4k7m2\n');
+    const errors = loadContext(root, { today: FIXTURE_TODAY }).loadErrors;
+    expect(errors.map((f) => `${f.file} ${f.message.split(':')[0]}`)).toEqual([
+      'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml YAML',
+      'content/questions/02-more/01-lists.yaml (root)',
+      'content/questions/notes.yaml not a question file path (content/questions/NN-module/NN-lesson.yaml), so no rule checks it',
     ]);
   });
 });
