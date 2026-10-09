@@ -1,6 +1,7 @@
 /** Export, import and merge of the event log (spec 8.3); pure apart from the lazy schema import. */
 import type { Backup } from '../../schemas/backup.ts';
-import { SCHEMA_VERSION, type StudyEvent } from '../../schemas/events.ts';
+import type { StudyEvent } from '../../schemas/events.ts';
+import { SCHEMA_VERSION } from '../../schemas/schema-version.ts';
 import type { KvValue } from './kv.ts';
 import { migrate } from './migrations/index.ts';
 

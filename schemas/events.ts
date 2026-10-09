@@ -4,8 +4,7 @@
  */
 import * as z from 'zod/mini';
 
-/** The storage shape's version (spec 8.2); `src/store/migrations` moves older backups up to it. */
-export const SCHEMA_VERSION = 1;
+export { SCHEMA_VERSION } from './schema-version.ts';
 
 export const MODES = ['check', 'quiz', 'focus', 'review', 'lightning', 'incident', 'boss', 'mock'] as const;
 export type Mode = (typeof MODES)[number];

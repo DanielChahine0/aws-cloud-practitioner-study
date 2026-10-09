@@ -1,5 +1,5 @@
 /** The IndexedDB database `ccp-study` (spec 8.1): `events`, `kv` and the derived `cache`. */
-import { SCHEMA_VERSION } from '../../schemas/events.ts';
+import { SCHEMA_VERSION } from '../../schemas/schema-version.ts';
 
 export const DB_NAME = 'ccp-study';
 

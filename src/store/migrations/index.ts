@@ -1,4 +1,4 @@
-import { SCHEMA_VERSION } from '../../../schemas/events.ts';
+import { SCHEMA_VERSION } from '../../../schemas/schema-version.ts';
 
 /** One pure step from schema N to N+1 (spec 8.2). */
 export type Migration = (data: Record<string, unknown>) => Record<string, unknown>;
