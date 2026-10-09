@@ -1,0 +1,34 @@
+# fixture-target: content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml
+questions:
+  - id: q-b4k7m2
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: shared-kitchen
+    note: m01/what-a-bakery-cloud-is
+    task: "1.1"
+    level: 2
+    stem: Which feature lets a branch borrow ovens only during the busy morning hours?
+    options:
+      - id: a
+        text: Bake the extra trays in the central kitchen on Saturdays
+        correct: true
+        why: The central kitchen lends ovens to any branch whose queue grows, so the extra trays need no new oven.
+      - id: b
+        text: Install a third oven at the harbour branch
+        why: A third oven sits idle six days a week, which is the cost the shared kitchen avoids.
+      - id: c
+        text: Close the harbour branch on Saturdays
+        why: Closing turns away the very customers the extra capacity is meant to serve.
+      - id: d
+        text: Bake every roll a day early and store it
+        why: Baking ahead does not add oven capacity and leaves the rolls stale.
+    evidence:
+      - Branches use ovens from one central kitchen when their queues grow.
+    takeaway: Borrow central ovens for a busy day instead of buying ovens that sit idle.
+    verified:
+      keyHash: 69212d380cb1
+      fullHash: 8447f462e2bf
+      checks: [solve-closed@1, solve-notes@1, critic@1]
+      on: "2026-10-10"
