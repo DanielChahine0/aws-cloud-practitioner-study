@@ -1,0 +1,2330 @@
+# The one concept registry (spec 2.4). Edit it by hand or with pnpm content:concepts.
+- id: client-server-model
+  name: Client-server model
+  home: m01/welcome-to-aws-cloud-practitioner-essentials
+  anchor: the-client-server-model
+  tasks: [ "3.1" ]
+- id: coffee-shop-analogy
+  name: Coffee shop analogy
+  home: m01/welcome-to-aws-cloud-practitioner-essentials
+  anchor: coffee-shop-connections
+  tasks: []
+  tested: false
+- id: pay-as-you-go-pricing
+  name: Pay-as-you-go pricing
+  home: m01/welcome-to-aws-cloud-practitioner-essentials
+  anchor: paying-only-for-what-you-use
+  tasks: [ "1.4", "4.1" ]
+  confusableWith: [ pay-less-by-using-more, save-when-you-commit, trade-fixed-expense-for-variable-expense ]
+- id: resource-provisioning
+  name: Resource provisioning
+  home: m01/welcome-to-aws-cloud-practitioner-essentials
+  anchor: paying-only-for-what-you-use
+  tasks: [ "1.1", "1.4" ]
+- id: cloud-computing-definition
+  name: Cloud computing definition
+  home: m01/what-is-cloud-computing
+  anchor: the-definition-part-by-part
+  tasks: [ "1.1", "3.1" ]
+- id: on-demand-delivery
+  name: On-demand delivery
+  home: m01/what-is-cloud-computing
+  anchor: the-definition-part-by-part
+  tasks: [ "1.1" ]
+  confusableWith: [ on-demand-instances, pay-as-you-go-pricing ]
+- id: data-center
+  name: Data center
+  home: m01/what-is-cloud-computing
+  anchor: data-centers
+  tasks: [ "3.2", "1.1" ]
+- id: cloud-based-deployment
+  name: Cloud-based deployment
+  home: m01/what-is-cloud-computing
+  anchor: cloud-deployment-types
+  tasks: [ "3.1" ]
+  confusableWith: [ hybrid-deployment, on-premises-deployment ]
+- id: on-premises-deployment
+  name: On-premises deployment
+  home: m01/what-is-cloud-computing
+  anchor: cloud-deployment-types
+  tasks: [ "3.1" ]
+- id: hybrid-deployment
+  name: Hybrid deployment
+  home: m01/what-is-cloud-computing
+  anchor: cloud-deployment-types
+  tasks: [ "3.1" ]
+  confusableWith: [ on-premises-deployment ]
+- id: benefits-of-the-aws-cloud
+  name: Benefits of the AWS Cloud
+  home: m01/benefits-of-the-aws-cloud
+  anchor: trade-fixed-expense-for-variable-expense
+  tasks: [ "1.1" ]
+- id: trade-fixed-expense-for-variable-expense
+  name: Trade fixed expense for variable expense
+  home: m01/benefits-of-the-aws-cloud
+  anchor: trade-fixed-expense-for-variable-expense
+  tasks: [ "1.4", "1.1" ]
+- id: economies-of-scale
+  name: Economies of scale
+  home: m01/benefits-of-the-aws-cloud
+  anchor: benefit-from-massive-economies-of-scale
+  tasks: [ "1.4", "1.1" ]
+  confusableWith: [ pay-less-by-using-more, trade-fixed-expense-for-variable-expense ]
+- id: stop-guessing-capacity
+  name: Stop guessing capacity
+  home: m01/benefits-of-the-aws-cloud
+  anchor: stop-guessing-capacity
+  tasks: [ "1.1", "1.4" ]
+- id: increase-speed-and-agility
+  name: Increase speed and agility
+  home: m01/benefits-of-the-aws-cloud
+  anchor: increase-speed-and-agility
+  tasks: [ "1.1" ]
+  confusableWith: [ stop-guessing-capacity ]
+- id: stop-spending-money-on-data-centers
+  name: Stop spending money running and maintaining data centers
+  home: m01/benefits-of-the-aws-cloud
+  anchor: stop-spending-money-running-and-maintaining-data-centers
+  tasks: [ "1.1", "1.4" ]
+  confusableWith: [ trade-fixed-expense-for-variable-expense ]
+- id: go-global-in-minutes
+  name: Go global in minutes
+  home: m01/benefits-of-the-aws-cloud
+  anchor: go-global-in-minutes
+  tasks: [ "1.1", "3.2" ]
+  confusableWith: [ increase-speed-and-agility ]
+- id: aws-global-infrastructure
+  name: AWS Global Infrastructure
+  home: m01/introduction-to-aws-global-infrastructure
+  anchor: region-availability-zone-data-center
+  tasks: [ "3.2", "1.1" ]
+- id: aws-regions
+  name: AWS Regions
+  home: m01/introduction-to-aws-global-infrastructure
+  anchor: region-availability-zone-data-center
+  tasks: [ "3.2" ]
+  confusableWith: [ edge-locations ]
+- id: availability-zones
+  name: Availability Zones
+  home: m01/introduction-to-aws-global-infrastructure
+  anchor: region-availability-zone-data-center
+  tasks: [ "3.2" ]
+  confusableWith: [ aws-regions, data-center, edge-locations ]
+- id: high-availability
+  name: High availability
+  home: m01/introduction-to-aws-global-infrastructure
+  anchor: global-reach-buys-availability
+  tasks: [ "3.2", "1.1" ]
+  confusableWith: [ scalability ]
+- id: fault-tolerance
+  name: Fault tolerance
+  home: m01/introduction-to-aws-global-infrastructure
+  anchor: global-reach-buys-availability
+  tasks: [ "3.2" ]
+  confusableWith: [ high-availability ]
+- id: multi-az-deployment
+  name: Multi-AZ deployment
+  home: m04/diving-deeper-into-aws-global-infrastructure
+  anchor: redundancy-for-uptime
+  tasks: [ "3.2", "3.4" ]
+  confusableWith: [ multi-region-architecture ]
+- id: multi-region-architecture
+  name: Multi-Region architecture
+  home: m04/diving-deeper-into-aws-global-infrastructure
+  anchor: redundancy-for-uptime
+  tasks: [ "3.2" ]
+- id: shared-responsibility-model
+  name: AWS shared responsibility model
+  home: m01/the-aws-shared-responsibility-model
+  anchor: who-secures-what
+  tasks: [ "2.1" ]
+- id: security-of-the-cloud
+  name: Security of the cloud
+  home: m01/the-aws-shared-responsibility-model
+  anchor: who-secures-what
+  tasks: [ "2.1" ]
+- id: security-in-the-cloud
+  name: Security in the cloud
+  home: m01/the-aws-shared-responsibility-model
+  anchor: who-secures-what
+  tasks: [ "2.1" ]
+  confusableWith: [ security-of-the-cloud ]
+- id: client-side-encryption
+  name: Client-side encryption
+  home: m01/the-aws-shared-responsibility-model
+  anchor: who-secures-what
+  tasks: [ "2.1", "2.2" ]
+- id: operating-system-patching
+  name: Operating system patching
+  home: m01/the-aws-shared-responsibility-model
+  anchor: who-secures-what
+  tasks: [ "2.1" ]
+- id: latency
+  name: Latency
+  home: m01/applying-cloud-concepts-to-real-life-use-cases
+  anchor: going-global-regions-and-availability-zones
+  tasks: [ "3.2" ]
+- id: amazon-ec2
+  name: Amazon EC2
+  home: m02/introduction-to-amazon-ec2
+  anchor: compute-in-the-cloud
+  tasks: [ "3.3", "2.1" ]
+  confusableWith: [ aws-lambda, amazon-lightsail, aws-fargate ]
+- id: compute-as-a-service
+  name: Compute as a service
+  home: m02/introduction-to-amazon-ec2
+  anchor: what-you-control
+  tasks: [ "3.3", "1.1" ]
+- id: on-premises-vs-cloud
+  name: On-premises versus cloud
+  home: m02/introduction-to-amazon-ec2
+  anchor: ec2-versus-owning-servers
+  tasks: [ "1.1", "1.4", "3.1" ]
+- id: multi-tenancy
+  name: Multi-tenancy
+  home: m02/introduction-to-amazon-ec2
+  anchor: multi-tenancy
+  tasks: [ "3.3", "2.1", "4.1" ]
+- id: hypervisor
+  name: Hypervisor
+  home: m02/introduction-to-amazon-ec2
+  anchor: multi-tenancy
+  tasks: [ "2.1", "3.3" ]
+- id: vertical-scaling
+  name: Vertical scaling
+  home: m02/scaling-amazon-ec2
+  anchor: scaling-out-versus-scaling-up
+  tasks: [ "3.3", "1.1" ]
+- id: amazon-machine-image
+  name: Amazon Machine Image (AMI)
+  home: m02/demo-launching-an-amazon-ec2-instance
+  anchor: what-an-ami-is-and-is-not
+  tasks: [ "3.3" ]
+- id: connecting-to-ec2-instances
+  name: Connecting to EC2 instances
+  home: m02/introduction-to-amazon-ec2
+  anchor: launch-connect-use
+  tasks: [ "3.3", "2.3" ]
+- id: ec2-instance-types
+  name: Amazon EC2 instance types
+  home: m02/amazon-ec2-instance-types
+  anchor: instance-families
+  tasks: [ "3.3" ]
+- id: ec2-instance-families
+  name: EC2 instance families
+  home: m02/amazon-ec2-instance-types
+  anchor: instance-families
+  tasks: [ "3.3" ]
+- id: general-purpose-instances
+  name: General purpose instances
+  home: m02/amazon-ec2-instance-types
+  anchor: instance-families
+  tasks: [ "3.3" ]
+- id: compute-optimized-instances
+  name: Compute optimized instances
+  home: m02/amazon-ec2-instance-types
+  anchor: instance-families
+  tasks: [ "3.3" ]
+  confusableWith: [ general-purpose-instances, memory-optimized-instances, storage-optimized-instances ]
+- id: memory-optimized-instances
+  name: Memory optimized instances
+  home: m02/amazon-ec2-instance-types
+  anchor: instance-families
+  tasks: [ "3.3" ]
+  confusableWith: [ storage-optimized-instances ]
+- id: accelerated-computing-instances
+  name: Accelerated computing instances
+  home: m02/amazon-ec2-instance-types
+  anchor: instance-families
+  tasks: [ "3.3" ]
+  confusableWith: [ compute-optimized-instances ]
+- id: storage-optimized-instances
+  name: Storage optimized instances
+  home: m02/amazon-ec2-instance-types
+  anchor: instance-families
+  tasks: [ "3.3" ]
+- id: ec2-instance-sizing
+  name: EC2 instance sizing
+  home: m02/amazon-ec2-instance-types
+  anchor: sizes
+  tasks: [ "3.3", "1.4" ]
+- id: aws-apis
+  name: AWS APIs
+  home: m02/how-to-provision-aws-resources
+  anchor: apis-behind-every-action
+  tasks: [ "3.1" ]
+- id: aws-management-console
+  name: AWS Management Console
+  home: m02/how-to-provision-aws-resources
+  anchor: aws-management-console
+  tasks: [ "3.1" ]
+- id: aws-cli
+  name: AWS Command Line Interface (AWS CLI)
+  home: m02/how-to-provision-aws-resources
+  anchor: aws-cli
+  tasks: [ "3.1" ]
+  confusableWith: [ aws-sdk, aws-management-console, aws-cloudshell ]
+- id: aws-sdk
+  name: AWS Software Development Kit (AWS SDK)
+  home: m02/how-to-provision-aws-resources
+  anchor: aws-sdk
+  tasks: [ "3.1" ]
+- id: aws-cloudshell
+  name: AWS CloudShell
+  home: m02/how-to-provision-aws-resources
+  anchor: aws-cli
+  tasks: [ "3.1" ]
+- id: unmanaged-services
+  name: Unmanaged services
+  home: m03/introduction-to-serverless-computing
+  anchor: amazon-ec2-unmanaged
+  tasks: [ "2.1", "3.4" ]
+- id: security-groups
+  name: Security groups
+  home: m05/subnets-security-groups-and-network-access-control-lists
+  anchor: security-groups
+  tasks: [ "3.5", "2.1" ]
+- id: launching-ec2-instances
+  name: Launching EC2 instances
+  home: m02/demo-launching-an-amazon-ec2-instance
+  anchor: launching-a-web-server
+  tasks: [ "3.3", "3.1" ]
+- id: ami-repeatability
+  name: AMI repeatability
+  home: m02/demo-launching-an-amazon-ec2-instance
+  anchor: what-an-ami-is-and-is-not
+  tasks: [ "3.3" ]
+- id: ec2-key-pairs
+  name: EC2 key pairs
+  home: m02/demo-launching-an-amazon-ec2-instance
+  anchor: launching-a-web-server
+  tasks: [ "3.3", "2.3" ]
+- id: ec2-user-data
+  name: EC2 user data
+  home: m02/demo-launching-an-amazon-ec2-instance
+  anchor: launching-a-web-server
+  tasks: [ "3.3" ]
+- id: aws-marketplace
+  name: AWS Marketplace
+  home: m11/aws-marketplace-and-aws-partners
+  anchor: marketplace-basics
+  tasks: [ "4.3", "2.4" ]
+  confusableWith: [ aws-partner-network ]
+- id: on-demand-instances
+  name: On-Demand Instances
+  home: m02/amazon-ec2-pricing
+  anchor: options-at-a-glance
+  tasks: [ "4.1" ]
+  confusableWith: [ reserved-instances, savings-plans, spot-instances ]
+- id: savings-plans
+  name: AWS Savings Plans
+  home: m02/amazon-ec2-pricing
+  anchor: commitments-and-flexibility
+  tasks: [ "4.1" ]
+- id: reserved-instances
+  name: Reserved Instances
+  home: m02/amazon-ec2-pricing
+  anchor: commitments-and-flexibility
+  tasks: [ "4.1" ]
+  confusableWith: [ savings-plans ]
+- id: spot-instances
+  name: Spot Instances
+  home: m02/amazon-ec2-pricing
+  anchor: spot-isolation-and-reservations
+  tasks: [ "4.1" ]
+- id: dedicated-hosts
+  name: Dedicated Hosts
+  home: m02/amazon-ec2-pricing
+  anchor: spot-isolation-and-reservations
+  tasks: [ "4.1" ]
+  confusableWith: [ dedicated-instances ]
+- id: dedicated-instances
+  name: Dedicated Instances
+  home: m02/amazon-ec2-pricing
+  anchor: spot-isolation-and-reservations
+  tasks: [ "4.1" ]
+- id: capacity-reservations
+  name: Capacity Reservations
+  home: m02/amazon-ec2-pricing
+  anchor: spot-isolation-and-reservations
+  tasks: [ "4.1" ]
+  confusableWith: [ reserved-instances ]
+- id: reserved-instance-flexibility
+  name: Reserved Instance flexibility
+  home: m02/amazon-ec2-pricing
+  anchor: commitments-and-flexibility
+  tasks: [ "4.1" ]
+  confusableWith: [ savings-plans ]
+- id: scalability
+  name: Scalability
+  home: m02/scaling-amazon-ec2
+  anchor: scalability-versus-elasticity
+  tasks: [ "1.1", "3.3" ]
+- id: elasticity
+  name: Elasticity
+  home: m02/scaling-amazon-ec2
+  anchor: scalability-versus-elasticity
+  tasks: [ "1.1", "3.3" ]
+  confusableWith: [ scalability ]
+- id: horizontal-scaling
+  name: Horizontal scaling
+  home: m02/scaling-amazon-ec2
+  anchor: scaling-out-versus-scaling-up
+  tasks: [ "3.3", "1.1" ]
+  confusableWith: [ vertical-scaling ]
+- id: amazon-ec2-auto-scaling
+  name: Amazon EC2 Auto Scaling
+  home: m02/scaling-amazon-ec2
+  anchor: amazon-ec2-auto-scaling
+  tasks: [ "3.3", "1.1" ]
+  confusableWith: [ elastic-load-balancing ]
+- id: dynamic-scaling
+  name: Dynamic scaling
+  home: m02/scaling-amazon-ec2
+  anchor: amazon-ec2-auto-scaling
+  tasks: [ "3.3" ]
+  confusableWith: [ predictive-scaling ]
+- id: predictive-scaling
+  name: Predictive scaling
+  home: m02/scaling-amazon-ec2
+  anchor: amazon-ec2-auto-scaling
+  tasks: [ "3.3" ]
+- id: elastic-load-balancing
+  name: Elastic Load Balancing (ELB)
+  home: m02/directing-traffic-with-elastic-load-balancing
+  anchor: load-balancers-and-elb
+  tasks: [ "3.3", "3.2" ]
+- id: load-balancing
+  name: Load balancing
+  home: m02/directing-traffic-with-elastic-load-balancing
+  anchor: uneven-load
+  tasks: [ "3.3" ]
+- id: load-balancing-routing-methods
+  name: Load balancing routing methods
+  home: m02/directing-traffic-with-elastic-load-balancing
+  anchor: load-balancers-and-elb
+  tasks: [ "3.3" ]
+- id: elastic-load-balancing-with-auto-scaling
+  name: Elastic Load Balancing with EC2 Auto Scaling
+  home: m02/directing-traffic-with-elastic-load-balancing
+  anchor: elb-and-amazon-ec2-auto-scaling
+  tasks: [ "3.3", "3.2" ]
+- id: loose-coupling
+  name: Loose coupling
+  home: m02/messaging-and-queuing
+  anchor: tight-versus-loose-coupling
+  tasks: [ "1.2", "3.8" ]
+- id: messaging-and-queuing
+  name: Messaging and queuing
+  home: m02/messaging-and-queuing
+  anchor: why-direct-handoffs-break
+  tasks: [ "3.8" ]
+- id: monolithic-vs-microservices
+  name: Monolithic versus microservices
+  home: m02/messaging-and-queuing
+  anchor: from-monoliths-to-microservices
+  tasks: [ "1.2", "3.8" ]
+- id: amazon-sqs
+  name: Amazon Simple Queue Service (Amazon SQS)
+  home: m02/messaging-and-queuing
+  anchor: amazon-sqs
+  tasks: [ "3.8" ]
+- id: amazon-sns
+  name: Amazon Simple Notification Service (Amazon SNS)
+  home: m02/messaging-and-queuing
+  anchor: amazon-sns
+  tasks: [ "3.8" ]
+  confusableWith: [ amazon-sqs ]
+- id: publish-subscribe
+  name: Publish-subscribe
+  home: m02/messaging-and-queuing
+  anchor: amazon-sns
+  tasks: [ "3.8" ]
+- id: amazon-eventbridge
+  name: Amazon EventBridge
+  home: m02/messaging-and-queuing
+  anchor: amazon-eventbridge
+  tasks: [ "3.8" ]
+  confusableWith: [ amazon-sns, amazon-sqs ]
+- id: event-driven-architecture
+  name: Event-driven architecture
+  home: m02/messaging-and-queuing
+  anchor: amazon-eventbridge
+  tasks: [ "3.8", "3.3" ]
+- id: managed-services
+  name: Managed services
+  home: m03/introduction-to-serverless-computing
+  anchor: managed-services
+  tasks: [ "2.1", "1.4" ]
+  confusableWith: [ unmanaged-services, serverless-computing ]
+- id: fully-managed-services
+  name: Fully managed services
+  home: m03/introduction-to-serverless-computing
+  anchor: responsibility-spectrum
+  tasks: [ "2.1", "1.4" ]
+  confusableWith: [ managed-services, serverless-computing ]
+- id: serverless-computing
+  name: Serverless computing
+  home: m03/introduction-to-serverless-computing
+  anchor: serverless-fully-managed
+  tasks: [ "3.3", "2.1" ]
+- id: aws-lambda
+  name: AWS Lambda
+  home: m03/aws-lambda
+  anchor: what-lambda-is
+  tasks: [ "3.3", "2.1" ]
+- id: lambda-functions
+  name: Lambda functions
+  home: m03/aws-lambda
+  anchor: how-lambda-works
+  tasks: [ "3.3" ]
+- id: lambda-triggers
+  name: Lambda triggers
+  home: m03/aws-lambda
+  anchor: triggers
+  tasks: [ "3.3" ]
+- id: lambda-runtimes
+  name: Lambda runtimes
+  home: m03/aws-lambda
+  anchor: runtimes
+  tasks: [ "3.3" ]
+- id: lambda-pricing
+  name: Lambda pricing
+  home: m03/aws-lambda
+  anchor: how-lambda-works
+  tasks: [ "4.1", "3.3" ]
+- id: containers
+  name: Containers
+  home: m03/containers-and-orchestration-on-aws
+  anchor: why-containers
+  tasks: [ "3.3" ]
+- id: containers-vs-virtual-machines
+  name: Containers vs virtual machines
+  home: m03/containers-and-orchestration-on-aws
+  anchor: containers-versus-vms
+  tasks: [ "3.3" ]
+- id: container-orchestration
+  name: Container orchestration
+  home: m03/containers-and-orchestration-on-aws
+  anchor: why-orchestration
+  tasks: [ "3.3" ]
+- id: amazon-ecr
+  name: Amazon Elastic Container Registry (Amazon ECR)
+  home: m03/containers-and-orchestration-on-aws
+  anchor: amazon-ecr
+  tasks: [ "3.3" ]
+  confusableWith: [ amazon-ecs ]
+- id: amazon-ecs
+  name: Amazon Elastic Container Service (Amazon ECS)
+  home: m03/containers-and-orchestration-on-aws
+  anchor: orchestrators-ecs-and-eks
+  tasks: [ "3.3" ]
+  confusableWith: [ amazon-eks, aws-fargate ]
+- id: amazon-eks
+  name: Amazon Elastic Kubernetes Service (Amazon EKS)
+  home: m03/containers-and-orchestration-on-aws
+  anchor: orchestrators-ecs-and-eks
+  tasks: [ "3.3" ]
+  confusableWith: [ aws-fargate ]
+- id: aws-fargate
+  name: AWS Fargate
+  home: m03/containers-and-orchestration-on-aws
+  anchor: launch-types-for-ecs-and-eks-ec2-or-fargate
+  tasks: [ "3.3" ]
+  confusableWith: [ aws-lambda ]
+- id: kubernetes
+  name: Kubernetes
+  home: m03/containers-and-orchestration-on-aws
+  anchor: orchestrators-ecs-and-eks
+  tasks: [ "3.3" ]
+- id: aws-elastic-beanstalk
+  name: AWS Elastic Beanstalk
+  home: m03/additional-compute-services
+  anchor: aws-elastic-beanstalk
+  tasks: [ "3.3", "3.1" ]
+  confusableWith: [ aws-lambda ]
+- id: aws-batch
+  name: AWS Batch
+  home: m03/additional-compute-services
+  anchor: aws-batch
+  tasks: [ "3.3" ]
+  confusableWith: [ aws-lambda ]
+- id: batch-computing
+  name: Batch computing
+  home: m03/additional-compute-services
+  anchor: aws-batch
+  tasks: [ "3.3" ]
+- id: amazon-lightsail
+  name: Amazon Lightsail
+  home: m03/additional-compute-services
+  anchor: amazon-lightsail
+  tasks: [ "3.3" ]
+  confusableWith: [ aws-elastic-beanstalk ]
+- id: aws-outposts
+  name: AWS Outposts
+  home: m03/additional-compute-services
+  anchor: aws-outposts
+  tasks: [ "3.1", "3.3" ]
+  confusableWith: [ aws-snow-family, aws-storage-gateway ]
+- id: region-selection
+  name: Region selection
+  home: m04/choosing-aws-regions
+  anchor: the-four-factors
+  tasks: [ "3.2", "2.2" ]
+- id: edge-locations
+  name: Edge locations
+  home: m04/diving-deeper-into-aws-global-infrastructure
+  anchor: edge-locations
+  tasks: [ "3.2" ]
+- id: infrastructure-as-code
+  name: Infrastructure as code (IaC)
+  home: m04/infrastructure-and-automation
+  anchor: why-automate
+  tasks: [ "3.1" ]
+  confusableWith: [ programmatic-access ]
+- id: aws-cloudformation
+  name: AWS CloudFormation
+  home: m04/infrastructure-and-automation
+  anchor: aws-cloudformation
+  tasks: [ "3.1" ]
+  confusableWith: [ aws-elastic-beanstalk, aws-config ]
+- id: regulatory-compliance
+  name: Regulatory compliance
+  home: m10/compliance
+  anchor: what-compliance-asks
+  tasks: [ "2.2" ]
+- id: aws-govcloud-regions
+  name: AWS GovCloud Regions
+  home: m04/choosing-aws-regions
+  anchor: the-four-factors
+  tasks: [ "3.2", "2.2" ]
+- id: regional-pricing
+  name: Regional pricing
+  home: m04/choosing-aws-regions
+  anchor: the-four-factors
+  tasks: [ "3.2", "4.1" ]
+- id: gdpr
+  name: General Data Protection Regulation (GDPR)
+  home: m04/choosing-aws-regions
+  anchor: the-four-factors
+  tasks: [ "2.2", "3.2" ]
+  confusableWith: [ hipaa ]
+- id: amazon-cloudfront
+  name: Amazon CloudFront
+  home: m05/global-networking
+  anchor: amazon-cloudfront
+  tasks: [ "3.5", "3.2" ]
+  confusableWith: [ aws-global-accelerator, amazon-route-53, aws-cloudformation ]
+- id: amazon-route-53
+  name: Amazon Route 53
+  home: m05/global-networking
+  anchor: amazon-route-53
+  tasks: [ "3.5" ]
+  confusableWith: [ aws-global-accelerator, elastic-load-balancing ]
+- id: cloudformation-templates
+  name: AWS CloudFormation templates
+  home: m04/infrastructure-and-automation
+  anchor: aws-cloudformation
+  tasks: [ "3.1" ]
+- id: programmatic-access
+  name: Programmatic access
+  home: m04/infrastructure-and-automation
+  anchor: four-ways-to-call-aws-apis
+  tasks: [ "3.1" ]
+- id: aws-networking
+  name: AWS networking
+  home: m05/introduction-to-networking
+  anchor: networking-and-the-coffee-shop
+  tasks: [ "3.5" ]
+- id: amazon-vpc
+  name: Amazon VPC
+  home: m05/introduction-to-networking
+  anchor: amazon-vpc-and-subnets
+  tasks: [ "3.5" ]
+  confusableWith: [ virtual-private-gateway, vpn ]
+- id: subnets
+  name: Subnets
+  home: m05/subnets-security-groups-and-network-access-control-lists
+  anchor: subnets
+  tasks: [ "3.5" ]
+- id: public-subnets
+  name: Public subnets
+  home: m05/amazon-vpc-demo
+  anchor: step-2-create-the-subnets
+  tasks: [ "3.5" ]
+- id: private-subnets
+  name: Private subnets
+  home: m05/amazon-vpc-demo
+  anchor: step-2-create-the-subnets
+  tasks: [ "3.5" ]
+- id: network-diagrams
+  name: Network diagrams
+  home: m05/introduction-to-networking
+  anchor: reading-network-diagrams
+  tasks: []
+  tested: false
+- id: internet-gateway
+  name: Internet gateway
+  home: m05/organizing-aws-cloud-resources
+  anchor: internet-gateway
+  tasks: [ "3.5" ]
+  confusableWith: [ nat-gateway, virtual-private-gateway ]
+- id: virtual-private-gateway
+  name: Virtual private gateway
+  home: m05/organizing-aws-cloud-resources
+  anchor: virtual-private-gateway-and-vpn
+  tasks: [ "3.5" ]
+  confusableWith: [ vpn ]
+- id: vpn
+  name: AWS VPN
+  home: m05/organizing-aws-cloud-resources
+  anchor: virtual-private-gateway-and-vpn
+  tasks: [ "3.5" ]
+- id: aws-direct-connect
+  name: AWS Direct Connect
+  home: m05/more-ways-to-connect-to-the-aws-cloud
+  anchor: aws-direct-connect
+  tasks: [ "3.5" ]
+  confusableWith: [ aws-site-to-site-vpn, vpn ]
+- id: aws-client-vpn
+  name: AWS Client VPN
+  home: m05/more-ways-to-connect-to-the-aws-cloud
+  anchor: aws-client-vpn
+  tasks: [ "3.5" ]
+  confusableWith: [ aws-site-to-site-vpn, aws-privatelink, aws-direct-connect ]
+- id: aws-site-to-site-vpn
+  name: AWS Site-to-Site VPN
+  home: m05/more-ways-to-connect-to-the-aws-cloud
+  anchor: aws-site-to-site-vpn
+  tasks: [ "3.5" ]
+- id: aws-privatelink
+  name: AWS PrivateLink
+  home: m05/more-ways-to-connect-to-the-aws-cloud
+  anchor: aws-privatelink
+  tasks: [ "3.5" ]
+  confusableWith: [ aws-transit-gateway ]
+- id: aws-transit-gateway
+  name: AWS Transit Gateway
+  home: m05/more-ways-to-connect-to-the-aws-cloud
+  anchor: other-gateways
+  tasks: [ "3.5" ]
+  confusableWith: [ virtual-private-gateway ]
+- id: nat-gateway
+  name: NAT gateway
+  home: m05/more-ways-to-connect-to-the-aws-cloud
+  anchor: other-gateways
+  tasks: [ "3.5" ]
+- id: amazon-api-gateway
+  name: Amazon API Gateway
+  home: m05/more-ways-to-connect-to-the-aws-cloud
+  anchor: other-gateways
+  tasks: [ "3.5" ]
+  confusableWith: [ aws-transit-gateway, virtual-private-gateway ]
+- id: packets
+  name: Packets
+  home: m05/subnets-security-groups-and-network-access-control-lists
+  anchor: packets-and-the-subnet-check
+  tasks: [ "3.5" ]
+- id: network-acls
+  name: Network ACLs
+  home: m05/subnets-security-groups-and-network-access-control-lists
+  anchor: network-acls
+  tasks: [ "3.5", "2.4" ]
+  confusableWith: [ security-groups ]
+- id: stateless-packet-filtering
+  name: Stateless packet filtering
+  home: m05/subnets-security-groups-and-network-access-control-lists
+  anchor: network-acls
+  tasks: [ "3.5" ]
+- id: stateful-packet-filtering
+  name: Stateful packet filtering
+  home: m05/subnets-security-groups-and-network-access-control-lists
+  anchor: security-groups
+  tasks: [ "3.5" ]
+  confusableWith: [ stateless-packet-filtering ]
+- id: cidr-blocks
+  name: CIDR blocks
+  home: m05/amazon-vpc-demo
+  anchor: step-1-create-the-vpc
+  tasks: [ "3.5" ]
+- id: route-tables
+  name: Route tables
+  home: m05/amazon-vpc-demo
+  anchor: step-4-route-the-public-traffic
+  tasks: [ "3.5" ]
+- id: edge-networking
+  name: Edge networking
+  home: m05/global-networking
+  anchor: edge-networking
+  tasks: [ "3.2", "3.5" ]
+- id: domain-name-system
+  name: Domain Name System (DNS)
+  home: m05/global-networking
+  anchor: dns
+  tasks: [ "3.5" ]
+- id: route-53-routing-policies
+  name: Route 53 routing policies
+  home: m05/global-networking
+  anchor: amazon-route-53
+  tasks: [ "3.5", "3.2" ]
+- id: aws-global-accelerator
+  name: AWS Global Accelerator
+  home: m05/global-networking
+  anchor: aws-global-accelerator
+  tasks: [ "3.5", "3.2" ]
+- id: direct-connect-failover
+  name: Direct Connect failover
+  home: m05/global-architectures
+  anchor: using-both-failover-and-aggregation
+  tasks: [ "3.5", "3.2" ]
+- id: block-storage
+  name: Block storage
+  home: m06/introduction-to-storage
+  anchor: block-storage
+  tasks: [ "3.6" ]
+  confusableWith: [ file-storage, object-storage ]
+- id: object-storage
+  name: Object storage
+  home: m06/introduction-to-storage
+  anchor: object-storage
+  tasks: [ "3.6" ]
+- id: file-storage
+  name: File storage
+  home: m06/introduction-to-storage
+  anchor: file-storage
+  tasks: [ "3.6" ]
+  confusableWith: [ object-storage ]
+- id: ec2-instance-store
+  name: Amazon EC2 instance store
+  home: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+  anchor: amazon-ec2-instance-store
+  tasks: [ "3.6" ]
+- id: amazon-ebs
+  name: Amazon Elastic Block Store (Amazon EBS)
+  home: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+  anchor: amazon-elastic-block-store-amazon-ebs
+  tasks: [ "3.6" ]
+  confusableWith: [ ec2-instance-store, amazon-efs, amazon-s3 ]
+- id: ebs-volumes
+  name: EBS volumes
+  home: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+  anchor: amazon-elastic-block-store-amazon-ebs
+  tasks: [ "3.6" ]
+- id: ebs-volume-types
+  name: EBS volume types
+  home: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+  anchor: amazon-elastic-block-store-amazon-ebs
+  tasks: [ "3.6" ]
+- id: data-persistence
+  name: Data persistence
+  home: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+  anchor: amazon-elastic-block-store-amazon-ebs
+  tasks: [ "3.6" ]
+- id: ebs-snapshots
+  name: EBS snapshots
+  home: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+  anchor: ebs-snapshots
+  tasks: [ "3.6", "3.2" ]
+- id: incremental-backups
+  name: Incremental backups
+  home: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+  anchor: how-the-snapshot-chain-works
+  tasks: [ "3.6" ]
+- id: ebs-data-lifecycle
+  name: EBS data lifecycle
+  home: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+  anchor: ebs-data-lifecycle
+  tasks: [ "3.6", "2.1" ]
+- id: amazon-data-lifecycle-manager
+  name: Amazon Data Lifecycle Manager
+  home: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+  anchor: amazon-data-lifecycle-manager
+  tasks: [ "3.6" ]
+  confusableWith: [ aws-backup, s3-lifecycle, efs-lifecycle-management ]
+- id: amazon-s3
+  name: Amazon S3
+  home: m06/amazon-simple-storage-service-amazon-s3
+  anchor: what-s3-is
+  tasks: [ "3.6" ]
+- id: s3-objects
+  name: S3 objects
+  home: m06/amazon-simple-storage-service-amazon-s3
+  anchor: objects-and-buckets
+  tasks: [ "3.6" ]
+- id: s3-buckets
+  name: S3 buckets
+  home: m06/amazon-simple-storage-service-amazon-s3
+  anchor: objects-and-buckets
+  tasks: [ "3.6" ]
+- id: s3-durability
+  name: S3 durability
+  home: m06/amazon-simple-storage-service-amazon-s3
+  anchor: durability-and-versioning
+  tasks: [ "3.6" ]
+- id: s3-versioning
+  name: S3 Versioning
+  home: m06/amazon-simple-storage-service-amazon-s3
+  anchor: durability-and-versioning
+  tasks: [ "3.6" ]
+- id: s3-bucket-policies
+  name: S3 bucket policies
+  home: m06/amazon-s3-demonstration
+  anchor: writing-a-bucket-policy
+  tasks: [ "2.3", "3.6" ]
+  confusableWith: [ s3-presigned-urls ]
+- id: s3-presigned-urls
+  name: S3 presigned URLs
+  home: m06/amazon-simple-storage-service-amazon-s3
+  anchor: security-and-privacy
+  tasks: [ "2.3", "3.6" ]
+- id: s3-block-public-access
+  name: S3 Block Public Access
+  home: m06/amazon-simple-storage-service-amazon-s3
+  anchor: security-and-privacy
+  tasks: [ "2.3", "3.6" ]
+  confusableWith: [ s3-bucket-policies ]
+- id: s3-storage-classes
+  name: Amazon S3 storage classes
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: why-storage-classes-exist
+  tasks: [ "3.6" ]
+- id: s3-standard
+  name: S3 Standard
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: frequent-and-changing-access
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-standard-ia ]
+- id: s3-intelligent-tiering
+  name: S3 Intelligent-Tiering
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: frequent-and-changing-access
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-lifecycle, s3-standard, s3-standard-ia ]
+- id: s3-standard-ia
+  name: S3 Standard-IA
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: infrequent-access
+  tasks: [ "3.6" ]
+- id: s3-one-zone-ia
+  name: S3 One Zone-IA
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: infrequent-access
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-standard-ia ]
+- id: s3-express-one-zone
+  name: S3 Express One Zone
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: single-zone-speed
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-one-zone-ia, s3-standard ]
+- id: s3-glacier-storage-classes
+  name: S3 Glacier storage classes
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: glacier-archive-classes
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-standard-ia, s3-intelligent-tiering ]
+- id: s3-lifecycle
+  name: S3 Lifecycle
+  home: m06/amazon-s3-storage-classes-and-s3-lifecycle
+  anchor: s3-lifecycle
+  tasks: [ "3.6" ]
+- id: s3-object-metadata
+  name: S3 object metadata
+  home: m06/amazon-s3-demonstration
+  anchor: object-metadata
+  tasks: [ "3.6" ]
+- id: amazon-efs
+  name: Amazon Elastic File System (Amazon EFS)
+  home: m06/amazon-elastic-file-system-amazon-efs
+  anchor: what-amazon-efs-is
+  tasks: [ "3.6" ]
+  confusableWith: [ amazon-fsx, aws-storage-gateway, amazon-s3 ]
+- id: network-file-system
+  name: Network File System (NFS)
+  home: m06/amazon-elastic-file-system-amazon-efs
+  anchor: what-amazon-efs-is
+  tasks: [ "3.6" ]
+- id: efs-storage-classes
+  name: EFS storage classes
+  home: m06/amazon-elastic-file-system-amazon-efs
+  anchor: storage-classes
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-storage-classes ]
+- id: efs-lifecycle-management
+  name: EFS lifecycle management
+  home: m06/amazon-elastic-file-system-amazon-efs
+  anchor: lifecycle-management
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-lifecycle ]
+- id: ebs-vs-efs
+  name: EBS compared with EFS
+  home: m06/amazon-elastic-file-system-amazon-efs
+  anchor: ebs-compared-with-efs
+  tasks: [ "3.6" ]
+- id: amazon-fsx
+  name: Amazon FSx
+  home: m06/amazon-fsx
+  anchor: what-fsx-is
+  tasks: [ "3.6" ]
+  confusableWith: [ aws-storage-gateway ]
+- id: fsx-for-windows-file-server
+  name: Amazon FSx for Windows File Server
+  home: m06/amazon-fsx
+  anchor: the-four-file-systems
+  tasks: [ "3.6" ]
+  confusableWith: [ s3-file-gateway ]
+- id: fsx-for-netapp-ontap
+  name: Amazon FSx for NetApp ONTAP
+  home: m06/amazon-fsx
+  anchor: the-four-file-systems
+  tasks: [ "3.6" ]
+  confusableWith: [ fsx-for-windows-file-server, fsx-for-openzfs ]
+- id: fsx-for-openzfs
+  name: Amazon FSx for OpenZFS
+  home: m06/amazon-fsx
+  anchor: the-four-file-systems
+  tasks: [ "3.6" ]
+- id: fsx-for-lustre
+  name: Amazon FSx for Lustre
+  home: m06/amazon-fsx
+  anchor: the-four-file-systems
+  tasks: [ "3.6" ]
+  confusableWith: [ fsx-for-openzfs ]
+- id: aws-storage-gateway
+  name: AWS Storage Gateway
+  home: m06/aws-storage-gateway
+  anchor: what-it-is
+  tasks: [ "3.6", "3.1" ]
+- id: hybrid-cloud-storage
+  name: Hybrid cloud storage
+  home: m06/aws-storage-gateway
+  anchor: what-it-is
+  tasks: [ "3.6", "3.1" ]
+- id: s3-file-gateway
+  name: Amazon S3 File Gateway
+  home: m06/aws-storage-gateway
+  anchor: gateway-types
+  tasks: [ "3.6" ]
+  confusableWith: [ tape-gateway, volume-gateway ]
+- id: volume-gateway
+  name: Volume Gateway
+  home: m06/aws-storage-gateway
+  anchor: gateway-types
+  tasks: [ "3.6" ]
+- id: tape-gateway
+  name: Tape Gateway
+  home: m06/aws-storage-gateway
+  anchor: gateway-types
+  tasks: [ "3.6" ]
+  confusableWith: [ volume-gateway ]
+- id: aws-elastic-disaster-recovery
+  name: AWS Elastic Disaster Recovery
+  home: m06/aws-elastic-disaster-recovery
+  anchor: how-it-works
+  tasks: [ "3.6", "3.2" ]
+  confusableWith: [ aws-storage-gateway ]
+- id: disaster-recovery
+  name: Disaster recovery
+  home: m06/aws-elastic-disaster-recovery
+  anchor: how-it-works
+  tasks: [ "3.2", "3.6" ]
+- id: block-level-replication
+  name: Block-level replication
+  home: m06/aws-elastic-disaster-recovery
+  anchor: how-it-works
+  tasks: [ "3.6", "3.2" ]
+- id: point-in-time-recovery
+  name: Point-in-time recovery
+  home: m06/aws-elastic-disaster-recovery
+  anchor: how-it-works
+  tasks: [ "3.6", "3.2" ]
+- id: choosing-storage-services
+  name: Choosing storage services
+  home: m06/comparing-storage-services
+  anchor: database-storage-on-amazon-ebs
+  tasks: [ "3.6" ]
+- id: s3-static-website-hosting
+  name: S3 static website hosting
+  home: m06/comparing-storage-services
+  anchor: static-website-on-amazon-s3
+  tasks: [ "3.6" ]
+- id: provisioned-iops-ssd
+  name: Provisioned IOPS SSD
+  home: m06/comparing-storage-services
+  anchor: database-storage-on-amazon-ebs
+  tasks: [ "3.6" ]
+- id: relational-databases
+  name: Relational databases
+  home: m07/relational-database-services
+  anchor: relational-databases
+  tasks: [ "3.4" ]
+- id: sql
+  name: SQL
+  home: m07/relational-database-services
+  anchor: relational-databases
+  tasks: [ "3.4" ]
+- id: migration-strategy-rehost
+  name: Rehost (lift and shift)
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+  confusableWith: [ migration-strategy-replatform, migration-strategy-relocate ]
+- id: aws-database-migration-service
+  name: AWS Database Migration Service (AWS DMS)
+  home: m12/database-migrations
+  anchor: how-aws-dms-works
+  tasks: [ "3.4", "1.3" ]
+  confusableWith: [ aws-schema-conversion-tool, aws-datasync ]
+- id: amazon-rds
+  name: Amazon RDS
+  home: m07/relational-database-services
+  anchor: amazon-rds
+  tasks: [ "3.4", "2.1" ]
+  confusableWith: [ amazon-redshift ]
+- id: amazon-rds-read-replicas
+  name: Amazon RDS read replicas
+  home: m11/cost-optimization
+  anchor: amazon-rds
+  tasks: [ "3.4" ]
+  confusableWith: [ multi-az-deployment ]
+- id: amazon-aurora
+  name: Amazon Aurora
+  home: m07/relational-database-services
+  anchor: amazon-aurora
+  tasks: [ "3.4" ]
+  confusableWith: [ amazon-rds, amazon-dynamodb ]
+- id: nosql-databases
+  name: NoSQL databases
+  home: m07/nosql-database-services
+  anchor: relational-versus-nosql
+  tasks: [ "3.4" ]
+  confusableWith: [ relational-databases ]
+- id: key-value-data-model
+  name: Key-value data model
+  home: m07/nosql-database-services
+  anchor: relational-versus-nosql
+  tasks: [ "3.4" ]
+- id: flexible-schema
+  name: Flexible schema
+  home: m07/nosql-database-services
+  anchor: relational-versus-nosql
+  tasks: [ "3.4" ]
+- id: amazon-dynamodb
+  name: Amazon DynamoDB
+  home: m07/nosql-database-services
+  anchor: amazon-dynamodb
+  tasks: [ "3.4" ]
+  confusableWith: [ amazon-rds, amazon-elasticache ]
+- id: amazon-dynamodb-global-tables
+  name: Amazon DynamoDB global tables
+  home: m07/nosql-database-services
+  anchor: amazon-dynamodb
+  tasks: [ "3.4", "3.2" ]
+- id: amazon-dynamodb-auto-scaling
+  name: Amazon DynamoDB auto scaling
+  home: m07/nosql-database-services
+  anchor: amazon-dynamodb
+  tasks: [ "3.4" ]
+  confusableWith: [ amazon-ec2-auto-scaling ]
+- id: foreign-keys
+  name: Foreign keys
+  home: m07/aws-databases-demonstration
+  anchor: amazon-rds-in-the-console
+  tasks: [ "3.4" ]
+- id: amazon-dynamodb-partition-key
+  name: Amazon DynamoDB partition key
+  home: m07/aws-databases-demonstration
+  anchor: amazon-dynamodb-in-the-console
+  tasks: [ "3.4" ]
+- id: amazon-dynamodb-scan
+  name: Amazon DynamoDB scan
+  home: m07/aws-databases-demonstration
+  anchor: amazon-dynamodb-in-the-console
+  tasks: [ "3.4" ]
+- id: amazon-dynamodb-query
+  name: Amazon DynamoDB query
+  home: m07/aws-databases-demonstration
+  anchor: amazon-dynamodb-in-the-console
+  tasks: [ "3.4" ]
+  confusableWith: [ amazon-dynamodb-scan ]
+- id: in-memory-caching
+  name: In-memory caching
+  home: m07/in-memory-caching-services
+  anchor: in-memory-caches
+  tasks: [ "3.4" ]
+- id: caching-layer
+  name: Caching layer
+  home: m07/in-memory-caching-services
+  anchor: where-elasticache-sits
+  tasks: [ "3.4" ]
+- id: amazon-elasticache
+  name: Amazon ElastiCache
+  home: m07/in-memory-caching-services
+  anchor: amazon-elasticache
+  tasks: [ "3.4" ]
+  confusableWith: [ amazon-rds-read-replicas ]
+- id: database-performance-bottlenecks
+  name: Database performance bottlenecks
+  home: m07/in-memory-caching-services
+  anchor: why-databases-slow-down
+  tasks: [ "3.4" ]
+- id: amazon-elasticache-serverless
+  name: Amazon ElastiCache Serverless
+  home: m07/in-memory-caching-services
+  anchor: amazon-elasticache
+  tasks: [ "3.4" ]
+- id: amazon-elasticache-high-availability
+  name: Amazon ElastiCache high availability
+  home: m07/in-memory-caching-services
+  anchor: amazon-elasticache
+  tasks: [ "3.4", "3.2" ]
+- id: purpose-built-databases
+  name: Purpose-built databases
+  home: m07/additional-database-services
+  anchor: purpose-built-databases
+  tasks: [ "3.4" ]
+- id: semistructured-data
+  name: Semistructured data
+  home: m07/additional-database-services
+  anchor: amazon-documentdb-with-mongodb-compatibility
+  tasks: [ "3.4" ]
+- id: amazon-documentdb
+  name: Amazon DocumentDB (with MongoDB compatibility)
+  home: m07/additional-database-services
+  anchor: amazon-documentdb-with-mongodb-compatibility
+  tasks: [ "3.4" ]
+  confusableWith: [ amazon-dynamodb, amazon-neptune ]
+- id: amazon-neptune
+  name: Amazon Neptune
+  home: m07/additional-database-services
+  anchor: amazon-neptune
+  tasks: [ "3.4" ]
+- id: graph-databases
+  name: Graph databases
+  home: m07/additional-database-services
+  anchor: amazon-neptune
+  tasks: [ "3.4" ]
+  confusableWith: [ relational-databases, key-value-data-model ]
+- id: amazon-managed-blockchain
+  name: Amazon Managed Blockchain
+  home: m07/additional-database-services
+  anchor: other-specialized-options
+  tasks: [ "3.4", "3.8" ]
+- id: amazon-dynamodb-accelerator
+  name: Amazon DynamoDB Accelerator (DAX)
+  home: m07/additional-database-services
+  anchor: other-specialized-options
+  tasks: [ "3.4" ]
+  confusableWith: [ amazon-elasticache, aws-global-accelerator ]
+- id: aws-backup
+  name: AWS Backup
+  home: m07/additional-database-services
+  anchor: aws-backup
+  tasks: [ "3.6", "3.4" ]
+  confusableWith: [ aws-elastic-disaster-recovery, aws-storage-gateway ]
+- id: artificial-intelligence
+  name: Artificial intelligence
+  home: m08/introduction-to-ai-and-machine-learning
+  anchor: ai-ml-and-classical-programming
+  tasks: [ "3.7" ]
+  confusableWith: [ machine-learning ]
+- id: machine-learning
+  name: Machine learning
+  home: m08/introduction-to-ai-and-machine-learning
+  anchor: ai-ml-and-classical-programming
+  tasks: [ "3.7" ]
+- id: classical-programming
+  name: Classical programming
+  home: m08/introduction-to-ai-and-machine-learning
+  anchor: ai-ml-and-classical-programming
+  tasks: [ "3.7" ]
+  confusableWith: [ machine-learning ]
+- id: ml-model-training
+  name: ML model training
+  home: m08/introduction-to-ai-and-machine-learning
+  anchor: training-and-inference
+  tasks: [ "3.7" ]
+- id: ml-inference
+  name: ML inference
+  home: m08/introduction-to-ai-and-machine-learning
+  anchor: training-and-inference
+  tasks: [ "3.7" ]
+  confusableWith: [ ml-model-training ]
+- id: natural-language-processing
+  name: Natural language processing
+  home: m08/introduction-to-ai-and-machine-learning
+  anchor: conversational-and-predictive-ai
+  tasks: [ "3.7" ]
+- id: ai-ml-business-use-cases
+  name: AI/ML business use cases
+  home: m08/ai-ml-on-aws
+  anchor: use-cases
+  tasks: [ "3.7" ]
+- id: aws-ai-ml-stack
+  name: AWS AI/ML stack
+  home: m08/ai-ml-on-aws
+  anchor: the-three-tiers
+  tasks: [ "3.7" ]
+- id: aws-ai-services
+  name: AWS AI services
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-1-pre-built-ai-services
+  tasks: [ "3.7" ]
+  confusableWith: [ aws-ml-services, ml-frameworks-and-infrastructure ]
+- id: aws-ml-services
+  name: AWS ML services
+  home: m08/ai-ml-on-aws
+  anchor: the-three-tiers
+  tasks: [ "3.7" ]
+  confusableWith: [ ml-frameworks-and-infrastructure ]
+- id: ml-frameworks-and-infrastructure
+  name: ML frameworks and infrastructure
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-3-ml-frameworks-and-infrastructure
+  tasks: [ "3.7", "3.3" ]
+- id: amazon-sagemaker-ai
+  name: Amazon SageMaker AI
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-2-amazon-sagemaker-ai
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-sagemaker-jumpstart, aws-ai-services ]
+- id: amazon-comprehend
+  name: Amazon Comprehend
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-1-pre-built-ai-services
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-lex, amazon-translate ]
+- id: amazon-polly
+  name: Amazon Polly
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-1-pre-built-ai-services
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-translate ]
+- id: amazon-translate
+  name: Amazon Translate
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-1-pre-built-ai-services
+  tasks: [ "3.7" ]
+- id: amazon-lex
+  name: Amazon Lex
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-1-pre-built-ai-services
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-polly, amazon-q-business ]
+- id: amazon-personalize
+  name: Amazon Personalize
+  home: m08/aws-ai-ml-solutions
+  anchor: tier-1-pre-built-ai-services
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-sagemaker-ai ]
+- id: deep-learning
+  name: Deep learning
+  home: m08/introduction-to-generative-ai-on-aws
+  anchor: deep-learning
+  tasks: [ "3.7" ]
+  confusableWith: [ machine-learning, generative-ai ]
+- id: neural-networks
+  name: Neural networks
+  home: m08/introduction-to-generative-ai-on-aws
+  anchor: deep-learning
+  tasks: [ "3.7" ]
+- id: generative-ai
+  name: Generative AI
+  home: m08/introduction-to-generative-ai-on-aws
+  anchor: generative-ai
+  tasks: [ "3.7" ]
+- id: foundation-models
+  name: Foundation models
+  home: m08/introduction-to-generative-ai-on-aws
+  anchor: generative-ai
+  tasks: [ "3.7" ]
+  confusableWith: [ large-language-models ]
+- id: large-language-models
+  name: Large language models
+  home: m08/introduction-to-generative-ai-on-aws
+  anchor: generative-ai
+  tasks: [ "3.7" ]
+- id: amazon-q
+  name: Amazon Q
+  home: m08/introduction-to-generative-ai-on-aws
+  anchor: aws-options
+  tasks: [ "3.7" ]
+- id: amazon-sagemaker-jumpstart
+  name: Amazon SageMaker JumpStart
+  home: m08/aws-generative-ai-solutions
+  anchor: services
+  tasks: [ "3.7" ]
+- id: amazon-bedrock
+  name: Amazon Bedrock
+  home: m08/aws-generative-ai-solutions
+  anchor: services
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-sagemaker-jumpstart, amazon-q-business, amazon-sagemaker-ai ]
+- id: amazon-q-business
+  name: Amazon Q Business
+  home: m08/aws-generative-ai-solutions
+  anchor: services
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-q-developer ]
+- id: amazon-q-developer
+  name: Amazon Q Developer
+  home: m08/aws-generative-ai-solutions
+  anchor: services
+  tasks: [ "3.7" ]
+- id: fine-tuning
+  name: Fine-tuning
+  home: m08/aws-generative-ai-solutions
+  anchor: services
+  tasks: [ "3.7" ]
+- id: multimodal-generative-ai
+  name: Multimodal generative AI
+  home: m08/aws-generative-ai-solutions
+  anchor: services
+  tasks: [ "3.7" ]
+- id: data-analytics
+  name: Data analytics
+  home: m08/introduction-to-data-analytics
+  anchor: analytics-next-to-aiml
+  tasks: [ "3.7" ]
+- id: data-lakes
+  name: Data lakes
+  home: m08/introduction-to-data-analytics
+  anchor: data-lakes
+  tasks: [ "3.7", "3.6" ]
+- id: etl
+  name: ETL
+  home: m08/introduction-to-data-analytics
+  anchor: etl-elt-and-zero-etl
+  tasks: [ "3.7" ]
+  confusableWith: [ zero-etl ]
+- id: elt
+  name: ELT
+  home: m08/introduction-to-data-analytics
+  anchor: etl-elt-and-zero-etl
+  tasks: [ "3.7" ]
+  confusableWith: [ etl, zero-etl ]
+- id: zero-etl
+  name: Zero-ETL
+  home: m08/introduction-to-data-analytics
+  anchor: etl-elt-and-zero-etl
+  tasks: [ "3.7" ]
+- id: data-pipelines
+  name: Data pipelines
+  home: m08/data-analytics-and-ai-ml
+  anchor: the-pipeline-marker-by-marker
+  tasks: [ "3.7" ]
+- id: amazon-kinesis-data-streams
+  name: Amazon Kinesis Data Streams
+  home: m08/data-pipelines-on-aws
+  anchor: services-by-phase
+  tasks: [ "3.7" ]
+- id: amazon-data-firehose
+  name: Amazon Data Firehose
+  home: m08/data-pipelines-on-aws
+  anchor: services-by-phase
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-kinesis-data-streams ]
+- id: amazon-redshift
+  name: Amazon Redshift
+  home: m08/data-pipelines-on-aws
+  anchor: services-by-phase
+  tasks: [ "3.7", "3.4" ]
+  confusableWith: [ amazon-s3, data-lakes ]
+- id: aws-glue
+  name: AWS Glue
+  home: m08/data-pipelines-on-aws
+  anchor: services-by-phase
+  tasks: [ "3.7" ]
+- id: amazon-emr
+  name: Amazon EMR
+  home: m08/data-pipelines-on-aws
+  anchor: services-by-phase
+  tasks: [ "3.7" ]
+  confusableWith: [ aws-glue ]
+- id: amazon-quicksight
+  name: Amazon Quick Sight
+  home: m08/data-pipelines-on-aws
+  anchor: services-by-phase
+  tasks: [ "3.7" ]
+- id: amazon-opensearch-service
+  name: Amazon OpenSearch Service
+  home: m08/data-pipelines-on-aws
+  anchor: services-by-phase
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-quicksight ]
+- id: aws-glue-data-catalog
+  name: AWS Glue Data Catalog
+  home: m08/data-analytics-and-ai-ml
+  anchor: the-pipeline-marker-by-marker
+  tasks: [ "3.7" ]
+- id: amazon-athena
+  name: Amazon Athena
+  home: m08/data-analytics-and-ai-ml
+  anchor: the-pipeline-marker-by-marker
+  tasks: [ "3.7" ]
+  confusableWith: [ amazon-redshift, amazon-quicksight ]
+- id: authentication
+  name: Authentication
+  home: m09/introduction-to-security-on-aws
+  anchor: authentication-and-authorization
+  tasks: [ "2.3", "2.2" ]
+  confusableWith: [ authorization ]
+- id: authorization
+  name: Authorization
+  home: m09/introduction-to-security-on-aws
+  anchor: authentication-and-authorization
+  tasks: [ "2.3", "2.2" ]
+- id: aws-security-controls
+  name: AWS security controls
+  home: m09/introduction-to-security-on-aws
+  anchor: security-controls
+  tasks: [ "2.2", "2.4" ]
+- id: aws-iam
+  name: AWS Identity and Access Management (IAM)
+  home: m09/preventing-unauthorized-access
+  anchor: iam-default-deny-and-least-privilege
+  tasks: [ "2.3" ]
+  confusableWith: [ aws-iam-identity-center, iam-access-analyzer ]
+- id: aws-account-root-user
+  name: AWS account root user
+  home: m09/preventing-unauthorized-access
+  anchor: the-aws-account-root-user
+  tasks: [ "2.3" ]
+- id: multi-factor-authentication
+  name: Multi-factor authentication (MFA)
+  home: m09/preventing-unauthorized-access
+  anchor: the-aws-account-root-user
+  tasks: [ "2.3" ]
+- id: principle-of-least-privilege
+  name: Principle of least privilege
+  home: m09/preventing-unauthorized-access
+  anchor: iam-default-deny-and-least-privilege
+  tasks: [ "2.3" ]
+- id: iam-policies
+  name: IAM policies
+  home: m09/preventing-unauthorized-access
+  anchor: iam-policies
+  tasks: [ "2.3" ]
+  confusableWith: [ service-control-policies, s3-bucket-policies ]
+- id: aws-iam-identity-center
+  name: AWS IAM Identity Center
+  home: m09/preventing-unauthorized-access
+  anchor: additional-access-management-services
+  tasks: [ "2.3" ]
+- id: aws-secrets-manager
+  name: AWS Secrets Manager
+  home: m09/preventing-unauthorized-access
+  anchor: additional-access-management-services
+  tasks: [ "2.3" ]
+  confusableWith: [ aws-systems-manager ]
+- id: aws-systems-manager
+  name: AWS Systems Manager
+  home: m09/preventing-unauthorized-access
+  anchor: additional-access-management-services
+  tasks: [ "2.3" ]
+- id: ddos-attacks
+  name: DDoS attacks
+  home: m09/protecting-networks-and-applications
+  anchor: dos-versus-ddos
+  tasks: [ "2.4", "2.2" ]
+- id: udp-flood-attacks
+  name: UDP flood attacks
+  home: m09/protecting-networks-and-applications
+  anchor: udp-flood-example
+  tasks: [ "2.4" ]
+- id: aws-shield-standard
+  name: AWS Shield Standard
+  home: m09/protecting-networks-and-applications
+  anchor: defense-through-aws-services
+  tasks: [ "2.4", "2.2" ]
+  confusableWith: [ aws-waf ]
+- id: aws-shield-advanced
+  name: AWS Shield Advanced
+  home: m09/protecting-networks-and-applications
+  anchor: defense-through-aws-services
+  tasks: [ "2.4", "2.2" ]
+  confusableWith: [ aws-shield-standard, aws-waf ]
+- id: aws-waf
+  name: AWS WAF
+  home: m09/protecting-networks-and-applications
+  anchor: defense-through-aws-services
+  tasks: [ "2.4" ]
+  confusableWith: [ security-groups, network-acls ]
+- id: data-encryption
+  name: Data encryption
+  home: m09/protecting-data
+  anchor: encryption-basics
+  tasks: [ "2.2" ]
+- id: encryption-at-rest
+  name: Encryption at rest
+  home: m09/protecting-data
+  anchor: built-in-protection-for-storage
+  tasks: [ "2.2" ]
+  confusableWith: [ encryption-in-transit ]
+- id: encryption-in-transit
+  name: Encryption in transit
+  home: m09/protecting-data
+  anchor: encryption-in-transit
+  tasks: [ "2.2" ]
+- id: ssl-tls-certificates
+  name: SSL/TLS certificates
+  home: m09/protecting-data
+  anchor: encryption-in-transit
+  tasks: [ "2.2" ]
+- id: aws-kms
+  name: AWS Key Management Service (AWS KMS)
+  home: m09/protecting-data
+  anchor: dedicated-data-protection-services
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-secrets-manager ]
+- id: aws-certificate-manager
+  name: AWS Certificate Manager (ACM)
+  home: m09/protecting-data
+  anchor: dedicated-data-protection-services
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-kms, aws-secrets-manager ]
+- id: amazon-macie
+  name: Amazon Macie
+  home: m09/protecting-data
+  anchor: dedicated-data-protection-services
+  tasks: [ "2.2", "2.4" ]
+- id: security-incident-response
+  name: Security incident response
+  home: m09/detecting-and-responding-to-security-incidents
+  anchor: choosing-between-them
+  tasks: [ "2.2", "2.4" ]
+- id: amazon-inspector
+  name: Amazon Inspector
+  home: m09/detecting-and-responding-to-security-incidents
+  anchor: find-weaknesses-amazon-inspector
+  tasks: [ "2.2", "3.5" ]
+  confusableWith: [ aws-security-hub, aws-trusted-advisor, amazon-macie ]
+- id: amazon-guardduty
+  name: Amazon GuardDuty
+  home: m09/detecting-and-responding-to-security-incidents
+  anchor: spot-threats-amazon-guardduty
+  tasks: [ "2.2", "2.4" ]
+  confusableWith: [ amazon-inspector, aws-security-hub, amazon-macie ]
+- id: amazon-detective
+  name: Amazon Detective
+  home: m09/detecting-and-responding-to-security-incidents
+  anchor: investigate-amazon-detective
+  tasks: [ "2.2", "2.4" ]
+  confusableWith: [ amazon-guardduty, aws-security-hub ]
+- id: aws-security-hub
+  name: AWS Security Hub
+  home: m09/detecting-and-responding-to-security-incidents
+  anchor: see-it-all-aws-security-hub
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-trusted-advisor ]
+- id: aws-security-documentation
+  name: AWS Security Documentation
+  home: m09/additional-security-resources
+  anchor: docs
+  tasks: [ "2.4" ]
+- id: aws-knowledge-center
+  name: AWS Knowledge Center
+  home: m09/additional-security-resources
+  anchor: docs
+  tasks: [ "2.4", "4.3" ]
+  confusableWith: [ aws-re-post, aws-security-blog ]
+- id: aws-security-blog
+  name: AWS Security Blog
+  home: m09/additional-security-resources
+  anchor: docs
+  tasks: [ "2.4" ]
+  confusableWith: [ aws-security-documentation ]
+- id: secure-monitor-audit-comply-progression
+  name: Secure, monitor, audit, comply progression
+  home: m10/introduction-to-monitoring-compliance-and-governance-in-the-aws-cloud
+  anchor: four-steps
+  tasks: [ "2.2" ]
+- id: cloud-monitoring
+  name: Cloud monitoring
+  home: m10/introduction-to-monitoring
+  anchor: definition
+  tasks: [ "2.2" ]
+- id: cloud-auditing
+  name: Cloud auditing
+  home: m10/aws-cloudtrail
+  anchor: why-auditing-is-easier-on-aws
+  tasks: [ "2.2" ]
+- id: cloud-governance
+  name: Cloud governance
+  home: m10/governance
+  anchor: why-governance
+  tasks: [ "2.2" ]
+- id: monitoring-metrics
+  name: Monitoring metrics
+  home: m10/introduction-to-monitoring
+  anchor: definition
+  tasks: [ "2.2" ]
+- id: monitoring-alerts
+  name: Monitoring alerts
+  home: m10/introduction-to-monitoring
+  anchor: why-the-cloud-needs-it
+  tasks: [ "2.2" ]
+- id: amazon-cloudwatch
+  name: Amazon CloudWatch
+  home: m10/amazon-cloudwatch
+  anchor: one-place-to-watch
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-cloudtrail, aws-config ]
+- id: cloudwatch-metrics
+  name: CloudWatch metrics
+  home: m10/amazon-cloudwatch
+  anchor: four-features
+  tasks: [ "2.2" ]
+- id: cloudwatch-alarms
+  name: CloudWatch alarms
+  home: m10/amazon-cloudwatch
+  anchor: four-features
+  tasks: [ "2.2" ]
+- id: cloudwatch-dashboards
+  name: CloudWatch dashboards
+  home: m10/amazon-cloudwatch
+  anchor: four-features
+  tasks: [ "2.2" ]
+- id: cloudwatch-logs
+  name: Amazon CloudWatch Logs
+  home: m10/amazon-cloudwatch
+  anchor: four-features
+  tasks: [ "2.2" ]
+- id: aws-cloudtrail
+  name: AWS CloudTrail
+  home: m10/aws-cloudtrail
+  anchor: what-cloudtrail-answers
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-config, aws-control-tower ]
+- id: cloudtrail-event-history
+  name: CloudTrail event history
+  home: m10/aws-cloudtrail
+  anchor: events-logs-and-insights
+  tasks: [ "2.2" ]
+  confusableWith: [ cloudtrail-insights, cloudtrail-logs ]
+- id: cloudtrail-logs
+  name: CloudTrail logs
+  home: m10/aws-cloudtrail
+  anchor: events-logs-and-insights
+  tasks: [ "2.2" ]
+  confusableWith: [ cloudwatch-logs ]
+- id: cloudtrail-insights
+  name: CloudTrail Insights
+  home: m10/aws-cloudtrail
+  anchor: events-logs-and-insights
+  tasks: [ "2.2" ]
+  confusableWith: [ cloudtrail-logs ]
+- id: log-file-integrity-validation
+  name: Log file integrity validation
+  home: m10/aws-cloudtrail
+  anchor: what-cloudtrail-answers
+  tasks: [ "2.2" ]
+- id: aws-artifact
+  name: AWS Artifact
+  home: m10/compliance
+  anchor: aws-artifact
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-audit-manager, aws-compliance-resources, aws-config ]
+- id: aws-artifact-agreements
+  name: AWS Artifact Agreements
+  home: m10/compliance
+  anchor: aws-artifact
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-artifact-reports ]
+- id: aws-artifact-reports
+  name: AWS Artifact Reports
+  home: m10/compliance
+  anchor: aws-artifact
+  tasks: [ "2.2" ]
+- id: aws-compliance-resources
+  name: AWS compliance resources
+  home: m10/compliance
+  anchor: where-to-learn-more
+  tasks: [ "2.2", "2.4" ]
+- id: hipaa
+  name: HIPAA
+  home: m10/compliance
+  anchor: what-compliance-asks
+  tasks: [ "2.2" ]
+- id: aws-config
+  name: AWS Config
+  home: m10/auditing-aws-resources-for-compliance
+  anchor: aws-config-do-my-resources-follow-our-rules
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-control-tower, aws-trusted-advisor ]
+- id: config-rules
+  name: AWS Config rules
+  home: m10/auditing-aws-resources-for-compliance
+  anchor: aws-config-do-my-resources-follow-our-rules
+  tasks: [ "2.2" ]
+- id: automated-remediation
+  name: Automated remediation
+  home: m10/auditing-aws-resources-for-compliance
+  anchor: aws-config-do-my-resources-follow-our-rules
+  tasks: [ "2.2" ]
+- id: aws-audit-manager
+  name: AWS Audit Manager
+  home: m10/auditing-aws-resources-for-compliance
+  anchor: aws-audit-manager-can-i-prove-it
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-cloudtrail, aws-config ]
+- id: automated-evidence-collection
+  name: Automated evidence collection
+  home: m10/auditing-aws-resources-for-compliance
+  anchor: aws-audit-manager-can-i-prove-it
+  tasks: [ "2.2" ]
+- id: audit-manager-frameworks
+  name: AWS Audit Manager frameworks
+  home: m10/auditing-aws-resources-for-compliance
+  anchor: aws-audit-manager-can-i-prove-it
+  tasks: [ "2.2" ]
+- id: aws-organizations
+  name: AWS Organizations
+  home: m10/aws-organizations
+  anchor: what-it-gives-you
+  tasks: [ "4.2", "4.1", "2.2" ]
+- id: consolidated-billing
+  name: Consolidated billing
+  home: m11/aws-pricing-and-billing-services
+  anchor: single-or-consolidated-billing
+  tasks: [ "4.2", "4.1" ]
+- id: organizational-units
+  name: Organizational units (OUs)
+  home: m10/aws-organizations
+  anchor: how-the-pieces-fit
+  tasks: [ "2.2" ]
+- id: service-control-policies
+  name: Service control policies (SCPs)
+  home: m10/aws-organizations
+  anchor: how-the-pieces-fit
+  tasks: [ "2.3", "2.2" ]
+- id: management-account
+  name: Management account
+  home: m10/aws-organizations
+  anchor: how-the-pieces-fit
+  tasks: [ "2.2", "4.2" ]
+  confusableWith: [ member-accounts, organization-root ]
+- id: organization-root
+  name: Organization root
+  home: m10/aws-organizations
+  anchor: how-the-pieces-fit
+  tasks: [ "2.2" ]
+- id: member-accounts
+  name: Member accounts
+  home: m10/aws-organizations
+  anchor: how-the-pieces-fit
+  tasks: [ "2.2", "4.2" ]
+- id: aws-control-tower
+  name: AWS Control Tower
+  home: m10/governance
+  anchor: aws-control-tower
+  tasks: [ "2.2" ]
+  confusableWith: [ aws-license-manager, aws-organizations, aws-service-catalog ]
+- id: control-tower-landing-zone
+  name: Control Tower landing zone
+  home: m10/governance
+  anchor: aws-control-tower
+  tasks: [ "2.2" ]
+- id: control-tower-account-factory
+  name: Control Tower Account Factory
+  home: m10/governance
+  anchor: aws-control-tower
+  tasks: [ "2.2" ]
+- id: control-tower-controls
+  name: Control Tower controls (guardrails)
+  home: m10/governance
+  anchor: aws-control-tower
+  tasks: [ "2.2" ]
+  confusableWith: [ service-control-policies ]
+- id: aws-service-catalog
+  name: AWS Service Catalog
+  home: m10/governance
+  anchor: aws-service-catalog
+  tasks: [ "2.2" ]
+- id: aws-license-manager
+  name: AWS License Manager
+  home: m10/governance
+  anchor: aws-license-manager-and-byol
+  tasks: [ "1.4", "2.2" ]
+- id: bring-your-own-license
+  name: Bring your own license (BYOL)
+  home: m10/governance
+  anchor: aws-license-manager-and-byol
+  tasks: [ "1.4" ]
+- id: aws-health
+  name: AWS Health
+  home: m10/aws-health
+  anchor: basics
+  tasks: [ "4.3" ]
+- id: aws-health-dashboard
+  name: AWS Health Dashboard
+  home: m10/aws-health
+  anchor: basics
+  tasks: [ "4.3" ]
+  confusableWith: [ aws-trusted-advisor, cloudwatch-dashboards ]
+- id: aws-health-api
+  name: AWS Health API
+  home: m10/aws-health
+  anchor: basics
+  tasks: [ "4.3" ]
+- id: aws-trusted-advisor
+  name: AWS Trusted Advisor
+  home: m10/aws-trusted-advisor
+  anchor: an-automated-advisor
+  tasks: [ "2.4", "4.3" ]
+  confusableWith: [ iam-access-analyzer ]
+- id: trusted-advisor-check-categories
+  name: Trusted Advisor check categories
+  home: m10/aws-trusted-advisor
+  anchor: example-checks
+  tasks: [ "4.3", "2.4" ]
+- id: service-limits
+  name: Service limits
+  home: m10/aws-trusted-advisor
+  anchor: example-checks
+  tasks: [ "4.3" ]
+- id: iam-access-analyzer
+  name: IAM Access Analyzer
+  home: m10/aws-trusted-advisor
+  anchor: iam-access-analyzer
+  tasks: [ "2.3" ]
+- id: aws-billing-and-cost-management-dashboard
+  name: AWS Billing and Cost Management dashboard
+  home: m11/aws-pricing-and-billing-services
+  anchor: telling-the-tools-apart
+  tasks: [ "4.2" ]
+  confusableWith: [ aws-organizations, aws-cost-explorer, aws-budgets ]
+- id: aws-budgets
+  name: AWS Budgets
+  home: m11/aws-pricing-and-billing-services
+  anchor: telling-the-tools-apart
+  tasks: [ "4.2" ]
+  confusableWith: [ aws-cost-explorer, aws-pricing-calculator ]
+- id: aws-cost-explorer
+  name: AWS Cost Explorer
+  home: m11/aws-pricing-and-billing-services
+  anchor: telling-the-tools-apart
+  tasks: [ "4.2" ]
+  confusableWith: [ aws-pricing-calculator ]
+- id: aws-support-plans
+  name: AWS Support plans
+  home: m11/aws-support-plans
+  anchor: plan-comparison
+  tasks: [ "4.3", "3.8" ]
+- id: aws-partner-network
+  name: AWS Partner Network
+  home: m11/aws-marketplace-and-aws-partners
+  anchor: aws-partner-network
+  tasks: [ "4.3" ]
+  confusableWith: [ aws-professional-services ]
+- id: cost-optimization
+  name: Cost optimization
+  home: m11/cost-optimization
+  anchor: look-across-services
+  tasks: [ "1.4", "1.2" ]
+- id: save-when-you-commit
+  name: Save when you commit
+  home: m11/aws-pricing-concepts
+  anchor: three-pricing-principles
+  tasks: [ "4.1", "1.4" ]
+- id: pay-less-by-using-more
+  name: Pay less by using more
+  home: m11/aws-pricing-concepts
+  anchor: three-pricing-principles
+  tasks: [ "1.4", "4.1" ]
+  confusableWith: [ save-when-you-commit ]
+- id: cost-drivers
+  name: Cost drivers
+  home: m11/aws-pricing-concepts
+  anchor: cost-drivers
+  tasks: [ "4.1", "1.4" ]
+- id: outbound-data-transfer
+  name: Outbound data transfer
+  home: m11/aws-pricing-concepts
+  anchor: cost-drivers
+  tasks: [ "4.1" ]
+- id: s3-pricing
+  name: Amazon S3 pricing
+  home: m11/aws-pricing-concepts
+  anchor: cost-drivers
+  tasks: [ "4.1", "3.6" ]
+- id: cost-allocation-tags
+  name: AWS cost allocation tags
+  home: m11/aws-pricing-and-billing-services
+  anchor: tags
+  tasks: [ "4.2" ]
+- id: aws-pricing-calculator
+  name: AWS Pricing Calculator
+  home: m11/aws-pricing-and-billing-services
+  anchor: telling-the-tools-apart
+  tasks: [ "4.2" ]
+  confusableWith: [ migration-evaluator ]
+- id: technical-account-manager
+  name: Technical account manager (TAM)
+  home: m11/aws-support-plans
+  anchor: what-the-plans-add
+  tasks: [ "4.3" ]
+- id: aws-re-post
+  name: AWS re:Post
+  home: m11/aws-support-plans
+  anchor: beyond-the-plans
+  tasks: [ "4.3" ]
+- id: aws-trust-and-safety-center
+  name: AWS Trust and Safety Center
+  home: m11/aws-support-plans
+  anchor: beyond-the-plans
+  tasks: [ "4.3" ]
+- id: aws-solutions-architects
+  name: AWS solutions architects
+  home: m11/aws-support-plans
+  anchor: beyond-the-plans
+  tasks: [ "4.3" ]
+  confusableWith: [ technical-account-manager ]
+- id: aws-professional-services
+  name: AWS Professional Services
+  home: m11/aws-support-plans
+  anchor: beyond-the-plans
+  tasks: [ "4.3" ]
+  confusableWith: [ aws-solutions-architects, technical-account-manager ]
+- id: aws-self-support-resources
+  name: AWS self-support resources
+  home: m11/aws-support-plans
+  anchor: beyond-the-plans
+  tasks: [ "4.3" ]
+- id: independent-software-vendors
+  name: Independent software vendors (ISVs)
+  home: m11/aws-marketplace-and-aws-partners
+  anchor: marketplace-basics
+  tasks: [ "4.3" ]
+- id: aws-partner-funding
+  name: AWS Partner funding
+  home: m11/aws-marketplace-and-aws-partners
+  anchor: aws-partner-network
+  tasks: [ "4.3" ]
+- id: aws-partner-events
+  name: AWS Partner events
+  home: m11/aws-marketplace-and-aws-partners
+  anchor: aws-partner-network
+  tasks: [ "4.3" ]
+- id: aws-partner-training-and-certification
+  name: AWS Partner training and certification
+  home: m11/aws-marketplace-and-aws-partners
+  anchor: aws-partner-network
+  tasks: [ "4.3" ]
+- id: rightsizing
+  name: Rightsizing
+  home: m11/cost-optimization
+  anchor: amazon-ec2
+  tasks: [ "1.4", "1.2" ]
+- id: aws-compute-optimizer
+  name: AWS Compute Optimizer
+  home: m11/cost-optimization
+  anchor: amazon-ec2
+  tasks: [ "1.4", "4.2" ]
+  confusableWith: [ aws-trusted-advisor, aws-cost-explorer ]
+- id: vpc-endpoints
+  name: VPC endpoints
+  home: m11/cost-optimization
+  anchor: data-transfer
+  tasks: [ "3.5", "4.1" ]
+- id: cloud-migration
+  name: Cloud migration
+  home: m12/introduction-to-migration
+  anchor: cloud-migration
+  tasks: [ "1.3" ]
+- id: three-phase-migration-process
+  name: Three-phase migration process
+  home: m12/introduction-to-migration
+  anchor: the-three-phases
+  tasks: [ "1.3" ]
+- id: migration-assess-phase
+  name: Assess phase
+  home: m12/introduction-to-migration
+  anchor: the-three-phases
+  tasks: [ "1.3" ]
+  confusableWith: [ migration-mobilize-phase ]
+- id: migration-mobilize-phase
+  name: Mobilize phase
+  home: m12/introduction-to-migration
+  anchor: the-three-phases
+  tasks: [ "1.3" ]
+- id: migrate-and-modernize-phase
+  name: Migrate and modernize phase
+  home: m12/introduction-to-migration
+  anchor: the-three-phases
+  tasks: [ "1.3" ]
+  confusableWith: [ migration-mobilize-phase ]
+- id: aws-cloud-adoption-framework
+  name: AWS Cloud Adoption Framework (AWS CAF)
+  home: m12/aws-cloud-adoption-framework
+  anchor: why-aws-caf-exists
+  tasks: [ "1.3" ]
+  confusableWith: [ aws-well-architected-framework ]
+- id: aws-caf-business-perspective
+  name: AWS CAF Business perspective
+  home: m12/aws-cloud-adoption-framework
+  anchor: the-six-perspectives
+  tasks: [ "1.3" ]
+  confusableWith: [ aws-caf-governance-perspective ]
+- id: aws-caf-people-perspective
+  name: AWS CAF People perspective
+  home: m12/aws-cloud-adoption-framework
+  anchor: the-six-perspectives
+  tasks: [ "1.3" ]
+- id: aws-caf-governance-perspective
+  name: AWS CAF Governance perspective
+  home: m12/aws-cloud-adoption-framework
+  anchor: the-six-perspectives
+  tasks: [ "1.3" ]
+  confusableWith: [ aws-caf-people-perspective ]
+- id: aws-caf-platform-perspective
+  name: AWS CAF Platform perspective
+  home: m12/aws-cloud-adoption-framework
+  anchor: the-six-perspectives
+  tasks: [ "1.3" ]
+- id: aws-caf-security-perspective
+  name: AWS CAF Security perspective
+  home: m12/aws-cloud-adoption-framework
+  anchor: the-six-perspectives
+  tasks: [ "1.3" ]
+- id: aws-caf-operations-perspective
+  name: AWS CAF Operations perspective
+  home: m12/aws-cloud-adoption-framework
+  anchor: the-six-perspectives
+  tasks: [ "1.3" ]
+  confusableWith: [ aws-caf-platform-perspective ]
+- id: aws-caf-action-plan
+  name: AWS CAF Action Plan
+  home: m12/aws-cloud-adoption-framework
+  anchor: aws-caf-action-plan
+  tasks: [ "1.3" ]
+- id: seven-migration-strategies
+  name: Seven migration strategies (7 Rs)
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+- id: migration-strategy-relocate
+  name: Relocate
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+- id: migration-strategy-replatform
+  name: Replatform (lift, tinker and shift)
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+  confusableWith: [ migration-strategy-repurchase ]
+- id: migration-strategy-refactor
+  name: Refactor (re-architect)
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+  confusableWith: [ migration-strategy-replatform, migration-strategy-rehost ]
+- id: migration-strategy-repurchase
+  name: Repurchase (drop and shop)
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+- id: migration-strategy-retain
+  name: Retain
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+  confusableWith: [ migration-strategy-retire ]
+- id: migration-strategy-retire
+  name: Retire
+  home: m12/seven-migration-strategies
+  anchor: the-seven-rs
+  tasks: [ "1.3" ]
+- id: migration-evaluator
+  name: Migration Evaluator
+  home: m12/migration-services-and-tools
+  anchor: the-four-services-side-by-side
+  tasks: [ "1.3", "3.8" ]
+- id: aws-application-discovery-service
+  name: AWS Application Discovery Service
+  home: m12/migration-services-and-tools
+  anchor: the-four-services-side-by-side
+  tasks: [ "1.3", "3.8" ]
+  confusableWith: [ aws-migration-hub, migration-evaluator, aws-application-migration-service ]
+- id: aws-migration-hub
+  name: AWS Migration Hub
+  home: m12/migration-services-and-tools
+  anchor: the-four-services-side-by-side
+  tasks: [ "1.3", "3.8" ]
+- id: aws-application-migration-service
+  name: AWS Application Migration Service
+  home: m12/migration-services-and-tools
+  anchor: the-four-services-side-by-side
+  tasks: [ "1.3", "3.8" ]
+  confusableWith: [ aws-database-migration-service, aws-migration-hub, aws-elastic-disaster-recovery ]
+- id: aws-migration-and-modernization-competency-partners
+  name: AWS Migration and Modernization Competency Partners
+  home: m12/migration-services-and-tools
+  anchor: partner-help
+  tasks: [ "4.3", "1.3" ]
+  confusableWith: [ aws-professional-services ]
+- id: aws-schema-conversion-tool
+  name: AWS Schema Conversion Tool (AWS SCT)
+  home: m12/database-migrations
+  anchor: aws-dms-versus-aws-sct
+  tasks: [ "3.4", "1.3" ]
+- id: homogeneous-database-migration
+  name: Homogeneous database migration
+  home: m12/database-migrations
+  anchor: migration-types
+  tasks: [ "3.4", "1.3" ]
+- id: heterogeneous-database-migration
+  name: Heterogeneous database migration
+  home: m12/database-migrations
+  anchor: migration-types
+  tasks: [ "3.4", "1.3" ]
+  confusableWith: [ homogeneous-database-migration ]
+- id: database-schema
+  name: Database schema
+  home: m12/database-migrations
+  anchor: migration-types
+  tasks: [ "3.4" ]
+- id: online-data-transfer
+  name: Online data transfer
+  home: m12/transferring-data-online
+  anchor: before-moving-data
+  tasks: [ "1.3" ]
+- id: aws-datasync
+  name: AWS DataSync
+  home: m12/transferring-data-online
+  anchor: aws-datasync
+  tasks: [ "1.3", "3.8", "3.6" ]
+  confusableWith: [ aws-transfer-family, aws-snow-family, aws-storage-gateway ]
+- id: aws-transfer-family
+  name: AWS Transfer Family
+  home: m12/transferring-data-online
+  anchor: aws-transfer-family
+  tasks: [ "1.3", "3.8" ]
+- id: transfer-protocols
+  name: Transfer protocols
+  home: m12/transferring-data-online
+  anchor: aws-transfer-family
+  tasks: [ "3.8" ]
+- id: offline-data-transfer
+  name: Offline data transfer
+  home: m12/transferring-data-offline
+  anchor: when-to-go-offline
+  tasks: [ "1.3" ]
+  confusableWith: [ online-data-transfer ]
+- id: aws-snow-family
+  name: AWS Snow Family
+  home: m12/transferring-data-offline
+  anchor: snowball-edge-storage-optimized-devices
+  tasks: [ "1.3", "3.8" ]
+  confusableWith: [ aws-storage-gateway ]
+- id: aws-snowball-edge-storage-optimized
+  name: AWS Snowball Edge Storage Optimized
+  home: m12/transferring-data-offline
+  anchor: snowball-edge-storage-optimized-devices
+  tasks: [ "1.3", "3.8" ]
+- id: edge-computing
+  name: Edge computing
+  home: m12/transferring-data-offline
+  anchor: snowball-edge-storage-optimized-devices
+  tasks: [ "3.8", "3.1" ]
+  confusableWith: [ edge-locations ]
+- id: aws-well-architected-framework
+  name: AWS Well-Architected Framework
+  home: m13/aws-well-architected-framework
+  anchor: why-keep-improving
+  tasks: [ "1.2" ]
+  confusableWith: [ aws-well-architected-tool ]
+- id: architecture-evaluation
+  name: Architecture evaluation
+  home: m13/introduction-to-well-architected-solutions
+  anchor: design-quality
+  tasks: [ "1.2" ]
+- id: purpose-built-services
+  name: Purpose-built services
+  home: m13/introduction-to-well-architected-solutions
+  anchor: design-quality
+  tasks: [ "3.8" ]
+- id: aws-codepipeline
+  name: AWS CodePipeline
+  home: m13/aws-specialized-services
+  anchor: development-services
+  tasks: [ "3.8" ]
+  confusableWith: [ aws-x-ray, aws-elastic-beanstalk ]
+- id: aws-x-ray
+  name: AWS X-Ray
+  home: m13/aws-specialized-services
+  anchor: development-services
+  tasks: [ "3.8" ]
+- id: aws-amplify
+  name: AWS Amplify
+  home: m13/aws-specialized-services
+  anchor: development-services
+  tasks: [ "3.8" ]
+  confusableWith: [ aws-elastic-beanstalk ]
+- id: amazon-connect
+  name: Amazon Connect
+  home: m13/aws-specialized-services
+  anchor: business-application-services
+  tasks: [ "3.8" ]
+  confusableWith: [ amazon-ses, amazon-lex ]
+- id: amazon-ses
+  name: Amazon Simple Email Service (Amazon SES)
+  home: m13/aws-specialized-services
+  anchor: business-application-services
+  tasks: [ "3.8" ]
+  confusableWith: [ amazon-sns ]
+- id: amazon-appstream-2-0
+  name: Amazon AppStream 2.0
+  home: m13/aws-specialized-services
+  anchor: end-user-computing-services
+  tasks: [ "3.8" ]
+  confusableWith: [ amazon-workspaces ]
+- id: amazon-workspaces
+  name: Amazon WorkSpaces
+  home: m13/aws-specialized-services
+  anchor: end-user-computing-services
+  tasks: [ "3.8" ]
+- id: aws-iot-core
+  name: AWS IoT Core
+  home: m13/aws-specialized-services
+  anchor: iot-services
+  tasks: [ "3.8" ]
+- id: operational-excellence-pillar
+  name: Operational excellence pillar
+  home: m13/aws-well-architected-framework
+  anchor: the-six-pillars
+  tasks: [ "1.2" ]
+  confusableWith: [ reliability-pillar ]
+- id: security-pillar
+  name: Security pillar
+  home: m13/aws-well-architected-framework
+  anchor: the-six-pillars
+  tasks: [ "1.2" ]
+- id: reliability-pillar
+  name: Reliability pillar
+  home: m13/aws-well-architected-framework
+  anchor: the-six-pillars
+  tasks: [ "1.2" ]
+- id: performance-efficiency-pillar
+  name: Performance efficiency pillar
+  home: m13/aws-well-architected-framework
+  anchor: the-six-pillars
+  tasks: [ "1.2" ]
+  confusableWith: [ reliability-pillar ]
+- id: cost-optimization-pillar
+  name: Cost optimization pillar
+  home: m13/aws-well-architected-framework
+  anchor: the-six-pillars
+  tasks: [ "1.2", "1.4" ]
+  confusableWith: [ performance-efficiency-pillar, sustainability-pillar ]
+- id: sustainability-pillar
+  name: Sustainability pillar
+  home: m13/aws-well-architected-framework
+  anchor: the-six-pillars
+  tasks: [ "1.2" ]
+- id: aws-well-architected-tool
+  name: AWS Well-Architected Tool
+  home: m13/aws-well-architected-framework
+  anchor: aws-well-architected-tool
+  tasks: [ "1.2" ]
