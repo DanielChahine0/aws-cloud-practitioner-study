@@ -1,7 +1,7 @@
 questions:
   - id: q-6ygz70
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: high-availability
@@ -30,9 +30,14 @@ questions:
       - "High availability: minimal downtime, because a standby takes over when one component fails."
     takeaway: When one component fails and a standby steps in so downtime stays small, that is high availability.
     history: []
+    verified:
+      keyHash: d58a2a38f917
+      fullHash: 95d03dae3dc7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-844ypb
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: high-availability
@@ -40,28 +45,33 @@ questions:
     task: "1.1"
     level: 1
     stem: >-
-      Which statement best describes the benefit that high availability gives a business?
+      Which benefit does high availability on its own give a business?
     options:
       - id: a
-        text: Downtime stays small because a standby replaces a failed part.
-        correct: true
-        why: High availability keeps applications reachable by switching to a standby when one component fails.
+        text: Work carries on while several components fail at the same moment.
+        why: Surviving several failures at once is fault tolerance, which goes further than high availability.
       - id: b
-        text: Capacity grows and shrinks on its own as customer demand shifts.
-        why: Adjusting capacity to demand describes elasticity, not keeping downtime low after a failure.
+        text: A broken server is rebuilt from a backup by the next morning.
+        why: Rebuilding overnight leaves hours of downtime, the opposite of the minimal downtime high availability gives.
       - id: c
-        text: Prices drop as more customers share the provider's hardware.
-        why: Lower prices from shared hardware describe economies of scale, which say nothing about downtime.
+        text: Downtime stays small because a standby replaces one failed part.
+        correct: true
+        why: High availability keeps downtime minimal by switching to a standby when one component fails.
       - id: d
-        text: New resources can be launched in other countries within minutes.
-        why: Launching quickly in new geographies describes global reach, not recovery from a failed part.
+        text: Capacity grows and shrinks on its own as customer demand shifts.
+        why: Matching capacity to demand describes elasticity, not keeping downtime low after a failure.
     evidence:
       - "High availability: minimal downtime via standby components."
     takeaway: High availability means minimal downtime, because a standby component takes over when one part fails.
     history: []
+    verified:
+      keyHash: e69ab790423d
+      fullHash: 517ebda93d89
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-vqzs5r
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fault-tolerance
@@ -89,39 +99,49 @@ questions:
       - "Fault tolerance: going further, the system runs on when several components fail, via resilience in every layer."
     takeaway: Surviving several component failures at once, through resilience in every layer, is fault tolerance.
     history: []
+    verified:
+      keyHash: 408df4ec3f6a
+      fullHash: ac8ec9e824be
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-h68n9s
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fault-tolerance
     note: m01/introduction-to-aws-global-infrastructure
     task: "3.2"
-    level: 1
+    level: 2
     stem: >-
-      Which statement describes fault tolerance rather than high availability?
+      Which situation at the cafe shows fault tolerance rather than only high availability?
     options:
       - id: a
-        text: The system keeps working when several components fail together.
-        correct: true
-        why: Continuing to operate through multiple failures at once is what sets fault tolerance apart.
+        text: When the main payment server breaks, a standby server takes over the orders.
+        why: A standby covering one failed server is the high availability pattern, which fault tolerance goes beyond.
       - id: b
-        text: A standby takes over after a single component has failed.
-        why: A standby covering one failure is the high availability pattern, which fault tolerance goes beyond.
+        text: When a server and a disk break together, payments carry on without a pause.
+        correct: true
+        why: Running on while several components fail at once is what sets fault tolerance apart.
       - id: c
-        text: Extra servers are added automatically as order traffic climbs.
-        why: Adding servers as traffic climbs describes scaling, not surviving broken components.
+        text: When the only payment server breaks, staff restore it from last night's backup.
+        why: Restoring from a backup means downtime until the restore ends, so the system did not run on.
       - id: d
-        text: Resources can be started in a brand new geography within minutes.
-        why: Starting resources quickly in new places describes global reach, not resilience to failures.
+        text: When the server room floods, the app is rebuilt in a new location the next day.
+        why: Rebuilding the next day leaves a full outage in between, which is neither availability nor tolerance.
     evidence:
       - "Fault tolerance: operating on despite multiple failures."
       - "High availability limits downtime from one failure, fault tolerance survives several, and both come from spreading resources across AZs and Regions."
     takeaway: High availability covers one failure with a standby, while fault tolerance keeps running through several failures.
     history: []
+    verified:
+      keyHash: 89dd1cf3022f
+      fullHash: f499677e3bf4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-dr38dj
     version: 1
-    status: draft
+    status: live
     type: match
     pool: practice
     concept: aws-global-infrastructure
@@ -146,6 +166,11 @@ questions:
       - A Region holds three or more AZs, and each AZ is an isolated part of one Region holding one or more data centers.
     takeaway: Regions contain Availability Zones, and each Availability Zone contains one or more data centers.
     history: []
+    verified:
+      keyHash: 4eb0391c7894
+      fullHash: a780938b73cc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-9nxypw
     version: 1
     status: draft
@@ -153,64 +178,73 @@ questions:
     pool: practice
     concept: aws-global-infrastructure
     note: m01/introduction-to-aws-global-infrastructure
-    task: "1.1"
-    level: 2
+    task: "3.2"
+    level: 1
     stem: >-
-      The cafe's owner is deciding whether to move the ordering app to AWS and asks how the AWS Global Infrastructure is organized.
-      Which answer describes it correctly?
+      The cafe's owner is learning how the AWS Global Infrastructure is put together.
+      Which part sits inside an Availability Zone, with one or more of them in each zone?
     options:
       - id: a
-        text: Regions hold Availability Zones, which hold data centers
-        correct: true
-        why: The global infrastructure nests data centers inside Availability Zones, and Availability Zones inside Regions.
+        text: AWS Region
+        why: A Region is the geographic area that holds the zones, so it sits above an Availability Zone rather than inside one.
       - id: b
-        text: Data centers hold Regions, which hold Availability Zones
-        why: This reverses the nesting, since a data center is the smallest level and sits inside an Availability Zone.
+        text: Edge location
+        why: Edge locations cache content near viewers and are not a part that each Availability Zone contains.
       - id: c
-        text: Availability Zones hold Regions, which hold data centers
-        why: An Availability Zone sits inside one Region and never contains a Region.
+        text: Data center
+        correct: true
+        why: Each Availability Zone holds one or more data centers, the part nested inside the zone.
       - id: d
-        text: One very large data center serves each whole continent
-        why: AWS spreads capacity across many isolated locations, precisely so no single data center can stop everything.
+        text: Availability Zone
+        why: Another Availability Zone sits beside this one in the same Region, kept apart from it rather than inside it.
     evidence:
-      - "AWS Global Infrastructure: AWS's Regions, AZs and data centers worldwide."
+      - "Availability Zone (AZ): an isolated location in a Region, with one or more data centers."
       - A Region holds three or more AZs, and each AZ is an isolated part of one Region holding one or more data centers.
-    takeaway: The AWS Global Infrastructure is Regions worldwide, each holding Availability Zones made of data centers.
+    takeaway: Regions hold Availability Zones, and each Availability Zone holds one or more data centers.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 'Availability Zone' cannot sit inside an Availability Zone by the stem's own wording, so it is a throwaway distractor."
   - id: q-arybmq
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-regions
     note: m01/introduction-to-aws-global-infrastructure
     task: "3.2"
-    level: 3
+    level: 2
     stem: >-
-      The cafe is opening branches in Japan and wants to run its ordering app close to its new customers, in an area that offers several isolated locations it can spread servers across.
-      What should the cafe pick?
+      The cafe is opening its first branches in Brazil, and nearly all its new customers live there.
+      The ordering app must answer those customers with low latency.
+      Which Region should the cafe run the app in?
     options:
       - id: a
-        text: An AWS Region near Tokyo
-        correct: true
-        why: A Region is a geographic area near customers that contains several physically separate Availability Zones to run the app in.
+        text: The Ohio Region
+        why: Ohio is far from customers in Brazil, so every order would travel a long way and add latency.
       - id: b
-        text: An edge location near Tokyo
-        why: An edge location caches content close to viewers but does not offer separate Availability Zones for running the app.
+        text: The Dublin Region
+        why: Dublin sits in Europe, far from the Brazilian customers, so it cannot give them the lowest latency.
       - id: c
-        text: A single data center near Tokyo
-        why: One data center is a single location, so it gives the cafe nothing to spread servers across.
+        text: The Sao Paulo Region
+        correct: true
+        why: Sao Paulo is the Region near the customers in Brazil, which gives them low-latency access to the app.
       - id: d
-        text: An on-premises server near Tokyo
-        why: A server the cafe owns in Japan is not part of AWS and offers no isolated locations to spread across.
+        text: The Tokyo Region
+        why: Tokyo is on the far side of the world from Brazil, so it would add the most latency for these customers.
     evidence:
       - Geographic area near customers (such as Ohio, Dublin, Tokyo, Paris, Sao Paulo), sited partly for availability, with three or more physically separate AZs
       - Nearby users get low-latency, fault-tolerant access to services, and advanced components come later.
-    takeaway: To run workloads near customers with several isolated locations to use, choose an AWS Region in that geography.
+    takeaway: Pick the AWS Region nearest your customers, because a nearby Region gives them low-latency access.
     history: []
+    verified:
+      keyHash: 8c765e650bc7
+      fullHash: 43a54010084f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-1j5jfr
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-regions
@@ -218,61 +252,71 @@ questions:
     task: "3.2"
     level: 1
     stem: >-
-      Which statement about an AWS Region is accurate?
+      Which statement describes an AWS Region?
     options:
       - id: a
-        text: It is a geographic area with three or more separate Availability Zones.
+        text: An isolated location with its own power, networking and connectivity.
+        why: Its own power, networking and connectivity describe an Availability Zone, which sits inside a Region.
+      - id: b
+        text: A facility with redundant power, found one or more per isolated location.
+        why: A facility found one or more per isolated location is a data center, the smallest level.
+      - id: c
+        text: A geographic area that holds three or more separate isolated locations.
         correct: true
         why: Each Region covers a geographic area and contains three or more physically separate Availability Zones.
-      - id: b
-        text: It is one data center that handles all the traffic for a whole country.
-        why: A Region spans several Availability Zones made of data centers, never just one building.
-      - id: c
-        text: It is an isolated location that sits inside a single Availability Zone.
-        why: This reverses the nesting, since Availability Zones sit inside a Region.
       - id: d
-        text: It is a small site that keeps cached copies of content for nearby viewers.
+        text: A site that keeps cached copies of content close to nearby viewers.
         why: Caching content close to viewers describes an edge location, not a Region.
     evidence:
       - "AWS Region: a geographic area with three or more AZs."
     takeaway: An AWS Region is a geographic area that contains three or more separate Availability Zones.
     history: []
+    verified:
+      keyHash: 4c077241dd17
+      fullHash: 688b548645a5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-vqx7fw
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: availability-zones
     note: m01/introduction-to-aws-global-infrastructure
     task: "3.2"
-    level: 1
+    level: 2
     select: 2
     stem: >-
-      The cafe's developer is explaining Availability Zones to the owner before deploying the ordering app.
-      Which statements about an Availability Zone are accurate?
+      The cafe runs its ordering app in two Availability Zones of the Paris Region.
+      A fire knocks out one zone, and the other zone keeps taking orders.
+      Which facts about Availability Zones explain why the other zone kept running?
     options:
       - id: a
-        text: It lies entirely within one Region.
-        correct: true
-        why: An Availability Zone belongs to a single Region and never spans two of them.
+        text: Each zone sits inside the area of a single Region.
+        why: Belonging to one Region is true of every zone but does nothing to shield one zone from a fire in another.
       - id: b
-        text: It has its own power, networking and connectivity.
+        text: Each zone has its own power, networking and connectivity.
         correct: true
-        why: Each Availability Zone runs on independent power, networking and connectivity so its problems stay contained.
+        why: Independent power, networking and connectivity mean the fire's damage to one zone does not cut off the other.
       - id: c
-        text: It can stretch across two neighboring Regions.
-        why: Availability Zones never cross a Region boundary, so this describes something that cannot exist.
+        text: Each zone holds one or more data centers of its own.
+        why: The data centers inside the burned zone go down with it, so holding data centers does not explain the survivor.
       - id: d
-        text: It is a site that caches content near viewers.
-        why: Caching content near viewers is the job of an edge location, not an Availability Zone.
+        text: Each zone is kept physically apart from the other zones.
+        correct: true
+        why: Zones are kept apart because one disaster can cut off a whole zone, so the fire stays in one place.
       - id: e
-        text: It is always made up of exactly one data center.
-        why: An Availability Zone holds one or more data centers, so it is not limited to exactly one.
+        text: Each zone is placed close to the customers it serves.
+        why: Being near customers is about latency, which plays no part in surviving a fire in the other zone.
     evidence:
       - Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ
-      - "Availability Zone (AZ): an isolated location in a Region, with one or more data centers."
-    takeaway: An Availability Zone is an isolated part of one Region with its own power and networking and one or more data centers.
+    takeaway: Availability Zones survive each other's disasters because each is physically apart with its own power and networking.
     history: []
+    verified:
+      keyHash: 111d3f954afb
+      fullHash: 67f98cb59a03
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-6nwzkw
     version: 1
     status: draft
@@ -283,23 +327,28 @@ questions:
     task: "3.2"
     level: 3
     stem: >-
-      The cafe wants its ordering app to keep serving customers even if a flood knocks out one isolated location in the Region it uses.
-      Where should it place copies of its servers and data?
+      The cafe's ordering app runs in one Availability Zone of the Dublin Region, and its data must stay in Dublin.
+      The cafe wants the app to keep serving if a flood cuts off that zone.
+      Where should it place a second copy of the app and its data?
     options:
       - id: a
-        text: Across several Availability Zones in its Region
-        correct: true
-        why: Availability Zones are isolated from one another, so a flood in one leaves the copies in the others running.
+        text: In a second data center inside the same zone
+        why: A data center in the same zone is cut off by the same flood, so both copies would stop together.
       - id: b
-        text: Across several racks in one single data center
-        why: Every rack shares the same building, so a flood there stops all copies at once.
+        text: In an Availability Zone of the Paris Region
+        why: A zone in Paris would survive the flood, but it moves the data out of Dublin, which the cafe cannot do.
       - id: c
-        text: Across several servers in one Availability Zone
-        why: All servers in one zone share its location, so losing that zone stops every copy.
+        text: In an edge location close to Dublin
+        why: An edge location caches content for nearby viewers and is not a place to run the app and keep its data.
       - id: d
-        text: Across several edge locations near customers
-        why: Edge locations cache content for viewers and are not where the app's servers and data run.
+        text: In another Availability Zone of the Dublin Region
+        correct: true
+        why: Another zone in Dublin is isolated from the flooded one and keeps the data inside the Region the cafe must use.
     evidence:
       - Spread resources and replicate data across several AZs so one AZ's outage does not stop applications.
-    takeaway: Spreading servers and data across several Availability Zones keeps an app running when one zone goes down.
+      - Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ
+    takeaway: To survive one zone's outage without leaving a Region, replicate across another Availability Zone in that Region.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"

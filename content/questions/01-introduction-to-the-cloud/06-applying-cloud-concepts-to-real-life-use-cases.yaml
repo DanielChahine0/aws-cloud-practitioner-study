@@ -1,7 +1,7 @@
 questions:
   - id: q-711bzy
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: latency
@@ -31,9 +31,14 @@ questions:
       - Hosting in Regions near customers cuts latency.
     takeaway: When distant users see slow responses, running the workload in a Region near them is the direct way to cut latency.
     history: []
+    verified:
+      keyHash: 5fef2709479b
+      fullHash: 3f92016d2ec6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-w9fd5e
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: latency
@@ -60,3 +65,8 @@ questions:
       - "Latency: delay in answering requests, growing with distance from the infrastructure."
     takeaway: Latency is response delay, and it grows with the distance between users and the infrastructure serving them.
     history: []
+    verified:
+      keyHash: 0ea7b7c88f4f
+      fullHash: e3b8a874428f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

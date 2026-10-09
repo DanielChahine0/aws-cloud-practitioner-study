@@ -1,7 +1,7 @@
 questions:
   - id: q-pbjmvk
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: containers
@@ -13,22 +13,27 @@ questions:
       Which approach makes the app behave the same wherever it runs?
     options:
       - id: a
-        text: Ship the app inside a container with its libraries
+        text: Package the app as a container image
         correct: true
         why: A container carries the code together with its runtime, libraries and settings, so every host runs the same environment.
       - id: b
-        text: Move the app onto a larger EC2 instance type
+        text: Move the app to a larger instance type
         why: A bigger instance adds CPU and memory, but the library mismatch between the machines stays exactly as it was.
       - id: c
-        text: Put the app servers in an Auto Scaling group
+        text: Add the servers to an Auto Scaling group
         why: An Auto Scaling group changes how many servers run, while each server still carries its own mismatched library.
       - id: d
-        text: Run the test copy of the app on a Dedicated Host
+        text: Run the test copy on a Dedicated Host
         why: A Dedicated Host changes who shares the hardware, and it does nothing to align the software the app depends on.
     evidence:
       - A container packs code, runtime, dependencies and configuration into one isolated unit that runs the same anywhere.
     takeaway: When an app fails only because environments differ, packaging it as a container gives every host the same environment.
     history: []
+    verified:
+      keyHash: 37285be865bf
+      fullHash: 176209583ffa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-nddyse
     version: 1
     status: draft
@@ -37,34 +42,36 @@ questions:
     concept: containers
     note: m03/containers-and-orchestration-on-aws
     task: "3.3"
-    level: 1
+    level: 2
     select: 2
     stem: >-
-      The cafe is packaging its menu service as a container for the first time.
-      Which items travel inside that container together with the service's code?
+      The cafe's menu service must behave the same on a developer's laptop, on the test server and in production.
+      Which properties of a container make that happen?
     options:
       - id: a
-        text: The runtime the code needs
-        correct: true
-        why: The runtime is part of what a container bundles, so the code finds the same runtime on every host.
+        text: It shares the operating system of its host
+        why: Sharing the host's operating system keeps a container light, but it does nothing to make the service match across machines.
       - id: b
-        text: The libraries the code depends on
+        text: It packs the runtime and libraries in with the code
         correct: true
-        why: Dependencies are packed into the container, which is what keeps the service from breaking on a new host.
+        why: With the runtime and libraries inside the container, every machine runs the service against the same versions.
       - id: c
-        text: A full guest operating system
-        why: A container shares the operating system of its host, while a full guest operating system belongs to a virtual machine.
+        text: It starts more quickly than a virtual machine
+        why: A quick start helps during a rush, yet a service that starts fast can still break on a host with different software.
       - id: d
-        text: The hypervisor that hosts it
-        why: A hypervisor is the layer under virtual machines, and it is never packed inside a container.
+        text: It carries its configuration along with the code
+        correct: true
+        why: Because the settings travel inside the container, the laptop, the test server and production all read the same ones.
       - id: e
-        text: The physical server it runs on
-        why: The container is a software package, so the hardware under it stays outside and can change from host to host.
+        text: It can be restarted by an orchestrator if it fails
+        why: Restarting a failed container keeps it running, but it leaves any difference between the machines in place.
     evidence:
       - A container packs code, runtime, dependencies and configuration into one isolated unit that runs the same anywhere.
-      - "Container: a portable, isolated package of an app with all it needs to run."
-    takeaway: A container bundles code with its runtime, dependencies and configuration, while the host supplies the operating system.
+    takeaway: A container behaves the same on every host because it carries its runtime, dependencies and configuration with the code.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-gb7f1t
     version: 1
     status: draft
@@ -76,28 +83,32 @@ questions:
     level: 2
     stem: >-
       The cafe wants to fit many small services onto each host and have new copies ready within moments during the lunch rush.
-      Why do containers suit this better than virtual machines?
+      Which property lets containers do this better than virtual machines?
     options:
       - id: a
-        text: They share the operating system of their host
-        correct: true
-        why: Sharing the host's operating system keeps each container light, so more fit on a host and they start quickly.
+        text: Packing the runtime and libraries with the code
+        why: A virtual machine also holds the app's runtime and libraries, so bundling them is not what makes a container lighter.
       - id: b
-        text: They each boot a complete operating system
-        why: Booting a complete operating system is what makes a virtual machine heavier and slower, the opposite of this need.
+        text: Pulling their images from a managed registry
+        why: Where the images are kept says nothing about how much of each host a running copy takes or how fast it boots.
       - id: c
-        text: They each run on a hypervisor of their own
-        why: The hypervisor is the layer under virtual machines, and it adds weight rather than explaining why containers start fast.
+        text: Sharing the operating system of the host
+        correct: true
+        why: With no operating system of its own to boot, each container is light, so more fit on a host and they start quickly.
       - id: d
-        text: They need no configuration files to run
-        why: Containers still rely on configuration, so skipping it is no reason they start faster.
+        text: Being scheduled across a cluster by an orchestrator
+        why: An orchestrator places and scales copies, but each copy is no lighter or faster to boot because of it.
     evidence:
       - Containers share the host's OS, so they are lighter, start faster and use resources better.
-    takeaway: Containers start faster and pack more densely than VMs because they share the host's operating system.
+      - A VM runs its own full OS on a hypervisor, making it heavier and slower to start.
+    takeaway: Containers start faster and pack more densely than VMs because they share the host's operating system instead of booting their own.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-kvwxsd
     version: 1
-    status: draft
+    status: live
     type: match
     pool: practice
     concept: containers-vs-virtual-machines
@@ -115,13 +126,18 @@ questions:
         right: Boots its own complete operating system and starts more slowly
         why: A virtual machine carries a full operating system of its own, which makes it heavier to start.
       - left: Hypervisor
-        right: Layer that lets each virtual machine have its own operating system
+        right: Lets each virtual machine run its own operating system
         why: The hypervisor sits under the virtual machines and lets every one of them run a separate operating system.
     evidence:
       - Containers share the host's OS, so they are lighter, start faster and use resources better.
       - A VM runs its own full OS on a hypervisor, making it heavier and slower to start.
     takeaway: Containers borrow the host's operating system, while each VM brings its own on top of a hypervisor.
     history: []
+    verified:
+      keyHash: c06fa8538103
+      fullHash: 839e11c7e6a4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-w2w9fc
     version: 1
     status: draft
@@ -134,58 +150,67 @@ questions:
     stem: >-
       The cafe began with a handful of containers on a single EC2 instance and now runs thousands across many instances.
       Its staff spend their days restarting failed containers and adding more by hand when orders spike.
-      What does the cafe need?
+      Which fact about containers explains why the cafe now needs an orchestrator?
     options:
       - id: a
-        text: A container orchestration service
-        correct: true
-        why: An orchestrator runs container lifecycles across a cluster, replaces failed ones and scales them with traffic.
+        text: They rely on their host for the operating system
+        why: Using the host's operating system is what keeps containers light, and it has nothing to do with restarts or scaling.
       - id: b
-        text: A container image registry service
-        why: A registry keeps the images the cafe builds, but it never restarts or scales the running containers.
+        text: They rely on a registry to keep their images
+        why: A registry stores images for later runs, while the staff's burden is keeping the running containers healthy and sized.
       - id: c
-        text: A larger instance type for each host
-        why: Bigger hosts still leave every restart and every scaling step to the cafe's staff.
+        text: They rely on a launch type for their compute
+        why: The launch type supplies the compute under the containers, and it does not restart them or add copies.
       - id: d
-        text: A hypervisor for each container host
-        why: A hypervisor runs virtual machines, and it does nothing to watch over or scale containers.
+        text: They rely on another tool to scale and recover
+        correct: true
+        why: Containers neither scale nor heal themselves, so at this size an orchestrator must take over recovery and scaling.
     evidence:
       - That breaks down once a few containers on one host become thousands on many.
       - Containers do not scale themselves, so orchestrators run their lifecycle across a cluster, scale them with traffic, and handle recovery, monitoring and updates.
-    takeaway: Once containers multiply across many hosts, an orchestrator takes over their health, scaling and updates.
+    takeaway: Containers cannot scale or recover on their own, so once they multiply across many hosts an orchestrator must manage them.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-fqhfca
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: container-orchestration
     note: m03/containers-and-orchestration-on-aws
     task: "3.3"
-    level: 1
+    level: 2
     stem: >-
-      Which job does container orchestration take over from the team that runs the containers?
+      The cafe needs extra copies of its ordering container while the lunch rush is on and fewer once it ends.
+      Which job of its orchestrator handles that?
     options:
       - id: a
-        text: Keeping containers healthy and scaling them with demand
-        correct: true
-        why: Orchestration manages the lifecycle of many containers, including recovery and scaling as traffic changes.
+        text: Recovering containers that fail
+        why: Recovery replaces copies that crash, but it keeps the count the same instead of following the rush.
       - id: b
-        text: Storing and versioning the images that containers start from
-        why: Keeping and versioning images is the work of a container registry, a separate tool from the orchestrator.
+        text: Monitoring the health of each container
+        why: Monitoring reports how each copy is doing, and it does not add copies when orders climb.
       - id: c
-        text: Bundling the code and its libraries into one portable package
-        why: Bundling the app is what building a container image does, before any orchestrator gets involved.
+        text: Rolling out updates to containers
+        why: Updates swap in a new version of the app, which leaves the number of copies where it was.
       - id: d
-        text: Running each workload on its own complete operating system
-        why: A complete operating system per workload describes virtual machines, which orchestration does not provide.
+        text: Scaling the containers with traffic
+        correct: true
+        why: Scaling adds copies as orders climb at lunch and removes them when the rush is over.
     evidence:
-      - "Container orchestration: automated lifecycle, scaling and health management for many containers."
-    takeaway: Orchestration automates the lifecycle, health and scaling of many containers, separate from building or storing images.
+      - Containers do not scale themselves, so orchestrators run their lifecycle across a cluster, scale them with traffic, and handle recovery, monitoring and updates.
+    takeaway: An orchestrator scales containers with traffic, alongside its recovery, monitoring and update duties.
     history: []
+    verified:
+      keyHash: 64044fe89772
+      fullHash: 177098c063cf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-ph0mv3
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-ecs
@@ -214,9 +239,14 @@ questions:
       - ECS is the streamlined, integrated orchestrator, for Docker containers and others.
     takeaway: For a streamlined, AWS-integrated orchestrator without Kubernetes, choose Amazon ECS.
     history: []
+    verified:
+      keyHash: 54cf90bb9dc4
+      fullHash: 2ba3fe090a91
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-yb17kn
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-ecs
@@ -245,9 +275,14 @@ questions:
       - "In practice: push images to ECR, pick ECS or EKS, then pick EC2 or Fargate."
     takeaway: In an AWS container setup, ECR stores images, ECS orchestrates them and Fargate or EC2 supplies the compute.
     history: []
+    verified:
+      keyHash: 0e688fef0296
+      fullHash: d438b90367f2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-seqbtr
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-eks
@@ -276,9 +311,14 @@ questions:
       - EKS suits large-scale or hybrid setups that want extra control and flexibility.
     takeaway: Teams already on Kubernetes, or running large or hybrid setups, point to Amazon EKS.
     history: []
+    verified:
+      keyHash: 2df10dcddc5b
+      fullHash: 2a3c41f90fef
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-fkqv41
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-eks
@@ -306,9 +346,14 @@ questions:
       - "Team wanting Kubernetes without managing servers: EKS on Fargate."
     takeaway: Kubernetes with no servers to manage means Amazon EKS with the Fargate launch type.
     history: []
+    verified:
+      keyHash: 221af2b1e97c
+      fullHash: dd0da314dc2a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-pykrqy
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: kubernetes
@@ -320,25 +365,31 @@ questions:
       What is Kubernetes?
     options:
       - id: a
-        text: An open source platform for running containers at scale
+        text: An open standard that defines container image formats
+        why: Image format standards come from the Open Container Initiative, while Kubernetes runs the containers built from images.
+      - id: b
+        text: An open source tool that builds and ships container images
+        why: Building and shipping images is the kind of job Docker does, while Kubernetes deploys and scales the containers.
+      - id: c
+        text: An open source hypervisor that runs virtual machines
+        why: A hypervisor runs virtual machines with their own operating systems, a different job from orchestrating containers.
+      - id: d
+        text: An open source platform that orchestrates containers
         correct: true
         why: Kubernetes is the open source container platform that automates how containers are deployed, scaled and managed.
-      - id: b
-        text: An AWS registry that stores and versions container images
-        why: That describes Amazon ECR, which keeps images rather than running containers.
-      - id: c
-        text: An AWS serverless engine that hosts containers for others
-        why: That describes AWS Fargate, which supplies compute under an orchestrator such as EKS.
-      - id: d
-        text: A hypervisor layer that runs complete virtual machines
-        why: A hypervisor runs virtual machines with their own operating systems, a different job from orchestrating containers.
     evidence:
       - "Kubernetes: the open source container platform EKS runs."
+      - EKS runs Kubernetes, the open source platform automating container deployment, scaling and management.
     takeaway: Kubernetes is the open source platform for deploying, scaling and managing containers, and EKS is the AWS service that runs it.
     history: []
+    verified:
+      keyHash: 85330cce6a1e
+      fullHash: 238ead0ec293
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-jjka8f
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: kubernetes
@@ -367,9 +418,14 @@ questions:
       - AWS fully manages EKS, while Kubernetes gets updates and support from its open source community.
     takeaway: Kubernetes is open source and community supported, and Amazon EKS is how AWS runs it as a managed service.
     history: []
+    verified:
+      keyHash: 94daafefbab5
+      fullHash: 41413b86c760
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-15e87q
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-ecr
@@ -399,6 +455,11 @@ questions:
       - Orchestrators pull images from it, and you push and pull with standard tools and CLIs.
     takeaway: Storing and versioning container images is the job of the registry, Amazon ECR, which orchestrators pull from.
     history: []
+    verified:
+      keyHash: a5db441a4e09
+      fullHash: 7e6f887f70cd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-ca33xj
     version: 1
     status: draft
@@ -411,33 +472,36 @@ questions:
     select: 2
     stem: >-
       The cafe is about to push its first images to Amazon ECR.
-      Which statements about Amazon ECR are accurate?
+      Which statements describe Amazon ECR?
     options:
       - id: a
-        text: The images it stores follow Open Container Initiative standards
-        correct: true
-        why: ECR expects images that meet the Open Container Initiative standards.
+        text: It runs the containers with no servers for the cafe to manage
+        why: Running containers without servers to manage describes AWS Fargate, while ECR only holds the images.
       - id: b
-        text: Orchestrators such as Amazon ECS pull images from it
+        text: It keeps images in repositories that orchestrators pull from
         correct: true
-        why: ECR is where orchestrators fetch images from when they start containers.
+        why: ECR stores images in repositories, and orchestrators fetch them from there when they start containers.
       - id: c
-        text: It schedules containers and scales them with traffic
-        why: Scheduling and scaling containers is orchestration, the job of ECS or EKS.
+        text: It operates the Kubernetes control plane for each cluster
+        why: Operating the Kubernetes control plane is what AWS does for Amazon EKS, not a job of the image registry.
       - id: d
-        text: It supplies the servers that the containers run on
-        why: The compute under containers comes from EC2 or Fargate, while ECR only stores images.
+        text: It expects every image to meet the Open Container Initiative standards
+        correct: true
+        why: ECR supports images that follow the Open Container Initiative standards, so the cafe's images must meet them.
       - id: e
-        text: It needs its own special tool for every push and pull
-        why: ECR works with the standard container tools and command line interfaces.
+        text: It schedules the containers and scales them with traffic
+        why: Scheduling and scaling running containers is orchestration, the job of Amazon ECS or Amazon EKS.
     evidence:
       - Orchestrators pull images from it, and you push and pull with standard tools and CLIs.
       - Images must meet Open Container Initiative (OCI) standards.
     takeaway: Amazon ECR stores OCI images for orchestrators to pull, and it neither runs nor scales containers.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Only the two keys (options 4 and 5) repeat the stem's word 'images', which points at them. Option 5 is the longest option by a clear margin, a length tell."
   - id: q-a3pe53
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-fargate
@@ -466,34 +530,42 @@ questions:
       - "Fargate: serverless, so AWS runs the servers while ECS or EKS orchestrates, and you pay only for resources used."
     takeaway: To run ECS or EKS containers without managing servers, choose the serverless Fargate launch type.
     history: []
+    verified:
+      keyHash: 768cd6489717
+      fullHash: f67a8f20b131
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-c901hx
     version: 1
     status: draft
-    type: match
+    type: single
     pool: practice
     concept: aws-fargate
     note: m03/containers-and-orchestration-on-aws
     task: "3.3"
     level: 2
     stem: >-
-      Four businesses are each planning a container workload.
-      Match each workload to the orchestrator and launch type that suits it.
-    pairs:
-      - left: A startup's new web app whose traffic rises and falls
-        right: Amazon ECS with AWS Fargate
-        why: A young app with uneven traffic wants the streamlined orchestrator, and Fargate removes server care and charges only for what is used.
-      - left: A small business app that needs particular hardware or networking
-        right: Amazon ECS with Amazon EC2
-        why: A small business without Kubernetes needs gets the streamlined orchestrator, and the EC2 launch type lets it choose and control the instances the hardware needs.
-      - left: A team that wants Kubernetes with no servers to run
-        right: Amazon EKS with AWS Fargate
-        why: EKS keeps Kubernetes, and Fargate takes the servers off the team's hands.
-      - left: An enterprise's large, complex workloads that need deep instance tuning
-        right: Amazon EKS with Amazon EC2
-        why: EKS suits large enterprise setups, and EC2 allows the deep instance tuning they ask for.
+      The cafe keeps orchestrating its containers with Amazon ECS but switches their launch type from Amazon EC2 to AWS Fargate.
+      What does the cafe get after the switch?
+    options:
+      - id: a
+        text: The cafe manages the VMs and keeps full control of them
+        why: Managing the VMs with full control is what the EC2 launch type gave the cafe, the setup it is leaving.
+      - id: b
+        text: AWS stores the images, and orchestrators pull them from it
+        why: Storing images for orchestrators to pull is the job of a registry such as ECR, whichever launch type runs them.
+      - id: c
+        text: AWS runs the servers, and the cafe pays for resources used
+        correct: true
+        why: Fargate is serverless, so AWS runs the servers under the containers and the cafe pays only for the resources they use.
+      - id: d
+        text: AWS runs the code as functions only when events arrive
+        why: Running code as functions on events describes AWS Lambda, while Fargate still runs the cafe's containers.
     evidence:
-      - Choose EKS for Kubernetes and large or hybrid setups, and ECS for a streamlined, integrated option.
-      - "EC2: you manage the VMs under your containers, for full control plus upkeep."
       - "Fargate: serverless, so AWS runs the servers while ECS or EKS orchestrates, and you pay only for resources used."
-    takeaway: Pick Fargate when nobody should manage servers, and EC2 when the workload needs control over its instances.
+      - "EC2: you manage the VMs under your containers, for full control plus upkeep."
+    takeaway: Moving to Fargate hands the servers under the containers to AWS, and the cafe pays only for the resources its containers use.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"

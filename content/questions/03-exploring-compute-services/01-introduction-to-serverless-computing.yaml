@@ -1,7 +1,7 @@
 questions:
   - id: q-816djf
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: unmanaged-services
@@ -10,31 +10,37 @@ questions:
     level: 2
     stem: >-
       The cafe hosts its online ordering site on Amazon EC2 instances.
-      A security fix for the operating system on those instances has just come out.
+      A security fix comes out for the firmware in the physical servers beneath those instances.
       Who is expected to apply it?
     options:
       - id: a
-        text: AWS, because it owns the physical hosts
-        why: AWS looks after the hardware under EC2, but the guest operating system on each instance is left to the customer.
+        text: The cafe's tech team
+        why: The cafe looks after what runs on its instances, while the physical servers under them belong to AWS.
       - id: b
-        text: The cafe, which controls the instance
-        correct: true
-        why: EC2 is unmanaged, so patching the operating system on its instances is the cafe's own job.
+        text: The cafe's IT contractor
+        why: A contractor can only take on the cafe's own share, and the physical servers under EC2 are outside that share.
       - id: c
-        text: AWS, because EC2 is a managed service
-        why: EC2 is the lesson's example of an unmanaged service, where operating system upkeep stays with the customer.
+        text: AWS's operations staff
+        correct: true
+        why: Even with an unmanaged service like EC2, AWS runs the physical layer, so firmware on the host servers is its job.
       - id: d
-        text: Nobody, because EC2 patches itself
-        why: An EC2 instance does not patch its own operating system; someone on the cafe's side has to do it.
+        text: The cafe and AWS jointly
+        why: The physical layer is not split between the two, since AWS alone runs the hardware beneath EC2 instances.
     evidence:
       - You get fine control, but patching, scaling and the OS are yours while AWS runs the hardware.
-    takeaway: On an unmanaged service like EC2, the customer patches and maintains the operating system while AWS runs the hardware.
+      - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
+    takeaway: Even on an unmanaged service like EC2, AWS keeps the physical layer, while the customer handles everything on each instance.
     history: []
+    verified:
+      keyHash: 6808d24a33b7
+      fullHash: b8d0cf028190
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-k7zz5h
     version: 1
-    status: draft
+    status: live
     type: multi
-    select: 2
+    select: 3
     pool: practice
     concept: unmanaged-services
     note: m03/introduction-to-serverless-computing
@@ -45,29 +51,38 @@ questions:
       Which tasks belong to the customer rather than to AWS?
     options:
       - id: a
-        text: Updating the guest operating system
+        text: Updating the operating system
         correct: true
         why: The operating system on each EC2 instance is set up, secured and kept current by the customer.
       - id: b
-        text: Maintaining the physical host servers
+        text: Maintaining the host servers
         why: The physical layer under EC2 is run by AWS, so host maintenance is not the customer's work.
       - id: c
-        text: Configuring the instance's network settings
+        text: Configuring the network setup
         correct: true
         why: With an unmanaged service, the network setup of each instance is part of the customer's share.
       - id: d
-        text: Securing the data center buildings
+        text: Guarding the building entrances
         why: Physical security of the facilities belongs to AWS under every service model.
       - id: e
-        text: Replacing failed hardware in the host
-        why: Broken hardware under an instance is swapped out by AWS, not by the customer.
+        text: Installing the web application
+        correct: true
+        why: The apps that run on an EC2 instance are the customer's to set up, secure and maintain.
+      - id: f
+        text: Replacing failed disk drives
+        why: Broken hardware under an instance is part of the physical layer, so AWS swaps it out.
     evidence:
       - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
     takeaway: With EC2, the customer owns each instance's operating system, network setup and applications, and AWS owns the physical layer.
     history: []
+    verified:
+      keyHash: e83e0990718b
+      fullHash: 976c901263f8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-43kfy4
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: managed-services
@@ -75,30 +90,36 @@ questions:
     task: "2.1"
     level: 3
     stem: >-
-      The cafe starts using a service where its team picks a few settings during setup.
-      From then on AWS operates it, and nobody at the cafe looks after servers, though some configuration choices remain the cafe's.
+      The cafe sets up a database service on AWS, and its team must choose the server size and storage up front.
+      After that, AWS patches and operates the service day to day.
       Which service model does this describe?
     options:
       - id: a
         text: An unmanaged service
-        why: An unmanaged service would leave the operating system and server upkeep with the cafe, which is not the case here.
+        why: An unmanaged service would leave patching and daily operation with the cafe, but AWS does that work here.
       - id: b
         text: A managed service
         correct: true
-        why: A managed service takes over most operational work while leaving some setup or configuration with the customer, as described.
+        why: A managed service takes over the daily operation while leaving some provisioning, such as server size, with the customer.
       - id: c
         text: A fully managed service
-        why: A fully managed service leaves nothing to provision or configure on the server side, but this one still has settings for the cafe.
+        why: A fully managed service leaves no servers to provision, yet here the cafe has to pick the server size itself.
       - id: d
         text: An on-premises service
-        why: An on-premises service runs on the cafe's own hardware, so AWS would not be operating it at all.
+        why: An on-premises service runs on the cafe's own hardware, so AWS would not be patching or operating it.
     evidence:
       - "Managed: AWS absorbs much of the operational overhead, though some provisioning or configuration may remain yours depending on the service."
-    takeaway: A managed service removes most server work, but some provisioning or configuration can still fall to the customer.
+      - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
+    takeaway: A managed service removes daily operations, but some provisioning, like choosing server size, can still fall to the customer.
     history: []
+    verified:
+      keyHash: ac4029f1875e
+      fullHash: 8e4ac57029c3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-mntxx3
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: managed-services
@@ -110,26 +131,31 @@ questions:
       What does the managed option trade?
     options:
       - id: a
-        text: Gives up some control, gains less operational work
-        correct: true
-        why: Moving toward managed means handing AWS the day-to-day running in return for fewer knobs the team can turn.
+        text: More control in return for more upkeep
+        why: That is the trade of running the queue on its own EC2 instances, the opposite direction from a managed service.
       - id: b
-        text: Gives up some security, gains lower latency
-        why: A managed service does not weaken security in return for speed; the trade is about control versus upkeep.
+        text: Less control in return for faster speed
+        why: The managed option is not chosen for speed; what the team gives up control for is less operational work.
       - id: c
-        text: Gives up ownership of its data, gains a free tier
-        why: The cafe keeps ownership of its data with a managed service, and the choice is not about free usage.
+        text: Less control in return for less upkeep
+        correct: true
+        why: Moving toward managed means handing AWS the day-to-day running in return for fewer settings the team can change.
       - id: d
-        text: Gives up scaling, gains full hardware access
-        why: A managed service does not hand the customer the hardware; AWS keeps that layer in every model.
+        text: More upkeep in return for lower speed
+        why: A managed service takes upkeep away from the team rather than adding it, and speed is not what is traded.
     evidence:
       - Each step toward managed trades control for convenience, so pick what your app needs.
       - Managed services cut infrastructure work, though some setup may remain.
     takeaway: Choosing a managed service swaps some control and customization for less operational effort.
     history: []
+    verified:
+      keyHash: 4c0035d7d4d8
+      fullHash: 653474db00ae
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-bjf1qa
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: serverless-computing
@@ -138,29 +164,34 @@ questions:
     level: 2
     stem: >-
       The cafe wants to launch a gift-card app without ever seeing, provisioning or patching the servers it runs on.
-      Which approach fits this goal?
+      Which AWS service fits this goal?
     options:
       - id: a
-        text: Serverless computing
-        correct: true
-        why: With serverless computing the servers stay hidden, and AWS provisions, scales and maintains them for the cafe.
+        text: Amazon Lightsail
+        why: Lightsail still gives the cafe virtual servers to look after, so the servers are not hidden from it.
       - id: b
-        text: Amazon EC2 instances it manages
+        text: Amazon EC2
         why: EC2 instances leave the operating system and patching with the cafe, which is the work it wants to avoid.
       - id: c
-        text: Physical servers in the back office
-        why: Servers in the back office would put all provisioning and patching on the cafe's own staff.
+        text: AWS Lambda
+        correct: true
+        why: Lambda is serverless, so the servers stay hidden and AWS provisions, scales and maintains them for the cafe.
       - id: d
-        text: Virtual machines on Amazon Lightsail
-        why: Lightsail still gives the cafe virtual servers to look after, so the servers are not hidden from it.
+        text: Amazon EC2 Auto Scaling
+        why: Auto Scaling adds and removes EC2 instances, but the cafe still sees and patches each of those servers.
     evidence:
       - The servers hosting your app are hidden and out of reach.
       - AWS handles provisioning, maintenance, scaling and high availability.
     takeaway: Serverless computing hides the servers entirely, and AWS provisions, scales and maintains them for you.
     history: []
+    verified:
+      keyHash: 5ae51b045fb9
+      fullHash: 9179aeebba65
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-fcz1x4
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 3
     pool: practice
@@ -198,6 +229,11 @@ questions:
       - What stays with you under Lambda is the application code and keeping it secure.
     takeaway: Serverless shifts provisioning, scaling and availability to AWS, while the code and its security stay with the customer.
     history: []
+    verified:
+      keyHash: fa8e6831983b
+      fullHash: 73de6432f396
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-hbhw20
     version: 1
     status: draft
@@ -206,53 +242,74 @@ questions:
     concept: fully-managed-services
     note: m03/introduction-to-serverless-computing
     task: "2.1"
-    level: 3
+    level: 2
     stem: >-
-      The cafe moves its order-confirmation logic onto AWS Lambda, a fully managed service.
-      Which responsibility stays with the cafe?
+      The cafe runs its order-confirmation logic on AWS Lambda, a fully managed service.
+      A weekend promotion is expected to bring a large rush of orders.
+      Who makes sure the logic has enough capacity for the rush?
     options:
       - id: a
-        text: Patching the hosts' operating system
-        why: Lambda leaves no servers for the cafe to manage, so host patching is done by AWS.
+        text: The cafe's developers
+        why: The developers own the function code, but capacity under a fully managed service is not part of their share.
       - id: b
-        text: The function code and its security
-        correct: true
-        why: Under a fully managed service like Lambda, the cafe still owns its function code and keeping that code secure.
+        text: The cafe's ops staff
+        why: With a fully managed service there are no servers for the cafe to provision, so its ops staff have nothing to add.
       - id: c
-        text: Adding servers when orders spike
-        why: AWS covers scaling for a fully managed service, so the cafe never adds servers itself.
+        text: AWS, through Lambda
+        correct: true
+        why: Under a fully managed service like Lambda, AWS covers scaling, so the extra orders get capacity without the cafe acting.
       - id: d
-        text: Keeping the servers highly available
-        why: Availability of the underlying servers is covered by AWS with a fully managed service like Lambda.
+        text: The cafe and AWS jointly
+        why: Scaling is not shared here, since a fully managed service puts it wholly with AWS.
     evidence:
       - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
-      - What stays with you under Lambda is the application code and keeping it secure.
-    takeaway: With a fully managed service like Lambda, AWS runs the servers, while the customer still owns its code and that code's security.
+    takeaway: With a fully managed service like Lambda, AWS handles scaling for demand spikes, so the customer provisions no capacity.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-wqxf4j
     version: 1
-    status: draft
-    type: match
+    status: live
+    type: multi
+    select: 2
     pool: practice
     concept: fully-managed-services
     note: m03/introduction-to-serverless-computing
     task: "2.1"
-    level: 3
+    level: 2
     stem: >-
-      Match each service model to the share of the work that stays with the cafe.
-    pairs:
-      - left: Unmanaged, such as Amazon EC2
-        right: The OS, network setup and apps on every instance
-        why: With an unmanaged service, the cafe sets up, secures and maintains everything above the physical layer.
-      - left: Managed
-        right: Some provisioning or configuration, depending on the service
-        why: A managed service removes most operational work, yet a few setup choices can still be the cafe's.
-      - left: Fully managed, such as AWS Lambda
-        right: Its own code and that code's security
-        why: A fully managed service leaves no servers to handle, so the cafe's share narrows to its code and keeping it secure.
+      The cafe moves its loyalty points logic from Amazon EC2 instances to AWS Lambda, a fully managed service.
+      Which jobs does AWS take over from the cafe because of the move?
+    options:
+      - id: a
+        text: Patching the operating system
+        correct: true
+        why: On EC2 the cafe patched each instance's OS, but with Lambda AWS handles that maintenance.
+      - id: b
+        text: Writing the points logic
+        why: The application code stays with the cafe under Lambda, so writing it is not handed to AWS.
+      - id: c
+        text: Replacing failed hardware
+        why: AWS already ran the physical layer under EC2, so this job does not move as a result of the switch.
+      - id: d
+        text: Choosing the instance sizes
+        correct: true
+        why: Picking EC2 instance sizes was the cafe's provisioning work, and Lambda leaves no servers for it to provision.
+      - id: e
+        text: Securing the function code
+        why: Keeping the code secure remains the cafe's job under Lambda, so AWS does not take it over.
+      - id: f
+        text: Guarding the data centers
+        why: Physical security was already AWS's under EC2, so nothing about this job changes with the move.
     evidence:
       - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
-      - "Managed: AWS absorbs much of the operational overhead, though some provisioning or configuration may remain yours depending on the service."
       - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
-    takeaway: The customer's share shrinks from OS and apps with unmanaged, to some setup with managed, to the code and its security with fully managed.
+      - AWS handles provisioning, maintenance, scaling and high availability.
+    takeaway: Moving from EC2 to a fully managed service like Lambda hands server provisioning and OS upkeep to AWS, while the code stays with you.
     history: []
+    verified:
+      keyHash: de20abc4573c
+      fullHash: a5e69e149cbb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,7 +1,7 @@
 questions:
   - id: q-chzy6w
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-elastic-beanstalk
@@ -31,10 +31,15 @@ questions:
       - You can save configurations to redeploy and still control every resource.
     takeaway: Hand over code and settings, get a scaled web environment you still control; that is Elastic Beanstalk.
     history: []
+    verified:
+      keyHash: 2a3eb01f7e48
+      fullHash: 2fd4e7dbe624
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-fxhezq
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: aws-elastic-beanstalk
@@ -47,31 +52,36 @@ questions:
       Which statements about this deployment method are true?
     options:
       - id: a
-        text: It sets up the EC2 capacity, scaling and health checks from the uploaded code
-        correct: true
-        why: The service turns the cafe's code and settings into a running environment, so the team skips building it by hand.
+        text: It bills the API only for the milliseconds its code runs
+        why: Billing only for the time code runs describes AWS Lambda, while Elastic Beanstalk uses the EC2 resources it creates.
       - id: b
-        text: It runs the API only as short functions that start when an event arrives
-        why: Running code as functions per event describes AWS Lambda, while Elastic Beanstalk deploys onto instances.
+        text: It builds the instances, load balancing and scaling from code
+        correct: true
+        why: The service turns the cafe's code and settings into a running EC2 environment, so the team skips building it by hand.
       - id: c
-        text: It lets the team store a configuration and reuse it for the next deployment
+        text: It queues the API's work and sizes a fleet to fit each job
+        why: Queuing jobs and sizing a fleet to fit them is what AWS Batch does, not a service that deploys a web API.
+      - id: d
+        text: It saves environment settings so the team can redeploy them
         correct: true
         why: Saved configurations let the cafe redeploy the same environment, and the team keeps control of every resource.
-      - id: d
-        text: It installs AWS racks inside the cafe's own building to host the API
-        why: Placing AWS hardware on premises is what AWS Outposts does, not a deployment service in the cloud.
       - id: e
-        text: It charges the cafe one fixed monthly price for a bundled server plan
+        text: It sells a server bundle for one predictable monthly price
         why: A predictable monthly bundle describes Amazon Lightsail, while Elastic Beanstalk uses the AWS resources it creates.
     evidence:
       - Give this fully managed service code and settings, and it builds the EC2 setup, scaling, load balancing and health checks.
       - You can save configurations to redeploy and still control every resource.
     takeaway: Elastic Beanstalk builds the environment from your code, and you can save its configuration and keep control.
     history: []
+    verified:
+      keyHash: 0dbaad722023
+      fullHash: 8ff0e2f27290
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-rrj9rq
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-batch
@@ -101,10 +111,15 @@ questions:
       - It schedules jobs and scales resources to fit them across a fleet such as EC2 instances.
     takeaway: Many heavy jobs that need scheduling across a fleet point to AWS Batch, not to Lambda's event-driven functions.
     history: []
+    verified:
+      keyHash: 139b748bff78
+      fullHash: e3b266b83c05
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-zk6qrc
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-batch
@@ -131,10 +146,15 @@ questions:
       - It schedules jobs and scales resources to fit them across a fleet such as EC2 instances.
     takeaway: AWS Batch both schedules heavy jobs and scales the compute under them.
     history: []
+    verified:
+      keyHash: da7b9bdb86ac
+      fullHash: e2c96b2fe8e8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-rh30a1
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: batch-computing
@@ -142,27 +162,33 @@ questions:
     task: "3.3"
     level: 2
     stem: >-
-      The cafe is listing its computing work to see which parts count as batch computing.
-      Which item on the list is an example of batch computing?
+      Each night, the cafe re-encodes its whole library of recipe videos into new formats.
+      The heavy work is split into many pieces that run side by side and finish by morning.
+      Which term describes this kind of work?
     options:
       - id: a
-        text: Showing the menu page to each guest who opens the site
-        why: Serving pages as guests arrive is interactive work answered one request at a time, not a large job run in bulk.
+        text: Edge computing
+        why: Edge computing handles data on a rugged device out in the field, not a large overnight run of encoding work.
       - id: b
-        text: Converting a year of recipe videos into new formats at once
-        correct: true
-        why: Transcoding a large set of videos is heavy work that splits into many jobs run in parallel, which is batch computing.
+        text: Serverless computing
+        why: Serverless computing describes servers that AWS runs out of sight, not the shape of a large compute-heavy workload.
       - id: c
-        text: Checking one customer's loyalty points when they tap the app
-        why: A single lookup on demand is a small real-time request, not a large compute-heavy job.
+        text: Batch computing
+        correct: true
+        why: Encoding a whole video library is a large, compute-heavy workload run in parallel pieces, which is batch computing.
       - id: d
-        text: Keeping a small blog online on one low-cost server all month
-        why: Hosting a low-traffic site is steady serving work, the kind of job a simple hosting bundle covers.
+        text: End-user computing
+        why: End-user computing gives staff remote desktops and apps, not heavy processing that runs overnight.
     evidence:
       - It fits parallel work like genomics, media transcoding and ML training.
       - "**Batch computing**: running large, compute-heavy jobs, often in parallel."
     takeaway: Batch computing means large, compute-heavy jobs run in bulk, often in parallel, such as transcoding media.
     history: []
+    verified:
+      keyHash: 6421d9053929
+      fullHash: 87895571b649
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-7wek7w
     version: 1
@@ -179,31 +205,34 @@ questions:
       Which descriptions match that term?
     options:
       - id: a
-        text: Splitting a large workload into many jobs that run side by side
-        correct: true
-        why: Batch work is often broken into parallel jobs so a large workload finishes sooner.
+        text: Processes data on rugged devices far from any Region
+        why: Working on data with a rugged device away from a Region describes edge computing, not batch computing.
       - id: b
-        text: Answering each customer request the moment it reaches the app
-        why: Handling requests one by one as they arrive is interactive serving, not batch work.
-      - id: c
-        text: Working through heavy tasks such as simulations or model training
+        text: Handles large tasks that each need heavy processing
         correct: true
-        why: Simulations and model training are compute-heavy jobs, the typical load of batch computing.
+        why: Batch computing is about large, compute-heavy work, such as simulations or huge datasets.
+      - id: c
+        text: Streams desktops and apps to staff on any device
+        why: Giving staff remote desktops and apps describes end-user computing, not batch computing.
       - id: d
-        text: Keeping one small server online for a site with few visitors
-        why: A single server for light traffic is simple hosting, with no large jobs to process.
+        text: Runs many pieces at once so the whole finishes sooner
+        correct: true
+        why: Batch work is often split into pieces that run in parallel, so a large workload ends sooner.
       - id: e
-        text: Running AWS hardware inside the cafe's own data center
-        why: AWS hardware on premises describes a hybrid setup, which says nothing about how jobs are run.
+        text: Runs apps on servers that AWS provisions and maintains
+        why: Running apps on servers that AWS provisions and maintains describes serverless computing, not batch computing.
     evidence:
       - "**Batch computing**: running large, compute-heavy jobs, often in parallel."
       - A fully managed service for heavy compute such as huge datasets, simulations and complex math.
     takeaway: Batch computing is large, compute-heavy work, often split into jobs that run in parallel.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-wz0hrz
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-lightsail
@@ -233,10 +262,15 @@ questions:
       - It fits blogs, small or low-traffic sites, and dev and test.
     takeaway: A small site with a predictable monthly bill and little setup points to Lightsail, not Elastic Beanstalk.
     history: []
+    verified:
+      keyHash: ef9c9c0c302a
+      fullHash: f7b5bb380c7d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-q8pksw
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-lightsail
@@ -263,6 +297,11 @@ questions:
       - "A cost-effective bundle: virtual private servers (VPSs) plus storage, databases and networking, for a predictable monthly price."
     takeaway: A Lightsail plan packs a VPS with its storage, database and network pieces for one steady monthly fee.
     history: []
+    verified:
+      keyHash: 12318edcc67c
+      fullHash: a9c55146c32d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-a16vhy
     version: 1
@@ -272,31 +311,34 @@ questions:
     concept: aws-outposts
     note: m03/additional-compute-services
     task: "3.1"
-    level: 3
+    level: 2
     stem: >-
-      A rule says the cafe chain's payment records must stay inside its own data center.
-      The chain still wants to run AWS compute and storage there, using the same tools and APIs it uses in the cloud.
-      Which service fits?
+      A rule says the cafe chain's payment records must stay on its own premises.
+      The chain still wants to use AWS services on those records, so it picks AWS Outposts.
+      What does Outposts give the chain?
     options:
       - id: a
-        text: AWS Snow Family
-        why: Snow Family devices carry data offline to AWS, rather than running AWS services in the data center for good.
+        text: An appliance at its site that links local storage to AWS storage
+        why: Linking local storage to AWS storage describes AWS Storage Gateway, which puts copies of the records in AWS.
       - id: b
-        text: AWS Storage Gateway
-        why: Storage Gateway links on-premises systems to storage in AWS, so it does not run AWS compute locally.
+        text: A rugged device at its site that collects data and ships it to AWS
+        why: Shipping data to AWS on a device describes AWS Snow Family, which moves the records off the premises.
       - id: c
-        text: AWS Outposts
-        correct: true
-        why: Outposts brings AWS compute, storage and networking into the chain's own data center with the same tools and APIs.
+        text: A dedicated line from its site that carries traffic privately to AWS
+        why: A private line into AWS describes AWS Direct Connect, and the records would still be handled in an AWS Region.
       - id: d
-        text: Amazon Lightsail
-        why: Lightsail hosts small sites inside AWS, so the payment records would leave the chain's data center.
+        text: AWS-managed racks at its site that run AWS compute and storage
+        correct: true
+        why: Outposts brings AWS compute, storage and networking into the chain's own data center, so the records never leave.
     evidence:
       - A fully managed hybrid cloud offering that brings AWS compute, storage and networking into your data center.
       - AWS services run locally with the same tools and APIs as in the cloud.
       - It fits compliance, data residency, low latency, remote sites and legacy app modernization.
-    takeaway: Data that must stay on site, with AWS services running beside it, points to Outposts.
+    takeaway: Outposts runs AWS compute and storage inside your own data center, so data that must stay on site can stay there.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-haawrq
     version: 1
@@ -306,27 +348,30 @@ questions:
     concept: aws-outposts
     note: m03/additional-compute-services
     task: "3.3"
-    level: 2
+    level: 3
     stem: >-
-      The cafe's roastery runs software that controls its roasting machines and needs very fast responses from servers on the factory floor.
-      The team wants AWS services to run right there.
-      Which compute service fits?
+      The cafe's roastery runs software that controls its roasting machines and needs very fast responses from nearby servers.
+      The team wants AWS compute services to run on the roastery floor itself.
+      Which service fits?
     options:
       - id: a
-        text: AWS Batch
-        why: AWS Batch schedules heavy jobs on compute in the cloud, so the roastery would still wait on a distant network.
+        text: AWS Direct Connect
+        why: Direct Connect gives a private link into an AWS Region, but the servers still sit far from the roastery floor.
       - id: b
-        text: AWS Elastic Beanstalk
-        why: Elastic Beanstalk deploys apps onto EC2 in an AWS Region, not onto hardware at the roastery.
+        text: AWS Storage Gateway
+        why: Storage Gateway connects on-premises storage to AWS, so it does not run AWS compute services at the roastery.
       - id: c
-        text: Amazon Lightsail
-        why: Lightsail servers live in AWS, so the machines would still reach them over a longer network path.
-      - id: d
         text: AWS Outposts
         correct: true
         why: Outposts places AWS infrastructure on premises, so the control software gets low latency to the machines.
+      - id: d
+        text: AWS Lambda
+        why: Lambda functions run in an AWS Region, so the machines would still reach them over a longer network path.
     evidence:
       - It fits compliance, data residency, low latency, remote sites and legacy app modernization.
       - Outposts is the only one of the four on premises.
     takeaway: When AWS services must run on site for low latency, Outposts is the on-premises choice.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"

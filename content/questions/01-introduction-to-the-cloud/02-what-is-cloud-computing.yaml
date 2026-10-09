@@ -1,12 +1,12 @@
 questions:
   - id: q-wg72jh
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cloud-computing-definition
     note: m01/what-is-cloud-computing
-    task: "3.1"
+    task: "1.1"
     level: 2
     stem: >-
       The cafe's staff open the ordering system from a browser at the shop, at home and on delivery runs, and no server sits in any cafe building.
@@ -29,10 +29,15 @@ questions:
       - "Over the internet: remote use through web-based services, not local hardware, from anywhere."
     takeaway: Reaching resources remotely from anywhere, with nothing installed on site, is the over-the-internet part of cloud computing.
     history: []
+    verified:
+      keyHash: ee412f1c48ec
+      fullHash: 0f8f50deca7e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-s3meps
     version: 1
-    status: draft
+    status: live
     type: match
     pool: practice
     concept: cloud-computing-definition
@@ -57,6 +62,11 @@ questions:
       - "Definition, in order: (1) on-demand delivery (2) of IT resources (3) over the internet (4) with pay-as-you-go pricing."
     takeaway: The four parts work together as fast access to resources, the resources themselves, remote use and billing by consumption.
     history: []
+    verified:
+      keyHash: 258152978ca9
+      fullHash: 0108b19541be
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-r96y1p
     version: 1
@@ -66,28 +76,31 @@ questions:
     concept: on-demand-delivery
     note: m01/what-is-cloud-computing
     task: "1.1"
-    level: 3
+    level: 2
     stem: >-
-      Before a holiday promotion, the cafe adds extra servers in seconds and drops them once the rush ends, with no lengthy setup work.
-      Which part of the cloud computing definition explains how quickly that capacity arrives?
+      For a holiday promotion, the cafe runs extra servers on AWS, is billed for the hours they run, and lets its staff manage them from home.
+      Which detail of this setup shows on-demand delivery?
     options:
       - id: a
-        text: Pay-as-you-go pricing
-        why: Pay-as-you-go explains how the cafe pays for the servers, not how fast they become available.
+        text: Staff manage the servers from home through a browser.
+        why: Managing servers remotely through web-based services is the over-the-internet part, not on-demand delivery.
       - id: b
-        text: Over the internet
-        why: Remote access explains where the servers are used from, not the speed of getting them.
+        text: The bill covers only the hours the servers actually run.
+        why: Paying only for the hours consumed is pay-as-you-go pricing, not how the servers are delivered.
       - id: c
-        text: On-demand delivery
+        text: The extra servers are ready in seconds, with no long setup.
         correct: true
-        why: Resources that arrive in seconds and scale up or down without long setup are on-demand delivery.
+        why: Getting capacity within seconds and dropping it again without lengthy setup is on-demand delivery.
       - id: d
-        text: Hybrid deployment
-        why: Hybrid is a way of mixing in-house and cloud resources, not a part of the definition about speed.
+        text: The promotion runs on servers, storage and a database.
+        why: Servers, storage and databases are the IT resources being delivered, not the on-demand way they arrive.
     evidence:
       - "On-demand delivery: resources in seconds, scaled up or down without long setup, the idea AWS began with."
-    takeaway: Speed of getting and releasing resources is on-demand delivery, while how you are billed for them is pay-as-you-go pricing.
+    takeaway: On-demand delivery is about how fast resources arrive and leave, apart from where they are used from or how they are billed.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 is the only detail not described in the stem's setup besides option 1, and the stem names billing and remote management, so a reader can rule out options 2 and 3 as already labelled and guess the new detail."
 
   - id: q-d3jmvj
     version: 1
@@ -102,56 +115,64 @@ questions:
     stem: Which statements describe on-demand delivery in cloud computing?
     options:
       - id: a
-        text: Resources become available within seconds of asking.
+        text: New servers are ready within seconds of a request.
         correct: true
         why: Getting resources in seconds, whenever they are needed, is the core of on-demand delivery.
       - id: b
-        text: Charges follow only what is actually consumed.
-        why: Billing by consumption is pay-as-you-go pricing, a separate part of the definition.
+        text: The bill reflects only the resources actually consumed.
+        why: Paying only for what is consumed is pay-as-you-go pricing, a separate part of the definition.
       - id: c
-        text: Capacity grows or shrinks without a long setup.
+        text: Added capacity needs no lengthy setup before it is used.
         correct: true
-        why: Scaling up or down without lengthy setup work is part of what on-demand delivery offers.
+        why: Skipping long setup work when capacity is added or removed is part of what on-demand delivery offers.
       - id: d
-        text: Systems are reached remotely from any location.
-        why: Remote access from anywhere is the over-the-internet part of the definition.
+        text: Teams reach their systems remotely through web services.
+        why: Remote use through web-based services is the over-the-internet part of the definition.
       - id: e
-        text: Hardware is reserved under a multi-year contract.
-        why: A long fixed reservation is the opposite of getting resources only when they are needed.
+        text: Servers, storage and databases are supplied to build apps.
+        why: Servers, storage and databases are the IT resources themselves, not the way they are delivered.
     evidence:
       - "On-demand delivery: resources in seconds, scaled up or down without long setup, the idea AWS began with."
       - "On-demand delivery: resources within seconds, whenever needed."
     takeaway: On-demand delivery means resources in seconds and easy scaling, which is separate from how the bill is calculated.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: On-demand delivery means resources are available quickly when needed without lengthy setup; option 2 describes pay-as-you-go but is often bundled into the same definition."
 
   - id: q-525s43
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: data-center
     note: m01/what-is-cloud-computing
     task: "3.2"
     level: 1
-    stem: Which description best fits a data center?
+    stem: What is the name for one or more buildings that hold servers and protect them with spare power, cooling and physical security?
     options:
       - id: a
-        text: A software layer that splits a single physical server into several virtual machines
-        why: That describes virtualization, a technique used on servers, not the facility that houses them.
+        text: AWS Region
+        why: A Region is a geographic area that contains Availability Zones, not a single facility of servers.
       - id: b
-        text: One or more buildings of servers with redundant power, cooling and security
+        text: Edge location
+        why: An edge location is a site that serves cached copies of content close to users, not the term for a server facility.
+      - id: c
+        text: Data center
         correct: true
         why: A data center is a facility of servers protected by backup power, cooling and physical security.
-      - id: c
-        text: A web-based console that staff use to launch and stop their cloud resources
-        why: A console is a management tool reached over the internet, not a building that holds servers.
       - id: d
-        text: A pricing model that bills each resource only for the time it actually runs
-        why: Billing by use is pay-as-you-go pricing, which says nothing about the physical facility.
+        text: AWS Outposts
+        why: Outposts puts AWS infrastructure inside a customer's own facility, so it is not the name for the facility itself.
     evidence:
       - A data center is one or more buildings of servers with redundant power, cooling and security.
     takeaway: A data center is a physical facility of servers with redundant power, cooling and security.
     history: []
+    verified:
+      keyHash: 381e5c8e190c
+      fullHash: a3517588383e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-xh0w3d
     version: 1
@@ -167,26 +188,29 @@ questions:
       What changes most when the chain moves to data centers that AWS runs?
     options:
       - id: a
-        text: The chain must still buy servers and ship them into an AWS building to run them.
-        why: Using AWS data centers means using facilities and hardware the chain does not own or supply.
+        text: The staff rent space in a shared facility and keep running the hardware there.
+        why: Renting space in a shared facility is co-location, where the chain still runs the hardware itself.
       - id: b
-        text: The chain gains dedicated hardware in its own building with the lowest latency.
-        why: Dedicated in-house hardware with low latency describes keeping the servers on premises, not moving out.
-      - id: c
-        text: The facility upkeep moves to AWS, so the staff can spend time on new ideas.
+        text: AWS takes over the facility upkeep, and the staff spend that time on new features.
         correct: true
         why: AWS looks after the buildings it owns, which frees the staff from repetitive chores for innovation.
+      - id: c
+        text: The staff keep doing the facility upkeep, but now inside a building that AWS owns.
+        why: AWS looks after the facilities it owns, so the chain's staff no longer run the cooling or power there.
       - id: d
-        text: The chain must sign a fixed long-term contract before any server is turned on.
-        why: Cloud resources are billed by consumption, not through a fixed long-term contract.
+        text: AWS takes over the facility upkeep, and the chain no longer pays for its compute.
+        why: The chain still pays for what it consumes, so moving to AWS data centers does not make compute free.
     evidence:
       - Firms once ran their own or co-located, but AWS lets them use data centers they do not own, trading upkeep and repetitive chores for innovation.
     takeaway: Using AWS data centers swaps the upkeep of your own facility for time spent on innovation.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-t9h3cy
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cloud-based-deployment
@@ -195,29 +219,34 @@ questions:
     level: 3
     stem: >-
       A new cafe brand builds its whole ordering platform on AWS from the start, using virtual servers, databases and networking there.
-      It keeps no servers in any shop or office. Which deployment type is this?
+      It keeps no servers in any shop or office, and AWS is its only provider. Which deployment type is this?
     options:
       - id: a
         text: Hybrid deployment
         why: Hybrid mixes in-house and cloud resources, but this brand keeps nothing in-house.
       - id: b
+        text: Multi-cloud deployment
+        why: Multi-cloud spreads work across several cloud providers, but this brand uses AWS alone.
+      - id: c
         text: On-premises deployment
         why: On-premises keeps resources in-house, while this brand runs everything on AWS.
-      - id: c
+      - id: d
         text: Cloud-based deployment
         correct: true
         why: Running every part of the platform in the cloud, with nothing on site, is a cloud-based deployment.
-      - id: d
-        text: Co-location
-        why: Co-location hosts the brand's own servers in a shared facility, but this brand owns no servers.
     evidence:
       - "Cloud-based (public cloud): all in the cloud, migrated or newly built, for example moving data first, then building an app of virtual servers, databases and networking."
     takeaway: When every resource runs in the cloud and nothing stays in-house, the deployment is cloud-based, also called public cloud.
     history: []
+    verified:
+      keyHash: 763c3afd6878
+      fullHash: 7dc9e3119439
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-sx7j3y
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cloud-based-deployment
@@ -229,26 +258,31 @@ questions:
       Why does a cloud-based deployment alone fall short of that rule?
     options:
       - id: a
-        text: It places every resource in the cloud, so no data stays in-house.
+        text: It bills the cafe for consumption instead of a fixed contract.
+        why: Billing by consumption is true of the cloud, but it says nothing about where the records are kept.
+      - id: b
+        text: It lets the cafe add capacity within seconds of asking.
+        why: Fast capacity is a real cloud benefit, but it does not decide whether records stay on premises.
+      - id: c
+        text: It runs every resource in the cloud, with none kept on site.
         correct: true
         why: A cloud-based deployment is all cloud, so on its own it cannot keep sensitive records on premises.
-      - id: b
-        text: It requires buying all the servers upfront before any scaling.
-        why: Cloud-based deployment has little upfront cost, so buying servers first is not the obstacle.
-      - id: c
-        text: It caps growth at a fixed number of servers set at signup.
-        why: Cloud-based deployment scales well, so a fixed server cap is not the reason it fails here.
       - id: d
-        text: It is offered only under long-term contracts with fixed fees.
-        why: Cloud resources follow pay-as-you-go pricing, not mandatory long-term contracts.
+        text: It lets staff reach the systems remotely from any location.
+        why: Remote access is a real cloud trait, but it is not what puts the records outside the building.
     evidence:
       - It scales well with little upfront cost, but alone cannot keep sensitive data on premises for compliance.
     takeaway: Cloud-based deployment scales cheaply but, being all cloud, cannot by itself keep sensitive data on premises.
     history: []
+    verified:
+      keyHash: ec1e44808d83
+      fullHash: b04ce05e2ae3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-s9rz1v
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: on-premises-deployment
@@ -276,10 +310,15 @@ questions:
       - "On-premises: largely legacy IT plus virtualization and application management to try to lift utilization, missing many cloud benefits but offering dedicated resources and low latency."
     takeaway: An all in-house setup that leans on virtualization for better utilization is on-premises deployment.
     history: []
+    verified:
+      keyHash: 013894bbef0b
+      fullHash: ba9a659dd1dd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-v2ra06
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: on-premises-deployment
@@ -299,12 +338,17 @@ questions:
         text: Older systems kept in-house, while newer workloads run with a cloud provider
         why: Splitting work between in-house systems and the cloud describes a hybrid deployment.
       - id: d
-        text: Charges that stop at once, while each resource must be deleted by hand
-        why: Charges ending when a resource is removed come from pay-as-you-go pricing, not from a deployment type.
+        text: Several cloud providers in use, while no single provider holds every workload
+        why: Spreading work across several cloud providers puts it in the cloud, while on-premises keeps everything in-house.
     evidence:
       - "On-premises: largely legacy IT plus virtualization and application management to try to lift utilization, missing many cloud benefits but offering dedicated resources and low latency."
     takeaway: On-premises trades away many cloud benefits in return for dedicated resources and low latency.
     history: []
+    verified:
+      keyHash: 94d237af3799
+      fullHash: 496de17de714
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
 
   - id: q-4k7ydm
     version: 1
@@ -314,28 +358,31 @@ questions:
     concept: hybrid-deployment
     note: m01/what-is-cloud-computing
     task: "3.1"
-    level: 3
+    level: 2
     stem: >-
-      The cafe chain keeps its older inventory system in its own server room because the team that maintains it works there.
-      It launches a new loyalty app on AWS. Which deployment type describes the chain's setup?
+      The cafe chain has an older inventory system in its back-office server room and is launching a new loyalty app.
+      Which plan gives the chain a hybrid deployment?
     options:
       - id: a
-        text: On-premises deployment
-        why: On-premises keeps everything in-house, but the loyalty app runs in the cloud.
+        text: Every system runs on AWS, and staff open them from laptops in the back office.
+        why: Using cloud systems from an office laptop is still all cloud, which makes it a cloud-based deployment.
       - id: b
-        text: Hybrid deployment
+        text: The inventory system stays in the server room, and the loyalty app runs on AWS.
         correct: true
-        why: Keeping a legacy system in-house while running new work in the cloud is a hybrid deployment.
+        why: Keeping a legacy system in-house while new work runs in the cloud mixes the two, which is hybrid.
       - id: c
-        text: Cloud-based deployment
-        why: Cloud-based puts every system in the cloud, but the inventory system stays in-house.
+        text: Every system stays in the server room, and staff reach them from home by browser.
+        why: Remote access to servers that all stay in-house is still an on-premises deployment, not hybrid.
       - id: d
-        text: Co-location
-        why: Co-location hosts owned servers in a shared facility, which does not describe this in-house plus cloud mix.
+        text: The inventory system moves to AWS, and the loyalty app is built on AWS as well.
+        why: Moving the old system out and building the new app in the cloud leaves nothing in-house, so it is cloud-based.
     evidence:
       - "Hybrid: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
     takeaway: In-house legacy systems running alongside new cloud workloads make a hybrid deployment.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-zs219x
     version: 1
@@ -350,23 +397,26 @@ questions:
     stem: Which situations point the cafe toward a hybrid deployment?
     options:
       - id: a
-        text: A regulation keeps the payroll system in-house while the rest moves to the cloud.
+        text: A regulation keeps payroll in-house, and the other systems run in the cloud.
         correct: true
         why: Regulation that holds some systems on site while others go to the cloud calls for a hybrid mix.
       - id: b
-        text: Every workload moves to the cloud and the old server room is closed.
-        why: Moving everything to the cloud with nothing left in-house is a cloud-based deployment.
+        text: A regulation once kept payroll in-house, and now every system runs in the cloud.
+        why: Compliance shapes the choice but is not a deployment type, and an all-cloud setup is cloud-based.
       - id: c
-        text: All servers stay in-house, with virtualization added to raise utilization.
-        why: Keeping everything in-house, even with virtualization, is an on-premises deployment.
+        text: The older ordering system stays in-house, and new apps run in-house, not in the cloud.
+        why: With the old system and the new apps all kept in-house, nothing runs in the cloud, so it is on-premises.
       - id: d
-        text: An older ordering system stays in-house for upkeep while new apps run in the cloud.
+        text: The older ordering system stays in-house for upkeep, and new apps run in the cloud.
         correct: true
         why: A legacy system kept in-house for maintenance next to new cloud apps is the classic hybrid case.
       - id: e
-        text: A new app is built from scratch on cloud servers, with nothing on site.
-        why: Building only in the cloud with no in-house part is a cloud-based deployment, not hybrid.
+        text: The older ordering system leaves its in-house servers, and new apps run in the cloud.
+        why: Moving the old system out of its in-house servers leaves everything in the cloud, which is cloud-based.
     evidence:
       - "Hybrid: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
     takeaway: Hybrid fits when maintenance or regulation keeps some systems in-house while other work runs in the cloud.
     history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone"
