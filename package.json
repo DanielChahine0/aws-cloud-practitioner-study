@@ -19,6 +19,8 @@
     "content:fingerprint": "node scripts/content/fingerprint.ts",
     "content:concepts": "node scripts/content/concepts.ts",
     "content:new-question": "node scripts/content/new-question.ts",
+    "content:checks": "node scripts/content/checks.ts",
+    "content:stamp": "node scripts/content/stamp.ts",
     "check": "pnpm typecheck && pnpm lint && pnpm content:validate && pnpm test",
     "e2e": "playwright test",
     "verify": "pnpm check && pnpm build && pnpm e2e",
