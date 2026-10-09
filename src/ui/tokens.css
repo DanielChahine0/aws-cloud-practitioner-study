@@ -1,0 +1,17 @@
+/* Visual tokens from spec 7.1, verbatim; v1 is light only, so a dark remap is one more block later. */
+:root {
+  --surface: #f3f3f2;
+  --pane: #ffffff;
+  --line: #e3e3e1;
+  --text: #1e1e1e;
+  --muted: #6a6a6a;
+  --active: #2d2d2d; /* graphite */
+  --ok: #2f7d4a;
+  --bad: #b42318; /* correctness, always with icon + word */
+  --d1: #5b7083;
+  --d2: #7a5c61;
+  --d3: #5e7559;
+  --d4: #8a7550; /* exam domains, charts only */
+  --live: #9a6700; /* live AWS resources only */
+  --update: #5b6b7a; /* "Exam guide update" label and rule */
+}
