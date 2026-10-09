@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { FingerprintFile } from '../../schemas/fingerprint.ts';
 import { runsAgainst, unpack } from '../../scripts/content/lib/fingerprint.ts';
-import { allowFile, fingerprintModule } from '../../scripts/content/lib/fingerprint-files.ts';
+import { allowFile, fingerprintCourse } from '../../scripts/content/lib/fingerprint-files.ts';
 import { sourceTitles, splitItems } from '../../scripts/content/lib/source.ts';
 import { words } from '../../scripts/content/lib/text.ts';
 
@@ -39,15 +39,21 @@ describe('sourceTitles', () => {
   });
 });
 
-describe('fingerprintModule', () => {
-  it('fingerprints the whole text, lists the item ids without hashing them, and finds a copied run', () => {
+const fingerprintModule = (module: number, text: string) => {
+  const [file] = fingerprintCourse(new Map([[module, text]]));
+  if (file === undefined) throw new Error('no fingerprint file');
+  return file;
+};
+
+describe('fingerprintCourse on one module', () => {
+  it('fingerprints the text and the items in two sets, lists the item ids, and finds a copied run', () => {
     const file = fingerprintModule(1, source);
     expect(FingerprintFile.parse(file)).toEqual(file);
-    expect(file.items).toEqual(['kc-01', 'quiz-01']);
+    expect(file.itemIds).toEqual(['kc-01', 'quiz-01']);
     const copied = words(
       'Bakers rent proofing cabinets by the minute and hand them back once the dough has risen',
     );
-    expect(runsAgainst(copied, unpack(file.text))).toHaveLength(1);
+    expect(runsAgainst(copied, [unpack(file.text), unpack(file.items)])).toHaveLength(1);
   });
 
   const block = (marker: string): string => `${marker}\nWhich oven should a branch rent this morning?\n`;
@@ -60,7 +66,7 @@ describe('fingerprintModule', () => {
     ]
       .map(block)
       .join('\n');
-    expect(fingerprintModule(1, shuffled).items).toEqual(['kc-01', 'quiz-01', 'quiz-02']);
+    expect(fingerprintModule(1, shuffled).itemIds).toEqual(['kc-01', 'quiz-01', 'quiz-02']);
   });
 
   it('refuses a source that repeats an assessment question number', () => {

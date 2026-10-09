@@ -76,7 +76,7 @@ The repository is local only, a pre-commit hook runs the fast checks, and hostin
   content/
     validate.yaml                     # active validator rules and thresholds, raised phase by phase
     concepts.yaml                     # the one concept registry
-    fingerprints/mNN.json             # one-way, truncated hashes of the course's 6-word shingles
+    fingerprints/mNN.json             # one-way, modulus-sized hashes of the course's 6-word shingles
     fingerprints/allow.txt            # module and lesson titles plus official lists, masked before checks
     exam/blueprint.yaml               # domains, weights, 19 tasks, named terms, source URLs, verified_on
     exam/quotas.yaml                  # exam-pool targets per module x task, multi-response targets per domain
@@ -143,7 +143,7 @@ One registry, `content/concepts.yaml`, maps note tags to concepts, and 13 valida
 | Input | Where | Enters the repo as |
 |---|---|---|
 | Raw course JSON for all 13 modules, plus `manifest.json` (captured 2026-10-09) | `~/Library/Application Support/ccp-study/raw/` | nothing |
-| Readable course text, `module-NN.md` | `~/Library/Application Support/ccp-study/source/` (written by `render_source.py`) | `content/fingerprints/` only: truncated shingle hashes, plus the titles and official lists that are masked (2.5) |
+| Readable course text, `module-NN.md` | `~/Library/Application Support/ccp-study/source/` (written by `render_source.py`) | `content/fingerprints/` only: modulus-sized shingle hashes, plus the titles and official lists that are masked (2.5) |
 | Pipeline tools `render_source.py`, `overlap_check.py`, `lint_notes.py`, plus `allow.txt` | `~/Library/Application Support/ccp-study/pipeline/` | nothing; rules 7 and 8 port their thresholds and masking |
 | Own-words notes, glossary and concept index | `resources/` | themselves |
 | Official AWS pages | the web | URLs with a `verified_on` date, in "Exam guide update" lines, `blueprint.yaml` and missions |
@@ -239,26 +239,33 @@ Known gaps found so far by an exact-phrase search of the course source text and 
 - **Tokens** follow `overlap_check.py` exactly: lowercase, then `[a-z0-9]+(?:['’][a-z]+)?`.
   - The source is tokenized as it is, without stripping Markdown.
   - Checked text (notes, questions, key points) is tokenized after stripping frontmatter, link targets, URLs and the characters `*`, `_`, backtick, `#`, `>` and `|`.
-- **Truncated hashes:** each 6-word shingle is hashed with sha256 and cut to `b` bits, where `b = ceil(log2(n / 0.01))` for a module with `n` distinct shingles (20 or 21 bits for these modules).
-  - Each set's false-positive rate `f = |set| / 2^b` therefore lies between 0.5% and 1%, and the file stores `b` and `f`.
-  - The truncation is what makes the sets one-way: with full-width hashes, anyone could start from a known phrase such as a lesson title and test every next word, and the course text would come back almost word for word.
-  - At 0.5% to 1%, each next-word test across the course's about 5,500 distinct words passes 27 to 55 wrong candidates, so the rebuild branches at every word and fails.
-  - A unit test asserts `0.004 <= f <= 0.01` for every file.
-- `text` holds every shingle of the module, and `items` lists only the ids of its knowledge checks and assessment items (`kc-01`, `quiz-01` and so on), split at the source's `[KNOWLEDGE CHECK ...]` and `[ASSESSMENT Qn ...]` markers.
-  - Items get no shingle sets of their own, because a shingle stored in two sets lets a guess be tested twice, which cuts the false-positive rate from about 1% to about 0.01% and breaks the one-way property.
-- The whole course comes to about 137,000 shingles, packed as 3-byte values in base64, about 0.6 MB, with no text and no positions.
+- **Modulus-sized sets:** each 6-word shingle is hashed with sha256, and the first 4 bytes as an unsigned integer, modulo `range`, are its value, where `range = floor(n / 0.005)` for a set of `n` distinct shingles.
+  - Each set's false-positive rate `f = count / range` is therefore 0.5% (a hair below only where two shingles share a value), and the file stores `range`, `count` and `f`.
+  - A module's `text` and `items` sets together give about 1%, the old upper bound, which per-set truncation to whole bits would have pushed to 1% to 2%.
+  - The small range is what makes the sets one-way: with full-width hashes, anyone could start from a known phrase such as a lesson title and test every next word, and the course text would come back almost word for word.
+  - At 0.5% per set, each next-word test across the course's about 5,500 distinct words passes about 27 wrong candidates, so the rebuild branches at every word and fails.
+  - A unit test asserts `0.004 <= f <= 0.01` for every set.
+- **One set per course shingle:** every distinct shingle of the whole course is stored in exactly one of 26 sets, a `text` and an `items` set per module.
+  - A shingle that occurs inside any knowledge check or assessment item goes to the `items` set of the lowest-numbered module whose items hold it, split at the source's `[KNOWLEDGE CHECK ...]` and `[ASSESSMENT Qn ...]` markers.
+  - Every other shingle goes to the `text` set of the lowest-numbered module that holds it.
+  - A shingle stored in two sets would let a guess be tested twice, which cuts the false-positive rate from about 0.5% to about 0.0025% and breaks the one-way property; the rule also drops the cross-module copies that per-module sets stored.
+  - `itemIds` lists the ids of the module's knowledge checks and assessment items (`kc-01`, `quiz-01` and so on).
+- The whole course comes to 135,093 shingles in 26 sets, packed as 3-byte values in base64, about 0.6 MB, with no text and no positions.
 - **Masking:** `allow.txt` holds the phrases `overlap_check.py` masks, namely every module and lesson title from the source's title lines plus the official names and fixed lists in `pipeline/allow.txt` (such as the six Well-Architected pillars).
   - Titles are names that the notes already carry in their `title` frontmatter, not course prose.
   - Before shingling, rule 7 masks these phrases in the checked text exactly as `overlap_check.py` does, and skips every shingle that touches a masked word.
 - **Runs:** a run of 9 or more copied words shows up as 4 or more consecutive shingles that all hit, because a 9-word run contains exactly 4 overlapping 6-word shingles.
   - This is a slightly stricter stand-in for the 9-gram test in `overlap_check.py`, because 4 consecutive hits can also come from overlapping phrases in different places of the source.
-  - At `f` of 1% or less, 4 consecutive false hits occur with a chance of at most 1e-8 per position.
+  - At `f` of about 1% for a module's two sets, 4 consecutive false hits occur with a chance of about 1e-8 per position.
 - **Share:** the share is corrected for false positives: `share = (hits / shingles - f) / (1 - f)`.
-- **Notes:** checked against their own module's set, as `overlap_check.py` does: no run, and a corrected share of at most 8%.
-- **Questions, incident steps and capstone key points:** no run against any module's set (the whole course).
-  - The stem check against the course's knowledge checks and assessment items is deferred to Phase 1, where it will be designed so that each course shingle is stored in exactly one set.
+- **Notes:** checked against their own module's `text` and `items` sets, as `overlap_check.py` does: no run, and a corrected share of at most 8%.
+- **Questions, incident steps and capstone key points:** no run against any module's sets (the whole course).
+  - **Stem check:** a live question's stem and option texts (or a match question's lefts and rights) may not share an 8-word run, 3 consecutive hit shingles, with any one module's `items` set.
+  - Their pooled corrected share against any one module's `items` set may not exceed 25% when they hold at least 8 shingles.
+  - The bar is closer than the 9-word run, because knowledge checks are the text a practice question is most likely to echo; at `f` of 0.5%, a false 3-run happens about once in 8 million positions.
 - **Checked on 2026-10-09** against the current notes:
-  - With this masking and truncation, every note passes (worst corrected share 3.8%, no run).
+  - With this masking and the Phase 0 truncated sets, every note passed (worst corrected share 3.8%, no run).
+  - Checked again in Phase 1 with the modulus-sized sets and the one-set rule: every note passes (worst corrected share 3.6%, no run).
   - Without the masking, 5 notes fail on lesson and module titles, which `overlap_check.py` masks.
   - A whole-course run check would flag one Module 11 note on a phrase whose 4 shingles all occur in Module 2 but never as one 9-word run, which is why notes are checked against their own module only.
 
@@ -401,7 +408,7 @@ export const Question = z.discriminatedUnion('type', [
 | R4 Explanations | Every option and pair has a `why`, and every question and incident step has 1 to 3 evidence lines and a takeaway. |
 | R5 Evidence | Every evidence line equals one whole line of the cited note (for a capstone key point, of the home note of one of its concepts), compared after stripping list markers (`-`, `*`, `1.`, `1)`), `**` and link syntax, case-sensitive; for an "Exam guide update" line the evidence is the sentence after the colon, so refreshing `verified_on` never breaks it. |
 | R6 References | Concepts (through aliases), notes, task ids, lab and incident question refs, note links, and the links in `resources/glossary.md` and `resources/concepts.md` resolve; every note tag is a registered concept or alias; every concept's home note lists it and contains its anchor H3; a question's `task` is one of its concept's `tasks`; `confusableWith` targets exist, at most 3. |
-| R7 Originality | Against the committed fingerprints, with the `allow.txt` phrases masked (2.5): notes have no run and a corrected share of at most 8% against their own module, and questions, incident steps and key points have no run against any module, with a stem check to come in Phase 1. |
+| R7 Originality | Against the committed fingerprints, with the `allow.txt` phrases masked (2.5): notes have no run and a corrected share of at most 8% against their own module, and questions, incident steps and key points have no run against any module; live question stems and options also pass the stem check against each module's knowledge checks and assessment items (no 8-word run, at most 25% shared). |
 | R8 Markdown style | No U+2014 in any tracked file except under `tests/content/bad/`; one sentence per line in all Markdown (the `lint_notes.py` regex and abbreviation list; code and tables exempt); note frontmatter keys and section order as in `lint_notes.py`. |
 | R9 Verified stamp | Every live question, incident step and capstone key point has a `verified` block whose hashes equal its current hashes and whose `checks` name every required check (all three for questions and incident steps, `critic` for key points). |
 | R10 Coverage | Driven by switches in `validate.yaml`: at least `practicePerConcept` live practice questions per tested concept; with `examQuotas`, every `quotas.yaml` module x task cell and multi-response target met by live exam-pool items and no concept with more than 4 exam-pool items; with `blueprintTerms`, every blueprint term found in `resources/` (case-insensitive exact phrase) or mapped by `coveredBy`. |

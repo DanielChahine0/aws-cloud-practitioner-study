@@ -1,16 +1,56 @@
 import type { FingerprintFile } from '../../../schemas/fingerprint.ts';
-import { buildSet } from './fingerprint.ts';
+import { packShingles, shingleWindows } from './fingerprint.ts';
 import { sourceTitles, splitItems } from './source.ts';
 import { words } from './text.ts';
 
-/** One module's fingerprint file: the whole source text as one set, plus the sorted ids of its knowledge checks and assessment items. */
-export function fingerprintModule(module: number, source: string): FingerprintFile {
-  const items = splitItems(source)
-    .map((item) => item.id)
-    .sort();
-  const repeated = items.find((id, i) => id === items[i - 1]);
-  if (repeated !== undefined) throw new Error(`module ${module} repeats item ${repeated}`);
-  return { module, text: buildSet(words(source)), items };
+/** One module's share of the course shingles: those of its knowledge checks and assessment items, and the rest. */
+export interface ModuleShingles {
+  text: Set<string>;
+  items: Set<string>;
+}
+
+const shinglesOf = (text: string): string[] =>
+  shingleWindows(words(text)).filter((s): s is string => s !== null);
+
+/**
+ * Puts every distinct course shingle in exactly one set (spec 2.5): a shingle inside any item goes to the `items` set
+ * of the lowest module whose items hold it, and every other shingle to the `text` set of the lowest module that holds it.
+ * Every module number from 1 to the highest present gets an entry, empty when it has no source.
+ */
+export function partitionShingles(sources: ReadonlyMap<number, string>): Map<number, ModuleShingles> {
+  const modules = [...sources.keys()].sort((a, b) => a - b);
+  const out = new Map<number, ModuleShingles>();
+  for (let m = 1; m <= (modules.at(-1) ?? 0); m++) out.set(m, { text: new Set(), items: new Set() });
+  const placed = new Set<string>();
+  const place = (shingles: Iterable<string>, into: Set<string>): void => {
+    for (const s of shingles) {
+      if (placed.has(s)) continue;
+      placed.add(s);
+      into.add(s);
+    }
+  };
+  for (const m of modules) {
+    const items = splitItems(sources.get(m) ?? '').flatMap((item) => shinglesOf(item.text));
+    place(items, out.get(m)?.items ?? new Set());
+  }
+  for (const m of modules) place(shinglesOf(sources.get(m) ?? ''), out.get(m)?.text ?? new Set());
+  return out;
+}
+
+/** The fingerprint files of the whole course, one per source module in order, each with its two sets and its sorted item ids. */
+export function fingerprintCourse(sources: ReadonlyMap<number, string>): FingerprintFile[] {
+  const parts = partitionShingles(sources);
+  return [...sources.keys()]
+    .sort((a, b) => a - b)
+    .map((module) => {
+      const itemIds = splitItems(sources.get(module) ?? '')
+        .map((item) => item.id)
+        .sort();
+      const repeated = itemIds.find((id, i) => id === itemIds[i - 1]);
+      if (repeated !== undefined) throw new Error(`module ${module} repeats item ${repeated}`);
+      const part = parts.get(module) ?? { text: new Set<string>(), items: new Set<string>() };
+      return { module, text: packShingles(part.text), items: packShingles(part.items), itemIds };
+    });
 }
 
 /** The text of content/fingerprints/allow.txt: every title from the sources, then the official phrases of pipeline/allow.txt. */

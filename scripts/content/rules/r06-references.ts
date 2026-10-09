@@ -7,7 +7,7 @@ import { finding, type Rule } from './rule.ts';
 const LINK = /\]\(([^)#\s]+)(?:#[^)]*)?\)/g;
 const EXTERNAL = /^(?:https?:|mailto:)/;
 
-/** R6 References: note identity, relative links, concept tags, homes, anchors, confusables and mission ids all resolve. */
+/** R6 References: note identity, relative links, concept tags, homes, anchors, confusables, mission ids and question references all resolve. */
 export const r06: Rule = {
   id: 'R6',
   title: 'References',
@@ -101,6 +101,32 @@ export const r06: Rule = {
     for (const mission of ctx.missions) {
       if (mission.fm !== null && mission.fm.id !== mission.id) {
         out.push(finding('R6', mission.path, `id '${mission.fm.id}' does not match the file name`, 1));
+      }
+    }
+
+    for (const entry of ctx.questions) {
+      const { q } = entry;
+      if (q.status === 'retired') continue;
+      const report = (message: string): void => {
+        out.push(finding('R6', entry.path, `${q.id}: ${message}`, entry.line));
+      };
+      const concept = ctx.concepts.find((c) => c.id === q.concept || (c.aliases ?? []).includes(q.concept));
+      if (concept === undefined) {
+        report(`concept '${q.concept}' is not registered`);
+        continue;
+      }
+      if (concept.tested === false) report(`concept '${q.concept}' is marked tested: false`);
+      if (q.note !== entry.noteId) {
+        report(`note ${q.note} does not match the file it sits in`);
+      } else {
+        const names = [concept.id, ...(concept.aliases ?? [])];
+        const listed = lessons.get(q.note)?.fm?.concepts ?? [];
+        if (!listed.some((tag) => names.includes(tag))) {
+          report(`note ${q.note} does not list concept ${q.concept}`);
+        }
+      }
+      if (!concept.tasks.includes(q.task)) {
+        report(`task ${q.task} is not one of ${concept.id}'s tasks (${concept.tasks.join(', ')})`);
       }
     }
     return out;

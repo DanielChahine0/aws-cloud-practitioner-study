@@ -30,6 +30,7 @@ describe('R6 references', () => {
   it('reports a home note that does not list the concept, and a missing home note', () => {
     expect(r06((root) => replaceIn(root, LESSON, '  - shared-kitchen\n', ''))).toEqual([
       '[shared-kitchen] home note m01/what-a-bakery-cloud-is does not list it in concepts',
+      'q-b4k7m2: note m01/what-a-bakery-cloud-is does not list concept shared-kitchen',
     ]);
     expect(
       r06((root) =>
@@ -91,6 +92,45 @@ describe('R6 references', () => {
     expect(findings.map((f) => `${f.file} ${f.message}`)).toEqual([
       `${LESSON} concept tag 'sourdough-starter' is not registered in ${CONCEPTS}`,
       `resources/01-baking-basics/02-what-a-bakery-cloud-is.md note id 'm01/what-a-bakery-cloud-is' is already used by ${LESSON}`,
+    ]);
+  });
+});
+
+describe('R6 question references', () => {
+  const QUESTIONS = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
+  const inQuestions = (from: string, to: string) => (root: string) => replaceIn(root, QUESTIONS, from, to);
+
+  it('passes a question concept given by alias', () => {
+    expect(
+      r06((root) => {
+        replaceIn(root, CONCEPTS, '  tasks: ["1.1"]\n', '  tasks: ["1.1"]\n  aliases: [shared-oven]\n');
+        replaceIn(root, QUESTIONS, '    concept: shared-kitchen\n', '    concept: shared-oven\n');
+      }),
+    ).toEqual([]);
+  });
+
+  it('reports a question concept that is not registered or not tested', () => {
+    expect(r06(inQuestions('    concept: shared-kitchen\n', '    concept: rye-bread\n'))).toEqual([
+      "q-b4k7m2: concept 'rye-bread' is not registered",
+    ]);
+    expect(
+      r06((root) => replaceIn(root, CONCEPTS, '  tasks: ["4.1"]\n', '  tasks: ["4.1"]\n  tested: false\n')),
+    ).toEqual(["q-c8n3p5: concept 'per-minute-rental' is marked tested: false"]);
+  });
+
+  it('reports a question note that is not its file, or does not list the concept', () => {
+    expect(
+      r06(inQuestions('    note: m01/what-a-bakery-cloud-is\n', '    note: m01/another-lesson\n')),
+    ).toEqual(['q-b4k7m2: note m01/another-lesson does not match the file it sits in']);
+    expect(r06((root) => replaceIn(root, LESSON, '  - per-minute-rental\n', ''))).toEqual([
+      '[per-minute-rental] home note m01/what-a-bakery-cloud-is does not list it in concepts',
+      'q-c8n3p5: note m01/what-a-bakery-cloud-is does not list concept per-minute-rental',
+    ]);
+  });
+
+  it("reports a question task that is not one of its concept's tasks", () => {
+    expect(r06(inQuestions('    task: "4.1"\n', '    task: "1.1"\n'))).toEqual([
+      "q-c8n3p5: task 1.1 is not one of per-minute-rental's tasks (4.1)",
     ]);
   });
 });
