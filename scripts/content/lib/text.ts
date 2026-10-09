@@ -6,7 +6,7 @@
 
 /** Stands in for a masked word, so no shingle that touches it can count as copied. */
 export const MASK = '§';
-const EM_DASH = '—';
+const EM_DASH = '\u2014';
 const WORD = /[a-z0-9]+(?:['’][a-z]+)?/g;
 const ABBREVIATIONS = [
   'e.g.',
