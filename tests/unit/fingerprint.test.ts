@@ -1,13 +1,16 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import {
-  bitsFor,
-  buildSet,
   hashShingle,
+  hitsAgainst,
   pack,
+  packShingles,
+  RUN_SHINGLES,
+  rangeFor,
   runsAgainst,
   shareAgainst,
   shingleWindows,
+  TARGET_RATE,
   unpack,
 } from '../../scripts/content/lib/fingerprint.ts';
 import { MASK, words } from '../../scripts/content/lib/text.ts';
@@ -16,33 +19,39 @@ const SOURCE = words(
   'Every branch borrows ovens from the shared kitchen whenever the morning queue grows, ' +
     'and bakers hand the proofing cabinets back once the dough has risen so nobody pays for idle shelves at night.',
 );
+const shinglesOf = (tokens: readonly string[]): Set<string> =>
+  new Set(shingleWindows(tokens).filter((s): s is string => s !== null));
+const OWN_START = words('our own opening words here');
+const OWN_END = words('and our own closing words');
 
-describe('bitsFor', () => {
-  it('keeps the false-positive rate above 0.5% and at most 1%', () => {
-    for (const n of [1, 2, 7, 100, 1000, 10_485, 20_000]) {
-      const rate = n / 2 ** bitsFor(n);
-      expect(rate).toBeLessThanOrEqual(0.01);
-      expect(rate).toBeGreaterThan(0.005);
+describe('rangeFor', () => {
+  it('keeps the rate of a set of n shingles at 0.5%, never below', () => {
+    expect(TARGET_RATE).toBe(0.005);
+    expect(rangeFor(0)).toBe(1);
+    for (let n = 100; n <= 20_000; n += 37) {
+      const rate = n / rangeFor(n);
+      expect(rate).toBeGreaterThanOrEqual(0.005);
+      expect(rate).toBeLessThan(0.0051);
     }
   });
 });
 
 describe('hashShingle', () => {
-  it('always fits in b bits', () => {
+  it('always falls below the range', () => {
     fc.assert(
-      fc.property(fc.string(), fc.integer({ min: 1, max: 24 }), (s, b) => {
-        const h = hashShingle(s, b);
-        return Number.isInteger(h) && h >= 0 && h < 2 ** b;
+      fc.property(fc.string(), fc.integer({ min: 1, max: 2 ** 24 }), (s, range) => {
+        const h = hashShingle(s, range);
+        return Number.isInteger(h) && h >= 0 && h < range;
       }),
     );
   });
 });
 
 describe('pack and unpack', () => {
-  it('round-trip any set of 20-bit values', () => {
+  it('round-trip any set of values below 2^24', () => {
     fc.assert(
-      fc.property(fc.uniqueArray(fc.integer({ min: 0, max: 2 ** 20 - 1 })), (values) => {
-        const set = unpack(pack(new Set(values), 20));
+      fc.property(fc.uniqueArray(fc.integer({ min: 0, max: 2 ** 24 - 1 })), (values) => {
+        const set = unpack(pack(new Set(values), 2 ** 24));
         return set.values.size === values.length && values.every((v) => set.values.has(v));
       }),
     );
@@ -56,36 +65,45 @@ describe('shingleWindows', () => {
   });
 });
 
-describe('buildSet', () => {
-  it('stores every distinct shingle with a rate in range', () => {
-    const set = buildSet(SOURCE);
+describe('packShingles', () => {
+  it('stores every distinct shingle with a rate of about 0.5%', () => {
+    const shingles = shinglesOf(SOURCE);
+    const set = packShingles(shingles);
+    expect(set.range).toBe(rangeFor(shingles.size));
+    expect(set.count).toBeLessThanOrEqual(shingles.size);
     expect(set.f).toBeGreaterThan(0.004);
-    expect(set.f).toBeLessThanOrEqual(0.01);
-    expect(set.count).toBeLessThanOrEqual(SOURCE.length - 5);
+    expect(set.f).toBeLessThanOrEqual(0.0051);
   });
 });
 
-describe('runsAgainst', () => {
-  const set = unpack(buildSet(SOURCE));
+describe('hitsAgainst and runsAgainst', () => {
+  const first = shinglesOf(SOURCE.slice(0, 14));
+  const rest = new Set([...shinglesOf(SOURCE)].filter((s) => !first.has(s)));
+  const sets = [unpack(packShingles(first)), unpack(packShingles(rest))];
+  const tokens = (copied: readonly string[]): string[] => [...OWN_START, ...copied, ...OWN_END];
 
-  it('reports a copied run of 9 or more words as the words it covers', () => {
-    const copied = SOURCE.slice(3, 15);
-    const tokens = [...words('our own opening words here'), ...copied, ...words('and our own closing words')];
-    expect(runsAgainst(tokens, set)).toEqual([copied.join(' ')]);
+  it('reports a copied run of 9 or more words whose shingles split across two sets', () => {
+    const copied = SOURCE.slice(3, 17);
+    expect(runsAgainst(tokens(copied), sets)).toEqual([copied.join(' ')]);
   });
 
-  it('ignores a copied run of 8 words', () => {
-    const tokens = [
-      ...words('our own opening words here'),
-      ...SOURCE.slice(3, 11),
-      ...words('and our own closing words'),
-    ];
-    expect(runsAgainst(tokens, set)).toEqual([]);
+  it('ignores 8 copied words at the default minimum and reports them at a minimum of 3', () => {
+    const copied = SOURCE.slice(3, 11);
+    expect(RUN_SHINGLES).toBe(4);
+    expect(runsAgainst(tokens(copied), sets)).toEqual([]);
+    expect(runsAgainst(tokens(copied), sets, 3)).toEqual([copied.join(' ')]);
+  });
+
+  it('never counts a masked window as a hit', () => {
+    const masked = [...SOURCE.slice(0, 6)];
+    masked[5] = MASK;
+    expect(hitsAgainst(masked, sets)).toEqual([false]);
+    expect(hitsAgainst(SOURCE.slice(0, 6), sets)).toEqual([true]);
   });
 });
 
 describe('shareAgainst', () => {
-  const set = unpack(buildSet(SOURCE));
+  const set = unpack(packShingles(shinglesOf(SOURCE)));
 
   it('is about 1 for a full copy and near 0 for unrelated text', () => {
     expect(shareAgainst(SOURCE, [set]).share).toBeGreaterThan(0.95);

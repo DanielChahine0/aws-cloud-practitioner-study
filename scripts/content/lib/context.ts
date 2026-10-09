@@ -65,10 +65,12 @@ export interface QuestionEntry {
   q: Question;
 }
 
+/** One module's committed fingerprints: its two shingle sets, which hold each course shingle once between all modules (spec 2.5). */
 export interface ModulePrints {
   text: HashSet;
-  /** Knowledge check and assessment item ids, sorted; items carry no hashes of their own (spec 2.5). */
-  items: readonly string[];
+  items: HashSet;
+  /** Knowledge check and assessment item ids, sorted. */
+  itemIds: readonly string[];
 }
 
 /** Everything the rules and the build read, loaded once; parse and schema errors become R1 findings instead of exceptions. */
@@ -263,10 +265,14 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       errors.push({ rule: 'R1', file: path, message: `holds module ${parsed.data.module}, not ${module}` });
       return;
     }
+    let set: 'text' | 'items' = 'text';
     try {
-      fingerprints.set(module, { text: unpack(parsed.data.text), items: parsed.data.items });
+      const text = unpack(parsed.data.text);
+      set = 'items';
+      const items = unpack(parsed.data.items);
+      fingerprints.set(module, { text, items, itemIds: parsed.data.itemIds });
     } catch (error) {
-      errors.push({ rule: 'R1', file: path, message: `text: ${errorText(error)}` });
+      errors.push({ rule: 'R1', file: path, message: `${set}: ${errorText(error)}` });
     }
   };
 

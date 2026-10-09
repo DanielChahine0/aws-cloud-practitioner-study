@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { FingerprintFile } from '../../schemas/fingerprint.ts';
-import { hashShingle, shingleWindows, unpack } from '../../scripts/content/lib/fingerprint.ts';
+import { hashShingle, shingleWindows, TARGET_RATE, unpack } from '../../scripts/content/lib/fingerprint.ts';
 import { words } from '../../scripts/content/lib/text.ts';
 
 const dir = fileURLToPath(new URL('../../content/fingerprints/', import.meta.url));
@@ -12,22 +12,34 @@ const load = (m: number) => FingerprintFile.parse(JSON.parse(raw(m)));
 const MODULES = Array.from({ length: 13 }, (_, i) => i + 1);
 
 describe('committed fingerprints', () => {
-  it.each(MODULES)('module %i keeps its text set at 0.4% <= f <= 1%', (m) => {
+  it.each(MODULES)('module %i keeps its text and items sets at 0.4% <= f <= 1%', (m) => {
     const file = load(m);
     expect(file.module).toBe(m);
-    expect(file.text.f).toBeGreaterThanOrEqual(0.004);
-    expect(file.text.f).toBeLessThanOrEqual(0.01);
-    expect(unpack(file.text).values.size).toBe(file.text.count);
+    for (const set of [file.text, file.items]) {
+      expect(set.f).toBeGreaterThanOrEqual(0.004);
+      expect(set.f).toBeLessThanOrEqual(0.01);
+      expect(unpack(set).values.size).toBe(set.count);
+    }
   });
 
-  // A shingle stored in two sets can be tested twice, which breaks the one-way property (spec 2.5).
-  it.each(MODULES)('module %i stores each shingle in one set only, so items are bare ids', (m) => {
-    expect(raw(m).match(/"data":/g)).toHaveLength(1);
-    expect(load(m).items.every((id) => /^(?:kc|quiz)-\d{2}$/.test(id))).toBe(true);
+  // Each course shingle sits in exactly one set, so no guess can be tested twice (spec 2.5).
+  it.each(MODULES)('module %i stores exactly two sets, text and items', (m) => {
+    expect(raw(m).match(/"data":/g)).toHaveLength(2);
+  });
+
+  // A set's range is floor(shingles / 0.005), so it records the shingle count; `count` is the distinct hash values,
+  // a quarter of a percent fewer because two shingles of one set can share a value.
+  it('hold 135,093 shingles in 26 sets', () => {
+    const sets = MODULES.flatMap((m) => [load(m).text, load(m).items]);
+    expect(sets).toHaveLength(26);
+    expect(sets.reduce((n, set) => n + Math.round(set.range * TARGET_RATE), 0)).toBe(135_093);
+    const values = sets.reduce((n, set) => n + set.count, 0);
+    expect(values).toBeLessThanOrEqual(135_093);
+    expect(values).toBeGreaterThan(135_093 * 0.99);
   });
 
   it('cover 119 knowledge checks and 133 assessment items', () => {
-    const ids = MODULES.flatMap((m) => load(m).items);
+    const ids = MODULES.flatMap((m) => load(m).itemIds);
     expect(ids.filter((id) => id.startsWith('kc-'))).toHaveLength(119);
     expect(ids.filter((id) => id.startsWith('quiz-'))).toHaveLength(133);
   });
@@ -38,10 +50,11 @@ describe('committed fingerprints', () => {
     const checked = allow.flatMap((line) => {
       const m = /^Module (\d+): /.exec(line);
       if (m === null) return [];
-      const set = unpack(load(Number(m[1])).text);
+      const file = load(Number(m[1]));
+      const sets = [unpack(file.text), unpack(file.items)];
       return shingleWindows(words(line)).map((s) => ({
         s,
-        hit: s !== null && set.values.has(hashShingle(s, set.b)),
+        hit: s !== null && sets.some((set) => set.values.has(hashShingle(s, set.range))),
       }));
     });
     expect(checked).toHaveLength(11);

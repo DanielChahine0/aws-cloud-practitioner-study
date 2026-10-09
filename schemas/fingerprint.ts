@@ -1,9 +1,13 @@
 import { z } from 'zod';
 import { ModuleNumber } from './common.ts';
 
-/** One truncated-hash shingle set; `f` is its false-positive rate, count / 2^b (spec 2.5). */
+/** One modulus-sized shingle set: each shingle maps to sha256 mod `range`, and `f`, count / range, is its false-positive rate (spec 2.5). */
 export const PackedSet = z.strictObject({
-  b: z.number().int().min(1).max(24),
+  range: z
+    .number()
+    .int()
+    .min(1)
+    .max(2 ** 24),
   count: z.number().int().min(0),
   f: z.number().min(0).max(1),
   data: z.string(),
@@ -14,13 +18,16 @@ export type PackedSet = z.infer<typeof PackedSet>;
 export const ItemId = z.string().regex(/^(?:kc|quiz)-\d{2}$/, 'must look like kc-01 or quiz-01');
 
 /**
- * content/fingerprints/mNN.json: the module's whole text as one set, plus the ids of its knowledge checks and assessment items.
- * Items carry no hashes, because a shingle stored in two sets could be tested twice (spec 2.5).
+ * content/fingerprints/mNN.json: one module's two shingle sets and the ids of its knowledge checks and assessment items.
+ * Every course shingle sits in exactly one of the 26 sets: a shingle inside any item goes to the `items` set of the
+ * lowest module whose items hold it, and every other shingle to the `text` set of the lowest module that holds it,
+ * so no guess can be tested twice (spec 2.5).
  */
 export const FingerprintFile = z.strictObject({
   module: ModuleNumber,
   text: PackedSet,
-  items: z.array(ItemId).refine((ids) => ids.every((id, i) => i === 0 || (ids[i - 1] ?? '') < id), {
+  items: PackedSet,
+  itemIds: z.array(ItemId).refine((ids) => ids.every((id, i) => i === 0 || (ids[i - 1] ?? '') < id), {
     message: 'item ids must be sorted and unique',
   }),
 });

@@ -29,7 +29,7 @@ describe('R7 originality', () => {
     const unmasked = runRules({ ...ctx, allow: [['no', 'such', 'phrase']] }, ['R7']).findings;
     expect(unmasked.map((f) => f.message.split(' from')[0])).toEqual([
       'copies a 14-word run',
-      '9.7% of its 6-word sequences come',
+      '9.4% of its 6-word sequences come',
     ]);
   });
 });

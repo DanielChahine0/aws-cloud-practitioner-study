@@ -93,8 +93,8 @@ describe('Blueprint', () => {
 });
 
 describe('FingerprintFile', () => {
-  const set = { b: 20, count: 1, f: 1 / 2 ** 20, data: 'AAAl' };
-  const file = (items: unknown) => ({ module: 1, text: set, items });
+  const set = { range: 200, count: 1, f: 1 / 200, data: 'AAAl' };
+  const file = (itemIds: unknown) => ({ module: 1, text: set, items: set, itemIds });
 
   it('accepts sorted, unique item ids', () => {
     expect(FingerprintFile.safeParse(file(['kc-01', 'kc-02', 'quiz-01'])).success).toBe(true);
@@ -103,16 +103,23 @@ describe('FingerprintFile', () => {
 
   it('rejects unsorted or repeated item ids', () => {
     expect(messages(FingerprintFile.safeParse(file(['quiz-01', 'kc-01'])))).toEqual([
-      'items: item ids must be sorted and unique',
+      'itemIds: item ids must be sorted and unique',
     ]);
     expect(messages(FingerprintFile.safeParse(file(['kc-01', 'kc-01'])))).toEqual([
-      'items: item ids must be sorted and unique',
+      'itemIds: item ids must be sorted and unique',
     ]);
   });
 
-  // Item sets would store each item's shingles a second time, so a guess could be tested twice (spec 2.5).
-  it('rejects the old per-item shingle sets', () => {
-    expect(FingerprintFile.safeParse(file({ 'kc-01': set })).success).toBe(false);
+  // Each course shingle sits in exactly one set, so the old truncated sets and per-item sets are gone (spec 2.5).
+  it('rejects a truncated-bits set and per-item shingle sets', () => {
+    expect(
+      FingerprintFile.safeParse({ ...file([]), text: { b: 20, count: 1, f: 1 / 2 ** 20, data: 'AAAl' } })
+        .success,
+    ).toBe(false);
+    expect(FingerprintFile.safeParse({ ...file([]), items: { 'kc-01': set } }).success).toBe(false);
+    expect(FingerprintFile.safeParse({ ...file([]), text: { ...set, range: 2 ** 24 + 1 } }).success).toBe(
+      false,
+    );
   });
 });
 

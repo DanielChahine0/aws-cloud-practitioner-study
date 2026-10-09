@@ -12,7 +12,8 @@ describe('loadContext', () => {
     expect(ctx.concepts.map((c) => c.id)).toEqual(['shared-kitchen', 'per-minute-rental']);
     expect(ctx.blueprint?.tasks).toHaveLength(19);
     expect(ctx.missions.map((m) => m.id)).toEqual(['mission-00']);
-    expect(ctx.fingerprints.get(1)?.items).toEqual(['kc-01', 'quiz-01']);
+    expect(ctx.fingerprints.get(1)?.itemIds).toEqual(['kc-01', 'quiz-01']);
+    expect(ctx.fingerprints.get(1)?.items.values.size).toBeGreaterThan(0);
     expect(ctx.allow.length).toBeGreaterThan(0);
     expect(ctx.shared.map((s) => s.path)).toEqual([
       'resources/README.md',

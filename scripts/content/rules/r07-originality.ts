@@ -40,16 +40,18 @@ export const r07: Rule = {
         continue;
       }
       const tokens = tokensOf(note.text);
-      report(note.path, runsAgainst(tokens, prints.text), shareAgainst(tokens, [prints.text]).share);
+      const sets = [prints.text, prints.items];
+      report(note.path, runsAgainst(tokens, sets), shareAgainst(tokens, sets).share);
     }
 
-    const everyModule = [...ctx.fingerprints.values()].map((prints) => prints.text);
+    const modules = [...ctx.fingerprints.values()];
+    const everySet = modules.flatMap((prints) => [prints.text, prints.items]);
     for (const doc of ctx.shared) {
       const tokens = tokensOf(doc.text);
       report(
         doc.path,
-        everyModule.flatMap((set) => runsAgainst(tokens, set)),
-        shareAgainst(tokens, everyModule).share,
+        modules.flatMap((prints) => runsAgainst(tokens, [prints.text, prints.items])),
+        shareAgainst(tokens, everySet).share,
       );
     }
     return out;
