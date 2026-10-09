@@ -1991,6 +1991,21 @@
   home: m11/aws-support-plans
   anchor: beyond-the-plans
   tasks: [ "4.3" ]
+- id: aws-business-support-plus
+  name: AWS Business Support+
+  home: m11/aws-support-plans
+  anchor: end-of-support-notice
+  tasks: [ "4.3" ]
+- id: aws-enterprise-support
+  name: AWS Enterprise Support
+  home: m11/aws-support-plans
+  anchor: end-of-support-notice
+  tasks: [ "4.3" ]
+- id: aws-unified-operations
+  name: AWS Unified Operations
+  home: m11/aws-support-plans
+  anchor: end-of-support-notice
+  tasks: [ "4.3" ]
 - id: independent-software-vendors
   name: Independent software vendors (ISVs)
   home: m11/aws-marketplace-and-aws-partners

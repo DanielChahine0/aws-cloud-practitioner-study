@@ -13,6 +13,9 @@ concepts:
   - aws-solutions-architects
   - aws-professional-services
   - aws-self-support-resources
+  - aws-business-support-plus
+  - aws-enterprise-support
+  - aws-unified-operations
 ---
 
 # AWS Support Plans
@@ -48,6 +51,13 @@ concepts:
 ### End of support notice
 
 - Per the course, Developer, Business and Enterprise On-Ramp Support end on January 1, 2027, and a linked page compares the new options.
+- **Exam guide update** (verified_on 2026-10-09, [CLF-C02 Domain 4](https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html)): The exam guide names four Support plans: Basic Support, AWS Business Support+, AWS Enterprise Support and AWS Unified Operations.
+- **Exam guide update** (verified_on 2026-10-09, [Compare AWS Support plans](https://aws.amazon.com/premiumsupport/plans/)): AWS calls Business Support+ the minimum plan it recommends for production workloads.
+- **Exam guide update** (verified_on 2026-10-09, [Compare AWS Support plans](https://aws.amazon.com/premiumsupport/plans/)): With Business Support+, a business-critical or mission-critical system that is down gets a response in under 30 minutes.
+- **Exam guide update** (verified_on 2026-10-09, [Compare AWS Support plans](https://aws.amazon.com/premiumsupport/plans/)): Enterprise Support includes a designated technical account manager.
+- **Exam guide update** (verified_on 2026-10-09, [Compare AWS Support plans](https://aws.amazon.com/premiumsupport/plans/)): With Enterprise Support, a business-critical or mission-critical system that is down gets a response in under 15 minutes.
+- **Exam guide update** (verified_on 2026-10-09, [Compare AWS Support plans](https://aws.amazon.com/premiumsupport/plans/)): Unified Operations is the only plan that includes 24/7 workload monitoring.
+- **Exam guide update** (verified_on 2026-10-09, [Compare AWS Support plans](https://aws.amazon.com/premiumsupport/plans/)): With Unified Operations, an Incident Management Engineer responds in under 5 minutes when a business-critical or mission-critical system is down.
 
 ### Beyond the plans
 
