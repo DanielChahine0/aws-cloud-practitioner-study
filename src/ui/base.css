@@ -320,6 +320,7 @@ kbd {
   font: inherit;
   line-height: inherit;
   color: inherit;
+  text-align: inherit;
   text-decoration: underline dotted;
   text-underline-offset: 3px;
   cursor: help;
@@ -802,13 +803,24 @@ dialog.sheet {
   gap: 12px;
 }
 
+/* WebKit keeps a native select at its own height, so the select drops its native look to honour 44 px (spec 7.5). */
 .match-row select {
   width: 100%;
   min-height: 44px;
-  padding: 0 8px;
+  padding: 0 36px 0 8px;
   font: inherit;
   color: var(--text);
-  background: var(--pane);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--pane);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
   border: 1px solid var(--line);
   border-radius: 6px;
 }
@@ -1066,6 +1078,21 @@ dialog.sheet {
   background: var(--pane);
   border-left: 3px solid var(--active);
   scroll-margin-top: 60px;
+}
+
+/* A table row cited as evidence marks its cells, since a row takes no padding or border of its own; cells sit on --pane, so the row turns --surface. */
+tr.evidence {
+  padding: 0;
+  background: none;
+  border-left: 0;
+}
+
+tr.evidence > * {
+  background: var(--surface);
+}
+
+tr.evidence > :first-child {
+  box-shadow: inset 3px 0 0 var(--active);
 }
 
 .home-line {

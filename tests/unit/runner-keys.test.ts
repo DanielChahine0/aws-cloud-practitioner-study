@@ -72,4 +72,14 @@ describe('runnerKey', () => {
     expect(runnerKey(key('1', { meta: true }), state())).toBeNull();
     expect(runnerKey(key('Enter', { ctrl: true }), state())).toBeNull();
   });
+
+  it('still takes Enter and Shift+Enter from a focused match select, but no other key', () => {
+    const fromSelect = { typing: true, select: true };
+    expect(runnerKey(key('Enter', fromSelect), MATCH)).toEqual({ kind: 'check' });
+    expect(runnerKey(key('Enter', { ...fromSelect, shift: true }), MATCH)).toEqual({ kind: 'sure' });
+    expect(runnerKey(key('a', fromSelect), MATCH)).toBeNull();
+    expect(runnerKey(key('1', fromSelect), MATCH)).toBeNull();
+    expect(runnerKey(key('Backspace', fromSelect), MATCH)).toBeNull();
+    expect(runnerKey(key('Enter', { typing: true }), MATCH)).toBeNull();
+  });
 });

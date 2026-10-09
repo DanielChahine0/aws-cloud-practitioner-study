@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { expect, type Page, test } from '@playwright/test';
 import type { QuestionView } from '../../schemas/chunks.ts';
+import { findEvidence } from '../../src/app/evidence.ts';
 import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1 } from './helpers.ts';
 
 /** Every practice e2e test uses Module 3, which the Phase 1 pilot fills with live questions. */
@@ -82,6 +83,8 @@ async function answerByKeys(page: Page, q: QuestionView): Promise<void> {
   }
   await page.keyboard.press('Enter');
   await expect(page.locator('.verdict')).toBeVisible();
+  // Next takes focus once the answer is stored.
+  await expect(page.getByRole('button', { name: /^Next/ })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('.verdict')).toHaveCount(0);
 }
@@ -99,6 +102,34 @@ async function finishByClicking(page: Page, questions: readonly QuestionView[]):
     await page.getByRole('button', { name: /^Next/ }).click();
     await expect(page.locator('.verdict')).toHaveCount(0);
   }
+}
+
+/**
+ * Runs the Module 3 lesson checks, answering right by clicking, until a question of this type is on screen.
+ * Unseen variants come first, so two rounds show every question.
+ */
+async function untilType(page: Page, type: QuestionView['type']): Promise<[QuestionView, QuestionView[]]> {
+  await page.goto('/#/m/03');
+  const questions = await chunkFor(page, 3);
+  const slugs = await lessonsOf(page, 3);
+  for (let round = 0; round < 2; round++) {
+    for (const slug of slugs) {
+      await page.goto(`/#/m/03/l/${slug}`);
+      await page.goto(`/#/s/check/m03/${slug}`);
+      const end = page.locator('.end-line');
+      for (;;) {
+        await expect(page.locator('section.runner, .end-line').first()).toBeVisible();
+        if (await end.isVisible()) break;
+        const q = await shown(page, questions);
+        if (q.type === type) return [q, questions];
+        await pickRight(page, q);
+        await page.getByRole('button', { name: /^Check/ }).click();
+        await page.getByRole('button', { name: /^Next/ }).click();
+        await expect(page.locator('.verdict')).toHaveCount(0);
+      }
+    }
+  }
+  throw new Error(`no ${type} question in the Module 3 lesson checks`);
 }
 
 /** Opens the AWS Lambda lesson check from the end of the note. */
@@ -165,8 +196,13 @@ test('every Module 3 lesson check works by keyboard alone, across all three ques
   await page.goto('/#/m/03');
   const questions = await chunkFor(page, 3);
   const slugs = await lessonsOf(page, 3);
+  // Unseen variants come first, so as many rounds as the most variants of one concept in one note show them all.
+  const variants = new Map<string, number>();
+  for (const q of questions)
+    variants.set(`${q.note} ${q.concept}`, (variants.get(`${q.note} ${q.concept}`) ?? 0) + 1);
+  const rounds = Math.max(...variants.values());
   const seen = new Set<string>();
-  for (let round = 0; round < 2; round++) {
+  for (let round = 0; round < rounds; round++) {
     for (const slug of slugs) {
       await page.goto(`/#/m/03/l/${slug}`);
       await page.goto(`/#/s/check/m03/${slug}`);
@@ -198,6 +234,100 @@ test('Read in notes opens the lesson with its evidence line highlighted', async 
   const text = (await evidence.innerText()).replace(/\s+/g, ' ').trim();
   expect(text).toBe(q.read.text.replace(/\s+/g, ' ').trim());
   await expect(evidence).toBeInViewport();
+});
+
+test('every live question of Modules 1 and 3 finds exactly one evidence line in its note', async ({
+  page,
+}) => {
+  test.skip(test.info().project.name !== 'chromium-desktop', 'one browser runs the content sweep');
+  await page.goto('/#/m/03');
+  // The app's own matcher, run in the page; a string expression, so the site's CSP has no say.
+  await page.evaluate(`window.findEvidence = ${findEvidence.toString()}`);
+  const misses: string[] = [];
+  for (const module of [1, 3]) {
+    const questions = await chunkFor(page, module);
+    expect(questions.length, `live questions in Module ${module}`).toBeGreaterThan(0);
+    for (const q of questions) {
+      const lesson = q.read.route.split('/').slice(0, 5).join('/');
+      if ((await page.evaluate(() => location.hash)) !== lesson) {
+        await page.goto(`/${lesson}`);
+        await expect(page.locator('.prose')).toBeVisible();
+      }
+      const hits = await page.evaluate(
+        (text) =>
+          (window as unknown as { findEvidence: (root: ParentNode, text: string) => unknown[] }).findEvidence(
+            document.querySelector('.prose') ?? document,
+            text,
+          ).length,
+        q.read.text,
+      );
+      if (hits !== 1) misses.push(`${q.id} has ${hits} hits for "${q.read.text}"`);
+    }
+  }
+  expect(misses).toEqual([]);
+});
+
+test('Next waits for the answer to be stored', async ({ page }) => {
+  // Holds every IndexedDB commit's completion while window.holdCommits is a pending promise.
+  await page.addInitScript(() => {
+    const own = Object.getOwnPropertyDescriptor(IDBTransaction.prototype, 'oncomplete');
+    if (own?.set === undefined || own.get === undefined) return;
+    const { get, set } = own;
+    Object.defineProperty(IDBTransaction.prototype, 'oncomplete', {
+      configurable: true,
+      get() {
+        return get.call(this);
+      },
+      set(handler: ((this: IDBTransaction, ev: Event) => unknown) | null) {
+        if (handler === null) return set.call(this, null);
+        set.call(this, function (this: IDBTransaction, ev: Event) {
+          const hold = (window as unknown as { holdCommits?: Promise<void> }).holdCommits;
+          if (hold === undefined) return handler.call(this, ev);
+          void hold.then(() => handler.call(this, ev));
+        });
+      },
+    });
+  });
+  const questions = await startLambdaCheck(page);
+  const q = await shown(page, questions);
+  await page.evaluate(() => {
+    const w = window as unknown as { holdCommits?: Promise<void>; releaseCommits?: () => void };
+    w.holdCommits = new Promise((resolve) => {
+      w.releaseCommits = resolve;
+    });
+  });
+  await pickRight(page, q);
+  await page.getByRole('button', { name: /^Check/ }).click();
+  await expect(page.locator('.verdict')).toHaveText('Correct');
+  const next = page.getByRole('button', { name: /^Next/ });
+  await expect(next).toBeDisabled();
+  await page.locator('#stem').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.verdict')).toHaveText('Correct');
+  await page.evaluate(() => (window as unknown as { releaseCommits: () => void }).releaseCommits());
+  await expect(next).toBeEnabled();
+  await expect(next).toBeFocused();
+});
+
+test('a match answered with the mouse checks on Enter and names the correct pairing of each wrong row', async ({
+  page,
+}) => {
+  test.slow();
+  const [q] = await untilType(page, 'match');
+  const selects = page.locator('.match-row select');
+  for (const box of await Promise.all((await selects.all()).map((s) => s.boundingBox()))) {
+    expect(box?.height ?? 0, 'select height in px').toBeGreaterThanOrEqual(44);
+  }
+  await pickWrong(page, q);
+  // Focus stays on the select that took the last pick.
+  await page.getByRole('combobox', { name: q.pairs.at(-1)?.left ?? '', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.verdict')).toHaveText('Incorrect');
+  const wrong = page.locator('.review-item.is-wrong');
+  await expect(wrong).toHaveCount(q.pairs.length);
+  for (const [i, pair] of q.pairs.entries()) {
+    await expect(wrong.nth(i).locator('.tag.ok')).toHaveText(`Correct answer: ${pair.right}`);
+  }
 });
 
 test('a reported problem is confirmed inline', async ({ page }) => {
@@ -353,8 +483,20 @@ test.describe('accessibility and layout', () => {
 
   test('the runner never scrolls sideways and keeps the submit bar in view on a phone', async ({ page }) => {
     test.skip(test.info().project.name !== 'webkit-mobile', 'a phone-width check');
-    await startLambdaCheck(page);
-    await expectNoSidewaysScroll(page);
-    await expect(page.locator('.submit-bar')).toBeInViewport();
+    const questions = await startLambdaCheck(page);
+    for (let i = 0; i < 3; i++) {
+      const q = await shown(page, questions);
+      await expectNoSidewaysScroll(page);
+      await expect(page.getByRole('button', { name: /^Check/ })).toBeInViewport();
+      await pickRight(page, q);
+      await page.getByRole('button', { name: /^Check/ }).click();
+      await expect(page.locator('.verdict')).toBeVisible();
+      await expectNoSidewaysScroll(page);
+      const next = page.getByRole('button', { name: /^Next/ });
+      await expect(next).toBeInViewport();
+      if (await page.locator('.end-line').isVisible()) break;
+      await next.click();
+      if (await page.locator('.end-line').isVisible()) break;
+    }
   });
 });

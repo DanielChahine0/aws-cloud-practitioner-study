@@ -255,6 +255,8 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
   const [activeLeft, setActiveLeft] = useState(0);
   const [expandAll, setExpandAll] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  /** True once the answer's event is committed; Next waits for it (spec 8.1). */
+  const [stored, setStored] = useState(false);
   const stem = useRef<HTMLParagraphElement>(null);
   const nextButton = useRef<HTMLButtonElement>(null);
   const shownAt = useRef(Date.now());
@@ -289,9 +291,17 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
       ms: Date.now() - shownAt.current,
     });
     onAnswered({ qid: q.id, picked, correct });
-    // Next takes focus once the answer is stored (spec 8.1 waits for the commit before showing Next).
+    // Next turns on and takes focus once the answer is stored (spec 8.1 waits for the commit before showing Next).
     // The page stays where the reader is, with the verdict under the stem; on a phone Next sits in the sticky bar.
-    void saved.then(() => nextButton.current?.focus({ preventScroll: true }));
+    void saved.then(() => setStored(true));
+  };
+
+  useEffect(() => {
+    if (stored) nextButton.current?.focus({ preventScroll: true });
+  }, [stored]);
+
+  const next = (): void => {
+    if (stored) onNext();
   };
 
   const choose = (id: string): void => {
@@ -343,7 +353,7 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
         submit(true);
         break;
       case 'next':
-        onNext();
+        next();
         break;
       case 'expand':
         setExpandAll(true);
@@ -389,6 +399,7 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
           alt: event.altKey,
           shift: event.shiftKey,
           typing: isTyping(target),
+          select: target instanceof HTMLSelectElement,
           at: event.timeStamp,
         },
         stateRef.current,
@@ -446,7 +457,7 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
       <p class="visually-hidden" aria-live="polite">
         {feedback === null ? '' : feedback.correct ? 'Correct.' : 'Incorrect.'}
       </p>
-      {answered ? (
+      {answered && (
         <div class="after">
           {q.takeaway !== '' && <p class="takeaway">{q.takeaway}</p>}
           <p>
@@ -461,11 +472,14 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
             </a>{' '}
             <kbd>o</kbd>
           </p>
-          <div class="submit-bar">
-            <button ref={nextButton} class="button" type="button" onClick={onNext}>
-              Next <kbd>Enter</kbd>
-            </button>
-          </div>
+        </div>
+      )}
+      {/* The bar is a child of the runner itself, so on a phone it sticks while any part of the question shows. */}
+      {answered ? (
+        <div class="submit-bar">
+          <button ref={nextButton} class="button" type="button" disabled={!stored} onClick={next}>
+            Next <kbd>Enter</kbd>
+          </button>
         </div>
       ) : (
         <div class="submit-bar">
@@ -601,7 +615,10 @@ function Review({
                   {right ? (
                     <span class="tag ok">Your answer, correct</span>
                   ) : (
-                    <span class="tag bad">Your answer: {mineText}</span>
+                    <>
+                      <span class="tag bad">Your answer: {mineText}</span>
+                      <span class="tag ok">Correct answer: {p.right}</span>
+                    </>
                   )}
                 </p>
                 <details open>

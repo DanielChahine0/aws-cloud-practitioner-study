@@ -13,7 +13,11 @@ export type RunnerCommand =
   | { kind: 'read' }
   | { kind: 'report' };
 
-export type RunnerKeyInput = KeyInput & { shift: boolean };
+export type RunnerKeyInput = KeyInput & {
+  shift: boolean;
+  /** True when the event comes from a focused select, which keeps letters and digits but takes no Enter of its own. */
+  select?: boolean;
+};
 
 export interface RunnerKeyState {
   type: 'single' | 'multi' | 'match';
@@ -27,8 +31,10 @@ export interface RunnerKeyState {
 const LETTERS = 'abcde';
 
 export function runnerKey(input: RunnerKeyInput, state: RunnerKeyState): RunnerCommand | null {
-  if (input.meta || input.ctrl || input.alt || input.typing || state.reportOpen) return null;
+  if (input.meta || input.ctrl || input.alt || state.reportOpen) return null;
   const key = input.key.length === 1 ? input.key.toLowerCase() : input.key;
+  // A match answered with the mouse keeps focus on its last select, and Enter there still checks (spec 7.4).
+  if (input.typing && !(input.select === true && key === 'Enter')) return null;
   if (key === 'Enter') {
     if (state.answered) return input.shift ? null : { kind: 'next' };
     return input.shift ? { kind: 'sure' } : { kind: 'check' };
