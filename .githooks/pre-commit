@@ -1,0 +1,3 @@
+#!/bin/sh
+# Runs the fast gate before every commit (spec 1.3); enabled once per clone with: git config core.hooksPath .githooks
+exec pnpm check
