@@ -1,0 +1,308 @@
+# The CLF-C02 exam blueprint: domains, weights and the 19 task statements, with the terms each task names (spec 2.3).
+# Copied from the exam guide pages below; re-check them and refresh every verified_on at least every 180 days (rule R13).
+# Each term is an AWS service, feature, tool, program, plan or named concept from the task's "Knowledge of" and "Skills in" lines, in the page's spelling.
+exam: CLF-C02
+guide:
+  url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02.html"
+  verified_on: "2026-10-09"
+domains:
+  - id: "1"
+    name: Cloud Concepts
+    weight: 24
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
+    verified_on: "2026-10-09"
+  - id: "2"
+    name: Security and Compliance
+    weight: 30
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
+    verified_on: "2026-10-09"
+  - id: "3"
+    name: Cloud Technology and Services
+    weight: 34
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+  - id: "4"
+    name: "Billing, Pricing, and Support"
+    weight: 12
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html"
+    verified_on: "2026-10-09"
+tasks:
+  - id: "1.1"
+    text: Define the benefits of the AWS Cloud.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
+    verified_on: "2026-10-09"
+    terms:
+      - global infrastructure
+      - speed of deployment
+      - global reach
+      - high availability
+      - elasticity
+      - agility
+  - id: "1.2"
+    text: Identify design principles of the AWS Cloud.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS Well-Architected Framework
+      - operational excellence
+      - security
+      - reliability
+      - performance efficiency
+      - cost optimization
+      - sustainability
+  - id: "1.3"
+    text: Understand the benefits of and strategies for migration to the AWS Cloud.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS Cloud Adoption Framework (AWS CAF)
+      - reduced business risk
+      - "improved environmental, social, and governance (ESG) performance"
+      - increased revenue
+      - increased operational efficiency
+      - database replication
+  - id: "1.4"
+    text: Understand concepts of cloud economics.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
+    verified_on: "2026-10-09"
+    terms:
+      - fixed costs
+      - variable costs
+      - Bring Your Own License (BYOL)
+      - included licenses
+      - rightsizing
+      - economies of scale
+  - id: "2.1"
+    text: Understand the AWS shared responsibility model.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS shared responsibility model
+      - Amazon RDS
+      - AWS Lambda
+      - Amazon EC2
+  - id: "2.2"
+    text: Understand AWS Cloud security, governance, and compliance concepts.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
+    verified_on: "2026-10-09"
+    terms:
+      - encryption
+      - AWS Artifact
+      - AWS compliance
+      - Amazon Inspector
+      - AWS Security Hub
+      - Amazon GuardDuty
+      - AWS Shield
+      - encryption in transit
+      - encryption at rest
+      - Amazon CloudWatch
+      - AWS CloudTrail
+      - AWS Config
+      - access reports
+  - id: "2.3"
+    text: Identify AWS access management capabilities.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS Identity and Access Management (IAM)
+      - root user
+      - principle of least privilege
+      - AWS IAM Identity Center
+      - access keys
+      - password policies
+      - AWS Secrets Manager
+      - AWS Systems Manager
+      - multi-factor authentication (MFA)
+      - cross-account IAM roles
+      - custom policies
+      - managed policies
+      - federated
+  - id: "2.4"
+    text: Identify components and resources for security.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS WAF
+      - AWS Firewall Manager
+      - AWS Shield
+      - Amazon GuardDuty
+      - AWS Marketplace
+      - AWS Knowledge Center
+      - AWS Security Center
+      - AWS Security Blog
+      - AWS Trusted Advisor
+  - id: "3.1"
+    text: Define methods of deploying and operating in the AWS Cloud.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - programmatic access
+      - APIs
+      - SDKs
+      - CLI
+      - AWS Management Console
+      - infrastructure as code (IaC)
+      - cloud
+      - hybrid
+      - on-premises
+  - id: "3.2"
+    text: Define the AWS global infrastructure.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS Regions
+      - Availability Zones
+      - edge locations
+      - high availability
+      - single points of failure
+      - disaster recovery
+      - business continuity
+      - low latency
+      - data sovereignty
+  - id: "3.3"
+    text: Identify AWS compute services.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - Amazon EC2 instance types
+      - compute optimized
+      - storage optimized
+      - Amazon Elastic Container Service (Amazon ECS)
+      - Amazon Elastic Kubernetes Service (Amazon EKS)
+      - AWS Fargate
+      - AWS Lambda
+      - auto scaling
+      - elasticity
+      - load balancers
+  - id: "3.4"
+    text: Identify AWS database services.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - EC2 hosted databases
+      - AWS managed databases
+      - relational databases
+      - Amazon RDS
+      - Amazon Aurora
+      - NoSQL databases
+      - Amazon DynamoDB
+      - memory-based databases
+      - Amazon ElastiCache
+      - AWS Database Migration Service (AWS DMS)
+      - AWS Schema Conversion Tool (AWS SCT)
+  - id: "3.5"
+    text: Identify AWS network services.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - VPC
+      - subnets
+      - gateways
+      - network ACLs
+      - security groups
+      - Amazon Inspector
+      - Amazon Route 53
+      - AWS VPN
+      - AWS Direct Connect
+  - id: "3.6"
+    text: Identify AWS storage services.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - object storage
+      - Amazon S3 storage classes
+      - block storage
+      - Amazon Elastic Block Store (Amazon EBS)
+      - instance store
+      - Amazon Elastic File System (Amazon EFS)
+      - Amazon FSx
+      - AWS Storage Gateway
+      - lifecycle policies
+      - AWS Backup
+  - id: "3.7"
+    text: Identify AWS artificial intelligence and machine learning (AI/ML) services and analytics services.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - Amazon SageMaker AI
+      - Amazon Lex
+      - Amazon Athena
+      - Amazon Kinesis
+      - AWS Glue
+      - Amazon Quick Sight
+  - id: "3.8"
+    text: Identify services from other in-scope AWS service categories.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
+    verified_on: "2026-10-09"
+    terms:
+      - Amazon EventBridge
+      - Amazon Simple Notification Service (Amazon SNS)
+      - Amazon Simple Queue Service (Amazon SQS)
+      - Amazon Connect
+      - Amazon Simple Email Service (Amazon SES)
+      - AWS Support
+      - AWS CodeBuild
+      - AWS CodePipeline
+      - AWS X-Ray
+      - Amazon AppStream 2.0
+      - Amazon WorkSpaces
+      - Amazon WorkSpaces Secure Browser
+      - AWS Amplify
+      - AWS IoT Core
+  - id: "4.1"
+    text: Compare AWS pricing models.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html"
+    verified_on: "2026-10-09"
+    terms:
+      - On-Demand Instances
+      - Reserved Instances
+      - Spot Instances
+      - AWS Savings Plans
+      - Dedicated Hosts
+      - Dedicated Instances
+      - Capacity Reservations
+      - Reserved Instance flexibility
+      - AWS Organizations
+      - incoming data transfer costs
+      - outgoing data transfer costs
+  - id: "4.2"
+    text: Understand resources for billing, budget, and cost management.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS Organizations
+      - AWS cost allocation tags
+      - AWS Budgets
+      - AWS Cost Explorer
+      - AWS Pricing Calculator
+      - consolidated billing
+      - AWS Cost and Usage Report
+  - id: "4.3"
+    text: Identify AWS technical resources and AWS Support options.
+    url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html"
+    verified_on: "2026-10-09"
+    terms:
+      - AWS Support plans
+      - AWS Partner Network
+      - independent software vendors
+      - system integrators
+      - AWS Support Center
+      - AWS whitepapers
+      - AWS Prescriptive Guidance
+      - AWS Knowledge Center
+      - AWS re:Post
+      - Basic Support
+      - AWS Business Support+
+      - AWS Enterprise Support
+      - AWS Unified Operations
+      - AWS Trusted Advisor
+      - AWS Health Dashboard
+      - AWS Health API
+      - AWS Trust and Safety team
+      - AWS Partners
+      - AWS Marketplace
+      - partner training and certification
+      - partner events
+      - partner volume discounts
+      - AWS Professional Services
+      - AWS solutions architects
