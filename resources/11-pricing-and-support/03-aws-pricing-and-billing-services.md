@@ -12,6 +12,7 @@ concepts:
   - aws-cost-explorer
   - cost-allocation-tags
   - aws-pricing-calculator
+  - aws-cost-and-usage-report
 ---
 
 # AWS Pricing and Billing Services
@@ -47,6 +48,8 @@ concepts:
 
 - Tags are resource metadata that let one search find related resources, such as all development ones.
 - Cost Explorer can allocate costs by tags such as project, department or environment, showing who drives spend.
+- **Exam guide update** (verified_on 2026-10-09, [AWS cost allocation tags](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html)): AWS cost allocation tags come in two types, AWS-generated and user-defined, and you must activate each before it appears in Cost Explorer or on a cost allocation report.
+- **Exam guide update** (verified_on 2026-10-09, [What are AWS Cost and Usage Reports?](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html)): The AWS Cost and Usage Report holds the most detailed AWS cost and usage data, broken down by hour, day or month and by your tags, delivered as files to an Amazon S3 bucket you own.
 
 ## Key takeaways
 

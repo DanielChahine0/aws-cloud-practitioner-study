@@ -9,6 +9,7 @@ concepts:
   - fully-managed-services
   - managed-services
   - unmanaged-services
+  - ec2-hosted-vs-managed-databases
 ---
 
 # Introduction to Databases
@@ -36,6 +37,7 @@ concepts:
 - AWS handles antivirus and anti-malware on managed OSes, and you inherit their compliance.
 - Managed services ease scaling and licensing, but leave app code to you.
 - Self-hosting on EC2 is for full control, OS included, and is not automatically cheaper or faster.
+- **Exam guide update** (verified_on 2026-10-09, [What is Amazon RDS?](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html)): With EC2 hosted databases you still install, patch, back up and scale the database and its operating system yourself, while AWS managed databases such as Amazon RDS hand those tasks to AWS.
 
 ## Key takeaways
 

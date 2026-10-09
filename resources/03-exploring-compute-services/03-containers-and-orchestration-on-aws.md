@@ -55,6 +55,8 @@ concepts:
 - EKS runs Kubernetes, the open source platform automating container deployment, scaling and management.
 - AWS fully manages EKS, while Kubernetes gets updates and support from its open source community.
 - EKS suits large-scale or hybrid setups that want extra control and flexibility.
+- **Exam guide update** (verified_on 2026-10-09, [Amazon ECS](https://aws.amazon.com/ecs/)): The exam guide spells out Amazon Elastic Container Service (Amazon ECS), the fully managed AWS service for orchestrating containers.
+- **Exam guide update** (verified_on 2026-10-09, [What is Amazon EKS?](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html)): With Amazon Elastic Kubernetes Service (Amazon EKS), AWS operates the Kubernetes control plane of each cluster for you.
 
 ### Amazon ECR
 

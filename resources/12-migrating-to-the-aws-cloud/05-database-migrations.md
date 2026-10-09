@@ -33,6 +33,7 @@ concepts:
 - It moves relational and NoSQL databases, data warehouses and analytics workloads to AWS.
 - You name the source and target, and a scheduled task on a replication VM copies the data while the source stays live.
 - You can fall back to the original or replicate into other Regions or Availability Zones.
+- **Exam guide update** (verified_on 2026-10-09, [What is AWS DMS?](https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html)): With database replication, AWS DMS goes beyond a one-time copy and keeps replicating ongoing changes from the source database to the target so the two stay in sync.
 
 ### AWS DMS versus AWS SCT
 

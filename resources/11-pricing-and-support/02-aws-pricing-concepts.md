@@ -42,6 +42,7 @@ concepts:
 - S3 has six cost components: storage, requests and retrieval, transfer and acceleration, management and analytics, replication, and S3 Object Lambda processing.
 - Data transfer: inbound and most same-Region traffic is free, with exceptions, while outbound data is pooled across services and billed per gigabyte at falling rates.
 - Example: downloads from a static website hosted in S3 count as outbound transfer.
+- **Exam guide update** (verified_on 2026-10-09, [Understanding data transfer charges](https://docs.aws.amazon.com/cur/latest/userguide/cur-data-transfers-charges.html)): Incoming data transfer costs are nothing for data coming from the internet into AWS, while outgoing data transfer costs apply to data leaving for the internet or for another Region.
 
 ### Worked example: a nonprofit on EC2
 

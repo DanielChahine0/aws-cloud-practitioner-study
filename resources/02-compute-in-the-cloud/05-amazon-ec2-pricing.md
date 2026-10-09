@@ -43,6 +43,8 @@ concepts:
 - A Savings Plan applies whatever the Region, tenancy, OS, family or size, while an RI stays within its family and Region.
 - Critical, always-on workloads that want dependable capacity and a predictable bill fit Savings Plans.
 - RI flexibility: the discount flows automatically to other sizes in the family, by instance size footprint, and across the Region's AZs, aiding distribution and fault tolerance.
+- **Exam guide update** (verified_on 2026-10-09, [What are Savings Plans?](https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html)): AWS Savings Plans give prices below On-Demand rates in exchange for committing to a set amount of compute usage per hour for one or three years.
+- **Exam guide update** (verified_on 2026-10-09, [How Reserved Instance discounts are applied](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/apply_ri.html)): Reserved Instance flexibility means a regional Reserved Instance discount applies in any Availability Zone of its Region and, for most instance types, to any size in the same instance family.
 
 ### Spot, isolation and reservations
 

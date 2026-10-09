@@ -58,6 +58,7 @@ concepts:
 - License Manager tracks and controls those licenses and tunes their cost.
 - It curbs noncompliance with usage caps, blocked launches and other controls.
 - It also eases Microsoft License Mobility through Software Assurance and automates entitlement rollout across accounts.
+- **Exam guide update** (verified_on 2026-10-09, [SQL Server on Amazon EC2 licensing](https://docs.aws.amazon.com/sql-server-ec2/latest/userguide/sql-server-on-ec2-licensing.html)): With the Bring Your Own License (BYOL) model you reuse licenses you already own on AWS, while with included licenses, such as SQL Server license-included instances on Amazon EC2, AWS supplies the license and handles its cost and compliance.
 
 ## Visuals
 

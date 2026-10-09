@@ -27,6 +27,7 @@ concepts:
 - Owning a data center means paying hundreds of thousands to millions of dollars upfront for space, hardware, staff and upkeep, then budgeting around it even when usage is low.
 - On AWS the bill follows monthly usage, so you start small, spending matches consumption for more financial flexibility, and billing and budgeting tools help you save.
 - The course sometimes says upfront expense instead of fixed expense.
+- **Exam guide update** (verified_on 2026-10-09, [Six advantages of cloud computing](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/six-advantages-of-cloud-computing.html)): Fixed costs are paid up front for data centers and servers whether or not you use them, while variable costs on AWS follow only what you actually consume.
 
 ### Benefit from massive economies of scale
 
@@ -52,6 +53,7 @@ concepts:
 ### Go global in minutes
 
 - A US company expanding to India can deploy to an AWS-managed [Region](04-introduction-to-aws-global-infrastructure.md) there instead of building its own data centers, in minutes rather than months or years.
+- **Exam guide update** (verified_on 2026-10-09, [Six advantages of cloud computing](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/six-advantages-of-cloud-computing.html)): The exam guide calls this benefit speed of deployment: with go global in minutes, you deploy an application to multiple Regions around the world with just a few clicks.
 
 ## Visuals
 

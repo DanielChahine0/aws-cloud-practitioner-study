@@ -32,6 +32,7 @@ concepts:
 - A cache keeps hot data in RAM, which reads hundreds to thousands of times faster than disk.
 - Typical contents: sessions, API responses, query results, anything requested repeatedly.
 - Lacking a database's lasting storage and rich queries, a cache complements the database, never replaces it.
+- **Exam guide update** (verified_on 2026-10-09, [What is Amazon ElastiCache?](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html)): The exam guide calls in-memory data stores memory-based databases, and its example is Amazon ElastiCache, a managed in-memory data store and cache.
 
 ### Amazon ElastiCache
 

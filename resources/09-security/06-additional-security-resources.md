@@ -9,6 +9,7 @@ concepts:
   - aws-knowledge-center
   - aws-security-blog
   - aws-marketplace
+  - aws-security-center
 ---
 
 # Additional Security Resources
@@ -26,6 +27,7 @@ concepts:
 - [Knowledge Center](https://repost.aws/search/content?globalSearch=security): Q&A, troubleshooting.
 - [AWS Security Documentation](https://docs.aws.amazon.com/security/): by product.
 - [AWS Security Blog](https://aws.amazon.com/blogs/security/): expert tips.
+- **Exam guide update** (verified_on 2026-10-09, [Overview of AWS: Security and compliance](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/security-and-compliance.html)): AWS Security Center is the name AWS documentation gives the cloud security site at aws.amazon.com/security, where it points you for more on AWS security and compliance.
 
 ### AWS Marketplace
 

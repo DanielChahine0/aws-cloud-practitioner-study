@@ -31,6 +31,7 @@ concepts:
 - It shares AWS experience and best practices, plus tooling that speeds the journey, organizes resources and aligns leaders.
 - Payoffs: revenue, productivity and customer experience up, operating costs and risk down, sustainability and transparency up.
 - Uses: legacy infrastructure and app moves, process and operations changes, and new business models.
+- **Exam guide update** (verified_on 2026-10-09, [AWS Cloud Adoption Framework](https://aws.amazon.com/cloud-adoption-framework/)): AWS CAF ties cloud adoption to four business outcomes: reduced business risk, improved ESG performance, increased revenue and increased operational efficiency.
 
 ### The six perspectives
 

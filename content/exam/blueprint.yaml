@@ -202,7 +202,7 @@ tasks:
       - security groups
       - Amazon Inspector
       - Amazon Route 53
-      - AWS VPN
+      - { term: AWS VPN, coveredBy: aws-site-to-site-vpn }
       - AWS Direct Connect
   - id: "3.6"
     text: Identify AWS storage services.

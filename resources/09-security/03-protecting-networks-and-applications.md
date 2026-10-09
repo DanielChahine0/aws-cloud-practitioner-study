@@ -12,6 +12,7 @@ concepts:
   - aws-shield-standard
   - aws-shield-advanced
   - aws-waf
+  - aws-firewall-manager
 ---
 
 # Protecting Networks and Applications
@@ -49,6 +50,7 @@ concepts:
 - Shield plus custom AWS WAF rules can counter complex DDoS attacks.
 - **AWS WAF**: a web application firewall that refuses requests from IP addresses blocked in its web ACL (web access control list).
   - It also spots bad actors' signatures and uses machine learning to catch new threats.
+- **Exam guide update** (verified_on 2026-10-09, [AWS Firewall Manager](https://aws.amazon.com/firewall-manager/)): AWS Firewall Manager centrally configures and enforces firewall rules, such as AWS WAF rules, security group rules and AWS Network Firewall firewalls, across the accounts in your organization.
 
 ## Visuals
 

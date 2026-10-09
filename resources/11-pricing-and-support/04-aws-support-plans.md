@@ -16,6 +16,8 @@ concepts:
   - aws-business-support-plus
   - aws-enterprise-support
   - aws-unified-operations
+  - aws-support-center
+  - aws-prescriptive-guidance
 ---
 
 # AWS Support Plans
@@ -67,6 +69,10 @@ concepts:
 - AWS solutions architects: for Business and Enterprise customers, help designing scalable, secure apps, with architecture and best practice advice.
 - AWS Professional Services: project-based consulting, such as complex migrations, security audits and performance tuning.
 - Self-support: user guides, SDK guides, blog posts and whitepapers.
+- **Exam guide update** (verified_on 2026-10-09, [AWS Support case management](https://docs.aws.amazon.com/awssupport/latest/user/case-management.html)): In the AWS Support Center every customer can open account and billing cases, while technical support cases need a plan above Basic Support.
+- **Exam guide update** (verified_on 2026-10-09, [AWS Whitepapers & Guides](https://aws.amazon.com/whitepapers/)): AWS whitepapers are technical documents written by AWS and the AWS community, published with decision guides and reference architecture diagrams as self-support resources.
+- **Exam guide update** (verified_on 2026-10-09, [AWS Prescriptive Guidance](https://aws.amazon.com/prescriptive-guidance/)): AWS Prescriptive Guidance offers guides and patterns from AWS technology experts, with steps, architectures, tools and code for common migration, optimization and modernization work.
+- **Exam guide update** (verified_on 2026-10-09, [AWS Trust & Safety Center on AWS re:Post](https://aws.amazon.com/about-aws/whats-new/2024/10/aws-trust-safety-center-re-post/)): Suspected misuse of AWS resources, such as odd network traffic coming from an AWS IP address, is reported to the AWS Trust and Safety team.
 
 ## Visuals
 

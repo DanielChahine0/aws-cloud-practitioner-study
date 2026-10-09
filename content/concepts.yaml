@@ -2343,3 +2343,75 @@
   home: m13/aws-well-architected-framework
   anchor: aws-well-architected-tool
   tasks: [ "1.2" ]
+- id: iam-access-reports
+  name: Access reports
+  home: m09/preventing-unauthorized-access
+  anchor: iam-policies
+  tasks: [ "2.2", "2.3" ]
+  confusableWith: [ aws-cloudtrail, aws-config ]
+- id: access-keys
+  name: Access keys
+  home: m09/preventing-unauthorized-access
+  anchor: which-iam-identity-when
+  tasks: [ "2.3" ]
+  confusableWith: [ aws-secrets-manager, multi-factor-authentication ]
+- id: iam-password-policies
+  name: Password policies
+  home: m09/preventing-unauthorized-access
+  anchor: the-aws-account-root-user
+  tasks: [ "2.3" ]
+  confusableWith: [ multi-factor-authentication, aws-account-root-user ]
+- id: cross-account-iam-roles
+  name: Cross-account IAM roles
+  home: m09/preventing-unauthorized-access
+  anchor: which-iam-identity-when
+  tasks: [ "2.3" ]
+  confusableWith: [ aws-iam-identity-center ]
+- id: custom-policies
+  name: Custom policies
+  home: m09/preventing-unauthorized-access
+  anchor: iam-policies
+  tasks: [ "2.3" ]
+  confusableWith: [ iam-policies, principle-of-least-privilege ]
+- id: aws-firewall-manager
+  name: AWS Firewall Manager
+  home: m09/protecting-networks-and-applications
+  anchor: defense-through-aws-services
+  tasks: [ "2.4" ]
+  confusableWith: [ aws-waf, aws-shield-advanced ]
+- id: aws-security-center
+  name: AWS Security Center
+  home: m09/additional-security-resources
+  anchor: docs
+  tasks: [ "2.4" ]
+  confusableWith: [ aws-security-blog, aws-knowledge-center ]
+- id: ec2-hosted-vs-managed-databases
+  name: EC2 hosted databases versus AWS managed databases
+  home: m07/introduction-to-databases
+  anchor: who-does-what
+  tasks: [ "3.4", "2.1" ]
+  confusableWith: [ amazon-rds, amazon-ec2 ]
+- id: aws-cost-and-usage-report
+  name: AWS Cost and Usage Report
+  home: m11/aws-pricing-and-billing-services
+  anchor: tags
+  tasks: [ "4.2" ]
+  confusableWith: [ aws-cost-explorer, aws-budgets ]
+- id: system-integrators
+  name: System integrators
+  home: m11/aws-marketplace-and-aws-partners
+  anchor: aws-partner-network
+  tasks: [ "4.3" ]
+  confusableWith: [ independent-software-vendors, aws-professional-services ]
+- id: aws-support-center
+  name: AWS Support Center
+  home: m11/aws-support-plans
+  anchor: beyond-the-plans
+  tasks: [ "4.3" ]
+  confusableWith: [ aws-re-post, aws-support-plans ]
+- id: aws-prescriptive-guidance
+  name: AWS Prescriptive Guidance
+  home: m11/aws-support-plans
+  anchor: beyond-the-plans
+  tasks: [ "4.3", "1.3" ]
+  confusableWith: [ aws-professional-services, aws-re-post ]

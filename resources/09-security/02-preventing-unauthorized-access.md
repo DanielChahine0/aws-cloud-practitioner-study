@@ -13,6 +13,11 @@ concepts:
   - aws-iam-identity-center
   - aws-secrets-manager
   - aws-systems-manager
+  - iam-access-reports
+  - access-keys
+  - iam-password-policies
+  - cross-account-iam-roles
+  - custom-policies
 ---
 
 # Preventing Unauthorized Access
@@ -33,6 +38,7 @@ concepts:
 - Give it a strong password and turn on multi-factor authentication (MFA) right after the first root login.
 - MFA requires at least two kinds of proof, such as the password plus a one-time code from a phone app.
 - Even then, keep the root user out of daily work and use IAM identities instead.
+- **Exam guide update** (verified_on 2026-10-09, [Set an account password policy for IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html)): Password policies set account-wide rules for IAM user passwords, such as minimum length, required character types, expiration and preventing reuse, but they never apply to the root user password.
 
 ### IAM, default deny and least privilege
 
@@ -51,6 +57,8 @@ concepts:
   - People, external identities, applications and AWS services can use roles, which also enable federated and cross-account access.
   - Roles are not meant for permanent access.
 - **Federation at scale**: rather than an IAM user per employee, staff use their corporate login mapped to IAM roles, set up through AWS IAM Identity Center with single sign-on (SSO).
+- **Exam guide update** (verified_on 2026-10-09, [Manage access keys for IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)): Access keys are long-term credentials, an access key ID plus a secret access key, that sign programmatic requests to the AWS CLI or API, and AWS advises temporary credentials from roles instead and never creating them for the root user.
+- **Exam guide update** (verified_on 2026-10-09, [IAM tutorial: Delegate access across AWS accounts using IAM roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html)): With cross-account IAM roles, users in one AWS account assume a role in another account and get temporary credentials there, so nobody needs a separate IAM user in each account.
 
 ### IAM policies
 
@@ -58,6 +66,8 @@ concepts:
 - It only takes effect once attached to a user, group or role.
 - Each statement sets an **Effect** (only Allow or Deny), an **Action** (any AWS API call) and a **Resource** (what the call targets).
 - Example: Allow `s3:ListBucket` on one reports bucket lets a user view that bucket and nothing else.
+- **Exam guide update** (verified_on 2026-10-09, [IAM last accessed information](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_last-accessed.html)): IAM access reports show last accessed information, meaning which services and actions each user, role or policy actually tried to use, so you can remove unused permissions and keep least privilege.
+- **Exam guide update** (verified_on 2026-10-09, [Managed policies and inline policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html)): Custom policies are customer managed or inline policies that you write and change yourself for your own use cases, unlike AWS managed policies, which AWS creates and you cannot edit.
 
 ### Lessons from the IAM console demo
 

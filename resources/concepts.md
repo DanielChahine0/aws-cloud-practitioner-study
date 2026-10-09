@@ -1,12 +1,13 @@
 # Concept index
 
 Every concept tag from the lessons' frontmatter, A to Z, with links to each lesson that uses it.
-There are 430 tags across 572 uses.
+There are 445 tags across 587 uses.
 Each tag names one idea, so the same idea carries the same tag in every lesson.
 
 ## A
 
 - `accelerated-computing-instances`: [Module 2, Amazon EC2 Instance Types](02-compute-in-the-cloud/02-amazon-ec2-instance-types.md)
+- `access-keys`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
 - `ai-ml-business-use-cases`: [Module 8, AI/ML on AWS](08-ai-ml-and-data-analytics/02-ai-ml-on-aws.md)
 - `amazon-api-gateway`: [Module 5, More Ways to Connect to the AWS Cloud](05-networking/03-more-ways-to-connect-to-the-aws-cloud.md); [Module 13, Specialized Use Cases](13-well-architected-solutions/04-specialized-use-cases.md)
 - `amazon-appstream-2-0`: [Module 13, AWS Specialized Services](13-well-architected-solutions/02-aws-specialized-services.md)
@@ -94,6 +95,7 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `aws-batch`: [Module 3, Additional Compute Services](03-exploring-compute-services/04-additional-compute-services.md)
 - `aws-billing-and-cost-management-dashboard`: [Module 11, Introduction to Pricing and Support](11-pricing-and-support/01-introduction-to-pricing-and-support.md); [Module 11, AWS Pricing and Billing Services](11-pricing-and-support/03-aws-pricing-and-billing-services.md)
 - `aws-budgets`: [Module 11, Introduction to Pricing and Support](11-pricing-and-support/01-introduction-to-pricing-and-support.md); [Module 11, AWS Pricing and Billing Services](11-pricing-and-support/03-aws-pricing-and-billing-services.md)
+- `aws-business-support-plus`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-caf-action-plan`: [Module 12, AWS Cloud Adoption Framework](12-migrating-to-the-aws-cloud/02-aws-cloud-adoption-framework.md)
 - `aws-caf-business-perspective`: [Module 12, AWS Cloud Adoption Framework](12-migrating-to-the-aws-cloud/02-aws-cloud-adoption-framework.md)
 - `aws-caf-governance-perspective`: [Module 12, AWS Cloud Adoption Framework](12-migrating-to-the-aws-cloud/02-aws-cloud-adoption-framework.md)
@@ -113,13 +115,16 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `aws-compute-optimizer`: [Module 11, Cost Optimization](11-pricing-and-support/06-cost-optimization.md)
 - `aws-config`: [Module 10, Auditing AWS Resources for Compliance](10-monitoring-compliance-and-governance/06-auditing-aws-resources-for-compliance.md)
 - `aws-control-tower`: [Module 10, Governance](10-monitoring-compliance-and-governance/08-governance.md)
+- `aws-cost-and-usage-report`: [Module 11, AWS Pricing and Billing Services](11-pricing-and-support/03-aws-pricing-and-billing-services.md)
 - `aws-cost-explorer`: [Module 11, Introduction to Pricing and Support](11-pricing-and-support/01-introduction-to-pricing-and-support.md); [Module 11, AWS Pricing and Billing Services](11-pricing-and-support/03-aws-pricing-and-billing-services.md)
 - `aws-database-migration-service`: [Module 7, Relational Database Services](07-databases/02-relational-database-services.md); [Module 12, Database Migrations](12-migrating-to-the-aws-cloud/05-database-migrations.md)
 - `aws-datasync`: [Module 12, Transferring Data Online](12-migrating-to-the-aws-cloud/06-transferring-data-online.md)
 - `aws-direct-connect`: [Module 5, Organizing AWS Cloud Resources](05-networking/02-organizing-aws-cloud-resources.md); [Module 5, More Ways to Connect to the AWS Cloud](05-networking/03-more-ways-to-connect-to-the-aws-cloud.md); [Module 5, Global Architectures](05-networking/07-global-architectures.md); [Module 12, Transferring Data Online](12-migrating-to-the-aws-cloud/06-transferring-data-online.md)
 - `aws-elastic-beanstalk`: [Module 3, Additional Compute Services](03-exploring-compute-services/04-additional-compute-services.md)
 - `aws-elastic-disaster-recovery`: [Module 6, AWS Elastic Disaster Recovery](06-storage/10-aws-elastic-disaster-recovery.md)
+- `aws-enterprise-support`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-fargate`: [Module 3, Containers and Orchestration on AWS](03-exploring-compute-services/03-containers-and-orchestration-on-aws.md)
+- `aws-firewall-manager`: [Module 9, Protecting Networks and Applications](09-security/03-protecting-networks-and-applications.md)
 - `aws-global-accelerator`: [Module 5, Global Networking](05-networking/06-global-networking.md)
 - `aws-global-infrastructure`: [Module 1, Introduction to AWS Global Infrastructure](01-introduction-to-the-cloud/04-introduction-to-aws-global-infrastructure.md); [Module 1, Applying Cloud Concepts to Real Life Use Cases](01-introduction-to-the-cloud/06-applying-cloud-concepts-to-real-life-use-cases.md); [Module 4, Introduction to Going Global](04-going-global/01-introduction-to-going-global.md)
 - `aws-glue`: [Module 8, Data Pipelines on AWS](08-ai-ml-and-data-analytics/07-data-pipelines-on-aws.md)
@@ -147,6 +152,7 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `aws-partner-funding`: [Module 11, AWS Marketplace and AWS Partners](11-pricing-and-support/05-aws-marketplace-and-aws-partners.md)
 - `aws-partner-network`: [Module 11, Introduction to Pricing and Support](11-pricing-and-support/01-introduction-to-pricing-and-support.md); [Module 11, AWS Marketplace and AWS Partners](11-pricing-and-support/05-aws-marketplace-and-aws-partners.md)
 - `aws-partner-training-and-certification`: [Module 11, AWS Marketplace and AWS Partners](11-pricing-and-support/05-aws-marketplace-and-aws-partners.md)
+- `aws-prescriptive-guidance`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-pricing-calculator`: [Module 11, AWS Pricing and Billing Services](11-pricing-and-support/03-aws-pricing-and-billing-services.md)
 - `aws-privatelink`: [Module 5, More Ways to Connect to the AWS Cloud](05-networking/03-more-ways-to-connect-to-the-aws-cloud.md)
 - `aws-professional-services`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
@@ -156,6 +162,7 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `aws-sdk`: [Module 2, How to Provision AWS Resources](02-compute-in-the-cloud/03-how-to-provision-aws-resources.md); [Module 4, Infrastructure and Automation](04-going-global/04-infrastructure-and-automation.md); [Module 7, AWS Databases Demonstration](07-databases/04-aws-databases-demonstration.md)
 - `aws-secrets-manager`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
 - `aws-security-blog`: [Module 9, Additional Security Resources](09-security/06-additional-security-resources.md)
+- `aws-security-center`: [Module 9, Additional Security Resources](09-security/06-additional-security-resources.md)
 - `aws-security-controls`: [Module 9, Introduction to Security on AWS](09-security/01-introduction-to-security-on-aws.md)
 - `aws-security-documentation`: [Module 9, Additional Security Resources](09-security/06-additional-security-resources.md)
 - `aws-security-hub`: [Module 9, Detecting and Responding to Security Incidents](09-security/05-detecting-and-responding-to-security-incidents.md)
@@ -168,12 +175,14 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `aws-snowball-edge-storage-optimized`: [Module 12, Transferring Data Offline](12-migrating-to-the-aws-cloud/07-transferring-data-offline.md)
 - `aws-solutions-architects`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-storage-gateway`: [Module 6, AWS Storage Gateway](06-storage/09-aws-storage-gateway.md)
+- `aws-support-center`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-support-plans`: [Module 11, Introduction to Pricing and Support](11-pricing-and-support/01-introduction-to-pricing-and-support.md); [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-systems-manager`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
 - `aws-transfer-family`: [Module 12, Transferring Data Online](12-migrating-to-the-aws-cloud/06-transferring-data-online.md)
 - `aws-transit-gateway`: [Module 5, More Ways to Connect to the AWS Cloud](05-networking/03-more-ways-to-connect-to-the-aws-cloud.md)
 - `aws-trust-and-safety-center`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-trusted-advisor`: [Module 10, AWS Trusted Advisor](10-monitoring-compliance-and-governance/10-aws-trusted-advisor.md); [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
+- `aws-unified-operations`: [Module 11, AWS Support Plans](11-pricing-and-support/04-aws-support-plans.md)
 - `aws-waf`: [Module 9, Protecting Networks and Applications](09-security/03-protecting-networks-and-applications.md)
 - `aws-well-architected-framework`: [Module 13, Introduction to Well-Architected Solutions](13-well-architected-solutions/01-introduction-to-well-architected-solutions.md); [Module 13, AWS Well-Architected Framework](13-well-architected-solutions/03-aws-well-architected-framework.md)
 - `aws-well-architected-tool`: [Module 13, AWS Well-Architected Framework](13-well-architected-solutions/03-aws-well-architected-framework.md)
@@ -226,6 +235,8 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `cost-drivers`: [Module 11, AWS Pricing Concepts](11-pricing-and-support/02-aws-pricing-concepts.md)
 - `cost-optimization`: [Module 11, Introduction to Pricing and Support](11-pricing-and-support/01-introduction-to-pricing-and-support.md); [Module 11, Cost Optimization](11-pricing-and-support/06-cost-optimization.md)
 - `cost-optimization-pillar`: [Module 13, AWS Well-Architected Framework](13-well-architected-solutions/03-aws-well-architected-framework.md)
+- `cross-account-iam-roles`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
+- `custom-policies`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
 
 ## D
 
@@ -253,6 +264,7 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `ebs-volume-types`: [Module 6, EC2 Instance Store and Amazon Elastic Block Store (Amazon EBS)](06-storage/02-ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs.md)
 - `ebs-volumes`: [Module 6, EC2 Instance Store and Amazon Elastic Block Store (Amazon EBS)](06-storage/02-ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs.md)
 - `ebs-vs-efs`: [Module 6, Amazon Elastic File System (Amazon EFS)](06-storage/07-amazon-elastic-file-system-amazon-efs.md)
+- `ec2-hosted-vs-managed-databases`: [Module 7, Introduction to Databases](07-databases/01-introduction-to-databases.md)
 - `ec2-instance-families`: [Module 2, Amazon EC2 Instance Types](02-compute-in-the-cloud/02-amazon-ec2-instance-types.md)
 - `ec2-instance-sizing`: [Module 2, Amazon EC2 Instance Types](02-compute-in-the-cloud/02-amazon-ec2-instance-types.md)
 - `ec2-instance-store`: [Module 6, EC2 Instance Store and Amazon Elastic Block Store (Amazon EBS)](06-storage/02-ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs.md)
@@ -310,6 +322,8 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 ## I
 
 - `iam-access-analyzer`: [Module 10, AWS Trusted Advisor](10-monitoring-compliance-and-governance/10-aws-trusted-advisor.md)
+- `iam-access-reports`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
+- `iam-password-policies`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
 - `iam-policies`: [Module 9, Preventing Unauthorized Access](09-security/02-preventing-unauthorized-access.md)
 - `in-memory-caching`: [Module 7, In-Memory Caching Services](07-databases/05-in-memory-caching-services.md)
 - `increase-speed-and-agility`: [Module 1, Benefits of the AWS Cloud](01-introduction-to-the-cloud/03-benefits-of-the-aws-cloud.md)
@@ -470,6 +484,7 @@ Each tag names one idea, so the same idea carries the same tag in every lesson.
 - `storage-optimized-instances`: [Module 2, Amazon EC2 Instance Types](02-compute-in-the-cloud/02-amazon-ec2-instance-types.md)
 - `subnets`: [Module 5, Introduction to Networking](05-networking/01-introduction-to-networking.md); [Module 5, Organizing AWS Cloud Resources](05-networking/02-organizing-aws-cloud-resources.md); [Module 5, Subnets, Security Groups, and Network Access Control Lists](05-networking/04-subnets-security-groups-and-network-access-control-lists.md)
 - `sustainability-pillar`: [Module 13, AWS Well-Architected Framework](13-well-architected-solutions/03-aws-well-architected-framework.md)
+- `system-integrators`: [Module 11, AWS Marketplace and AWS Partners](11-pricing-and-support/05-aws-marketplace-and-aws-partners.md)
 
 ## T
 

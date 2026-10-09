@@ -43,6 +43,7 @@ concepts:
 
 - **Amazon Connect**: AI-powered cloud contact center for calls and chats, with call routing, recording, analytics and AWS integrations.
 - **Amazon SES**: affordable, scalable email any app can use to automate reliable bulk sends (newsletters, promotions, transactional mail) and improve delivery.
+- **Exam guide update** (verified_on 2026-10-09, [Amazon SES](https://aws.amazon.com/ses/)): Amazon Simple Email Service (Amazon SES) sends transactional, marketing and bulk email straight from your applications, with pay-as-you-go pricing.
 
 ### End-user computing services
 

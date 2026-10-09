@@ -11,6 +11,7 @@ concepts:
   - aws-partner-funding
   - aws-partner-events
   - aws-partner-training-and-certification
+  - system-integrators
 ---
 
 # AWS Marketplace and AWS Partners
@@ -50,6 +51,8 @@ concepts:
   - Funding, via partner programs, to build, market and sell with AWS.
   - Events (webinars, workshops, in person) for networking, updates and AWS experts.
   - Partner-centered content within the wider AWS Training and Certification, from certification to one service or goal.
+- **Exam guide update** (verified_on 2026-10-09, [AWS Partners](https://aws.amazon.com/partners/)): System integrators are AWS services partners that deliver professional or managed services to help customers build and run their workloads on AWS.
+- **Exam guide update** (verified_on 2026-10-09, [CLF-C02 Domain 4](https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html)): The exam guide lists partner volume discounts among the benefits of joining the AWS Partner Network.
 
 ## Key takeaways
 

@@ -46,6 +46,7 @@ concepts:
 | Query | Amazon Redshift | Columnar storage plus massively parallel processing for complex SQL on big datasets |
 | Visualize | Amazon QuickSight | BI at scale: experts and non-experts build interactive dashboards and reports without infrastructure or developers; Amazon Q in QuickSight adds natural language |
 | Visualize | Amazon OpenSearch Service | Searches, monitors and analyzes business and operational data live, by keyword or natural language; dashboards for logs, traces, metrics; website search, log analytics, app monitoring, observability |
+- **Exam guide update** (verified_on 2026-10-09, [Amazon Quick Sight](https://aws.amazon.com/quicksight/)): AWS now spells the business intelligence service the course calls QuickSight as Amazon Quick Sight, which delivers AI-powered business intelligence.
 
 ## Key takeaways
 
