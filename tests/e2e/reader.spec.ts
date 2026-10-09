@@ -25,6 +25,8 @@ test.afterEach(() => {
 const h1 = (page: Page, name: string): Locator => page.getByRole('heading', { level: 1, name, exact: true });
 
 async function expectNoAxeViolations(page: Page): Promise<void> {
+  // Scan the settled page: mid fade-in, a dialog's text is still partly transparent and fails color-contrast.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished)));
   const results = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
   const violations = results.violations.map(
     (v) => `${v.id} (${v.nodes.length} nodes): ${v.help}; first: ${v.nodes[0]?.html ?? ''}`,
