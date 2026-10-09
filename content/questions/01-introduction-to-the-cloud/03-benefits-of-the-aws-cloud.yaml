@@ -1,0 +1,453 @@
+questions:
+  - id: q-58az7v
+    version: 1
+    status: draft
+    type: multi
+    pool: practice
+    concept: benefits-of-the-aws-cloud
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 1
+    select: 2
+    stem: >-
+      The cafe's owner is listing what moving its systems to AWS would give the business.
+      Which two items belong on that list as AWS Cloud benefits?
+    options:
+      - id: a
+        text: Capacity that follows real demand
+        correct: true
+        why: Scaling with actual demand instead of a forecast is the stop guessing capacity benefit.
+      - id: b
+        text: A large upfront hardware purchase
+        why: A big upfront purchase is the fixed expense that the cloud lets the cafe avoid.
+      - id: c
+        text: Deployment to new countries in minutes
+        correct: true
+        why: Reaching a Region abroad without building facilities is the go global in minutes benefit.
+      - id: d
+        text: Servers sized for a multiyear forecast
+        why: Buying for a long forecast is the on-premises guesswork the cloud removes.
+      - id: e
+        text: Staff time spent racking servers
+        why: Racking and powering servers is data center work that AWS takes off the cafe's hands.
+    evidence:
+      - "On AWS, spending follows usage and capacity follows demand."
+      - A US company expanding to India can deploy to an AWS-managed Region there instead of building its own data centers, in minutes rather than months or years.
+    takeaway: The cloud's benefits replace upfront buying and capacity guesswork with usage-based spending, demand-based scaling and fast global reach.
+    history: []
+
+  - id: q-bk0ykx
+    version: 1
+    status: draft
+    type: match
+    pool: practice
+    concept: benefits-of-the-aws-cloud
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 2
+    stem: >-
+      Match each change the cafe sees after moving to AWS with the cloud benefit it shows.
+    pairs:
+      - left: The monthly bill now rises and falls with use
+        right: Trade fixed expense for variable expense
+        why: A bill that tracks consumption instead of a big upfront outlay is a variable expense.
+      - left: A failed menu experiment is deleted and stops costing money
+        right: Increase speed and agility
+        why: Cheap, disposable test environments let the team try ideas quickly and drop the failures.
+      - left: The app runs in a Region abroad without a new building
+        right: Go global in minutes
+        why: Deploying to an existing AWS Region abroad replaces months of building facilities.
+      - left: Nobody on staff replaces failed server fans anymore
+        right: Stop spending money on data centers
+        why: Physical upkeep of servers is data center work that AWS now carries for the cafe.
+    evidence:
+      - Teams spin up test environments, try ideas and delete failures so costs stop, shifting time from provisioning and deprovisioning to innovating and optimizing.
+      - AWS runs that physical layer, freeing time and money for customers and strategy.
+    takeaway: Each cloud benefit shows up as a concrete change, from a usage-based bill to disposable test setups and quick launches abroad.
+    history: []
+
+  - id: q-bg0jsk
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: trade-fixed-expense-for-variable-expense
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe used to spend a large sum on servers before it opened, and paid for them even in slow months.
+      Now its AWS bill grows and shrinks with how much it actually uses.
+      Which benefit does this change show?
+    options:
+      - id: a
+        text: Trade fixed for variable expense
+        correct: true
+        why: Swapping a big upfront outlay for a bill that follows usage is exactly this benefit.
+      - id: b
+        text: Benefit from massive economies of scale
+        why: Bulk buying lowers AWS's prices, but the stem is about when and how the cafe pays.
+      - id: c
+        text: Stop guessing capacity
+        why: This benefit is about sizing resources to demand, not about the shape of the bill.
+      - id: d
+        text: Go global in minutes
+        why: Nothing in the stem involves reaching customers in another country.
+    evidence:
+      - Owning a data center means paying hundreds of thousands to millions of dollars upfront for space, hardware, staff and upkeep, then budgeting around it even when usage is low.
+      - On AWS the bill follows monthly usage, so you start small, spending matches consumption for more financial flexibility, and billing and budgeting tools help you save.
+    takeaway: Paying as you consume instead of buying ahead is the shift from fixed to variable expense.
+    history: []
+
+  - id: q-6vyd19
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: trade-fixed-expense-for-variable-expense
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 1
+    stem: >-
+      In cloud economics, which description fits a variable expense?
+    options:
+      - id: a
+        text: A cost that stays flat at any usage level
+        why: A cost that ignores usage is a fixed expense, the opposite of a variable one.
+      - id: b
+        text: A cost that tracks how much you consume
+        correct: true
+        why: A variable expense moves with consumption, the way a monthly AWS bill does.
+      - id: c
+        text: A one-time payment made before any use
+        why: Paying everything before use is the upfront model that a variable expense replaces.
+      - id: d
+        text: A price cut earned from bulk hardware buys
+        why: Lower prices from huge purchase volumes describe economies of scale, not an expense type.
+    evidence:
+      - "**Variable expense**: a cost that follows consumption, like an AWS bill."
+    takeaway: A variable expense follows consumption, while a fixed expense stays the same whatever the usage.
+    history: []
+
+  - id: q-wgwkn6
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: economies-of-scale
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 3
+    stem: >-
+      The cafe is a small startup with a tiny AWS account, yet it pays low prices for powerful hardware.
+      The reason is that AWS buys equipment in enormous volumes for all of its data centers and shares the savings with every customer.
+      Which benefit is this?
+    options:
+      - id: a
+        text: Pay less by using more
+        why: That principle lowers a customer's rates as its own usage grows, but this cafe uses very little.
+      - id: b
+        text: Trade fixed for variable expense
+        why: That benefit is about paying as you go, not about why the unit price is low.
+      - id: c
+        text: Benefit from massive economies of scale
+        correct: true
+        why: AWS's bulk purchasing lowers prices for all customers, even the smallest ones.
+      - id: d
+        text: Stop guessing capacity
+        why: That benefit is about sizing resources to demand, not about hardware prices.
+    evidence:
+      - AWS buys hardware in bulk for its worldwide data centers and passes the lower prices on.
+      - So startups, not only big enterprises, can afford advanced technology.
+    takeaway: Economies of scale come from AWS's combined purchasing power, so even small customers get lower prices.
+    history: []
+
+  - id: q-wfz00n
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: economies-of-scale
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 3
+    stem: >-
+      Which statement explains the economies of scale benefit of the AWS Cloud?
+    options:
+      - id: a
+        text: The cafe's own rates fall as its usage grows into higher tiers
+        why: Volume tiers for one customer's usage describe pay less by using more, a different idea.
+      - id: b
+        text: The cafe pays only for what it consumes each month
+        why: Paying for consumption describes trading fixed expense for variable expense.
+      - id: c
+        text: The cafe adds or removes servers as demand changes
+        why: Matching resources to demand is the stop guessing capacity benefit.
+      - id: d
+        text: AWS buys hardware in bulk and passes the lower prices on
+        correct: true
+        why: Huge purchase volumes across AWS lower unit prices, and customers get the savings.
+    evidence:
+      - AWS buys hardware in bulk for its worldwide data centers and passes the lower prices on.
+      - "**Economies of scale**: lower unit prices from huge purchase volumes."
+    takeaway: Economies of scale means AWS's bulk buying lowers prices, not that one customer's discount grows with its own usage.
+    history: []
+
+  - id: q-y1nwv1
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: stop-guessing-capacity
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 2
+    stem: >-
+      Before its loyalty app launched, the cafe chain bought servers for a large predicted crowd of members.
+      Far fewer people joined, and most of the servers now sit unused.
+      Which AWS Cloud benefit would have avoided this waste?
+    options:
+      - id: a
+        text: Increase speed and agility
+        why: Agility helps the team try ideas fast, but the waste here comes from sizing hardware to a forecast.
+      - id: b
+        text: Stop guessing capacity
+        correct: true
+        why: Provisioning for today and scaling with real demand avoids buying for a forecast that misses.
+      - id: c
+        text: Benefit from massive economies of scale
+        why: Lower hardware prices would not stop the cafe from buying far more than it needs.
+      - id: d
+        text: Go global in minutes
+        why: The problem is idle capacity, not reaching customers in another country.
+    evidence:
+      - "On premises you buy hardware for a forecast: plan for 10 million users over three years and get about 500,000, and the excess sits idle, while underestimating means a scramble for servers, degraded service and lost customers."
+      - On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning.
+    takeaway: When buying hardware for a forecast leaves servers idle or short, the cloud fix is to stop guessing capacity and scale with demand.
+    history: []
+
+  - id: q-z15f54
+    version: 1
+    status: draft
+    type: multi
+    pool: practice
+    concept: stop-guessing-capacity
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 2
+    select: 2
+    stem: >-
+      The cafe used to buy its servers based on a sales forecast.
+      Which two problems does scaling with real demand on AWS help it avoid?
+    options:
+      - id: a
+        text: Paid-for servers sitting idle after an overestimate
+        correct: true
+        why: Scaling with real demand means the cafe never pays for hardware nobody uses.
+      - id: b
+        text: Months of waiting to serve customers abroad
+        why: Slow international launches are what going global in minutes addresses.
+      - id: c
+        text: Slow service during a rush after an underestimate
+        correct: true
+        why: Adding capacity in minutes when demand rises keeps performance up instead of degrading.
+      - id: d
+        text: Staff hours spent racking and powering servers
+        why: Physical server upkeep is what stopping spending on data centers removes.
+      - id: e
+        text: Higher hardware prices from small purchases
+        why: Low prices from bulk buying come from AWS's economies of scale, not from scaling.
+    evidence:
+      - "On premises you buy hardware for a forecast: plan for 10 million users over three years and get about 500,000, and the excess sits idle, while underestimating means a scramble for servers, degraded service and lost customers."
+      - On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning.
+    takeaway: Guessing capacity fails both ways, idle servers or degraded service, and scaling with real demand avoids both.
+    history: []
+
+  - id: q-z5kgg6
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: increase-speed-and-agility
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 3
+    stem: >-
+      The cafe's developers want to test a new pre-order feature in a temporary environment.
+      If customers dislike it, they will delete the environment so it stops costing anything.
+      Which benefit does this way of working show?
+    options:
+      - id: a
+        text: Stop guessing capacity
+        why: That benefit is about matching resources to demand, not about trying ideas cheaply.
+      - id: b
+        text: Trade fixed for variable expense
+        why: Usage-based billing helps, but the stem is about how fast the team can experiment.
+      - id: c
+        text: Increase speed and agility
+        correct: true
+        why: Spinning up and discarding test environments quickly is the speed and agility benefit.
+      - id: d
+        text: Benefit from massive economies of scale
+        why: Bulk hardware pricing does not explain why experiments are quick and disposable.
+    evidence:
+      - Teams spin up test environments, try ideas and delete failures so costs stop, shifting time from provisioning and deprovisioning to innovating and optimizing.
+    takeaway: Throwaway test environments that cost nothing once deleted show the cloud's speed and agility.
+    history: []
+
+  - id: q-37w6ez
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: increase-speed-and-agility
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 3
+    stem: >-
+      Since moving to AWS, the cafe's small tech team ships new menu features weeks sooner and reacts faster when customer habits change.
+      Which benefit explains this?
+    options:
+      - id: a
+        text: Increase speed and agility
+        correct: true
+        why: Faster deployment shortens time to market and speeds up responses to change.
+      - id: b
+        text: Stop guessing capacity
+        why: Right-sizing servers keeps performance steady, but it does not make features ship sooner.
+      - id: c
+        text: Go global in minutes
+        why: Nothing in the stem involves serving customers in a new country.
+      - id: d
+        text: Stop spending money on data centers
+        why: Dropping data center costs frees money, but the stem is about how fast features reach customers.
+    evidence:
+      - Faster deployment shortens time to market and quickens responses to change.
+    takeaway: Shorter time to market and quicker reactions to change point to the speed and agility benefit.
+    history: []
+
+  - id: q-10werg
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: stop-spending-money-on-data-centers
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 3
+    stem: >-
+      The cafe closes its back-room server closet and moves everything to AWS.
+      It no longer pays for the closet's power and cooling, and its tech worker stops fixing hardware and starts improving the ordering experience.
+      Which benefit does this show?
+    options:
+      - id: a
+        text: Trade fixed for variable expense
+        why: That benefit is about paying with usage instead of upfront, not about who does the physical upkeep.
+      - id: b
+        text: Stop spending money on data centers
+        correct: true
+        why: AWS now carries the power, cooling and hardware work, freeing time and money for customers.
+      - id: c
+        text: Benefit from massive economies of scale
+        why: Bulk hardware pricing does not explain the end of power bills and hardware repairs.
+      - id: d
+        text: Stop guessing capacity and scale on demand
+        why: Matching servers to demand is a different benefit from handing over the physical layer.
+    evidence:
+      - A data center keeps costing money after it is built, for utilities, maintenance, and racking, stacking and powering servers.
+      - AWS runs that physical layer, freeing time and money for customers and strategy.
+    takeaway: Handing the physical upkeep of servers to AWS frees time and money for customers, which is stopping spending on data centers.
+    history: []
+
+  - id: q-fmws3a
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: stop-spending-money-on-data-centers
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 2
+    stem: >-
+      A cafe chain has already paid to build its own small data center.
+      Which kind of cost keeps arriving after construction is done?
+    options:
+      - id: a
+        text: The original build of the server room
+        why: Construction is a one-time cost that the stem says is already paid.
+      - id: b
+        text: Power, cooling and repairs for the servers
+        correct: true
+        why: Utilities and upkeep keep costing money for as long as the data center runs.
+      - id: c
+        text: A monthly cloud bill for unused capacity
+        why: A company running its own data center is not billed by a cloud provider for it.
+      - id: d
+        text: Discounts lost on bulk hardware purchases
+        why: Missing out on bulk pricing is not a recurring operating cost of a data center.
+    evidence:
+      - A data center keeps costing money after it is built, for utilities, maintenance, and racking, stacking and powering servers.
+    takeaway: A data center keeps costing money after it is built, which is why handing that layer to AWS saves money.
+    history: []
+
+  - id: q-dn0smx
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: go-global-in-minutes
+    note: m01/benefits-of-the-aws-cloud
+    task: "3.2"
+    level: 3
+    stem: >-
+      A US cafe chain is opening shops in India and wants its ordering app to run close to customers there.
+      It plans to use an AWS Region in India rather than build its own facilities.
+      Which benefit does this plan rely on?
+    options:
+      - id: a
+        text: Increase speed and agility
+        why: Agility is about experimenting and shipping quickly, not about reaching a new country.
+      - id: b
+        text: Go global in minutes
+        correct: true
+        why: Deploying to an existing AWS Region abroad takes minutes instead of building data centers.
+      - id: c
+        text: Stop guessing capacity
+        why: Scaling with demand helps once the app runs there, but it does not place the app abroad.
+      - id: d
+        text: Benefit from massive economies of scale
+        why: Lower hardware prices do not explain how the chain reaches customers in India.
+    evidence:
+      - A US company expanding to India can deploy to an AWS-managed Region there instead of building its own data centers, in minutes rather than months or years.
+    takeaway: Using an AWS Region abroad instead of building facilities there is what going global in minutes means.
+    history: []
+
+  - id: q-sga9hz
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: go-global-in-minutes
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 3
+    stem: >-
+      What lets a company start serving users in another country in minutes rather than months?
+    options:
+      - id: a
+        text: Building its own data center in that country
+        why: Building facilities abroad takes months or years, the delay this benefit removes.
+      - id: b
+        text: Deploying to an AWS Region already in that country
+        correct: true
+        why: AWS already runs Regions abroad, so deploying there replaces the slow build.
+      - id: c
+        text: Shipping its current servers to that country
+        why: Moving physical hardware abroad is still slow on-premises work, not a cloud benefit.
+      - id: d
+        text: Spinning up throwaway test environments at home
+        why: Disposable test setups show speed and agility, but they do not reach users abroad.
+    evidence:
+      - A US company expanding to India can deploy to an AWS-managed Region there instead of building its own data centers, in minutes rather than months or years.
+    takeaway: Going global in minutes comes from deploying to Regions AWS already runs, not from building or shipping hardware.
+    history: []

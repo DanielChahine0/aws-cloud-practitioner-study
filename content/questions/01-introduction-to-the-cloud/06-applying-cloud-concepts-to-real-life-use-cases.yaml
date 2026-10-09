@@ -1,0 +1,62 @@
+questions:
+  - id: q-711bzy
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: latency
+    note: m01/applying-cloud-concepts-to-real-life-use-cases
+    task: "3.2"
+    level: 2
+    stem: >-
+      Most of the cafe's online orders now come from customers in Europe, but its ordering site runs only in a Region in the United States.
+      Those customers complain that each page takes a long time to respond.
+      Which change most directly shortens that wait?
+    options:
+      - id: a
+        text: Serve the site from a Region much closer to its main users
+        correct: true
+        why: Answers travel a shorter distance when the site runs near its users, so each response arrives sooner.
+      - id: b
+        text: Copy the site into a second Availability Zone in its current Region
+        why: A second Availability Zone helps the site survive a failure, but it sits just as far from Europe as before.
+      - id: c
+        text: Commit to the current servers for a longer billing term
+        why: A longer commitment changes what the cafe pays, not how far each request has to travel.
+      - id: d
+        text: Encrypt the order data that the site keeps in storage
+        why: Encryption protects the stored data, but it does nothing to bring the site nearer to its users.
+    evidence:
+      - "It therefore hosts its application in Regions close to its main customer groups:"
+      - Hosting in Regions near customers cuts latency.
+    takeaway: When distant users see slow responses, running the workload in a Region near them is the direct way to cut latency.
+    history: []
+  - id: q-w9fd5e
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: latency
+    note: m01/applying-cloud-concepts-to-real-life-use-cases
+    task: "3.2"
+    level: 1
+    stem: >-
+      In the AWS global infrastructure, what does the term latency describe?
+    options:
+      - id: a
+        text: The share of time an application stays reachable for users
+        why: That describes availability, which more Regions and Availability Zones improve, not the delay itself.
+      - id: b
+        text: The ability of a system to keep working when one part fails
+        why: That describes fault tolerance, such as failing over between Availability Zones, not response delay.
+      - id: c
+        text: The wait for a reply, which grows with server distance
+        correct: true
+        why: Latency is the delay before a request is answered, and it rises the farther users are from the infrastructure.
+      - id: d
+        text: The amount of capacity a workload adds as its demand grows
+        why: That describes scaling to meet demand, which changes capacity rather than the delay caused by distance.
+    evidence:
+      - "Latency: delay in answering requests, growing with distance from the infrastructure."
+    takeaway: Latency is response delay, and it grows with the distance between users and the infrastructure serving them.
+    history: []

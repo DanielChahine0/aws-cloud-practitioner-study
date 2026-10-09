@@ -1,0 +1,349 @@
+questions:
+  - id: q-aftqd7
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-lambda
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe wants a short piece of code to tag each pastry photo a customer uploads to its app.
+      The owner has no staff to provision, patch or scale servers.
+      Which compute service fits best?
+    options:
+      - id: a
+        text: Amazon EC2
+        why: EC2 hands the cafe virtual servers that it must provision, patch and scale itself, which it cannot staff.
+      - id: b
+        text: AWS Lambda
+        correct: true
+        why: Lambda runs the uploaded code each time a photo event arrives, with no servers for the cafe to manage.
+      - id: c
+        text: Amazon Lightsail
+        why: Lightsail still gives the cafe a server to keep running and patched, even between photo uploads.
+      - id: d
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk deploys an app onto instances in the cafe's account, rather than running a function per upload.
+    evidence:
+      - Instead, you deploy a function holding your code, and it runs whenever its trigger fires.
+      - Lambda plugs easily into other AWS services, so whole apps can run without managing servers.
+    takeaway: Short, event-driven code with no servers to look after points to AWS Lambda.
+    history: []
+
+  - id: q-snsj5r
+    version: 1
+    status: draft
+    type: multi
+    pool: practice
+    concept: aws-lambda
+    note: m03/aws-lambda
+    task: "2.1"
+    level: 2
+    select: 2
+    stem: >-
+      The cafe moves its order-confirmation code onto AWS Lambda.
+      Under the shared responsibility model, which tasks stay with the cafe?
+    options:
+      - id: a
+        text: Writing and maintaining the function's code
+        correct: true
+        why: The code is the cafe's own, so keeping it correct and up to date is the cafe's job.
+      - id: b
+        text: Patching the environment the function runs in
+        why: AWS patches, updates and secures the environment beneath a Lambda function.
+      - id: c
+        text: Setting the IAM permissions the function uses
+        correct: true
+        why: The cafe decides which roles and permissions let the function reach other AWS services.
+      - id: d
+        text: Adding capacity when order volume jumps
+        why: Lambda scales up and down on its own as triggers increase, so the cafe adds no capacity.
+      - id: e
+        text: Allocating compute resources to each run
+        why: AWS allocates the resources for each run, so the cafe never sizes hosts for the function.
+    evidence:
+      - You own the code and the IAM roles and permissions the function uses to reach other services.
+      - AWS patches, updates and secures the underlying environment and allocates its resources.
+    takeaway: With Lambda, AWS runs and patches the platform, while you own your code and its IAM permissions.
+    history: []
+
+  - id: q-096x8d
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-lambda
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's month-end stock reconciliation is one job that runs for several hours and cannot be broken into smaller pieces.
+      Why is AWS Lambda a poor fit for it?
+    options:
+      - id: a
+        text: A single run can last at most 15 minutes
+        correct: true
+        why: Lambda stops a run at 15 minutes, so an unsplittable multi-hour job cannot finish inside one run.
+      - id: b
+        text: It can only handle one trigger at a time
+        why: Lambda scales by itself from one trigger to thousands, so concurrency is not the obstacle here.
+      - id: c
+        text: It only supports code written in Java
+        why: Lambda offers several built-in runtimes and custom ones, so language is not the obstacle here.
+      - id: d
+        text: The cafe would need to patch its servers
+        why: AWS patches the environment under Lambda, so patching is not a reason to avoid it.
+    evidence:
+      - A run lasts 15 minutes at most, so work that cannot be split into such chunks may fit elsewhere.
+    takeaway: Lambda suits short, event-driven jobs, because one run stops at 15 minutes.
+    history: []
+
+  - id: q-ffkrg4
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: lambda-triggers
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 1
+    stem: >-
+      In AWS Lambda, what is a trigger?
+    options:
+      - id: a
+        text: The layer that hands a function its event and context data
+        why: That describes a runtime, which sits between Lambda and the function's language.
+      - id: b
+        text: The IAM role that lets a function reach other services
+        why: That describes an execution role, which grants access but never starts a run.
+      - id: c
+        text: The event, such as an upload, that invokes a function
+        correct: true
+        why: A trigger is the event that causes Lambda to run the function's code.
+      - id: d
+        text: The ready-made template that presets a function's code
+        why: That describes a blueprint, which is a starting point for writing a function.
+    evidence:
+      - Instead, you deploy a function holding your code, and it runs whenever its trigger fires.
+      - They range from simple events, like an upload or a finished classification, to heavier ones like a live data stream or resizing one image into several resolutions.
+    takeaway: A Lambda trigger is the event that starts a function, from a file upload to a data stream.
+    history: []
+
+  - id: q-aax7kk
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: lambda-triggers
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's tills drop each order into an Amazon SQS queue, and a Lambda function prints the kitchen ticket.
+      In this setup, what starts each run of the function?
+    options:
+      - id: a
+        text: The execution role attached to the function
+        why: The execution role only lets the function read the queue, and it never starts a run.
+      - id: b
+        text: The CloudWatch log stream for the function
+        why: CloudWatch Logs records each run after it happens, so it cannot be what starts one.
+      - id: c
+        text: The runtime chosen for the function's code
+        why: The runtime passes the event to the code once a run starts, and it does not start runs itself.
+      - id: d
+        text: A new order message arriving in the queue
+        correct: true
+        why: Each new SQS message is the event that invokes the function, so it is the trigger.
+    evidence:
+      - Each new SQS message invokes a function built from an SQS blueprint.
+    takeaway: When a queue feeds Lambda, each new message is the trigger that invokes the function.
+    history: []
+
+  - id: q-w0fp96
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: lambda-runtimes
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 1
+    stem: >-
+      What job does a Lambda runtime do?
+    options:
+      - id: a
+        text: It grants the function access to other AWS services
+        why: Granting access is the job of the execution role, an IAM role, and not of the runtime.
+      - id: b
+        text: It relays the invocation event to the code and returns the reply
+        correct: true
+        why: A runtime sits between Lambda and one language, passing in the event and context and handing back the result.
+      - id: c
+        text: It records the details of each run for later review
+        why: Recording each run is done by CloudWatch Logs, and not by the runtime.
+      - id: d
+        text: It decides which events are allowed to start the function
+        why: Events start a function through its trigger or event source, which the runtime does not choose.
+    evidence:
+      - "Each runtime is a go-between for one language: it hands your function the invocation event and context details, then returns the function's reply to Lambda."
+    takeaway: A Lambda runtime is the per-language bridge that feeds a function its event and returns its reply.
+    history: []
+
+  - id: q-5zkc17
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: lambda-runtimes
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's developer wants to write a Lambda function in a language missing from Lambda's built-in runtimes.
+      What lets the developer keep using Lambda?
+    options:
+      - id: a
+        text: Building a custom runtime for that language
+        correct: true
+        why: Lambda accepts runtimes you build yourself, so a language outside the built-in set can still run.
+      - id: b
+        text: Raising the memory size of the function
+        why: Memory size tunes speed and cost, and it does not add support for another language.
+      - id: c
+        text: Attaching a broader execution role to it
+        why: An execution role controls what the function can reach, and it has nothing to do with language.
+      - id: d
+        text: Starting the function from a blueprint
+        why: A blueprint presets code for an existing runtime, so it does not add a new language.
+    evidence:
+      - "The course says Lambda supports any language: Java, Python and Node.js come built in, and you can build a custom runtime."
+    takeaway: When no built-in Lambda runtime covers a language, a custom runtime fills the gap.
+    history: []
+
+  - id: q-8t8v26
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: lambda-functions
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 1
+    stem: >-
+      When you start using AWS Lambda, what becomes a Lambda function?
+    options:
+      - id: a
+        text: The event source you connect to it
+        why: An event source is the trigger that invokes a function, not the function itself.
+      - id: b
+        text: The memory size you allocate to it
+        why: Memory size is a setting of the function that tunes performance and price, not the function.
+      - id: c
+        text: The code you upload to the service
+        correct: true
+        why: Lambda turns the code you upload into a function that it runs when triggered.
+      - id: d
+        text: The log group that records its runs
+        why: A log group in CloudWatch Logs only records what each run did.
+    evidence:
+      - 1) Upload code, which becomes a function.
+    takeaway: A Lambda function is simply your uploaded code, ready to run when its trigger fires.
+    history: []
+
+  - id: q-m4941x
+    version: 1
+    status: draft
+    type: match
+    pool: practice
+    concept: lambda-functions
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is setting up a Lambda function that reads order messages from a queue.
+      Match each piece of the setup to the part it plays.
+    pairs:
+      - left: Lambda function
+        right: The cafe's own code that runs each time an order arrives
+        why: The function is the uploaded code itself, which Lambda runs on each trigger.
+      - left: Execution role
+        right: The IAM role that lets the code read the order queue
+        why: An execution role grants the function access to other services, such as the queue.
+      - left: Blueprint
+        right: A ready-made template the cafe can start the code from
+        why: A blueprint presets code and a runtime, so the cafe does not start from a blank function.
+      - left: CloudWatch Logs
+        right: The record that shows each order was handled
+        why: CloudWatch Logs keeps a log of every run, which confirms each message was processed.
+    evidence:
+      - Each new SQS message invokes a function built from an SQS blueprint.
+      - An execution role lets the function read the queue.
+      - The queue emptied almost at once, and CloudWatch logs confirmed each message was processed.
+    takeaway: A Lambda function is your code, given access by an execution role, often started from a blueprint and logged per run.
+    history: []
+
+  - id: q-kbhg01
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: lambda-pricing
+    note: m03/aws-lambda
+    task: "4.1"
+    level: 1
+    stem: >-
+      Which measure is the AWS Lambda charge for compute based on?
+    options:
+      - id: a
+        text: The number of servers kept running each hour
+        why: Lambda has no servers for you to keep running, so there is no per-server hourly charge.
+      - id: b
+        text: Run time per millisecond, priced by memory
+        correct: true
+        why: Lambda bills only for the time code runs, measured per millisecond, at a price set by allocated memory.
+      - id: c
+        text: A flat monthly fee for each deployed function
+        why: Lambda bills by usage, so a deployed function that never runs costs nothing for compute.
+      - id: d
+        text: The number of times the code is uploaded
+        why: Uploading code is how a function is created, and it is not what the compute bill measures.
+    evidence:
+      - 4) You pay for compute time only, per millisecond, priced by allocated memory.
+    takeaway: Lambda compute is billed per millisecond of run time, at a rate set by the memory you allocate.
+    history: []
+
+  - id: q-dvjppr
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: lambda-pricing
+    note: m03/aws-lambda
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe's Lambda function sends receipts and runs only when an order is placed.
+      Overnight the cafe is closed and no orders arrive.
+      What does the cafe pay in compute for those quiet hours?
+    options:
+      - id: a
+        text: A reduced hourly rate for the idle function
+        why: Lambda has no idle hourly rate, because nothing is billed while the code is not running.
+      - id: b
+        text: Nothing, because no code runs overnight
+        correct: true
+        why: Lambda charges only for the time code runs, so hours without orders cost nothing for compute.
+      - id: c
+        text: The full rate, since memory stays allocated
+        why: Memory sets the price of run time, but it is not billed while no run is happening.
+      - id: d
+        text: A flat nightly fee for keeping it deployed
+        why: Lambda has no fee for simply keeping a function deployed, only for the time it runs.
+    evidence:
+      - 3) Code runs only on events, while Lambda handles servers and scaling.
+      - 4) You pay for compute time only, per millisecond, priced by allocated memory.
+    takeaway: With Lambda's pay-per-use billing, hours with no events cost nothing for compute.
+    history: []

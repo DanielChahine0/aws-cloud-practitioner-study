@@ -1,0 +1,313 @@
+questions:
+  - id: q-s4anj8
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: shared-responsibility-model
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 1
+    stem: >-
+      How does the AWS shared responsibility model split the work of keeping a workload secure?
+    options:
+      - id: a
+        text: AWS takes every security duty once a workload moves to its platform
+        why: Customers keep duties such as their data, access and the operating systems they run, so AWS never takes all of it.
+      - id: b
+        text: AWS protects the platform, and the customer protects what it puts on it
+        correct: true
+        why: AWS secures the facilities, hardware and isolation layers, while the customer secures its data, applications and access on top.
+      - id: c
+        text: The customer takes every security duty, and AWS only rents out hardware
+        why: AWS owns all physical security and the isolation between customers, so the customer does not carry everything.
+      - id: d
+        text: AWS and the customer split every single duty evenly between them
+        why: Most duties have one clear owner, and physical security in particular is never shared.
+    evidence:
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+    takeaway: The model divides security so AWS guards the platform and each customer guards what it builds and stores there.
+    history: []
+
+  - id: q-rbxpza
+    version: 1
+    status: draft
+    type: match
+    pool: practice
+    concept: shared-responsibility-model
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe is moving its ordering system to AWS and wants a clear list of who handles each security job.
+      Match each job to the party that owns it.
+    pairs:
+      - left: Guarding the buildings where the servers sit
+        right: AWS
+        why: Physical protection of facilities is an AWS duty that customers never share.
+      - left: Deciding which staff can open the sales records
+        right: The cafe
+        why: The customer chooses who reaches its data, so access to the sales records is the cafe's call.
+      - left: Setting up server-side encryption for stored orders
+        right: It depends on the service used
+        why: Who owns server-side encryption changes from one AWS service to another.
+    evidence:
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+      - Server-side encryption and OS, network and firewall setup vary by service.
+    takeaway: Each security job has an owner under the model, and a few of them shift depending on the service.
+    history: []
+
+  - id: q-g5351d
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: security-of-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe's owner asks what stops a stranger from walking into a data center and pulling out the disk that holds the cafe's sales history.
+      Which party handles that risk?
+    options:
+      - id: a
+        text: AWS
+        correct: true
+        why: Physical security of the data centers is part of AWS's share and is never handed to customers.
+      - id: b
+        text: The cafe
+        why: The cafe has no access to AWS buildings, so it cannot control who walks into them.
+      - id: c
+        text: The cafe and AWS jointly
+        why: Physical security is never split with customers, so it is not a joint duty.
+      - id: d
+        text: The cafe's internet provider
+        why: A network carrier has no role in guarding the inside of an AWS facility.
+    evidence:
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+    takeaway: Physical protection of AWS facilities and hardware sits fully with AWS as security of the cloud.
+    history: []
+
+  - id: q-4y1pk6
+    version: 1
+    status: draft
+    type: multi
+    pool: practice
+    concept: security-of-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    select: 2
+    stem: >-
+      The cafe runs its online menu on AWS.
+      Which duties does AWS carry for the cafe as part of its own share of security?
+    options:
+      - id: a
+        text: Controlling entry to the data center buildings
+        correct: true
+        why: Physical access control at the facilities belongs to AWS alone.
+      - id: b
+        text: Keeping the cafe's servers apart from other customers at the hypervisor
+        correct: true
+        why: AWS secures the hypervisor layer that isolates one customer's machines from another's.
+      - id: c
+        text: Installing fixes on the operating system the cafe runs
+        why: Applying operating system fixes is the customer's job, even when AWS knows a fix exists.
+      - id: d
+        text: Choosing which staff may read the menu files
+        why: Deciding who reaches the data is a customer choice made through AWS controls.
+      - id: e
+        text: Encrypting menu files on the cafe's laptops before upload
+        why: Encrypting data before it leaves the client is a customer duty.
+    evidence:
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+      - "Hypervisor layer: a virtualization layer that AWS secures."
+    takeaway: AWS's share covers the facilities, hardware and isolation layers that every customer runs on.
+    history: []
+
+  - id: q-x67nxf
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: security-in-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 3
+    stem: >-
+      The cafe stored its staff schedules on AWS and left them open to anyone with the link, and a competitor read them.
+      Under the model, which share of security did this lapse fall into?
+    options:
+      - id: a
+        text: Security in the cloud, owned by the cafe
+        correct: true
+        why: Choosing who can reach stored data is the customer's share, so the open setting was the cafe's lapse.
+      - id: b
+        text: Security of the cloud, owned by AWS
+        why: AWS's share covers facilities, hardware and isolation, not the access choices a customer makes for its data.
+      - id: c
+        text: Physical security, owned by AWS
+        why: Nobody entered a building, so the physical protection of the facilities played no part.
+      - id: d
+        text: Hypervisor isolation, owned by AWS
+        why: The schedules were exposed by an access setting, not by one customer reaching into another's machines.
+    evidence:
+      - "You choose what data to store and, via AWS controls, who reaches it: everyone, some users, one person under conditions, or nobody."
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+    takeaway: Access settings on your own data are security in the cloud, so a wrong setting is the customer's lapse.
+    history: []
+
+  - id: q-5m1zcb
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: security-in-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 3
+    stem: >-
+      Which description matches security in the cloud rather than security of the cloud?
+    options:
+      - id: a
+        text: The customer protecting its own data, applications and access
+        correct: true
+        why: Security in the cloud is the customer's share, which covers what it stores and runs and who can reach it.
+      - id: b
+        text: AWS protecting its facilities, hardware and global network
+        why: Facilities, hardware and the network behind the services are AWS's share, which is security of the cloud.
+      - id: c
+        text: AWS keeping each customer apart at the hypervisor layer
+        why: Isolation at the hypervisor is something AWS secures, so it belongs to security of the cloud.
+      - id: d
+        text: AWS guarding the data center doors with access controls
+        why: Physical entry control is AWS's job and is part of security of the cloud.
+    evidence:
+      - "Security in the cloud: the customer's share."
+      - Customers patch their OS and secure applications, data, access and client-side encryption.
+    takeaway: Security in the cloud is the customer's share, while security of the cloud is what AWS protects underneath.
+    history: []
+
+  - id: q-hbrcyf
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: client-side-encryption
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does client-side encryption mean?
+    options:
+      - id: a
+        text: The data is scrambled before it ever reaches the server
+        correct: true
+        why: Client-side encryption happens on the sender's side, so the server only ever receives encrypted data.
+      - id: b
+        text: The storage service scrambles data after it arrives there
+        why: Encryption done by the service after the data arrives is server-side encryption, not client-side.
+      - id: c
+        text: AWS scrambles the physical disks inside its facilities
+        why: Protecting hardware in the facilities is AWS's physical duty and is not what client-side encryption names.
+      - id: d
+        text: The data is scrambled only while it travels the network
+        why: Protecting data in transit is traffic protection, which is a different duty from encrypting on the client.
+    evidence:
+      - "Client-side encryption: encrypting data on the client before the server gets it."
+    takeaway: Client-side encryption locks the data on your own side before any server receives it.
+    history: []
+
+  - id: q-6p35gq
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: client-side-encryption
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe encrypts its secret recipes on the office computer and only then uploads the files to AWS.
+      Who is responsible for that encryption step?
+    options:
+      - id: a
+        text: AWS
+        why: AWS never sees the files before they leave the office, so it cannot own a step done there.
+      - id: b
+        text: The cafe
+        correct: true
+        why: Encrypting data on the client before upload is a customer duty under the model.
+      - id: c
+        text: It varies by service
+        why: Server-side encryption varies by service, but encryption done on the client always belongs to the customer.
+      - id: d
+        text: The cafe and AWS equally
+        why: The step happens entirely on the cafe's own computer, so it is not split with AWS.
+    evidence:
+      - Customers patch their OS and secure applications, data, access and client-side encryption.
+      - "Client-side encryption: encrypting data on the client before the server gets it."
+    takeaway: Encryption done on your own machine before upload is always your duty, unlike server-side encryption.
+    history: []
+
+  - id: q-a7kxvk
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: operating-system-patching
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      AWS learns about a security flaw in the operating system that the cafe runs on its AWS server.
+      What happens next under the model?
+    options:
+      - id: a
+        text: AWS signs in to the server and installs the fix itself
+        why: AWS has no way into a customer's operating system, so it cannot sign in and apply the fix.
+      - id: b
+        text: AWS can warn the cafe, and the cafe installs the fix
+        correct: true
+        why: AWS may raise the alarm, but applying the fix to the operating system is the cafe's duty.
+      - id: c
+        text: The vendor of the system pushes the fix onto the server
+        why: The vendor makes the fix available, but someone with access to the server still has to apply it.
+      - id: d
+        text: AWS holds the fix until its next planned maintenance
+        why: AWS does not patch a customer's operating system at any time, planned or not.
+    evidence:
+      - "AWS spots a flaw in a customer's OS: it can only alert them, and they patch."
+      - Only you can sign in to your OS or add users, since AWS has no back door.
+    takeaway: AWS can only alert a customer about an OS flaw, and the customer applies the patch.
+    history: []
+
+  - id: q-qzp0f5
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: operating-system-patching
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 1
+    stem: >-
+      Under the AWS shared responsibility model, which party applies security updates to the operating system a customer runs?
+    options:
+      - id: a
+        text: AWS
+        why: AWS cannot sign in to a customer's operating system, so it cannot apply the updates.
+      - id: b
+        text: The software vendor
+        why: The vendor publishes the updates, but installing them on the customer's system is not its job.
+      - id: c
+        text: The customer
+        correct: true
+        why: The customer runs the operating system, so applying its updates is the customer's duty alone.
+      - id: d
+        text: AWS and the vendor jointly
+        why: Neither AWS nor the vendor installs updates on a customer's system, so a joint answer is wrong too.
+    evidence:
+      - The vendor supplies OS patches, but applying them is yours alone.
+    takeaway: Whoever runs the operating system patches it, and on AWS that is the customer.
+    history: []

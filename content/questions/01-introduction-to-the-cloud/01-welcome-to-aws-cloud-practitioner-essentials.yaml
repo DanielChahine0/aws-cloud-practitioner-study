@@ -1,0 +1,189 @@
+questions:
+  - id: q-azv9sz
+    version: 1
+    status: draft
+    type: match
+    pool: practice
+    concept: client-server-model
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "3.1"
+    level: 2
+    stem: >-
+      A guest taps "Show my rewards" in the cafe's loyalty app, and a machine in AWS handles the tap.
+      Match each moment of that exchange to its step.
+    pairs:
+      - left: The phone sends the rewards lookup to the machine in AWS
+        right: Request
+        why: The app on the phone is the client, and asking for the rewards total is the request it sends.
+      - left: The machine confirms the guest is signed in and allowed to see the points
+        right: Validation
+        why: Checking that an incoming ask is legitimate and permitted is the server's validation step.
+      - left: The points balance shows up on the guest's screen
+        right: Response
+        why: Sending the finished result back for the client to display is the response step.
+    evidence:
+      - "Request: the client asks, here for a coffee, though a request can be for any data or analysis a business needs."
+      - "Validation: the server checks the request is legitimate and allowed, as a barista checks payment and the menu."
+      - "Response: the server hands back the result, a finished drink."
+    takeaway: A client-server exchange moves from the client's request, to the server's validation, to the server's response.
+    history: []
+  - id: q-e81xws
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: client-server-model
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "3.1"
+    level: 1
+    stem: >-
+      How does cloud computing relate to the way clients and servers work together?
+    options:
+      - id: a
+        text: It is one form of that model, with servers supplied over the internet
+        correct: true
+        why: The cloud keeps clients and servers, and supplies the server side as scalable machines reached online.
+      - id: b
+        text: It replaces that model, so clients now connect only to each other directly
+        why: Modern applications still rely on servers, and the cloud does not remove them.
+      - id: c
+        text: It moves the client side into data centers and leaves servers on site
+        why: In the cloud it is the server side that lives in the provider's data centers, not the client side.
+      - id: d
+        text: It skips validation, so servers answer every request they receive
+        why: Cloud servers still check that requests are legitimate before they respond.
+    evidence:
+      - The cloud does not replace the client-server model, which modern applications still use.
+      - Cloud computing is one version of it, supplying the server side as scalable servers that clients reach over the internet.
+    takeaway: Cloud computing is a form of the client-server model in which the servers are scalable machines reached over the internet.
+    history: []
+  - id: q-2k67rk
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: pay-as-you-go-pricing
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "4.1"
+    level: 3
+    stem: >-
+      The cafe tries an online gift-card service for one month.
+      It signs no contract, puts down no deposit, and is billed only for the server hours the service actually runs.
+      Which AWS pricing idea does this show?
+    options:
+      - id: a
+        text: Pay-as-you-go pricing
+        correct: true
+        why: Being charged only for what runs, with nothing paid in advance, is the heart of this model.
+      - id: b
+        text: Commitment-based savings
+        why: Savings from a commitment need a term agreement, and the cafe signed nothing.
+      - id: c
+        text: Volume-tiered discounts
+        why: Tiered discounts lower the rate as usage grows, which the scenario never mentions.
+      - id: d
+        text: Economies of scale
+        why: That idea is about the provider's size lowering prices for everyone, not how this cafe is billed.
+    evidence:
+      - You pay only for the AWS resources you consume, just as staff earn wages only for hours on shift.
+      - On AWS there is no prepayment, and you need not worry about capacity constraints.
+    takeaway: No contract, no deposit and charges only for what actually runs is pay-as-you-go pricing.
+    history: []
+  - id: q-9wx5re
+    version: 1
+    status: draft
+    type: multi
+    pool: practice
+    concept: pay-as-you-go-pricing
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "1.4"
+    level: 1
+    select: 2
+    stem: >-
+      The cafe's owner asks what pay-as-you-go pricing on AWS would mean for a new ordering site.
+      Which statements are accurate?
+    options:
+      - id: a
+        text: Nothing has to be paid before the site starts using resources
+        correct: true
+        why: AWS asks for no prepayment, so the site can start without an upfront charge.
+      - id: b
+        text: Charges follow the resources the site actually consumes
+        correct: true
+        why: The bill tracks real consumption, much like wages paid only for hours worked.
+      - id: c
+        text: A minimum monthly spend must be agreed before launch
+        why: Pay-as-you-go has no spending floor to agree on before the site goes live.
+      - id: d
+        text: Capacity for the busiest day must be bought in advance
+        why: Buying peak capacity ahead of time is the fixed-capacity habit this model avoids.
+      - id: e
+        text: Resources keep billing for a month after they are released
+        why: Charges for a resource stop as soon as it is deprovisioned, not a month later.
+    evidence:
+      - You pay only for the AWS resources you consume, just as staff earn wages only for hours on shift.
+      - On AWS there is no prepayment, and you need not worry about capacity constraints.
+    takeaway: Pay-as-you-go means no upfront payment and a bill that follows actual consumption.
+    history: []
+  - id: q-va2dze
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: resource-provisioning
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe ran extra servers on AWS for a holiday promotion.
+      The promotion is over, and the team deprovisioned those servers at noon today.
+      When do the charges for those servers end?
+    options:
+      - id: a
+        text: Immediately, at that moment
+        correct: true
+        why: Billing for a resource stops the instant it is deprovisioned, so the charges end at that moment.
+      - id: b
+        text: At the close of the billing month
+        why: AWS does not keep charging for released resources until the month ends.
+      - id: c
+        text: Once the next invoice is settled
+        why: Paying an invoice settles past charges, and it has no effect on when new charges stop.
+      - id: d
+        text: After a set notice period runs out
+        why: There is no notice period, because charges end as soon as a resource is gone.
+    evidence:
+      - Billing for a resource ends the moment it is deprovisioned.
+    takeaway: Deprovisioning a resource on AWS stops its charges right away.
+    history: []
+  - id: q-cec23m
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: resource-provisioning
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "1.1"
+    level: 2
+    stem: >-
+      Orders on the cafe's website jump sharply during a local festival week, then fall back to normal.
+      Which approach on AWS fits this pattern best?
+    options:
+      - id: a
+        text: Add servers as the rush builds and release them once it passes
+        correct: true
+        why: Provisioning when the load appears and deprovisioning when it fades matches capacity to the festival.
+      - id: b
+        text: Buy enough servers in advance to cover the busiest festival day
+        why: Buying for the peak up front leaves most of that capacity idle, yet still paid for, the rest of the year.
+      - id: c
+        text: Keep the festival-week capacity running all year just to be safe
+        why: Running peak capacity all year pays for servers that sit idle once the festival ends.
+      - id: d
+        text: Wait for the cafe's own data center to install more hardware
+        why: An on-premises data center cannot add capacity at short notice, so the rush would pass first.
+    evidence:
+      - You provision resources when demand appears and deprovision them as fast when it fades, by hand or automatically through configuration.
+      - An on-premises data center is just as rigid, because its capacity cannot be multiplied at short notice.
+    takeaway: Provision resources as demand rises and deprovision them as it falls, so capacity follows the load.
+    history: []
