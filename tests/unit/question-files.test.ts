@@ -61,4 +61,63 @@ describe('editQuestionFile', () => {
       'q-zzzzzz is not in this file',
     );
   });
+
+  it('keeps a folded stem and every untouched line byte for byte', () => {
+    const folded = `questions:
+  - id: q-7k2m9p
+    version: 1
+    status: draft
+    stem: >-
+      The harbour branch sells out of croissants by 9 a.m. every Saturday.
+      Which change helps most?
+    takeaway: >-
+      Plan for the peak.
+
+  - id: q-3h8r2t
+    version: 1
+    status: draft
+    stem: >-
+      Match each situation.
+      Then check the pairs.
+    review:
+      attempts: 1
+      lastFailure: "critic: a tell"
+`;
+    const out = editQuestionFile(
+      folded,
+      new Map([
+        ['q-7k2m9p', { status: 'live' as const, verified, review: null }],
+        ['q-3h8r2t', { review: { attempts: 2, lastFailure: 'solve-closed: picked b' } }],
+      ]),
+    );
+    expect(out).toBe(`questions:
+  - id: q-7k2m9p
+    version: 1
+    status: live
+    stem: >-
+      The harbour branch sells out of croissants by 9 a.m. every Saturday.
+      Which change helps most?
+    takeaway: >-
+      Plan for the peak.
+    verified:
+      keyHash: 0123456789ab
+      fullHash: ba9876543210
+      checks: [ solve-closed@1, solve-notes@1, critic@2 ]
+      on: 2026-10-10
+
+  - id: q-3h8r2t
+    version: 1
+    status: draft
+    stem: >-
+      Match each situation.
+      Then check the pairs.
+    review:
+      attempts: 2
+      lastFailure: "solve-closed: picked b"
+`);
+    const block =
+      '    verified:\n      keyHash: 0123456789ab\n      fullHash: ba9876543210\n' +
+      '      checks: [ solve-closed@1, solve-notes@1, critic@2 ]\n      on: 2026-10-10\n';
+    expect(editQuestionFile(out, new Map([['q-7k2m9p', { verified: null }]]))).toBe(out.replace(block, ''));
+  });
 });

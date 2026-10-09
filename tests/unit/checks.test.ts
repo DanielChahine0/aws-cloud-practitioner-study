@@ -8,6 +8,7 @@ import {
   checkVersion,
   grade,
   type KeyFile,
+  kindOf,
   lintAnswers,
   makeBatches,
   type PassLog,
@@ -345,5 +346,64 @@ describe('stampQuestions', () => {
     expect(stampQuestions(load(root), FIXTURE_TODAY).summary).toBe(
       'stamp: 2 live, 0 drafts to revise, 1 need Dani',
     );
+  });
+});
+
+describe('grade and stamp reruns', () => {
+  const failClosed = (root: string): void => {
+    const keys = readJson<KeyFile>(root, 'keys.json');
+    answerAll(root, (batch, id, answer) => {
+      const order = keys[batch]?.[id]?.order ?? [];
+      return id === 'q-7k2m9p' && batch.startsWith('solve-closed')
+        ? { ...answer, picked: [order.indexOf('b') + 1] }
+        : answer;
+    });
+  };
+  const attempts = (root: string): number | undefined =>
+    load(root).questions.find((e) => e.q.id === 'q-7k2m9p')?.q.review?.attempts;
+
+  it('counts one failure once when grade runs twice before stamp', () => {
+    const root = setup();
+    prepare(load(root), [1], 1);
+    failClosed(root);
+    grade(root, FIXTURE_TODAY);
+    stampQuestions(load(root), FIXTURE_TODAY);
+    grade(root, FIXTURE_TODAY);
+    stampQuestions(load(root), FIXTURE_TODAY);
+    expect(attempts(root)).toBe(1);
+  });
+
+  it('does not burn an attempt on a missing answer and batches the question again', () => {
+    const root = setup();
+    prepare(load(root), [1], 1);
+    answerAll(root);
+    const closed = batchFiles(root).find(
+      (b) => b.kind === 'solve-closed' && b.questions.some((q) => q.id === 'q-7k2m9p'),
+    );
+    if (closed === undefined) throw new Error('no solve-closed batch');
+    const answers = readJson<{ answers: { id: string }[] }>(root, `answers/${closed.batch}.json`).answers;
+    writeAnswers(
+      root,
+      closed.batch,
+      answers.filter((a) => a.id !== 'q-7k2m9p'),
+    );
+    const { failures } = grade(root, FIXTURE_TODAY);
+    expect(failures.map((f) => `${f.id} ${f.check}: ${f.reason}`)).toEqual([
+      'q-7k2m9p solve-closed: no answer',
+    ]);
+    stampQuestions(load(root), FIXTURE_TODAY);
+    expect(attempts(root)).toBeUndefined();
+    const passes = readJson<PassLog>(root, 'passes.json');
+    expect(candidates(load(root), [1], passes).find((c) => c.entry.q.id === 'q-7k2m9p')?.needs).toEqual([
+      'solve-closed',
+    ]);
+  });
+});
+
+describe('kindOf', () => {
+  it('accepts a batch number past 99', () => {
+    expect(kindOf('solve-closed-100')).toBe('solve-closed');
+    expect(kindOf('critic-cue-07')).toBe('critic-cue');
+    expect(kindOf('critic-123')).toBe('critic');
   });
 });

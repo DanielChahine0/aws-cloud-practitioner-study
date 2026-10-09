@@ -165,7 +165,7 @@ questions:
     concept: security-in-the-cloud
     note: m01/the-aws-shared-responsibility-model
     task: "2.1"
-    level: 3
+    level: 1
     stem: >-
       Which description matches security in the cloud rather than security of the cloud?
     options:

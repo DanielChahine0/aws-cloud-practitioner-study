@@ -55,9 +55,27 @@ describe('styleProblems', () => {
     expect(styleProblems({ ...singleQuestion(), stem }, note)).toEqual([
       'the number 99.99% is not in m01/what-a-bakery-cloud-is',
     ]);
-    const stated = { ...note, text: `${note.text}\nOvens are ready 99.99% of the time.\n` };
+    const line = '\nOvens are ready 99.99% of the time.\n';
+    const stated = { ...note, text: `${note.text}${line}`, body: `${note.body}${line}` };
     expect(styleProblems({ ...singleQuestion(), stem }, stated)).toEqual([]);
     expect(root).not.toBe('');
+  });
+
+  it('ignores the frontmatter when it looks for a stated number', () => {
+    const { note } = fixture();
+    const body = '# Ovens\n\n- Branches share ovens.\n';
+    const bare = { ...note, text: `---\nmodule: 1\nlesson: 4\n---\n${body}`, body };
+    const stem = 'The harbour branch spreads its ovens across 4 kitchens. Which idea is this?';
+    expect(styleProblems({ ...singleQuestion(), stem }, bare)).toEqual([
+      'the number 4 is not in m01/what-a-bakery-cloud-is',
+    ]);
+  });
+
+  it('does not read the digits of a service name as a number', () => {
+    const { note } = fixture();
+    const q = singleQuestion();
+    const options = q.options.map((o) => (o.id === 'd' ? { ...o, text: 'Amazon S3 Glacier on EC2' } : o));
+    expect(styleProblems({ ...q, options }, note)).toEqual([]);
   });
 
   it('checks numbers in match pairs too', () => {

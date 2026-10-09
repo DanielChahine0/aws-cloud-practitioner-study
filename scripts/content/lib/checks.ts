@@ -375,8 +375,8 @@ type Payload = {
   notes?: string;
 };
 
-const kindOf = (batch: string): BatchKind | null =>
-  BATCH_KINDS.find((k) => new RegExp(`^${k}-\\d{2}$`).test(batch)) ?? null;
+export const kindOf = (batch: string): BatchKind | null =>
+  BATCH_KINDS.find((k) => new RegExp(`^${k}-\\d{2,}$`).test(batch)) ?? null;
 
 /** The shape problems a pick has against the question as the batch showed it. */
 function pickProblems(p: Payload, picked: number[] | Record<string, string>, want: number): string[] {
@@ -527,13 +527,18 @@ export function grade(root: string, today = localDate()): { passes: number; fail
 
   const passed: { id: string; check: CheckName; hash: string }[] = [];
   const failures: Failure[] = [];
+  // A missing answer means the checker crashed, not that the question failed, so it is reported but never recorded:
+  // the question stays a candidate for the next round and keeps its attempts.
+  const unanswered = new Set<Failure>();
   for (const [batch, entries] of Object.entries(keys)) {
     const kind = kindOf(batch);
     if (kind === null || kind === 'critic-cue') continue;
     const check = CHECK_OF[kind];
     for (const [id, { hash, order }] of Object.entries(entries)) {
-      const fail = (reason: string): void => {
-        failures.push({ id, check, hash, reason });
+      const fail = (reason: string, recorded = true): void => {
+        const failure = { id, check, hash, reason };
+        failures.push(failure);
+        if (!recorded) unanswered.add(failure);
       };
       const q = questions.get(id);
       if (q === undefined) {
@@ -546,13 +551,14 @@ export function grade(root: string, today = localDate()): { passes: number; fail
       }
       const parsed = ANSWER[kind].safeParse(answers.get(batch)?.get(id));
       if (!parsed.success) {
-        fail('no answer');
+        fail('no answer', false);
         continue;
       }
       if (kind === 'critic') {
         const a = parsed.data as z.infer<typeof CriticAnswer>;
         const guess = q.type === 'match' ? null : cueGuess.get(id);
-        if (q.type !== 'match' && (guess === undefined || guess === null)) fail('no answer in the cue round');
+        if (q.type !== 'match' && (guess === undefined || guess === null))
+          fail('no answer in the cue round', false);
         else if (guess !== null && guess !== undefined && sameSet(guess, keyOf(q))) {
           fail('the cue round found the key from the options alone');
         } else if (CRITIC_FLAGS.some(([flag]) => !a[flag])) {
@@ -593,10 +599,13 @@ export function grade(root: string, today = localDate()): { passes: number; fail
     log[`${id} ${check}@${checkVersion(root, check)} ${hash}`] = today;
   mkdirSync(p.dir, { recursive: true });
   writeJson(p.passes, log);
-  const merged = readFailures(root).filter(
-    (old) => !failures.some((f) => f.id === old.id && f.check === old.check && f.hash === old.hash),
+  // An earlier failure at the same id, check and hash stays as it is, stamped flag included, so a second grade before
+  // pnpm content:stamp never counts one failure twice.
+  const old = readFailures(root);
+  const added = failures.filter(
+    (f) => !unanswered.has(f) && !old.some((o) => o.id === f.id && o.check === f.check && o.hash === f.hash),
   );
-  writeJson(p.failures, [...merged, ...failures]);
+  writeJson(p.failures, [...old, ...added]);
   return { passes: passed.length, failures };
 }
 

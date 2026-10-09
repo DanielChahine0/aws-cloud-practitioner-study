@@ -217,7 +217,7 @@ questions:
       - id: b
         text: The function code and its security
         correct: true
-        why: Under a fully managed service like Lambda, the cafe's remaining share is its own code and keeping that code secure.
+        why: Under a fully managed service like Lambda, the cafe still owns its function code and keeping that code secure.
       - id: c
         text: Adding servers when orders spike
         why: AWS covers scaling for a fully managed service, so the cafe never adds servers itself.
@@ -227,7 +227,7 @@ questions:
     evidence:
       - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
       - What stays with you under Lambda is the application code and keeping it secure.
-    takeaway: With a fully managed service like Lambda, the customer is left with only its code and that code's security.
+    takeaway: With a fully managed service like Lambda, AWS runs the servers, while the customer still owns its code and that code's security.
     history: []
   - id: q-wqxf4j
     version: 1
@@ -248,11 +248,11 @@ questions:
         right: Some provisioning or configuration, depending on the service
         why: A managed service removes most operational work, yet a few setup choices can still be the cafe's.
       - left: Fully managed, such as AWS Lambda
-        right: Only its own code and that code's security
-        why: A fully managed service leaves no servers to handle, so the cafe looks after just its code.
+        right: Its own code and that code's security
+        why: A fully managed service leaves no servers to handle, so the cafe's share narrows to its code and keeping it secure.
     evidence:
       - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
       - "Managed: AWS absorbs much of the operational overhead, though some provisioning or configuration may remain yours depending on the service."
       - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
-    takeaway: The customer's share shrinks from OS and apps with unmanaged, to some setup with managed, to just the code with fully managed.
+    takeaway: The customer's share shrinks from OS and apps with unmanaged, to some setup with managed, to the code and its security with fully managed.
     history: []

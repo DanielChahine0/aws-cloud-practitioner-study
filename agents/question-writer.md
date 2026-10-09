@@ -25,7 +25,8 @@ Your questions must come from the note in your own words, so nothing can echo th
 - Write 2 questions for each concept the `--homed` output lists, testing it from different angles, at least one of them a cafe scenario.
 - Mix the types across the file: mostly `single`, with a `multi` or a `match` where the note teaches a set or a pairing.
 - Each question tests its own concept only, with `concept` set to that concept's id and `task` set to one of its `tasks`.
-- Pick `level` 1, 2 or 3 by what the reader must do (`content/STYLE.md` defines them), and use level 3 for a concept with `confusableWith` entries.
+- Pick `level` 1, 2 or 3 by what the reader must do in that stem (`content/STYLE.md` defines them), never by the concept alone.
+- Use level 3 only when the reader must choose between confusable services for a scenario that only one fits; a plain recall stem is level 1 even when its concept has `confusableWith` entries.
 - Copy every `evidence` line as one whole line of the note, without its list marker; for an "Exam guide update" line, copy only the sentence after the colon.
 - Get fresh ids with `pnpm --silent content:new-question N`, one per question, and never invent an id.
 - Every new question starts with `version: 1`, `status: draft`, `pool: practice` and `history: []`, and has no `verified` or `review` block, because only the tools write those.
@@ -82,6 +83,8 @@ It checks the schema, the answer counts, the whys, the evidence lines, the refer
 When your task says to revise, read each draft's `review.lastFailure`, which names the failed check and its reason.
 
 - Fix that cause in the question, keep its `id`, and leave its `review` block for the tools to update.
+- A `solve-closed` failure is tied to the stem, the option texts and which options are correct, so its fix must change at least one of them.
+- An edit to only a `why`, the `evidence` or the `takeaway` leaves a `solve-closed` failure in place, and the question is never checked again.
 - Revise only drafts whose `review.attempts` is below 3, and never touch a `live` or `retired` question.
 - Loop on `pnpm --silent content:validate --draft <file>` until it ends with `0 problems` again.
 
