@@ -69,9 +69,6 @@ questions:
       - A container packs code, runtime, dependencies and configuration into one isolated unit that runs the same anywhere.
     takeaway: A container behaves the same on every host because it carries its runtime, dependencies and configuration with the code.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-gb7f1t
     version: 1
     status: draft
@@ -103,9 +100,6 @@ questions:
       - A VM runs its own full OS on a hypervisor, making it heavier and slower to start.
     takeaway: Containers start faster and pack more densely than VMs because they share the host's operating system instead of booting their own.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-kvwxsd
     version: 1
     status: live
@@ -170,9 +164,6 @@ questions:
       - Containers do not scale themselves, so orchestrators run their lifecycle across a cluster, scale them with traffic, and handle recovery, monitoring and updates.
     takeaway: Containers cannot scale or recover on their own, so once they multiply across many hosts an orchestrator must manage them.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-fqhfca
     version: 1
     status: live
@@ -496,9 +487,6 @@ questions:
       - Images must meet Open Container Initiative (OCI) standards.
     takeaway: Amazon ECR stores OCI images for orchestrators to pull, and it neither runs nor scales containers.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Only the two keys (options 4 and 5) repeat the stem's word 'images', which points at them. Option 5 is the longest option by a clear margin, a length tell."
   - id: q-a3pe53
     version: 1
     status: live
@@ -566,6 +554,3 @@ questions:
       - "EC2: you manage the VMs under your containers, for full control plus upkeep."
     takeaway: Moving to Fargate hands the servers under the containers to AWS, and the cafe pays only for the resources its containers use.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"

@@ -98,9 +98,6 @@ questions:
       - "On-demand delivery: resources in seconds, scaled up or down without long setup, the idea AWS began with."
     takeaway: On-demand delivery is about how fast resources arrive and leave, apart from where they are used from or how they are billed.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 4 is the only detail not described in the stem's setup besides option 1, and the stem names billing and remote management, so a reader can rule out options 2 and 3 as already labelled and guess the new detail."
 
   - id: q-d3jmvj
     version: 1
@@ -136,9 +133,6 @@ questions:
       - "On-demand delivery: resources within seconds, whenever needed."
     takeaway: On-demand delivery means resources in seconds and easy scaling, which is separate from how the bill is calculated.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "solve-closed: a second option is defensible: On-demand delivery means resources are available quickly when needed without lengthy setup; option 2 describes pay-as-you-go but is often bundled into the same definition."
 
   - id: q-525s43
     version: 1
@@ -204,9 +198,6 @@ questions:
       - Firms once ran their own or co-located, but AWS lets them use data centers they do not own, trading upkeep and repetitive chores for innovation.
     takeaway: Using AWS data centers swaps the upkeep of your own facility for time spent on innovation.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-t9h3cy
     version: 1
@@ -380,9 +371,6 @@ questions:
       - "Hybrid: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
     takeaway: In-house legacy systems running alongside new cloud workloads make a hybrid deployment.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-zs219x
     version: 1
@@ -417,6 +405,3 @@ questions:
       - "Hybrid: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
     takeaway: Hybrid fits when maintenance or regulation keeps some systems in-house while other work runs in the cloud.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"

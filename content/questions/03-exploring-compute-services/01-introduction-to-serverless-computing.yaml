@@ -265,9 +265,6 @@ questions:
       - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
     takeaway: With a fully managed service like Lambda, AWS handles scaling for demand spikes, so the customer provisions no capacity.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-wqxf4j
     version: 1
     status: live

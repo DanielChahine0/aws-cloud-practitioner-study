@@ -226,9 +226,6 @@ questions:
       - A fully managed service for heavy compute such as huge datasets, simulations and complex math.
     takeaway: Batch computing is large, compute-heavy work, often split into jobs that run in parallel.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-wz0hrz
     version: 1
@@ -336,9 +333,6 @@ questions:
       - It fits compliance, data residency, low latency, remote sites and legacy app modernization.
     takeaway: Outposts runs AWS compute and storage inside your own data center, so data that must stay on site can stay there.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-haawrq
     version: 1
@@ -372,6 +366,3 @@ questions:
       - Outposts is the only one of the four on premises.
     takeaway: When AWS services must run on site for low latency, Outposts is the on-premises choice.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"

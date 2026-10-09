@@ -35,9 +35,6 @@ questions:
       - A US company expanding to India can deploy to an AWS-managed Region there instead of building its own data centers, in minutes rather than months or years.
     takeaway: The cloud's benefits replace upfront buying and capacity guesswork with usage-based spending, demand-based scaling and fast global reach.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-bk0ykx
     version: 1
@@ -152,9 +149,6 @@ questions:
       - "**Fixed expense**: a cost that does not change with usage."
     takeaway: A variable expense follows consumption, while a fixed expense stays the same whatever the usage.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-wgwkn6
     version: 1
@@ -225,9 +219,6 @@ questions:
       - So startups, not only big enterprises, can afford advanced technology.
     takeaway: Economies of scale means AWS's bulk hardware buying lowers prices enough for startups to afford advanced technology.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-y1nwv1
     version: 1
@@ -303,9 +294,6 @@ questions:
       - On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning.
     takeaway: Guessing capacity fails both ways, idle servers or degraded service, and scaling with real demand avoids both.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-z5kgg6
     version: 1

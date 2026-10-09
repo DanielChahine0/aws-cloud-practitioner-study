@@ -148,9 +148,6 @@ questions:
       - They range from simple events, like an upload or a finished classification, to heavier ones like a live data stream or resizing one image into several resolutions.
     takeaway: A Lambda trigger is the event that starts a function, from a file upload to a data stream.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-aax7kk
     version: 1
     status: draft
@@ -181,9 +178,6 @@ questions:
       - Each new SQS message invokes a function built from an SQS blueprint.
     takeaway: When a queue feeds Lambda, each new message is the trigger that invokes the function.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-w0fp96
     version: 1
     status: live
@@ -249,9 +243,6 @@ questions:
       - "The course says Lambda supports any language: Java, Python and Node.js come built in, and you can build a custom runtime."
     takeaway: When no built-in Lambda runtime covers a language, a custom runtime fills the gap.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-8t8v26
     version: 1
     status: live
@@ -353,9 +344,6 @@ questions:
       - 4) You pay for compute time only, per millisecond, priced by allocated memory.
     takeaway: Lambda compute is billed per millisecond of run time, at a rate set by the memory you allocate.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-dvjppr
     version: 1
     status: draft
@@ -387,6 +375,3 @@ questions:
       - 4) You pay for compute time only, per millisecond, priced by allocated memory.
     takeaway: With Lambda's pay-per-use billing, only the time code spends running adds to the compute bill.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"

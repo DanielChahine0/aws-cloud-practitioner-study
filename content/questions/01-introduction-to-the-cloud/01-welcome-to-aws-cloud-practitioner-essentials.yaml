@@ -26,9 +26,6 @@ questions:
       - In the coffee shop, the customer is the client and the barista is the server, which on AWS would be a virtual server.
     takeaway: Deploying an app on AWS puts the server side on virtual servers in AWS data centers, which client devices reach over the internet.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: The stem already says 'a phone app for guests and a back end hosted by AWS', which hands out the first two pairs before any reasoning."
   - id: q-e81xws
     version: 1
     status: draft
@@ -62,9 +59,6 @@ questions:
       - Cloud computing is one version of it, supplying the server side as scalable servers that clients reach over the internet.
     takeaway: Moving a back end to AWS keeps the client-server model, with a virtual server in AWS answering the client's requests.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-2k67rk
     version: 1
     status: draft
@@ -97,9 +91,6 @@ questions:
       - On AWS there is no prepayment, and you need not worry about capacity constraints.
     takeaway: No contract, no term and a flat charge only for what runs is pay-as-you-go pricing.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Options 1 and 3 are noun phrases ending in 'pricing' while options 2 and 4 are slogans, so the options are not parallel in grammar."
   - id: q-9wx5re
     version: 1
     status: draft
@@ -136,9 +127,6 @@ questions:
       - On AWS there is no prepayment, and you need not worry about capacity constraints.
     takeaway: Pay-as-you-go means no upfront payment and a bill that follows actual consumption.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-va2dze
     version: 1
     status: draft
@@ -171,9 +159,6 @@ questions:
       - "**Deprovisioning**: releasing unneeded resources, which ends their charges immediately."
     takeaway: A resource's charges stop the moment it is deprovisioned, with no wait for a billing cycle to end.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
   - id: q-cec23m
     version: 1
     status: draft
@@ -205,6 +190,3 @@ questions:
       - You provision resources when demand appears and deprovision them as fast when it fades, by hand or automatically through configuration.
     takeaway: Provision resources as demand rises and deprovision them as it falls, so capacity follows the load.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"

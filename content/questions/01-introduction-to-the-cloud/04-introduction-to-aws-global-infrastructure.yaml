@@ -202,9 +202,6 @@ questions:
       - A Region holds three or more AZs, and each AZ is an isolated part of one Region holding one or more data centers.
     takeaway: Regions hold Availability Zones, and each Availability Zone holds one or more data centers.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 4 'Availability Zone' cannot sit inside an Availability Zone by the stem's own wording, so it is a throwaway distractor."
   - id: q-arybmq
     version: 1
     status: live
@@ -349,6 +346,3 @@ questions:
       - Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ
     takeaway: To survive one zone's outage without leaving a Region, replicate across another Availability Zone in that Region.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"

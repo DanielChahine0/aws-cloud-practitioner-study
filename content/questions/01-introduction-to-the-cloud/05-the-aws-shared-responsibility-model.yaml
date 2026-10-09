@@ -145,9 +145,6 @@ questions:
       - Server-side encryption and OS, network and firewall setup vary by service.
     takeaway: AWS's fixed share covers the facilities, hardware and isolation layers, while encryption and network setup vary by service.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-x67nxf
     version: 1
@@ -180,9 +177,6 @@ questions:
       - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
     takeaway: Access settings on your own data are security in the cloud, so a wrong setting is the customer's lapse.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-5m1zcb
     version: 1
@@ -214,9 +208,6 @@ questions:
       - Customers patch their OS and secure applications, data, access and client-side encryption.
     takeaway: Security in the cloud is the customer's share of data, apps, access and patches, while AWS protects what lies underneath.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-hbrcyf
     version: 1
@@ -285,9 +276,6 @@ questions:
       - Server-side encryption and OS, network and firewall setup vary by service.
     takeaway: Encryption done on your own machine before upload is always your duty, unlike server-side encryption.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-a7kxvk
     version: 1
@@ -320,9 +308,6 @@ questions:
       - Only you can sign in to your OS or add users, since AWS has no back door.
     takeaway: AWS can only alert a customer about an OS flaw, and the customer applies the patch.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
 
   - id: q-qzp0f5
     version: 1
@@ -354,6 +339,3 @@ questions:
       - "AWS spots a flaw in a customer's OS: it can only alert them, and they patch."
     takeaway: The vendor publishes OS patches, but on AWS the customer is the one who applies them.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone"
