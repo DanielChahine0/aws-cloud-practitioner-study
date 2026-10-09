@@ -1,0 +1,40 @@
+questions:
+  - id: q-7k2m9p
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: shared-kitchen
+    note: m01/what-a-bakery-cloud-is
+    task: "1.1"
+    level: 2
+    stem: >-
+      The harbour branch sells out of croissants before noon on market days.
+      Which arrangement gives it extra baking capacity only on those days?
+    options:
+      - { id: a, text: Use spare ovens in the central kitchen, correct: true, why: The central kitchen lends ovens when a branch queue grows and takes them back after. }
+      - { id: b, text: Install a permanent oven at the branch, why: A permanent oven costs money on the quiet days as well as the market days. }
+      - { id: c, text: Ask customers to order a week ahead, why: Advance orders shift demand but add no ovens for the busy mornings. }
+      - { id: d, text: Bake the market stock the night before, why: Baking early changes the timing and still uses only the branch's own ovens. }
+    evidence:
+      - Branches use ovens from one central kitchen when their queues grow.
+    takeaway: Borrow central ovens for peaks instead of owning capacity for them.
+    history: []
+  - id: q-3h8r2t
+    version: 1
+    status: draft
+    type: match
+    pool: practice
+    concept: per-minute-rental
+    note: m01/what-a-bakery-cloud-is
+    task: "4.1"
+    level: 1
+    stem: Match each bakery situation with how the proofing cabinet bill behaves.
+    pairs:
+      - { left: Dough is proofing, right: The cabinet is billed, why: Cabinets cost money only while dough is inside them proofing. }
+      - { left: Cabinet stands empty, right: Nothing is billed, why: An empty cabinet is not in use and the per-minute bill stops. }
+      - { left: Proofing ends early, right: Billing stops at once, why: Billing follows the minutes of use and an early finish costs less. }
+    evidence:
+      - Cabinets are billed only while dough proofs.
+    takeaway: Per-minute rental bills only the minutes that the cabinet is in use.
+    history: []
