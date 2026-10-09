@@ -267,7 +267,9 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
   const ready = canSubmit(q, picked);
 
   useLayoutEffect(() => {
-    stem.current?.focus();
+    // Each question starts at the top of the page, with focus on its stem (spec 7.5).
+    window.scrollTo(0, 0);
+    stem.current?.focus({ preventScroll: true });
   }, []);
 
   const submit = (sure: boolean): void => {
@@ -288,7 +290,8 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
     });
     onAnswered({ qid: q.id, picked, correct });
     // Next takes focus once the answer is stored (spec 8.1 waits for the commit before showing Next).
-    void saved.then(() => nextButton.current?.focus());
+    // The page stays where the reader is, with the verdict under the stem; on a phone Next sits in the sticky bar.
+    void saved.then(() => nextButton.current?.focus({ preventScroll: true }));
   };
 
   const choose = (id: string): void => {
@@ -601,7 +604,7 @@ function Review({
                     <span class="tag bad">Your answer: {mineText}</span>
                   )}
                 </p>
-                <details open={expandAll || !right}>
+                <details open>
                   <summary>Why</summary>
                   <p>{p.why}</p>
                 </details>

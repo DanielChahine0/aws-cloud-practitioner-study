@@ -14,7 +14,12 @@ export function openDb(name = DB_NAME): Promise<IDBDatabase> {
         }
       }
     };
-    open.onsuccess = () => resolve(open.result);
+    open.onsuccess = () => {
+      const db = open.result;
+      // Another tab's upgrade or a deletion waits on this connection; let it go instead of blocking it.
+      db.onversionchange = () => db.close();
+      resolve(db);
+    };
     open.onerror = () => reject(open.error ?? new Error('IndexedDB did not open'));
     open.onblocked = () => reject(new Error('IndexedDB is blocked by another tab'));
   });

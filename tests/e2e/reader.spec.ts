@@ -1,38 +1,10 @@
-import AxeBuilder from '@axe-core/playwright';
 import { expect, type Locator, type Page, test } from '@playwright/test';
+import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1 } from './helpers.ts';
 
 const HOME_TITLE = 'AWS Cloud Practitioner Essentials';
 const SUPPORT_PLANS = '/#/m/11/l/aws-support-plans';
-const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
-/** Console errors and uncaught page errors of the running test; a CSP violation shows up here as a console error. */
-let problems: string[] = [];
-
-test.beforeEach(({ page }) => {
-  problems = [];
-  page.on('console', (message) => {
-    if (message.type() === 'error') problems.push(`console error: ${message.text()}`);
-  });
-  page.on('pageerror', (error) => {
-    problems.push(`page error: ${error.message}`);
-  });
-});
-
-test.afterEach(() => {
-  expect(problems, 'console errors and page errors during the test').toEqual([]);
-});
-
-const h1 = (page: Page, name: string): Locator => page.getByRole('heading', { level: 1, name, exact: true });
-
-async function expectNoAxeViolations(page: Page): Promise<void> {
-  // Scan the settled page: mid fade-in, a dialog's text is still partly transparent and fails color-contrast.
-  await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished)));
-  const results = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
-  const violations = results.violations.map(
-    (v) => `${v.id} (${v.nodes.length} nodes): ${v.help}; first: ${v.nodes[0]?.html ?? ''}`,
-  );
-  expect(violations).toEqual([]);
-}
+failOnPageProblems();
 
 /** Opens the lesson and waits until its note and its term buttons answer. */
 async function openSupportPlans(page: Page): Promise<Locator> {
@@ -40,13 +12,6 @@ async function openSupportPlans(page: Page): Promise<Locator> {
   await expect(h1(page, 'AWS Support Plans')).toBeVisible();
   await expect(page.locator('li.update').first()).toBeVisible();
   return page.locator('button.term').first();
-}
-
-async function expectNoSidewaysScroll(page: Page): Promise<void> {
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow, 'pixels of horizontal overflow').toBe(0);
 }
 
 test('Home lists the 13 modules', async ({ page }) => {
