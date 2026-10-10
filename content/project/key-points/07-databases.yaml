@@ -1,0 +1,48 @@
+# Reference key points for decision 7: Databases and caching.
+module: 7
+keyPoints:
+  - id: kp-07-sales-in-amazon-rds
+    status: live
+    text: Point-of-sale records go into Amazon RDS, a managed relational database, because each sale is structured transactional data that must stay consistent while AWS handles the patching and backups the part-time IT person has no time for.
+    concepts: [amazon-rds, relational-databases]
+    evidence: A relational service for operational workloads, not data warehousing, that automates patching, backups, provisioning, failover and disaster recovery.
+    verified:
+      fullHash: 61f28a22c96a
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-07-multi-az-protects-sales
+    status: live
+    text: The sales database runs as a Multi-AZ deployment with automated backups, so a standby in a second Availability Zone takes over if the primary fails and no recorded sale is lost.
+    concepts: [amazon-rds, multi-az-deployment]
+    evidence: "Resilience: Multi-AZ, automated backups on your schedule, and manual DB snapshots (full copies for point-in-time recovery or archives)."
+    verified:
+      fullHash: 973c6d053e7f
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-07-loyalty-in-dynamodb
+    status: live
+    text: Loyalty profiles and stamp balances live in Amazon DynamoDB, whose flexible schema lets one regular store a favorite drink and another a birthday, with no servers for the cafe to maintain.
+    concepts: [amazon-dynamodb, flexible-schema]
+    evidence: Fully managed, serverless NoSQL for key-value and document data.
+    verified:
+      fullHash: 4acff312f8ce
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-07-auto-scaling-morning-rush
+    status: live
+    text: DynamoDB auto scaling raises table throughput for the morning order surge and lowers it again once the rush ends, so orders stay fast at the peak without paying for peak capacity all day.
+    concepts: [amazon-dynamodb-auto-scaling]
+    evidence: "**Auto scaling with provisioned capacity**: throughput automatically follows real use toward your target utilization, steady at peaks, cheaper when quiet."
+    verified:
+      fullHash: f00536ed440b
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-07-cache-menu-elasticache
+    status: live
+    text: An Amazon ElastiCache layer answers the repeated morning reads of the menu and popular lookups from memory, which takes load off the database and can let the cafe run a smaller, cheaper instance under its budget.
+    concepts: [caching-layer, amazon-elasticache, database-performance-bottlenecks]
+    evidence: Reading from the cache can let you run smaller, cheaper database instances.
+    verified:
+      fullHash: 89a625d93cc4
+      checks: [ critic@1 ]
+      on: 2026-10-10
