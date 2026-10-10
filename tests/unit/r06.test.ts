@@ -123,6 +123,9 @@ describe('R6 question references', () => {
       "inc-001: concept 'per-minute-rental' is marked tested: false",
       "q-e3g7j9: concept 'per-minute-rental' is marked tested: false",
       "lab-m01-sort-the-bakes: concept 'per-minute-rental' is marked tested: false",
+      "kp-01-pay-only-while-proofing: concept 'per-minute-rental' is marked tested: false",
+      "kp-01-give-capacity-back: concept 'per-minute-rental' is marked tested: false",
+      "kp-01-name-the-billing-term: concept 'per-minute-rental' is marked tested: false",
       "q-c8n3p5: concept 'per-minute-rental' is marked tested: false",
       "q-d9p4r6: concept 'per-minute-rental' is marked tested: false",
     ]);

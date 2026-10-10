@@ -10,13 +10,14 @@ const BUILD = [
   'assets/index-BmD2kQ9x.js.map',
   'content/m01.bf78409a.json',
   'content/exam-a.0f1e2d3c.json',
+  'content/project.5a6b7c8d.json',
   'assets/index-C4f1aZ7e.css',
   'deploys.json',
 ];
 const HTML = '<!doctype html><title>CCP Study</title>';
 
 describe('swManifest', () => {
-  it('lists / first, then every build file sorted, exam forms included, without sw.js, deploys.json and source maps', () => {
+  it('lists / first, then every build file sorted, exam forms and the project chunk included, without sw.js, deploys.json and source maps', () => {
     expect(swManifest(BUILD, HTML).files).toEqual([
       '/',
       '/assets/index-BmD2kQ9x.js',
@@ -25,6 +26,7 @@ describe('swManifest', () => {
       '/content/index.328894ee.json',
       '/content/m01.bf78409a.json',
       '/content/m02.2efa04cd.json',
+      '/content/project.5a6b7c8d.json',
       '/index.html',
     ]);
   });
