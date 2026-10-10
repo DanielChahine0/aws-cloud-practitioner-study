@@ -6,7 +6,7 @@ import { studyDay, tzOffset } from '../engine/day.ts';
 import { moduleMastery } from '../engine/mastery.ts';
 import { deriveMemory } from '../engine/memory.ts';
 import { firstAttempts } from '../engine/mock.ts';
-import { extras, nextAction, weakestLab } from '../engine/next.ts';
+import { extras, incidentToday, nextAction, weakestLab } from '../engine/next.ts';
 import { reviewQueue } from '../engine/queue.ts';
 import {
   rankFacts as factsOf,
@@ -192,16 +192,20 @@ const labExtra = computed(() => {
   });
 });
 
-/** The extras line's entries (spec 4.6): a ready boss, a due mock and a core lab, at most two. */
+/** Today's offered incident and whether it is solved, or null before Home records the day's offer (spec 4.5). */
+export const incidentNow = computed(() => incidentToday(progress.value, studyDay(now.value)));
+
+/** The extras line's entries (spec 4.6): today's unsolved incident, a ready boss, a due mock and a lab, at most two. */
 export const extraItems = computed(() => {
   const at = now.value;
+  const offered = incidentNow.value;
   return extras({
     bosses: bosses.value,
     progress: progress.value,
     today: studyDay(at),
     now: at,
     lab: labExtra.value,
-    incident: null,
+    incident: offered === null || offered.done ? null : offered.incident,
   });
 });
 

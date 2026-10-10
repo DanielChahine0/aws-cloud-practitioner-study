@@ -6,6 +6,7 @@ import { type Extra, type LessonRef, type NextAction, nextMinutes } from '../eng
 import type { ReviewQueue } from '../engine/queue.ts';
 import type { Readiness, ReadinessLabel } from '../engine/readiness.ts';
 import type { StreakState } from '../engine/streak.ts';
+import { incidentLabel } from './incident.ts';
 import { type MockRoute, pad2, toHash } from './router.ts';
 
 const MINUTE_MS = 60_000;
@@ -236,15 +237,19 @@ export function extrasLine(items: readonly { label: string }[]): string {
   return `${EXTRAS_LEAD}${items.map((item) => item.label).join(EXTRAS_JOIN)}`;
 }
 
-/** What an extra's label needs from the index: module short names and lab titles. */
+/** What an extra's label needs from the index: module short names, lab titles and incident titles. */
 export interface ExtraContent {
   modules: readonly { n: number; short: string }[];
   labs: readonly { id: string; title: string }[];
+  incidents: readonly { id: string; title: string }[];
 }
 
-/** The label and link of one extra: a ready boss, the next unseen mock form, or a core lab (spec 4.6 and 7.2). */
+/** The label and link of one extra: today's incident, a ready boss, the next unseen mock form, or a core lab. */
 export function extraLink(extra: Extra, idx: ExtraContent): { label: string; href: string } {
-  if (extra.kind === 'incident') return { label: 'Incident', href: '#/s/incident' };
+  if (extra.kind === 'incident') {
+    const title = idx.incidents.find((i) => i.id === extra.incident)?.title ?? '';
+    return { label: incidentLabel(title), href: toHash({ kind: 'incident' }) };
+  }
   switch (extra.kind) {
     case 'boss': {
       const short = idx.modules.find((m) => m.n === extra.module)?.short ?? '';

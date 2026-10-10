@@ -14,6 +14,7 @@ export type Route =
   | { kind: 'focus'; scope: string }
   | { kind: 'results'; sid: string }
   | { kind: 'lab'; module: number; id: string }
+  | { kind: 'incident' }
   | { kind: 'not-found'; hash: string };
 
 /** A mock's route segment: a form in lower case, or the remix. */
@@ -45,6 +46,7 @@ export function parseHash(hash: string): Route {
   if (path === '/missions') return { kind: 'missions' };
   if (path === '/s/review') return { kind: 'review' };
   if (path === '/s/mock') return { kind: 'mocks' };
+  if (path === '/s/incident') return { kind: 'incident' };
   const module = MODULE_PATH.exec(path);
   if (module) return { kind: 'module', module: Number(module[1]) };
   const lesson = LESSON_PATH.exec(path);
@@ -100,6 +102,8 @@ export function toHash(route: Route): string {
       return `#/r/${route.sid}`;
     case 'lab':
       return `#/m/${pad2(route.module)}/lab/${route.id}`;
+    case 'incident':
+      return '#/s/incident';
     case 'not-found':
       return route.hash;
   }

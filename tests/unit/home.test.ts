@@ -512,11 +512,11 @@ describe('Home lines', () => {
 
   it('links a boss extra to its boss and a mock extra to its form', () => {
     const modules = [{ n: 5, short: 'Networking' }];
-    expect(extraLink({ kind: 'boss', module: 5 }, { modules, labs: [] })).toEqual({
+    expect(extraLink({ kind: 'boss', module: 5 }, { modules, labs: [], incidents: [] })).toEqual({
       label: 'Boss: Networking',
       href: '#/s/boss/m05',
     });
-    expect(extraLink({ kind: 'mock', form: 'B' }, { modules, labs: [] })).toEqual({
+    expect(extraLink({ kind: 'mock', form: 'B' }, { modules, labs: [], incidents: [] })).toEqual({
       label: 'Mock B',
       href: '#/s/mock/b',
     });
@@ -525,7 +525,10 @@ describe('Home lines', () => {
   it('links a lab extra to its lab with its title', () => {
     const labs = [labMeta('lab-m03-pick-the-compute', 3, { title: 'Pick the compute' })];
     expect(
-      extraLink({ kind: 'lab', lab: 'lab-m03-pick-the-compute', module: 3 }, { modules: [], labs }),
+      extraLink(
+        { kind: 'lab', lab: 'lab-m03-pick-the-compute', module: 3 },
+        { modules: [], labs, incidents: [] },
+      ),
     ).toEqual({
       label: 'Lab: Pick the compute',
       href: '#/m/03/lab/lab-m03-pick-the-compute',
@@ -536,12 +539,27 @@ describe('Home lines', () => {
     const idx = {
       modules: [{ n: 5, short: 'Networking' }],
       labs: [labMeta('lab-m01-who-patches-what', 1, { title: 'Who patches what?' })],
+      incidents: [],
     };
     const links = [
       extraLink({ kind: 'boss', module: 5 }, idx),
       extraLink({ kind: 'lab', lab: 'lab-m01-who-patches-what', module: 1 }, idx),
     ];
     expect(extrasLine(links)).toBe('Optional today: Boss: Networking  |  Lab: Who patches what?');
+  });
+
+  it("links today's incident by its title, and reads the extras line with a lab after it", () => {
+    const incidents = [{ id: 'inc-003', title: 'The cold ovens', modules: [2] }];
+    const labs = [{ id: 'lab-m02-morning-rush', module: 2, title: 'Morning rush', tier: 'core' as const }];
+    const incident = extraLink({ kind: 'incident', incident: 'inc-003' }, { modules: [], labs, incidents });
+    expect(incident).toEqual({ label: 'Incident "The cold ovens"', href: '#/s/incident' });
+    const lab = extraLink(
+      { kind: 'lab', lab: 'lab-m02-morning-rush', module: 2 },
+      { modules: [], labs, incidents },
+    );
+    expect(extrasLine([incident, lab])).toBe(
+      'Optional today: Incident "The cold ovens"  |  Lab: Morning rush',
+    );
   });
 });
 
