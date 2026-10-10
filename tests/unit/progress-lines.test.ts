@@ -8,6 +8,7 @@ import {
   changeVerdict,
   dayStrip,
   domainValue,
+  driftLine,
   memoryMockLine,
   mockLine,
   RESET_WORD,
@@ -156,5 +157,18 @@ describe('Progress lines', () => {
 
   it('asks for the reset word in capitals', () => {
     expect(RESET_WORD).toBe('RESET');
+  });
+
+  it('writes the capstone drift line, final minus self', () => {
+    expect(driftLine({ decisions: 0, total: 0 })).toBe('Capstone drift: no final grades yet.');
+    expect(driftLine({ decisions: 3, total: 2 })).toBe(
+      'Capstone drift: +2 over 3 decisions (final minus self).',
+    );
+    expect(driftLine({ decisions: 1, total: -1 })).toBe(
+      'Capstone drift: -1 over 1 decision (final minus self).',
+    );
+    expect(driftLine({ decisions: 2, total: 0 })).toBe(
+      'Capstone drift: 0 over 2 decisions (final minus self).',
+    );
   });
 });

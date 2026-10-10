@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { SCHEMA_VERSION } from '../../../schemas/version.ts';
+import { decisionsOf, driftOf } from '../../engine/capstone.ts';
 import { studyDay } from '../../engine/day.ts';
 import { level } from '../../engine/level.ts';
 import { ENGINE_VERSION } from '../../engine/replay.ts';
@@ -17,6 +18,7 @@ import { closeOnBackdrop } from '../../ui/backdrop.ts';
 import { now } from '../clock.ts';
 import { index } from '../content.ts';
 import { shortDate } from '../dates.ts';
+import { downloadText } from '../download.ts';
 import { memory, streak } from '../memory.ts';
 import {
   events,
@@ -28,6 +30,7 @@ import {
   replaceAll,
   writeKv,
 } from '../progress.ts';
+import { driftLine } from '../progress-lines.ts';
 import { overlay } from '../state.ts';
 import { BadgeList } from './progress/BadgeList.tsx';
 import { Calibration } from './progress/Calibration.tsx';
@@ -51,14 +54,7 @@ async function exportBackup(): Promise<void> {
     contentVersion: index.value?.contentVersion ?? '',
     now,
   });
-  const url = URL.createObjectURL(new Blob([JSON.stringify(backup)], { type: 'application/json' }));
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = backupFileName(now);
-  document.body.append(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 0);
+  downloadText(backupFileName(now), JSON.stringify(backup), 'application/json');
 }
 
 type ImportState =
@@ -110,6 +106,8 @@ export function Progress() {
         <Causes />
         {index.value !== null && <BadgeList idx={index.value} />}
         <MockHistory />
+        <h3>Capstone</h3>
+        <p class="muted drift-line">{driftLine(driftOf(decisionsOf(events.value)))}</p>
 
         <h3>Backup</h3>
         <p class="muted">

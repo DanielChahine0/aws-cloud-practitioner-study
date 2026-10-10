@@ -7,6 +7,7 @@ import type { MockAttempt } from '../engine/mock.ts';
 import type { AnswerRecord, Cause } from '../engine/replay.ts';
 import { shortDate } from './dates.ts';
 import { examDateLabel } from './home.ts';
+import { signed } from './project.ts';
 import { CAUSE_LABELS, changedRightToWrong, scoreOf } from './results.ts';
 import { isCorrect } from './runner.ts';
 
@@ -143,3 +144,9 @@ export function domainValue(value: number): number {
 
 /** The word to type before deleting every event and setting. */
 export const RESET_WORD = 'RESET';
+
+/** The capstone drift of spec 6: final total minus self total, summed over the decisions with both grades. */
+export function driftLine(d: { decisions: number; total: number }): string {
+  if (d.decisions === 0) return 'Capstone drift: no final grades yet.';
+  return `Capstone drift: ${signed(d.total)} over ${d.decisions === 1 ? '1 decision' : `${d.decisions} decisions`} (final minus self).`;
+}
