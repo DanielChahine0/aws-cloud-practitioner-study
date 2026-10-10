@@ -14,11 +14,27 @@ export interface LazyLoader<T> {
    * The returned function detaches the instance, so an unmounted one is never called.
    */
   attach(shown: T | null, settled: (failed: boolean) => void): () => void;
+  /** Starts the load ahead of first use; a failure stays silent, and the next `attach` tries again. */
+  preload(): void;
 }
 
 export function lazyLoader<T>(load: () => Promise<T>): LazyLoader<T> {
   let loaded: T | null = null;
   let pending: Promise<T> | null = null;
+  const start = (): Promise<T> => {
+    if (pending !== null) return pending;
+    const started = load();
+    pending = started;
+    started.then(
+      (value) => {
+        loaded = value;
+      },
+      () => {
+        if (pending === started) pending = null;
+      },
+    );
+    return started;
+  };
   return {
     current: () => loaded,
     attach(shown, settled) {
@@ -26,15 +42,12 @@ export function lazyLoader<T>(load: () => Promise<T>): LazyLoader<T> {
         if (shown !== loaded) settled(false);
         return () => {};
       }
-      pending ??= load();
       let live = true;
-      pending.then(
-        (value) => {
-          loaded = value;
+      start().then(
+        () => {
           if (live) settled(false);
         },
         () => {
-          pending = null;
           if (live) settled(true);
         },
       );
@@ -42,16 +55,26 @@ export function lazyLoader<T>(load: () => Promise<T>): LazyLoader<T> {
         live = false;
       };
     },
+    preload() {
+      if (loaded === null) start().catch(() => {});
+    },
   };
 }
 
+/** A lazy screen, plus a way to fetch its code before first use. */
+export type LazyComponent<P extends object> = ComponentType<P> & { preload(): void };
+
 /**
  * A screen whose code loads on first use through `import()`, so exam code stays out of the initial bundle
- * (the 50 KB budget of spec 2.10); it shows `Loading` until then.
+ * (the 50 KB budget of spec 2.10); it shows `Loading` until then, and `Failed` (by default a `LAZY_ERROR` line) when the
+ * load fails.
  */
-export function lazyScreen<P extends object>(load: () => Promise<ComponentType<P>>): ComponentType<P> {
+export function lazyScreen<P extends object>(
+  load: () => Promise<ComponentType<P>>,
+  Failed: ComponentType = LazyError,
+): LazyComponent<P> {
   const loader = lazyLoader(load);
-  return function LazyScreen(props: P) {
+  function LazyScreen(props: P) {
     const [, setReady] = useState(0);
     const [failed, setFailed] = useState(false);
     // Preact runs effects after paint, so the load can resolve between the first render and its effect.
@@ -62,6 +85,11 @@ export function lazyScreen<P extends object>(load: () => Promise<ComponentType<P
     );
     const Loaded = loader.current();
     if (Loaded !== null) return <Loaded {...props} />;
-    return failed ? <p role="alert">{LAZY_ERROR}</p> : <p class="muted">Loading</p>;
-  };
+    return failed ? <Failed /> : <p class="muted">Loading</p>;
+  }
+  return Object.assign(LazyScreen, { preload: loader.preload });
+}
+
+function LazyError() {
+  return <p role="alert">{LAZY_ERROR}</p>;
 }

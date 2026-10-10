@@ -1,7 +1,8 @@
 import { effect } from '@preact/signals';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { ENGINE_VERSION } from '../engine/replay.ts';
 import { KV_KEYS } from '../store/kv.ts';
+import { closeOnBackdrop } from '../ui/backdrop.ts';
 import { startClock } from './clock.ts';
 import { index, loadError, loadIndex } from './content.ts';
 import { examTick, openExam, settleExam } from './exam-settle.ts';
@@ -9,21 +10,25 @@ import { useKeyboard } from './keyboard.ts';
 import { rankUp, watchRanks } from './memory.ts';
 import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
 import { Help } from './screens/Help.tsx';
-import { lazyScreen } from './screens/Lazy.tsx';
+import { LAZY_ERROR, lazyScreen } from './screens/Lazy.tsx';
 import { Palette } from './screens/Palette.tsx';
 import { Screen } from './screens/Screen.tsx';
 import { TopBar } from './screens/TopBar.tsx';
 import { exam, overlay, route } from './state.ts';
 import { rankUpLine, rulesLine } from './topbar.ts';
 
-// The Progress overlay loads on first open, so its sections stay out of the initial bundle (spec 2.10).
-const Progress = lazyScreen(() => import('./screens/Progress.tsx').then((m) => m.Progress));
+// The Progress overlay's code stays out of the initial bundle (spec 2.10); the app fetches it once the log has loaded,
+// so the save-error banner's Export works offline on a first visit too.
+const Progress = lazyScreen(
+  () => import('./screens/Progress.tsx').then((m) => m.Progress),
+  ProgressLoadError,
+);
 
 /** The shell: the top bar, the screen for the route once the content index has loaded, and the open dialog. */
 export function App() {
   useEffect(() => {
     loadIndex();
-    void initStore();
+    void initStore().then(Progress.preload);
     return startClock();
   }, []);
   useEffect(() => watchRanks(), []);
@@ -86,6 +91,39 @@ function SaveError() {
         Export
       </button>
     </div>
+  );
+}
+
+/**
+ * The Progress sheet when its code cannot load: a closable dialog, so closing it gives the keys back and the next open
+ * tries the load again.
+ */
+function ProgressLoadError() {
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const el = dialog.current;
+    if (el !== null && !el.open) el.showModal();
+  }, []);
+  return (
+    <dialog
+      ref={dialog}
+      class="sheet"
+      aria-labelledby="progress-title"
+      onClose={() => {
+        if (overlay.value === 'progress') overlay.value = null;
+      }}
+      onMouseDown={(event) => closeOnBackdrop(event.currentTarget, event)}
+    >
+      <div class="sheet-body">
+        <h2 id="progress-title">Progress</h2>
+        <p role="alert">{LAZY_ERROR}</p>
+        <form method="dialog">
+          <button class="button" type="submit">
+            Close
+          </button>
+        </form>
+      </div>
+    </dialog>
   );
 }
 

@@ -49,4 +49,41 @@ describe('lazyLoader', () => {
     expect(load).toHaveBeenCalledTimes(2);
     expect(retried).toHaveBeenCalledWith(false);
   });
+
+  it('preloads once, so a later attach shows the screen without another load', async () => {
+    const load = vi.fn(async () => 'screen');
+    const loader = lazyLoader(load);
+    loader.preload();
+    loader.preload();
+    await flush();
+    expect(loader.current()).toBe('screen');
+    const settled = vi.fn();
+    loader.attach(loader.current(), settled);
+    expect(load).toHaveBeenCalledTimes(1);
+    expect(settled).not.toHaveBeenCalled();
+  });
+
+  it('lets an attach join a preload still in flight', async () => {
+    const load = vi.fn(async () => 'screen');
+    const loader = lazyLoader(load);
+    loader.preload();
+    const settled = vi.fn();
+    loader.attach(null, settled);
+    await flush();
+    expect(load).toHaveBeenCalledTimes(1);
+    expect(settled).toHaveBeenCalledWith(false);
+  });
+
+  it('keeps a failed preload silent and retries it on the next attach', async () => {
+    const load = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce('screen');
+    const loader = lazyLoader<string>(load);
+    loader.preload();
+    await flush();
+    expect(loader.current()).toBeNull();
+    const settled = vi.fn();
+    loader.attach(null, settled);
+    await flush();
+    expect(load).toHaveBeenCalledTimes(2);
+    expect(settled).toHaveBeenCalledWith(false);
+  });
 });
