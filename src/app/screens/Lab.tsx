@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/ho
 import type { ContentIndex, LabView, QuestionView } from '../../../schemas/chunks.ts';
 import type { NewEvent } from '../../../schemas/events.ts';
 import type { ConfigureSpec, SimulateSpec, SortAction, SortSpec } from '../../../schemas/lab.ts';
+import type { TraceAction, TraceSpec } from '../../../schemas/lab-trace.ts';
 import { openSession } from '../../engine/replay.ts';
 import type { ConfigureState } from '../../labs/configure/model.ts';
 import { ConfigureView } from '../../labs/configure/View.tsx';
@@ -11,6 +12,8 @@ import type { SimulateState } from '../../labs/simulate/model.ts';
 import { SimulateView } from '../../labs/simulate/View.tsx';
 import type { SortState } from '../../labs/sort/model.ts';
 import { SortView } from '../../labs/sort/View.tsx';
+import type { TraceState } from '../../labs/trace/model.ts';
+import { TraceView } from '../../labs/trace/View.tsx';
 import { KV_KEYS } from '../../store/kv.ts';
 import { ulid } from '../../store/ulid.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
@@ -28,6 +31,9 @@ import {
   placedLine,
   RESET_ASK,
   returnedLine,
+  ruleOffLine,
+  ruleOnLine,
+  traceRuleText,
 } from '../lab.ts';
 import { type LabDraft, labDraftOf, labDraftsOf, withDraft, withHint } from '../lab-draft.ts';
 import { type LabCommand, labKey } from '../lab-keys.ts';
@@ -207,6 +213,18 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
     if (action.t === 'place') place(action.card, action.bucket);
     else dispatch(action);
   };
+  /** A switched Trace rule is announced by its text, never its id. */
+  const onTraceAction = (action: TraceAction): void => {
+    dispatch(action);
+    if (action.t !== 'toggle') return;
+    const text = traceRuleText(lab.spec as TraceSpec, action.rule);
+    if (text !== null) setAnnounce(action.on ? ruleOnLine(text) : ruleOffLine(text));
+  };
+  const onBoardAction = (action: unknown): void => {
+    if (lab.engine === 'sort') onSortAction(action as SortAction);
+    else if (lab.engine === 'trace') onTraceAction(action as TraceAction);
+    else dispatch(action);
+  };
 
   const run = (command: LabCommand): void => {
     switch (command.kind) {
@@ -340,13 +358,7 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
       {lab.credits && <p class="muted credits-note">{CREDITS_NOTE}</p>}
       {!done && (
         <section class="lab-board" aria-label="Workspace" ref={board}>
-          <Board
-            lab={lab}
-            state={state}
-            held={held}
-            onHold={setHeld}
-            onAction={lab.engine === 'sort' ? onSortAction : dispatch}
-          />
+          <Board lab={lab} state={state} held={held} onHold={setHeld} onAction={onBoardAction} />
         </section>
       )}
       <section class="lab-goals" aria-labelledby="lab-goals-title">
@@ -489,6 +501,8 @@ function Board(props: {
       return (
         <SimulateView spec={lab.spec as SimulateSpec} state={state as SimulateState} onAction={onAction} />
       );
+    case 'trace':
+      return <TraceView spec={lab.spec as TraceSpec} state={state as TraceState} onAction={onAction} />;
   }
 }
 

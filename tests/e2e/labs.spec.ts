@@ -8,13 +8,17 @@ import {
   labDoneCount,
   labFor,
   SYNTHETIC_CONFIGURE_LAB_ID,
+  SYNTHETIC_POLICY_LAB_ID,
   SYNTHETIC_SIMULATE_LAB_ID,
   SYNTHETIC_SORT_LAB_ID,
   SYNTHETIC_SORT_TITLE,
+  SYNTHETIC_TRACE_LAB_ID,
   storedDraftActions,
   syntheticConfigureLab,
+  syntheticPolicyLab,
   syntheticSimulateLab,
   syntheticSortLab,
+  syntheticTraceLab,
   useSyntheticLab,
 } from './lab-helpers.ts';
 import { shown } from './questions.ts';
@@ -69,9 +73,12 @@ async function placeAllByTaps(page: Page): Promise<void> {
   }
 }
 
-/** Answers the debrief by the Runner keys: digits (and letters in a match), Enter to check, Enter for Next. */
-async function answerDebriefByKeys(page: Page): Promise<void> {
-  const lab = await labFor(page, SYNTHETIC_SORT_LAB_ID);
+/**
+ * Answers the debrief of the lab `id` by the Runner keys: digits (and letters in a match), Enter to check, Enter for
+ * Next.
+ */
+async function answerDebriefByKeys(page: Page, id = SYNTHETIC_SORT_LAB_ID): Promise<void> {
+  const lab = await labFor(page, id);
   for (let i = 0; i < lab.debrief.questions.length; i++) {
     const q = await shown(page, lab.debrief.questions);
     // The debrief runs in the Runner, so it shows the bet buttons and the Sure hint (spec 4.1).
@@ -413,5 +420,131 @@ test('Simulate inputs, selects and checkboxes are at least 44 px tall on a phone
   await expect(
     page.getByRole('img', { name: 'Orders and Capacity for each hour from 0:00 to 23:00' }),
   ).toBeVisible();
+  await expectNoSidewaysScroll(page);
+});
+
+const TRACE_URL = `/#/m/01/lab/${SYNTHETIC_TRACE_LAB_ID}`;
+const POLICY_URL = `/#/m/01/lab/${SYNTHETIC_POLICY_LAB_ID}`;
+const HTTPS_IN = 'Inbound TCP 443 from 0.0.0.0/0';
+const SSH_OFFICE = 'Inbound TCP 22 from 192.0.2.0/24';
+const REPLIES_OUT = 'Rule 100: allow outbound TCP 1024-65535 to 0.0.0.0/0';
+const CUSTOMER = 'A customer opens the order page';
+const rule = (page: Page, text: string): Locator => page.getByRole('checkbox', { name: text, exact: true });
+const caseSummary = (page: Page, label: string): Locator => page.locator('summary', { hasText: label });
+const hopsOf = (page: Page, label: string): Locator =>
+  page.locator('li.trace-case', { has: caseSummary(page, label) }).locator('.trace-hops li');
+
+/**
+ * Scans the lab from the top of the page: opening a case scrolls it into view, and axe counts a checkbox that sits
+ * under the sticky top bar as a target with no room around it, which says where the page is scrolled, not how the
+ * board is built.
+ */
+async function scanFromTop(page: Page): Promise<void> {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+}
+
+test('a Trace lab works by keyboard alone and steps a case through its hops', async ({
+  page,
+  browserName,
+}) => {
+  // WebKit tabs to checkboxes and summaries only with Option held, as on a Mac without full keyboard access.
+  const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+  const back = browserName === 'webkit' ? 'Alt+Shift+Tab' : 'Shift+Tab';
+  await useLabAt(page, syntheticTraceLab, TRACE_URL);
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  await expect(page.getByText('Trace lab, about 6 minutes')).toBeVisible();
+  await tabTo(page, rule(page, HTTPS_IN), tab);
+  await page.keyboard.press('Space');
+  await expect(rule(page, HTTPS_IN)).toBeChecked();
+  await expect(said(page, `${HTTPS_IN} is on.`)).toBeAttached();
+  await tabTo(page, caseSummary(page, CUSTOMER), tab);
+  await expect(caseSummary(page, CUSTOMER)).toContainText('Result: Denied. Expected: Allowed.');
+  await page.keyboard.press('Enter');
+  await expect(hopsOf(page, CUSTOMER)).toHaveText([
+    'Network ACL, inbound: Allowed by rule 100',
+    'Security group, inbound: Allowed',
+    'Security group, outbound (reply): Allowed as a reply',
+    'Network ACL, outbound (reply): Denied by the final * rule',
+  ]);
+  await tabTo(page, rule(page, REPLIES_OUT), back);
+  await page.keyboard.press('Space');
+  await expect(said(page, `${REPLIES_OUT} is on.`)).toBeAttached();
+  await expect(caseSummary(page, CUSTOMER)).toContainText('Result: Allowed. Expected: Allowed.');
+  await expect(hopsOf(page, CUSTOMER).last()).toHaveText(
+    'Network ACL, outbound (reply): Allowed by rule 100',
+  );
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await expect(goal(page, 'Only the office logs in')).toContainText('Not met');
+  // The draft keeps both switched rules across a reload.
+  await expect.poll(() => storedDraftActions(page, SYNTHETIC_TRACE_LAB_ID)).toBe(2);
+  await page.reload();
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  await expect(rule(page, HTTPS_IN)).toBeChecked();
+  await expect(rule(page, REPLIES_OUT)).toBeChecked();
+  await tabTo(page, rule(page, SSH_OFFICE), tab);
+  await page.keyboard.press('Space');
+  await expect(rule(page, SSH_OFFICE)).toBeChecked();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('All 2 goals met. Plus 40 XP.', { exact: true })).toBeAttached();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+  await answerDebriefByKeys(page, SYNTHETIC_TRACE_LAB_ID);
+  expect(await labDoneCount(page, SYNTHETIC_TRACE_LAB_ID)).toBe(1);
+});
+
+test('Trace labs of both kinds have no axe violations and no sideways scroll', async ({ page }) => {
+  await useLabAt(page, syntheticTraceLab, TRACE_URL);
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  await caseSummary(page, CUSTOMER).click();
+  await expect(hopsOf(page, CUSTOMER)).toHaveCount(4);
+  await scanFromTop(page);
+  await checkButton(page).click();
+  await expect(page.getByText('0 of 2 goals met.', { exact: true })).toBeAttached();
+  await scanFromTop(page);
+
+  await useLabAt(page, syntheticPolicyLab, POLICY_URL);
+  await expect(h1(page, 'Keys for the bakers')).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Bakers policy, attached to Bakers' })).toBeVisible();
+  await caseSummary(page, 'Mo reads the rye recipe').click();
+  await expect(hopsOf(page, 'Mo reads the rye recipe')).toHaveText([
+    'SCP at Bakery group: Allowed',
+    'SCP at Shops: Allowed',
+    'SCP at East shop: Allowed',
+    'IAM policies: No match',
+  ]);
+  await scanFromTop(page);
+  await checkButton(page).click();
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await scanFromTop(page);
+});
+
+test('a Trace lab works by taps on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useLabAt(page, syntheticPolicyLab, POLICY_URL);
+  await expect(h1(page, 'Keys for the bakers')).toBeVisible();
+  const recipes = 'Allow recipes:Get* on recipes/*';
+  await rule(page, recipes).tap();
+  await expect(said(page, `${recipes} is on.`)).toBeAttached();
+  await caseSummary(page, 'Mo starts a bake in the deck oven').tap();
+  await expect(hopsOf(page, 'Mo starts a bake in the deck oven').last()).toHaveText('IAM policies: No match');
+  await rule(page, 'Allow oven:StartBake, oven:StopBake on oven/*').tap();
+  await expect(hopsOf(page, 'Mo starts a bake in the deck oven').last()).toHaveText('IAM policies: Allowed');
+  await checkButton(page).tap();
+  await expect(page.getByText('All 2 goals met. Plus 40 XP.', { exact: true })).toBeAttached();
+  expect(await labDoneCount(page, SYNTHETIC_POLICY_LAB_ID)).toBe(1);
+});
+
+test('Trace checkboxes and case summaries are at least 44 px tall on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useLabAt(page, syntheticTraceLab, TRACE_URL);
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  const targets = [
+    ...(await page.locator('label.trace-rule').all()),
+    ...(await page.locator('.trace-case summary').all()),
+  ];
+  expect(targets).toHaveLength(16);
+  for (const target of targets) expect((await target.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
   await expectNoSidewaysScroll(page);
 });

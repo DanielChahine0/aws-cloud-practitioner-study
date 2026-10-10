@@ -1,6 +1,8 @@
 /** The lab screen's copy (spec 5, 7.4), pure so the tests match it word for word. */
 import type { LabEngineId } from '../../schemas/ids.ts';
+import type { NetworkTraceSpec, PolicyTraceSpec, TraceSpec } from '../../schemas/lab-trace.ts';
 import type { GoalResult } from '../labs/contract.ts';
+import type { TraceHop } from '../labs/trace/model.ts';
 import { shortDate } from './dates.ts';
 
 export const ENGINE_LABEL = {
@@ -71,3 +73,98 @@ export function simChartLabel(model: 'scaling' | 's3-lifecycle', series: readonl
     ? `${series.join(' and ')} for each hour from 0:00 to 23:00`
     : `${series.join(' and ')} at the end of each 30-day month`;
 }
+
+/** A Trace hop's verdict in words, so colour is never the only signal (spec 7.6). */
+export const HOP_WORD = {
+  allow: 'Allowed',
+  deny: 'Denied',
+  nomatch: 'No match',
+  stateful: 'Allowed as a reply',
+  skipped: 'Not reached',
+} as const;
+export const RESULT_WORD = { allow: 'Allowed', deny: 'Denied' } as const;
+export const CASES_HEADING = 'Test cases';
+
+/** A test case's live result beside the one it should give. */
+export const caseLine = (result: 'allow' | 'deny', expect: 'allow' | 'deny'): string =>
+  `Result: ${RESULT_WORD[result]}. Expected: ${RESULT_WORD[expect]}.`;
+
+type SgRule = NetworkTraceSpec['sg']['rules'][number];
+type NaclRule = NetworkTraceSpec['nacl']['rules'][number];
+type Statement = PolicyTraceSpec['policies'][number]['statements'][number];
+type Policy = PolicyTraceSpec['policies'][number];
+
+/** `TCP 443`, `UDP 1024-65535` or `all traffic`. */
+function traffic(rule: SgRule | NaclRule): string {
+  if (rule.proto === 'all') return 'all traffic';
+  const ports = rule.from === rule.to ? `${rule.from}` : `${rule.from}-${rule.to}`;
+  return `${rule.proto.toUpperCase()} ${ports}`;
+}
+
+const peer = (rule: SgRule | NaclRule): string => `${rule.dir === 'in' ? 'from' : 'to'} ${rule.cidr}`;
+
+/** `Inbound TCP 443 from 0.0.0.0/0`. */
+export function sgRuleText(rule: SgRule): string {
+  return `${rule.dir === 'in' ? 'Inbound' : 'Outbound'} ${traffic(rule)} ${peer(rule)}`;
+}
+
+/** `Rule 100: allow inbound TCP 443 from 0.0.0.0/0`. */
+export function naclRuleText(rule: NaclRule): string {
+  return `Rule ${rule.n}: ${rule.action} ${rule.dir === 'in' ? 'inbound' : 'outbound'} ${traffic(rule)} ${peer(rule)}`;
+}
+
+/** `Allow s3:GetObject on cafe-menu/*`. */
+export function statementText(statement: Statement): string {
+  const effect = statement.effect === 'allow' ? 'Allow' : 'Deny';
+  return `${effect} ${statement.actions.join(', ')} on ${statement.resources.join(', ')}`;
+}
+
+/** A policy's legend: `Bakers policy, attached to Bakers`, naming its principal, group or org node by label. */
+export function policyLegend(spec: PolicyTraceSpec, policy: Policy): string {
+  const holders = policy.kind === 'scp' ? spec.org : [...spec.principals, ...spec.groups];
+  const holder = holders.find((h) => h.id === policy.attach)?.label ?? 'nothing';
+  return `${policy.label}, attached to ${holder}`;
+}
+
+const HOP_PLACE = {
+  'nacl-in': 'Network ACL, inbound',
+  'nacl-out': 'Network ACL, outbound',
+  'sg-in': 'Security group, inbound',
+  'sg-out': 'Security group, outbound',
+} as const;
+
+/** One hop of a stepped case: `Network ACL, outbound (reply): Denied by the final * rule`. */
+export function hopLine(spec: TraceSpec, hop: TraceHop): string {
+  let place: string;
+  if (hop.at === 'scp') {
+    const node = spec.kind === 'policy' ? spec.org.find((n) => n.id === hop.node) : undefined;
+    place = `SCP at ${node?.label ?? 'the organization'}`;
+  } else if (hop.at === 'iam') {
+    place = 'IAM policies';
+  } else {
+    place = `${HOP_PLACE[hop.at]}${hop.reply ? ' (reply)' : ''}`;
+  }
+  let by = '';
+  if (hop.by === '*') by = ' by the final * rule';
+  else if (spec.kind === 'network' && (hop.at === 'nacl-in' || hop.at === 'nacl-out')) {
+    const rule = spec.nacl.rules.find((r) => r.id === hop.by);
+    if (rule !== undefined) by = ` by rule ${rule.n}`;
+  }
+  return `${place}: ${HOP_WORD[hop.verdict]}${by}`;
+}
+
+/** The text of the rule or statement a toggle names, or null when the spec has none by that id. */
+export function traceRuleText(spec: TraceSpec, id: string): string | null {
+  if (spec.kind === 'network') {
+    const sg = spec.sg.rules.find((r) => r.id === id);
+    if (sg !== undefined) return sgRuleText(sg);
+    const nacl = spec.nacl.rules.find((r) => r.id === id);
+    return nacl === undefined ? null : naclRuleText(nacl);
+  }
+  const statement = spec.policies.flatMap((p) => p.statements).find((s) => s.id === id);
+  return statement === undefined ? null : statementText(statement);
+}
+
+/** Announced when a Trace rule is switched. */
+export const ruleOnLine = (text: string): string => `${text} is on.`;
+export const ruleOffLine = (text: string): string => `${text} is off.`;

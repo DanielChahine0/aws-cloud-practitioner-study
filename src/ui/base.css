@@ -2277,6 +2277,79 @@ dialog.confirm .button {
 /* Labs: Place */
 
 /* Labs: Trace */
+.trace {
+  display: grid;
+  gap: 16px;
+}
+
+.trace-rules {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.trace-rules legend {
+  margin-bottom: 4px;
+  padding: 0;
+  font-weight: 600;
+}
+
+.trace-rule .option-text {
+  overflow-wrap: anywhere;
+}
+
+.trace-cases-title {
+  margin: 8px 0 0;
+}
+
+.trace-cases {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trace-case details {
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* A case off its expected result gets a dashed border beside its words, never colour alone. */
+.trace-case.is-off details {
+  border-style: dashed;
+  border-color: var(--active);
+}
+
+.trace-case summary {
+  min-height: 44px;
+  padding: 10px 16px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.trace-case summary:focus-visible {
+  outline: 2px solid var(--active);
+  outline-offset: 2px;
+}
+
+.trace-case-label {
+  font-weight: 600;
+}
+
+.trace-case-result {
+  color: var(--muted);
+}
+
+.trace-hops {
+  margin: 0;
+  padding: 0 16px 12px 40px;
+  overflow-wrap: anywhere;
+}
 
 /* Labs: Investigate */
 
