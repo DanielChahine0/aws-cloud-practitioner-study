@@ -38,10 +38,13 @@ export function weakestConcepts(
     .sort((a, b) => a.mastery - b.mastery || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }
 
-/** `not studied`, `mastery 32 · due today` or `mastery 32 · due Oct 14` (date by `shortDate`). */
-export function conceptMeta(row: ConceptRow, today: string): string {
-  if (row.due === null) return 'not studied';
-  return `mastery ${row.mastery} · due ${row.due <= today ? 'today' : shortDate(row.due)}`;
+/**
+ * A concept row's marks: `not studied`, or `mastery 32` and `due today` or `due Oct 14` (date by `shortDate`). Each
+ * mark is one unbreakable phrase, so a narrow row wraps between marks and never splits a date from its label.
+ */
+export function conceptMarks(row: ConceptRow, today: string): string[] {
+  if (row.due === null) return ['not studied'];
+  return [`mastery ${row.mastery}`, `due ${row.due <= today ? 'today' : shortDate(row.due)}`];
 }
 
 /** The Boss section's line (spec 3.11 and 4.2): locked, passed, cooling down, or open; the pass day is in the zone `tz`. */

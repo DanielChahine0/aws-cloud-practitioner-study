@@ -1,3 +1,4 @@
+import { Fragment } from 'preact';
 import { useEffect } from 'preact/hooks';
 import type { ContentIndex } from '../../../schemas/chunks.ts';
 import { studyDay, tzOffset } from '../../engine/day.ts';
@@ -8,7 +9,7 @@ import { useTitle } from '../../ui/useTitle.ts';
 import { now } from '../clock.ts';
 import { ensureModule, modules } from '../content.ts';
 import { bosses, mastery, memory } from '../memory.ts';
-import { bossLineOf, conceptMeta, masteryLine, weakestConcepts } from '../module.ts';
+import { bossLineOf, conceptMarks, masteryLine, weakestConcepts } from '../module.ts';
 import { progress, storeReady } from '../progress.ts';
 import { pad2 } from '../router.ts';
 import { quizAvailability } from '../runner.ts';
@@ -159,7 +160,14 @@ function Concepts({ idx, module }: { idx: ContentIndex; module: number }) {
                 data-nav-item
               >
                 <span class="row-title">{row.name}</span>
-                <span class="row-meta">{conceptMeta(row, today)}</span>
+                <span class="row-meta row-marks">
+                  {conceptMarks(row, today).map((mark, i) => (
+                    <Fragment key={mark}>
+                      {i > 0 && ' '}
+                      <span class="mark">{mark}</span>
+                    </Fragment>
+                  ))}
+                </span>
               </a>
             </li>
           );

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   bossLineOf,
-  conceptMeta,
+  conceptMarks,
   masteryLine,
   RECALL_LABEL,
   recallBand,
@@ -78,18 +78,23 @@ describe('weakestConcepts', () => {
   });
 });
 
-describe('conceptMeta', () => {
-  it('says not studied, due today, or the due date', () => {
-    expect(conceptMeta({ id: 'c', name: 'C', mastery: 0, due: null }, '2026-10-14')).toBe('not studied');
-    expect(conceptMeta({ id: 'c', name: 'C', mastery: 32, due: '2026-10-14' }, '2026-10-14')).toBe(
-      'mastery 32 · due today',
-    );
-    expect(conceptMeta({ id: 'c', name: 'C', mastery: 32, due: '2026-10-02' }, '2026-10-14')).toBe(
-      'mastery 32 · due today',
-    );
-    expect(conceptMeta({ id: 'c', name: 'C', mastery: 32, due: '2026-10-20' }, '2026-10-14')).toBe(
-      'mastery 32 · due Oct 20',
-    );
+describe('conceptMarks', () => {
+  it('says not studied, or the mastery and due today or the due date', () => {
+    expect(conceptMarks({ id: 'c', name: 'C', mastery: 0, due: null }, '2026-10-14')).toEqual([
+      'not studied',
+    ]);
+    expect(conceptMarks({ id: 'c', name: 'C', mastery: 32, due: '2026-10-14' }, '2026-10-14')).toEqual([
+      'mastery 32',
+      'due today',
+    ]);
+    expect(conceptMarks({ id: 'c', name: 'C', mastery: 32, due: '2026-10-02' }, '2026-10-14')).toEqual([
+      'mastery 32',
+      'due today',
+    ]);
+    expect(conceptMarks({ id: 'c', name: 'C', mastery: 32, due: '2026-10-20' }, '2026-10-14')).toEqual([
+      'mastery 32',
+      'due Oct 20',
+    ]);
   });
 });
 
