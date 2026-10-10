@@ -159,6 +159,7 @@ function Labs({
                 <span class="row-n">{row.engine}</span>
                 <span class="row-title">{row.title}</span>
                 <span class="row-meta row-marks">
+                  {row.stretch && <span class="mark">Stretch</span>}
                   <span class="mark">{row.minutes} min</span>
                   {row.done && (
                     <span class="mark">

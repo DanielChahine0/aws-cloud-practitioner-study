@@ -11,6 +11,10 @@ import { commit, request, STORES } from './idb.ts';
  * open boss or mock, `{ sid, picks, flagged, changes, ms, current }`, which the exam shell writes on every change
  * and turns into answer events at submit (spec 8.1).
  * `labDrafts` holds `Record<lab id, { rev, actions, hints }>` for unfinished labs.
+ * `plan` is the plan status that Mission 0 or the Already done form records, `{ plan, credits, endsOn, services,
+ * recordedAt }`, and `missionTicks` maps each mission id to its ticked step ids (spec 5.3, 8.1).
+ * The capstone ADR drafts live under `adr-01` to `adr-13` (`adrKey`), one key per module, so an import that keeps
+ * the newer `updatedAt` per key never drops a module typed on another device (spec 6, 8.3).
  */
 export const KV_KEYS = {
   lastExportAt: 'lastExportAt',
@@ -22,7 +26,17 @@ export const KV_KEYS = {
   rankSeen: 'rankSeen',
   examSession: 'examSession',
   labDrafts: 'labDrafts',
+  plan: 'plan',
+  missionTicks: 'missionTicks',
 } as const;
+
+/** The prefix of the 13 ADR draft keys. */
+export const ADR_KEY_PREFIX = 'adr-';
+
+/** The kv key of one module's ADR draft: `adr-01` to `adr-13`. */
+export function adrKey(module: number): string {
+  return `${ADR_KEY_PREFIX}${String(module).padStart(2, '0')}`;
+}
 
 export type KvRecords = Record<string, KvValue>;
 
