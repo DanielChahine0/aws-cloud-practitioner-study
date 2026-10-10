@@ -1,3 +1,6 @@
+import { execFileSync } from 'node:child_process';
+import { rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { QID_ALPHABET, Qid } from '../../schemas/question.ts';
 import { newQid, qidSourceTexts, takenQids } from '../../scripts/content/lib/qid.ts';
@@ -40,5 +43,23 @@ describe('qidSourceTexts', () => {
     const taken = takenQids(qidSourceTexts(root));
     expect(taken.has('q-9d4r6t')).toBe(true);
     expect(taken.has('q-b4k7m2')).toBe(true);
+  });
+});
+
+describe('qidSourceTexts and incident steps', () => {
+  it('takes the ids of incident steps in the tree and in HEAD', () => {
+    const root = makeFixtureRoot();
+    expect(takenQids(qidSourceTexts(root)).has('q-d2f6h8')).toBe(true);
+    writeFileSync(join(root, 'content/incidents/inc-002.yaml'), 'id: inc-002\nsteps:\n  - id: q-5t6v7w\n');
+    expect(takenQids(qidSourceTexts(root)).has('q-5t6v7w')).toBe(true);
+    rmSync(join(root, 'content/incidents/inc-002.yaml'));
+    execFileSync('git', ['init', '-q'], { cwd: root });
+    writeFileSync(join(root, 'content/incidents/inc-003.yaml'), 'id: inc-003\nsteps:\n  - id: q-8x9y0z\n');
+    execFileSync('git', ['add', '-A'], { cwd: root });
+    execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qm', 'head'], {
+      cwd: root,
+    });
+    rmSync(join(root, 'content/incidents/inc-003.yaml'));
+    expect(takenQids(qidSourceTexts(root)).has('q-8x9y0z')).toBe(true);
   });
 });

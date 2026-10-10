@@ -14,6 +14,7 @@ const KIND_WEIGHT: Record<SearchEntry['kind'], number> = {
   concept: 2,
   term: 1,
   mission: 0,
+  lab: 0,
 };
 
 function score(entry: SearchEntry, q: string, words: readonly string[]): number {
@@ -29,7 +30,8 @@ function score(entry: SearchEntry, q: string, words: readonly string[]): number 
 
 /**
  * Palette results, best first: exact title, title prefix, word prefix in the title, then every query word
- * as a word prefix in the text; kind breaks ties (module, lesson, concept, term, mission), then shorter titles.
+ * as a word prefix in the text; kind breaks ties (module, lesson, concept, term, then mission and lab), then shorter
+ * titles.
  * An empty query lists the modules in course order.
  */
 export function rank(entries: readonly SearchEntry[], query: string): SearchEntry[] {

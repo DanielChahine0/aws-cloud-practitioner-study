@@ -2,9 +2,9 @@ import { useEffect } from 'preact/hooks';
 import { now } from './clock.ts';
 import { index } from './content.ts';
 import { nextLabel } from './home.ts';
-import { keyStep } from './keys.ts';
+import { G_WINDOW_MS, keyStep } from './keys.ts';
 import { nextUp } from './memory.ts';
-import { closeTerm, exam, navigate, openTerm, overlay, route } from './state.ts';
+import { closeTerm, exam, labHolding, navigate, openTerm, overlay, route } from './state.ts';
 
 /** Input types that take no typed text, so single-letter shortcuts stay on while one has focus. */
 const NON_TEXT_INPUTS = new Set(['radio', 'checkbox', 'button', 'submit', 'reset', 'file', 'range', 'color']);
@@ -20,6 +20,20 @@ export const isTyping = (target: EventTarget | null): boolean =>
 /** True when focus is on an element that answers Enter itself: a link, a button, a form field or a summary. */
 export const isControl = (target: EventTarget | null): boolean =>
   target instanceof Element && target.closest('a, button, input, select, textarea, summary') !== null;
+
+/** When `g` was pressed, if it was the previous key; the global listener below keeps it. */
+let gAt: number | null = null;
+/** The keydown the global listener handled last, and whether a `g` was pending when it came. */
+let handled: { at: number; pending: boolean } | null = null;
+
+/**
+ * True when the keydown at `at` follows a `g` still open, so a screen's own `h` or `r` leaves the `g h` and `g r`
+ * sequences alone, whichever window listener sees the keydown first.
+ */
+export function gPending(at: number): boolean {
+  if (handled !== null && handled.at === at) return handled.pending;
+  return gAt !== null && at - gAt <= G_WINDOW_MS;
+}
 
 /** Follows the Next button, when it has somewhere to go. */
 function followNext(): void {
@@ -43,8 +57,8 @@ function moveFocus(delta: 1 | -1): void {
 /** The one window keydown listener for the global shortcuts (spec 7.4); dialogs handle their own keys. */
 export function useKeyboard(): void {
   useEffect(() => {
-    let gAt: number | null = null;
     const onKeyDown = (event: KeyboardEvent): void => {
+      handled = { at: event.timeStamp, pending: gAt !== null && event.timeStamp - gAt <= G_WINDOW_MS };
       const step = keyStep(
         {
           key: event.key,
@@ -62,6 +76,7 @@ export function useKeyboard(): void {
           termOpen: openTerm.value !== null,
           gAt,
           exam: exam.value !== null,
+          labHolding: labHolding.value,
         },
       );
       gAt = step.gAt;

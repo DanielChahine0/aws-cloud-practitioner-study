@@ -13,6 +13,8 @@ export type Route =
   | { kind: 'mock'; form: MockRoute }
   | { kind: 'focus'; scope: string }
   | { kind: 'results'; sid: string }
+  | { kind: 'lab'; module: number; id: string }
+  | { kind: 'incident' }
   | { kind: 'not-found'; hash: string };
 
 /** A mock's route segment: a form in lower case, or the remix. */
@@ -30,6 +32,8 @@ const MOCK_PATH = /^\/s\/mock\/(a|b|c|d|remix)$/;
 /** A blueprint task (1.1 to 4.3) or a module (`m01` to `m13`). */
 const FOCUS_PATH = new RegExp(`^/s/focus/(1\\.[1-4]|2\\.[1-4]|3\\.[1-8]|4\\.[1-3]|m${MODULE})$`);
 const RESULTS_PATH = /^\/r\/([0-9A-HJKMNP-TV-Z]{26})$/;
+/** A lab (spec 7.2): the module in the path must be the module in the lab id. */
+const LAB_PATH = /^\/m\/(0[1-9]|1[0-3])\/lab\/(lab-m(0[1-9]|1[0-3])-[a-z0-9]+(?:-[a-z0-9]+)*)$/;
 
 export function pad2(n: number): string {
   return String(n).padStart(2, '0');
@@ -42,6 +46,7 @@ export function parseHash(hash: string): Route {
   if (path === '/missions') return { kind: 'missions' };
   if (path === '/s/review') return { kind: 'review' };
   if (path === '/s/mock') return { kind: 'mocks' };
+  if (path === '/s/incident') return { kind: 'incident' };
   const module = MODULE_PATH.exec(path);
   if (module) return { kind: 'module', module: Number(module[1]) };
   const lesson = LESSON_PATH.exec(path);
@@ -62,6 +67,8 @@ export function parseHash(hash: string): Route {
   if (focus) return { kind: 'focus', scope: focus[1] ?? '' };
   const results = RESULTS_PATH.exec(path);
   if (results) return { kind: 'results', sid: results[1] ?? '' };
+  const lab = LAB_PATH.exec(path);
+  if (lab && lab[1] === lab[3]) return { kind: 'lab', module: Number(lab[1]), id: lab[2] ?? '' };
   return { kind: 'not-found', hash };
 }
 
@@ -93,6 +100,10 @@ export function toHash(route: Route): string {
       return `#/s/focus/${route.scope}`;
     case 'results':
       return `#/r/${route.sid}`;
+    case 'lab':
+      return `#/m/${pad2(route.module)}/lab/${route.id}`;
+    case 'incident':
+      return '#/s/incident';
     case 'not-found':
       return route.hash;
   }

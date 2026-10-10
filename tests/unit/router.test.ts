@@ -25,6 +25,12 @@ describe('parseHash', () => {
     expect(parseHash('#/s/review')).toEqual({ kind: 'review' });
   });
 
+  it('reads the daily incident route, and nothing under it', () => {
+    expect(parseHash('#/s/incident')).toEqual({ kind: 'incident' });
+    expect(toHash({ kind: 'incident' })).toBe('#/s/incident');
+    expect(parseHash('#/s/incident/inc-001')).toEqual({ kind: 'not-found', hash: '#/s/incident/inc-001' });
+  });
+
   it('reads the boss, mock, focus and results routes', () => {
     expect(parseHash('#/s/boss/m05')).toEqual({ kind: 'boss', module: 5 });
     expect(parseHash('#/s/mock')).toEqual({ kind: 'mocks' });
@@ -38,6 +44,27 @@ describe('parseHash', () => {
       kind: 'results',
       sid: '01JA0000000000000000000000',
     });
+  });
+
+  it('reads a lab route only when its module matches the module in the lab id', () => {
+    expect(parseHash('#/m/03/lab/lab-m03-pick-the-compute')).toEqual({
+      kind: 'lab',
+      module: 3,
+      id: 'lab-m03-pick-the-compute',
+    });
+    expect(toHash({ kind: 'lab', module: 3, id: 'lab-m03-pick-the-compute' })).toBe(
+      '#/m/03/lab/lab-m03-pick-the-compute',
+    );
+    for (const hash of [
+      '#/m/04/lab/lab-m03-pick-the-compute',
+      '#/m/03/lab/lab-m3-pick-the-compute',
+      '#/m/03/lab/pick-the-compute',
+      '#/m/03/lab/lab-m03-',
+      '#/m/14/lab/lab-m14-x',
+      '#/m/03/lab/',
+    ]) {
+      expect(parseHash(hash)).toEqual({ kind: 'not-found', hash });
+    }
   });
 
   it('sends anything else to not-found with the hash it got', () => {
@@ -91,6 +118,7 @@ describe('toHash', () => {
     { kind: 'focus', scope: '2.3' },
     { kind: 'focus', scope: 'm05' },
     { kind: 'results', sid: '01JA0000000000000000000000' },
+    { kind: 'incident' },
     { kind: 'not-found', hash: '#/nowhere' },
   ];
 

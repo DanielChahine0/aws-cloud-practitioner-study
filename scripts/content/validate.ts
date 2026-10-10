@@ -1,12 +1,13 @@
 /**
  * pnpm content:validate [--all | --draft <file> | --demote]: runs the rules switched on in content/validate.yaml,
  * or every implemented rule with --all (spec 2.9).
- *   --draft <file>  checks one question file as if its drafts were live, plus the style and coverage checks
+ *   --draft <file>  checks one question or incident file as if its drafts were live, plus the style and coverage
+ *                   checks, or one lab file under content/labs/ with the lab rules and its replay (R11)
  *   --demote        sets live questions whose evidence left their note back to draft, then validates as usual
  */
 import { resolve } from 'node:path';
-import { loadContext } from './lib/context.ts';
-import { demote, draftCheck } from './lib/draft.ts';
+import { isIncidentFile, LABS_DIR, loadContext } from './lib/context.ts';
+import { demote, draftCheck, labDraftCheck } from './lib/draft.ts';
 import { formatFinding, RULES, redact, runRules } from './rules/index.ts';
 
 const root = resolve(import.meta.dirname, '..', '..');
@@ -16,12 +17,19 @@ const draftAt = args.indexOf('--draft');
 if (draftAt >= 0) {
   const file = args[draftAt + 1];
   if (file === undefined) {
-    console.error('content:validate: --draft needs a question file path');
+    console.error('content:validate: --draft needs a question or lab file path');
     process.exit(1);
+  }
+  if (file.startsWith(`${LABS_DIR}/`)) {
+    const { labs, problems } = labDraftCheck(loadContext(root), file);
+    for (const problem of problems) console.error(problem);
+    console.log(`draft check ${file}: ${labs} lab${labs === 1 ? '' : 's'}, ${problems.length} problems`);
+    process.exit(problems.length > 0 ? 1 : 0);
   }
   const { questions, problems } = draftCheck(loadContext(root), file);
   for (const problem of problems) console.error(problem);
-  console.log(`draft check ${file}: ${questions} questions, ${problems.length} problems`);
+  const noun = isIncidentFile(file) ? 'steps' : 'questions';
+  console.log(`draft check ${file}: ${questions} ${noun}, ${problems.length} problems`);
   process.exit(problems.length > 0 ? 1 : 0);
 }
 

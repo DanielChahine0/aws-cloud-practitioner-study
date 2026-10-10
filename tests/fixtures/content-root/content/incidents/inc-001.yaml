@@ -1,0 +1,72 @@
+id: inc-001
+title: Saturday rush at the harbour
+modules: [1]
+concepts: [shared-kitchen, per-minute-rental]
+brief: The harbour branch is buried in a Saturday bun rush, and by the afternoon the manager is puzzled by the cabinet bill.
+steps:
+  - id: q-d2f6h8
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: shared-kitchen
+    note: m01/what-a-bakery-cloud-is
+    task: "1.1"
+    level: 2
+    stem: At ten in the morning the bun queue reaches the door while the shared ovens stand cold. What should the harbour branch do first?
+    options:
+      - id: a
+        text: Send the extra bun trays to the shared ovens for the morning
+        correct: true
+        why: Borrowing idle shared ovens for a busy morning adds capacity without buying anything.
+      - id: b
+        text: Order a new oven for the harbour branch
+        why: A new oven would stand unused on quiet days, the waste the shared ovens avoid.
+      - id: c
+        text: Turn customers away once the queue passes ten people
+        why: Turning people away loses the sales that borrowed capacity would have kept.
+      - id: d
+        text: Bake tomorrow's buns tonight and sell them cold
+        why: Baking early adds no oven capacity and leaves the buns stale by morning.
+    evidence:
+      - Branches use ovens from one central kitchen when their queues grow.
+    takeaway: When a queue grows, borrow shared ovens instead of buying more.
+    history: []
+    verified:
+      keyHash: 1e0afefec6b2
+      fullHash: 6dd46478085d
+      checks: [solve-closed@1, solve-notes@1, critic@1]
+      on: "2026-10-10"
+  - id: q-e3g7j9
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: per-minute-rental
+    note: m01/what-a-bakery-cloud-is
+    task: "4.1"
+    level: 2
+    stem: The manager handed the borrowed proofing cabinet back at noon. What does the branch pay for that cabinet after noon?
+    options:
+      - id: a
+        text: Nothing, since no dough rises in it once it is handed back
+        correct: true
+        why: A cabinet costs money only while dough is inside it, so a returned one costs nothing.
+      - id: b
+        text: The whole day, since the cabinet was booked that morning
+        why: The bill follows the minutes of proofing, not the day the cabinet was first used.
+      - id: c
+        text: A flat monthly fee for keeping the cabinet on hand
+        why: There is no standing fee; the branch pays only for the minutes dough proofs.
+      - id: d
+        text: Half the day, as a charge for handing it back early
+        why: Handing a cabinet back early carries no charge; it simply stops the billing.
+    evidence:
+      - Cabinets are billed only while dough proofs.
+    takeaway: A cabinet handed back stops costing money as soon as the dough leaves it.
+    history: []
+    verified:
+      keyHash: ab16173e4fee
+      fullHash: cbf15c01f6bb
+      checks: [solve-closed@1, solve-notes@1, critic@1]
+      on: "2026-10-10"

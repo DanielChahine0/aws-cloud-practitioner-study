@@ -3,7 +3,14 @@ import type { DomainIdValue } from '../../../schemas/ids.ts';
 import type { Question } from '../../../schemas/question.ts';
 import { domainOf, MAX_PER_CONCEPT } from '../../../src/engine/quotas.ts';
 import { NEEDS_DANI_ATTEMPTS } from './checks.ts';
-import { type Context, type LessonNote, POOL_DIR, QUOTAS_FILE, questionFileOf } from './context.ts';
+import {
+  type Context,
+  incidentShips,
+  type LessonNote,
+  POOL_DIR,
+  QUOTAS_FILE,
+  questionFileOf,
+} from './context.ts';
 import { conceptsMdDrift, coverage, examConceptCounts, examCounts, practiceCounts } from './coverage.ts';
 import { parseGlossary } from './glossary.ts';
 import { notesAnchors } from './markdown.ts';
@@ -28,14 +35,25 @@ function styleLine(module: number, pool: Question['pool'], qs: readonly Question
   );
 }
 
-/** The default report: practice counts, one style line per module for each pool, and the concepts.md drift. */
+/** `Incidents: <s> shipped of <n>; steps <l> live, <d> draft`, where shipped incidents are the ones the build ships. */
+function incidentLine(ctx: Context): string {
+  const shipped = ctx.incidents.filter(incidentShips).length;
+  const steps = ctx.incidents.flatMap((i) => i.steps);
+  const of = (status: string): number => steps.filter((s) => s.q.status === status).length;
+  return `Incidents: ${shipped} shipped of ${ctx.incidents.length}; steps ${of('live')} live, ${of('draft')} draft`;
+}
+
+/**
+ * The default report: practice, lab and incident counts, one style line per module for each pool, the live labs of
+ * each module, and the concepts.md drift.
+ */
 export function report(ctx: Context): string[] {
   const lessons = ctx.notes.filter((n) => n.kind === 'lesson');
   const modules = new Set(ctx.notes.map((n) => n.module)).size;
   const glossary = ctx.shared.find((f) => f.path === 'resources/glossary.md');
   const terms = glossary === undefined ? 0 : parseGlossary(glossary.text, glossary.path).length;
   const tested = ctx.concepts.filter((c) => c.tested !== false).length;
-  const qs = ctx.questions.filter((e) => e.q.pool === 'practice').map((e) => e.q);
+  const qs = ctx.questions.filter((e) => e.incident === null && e.q.pool === 'practice').map((e) => e.q);
   const by = (status: string): number => qs.filter((q) => q.status === status).length;
   const live = qs.filter((q) => q.status === 'live');
   const liveBy = (type: string): number => live.filter((q) => q.type === type).length;
@@ -43,13 +61,23 @@ export function report(ctx: Context): string[] {
     `modules ${modules}, lessons ${lessons.length}, glossary terms ${terms}, concepts ${ctx.concepts.length} (${tested} tested)`,
     `questions: ${by('draft')} draft, ${by('live')} live, ${by('retired')} retired; live single ${liveBy('single')}, multi ${liveBy('multi')}, match ${liveBy('match')}`,
   ];
+  const labs = ctx.labs.filter((e) => e.lab.status === 'live').map((e) => e.lab);
+  const labsBy = (pick: (lab: (typeof labs)[number]) => string, value: string): number =>
+    labs.filter((lab) => pick(lab) === value).length;
+  out.push(
+    `Labs: ${labs.length} live (${labsBy((l) => l.tier, 'core')} core, ${labsBy((l) => l.tier, 'stretch')} stretch); sort ${labsBy((l) => l.engine, 'sort')}, configure ${labsBy((l) => l.engine, 'configure')}, simulate ${labsBy((l) => l.engine, 'simulate')}`,
+  );
+  out.push(incidentLine(ctx));
   const modulesWithQuestions = [...new Set(ctx.questions.map((e) => e.module))].sort((a, b) => a - b);
   for (const m of modulesWithQuestions) {
     const of = (pool: Question['pool']): Question[] =>
-      ctx.questions.filter((e) => e.module === m && e.q.pool === pool).map((e) => e.q);
+      ctx.questions.filter((e) => e.incident === null && e.module === m && e.q.pool === pool).map((e) => e.q);
     for (const line of [styleLine(m, 'practice', of('practice')), styleLine(m, 'exam', of('exam'))]) {
       if (line !== null) out.push(line);
     }
+  }
+  for (const m of [...new Set(labs.map((lab) => lab.module))].sort((a, b) => a - b)) {
+    out.push(`m${pad2(m)} labs: ${labs.filter((lab) => lab.module === m).length}`);
   }
   const drift = conceptsMdDrift(ctx);
   out.push(`concepts.md drift: ${drift.length}`, ...drift.slice(0, DRIFT_LINES).map((line) => `  ${line}`));
@@ -124,9 +152,57 @@ export function homed(ctx: Context, noteId: string): HomedConcepts {
       };
     });
   const existing = ctx.questions.filter(
-    (e) => e.q.pool === 'practice' && e.noteId === noteId && e.q.status !== 'retired',
+    (e) => e.incident === null && e.q.pool === 'practice' && e.noteId === noteId && e.q.status !== 'retired',
   ).length;
   return { note: noteId, title: note.fm?.title ?? note.slugFromPath, concepts, existing };
+}
+
+/** One module of `--lab-targets`: its folder, its labs, and each tested concept homed in it with its live practice ids. */
+export interface LabTarget {
+  module: number;
+  dir: string;
+  labs: string[];
+  concepts: {
+    id: string;
+    name: string;
+    note: string;
+    tasks: string[];
+    practice: { id: string; type: 'single' | 'multi' | 'match' }[];
+  }[];
+}
+
+/**
+ * `--lab-targets`: for each module, in order, its folder name, the lab ids already written, and each tested concept
+ * homed in it with the ids and types of its live practice questions (debrief candidates; never exam items).
+ */
+export function labTargets(ctx: Context): LabTarget[] {
+  const aliasOf = new Map<string, string>();
+  for (const c of ctx.concepts) for (const alias of c.aliases ?? []) aliasOf.set(alias, c.id);
+  const live = ctx.questions.filter(
+    (e) => e.incident === null && e.q.pool === 'practice' && e.q.status === 'live',
+  );
+  const out: LabTarget[] = [];
+  for (const readme of ctx.notes.filter((n) => n.kind === 'module')) {
+    const m = readme.module;
+    const prefix = `m${pad2(m)}/`;
+    out.push({
+      module: m,
+      dir: readme.path.split('/')[1] ?? '',
+      labs: ctx.labs.filter((e) => e.module === m).map((e) => e.lab.id),
+      concepts: ctx.concepts
+        .filter((c) => c.tested !== false && c.home.startsWith(prefix))
+        .map((c) => ({
+          id: c.id,
+          name: c.name,
+          note: c.home,
+          tasks: [...c.tasks],
+          practice: live
+            .filter((e) => (aliasOf.get(e.q.concept) ?? e.q.concept) === c.id)
+            .map((e) => ({ id: e.q.id, type: e.q.type })),
+        })),
+    });
+  }
+  return out;
 }
 
 export interface Target {
@@ -143,8 +219,8 @@ export function targets(ctx: Context): Target[] {
     const need = homed(ctx, note.id).concepts.reduce((sum, c) => sum + c.need, 0);
     if (need === 0) continue;
     const file =
-      ctx.questions.find((e) => e.q.pool === 'practice' && e.noteId === note.id)?.path ??
-      questionFileOf(note.path);
+      ctx.questions.find((e) => e.incident === null && e.q.pool === 'practice' && e.noteId === note.id)
+        ?.path ?? questionFileOf(note.path);
     out.push({ note: note.id, file, need });
   }
   return out;
@@ -228,4 +304,36 @@ export function examTargets(ctx: Context): ExamTarget[] {
       .filter((c) => c.open < MAX_PER_CONCEPT);
     return { module, file, cells, multi, concepts };
   });
+}
+
+/** One module's entry of `--incident-targets`: the incident ids it owns, the earlier modules and its tested concepts. */
+export interface IncidentTarget {
+  module: number;
+  ids: string[];
+  earlier: number[];
+  concepts: { id: string; name: string; note: string; tasks: string[] }[];
+}
+
+/** The first and last module with incidents, and how many incident ids each module owns (spec 4.5). */
+export const INCIDENT_MODULES = { first: 2, last: 13, each: 4 } as const;
+
+/**
+ * `--incident-targets`: Modules 2 to 13, each owning four pre-assigned ids (Module m owns `inc-<4(m-2)+1>` to
+ * `inc-<4(m-1)>`), the modules before it, and the tested concepts homed in it, so twelve writers never share a file.
+ */
+export function incidentTargets(ctx: Context): IncidentTarget[] {
+  const { first, last, each } = INCIDENT_MODULES;
+  const out: IncidentTarget[] = [];
+  for (let module = first; module <= last; module++) {
+    const ids = Array.from(
+      { length: each },
+      (_, i) => `inc-${String(each * (module - first) + i + 1).padStart(3, '0')}`,
+    );
+    const earlier = Array.from({ length: module - 1 }, (_, i) => i + 1);
+    const concepts = ctx.concepts
+      .filter((c) => c.tested !== false && Number(c.home.slice(1, 3)) === module)
+      .map((c) => ({ id: c.id, name: c.name, note: c.home, tasks: [...c.tasks] }));
+    out.push({ module, ids, earlier, concepts });
+  }
+  return out;
 }

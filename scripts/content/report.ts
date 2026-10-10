@@ -5,13 +5,24 @@
  *   --needs-dani         practice drafts with 2 failed revisions
  *   --homed <noteId>     JSON of the tested concepts homed in a lesson, with live, open and need counts, for the question writers
  *   --targets            JSON of the lesson notes whose concepts need new drafts, with the file to write and how many
+ *   --lab-targets        JSON of each module's folder, its lab ids, and its tested concepts with their live practice ids
  *   --exam-targets       JSON of each module's exam-pool cells and multi-response shares, with spare, live, open,
  *                        need and liveNeed counts, and its concepts that can still take an exam item (ids only)
+ *   --incident-targets   JSON of Modules 2 to 13 with their four incident ids, earlier modules and tested concepts
  */
 import { resolve } from 'node:path';
 import { loadContext } from './lib/context.ts';
 import { missingTerms } from './lib/coverage.ts';
-import { coverageReport, examTargets, homed, needsDani, report, targets } from './lib/report.ts';
+import {
+  coverageReport,
+  examTargets,
+  homed,
+  incidentTargets,
+  labTargets,
+  needsDani,
+  report,
+  targets,
+} from './lib/report.ts';
 
 const args = process.argv.slice(2);
 const ctx = loadContext(resolve(import.meta.dirname, '..', '..'));
@@ -29,6 +40,10 @@ if (homedAt >= 0) {
     console.error(`content:report: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
   }
+} else if (args.includes('--lab-targets')) {
+  console.log(JSON.stringify(labTargets(ctx), null, 2));
+} else if (args.includes('--incident-targets')) {
+  console.log(JSON.stringify(incidentTargets(ctx), null, 2));
 } else if (args.includes('--targets')) {
   console.log(JSON.stringify(targets(ctx), null, 2));
 } else if (args.includes('--exam-targets')) {

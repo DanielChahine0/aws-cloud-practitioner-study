@@ -20,6 +20,8 @@ export const openTerm = signal<OpenTerm | null>(null);
 export const exam = signal<{ sid: string; label: string; total: number; deadline: string } | null>(null);
 /** The 1-based position of the exam question on screen, for the focus bar's `23/65`. */
 export const examPosition = signal(1);
+/** True while a Sort lab card is held: Escape then puts it down instead of going up a level. */
+export const labHolding = signal(false);
 
 /** Closes the glossary popover and gives focus back to its term button. */
 export function closeTerm(): void {
@@ -36,6 +38,7 @@ function arrive(): void {
     route.value = parseHash(location.hash);
     overlay.value = null;
     openTerm.value = null;
+    labHolding.value = false;
   });
   document.getElementById('main')?.focus({ preventScroll: true });
 }

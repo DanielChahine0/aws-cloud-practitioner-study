@@ -1,33 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { closeOnBackdrop } from '../../ui/backdrop.ts';
+import { SHORTCUTS } from '../shortcuts.ts';
 import { overlay } from '../state.ts';
-
-const SHORTCUTS: readonly { keys: readonly string[]; joiner: string; action: string }[] = [
-  { keys: ['/', 'Cmd+K'], joiner: 'or', action: 'Search' },
-  { keys: ['?'], joiner: '', action: 'This help' },
-  { keys: ['g', 'h'], joiner: 'then', action: 'Home' },
-  { keys: ['g', 'r'], joiner: 'then', action: 'Review' },
-  { keys: ['g', 'p'], joiner: 'then', action: 'Progress' },
-  { keys: ['Enter'], joiner: '', action: 'Next (Home)' },
-  { keys: ['j', 'k'], joiner: 'and', action: 'Move (Home and Module)' },
-  { keys: ['[', ']'], joiner: 'and', action: 'Previous or next lesson' },
-  { keys: ['c'], joiner: '', action: 'Check yourself' },
-  { keys: ['Esc'], joiner: '', action: 'Close, or go up one level' },
-  { keys: ['1', '6'], joiner: 'to', action: 'Choose an option (toggle in multi)' },
-  { keys: ['Enter'], joiner: '', action: 'Check (not sure), then Next' },
-  { keys: ['Shift+Enter'], joiner: '', action: 'Sure' },
-  { keys: ['e'], joiner: '', action: 'Expand every explanation' },
-  { keys: ['o'], joiner: '', action: 'Read in notes' },
-  { keys: ['!'], joiner: '', action: 'Report a problem' },
-  { keys: ['1', '5'], joiner: 'to', action: 'Match: pick a left item' },
-  { keys: ['a', 'e'], joiner: 'to', action: 'Match: pair it' },
-  { keys: ['Backspace'], joiner: '', action: 'Match: unpair' },
-  { keys: ['1', '6'], joiner: 'to', action: 'Exam: choose an option' },
-  { keys: ['←', '→'], joiner: 'and', action: 'Exam: previous or next question' },
-  { keys: ['f'], joiner: '', action: 'Exam: flag for review' },
-  { keys: ['g'], joiner: '', action: 'Exam: open the question grid' },
-  { keys: ['Ctrl+Enter'], joiner: '', action: 'Exam: submit' },
-];
 
 /** The keyboard help sheet (`?`). */
 export function Help() {

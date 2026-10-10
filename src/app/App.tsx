@@ -9,7 +9,6 @@ import { examTick, openExam } from './exam-clock.ts';
 import { useKeyboard } from './keyboard.ts';
 import { rankUp, watchRanks } from './memory.ts';
 import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
-import { Help } from './screens/Help.tsx';
 import { LAZY_ERROR, lazyScreen } from './screens/Lazy.tsx';
 import { Palette } from './screens/Palette.tsx';
 import { Screen } from './screens/Screen.tsx';
@@ -17,18 +16,25 @@ import { TopBar } from './screens/TopBar.tsx';
 import { exam, overlay, route } from './state.ts';
 import { rankUpLine, rulesLine } from './topbar.ts';
 
-// The Progress overlay's code stays out of the initial bundle (spec 2.10); the app fetches it once the log has loaded,
-// so the save-error banner's Export works offline on a first visit too.
+// The Progress and Help sheets' code stays out of the initial bundle (spec 2.10); the app fetches both once the log has
+// loaded, so the save-error banner's Export and the `?` sheet work offline on a first visit too.
 const Progress = lazyScreen(
   () => import('./screens/Progress.tsx').then((m) => m.Progress),
-  ProgressLoadError,
+  sheetLoadError('progress', 'Progress'),
+);
+const Help = lazyScreen(
+  () => import('./screens/Help.tsx').then((m) => m.Help),
+  sheetLoadError('help', 'Keyboard shortcuts'),
 );
 
 /** The shell: the top bar, the screen for the route once the content index has loaded, and the open dialog. */
 export function App() {
   useEffect(() => {
     loadIndex();
-    void initStore().then(Progress.preload);
+    void initStore().then(() => {
+      Progress.preload();
+      Help.preload();
+    });
     return startClock();
   }, []);
   useEffect(() => watchRanks(), []);
@@ -103,36 +109,38 @@ function SaveError() {
 }
 
 /**
- * The Progress sheet when its code cannot load: a closable dialog, so closing it gives the keys back and the next open
- * tries the load again.
+ * A sheet whose code cannot load: a closable dialog, so closing it gives the keys back and the next open tries the load
+ * again.
  */
-function ProgressLoadError() {
-  const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    const el = dialog.current;
-    if (el !== null && !el.open) el.showModal();
-  }, []);
-  return (
-    <dialog
-      ref={dialog}
-      class="sheet"
-      aria-labelledby="progress-title"
-      onClose={() => {
-        if (overlay.value === 'progress') overlay.value = null;
-      }}
-      onMouseDown={(event) => closeOnBackdrop(event.currentTarget, event)}
-    >
-      <div class="sheet-body">
-        <h2 id="progress-title">Progress</h2>
-        <p role="alert">{LAZY_ERROR}</p>
-        <form method="dialog">
-          <button class="button" type="submit">
-            Close
-          </button>
-        </form>
-      </div>
-    </dialog>
-  );
+function sheetLoadError(sheet: 'progress' | 'help', title: string) {
+  return function SheetLoadError() {
+    const dialog = useRef<HTMLDialogElement>(null);
+    useEffect(() => {
+      const el = dialog.current;
+      if (el !== null && !el.open) el.showModal();
+    }, []);
+    return (
+      <dialog
+        ref={dialog}
+        class="sheet"
+        aria-labelledby={`${sheet}-title`}
+        onClose={() => {
+          if (overlay.value === sheet) overlay.value = null;
+        }}
+        onMouseDown={(event) => closeOnBackdrop(event.currentTarget, event)}
+      >
+        <div class="sheet-body">
+          <h2 id={`${sheet}-title`}>{title}</h2>
+          <p role="alert">{LAZY_ERROR}</p>
+          <form method="dialog">
+            <button class="button" type="submit">
+              Close
+            </button>
+          </form>
+        </div>
+      </dialog>
+    );
+  };
 }
 
 const stampEngine = (): void => {

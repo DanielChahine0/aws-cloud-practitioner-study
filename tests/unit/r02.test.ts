@@ -1,10 +1,11 @@
-import { copyFileSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { stringify } from 'yaml';
 import { type Context, loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { bakeryLab, FIXTURE_LAB, writeLab } from '../fixtures/labs.ts';
 import { POOL_FILE, singleQuestion, writePool } from '../fixtures/questions.ts';
 
 const CONCEPTS = 'content/concepts.yaml';
@@ -273,5 +274,104 @@ describe('R2 exam pool and frozen forms (spec 4.3)', () => {
     ).toEqual([
       `content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml  id 'q-b4k7m2' (question) is already used by question in ${POOL_FILE}`,
     ]);
+  });
+});
+
+describe('R2 labs (spec 5.1)', () => {
+  const OLD_LAB = 'content/labs/01-baking-basics/old-bakes.yaml';
+
+  /** R2 findings with `heads` as the HEAD lab files, after `edit` changes the working tree. */
+  function withLabHead(heads: Record<string, string>, edit: (root: string) => void = () => {}): string[] {
+    const root = makeFixtureRoot();
+    edit(root);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    const withHeadFiles: Context = {
+      ...ctx,
+      headPaths: (prefix) => Object.keys(heads).filter((path) => path.startsWith(prefix)),
+      head: (path) => heads[path] ?? null,
+    };
+    return runRules(withHeadFiles, ['R2']).findings.map((f) => `${f.file}  ${f.message}`);
+  }
+
+  it('reports a lab id that a concept already uses', () => {
+    expect(
+      withLabHead({}, (root) =>
+        replaceIn(root, CONCEPTS, '- id: per-minute-rental\n', '- id: lab-m01-sort-the-bakes\n'),
+      ),
+    ).toEqual([
+      `${FIXTURE_LAB}  id 'lab-m01-sort-the-bakes' (lab) is already used by concept in ${CONCEPTS}`,
+    ]);
+  });
+
+  it('reports a lab of HEAD that is gone', () => {
+    const old = stringify(bakeryLab({ id: 'lab-m01-old-bakes' }));
+    expect(withLabHead({ [FIXTURE_LAB]: stringify(bakeryLab()), [OLD_LAB]: old })).toEqual([
+      `${OLD_LAB}  lab lab-m01-old-bakes was in HEAD and is gone; retire it instead`,
+    ]);
+  });
+
+  it('needs a higher rev for any edit to a lab of HEAD, and nothing for an unchanged lab', () => {
+    const head = { [FIXTURE_LAB]: stringify(bakeryLab()) };
+    expect(withLabHead(head)).toEqual([]);
+    expect(withLabHead(head, (root) => writeLab(root, bakeryLab({ title: 'Sort the loaves' })))).toEqual([
+      `${FIXTURE_LAB}  lab lab-m01-sort-the-bakes changed since HEAD, so it needs rev 2`,
+    ]);
+    expect(
+      withLabHead(head, (root) => writeLab(root, bakeryLab({ title: 'Sort the loaves', rev: 2 }))),
+    ).toEqual([]);
+  });
+});
+
+describe('R2 incidents (spec 4.5)', () => {
+  const INCIDENT = 'content/incidents/inc-001.yaml';
+  const DRAFT_STEP = (text: string): string => text.replace('    status: live\n', '    status: draft\n');
+
+  /** R2 findings with the fixture incident in HEAD as `headEdit` makes it, after `edit` changes the working tree. */
+  function withIncidentHead(headEdit: (text: string) => string, edit: (root: string) => void): string[] {
+    const root = makeFixtureRoot();
+    const headText = headEdit(readFileSync(join(root, INCIDENT), 'utf8'));
+    edit(root);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    const withHeadFiles: Context = {
+      ...ctx,
+      headPaths: (prefix) => (INCIDENT.startsWith(prefix) ? [INCIDENT] : []),
+      head: (path) => (path === INCIDENT ? headText : null),
+    };
+    return runRules(withHeadFiles, ['R2']).findings.map((f) => `${f.file} ${f.message}`);
+  }
+  const remove = (root: string): void => rmSync(join(root, INCIDENT));
+
+  it('reports a step id that repeats a question id, and an incident id used twice', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, INCIDENT, '  - id: q-d2f6h8\n', '  - id: q-b4k7m2\n');
+    copyFileSync(join(root, INCIDENT), join(root, 'content/incidents/inc-002.yaml'));
+    const findings = runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R2']).findings.map(
+      (f) => f.message,
+    );
+    expect(findings).toContain(
+      "id 'q-b4k7m2' (question) is already used by step of inc-001 in content/incidents/inc-001.yaml",
+    );
+    expect(findings).toContain(
+      "id 'inc-001' (incident) is already used by incident in content/incidents/inc-001.yaml",
+    );
+  });
+
+  it('lets an incident whose HEAD version still had a draft step be deleted', () => {
+    expect(withIncidentHead(DRAFT_STEP, remove)).toEqual([]);
+  });
+
+  it('reports a shipped incident of HEAD that is gone', () => {
+    expect(withIncidentHead((text) => text, remove)).toEqual([
+      `${INCIDENT} incident inc-001 was in HEAD and is gone; retire it with status: retired instead`,
+    ]);
+  });
+
+  it('accepts a shipped incident retired in place', () => {
+    expect(
+      withIncidentHead(
+        (text) => text,
+        (root) => replaceIn(root, INCIDENT, 'modules: [1]', 'status: retired\nmodules: [1]'),
+      ),
+    ).toEqual([]);
   });
 });

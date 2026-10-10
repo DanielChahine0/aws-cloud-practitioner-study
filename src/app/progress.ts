@@ -31,9 +31,8 @@ const refs = computed<ContentRefs | null>(() => {
       ...Object.entries(idx.exam.items).map(([qid, item]) => [qid, item.version] as const),
     ]),
     notes: new Set(idx.modules.flatMap((m) => m.lessons.map((l) => `m${pad2(m.n)}/${l.slug}`))),
-    // Task 8 fills `labs` from `index.labs`, Task 17 fills `incidents` from `index.incidents`.
-    labs: new Set<string>(),
-    incidents: new Set<string>(),
+    labs: new Set(idx.labs.map((l) => l.id)),
+    incidents: new Set(idx.incidents.map((i) => i.id)),
   };
 });
 

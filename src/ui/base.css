@@ -1853,3 +1853,426 @@ dialog.confirm .button {
 #progress-title:focus {
   outline: none;
 }
+
+/* Labs: shared and Sort */
+.lab-brief {
+  margin: 0 0 12px;
+}
+
+.credits-note {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+}
+
+.lab-board {
+  display: grid;
+  gap: 16px;
+  margin: 0 0 24px;
+}
+
+.sort-tray {
+  display: grid;
+  gap: 8px;
+  min-height: 44px;
+  margin: 0;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+}
+
+.card {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.card:hover,
+.card[aria-pressed="true"] {
+  border-color: var(--active);
+}
+
+.card[aria-pressed="true"] {
+  box-shadow: inset 3px 0 0 var(--active);
+}
+
+.buckets {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .buckets {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bucket {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 12px;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.bucket-target {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.bucket-target:hover {
+  border-color: var(--active);
+}
+
+.bucket-n {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.bucket-count {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.bucket-detail {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.goal-list {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  margin: 0 0 16px;
+  list-style: none;
+}
+
+.goal {
+  padding: 8px 12px;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.goal-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+}
+
+.goal-word {
+  font-weight: 600;
+}
+
+.goal.is-unchecked .goal-word {
+  color: var(--muted);
+}
+
+.goal.is-met .goal-line svg,
+.goal.is-met .goal-word {
+  color: var(--ok);
+}
+
+.goal.is-open .goal-line svg,
+.goal.is-open .goal-word {
+  color: var(--bad);
+}
+
+.goal-message {
+  font-size: 0.875rem;
+}
+
+.hint {
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+}
+
+.lab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 16px;
+}
+
+.lab-button {
+  min-height: 44px;
+}
+
+.lab-actions .button-quiet kbd {
+  color: var(--active);
+  border-color: var(--line);
+}
+
+.lab-reset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 12px;
+  margin: 0 0 16px;
+  background: var(--pane);
+  border: 1px solid var(--active);
+  border-radius: 8px;
+}
+
+.lab-reset legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 4px;
+}
+
+.lab-debrief {
+  margin: 24px 0 0;
+}
+
+.debrief-lines {
+  padding-left: 20px;
+  margin: 0 0 12px;
+}
+
+.debrief-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0 0 16px;
+}
+
+/* On a phone, Check and Reset sit in a sticky bar at the bottom, like the runner's (spec 7.5). */
+@media (max-width: 480px) {
+  .lab-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    margin: 0 -16px 16px;
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    background: var(--pane);
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (hover: none) {
+  .lab-actions kbd {
+    display: none;
+  }
+}
+
+/* Labs: module page */
+/* The engine word sits where a lesson row has its number, so every lab title starts at the same place. */
+.lab-rows .row-n {
+  min-width: 9ch;
+  text-align: left;
+}
+
+/* Labs: Configure */
+.config {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.config-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+/* As with the match selects, WebKit keeps a native select at its own height, so this one drops its native look. */
+.config-field select {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 44px;
+  padding: 0 36px 0 12px;
+  font: inherit;
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--pane);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.config-field select:hover {
+  border-color: var(--active);
+}
+
+.field-detail {
+  margin: 4px 0 0;
+}
+
+/* Labs: Simulate */
+
+.sim {
+  display: grid;
+  gap: 16px;
+}
+
+.sim-params {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+@media (min-width: 640px) {
+  .sim-params {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.sim-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.sim-field select,
+.sim-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  color: var(--text);
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* As with the Configure selects, WebKit keeps a native select at its own height, so this one drops its native look. */
+.sim-field select {
+  padding-right: 36px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.sim-field input {
+  max-width: 10rem;
+}
+
+.sim-field select:hover,
+.sim-field input:hover {
+  border-color: var(--active);
+}
+
+.sim-idle {
+  margin: 0;
+}
+
+.sim-metrics {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sim-metrics caption {
+  margin-bottom: 4px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.sim-metrics th,
+.sim-metrics td {
+  padding: 6px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.sim-metrics td {
+  text-align: right;
+}
+
+.sim-chart {
+  margin: 0;
+}
+
+.sim-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sim-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.sim-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sim-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.sim-swatch-1 {
+  background: var(--active);
+}
+
+.sim-swatch-2 {
+  background: var(--muted);
+}
+
+/* Incident */
+.incident-paid {
+  font-weight: 600;
+}
+
+/* Lightning */

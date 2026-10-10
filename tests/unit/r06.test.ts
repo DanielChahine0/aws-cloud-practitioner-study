@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { bakeryLab, writeLab } from '../fixtures/labs.ts';
 import { POOL_FILE, singleQuestion, writePool } from '../fixtures/questions.ts';
 
 const LESSON = 'resources/01-baking-basics/01-what-a-bakery-cloud-is.md';
@@ -31,6 +32,7 @@ describe('R6 references', () => {
   it('reports a home note that does not list the concept, and a missing home note', () => {
     expect(r06((root) => replaceIn(root, LESSON, '  - shared-kitchen\n', ''))).toEqual([
       '[shared-kitchen] home note m01/what-a-bakery-cloud-is does not list it in concepts',
+      'q-d2f6h8: note m01/what-a-bakery-cloud-is does not list concept shared-kitchen',
       'q-b4k7m2: note m01/what-a-bakery-cloud-is does not list concept shared-kitchen',
     ]);
     expect(
@@ -112,11 +114,18 @@ describe('R6 question references', () => {
 
   it('reports a question concept that is not registered or not tested', () => {
     expect(r06(inQuestions('    concept: shared-kitchen\n', '    concept: rye-bread\n'))).toEqual([
+      'lab-m01-sort-the-bakes: debrief question q-b4k7m2 is on rye-bread, which the lab does not list',
       "q-b4k7m2: concept 'rye-bread' is not registered",
     ]);
     expect(
       r06((root) => replaceIn(root, CONCEPTS, '  tasks: ["4.1"]\n', '  tasks: ["4.1"]\n  tested: false\n')),
-    ).toEqual(["q-c8n3p5: concept 'per-minute-rental' is marked tested: false"]);
+    ).toEqual([
+      "inc-001: concept 'per-minute-rental' is marked tested: false",
+      "q-e3g7j9: concept 'per-minute-rental' is marked tested: false",
+      "lab-m01-sort-the-bakes: concept 'per-minute-rental' is marked tested: false",
+      "q-c8n3p5: concept 'per-minute-rental' is marked tested: false",
+      "q-d9p4r6: concept 'per-minute-rental' is marked tested: false",
+    ]);
   });
 
   it('reports a question note that is not its file, or does not list the concept', () => {
@@ -138,14 +147,18 @@ describe('R6 question references', () => {
     expect(r06(moveTo('content/questions/01-typo/01-what-a-bakery-cloud-is.yaml'))).toEqual([
       misplaced('q-b4k7m2'),
       misplaced('q-c8n3p5'),
+      misplaced('q-d9p4r6'),
     ]);
     expect(r06(moveTo('content/questions/01-baking-basics/09-what-a-bakery-cloud-is.yaml'))).toEqual([
       misplaced('q-b4k7m2'),
       misplaced('q-c8n3p5'),
+      misplaced('q-d9p4r6'),
     ]);
     expect(r06((root) => replaceIn(root, LESSON, '  - per-minute-rental\n', ''))).toEqual([
       '[per-minute-rental] home note m01/what-a-bakery-cloud-is does not list it in concepts',
+      'q-e3g7j9: note m01/what-a-bakery-cloud-is does not list concept per-minute-rental',
       'q-c8n3p5: note m01/what-a-bakery-cloud-is does not list concept per-minute-rental',
+      'q-d9p4r6: note m01/what-a-bakery-cloud-is does not list concept per-minute-rental',
     ]);
   });
 
@@ -176,5 +189,103 @@ describe('R6 exam-pool references', () => {
     expect(r06Pool({ concept: 'rye-bread' })).toEqual([
       `${POOL_FILE}  q-9d4r6t: concept 'rye-bread' is not registered`,
     ]);
+  });
+});
+
+describe('R6 lab references (spec 5.1)', () => {
+  const LAB = 'lab-m01-sort-the-bakes';
+  const withLab = (over: Parameters<typeof bakeryLab>[0]) => (root: string) =>
+    writeLab(root, bakeryLab(over));
+  const debrief = (questions: string[]) => ({ ...bakeryLab().debrief, questions });
+
+  it('passes the fixture lab, a concept given by alias and a retired lab with broken references', () => {
+    expect(r06(() => {})).toEqual([]);
+    expect(
+      r06((root) => {
+        replaceIn(root, CONCEPTS, '  tasks: ["1.1"]\n', '  tasks: ["1.1"]\n  aliases: [shared-oven]\n');
+        writeLab(root, bakeryLab({ concepts: ['shared-oven', 'per-minute-rental'] }));
+      }),
+    ).toEqual([]);
+    expect(r06(withLab({ status: 'retired', concepts: ['rye-bread'], notes: ['m01/gone'] }))).toEqual([]);
+  });
+
+  it('reports a concept that is not registered or not tested, and a note that does not exist', () => {
+    expect(r06(withLab({ concepts: ['shared-kitchen', 'per-minute-rental', 'rye-bread'] }))).toEqual([
+      `${LAB}: concept 'rye-bread' is not registered`,
+    ]);
+    expect(r06(withLab({ notes: ['m01/what-a-bakery-cloud-is', 'm01/gone'] }))).toEqual([
+      `${LAB}: note m01/gone is not a note`,
+    ]);
+  });
+
+  it('reports a debrief question that is a draft or an exam item by id only', () => {
+    expect(r06(withLab({ debrief: debrief(['q-b4k7m2', 'q-c8n3p5']) }))).toEqual([
+      `${LAB}: debrief question q-c8n3p5 is not a live practice question`,
+    ]);
+    const exam = singleQuestion({ id: 'q-9d4r6t', pool: 'exam', status: 'live' });
+    const findings = r06((root) => {
+      writePool(root, [exam]);
+      writeLab(root, bakeryLab({ debrief: debrief(['q-b4k7m2', 'q-9d4r6t']) }));
+    });
+    expect(findings).toEqual([`${LAB}: debrief question q-9d4r6t is not a live practice question`]);
+    expect(findings.join('\n')).not.toContain(exam.stem);
+  });
+
+  it('reports a debrief question on a concept the lab does not list', () => {
+    expect(r06(withLab({ concepts: ['shared-kitchen'] }))).toEqual([
+      `${LAB}: debrief question q-d9p4r6 is on per-minute-rental, which the lab does not list`,
+    ]);
+  });
+});
+
+describe('R6 incident references (spec 4.5)', () => {
+  const INCIDENT = 'content/incidents/inc-001.yaml';
+
+  it("passes the fixture incident, whose steps live outside their note's question file", () => {
+    expect(r06(() => {})).toEqual([]);
+  });
+
+  it('reports a step on a concept the incident does not list, and an incident concept that is not registered', () => {
+    expect(
+      r06((root) =>
+        replaceIn(
+          root,
+          INCIDENT,
+          'concepts: [shared-kitchen, per-minute-rental]',
+          'concepts: [shared-kitchen]',
+        ),
+      ),
+    ).toEqual(['inc-001: step q-e3g7j9 is on per-minute-rental, which the incident does not list']);
+    expect(
+      r06((root) =>
+        replaceIn(
+          root,
+          INCIDENT,
+          'concepts: [shared-kitchen, per-minute-rental]',
+          'concepts: [shared-kitchen, per-minute-rental, rye-bread]',
+        ),
+      ),
+    ).toEqual(["inc-001: concept 'rye-bread' is not registered"]);
+  });
+
+  it('reports a lab debrief question that is an incident step, by id only', () => {
+    const debrief = { ...bakeryLab().debrief, questions: ['q-b4k7m2', 'q-e3g7j9'] };
+    expect(r06((root) => writeLab(root, bakeryLab({ debrief })))).toEqual([
+      'lab-m01-sort-the-bakes: debrief question q-e3g7j9 is not a live practice question',
+    ]);
+  });
+
+  it('skips the incident checks of a retired incident', () => {
+    expect(
+      r06((root) => {
+        replaceIn(root, INCIDENT, 'modules: [1]', 'status: retired\nmodules: [1]');
+        replaceIn(
+          root,
+          INCIDENT,
+          'concepts: [shared-kitchen, per-minute-rental]',
+          'concepts: [shared-kitchen]',
+        );
+      }),
+    ).toEqual([]);
   });
 });

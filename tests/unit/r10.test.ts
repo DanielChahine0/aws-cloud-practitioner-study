@@ -36,6 +36,7 @@ function contextWith(
       module: 1,
       noteId: 'm01/what-a-bakery-cloud-is',
       q,
+      incident: null,
     }),
   );
   return { ...ctx, config: { ...OFF, ...switches }, questions: [...ctx.questions, ...added] };
@@ -46,14 +47,14 @@ describe('R10 practice per concept', () => {
   it('reports each tested concept below the target, counting live practice questions only', () => {
     expect(messages(contextWith({ practicePerConcept: 2 }))).toEqual([
       'content/concepts.yaml  concept shared-kitchen has 1 live practice question; it needs 2',
-      'content/concepts.yaml  concept per-minute-rental has 0 live practice questions; it needs 2',
+      'content/concepts.yaml  concept per-minute-rental has 1 live practice question; it needs 2',
     ]);
   });
 
   it('clears a concept once it has enough live practice questions', () => {
     const ctx = contextWith({ practicePerConcept: 2 }, [singleQuestion({ status: 'live' })]);
     expect(messages(ctx)).toEqual([
-      'content/concepts.yaml  concept per-minute-rental has 0 live practice questions; it needs 2',
+      'content/concepts.yaml  concept per-minute-rental has 1 live practice question; it needs 2',
     ]);
   });
 
@@ -109,7 +110,15 @@ describe('R10 exam quotas', () => {
   function examContext(items: readonly QuestionEntry['q'][], quotas = fixtureQuotas()): Context {
     const ctx = contextWith({ examQuotas: true });
     const pool = items.map(
-      (q, i): QuestionEntry => ({ path: POOL_FILE, line: 2 + i, index: i, module: 1, noteId: q.note, q }),
+      (q, i): QuestionEntry => ({
+        path: POOL_FILE,
+        line: 2 + i,
+        index: i,
+        module: 1,
+        noteId: q.note,
+        q,
+        incident: null,
+      }),
     );
     return { ...ctx, quotas, questions: [...ctx.questions, ...pool] };
   }

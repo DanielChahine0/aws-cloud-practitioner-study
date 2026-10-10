@@ -109,3 +109,82 @@ Exam-pool items live in `content/exam/pool/NN-<module-slug>.yaml` and fill the m
 
 - Good: `A regional clinic stores scanned patient forms that staff open often in the first month and rarely after that.`
 - Bad: `The cafe's loyalty app stores receipts.` sets an exam item in the cafe.
+
+## Labs
+
+These rules hold for every lab in `content/labs/` (spec 5), written by the lab writer and judged by the lab critic.
+`pnpm content:validate --draft <file>` checks the schema, the references, originality, retired plan names and the R11 replay.
+Lab text is plain text: no Markdown and no HTML.
+
+### Brief
+
+The brief sets one cafe situation in 1 to 3 sentences and says what to do.
+
+- Good: `The cafe's back office runs on servers in a cupboard, and the owner wants to know who looks after what. Sort each job to the side that owns it.`
+- Bad: `Sort these AWS services.` sets no situation.
+
+### Cards and buckets
+
+Card text names the need, never the answer.
+
+- Good: `Nightly copies of the order history that must survive a lost building`.
+- Bad: `Back up with Amazon S3` gives the bucket away.
+- Give each card one right bucket, and list in `also` any other bucket a careful reader could defend.
+
+### Goals and hints
+
+A goal label says what a finished goal looks like, and its hint teaches the idea without naming a placement.
+
+- Good hint: `Ask who touches the item: the cafe's staff, or the people who run the data center.`
+- Bad hint: `The patching card goes under AWS.`
+
+### Wrong paths
+
+Each wrong path models one mistake a learner really makes, named in its `mistake`, and finishes the board.
+
+- Good mistake: `Thinks AWS patches the guest operating system of an EC2 instance`.
+- Bad mistake: `Random placement`.
+
+### Debrief
+
+The 2 to 4 debrief lines state what the lab showed, one idea per line, and the debrief asks 2 or 3 live practice questions on the lab's concepts.
+
+### Lab credits and lab values
+
+Prices appear only as lab credits, a made-up unit, and never as dollars or real AWS prices.
+Any figure the cited notes do not state is called a lab value.
+
+- Good: `Each server costs 4 lab credits an hour (a lab value).`
+- Bad: `Each server costs $0.0416 an hour.`
+
+### Grounding
+
+Every card placement, goal, hint and debrief line rests on a line of a note the lab lists in `notes`.
+Support plans appear only by their four current names: Basic Support, AWS Business Support+, AWS Enterprise Support and AWS Unified Operations.
+
+### Configure fields
+
+Give each field one decision, labelled by the setting it changes.
+Option labels name the choice and never the verdict, so no option reads "Recommended" or "Cheapest".
+Option details state facts from the cited note or named lab values, never hints.
+
+### Simulate parameters
+
+Label each parameter by the lever it moves, and always show its unit.
+Name every constant a lab value in the brief, and every price in lab credits.
+Thresholds read as the cafe's needs, such as a daily budget or a deadline, never as the answer.
+
+## Incidents
+
+A daily incident is a short cafe story told over 2 to 4 steps in `content/incidents/inc-NNN.yaml` (spec 4.5).
+The question rules above `## Labs` apply to each step, which is a full practice question with its own whys, evidence and takeaway.
+
+- Tell one story: the brief sets the scene, and each step moves it on, from noticing the problem to fixing it.
+- Make each step stand on its own, so a reader who missed the step before can still answer it.
+- Never let the brief or an earlier step give away a later step's answer.
+- Keep the brief to plain text, 40 to 400 characters, with no Markdown and no answer in it.
+- Use `single` or `multi` steps only, since a `match` step breaks the story into a table.
+- Draw on earlier modules only when the story needs them, and list each one in `modules` after the home module.
+
+- Good: `The bill for the loyalty app doubled overnight, and the manager wants to know why before the morning rush.`
+- Bad: `The cafe should have used Auto Scaling, so the bill doubled.` gives the answer in the brief.

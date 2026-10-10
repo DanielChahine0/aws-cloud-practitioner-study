@@ -51,3 +51,22 @@ describe('R9 verified', () => {
     ]);
   });
 });
+
+describe('R9 on incident steps', () => {
+  it('reports a live step whose text changed after its stamp', () => {
+    const root = makeFixtureRoot();
+    replaceIn(
+      root,
+      'content/incidents/inc-001.yaml',
+      'why: Turning people away loses the sales that borrowed capacity would have kept.',
+      'why: Turning people away loses the sales that the borrowed ovens would have kept.',
+    );
+    expect(
+      runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R9']).findings.map(
+        (f) => `${f.file} ${f.message}`,
+      ),
+    ).toEqual([
+      'content/incidents/inc-001.yaml q-d2f6h8: verified at other hashes; its text changed after the checks, so re-check and re-stamp it',
+    ]);
+  });
+});

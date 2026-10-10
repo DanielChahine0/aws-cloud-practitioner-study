@@ -120,7 +120,7 @@ export const r06: Rule = {
       const home = lesson === undefined ? undefined : questionFileOf(lesson.path);
       if (lesson === undefined) {
         report(`note ${q.note} does not exist`);
-      } else if (q.pool === 'practice' && entry.path !== home) {
+      } else if (q.pool === 'practice' && entry.incident === null && entry.path !== home) {
         report(`note ${q.note} keeps its questions in ${home}, not in this file`);
       } else {
         const names = [concept.id, ...(concept.aliases ?? [])];
@@ -130,6 +130,64 @@ export const r06: Rule = {
       }
       if (!concept.tasks.includes(q.task)) {
         report(`task ${q.task} is not one of ${concept.id}'s tasks (${concept.tasks.join(', ')})`);
+      }
+    }
+
+    // Labs: concepts and notes resolve, and the debrief asks live practice questions on the lab's own concepts,
+    // never an incident step, named by id only so no exam item text can reach a finding (spec 5.1).
+    const resolve = (id: string): string =>
+      ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id))?.id ?? id;
+    for (const { path, lab } of ctx.labs) {
+      if (lab.status === 'retired') continue;
+      const report = (message: string): void => {
+        out.push(finding('R6', path, `${lab.id}: ${message}`));
+      };
+      for (const id of lab.concepts) {
+        const concept = ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id));
+        if (concept === undefined) report(`concept '${id}' is not registered`);
+        else if (concept.tested === false) report(`concept '${id}' is marked tested: false`);
+      }
+      for (const id of lab.notes) if (!lessons.has(id)) report(`note ${id} is not a note`);
+      const concepts = new Set(lab.concepts.map(resolve));
+      for (const qid of lab.debrief.questions) {
+        const entry = ctx.questions.find(
+          (e) => e.q.id === qid && e.incident === null && e.q.pool === 'practice' && e.q.status === 'live',
+        );
+        if (entry === undefined) report(`debrief question ${qid} is not a live practice question`);
+        else if (!concepts.has(resolve(entry.q.concept))) {
+          report(`debrief question ${qid} is on ${entry.q.concept}, which the lab does not list`);
+        }
+      }
+    }
+
+    const canonical = (id: string): string | undefined =>
+      ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id))?.id;
+    for (const { path, incident, steps } of ctx.incidents) {
+      if (incident.status === 'retired') continue;
+      const listed = new Set<string>();
+      for (const id of incident.concepts) {
+        const concept = ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id));
+        if (concept === undefined) {
+          out.push(finding('R6', path, `${incident.id}: concept '${id}' is not registered`));
+          continue;
+        }
+        if (concept.tested === false) {
+          out.push(finding('R6', path, `${incident.id}: concept '${id}' is marked tested: false`));
+        }
+        listed.add(concept.id);
+      }
+      for (const step of steps) {
+        if (step.q.status === 'retired') continue;
+        const id = canonical(step.q.concept);
+        if (id === undefined || listed.has(id)) continue;
+        out.push(
+          finding(
+            'R6',
+            path,
+            `${incident.id}: step ${step.q.id} is on ${step.q.concept}, which the incident does not list`,
+            step.line,
+          ),
+        );
       }
     }
     return out;
