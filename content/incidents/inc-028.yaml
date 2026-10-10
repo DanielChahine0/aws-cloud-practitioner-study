@@ -1,0 +1,111 @@
+id: inc-028
+title: Checkout crawls during reports
+modules: [8]
+concepts: [data-pipelines]
+brief: Whenever the analysts run their big reports, checkout in the cafe's loyalty app slows to a crawl, and the ML engineer needs the same order history to retrain the pastry recommender.
+steps:
+  - id: q-8njc9b
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: data-pipelines
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's loyalty app keeps its order history in Amazon DynamoDB.
+      Analysts scan the whole table for their reports, and the app slows down each time.
+      Which trait of DynamoDB makes the case for moving this full-history work to an S3 data lake?
+    options:
+      - id: a
+        text: A serverless design that leaves no servers to maintain
+        why: Being serverless spares the cafe upkeep, but it does nothing to stop full-table scans from slowing the app.
+      - id: b
+        text: A design tuned for fast reads and writes of single items
+        correct: true
+        why: DynamoDB shines at the app's quick item reads and writes, so scanning every item for reports is impractical and slows checkout.
+      - id: c
+        text: An item model that keeps each order as name-value pairs
+        why: How each order is stored as an item does not explain why reading every item for reports hurts the app.
+      - id: d
+        text: Global tables that copy the table to other Regions
+        why: Global tables serve app users in other Regions, which does nothing about report scans slowing checkout.
+    evidence:
+      - Customer history sits in Amazon DynamoDB, great for fast reads and writes but impractical to scan in full for training, so the data must move to a data lake.
+      - DynamoDB suits app reads and writes, not training scans, so data moves to an S3 data lake.
+    takeaway: Full-history analysis and training scans belong in an S3 data lake, not in the app's DynamoDB table.
+    history: []
+    verified:
+      keyHash: 57f2b5fb5d01
+      fullHash: 799717fd1164
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-mh73ar
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: data-pipelines
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's pipeline will use Amazon Data Firehose to deliver order changes from a DynamoDB table into S3, but Firehose has no direct link from DynamoDB today.
+      Which service should carry the changes from DynamoDB to Firehose?
+    options:
+      - id: a
+        text: AWS Glue Data Catalog
+        why: The catalog records the data's schema and location, and it does not move changes between services.
+      - id: b
+        text: Amazon Simple Queue Service (Amazon SQS)
+        why: Firehose cannot take an SQS queue as its source, and DynamoDB does not send its table changes into a queue on its own.
+      - id: c
+        text: Amazon Athena
+        why: Athena queries data that is already in S3, and it does not carry changes into the pipeline.
+      - id: d
+        text: Amazon Kinesis Data Streams
+        correct: true
+        why: Kinesis Data Streams takes in the table's changes and hands them on to Firehose, bridging the gap.
+    evidence:
+      - "**3 Ingest data**: with no direct DynamoDB-to-Firehose link today, changes go through Amazon Kinesis Data Streams, then Data Firehose aggregates them (near real time, little setup, auto scaling)."
+    takeaway: With no direct DynamoDB-to-Firehose link, a pipeline routes the table's changes through Kinesis Data Streams.
+    history: []
+    verified:
+      keyHash: cbe76fddbe10
+      fullHash: 0108d4e27402
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1pm2yb
+    version: 1
+    status: draft
+    pool: practice
+    type: single
+    concept: data-pipelines
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      In the cafe's pipeline, order records reach Amazon Data Firehose as JSON, but the data scientist and ML engineer want them as .csv files when they land in the S3 data lake.
+      What should the pipeline do?
+    options:
+      - id: a
+        text: Have Amazon Athena query the records where they sit in S3
+        why: Athena reads the files in place with SQL, which leaves them in JSON rather than converting them.
+      - id: b
+        text: Have an AWS Glue Data Catalog table note the records' schema
+        why: A catalog table records the schema and where the data sits, and the files still land as JSON.
+      - id: c
+        text: Have an AWS Lambda function process each record in transit
+        correct: true
+        why: Firehose can call a Lambda function that turns each JSON record into .csv before delivery to S3.
+      - id: d
+        text: Have Amazon SageMaker AI pull the records for model training
+        why: SageMaker AI trains on the data in S3, but it does not change the format the lake stores it in.
+    evidence:
+      - "**4 Process data**: records arrive as JSON, but the data scientist and ML engineer want .csv, so Firehose invokes an AWS Lambda function to convert them."
+    takeaway: Firehose can call a Lambda function to reshape records, such as JSON into .csv, before they land in S3.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 is the only option that changes the records at all ('process ... in transit') while the stem asks for a format change, so it stands out without knowledge. Option 4 is the only compute service next to three analytics and ML services, so the distractors are not from the key's category; a transforming service such as an AWS Glue job would be a stronger distractor."

@@ -1,0 +1,117 @@
+id: inc-025
+title: Reviews from the festival crowd
+modules: [8]
+concepts: [amazon-translate, amazon-comprehend, amazon-polly]
+brief: After the summer food festival, the cafe's review page fills up with comments from visitors all over the world, and the manager wants to make sense of them before the next weekend.
+steps:
+  - id: q-trr811
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: amazon-translate
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      A large pile of festival reviews is written in Spanish, Japanese and German, and the cafe manager reads only English.
+      She wants every review turned into English in one overnight run.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Comprehend
+        why: Comprehend finds sentiment and key phrases in text, but it leaves each review in its original language.
+      - id: b
+        text: Amazon Translate
+        correct: true
+        why: Translate converts text from one language to another, and it can work through a large batch at once.
+      - id: c
+        text: Amazon Transcribe
+        why: Transcribe turns spoken audio into text, and these reviews are already written down.
+      - id: d
+        text: Amazon Polly
+        why: Polly reads text aloud as speech, which does not change the language the review is written in.
+    evidence:
+      - Live or batch translation for global communication
+      - "**Amazon Translate**: Text translation."
+    takeaway: Converting a large batch of written text into another language points to Amazon Translate.
+    history: []
+    verified:
+      keyHash: 1b1a0bb32fa0
+      fullHash: 198412ca29b9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-z4463c
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: amazon-comprehend
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's festival reviews are all in English now.
+      The manager wants each one tagged with the key phrases it mentions, such as a drink or a dish, so the most common topics stand out without anyone reading every review.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Kendra
+        why: Kendra answers search questions over company content, and it does not tag each review with its phrases.
+      - id: b
+        text: Amazon Textract
+        why: Textract pulls text out of scanned forms and documents, but these reviews are already plain text.
+      - id: c
+        text: Amazon Comprehend
+        correct: true
+        why: Comprehend uses NLP to pull the key phrases out of documents, so it can tag each review by topic.
+      - id: d
+        text: Amazon Rekognition
+        why: Rekognition analyzes images and video, not the wording of written reviews.
+    evidence:
+      - NLP for key phrases, language, sentiment in documents
+      - Classifying, compliance, sentiment in lots of customer comments
+    takeaway: Pulling the key phrases out of large amounts of written feedback points to Amazon Comprehend.
+    history: []
+    verified:
+      keyHash: 4d6433964bef
+      fullHash: fe6b7fb8e4cc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-dn5rq6
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: amazon-polly
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      Several reviewers said the greeting on the cafe's phone line was hard to follow.
+      The manager wants new spoken greetings in English, Spanish and German, made from scripts the staff already wrote in each language, without hiring voice actors.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Transcribe
+        why: Transcribe turns speech into text, the opposite of turning a written script into a spoken greeting.
+      - id: b
+        text: Amazon Lex
+        why: Lex runs two-way conversations, while a fixed greeting only needs the script spoken aloud.
+      - id: c
+        text: Amazon Translate
+        why: The scripts already exist in each language, and Translate does not turn text into speech.
+      - id: d
+        text: Amazon Polly
+        correct: true
+        why: Polly turns written text into lifelike speech in many languages, so no voice actors are needed.
+    evidence:
+      - Text to lifelike speech; many languages, genders, accents
+      - Assistants, e-learning, visually impaired users, studio-free narration
+    takeaway: Turning written scripts into natural speech in several languages points to Amazon Polly.
+    history: []
+    verified:
+      keyHash: 1fbd73924d1a
+      fullHash: 4f6c93103484
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

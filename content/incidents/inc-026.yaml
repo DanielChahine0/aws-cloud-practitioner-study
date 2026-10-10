@@ -1,0 +1,149 @@
+id: inc-026
+title: Croissants in the bin
+modules: [8]
+concepts: [ai-ml-business-use-cases, ml-model-training, amazon-sagemaker-ai, ml-inference]
+brief: Most evenings the cafe throws away trays of unsold croissants, and the owner has hired a data scientist to bring the morning bake closer to what really sells.
+steps:
+  - id: q-9sapga
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: ai-ml-business-use-cases
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe wants a model that works out from past sales how many croissants will sell tomorrow, so the bakers know how many to make.
+      Which kind of machine learning job is this?
+    options:
+      - id: a
+        text: Detecting an anomaly
+        why: Anomaly detection flags unusual events, such as fraud, rather than estimating tomorrow's sales.
+      - id: b
+        text: Routing a request
+        why: Routing sends a request, such as a phone call, to the right place, which is not estimating sales.
+      - id: c
+        text: Making a prediction
+        correct: true
+        why: Estimating tomorrow's sales from past sales is a prediction, like forecasting the price of goods.
+      - id: d
+        text: Creating new content
+        why: Creating original text or images is generative work, not estimating a sales figure.
+    evidence:
+      - ML predicts (stock trends, prices of goods), decides (routing a caller by spoken request) and detects anomalies (online-banking fraud).
+    takeaway: Estimating a future quantity, such as tomorrow's sales, is a prediction job for machine learning.
+    history: []
+    verified:
+      keyHash: a9c767f47d38
+      fullHash: 9725fbcf7d05
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2jj7h3
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: ml-model-training
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      A data scientist feeds the cafe's long sales history into an ML algorithm to find the patterns behind croissant demand.
+      What does this training stage produce?
+    options:
+      - id: a
+        text: A fixed rule that a developer wrote
+        why: A hand-written rule is classical programming, while training learns the patterns from data.
+      - id: b
+        text: A forecast for tomorrow's bake
+        why: A forecast for a new day comes later, once the finished model is run on fresh data.
+      - id: c
+        text: A model of the sales patterns
+        correct: true
+        why: Training finds the hidden patterns in historical data and outputs a model that captures them.
+      - id: d
+        text: A cleaned copy of the sales records
+        why: Cleaning and formatting the data happens before training starts, not as its result.
+    evidence:
+      - "Training: ML finds hidden customer-sales patterns in lots of history and outputs a model."
+      - "**Training**: Finding patterns in historical data to build a model."
+    takeaway: Training turns historical data into a model, and using that model on new data comes afterward.
+    history: []
+    verified:
+      keyHash: 7d3f3fd2418f
+      fullHash: ffad2507918c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-36m7ds
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: amazon-sagemaker-ai
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's data scientist wants one managed AWS environment where she can run experiments on her own forecasting model, visualize the data, debug the model and monitor it after deployment, without running any servers.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Personalize
+        why: Personalize serves ready-made recommendations, and it is not a workspace for building and debugging her own model.
+      - id: b
+        text: Amazon SageMaker AI
+        correct: true
+        why: SageMaker AI gives one managed place to experiment with, debug and monitor her own model while AWS runs the servers.
+      - id: c
+        text: Amazon Bedrock
+        why: Bedrock offers managed foundation models through an API, not a workspace for her own forecasting model.
+      - id: d
+        text: Amazon Rekognition
+        why: Rekognition is a pre-trained image and video service with no place to build or monitor her own model.
+    evidence:
+      - "IDE: access control, visibility, experiments, data visualization, debugging, monitoring; plus hundreds of fast-deploy pre-trained models."
+      - You build, train and deploy your own models while AWS runs the infrastructure.
+    takeaway: Amazon SageMaker AI is one managed place to experiment with, debug and monitor your own ML models.
+    history: []
+    verified:
+      keyHash: 5ef8cbff120a
+      fullHash: 0514b8fc644f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-82kwjb
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: ml-inference
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      Each morning the cafe's trained demand model receives that day's weather and weekday and returns how many croissants to bake.
+      Which ML stage runs each morning?
+    options:
+      - id: a
+        text: Training
+        why: Training already happened on the sales history, and the morning run only applies the finished model.
+      - id: b
+        text: Fine-tuning
+        why: Fine-tuning adapts a pre-trained model with more data, but this run uses the model as it is.
+      - id: c
+        text: Data preparation
+        why: Gathering and cleaning data comes before training, not when the model makes its daily forecast.
+      - id: d
+        text: Inference
+        correct: true
+        why: Inference feeds new data to a trained model so it can predict, which is what happens each morning.
+    evidence:
+      - "Inference: the model gets new data, like a fresh order, and predicts or decides."
+      - "**Inference**: Applying a trained model to new data."
+    takeaway: Running a trained model on the day's fresh data to get a forecast is inference.
+    history: []
+    verified:
+      keyHash: 6c574d1124b6
+      fullHash: ee1390eaf199
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
