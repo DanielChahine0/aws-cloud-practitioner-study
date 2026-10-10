@@ -10,7 +10,7 @@ import {
   LONG_MEMORY,
   wellCalibrated,
 } from '../../src/engine/badges.ts';
-import { addDays } from '../../src/engine/day.ts';
+import { addDays, dayStartAt } from '../../src/engine/day.ts';
 import { deriveMemory, type MemoryContent } from '../../src/engine/memory.ts';
 import { review, type SrsCard } from '../../src/engine/srs.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
@@ -143,6 +143,31 @@ describe('badges in the memory replay (spec 3.10)', () => {
     expect(deriveMemory(timelineOf(log), BASIC).badges.get('clean-queue')?.day).toBe('2026-10-08');
   });
 
+  it('never counts a day with 10 reviews that ends with a tested card still due', () => {
+    const eleven = contentOf([...TEN, 'c-11'].map((id) => ({ id, module: 1 })));
+    const days = Array.from({ length: 8 }, (_, i) => addDays('2026-10-01', i));
+    const eleventh = (d: string): Log => [
+      [
+        at(d, 18, 30),
+        answerOf({ concept: 'c-11', correct: true, sure: true, mode: 'review', qid: `q-c-11-${d}` }),
+      ],
+    ];
+    // c-11 falls due on 2026-10-04 and waits until the next day, so that day has 10 reviews but is not clear.
+    const log = days.flatMap((d) => reviewDay(d, 10, d === '2026-10-04' ? [] : eleventh(d)));
+    const firstDay = deriveMemory(timelineOf(log.slice(0, 11)), eleven);
+    expect(firstDay.concepts.get('c-11')?.card?.due).toBe('2026-10-04T18:30:00.000Z');
+    expect(deriveMemory(timelineOf(log), eleven).badges.get('clean-queue')?.day).toBe('2026-10-08');
+  });
+
+  it('counts a card due exactly at the next 04:00 as clear for Clean Queue', () => {
+    const days = Array.from({ length: 7 }, (_, i) => addDays('2026-10-01', i));
+    const exam: Log = [['2026-09-30T08:00:00.000Z', { t: 'settings', patch: { examDate: '2026-10-09' } }]];
+    const m = deriveMemory(timelineOf([...exam, ...days.flatMap((d) => reviewDay(d))]), BASIC);
+    const end = dayStartAt('2026-10-08', 0).toISOString();
+    expect(TEN.some((c) => m.concepts.get(c)?.card?.due === end)).toBe(true);
+    expect(m.badges.get('clean-queue')?.day).toBe('2026-10-07');
+  });
+
   const markAndClear = (concept: string, day: string, n: number): Log => [
     [at(day, 9, n), answerOf({ concept, correct: false, sure: true, qid: `q-${concept}-1` })],
     [at(addDays(day, 1), 9, n), answerOf({ concept, correct: true, sure: true, qid: `q-${concept}-2` })],
@@ -201,6 +226,47 @@ describe('badges in the memory replay (spec 3.10)', () => {
     const m = deriveMemory(timelineOf([...longLog, ...lapse]), LONG);
     expect(m.concepts.get('lm-01')?.card?.stability).toBeLessThan(LONG_MEMORY.stabilityDays);
     expect(m.badges.has('long-memory')).toBe(true);
+  });
+
+  it('stops counting a card toward Long Memory once a lapse drops it below 21 days', () => {
+    const early = grow('lm-50', '2026-01-05T10:00:00.000Z');
+    let card: SrsCard | null = null;
+    for (const [t] of early) card = review(card, 'good', new Date(t));
+    const lapseAt = (card as SrsCard).due;
+    const lapsed = review(card, 'again', new Date(lapseAt));
+    const regrowAt = lapsed.due;
+    const log = sortLog([
+      ...longLog.filter(([, e]) => e.t !== 'answer' || e.concept !== 'lm-50'),
+      ...early,
+      [
+        lapseAt,
+        answerOf({ concept: 'lm-50', correct: false, sure: true, mode: 'review', qid: 'q-lm-50-lapse' }),
+      ],
+      [
+        regrowAt,
+        answerOf({ concept: 'lm-50', correct: true, sure: true, mode: 'review', qid: 'q-lm-50-regrow' }),
+      ],
+    ]);
+    expect(regrowAt < '2026-09-01').toBe(true);
+    const m = deriveMemory(timelineOf(log), LONG);
+    expect(m.concepts.get('lm-50')?.card?.stability).toBeLessThan(LONG_MEMORY.stabilityDays);
+    expect(FIFTY.slice(0, 49).every((c) => (m.concepts.get(c)?.card?.stability ?? 0) >= 21)).toBe(true);
+    expect(m.badges.has('long-memory')).toBe(false);
+  });
+
+  it('never counts an untested concept toward Long Memory', () => {
+    const untested = contentOf(FIFTY.map((id, i) => ({ id, module: 1, tested: i < 49 })));
+    expect(deriveMemory(timelineOf(longLog), untested).badges.has('long-memory')).toBe(false);
+  });
+
+  it("never counts the card of a split concept's old id toward Long Memory", () => {
+    const split = contentOf([
+      ...FIFTY.slice(0, 49).map((id) => ({ id, module: 1 })),
+      { id: 'lm-50a', module: 1, splitFrom: 'lm-50' },
+    ]);
+    const m = deriveMemory(timelineOf(longLog), split);
+    expect(m.concepts.get('lm-50')?.card?.stability).toBeGreaterThanOrEqual(LONG_MEMORY.stabilityDays);
+    expect(m.badges.has('long-memory')).toBe(false);
   });
 
   it('Well Calibrated: 40 Not sure answers at most 75% right beside 50 Sure at 86%', () => {
