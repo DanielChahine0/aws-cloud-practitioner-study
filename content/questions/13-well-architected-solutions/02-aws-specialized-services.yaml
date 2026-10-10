@@ -1,0 +1,637 @@
+questions:
+  - id: q-ghxqsw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-codepipeline
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe's developers want every commit to the loyalty app repository to move through build, test and deploy stages on its own, with no servers to set up.
+      Which service runs that whole release flow?
+    options:
+      - id: a
+        text: AWS CodeBuild
+        why: CodeBuild compiles and tests code, but it covers only the build step, not the full release through deployment.
+      - id: b
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk runs a web app on managed capacity, but it does not watch the repository and chain release stages.
+      - id: c
+        text: AWS CodePipeline
+        correct: true
+        why: CodePipeline notices each repository change and carries it through the build, test and deploy stages without servers.
+      - id: d
+        text: AWS X-Ray
+        why: X-Ray traces requests in a running app, so it helps debugging rather than shipping each commit.
+    evidence:
+      - "**AWS CodePipeline**: managed CI/CD that spots repository changes and runs build, test and deploy stages, shipping fixes reliably with no servers to provision."
+      - CodeBuild does CI builds and CodePipeline the whole release, but only X-Ray visualizes and debugs app behavior.
+    takeaway: CodeBuild handles only the build step, while CodePipeline automates the whole release from commit to deploy.
+    history: []
+    verified:
+      keyHash: d4f1b279a005
+      fullHash: a13b573a0e3e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-11gfe3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-codepipeline
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which job does AWS CodePipeline handle?
+    options:
+      - id: a
+        text: Tracing requests to find the slow calls in an app
+        why: Following requests to spot slow calls is what X-Ray does, not a release pipeline.
+      - id: b
+        text: Joining many data sources behind one GraphQL API
+        why: Merging data sources into one GraphQL API is the job of AppSync, not CodePipeline.
+      - id: c
+        text: Adding sign-in, storage and hosting to a web app
+        why: Giving a web or mobile app sign-in, storage and hosting is the Amplify toolkit, not release automation.
+      - id: d
+        text: Moving each commit through build, test and deploy
+        correct: true
+        why: CodePipeline is managed CI/CD that takes each change through build, test and deploy stages automatically.
+    evidence:
+      - "**AWS CodePipeline**: managed CI/CD that spots repository changes and runs build, test and deploy stages, shipping fixes reliably with no servers to provision."
+      - CI/CD (continuous integration and continuous delivery) builds, tests and ships each committed change automatically for fast, dependable releases.
+    takeaway: CodePipeline is managed CI/CD, automating how each code change is built, tested and deployed.
+    history: []
+    verified:
+      keyHash: 34399482f021
+      fullHash: abaa9b2c589f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r1a2ty
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-x-ray
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      Checkout in the cafe's online ordering app has become slow, and the developers cannot tell which backend call causes the delay.
+      Which service helps them trace requests and find the bottleneck?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        why: CloudTrail records who made which API calls in the account, which audits activity but does not trace slow app requests.
+      - id: b
+        text: AWS X-Ray
+        correct: true
+        why: X-Ray traces each request through the app, so the developers can see which call is the bottleneck.
+      - id: c
+        text: AWS CodePipeline
+        why: CodePipeline ships code changes through release stages, so it cannot show where a running request slows down.
+      - id: d
+        text: AWS CodeBuild
+        why: CodeBuild compiles and tests code before release, not requests while the app is serving customers.
+    evidence:
+      - "**AWS X-Ray**: monitors and traces requests so developers can visualize app behavior, find bottlenecks, debug faster and tune efficiency and reliability."
+    takeaway: When developers must see where requests slow down inside an app, AWS X-Ray traces them to the bottleneck.
+    history: []
+    verified:
+      keyHash: aaae09bb5094
+      fullHash: 450550d49572
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-shraaz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-x-ray
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Among the AWS developer services, which one lets developers visualize and debug how their application behaves?
+    options:
+      - id: a
+        text: AWS AppSync
+        why: AppSync provides managed GraphQL APIs for frontends, not a view into how the app behaves at run time.
+      - id: b
+        text: AWS CodeBuild
+        why: CodeBuild handles CI builds that compile and package code, not visualizing app behavior.
+      - id: c
+        text: AWS X-Ray
+        correct: true
+        why: X-Ray is the developer service that visualizes app behavior so teams can debug and tune it.
+      - id: d
+        text: AWS CodePipeline
+        why: CodePipeline automates the release of code changes, so it does not show how the app behaves.
+    evidence:
+      - CodeBuild does CI builds and CodePipeline the whole release, but only X-Ray visualizes and debugs app behavior.
+      - "**AWS X-Ray**: App tracing, debugging and visualization."
+    takeaway: Among developer services, only AWS X-Ray visualizes and debugs app behavior; the Code services build and release code.
+    history: []
+    verified:
+      keyHash: 1e3fdf94d96e
+      fullHash: 39397eb7fab4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-531rn7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-amplify
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      A small team at the cafe wants to build a mobile ordering app with both a frontend and a backend, adding sign-in, APIs, storage and hosting with little infrastructure work.
+      Which service fits best?
+    options:
+      - id: a
+        text: AWS Amplify
+        correct: true
+        why: Amplify speeds up full-stack web and mobile apps and adds sign-in, APIs, storage and hosting with little setup.
+      - id: b
+        text: AWS AppSync
+        why: AppSync builds a GraphQL data API, which covers only one piece of the app the team needs.
+      - id: c
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk deploys a web app onto managed capacity, but it does not add mobile sign-in, storage and hosting as a toolkit.
+      - id: d
+        text: AWS CodePipeline
+        why: CodePipeline automates releases of code changes, but it does not give the app sign-in, storage or hosting.
+    evidence:
+      - "**AWS Amplify**: speeds up building, deploying and running secure, scalable full-stack (frontend plus backend) web and mobile apps, adding sign-in, APIs, storage and hosting with little infrastructure work."
+    takeaway: A full-stack web or mobile app that needs sign-in, APIs, storage and hosting with little setup points to AWS Amplify.
+    history: []
+    verified:
+      keyHash: fb1144124838
+      fullHash: 4334bf07c4a3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kzkgn5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-amplify
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which statement describes the scope of AWS Amplify?
+    options:
+      - id: a
+        text: It merges many backend data sources into one GraphQL API
+        why: A single GraphQL API over many data sources is AppSync, which is narrower than Amplify's whole-app toolkit.
+      - id: b
+        text: It speeds up building whole web and mobile apps end to end
+        correct: true
+        why: Amplify is the broad full-stack web and mobile toolkit, covering frontend and backend rather than one API.
+      - id: c
+        text: It compiles, tests and packages code each time a build runs
+        why: Compiling, testing and packaging code is CodeBuild's managed CI, not Amplify's app toolkit.
+      - id: d
+        text: It traces requests so developers can find slow backend calls
+        why: Tracing requests to find bottlenecks is X-Ray, which watches a running app rather than building one.
+    evidence:
+      - AppSync just builds GraphQL data APIs, whereas Amplify is the broad full-stack web and mobile toolkit.
+      - "**AWS Amplify**: Full-stack web and mobile app toolkit."
+    takeaway: AWS Amplify is the broad full-stack web and mobile toolkit, while AppSync only builds GraphQL data APIs.
+    history: []
+    verified:
+      keyHash: c02dde236f73
+      fullHash: fa8e686344ad
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gzktfq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-connect
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe chain wants customers to phone or chat about catering orders, with each call routed to the right staff member, recorded and analyzed.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Lex
+        why: Lex builds conversational chatbots, but it is not a full contact center that routes and records calls to staff.
+      - id: b
+        text: Amazon SES
+        why: SES sends email from applications, so it cannot take phone calls or route them to staff.
+      - id: c
+        text: Amazon SNS
+        why: SNS pushes notifications to subscribers, which does not handle live calls and chats with routing.
+      - id: d
+        text: Amazon Connect
+        correct: true
+        why: Connect is a cloud contact center for calls and chats, with routing, recording and analytics built in.
+    evidence:
+      - "**Amazon Connect**: AI-powered cloud contact center for calls and chats, with call routing, recording, analytics and AWS integrations."
+      - Calls, routing and analytics mean Amazon Connect; SES is email only and WorkSpaces is a desktop.
+    takeaway: Customer calls and chats that need routing, recording and analytics point to Amazon Connect.
+    history: []
+    verified:
+      keyHash: 7ff87dcbe3e2
+      fullHash: 27864968db2a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ebvmr0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-connect
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which AWS service is a contact center that runs in the cloud?
+    options:
+      - id: a
+        text: Amazon WorkSpaces
+        why: WorkSpaces gives staff a managed cloud desktop, not a system for handling customer calls.
+      - id: b
+        text: Amazon Connect
+        correct: true
+        why: Connect is the AI-powered cloud contact center for customer calls and chats.
+      - id: c
+        text: Amazon Polly
+        why: Polly turns text into lifelike speech, which is a single feature rather than a contact center.
+      - id: d
+        text: Amazon SES
+        why: SES is an email sending service, so it does not run a contact center for calls.
+    evidence:
+      - "**Amazon Connect**: AI-powered cloud contact center."
+    takeaway: Amazon Connect is the AWS cloud contact center for customer calls and chats.
+    history: []
+    verified:
+      keyHash: 37eb5006cf8c
+      fullHash: f2191218a98d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-djdwae
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ses
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe wants its ordering app to email a monthly newsletter, promotions and order receipts to thousands of customers and to improve how often they land in inboxes.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SNS
+        why: SNS fans out notifications to subscribers, but it is not the service built for bulk newsletters and receipts by email.
+      - id: b
+        text: Amazon SES
+        correct: true
+        why: SES is scalable email that apps use for bulk newsletters, promotions and transactional mail with better delivery.
+      - id: c
+        text: Amazon Connect
+        why: Connect is a contact center for calls and chats, not a way to send bulk email.
+      - id: d
+        text: Amazon SQS
+        why: SQS queues messages between parts of an app, so it does not deliver email to customers.
+    evidence:
+      - "**Amazon SES**: affordable, scalable email any app can use to automate reliable bulk sends (newsletters, promotions, transactional mail) and improve delivery."
+    takeaway: Bulk newsletters, promotions and receipts sent by email from an app point to Amazon SES.
+    history: []
+    verified:
+      keyHash: f333a62f0791
+      fullHash: ad5b7ce9a755
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-eseevb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ses
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe's ordering app must send each customer a receipt by email right after checkout.
+      Which service lets the app send that mail itself?
+    options:
+      - id: a
+        text: Amazon SNS
+        why: SNS pushes messages to subscribers of a topic, not a receipt the app mails to each new buyer.
+      - id: b
+        text: Amazon SQS
+        why: SQS holds messages in a queue between parts of an app, so it never delivers email to customers.
+      - id: c
+        text: Amazon SES
+        correct: true
+        why: SES sends transactional email such as receipts straight from the app, paying only for what is sent.
+      - id: d
+        text: Amazon Connect
+        why: Connect runs a contact center for calls and chats, not email sent by the app at checkout.
+    evidence:
+      - "Amazon Simple Email Service (Amazon SES) sends transactional, marketing and bulk email straight from your applications, with pay-as-you-go pricing."
+    takeaway: Amazon SES sends email straight from applications with pay-as-you-go pricing and no upfront commitment.
+    history: []
+    verified:
+      keyHash: 2c2ac1a080ea
+      fullHash: ed8b987e173f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-w40pct
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-appstream-2-0
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      Office staff at the cafe need one desktop accounting app on their modest laptops.
+      They want to open just that app in a browser with nothing installed, rather than a full desktop.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon WorkSpaces
+        why: WorkSpaces gives each person a complete persistent desktop, which is more than one streamed app.
+      - id: b
+        text: Amazon WorkSpaces Secure Browser
+        why: Secure Browser suits web-only work, but the staff need a desktop app rather than websites.
+      - id: c
+        text: Amazon AppStream 2.0
+        correct: true
+        why: AppStream 2.0 streams a desktop app to a browser on any device, so nothing is installed and modest hardware is enough.
+      - id: d
+        text: Amazon EC2
+        why: EC2 gives raw virtual servers the cafe would have to set up and manage, not one app streamed to staff browsers.
+    evidence:
+      - "**Amazon AppStream 2.0**: streams desktop and SaaS apps (even desktop apps made SaaS with no code changes) to a browser on any device, so nothing is installed and modest hardware suffices."
+      - WorkSpaces gives a full desktop, AppStream 2.0 streams apps (the course's pick for staff SaaS access) and Secure Browser suits web-only work.
+    takeaway: Streaming a single desktop app to a browser with nothing installed points to AppStream 2.0, not a full WorkSpaces desktop.
+    history: []
+    verified:
+      keyHash: f5b112d1f76b
+      fullHash: 35c744a79a34
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0qwgj3
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-appstream-2-0
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      What does Amazon AppStream 2.0 deliver to users?
+    options:
+      - id: a
+        text: A complete persistent desktop in the cloud
+        why: A full persistent desktop is what WorkSpaces provides, while AppStream 2.0 streams individual apps.
+      - id: b
+        text: A managed browser for web-only work
+        why: A managed browser for web-only users is WorkSpaces Secure Browser, not AppStream 2.0.
+      - id: c
+        text: A toolkit for building web and mobile apps
+        why: A toolkit for building full-stack web and mobile apps is AWS Amplify, not a way to stream software to users.
+      - id: d
+        text: Desktop programs streamed to any browser
+        correct: true
+        why: AppStream 2.0 streams desktop and SaaS apps to a browser on any device, with nothing to install.
+    evidence:
+      - "**Amazon AppStream 2.0**: App streaming to any device."
+      - "**Amazon AppStream 2.0**: streams desktop and SaaS apps (even desktop apps made SaaS with no code changes) to a browser on any device, so nothing is installed and modest hardware suffices."
+    takeaway: Amazon AppStream 2.0 streams individual desktop and SaaS apps to a browser on any device.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 says 'streamed', which echoes 'Stream' in the stem's AppStream 2.0 and points at the key."
+  - id: q-g02dpe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-workspaces
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe hires a remote bookkeeper who needs a complete desktop that keeps their files and settings between sessions and works like an office PC from home.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon WorkSpaces
+        correct: true
+        why: WorkSpaces gives a managed, persistent cloud desktop that staff reach securely from anywhere and use like an office PC.
+      - id: b
+        text: Amazon AppStream 2.0
+        why: AppStream 2.0 streams individual apps to a browser, not a complete desktop that persists.
+      - id: c
+        text: Amazon WorkSpaces Secure Browser
+        why: Secure Browser is a lightweight browser for web-only users, not a full desktop for daily work.
+      - id: d
+        text: Amazon EC2
+        why: EC2 gives raw virtual servers that the cafe would have to manage, not a managed desktop service.
+    evidence:
+      - "**Amazon WorkSpaces**: fully managed virtual desktop infrastructure, a complete persistent desktop staff reach securely from anywhere and use like an office PC, cost-efficient and easy to run."
+      - WorkSpaces gives a full desktop, AppStream 2.0 streams apps (the course's pick for staff SaaS access) and Secure Browser suits web-only work.
+    takeaway: A complete, persistent desktop used like an office PC from anywhere points to Amazon WorkSpaces.
+    history: []
+    verified:
+      keyHash: bd17ec9b1de7
+      fullHash: b869bc37b1de
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-n5dg2a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-workspaces
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which description matches Amazon WorkSpaces?
+    options:
+      - id: a
+        text: A single app streamed to any browser
+        why: Streaming single apps to a browser is AppStream 2.0, not the full desktop that WorkSpaces gives.
+      - id: b
+        text: A persistent desktop in the cloud
+        correct: true
+        why: WorkSpaces is fully managed virtual desktop infrastructure that gives staff a persistent cloud desktop.
+      - id: c
+        text: A managed browser for web-only users
+        why: A lightweight managed browser for web-only users is WorkSpaces Secure Browser, a separate service.
+      - id: d
+        text: A simple virtual server at a set price
+        why: A simple server at a set monthly price describes Lightsail, which is not a desktop service.
+    evidence:
+      - "**Amazon WorkSpaces**: Managed persistent cloud desktops."
+      - "**Amazon WorkSpaces**: fully managed virtual desktop infrastructure, a complete persistent desktop staff reach securely from anywhere and use like an office PC, cost-efficient and easy to run."
+    takeaway: Amazon WorkSpaces is fully managed virtual desktop infrastructure that gives each user a persistent cloud desktop.
+    history: []
+    verified:
+      keyHash: 0efce71a56b5
+      fullHash: 1660ce994a49
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xzt2b4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-iot-core
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe fits its refrigerators with temperature sensors that send readings online so staff can watch them and change settings remotely.
+      Which service securely links these devices to the cafe's cloud apps?
+    options:
+      - id: a
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams carries streaming data, but it does not authenticate devices or manage them remotely.
+      - id: b
+        text: Amazon SNS
+        why: SNS pushes notifications to subscribers, not a secure link for sensor devices to report and take commands.
+      - id: c
+        text: AWS IoT Core
+        correct: true
+        why: IoT Core securely connects devices to cloud apps, with mutual authentication and encryption, and acts on their data.
+      - id: d
+        text: AWS Lambda
+        why: Lambda runs code in response to events, but it is not the service that connects and secures the sensors.
+    evidence:
+      - "**AWS IoT Core**: managed service that securely links devices to cloud apps and simplifies ingesting, processing and acting on their data, using mutual authentication, end-to-end encryption and a choice of protocols."
+    takeaway: Sensor devices that report data and take commands remotely connect to the cloud securely through AWS IoT Core.
+    history: []
+    verified:
+      keyHash: 2f5b8b04a5a4
+      fullHash: 601d8e2e3e6d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-s99dm6
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-iot-core
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe is reviewing several projects.
+      Which of them are IoT solutions that AWS IoT Core would connect to the cloud?
+    options:
+      - id: a
+        text: A coffee machine that reports online when its beans run low
+        correct: true
+        why: A physical machine that senses its beans and shares the data online is an IoT device that IoT Core can connect.
+      - id: b
+        text: A loyalty app that alerts staff online when a regular orders
+        why: The alert comes from plain software with no sensing physical device, so it is not IoT.
+      - id: c
+        text: Herb planters that water themselves from soil and weather data
+        correct: true
+        why: Planters that measure soil and adjust watering to the weather are an IoT solution for IoT Core.
+      - id: d
+        text: A smoke alarm that senses smoke and beeps loudly in the kitchen
+        why: The alarm senses smoke, but it neither shares data online nor takes remote control, so it is not IoT.
+      - id: e
+        text: A catering web form that emails staff online when it is sent
+        why: The email comes from an ordinary web form without a sensing device, so it does not count as IoT.
+    evidence:
+      - IoT needs a sensing physical device, managed with AWS IoT Core; a plain app or software feature does not count.
+      - "A camera that alerts your phone, a remote pet feeder or irrigation tuned to weather and soil: IoT solutions on AWS IoT Core."
+    takeaway: IoT requires a physical device with sensors that shares data online; plain apps and software features are not IoT.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 4 are the only physical devices that both sense something and connect online.)"
+  - id: q-6zdycj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-appstream-2-0
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe runs a desktop staff-scheduling program and wants to offer it to shift managers as a SaaS app without rewriting any code.
+      Managers should open just that program from any device, rather than a whole remote desktop.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon WorkSpaces
+        why: WorkSpaces hands each user a full persistent desktop, more than the single program the managers need.
+      - id: b
+        text: Amazon AppStream 2.0
+        correct: true
+        why: AppStream 2.0 streams a desktop program to a browser and can turn it into SaaS with no code changes.
+      - id: c
+        text: Amazon WorkSpaces Secure Browser
+        why: Secure Browser serves web-only users and cannot run a desktop program that is not a web app.
+      - id: d
+        text: AWS Amplify
+        why: Amplify helps build new full-stack web and mobile apps, which means writing code the cafe wants to avoid.
+    evidence:
+      - "**Amazon AppStream 2.0**: streams desktop and SaaS apps (even desktop apps made SaaS with no code changes) to a browser on any device, so nothing is installed and modest hardware suffices."
+    takeaway: To deliver one desktop program as SaaS with no code changes, stream it with AppStream 2.0 rather than handing out a full desktop.
+    history: []
+    verified:
+      keyHash: 1a63f20a184a
+      fullHash: b1601ab9f3b9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dzz6xk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-iot-core
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which AWS service securely connects sensor-fitted devices to cloud apps, using mutual authentication, end-to-end encryption and a choice of protocols?
+    options:
+      - id: a
+        text: AWS AppSync
+        why: AppSync builds GraphQL APIs that merge data sources for frontends, not device connections.
+      - id: b
+        text: Amazon SNS
+        why: SNS fans out messages to subscribers but does not manage secure links for physical devices.
+      - id: c
+        text: AWS IoT Core
+        correct: true
+        why: IoT Core is the managed service that links devices to cloud apps with mutual authentication and encryption.
+      - id: d
+        text: Amazon Connect
+        why: Connect runs a cloud contact center for calls and chats, not connections from sensor devices.
+    evidence:
+      - "**AWS IoT Core**: managed service that securely links devices to cloud apps and simplifies ingesting, processing and acting on their data, using mutual authentication, end-to-end encryption and a choice of protocols."
+    takeaway: AWS IoT Core is the managed, secure bridge between physical IoT devices and cloud applications.
+    history: []
+    verified:
+      keyHash: 3e2d15b5dcd5
+      fullHash: 8b9a34ebc210
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
