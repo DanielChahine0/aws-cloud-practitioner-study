@@ -8,6 +8,7 @@ import { buildContent, confusableLinks, readingMinutes } from '../../scripts/con
 import { CONCEPTS_FILE, FORMS_FILE, loadContext } from '../../scripts/content/lib/context.ts';
 import { normalize } from '../../src/app/search.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { dropFixtureLab } from '../fixtures/labs.ts';
 import { POOL_FILE } from '../fixtures/questions.ts';
 
 const LESSON_ROUTE = '#/m/01/l/what-a-bakery-cloud-is';
@@ -142,7 +143,7 @@ describe('buildContent on the fixture tree', () => {
   it('ships the live practice question in its module chunk with a Read in notes target', () => {
     const { index, json } = build();
     const chunk = json<ModuleChunk>(index.modules[0]?.chunk ?? '');
-    expect(chunk.questions.map((q) => q.id)).toEqual(['q-b4k7m2']);
+    expect(chunk.questions.map((q) => q.id)).toEqual(['q-b4k7m2', 'q-d9p4r6']);
     const single = chunk.questions[0];
     expect(single).toMatchObject({
       id: 'q-b4k7m2',
@@ -167,7 +168,7 @@ describe('buildContent on the fixture tree', () => {
       ['d', false],
     ]);
     expect(single?.stem).toMatch(/^A harbour branch sells out .* Which choice fits the bakery cloud\?$/);
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1 });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-d9p4r6': 1 });
   });
 
   it('ships the draft match only once it is live, with its pairs in authored order', () => {
@@ -184,7 +185,7 @@ describe('buildContent on the fixture tree', () => {
       'Two cabinets for ten minutes each',
     ]);
     expect(match?.read.route).toBe(`${LESSON_ROUTE}/paying-by-the-minute`);
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-c8n3p5': 1 });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-c8n3p5': 1, 'q-d9p4r6': 1 });
   });
 
   it('adds the Select suffix to a multi stem and cites an update line by its sentence', () => {
@@ -199,16 +200,16 @@ describe('buildContent on the fixture tree', () => {
       route: `${LESSON_ROUTE}/paying-by-the-minute`,
       text: 'The fixture guide names a newer billing term.',
     });
-    expect(chunk.questions.map((q) => q.id)).toEqual(['q-9q4r5s', 'q-b4k7m2']);
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-9q4r5s': 3 });
+    expect(chunk.questions.map((q) => q.id)).toEqual(['q-9q4r5s', 'q-b4k7m2', 'q-d9p4r6']);
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-9q4r5s': 3, 'q-d9p4r6': 1 });
   });
 
   it('never ships a retired question or one from the exam pool', () => {
     const root = makeFixtureRoot();
-    replaceIn(root, QUESTIONS_FILE, 'status: live', 'status: retired');
+    for (let i = 0; i < 2; i++) replaceIn(root, QUESTIONS_FILE, 'status: live', 'status: retired');
     expect(build(root).index.questionVersions).toEqual({});
     const exam = makeFixtureRoot();
-    replaceIn(exam, QUESTIONS_FILE, 'pool: practice', 'pool: exam');
+    for (let i = 0; i < 3; i++) replaceIn(exam, QUESTIONS_FILE, 'pool: practice', 'pool: exam');
     expect(build(exam).index.questionVersions).toEqual({});
   });
 
@@ -314,7 +315,7 @@ describe('mock forms, ranks, badges and the blueprint in the index', () => {
       'q-exc001': { version: 2, concept: 'shared-kitchen', task: '1.1', form: 'C', type: 'single' },
       'q-exd001': { version: 2, concept: 'shared-kitchen', task: '1.1', form: 'D', type: 'single' },
     });
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1 });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-d9p4r6': 1 });
     const { exam: _exam, ...rest } = index;
     const elsewhere = [...built.files]
       .filter(([name]) => !/^content\/(exam-[a-d]|index)\./.test(name))
@@ -364,10 +365,16 @@ describe('concept links and lesson sizes in the index', () => {
   it('counts the reading minutes of each lesson and the concepts its check can ask about', () => {
     const lesson = lessonOf(build().index);
     expect(lesson?.minutes).toBe(1);
-    expect(lesson?.checkConcepts).toBe(1);
+    expect(lesson?.checkConcepts).toBe(2);
     const root = makeFixtureRoot();
-    replaceIn(root, QUESTIONS_FILE, 'status: draft', 'status: live');
-    expect(lessonOf(build(root).index)?.checkConcepts).toBe(2);
+    dropFixtureLab(root);
+    replaceIn(
+      root,
+      QUESTIONS_FILE,
+      'id: q-d9p4r6\n    version: 1\n    status: live',
+      'id: q-d9p4r6\n    version: 1\n    status: retired',
+    );
+    expect(lessonOf(build(root).index)?.checkConcepts).toBe(1);
   });
 
   it('counts a live question filed under an alias for the surviving concept', () => {
@@ -376,7 +383,7 @@ describe('concept links and lesson sizes in the index', () => {
     replaceIn(root, QUESTIONS_FILE, 'concept: shared-kitchen', 'concept: central-oven');
     const { index } = build(root);
     expect(index.concepts[0]?.aliases).toEqual(['central-oven']);
-    expect(lessonOf(index)?.checkConcepts).toBe(1);
+    expect(lessonOf(index)?.checkConcepts).toBe(2);
   });
 
   it('never counts an untested concept, and copies splitFrom', () => {
@@ -384,7 +391,7 @@ describe('concept links and lesson sizes in the index', () => {
     replaceIn(root, CONCEPTS_FILE, 'tasks: ["1.1"]', 'tasks: ["1.1"]\n  tested: false');
     replaceIn(root, CONCEPTS_FILE, 'tasks: ["4.1"]', 'tasks: ["4.1"]\n  splitFrom: kitchen-rental');
     const { index } = build(root);
-    expect(lessonOf(index)?.checkConcepts).toBe(0);
+    expect(lessonOf(index)?.checkConcepts).toBe(1);
     expect(index.concepts.map((c) => [c.id, c.tested, c.splitFrom])).toEqual([
       ['shared-kitchen', false, null],
       ['per-minute-rental', true, 'kitchen-rental'],

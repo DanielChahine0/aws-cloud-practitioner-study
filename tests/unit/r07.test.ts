@@ -5,6 +5,7 @@ import { loadContext } from '../../scripts/content/lib/context.ts';
 import { fingerprintCourse } from '../../scripts/content/lib/fingerprint-files.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { bakeryLab, FIXTURE_LAB, writeLab } from '../fixtures/labs.ts';
 
 describe('R7 originality', () => {
   it('checks shared files against the course too', () => {
@@ -152,5 +153,37 @@ describe('R7 for questions', () => {
 
   it('ignores a draft with a copied stem', () => {
     expect(r07(inStem(FROM_CHECK), 'draft')).toEqual([]);
+  });
+});
+
+describe('R7 for labs', () => {
+  const COPIED = 'Bakers rent proofing cabinets by the minute and hand them back once the dough has risen.';
+
+  /** R7 findings for the fixture lab with its last card's text replaced. */
+  const withCardText = (text: string, status: 'live' | 'retired' = 'live'): string[] => {
+    const root = makeFixtureRoot();
+    const lab = bakeryLab({ status });
+    const spec = lab.spec as { cards: { text: string }[] };
+    writeLab(root, {
+      ...lab,
+      spec: { ...spec, cards: spec.cards.map((c, i) => (i === 3 ? { ...c, text } : c)) },
+    });
+    return runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R7']).findings.map(
+      (f) => `${f.file}  ${f.message.split(':')[0]}`,
+    );
+  };
+
+  it('passes the fixture lab', () => {
+    expect(withCardText('A cabinet nobody needs between closing and dawn')).toEqual([]);
+  });
+
+  it('reports a card text that copies a run of the course, on the lab file', () => {
+    expect(withCardText(COPIED)).toEqual([
+      `${FIXTURE_LAB}  lab-m01-sort-the-bakes copies a 9-word run from the course`,
+    ]);
+  });
+
+  it('ignores a retired lab', () => {
+    expect(withCardText(COPIED, 'retired')).toEqual([]);
   });
 });

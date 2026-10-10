@@ -5,6 +5,7 @@ import {
   CONCEPTS_FILE,
   type Finding,
   FORMS_FILE,
+  LABS_DIR,
   POOL_DIR,
   QUESTIONS_DIR,
   type QuestionEntry,
@@ -89,6 +90,25 @@ function idsIn(yamlText: string | null): string[] | null {
   );
 }
 
+/** A lab file's parsed YAML as a record, or null when it is missing, does not parse or is not a mapping. */
+function labRecord(yamlText: string | null): Record<string, unknown> | null {
+  if (yamlText === null) return null;
+  try {
+    const data: unknown = parseYaml(yamlText);
+    return typeof data === 'object' && data !== null && !Array.isArray(data)
+      ? (data as Record<string, unknown>)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/** A lab record without its `rev`, as text, so two versions compare on everything else. */
+function withoutRev(lab: Record<string, unknown>): string {
+  const { rev: _, ...rest } = lab;
+  return JSON.stringify(rest);
+}
+
 /** The forms of a forms.yaml text that pass the schema; [] when it is missing or does not parse. */
 function formsIn(yamlText: string | null): Forms['forms'] {
   if (yamlText === null) return [];
@@ -101,9 +121,10 @@ function formsIn(yamlText: string | null): Forms['forms'] {
 }
 
 /**
- * R2 Ids: ids are unique across concepts, aliases, missions and questions of both pools; no concept id in HEAD
+ * R2 Ids: ids are unique across concepts, aliases, missions, questions of both pools and labs; no concept id in HEAD
  * disappears; a live or retired question in HEAD stays, and a live question whose answer changes takes a key-fix
- * version; a form frozen in HEAD keeps its qids, their order and `frozen: true` (spec 4.3).
+ * version; a lab in HEAD stays, and any edit to it raises its `rev`; a form frozen in HEAD keeps its qids, their
+ * order and `frozen: true` (spec 4.3, 5.1).
  */
 export const r02: Rule = {
   id: 'R2',
@@ -121,6 +142,7 @@ export const r02: Rule = {
       for (const alias of c.aliases ?? []) claim(alias, `alias of ${c.id}`, CONCEPTS_FILE);
     for (const m of ctx.missions) claim(m.id, 'mission', m.path);
     for (const entry of ctx.questions) claim(entry.q.id, 'question', entry.path);
+    for (const entry of ctx.labs) claim(entry.lab.id, 'lab', entry.path);
 
     // A working tree that does not parse is R1's finding; comparing it with HEAD would only bury that one error.
     const before = conceptIdsIn(ctx.head(CONCEPTS_FILE));
@@ -182,6 +204,32 @@ export const r02: Rule = {
             ),
           );
         }
+      }
+    }
+
+    // Labs have no drafts: every lab in HEAD has shipped, so it stays (retired in place) and each edit raises its rev.
+    // A lab file that does not parse is R1's finding, not a lab that is gone.
+    const labIds = new Set<string>();
+    const unreadableLabs = new Set<string>();
+    for (const path of ctx.files) {
+      if (!path.startsWith(`${LABS_DIR}/`) || !path.endsWith('.yaml')) continue;
+      const lab = labRecord(ctx.read(path));
+      if (lab === null) unreadableLabs.add(path);
+      else for (const id of strings(lab.id)) labIds.add(id);
+    }
+    for (const path of ctx.headPaths(`${LABS_DIR}/`)) {
+      const before = labRecord(ctx.head(path));
+      const id = before === null ? undefined : strings(before.id)[0];
+      if (before === null || id === undefined || unreadableLabs.has(path)) continue;
+      if (!labIds.has(id)) {
+        out.push(finding('R2', path, `lab ${id} was in HEAD and is gone; retire it instead`));
+        continue;
+      }
+      const after = labRecord(ctx.read(path));
+      const was = typeof before.rev === 'number' ? before.rev : 0;
+      const now = typeof after?.rev === 'number' ? after.rev : 0;
+      if (after !== null && withoutRev(after) !== withoutRev(before) && now <= was) {
+        out.push(finding('R2', path, `lab ${id} changed since HEAD, so it needs rev ${was + 1}`));
       }
     }
 

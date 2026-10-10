@@ -5,6 +5,7 @@ import { loadContext } from '../../scripts/content/lib/context.ts';
 import { asLive, demote, draftCheck } from '../../scripts/content/lib/draft.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { dropFixtureLab } from '../fixtures/labs.ts';
 import {
   matchQuestion,
   POOL_FILE,
@@ -44,16 +45,16 @@ describe('asLive', () => {
 describe('draftCheck', () => {
   it('passes the fixture match, and reports only the coverage of the half-written file', () => {
     const { questions, problems } = draftCheck(load(makeFixtureRoot()), QUESTION_FILE);
-    expect(questions).toBe(2);
+    expect(questions).toBe(3);
     expect(problems.filter((p) => p.includes('q-3h8r2t'))).toEqual([]);
     expect(problems).toEqual([
       `${QUESTION_FILE}  concept shared-kitchen has 1 question that can still go live; it needs 2`,
-      `${QUESTION_FILE}  concept per-minute-rental has 1 question that can still go live; it needs 2`,
     ]);
   });
 
   it('reports an empty why only under --draft', () => {
     const root = makeFixtureRoot();
+    dropFixtureLab(root);
     const q = singleQuestion();
     const options = q.options.map((o) => (o.id === 'c' ? { ...o, why: '' } : o));
     writeQuestions(root, [{ ...q, options }, matchQuestion()]);

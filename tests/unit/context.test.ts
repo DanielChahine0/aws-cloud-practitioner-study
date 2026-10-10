@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { bakeryLab, FIXTURE_LAB, writeLab } from '../fixtures/labs.ts';
 import {
   POOL_FILE,
   QUESTION_FILE,
@@ -106,6 +107,7 @@ describe('loadContext', () => {
     expect(ctx.questions.map((e) => [e.path, e.index, e.line, e.noteId, e.q.id, e.q.type])).toEqual([
       [QUESTIONS, 0, 2, 'm01/what-a-bakery-cloud-is', 'q-b4k7m2', 'single'],
       [QUESTIONS, 1, 34, 'm01/what-a-bakery-cloud-is', 'q-c8n3p5', 'match'],
+      [QUESTIONS, 2, 57, 'm01/what-a-bakery-cloud-is', 'q-d9p4r6', 'single'],
     ]);
   });
 
@@ -115,7 +117,7 @@ describe('loadContext', () => {
     const ctx = loadContext(root, { today: FIXTURE_TODAY });
     expect(ctx.loadErrors).toEqual([expect.objectContaining({ rule: 'R1', file: QUESTIONS, line: 34 })]);
     expect(ctx.loadErrors[0]?.message.startsWith('questions[1] (q-c8n3p5).task: ')).toBe(true);
-    expect(ctx.questions.map((e) => e.q.id)).toEqual(['q-b4k7m2']);
+    expect(ctx.questions.map((e) => e.q.id)).toEqual(['q-b4k7m2', 'q-d9p4r6']);
   });
 
   it('reports question YAML errors, a file without a questions list and stray question paths', () => {
@@ -143,6 +145,7 @@ describe('loadContext on exam files (spec 2.6)', () => {
       [POOL_FILE, 1, 'm01/what-a-bakery-cloud-is', 'q-9d4r6t'],
       [QUESTION_FILE, 1, 'm01/what-a-bakery-cloud-is', 'q-b4k7m2'],
       [QUESTION_FILE, 1, 'm01/what-a-bakery-cloud-is', 'q-c8n3p5'],
+      [QUESTION_FILE, 1, 'm01/what-a-bakery-cloud-is', 'q-d9p4r6'],
     ]);
   });
 
@@ -197,6 +200,47 @@ describe('loadContext on exam files (spec 2.6)', () => {
     expect(ctx.forms).toBeNull();
     expect(ctx.loadErrors.map((f) => `${f.file}  ${f.message}`)).toEqual([
       'content/exam/forms.yaml  forms: Too small: expected array to have exactly 4 items',
+    ]);
+  });
+});
+
+describe('loadContext on lab files (spec 5.1)', () => {
+  const labErrors = (edit: (root: string) => void): string[] => {
+    const root = makeFixtureRoot();
+    edit(root);
+    return loadContext(root, { today: FIXTURE_TODAY }).loadErrors.map((f) => `${f.file}  ${f.message}`);
+  };
+
+  it('loads the fixture lab with its folder module and file slug', () => {
+    const ctx = loadContext(makeFixtureRoot(), { today: FIXTURE_TODAY });
+    expect(ctx.labs.map((e) => [e.path, e.module, e.slug, e.lab.id, e.lab.status])).toEqual([
+      [FIXTURE_LAB, 1, 'sort-the-bakes', 'lab-m01-sort-the-bakes', 'live'],
+    ]);
+  });
+
+  it('reports a lab whose module or id does not match its folder and file, and keeps it out of labs', () => {
+    const moved = 'content/labs/02-baking-basics/sort-the-bakes.yaml';
+    expect(labErrors((root) => writeLab(root, bakeryLab(), moved))).toEqual([
+      `${moved}  lab module 1 does not match its folder 02`,
+    ]);
+    const renamed = 'content/labs/01-baking-basics/sort-the-loaves.yaml';
+    expect(labErrors((root) => writeLab(root, bakeryLab(), renamed))).toEqual([
+      `${renamed}  lab id must be lab-m01-sort-the-loaves`,
+    ]);
+  });
+
+  it('reports a lab that breaks its schema, and any other file under content/labs', () => {
+    expect(labErrors((root) => writeLab(root, { ...bakeryLab(), minutes: 30 }))).toEqual([
+      `${FIXTURE_LAB}  minutes: Too big: expected number to be <=20`,
+    ]);
+    expect(
+      labErrors((root) => {
+        writeLab(root, bakeryLab(), 'content/labs/sort-the-bakes.yaml');
+        writeFileSync(join(root, 'content', 'labs', '01-baking-basics', 'notes.md'), '# Notes\n');
+      }),
+    ).toEqual([
+      'content/labs/01-baking-basics/notes.md  content/labs holds lab YAML files in NN-module folders only',
+      'content/labs/sort-the-bakes.yaml  content/labs holds lab YAML files in NN-module folders only',
     ]);
   });
 });

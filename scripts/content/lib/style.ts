@@ -62,6 +62,11 @@ export function styleProblems(q: Question, note: LessonNote | undefined): string
   return problems;
 }
 
+/** Lab text that names a retired Support plan, one problem per text, so labs use the exam's current names (spec 5). */
+export function labStyleProblems(texts: readonly string[]): string[] {
+  return texts.filter((text) => OLD_PLANS.test(text)).map((text) => `retired Support plan name in '${text}'`);
+}
+
 export interface ModuleStyle {
   singles: number;
   correctLongest: number;

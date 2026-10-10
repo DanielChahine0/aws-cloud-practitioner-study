@@ -5,6 +5,7 @@ import { stringify } from 'yaml';
 import { type Context, loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { bakeryLab, FIXTURE_LAB, writeLab } from '../fixtures/labs.ts';
 import { POOL_FILE, singleQuestion, writePool } from '../fixtures/questions.ts';
 
 const CONCEPTS = 'content/concepts.yaml';
@@ -273,5 +274,50 @@ describe('R2 exam pool and frozen forms (spec 4.3)', () => {
     ).toEqual([
       `content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml  id 'q-b4k7m2' (question) is already used by question in ${POOL_FILE}`,
     ]);
+  });
+});
+
+describe('R2 labs (spec 5.1)', () => {
+  const OLD_LAB = 'content/labs/01-baking-basics/old-bakes.yaml';
+
+  /** R2 findings with `heads` as the HEAD lab files, after `edit` changes the working tree. */
+  function withLabHead(heads: Record<string, string>, edit: (root: string) => void = () => {}): string[] {
+    const root = makeFixtureRoot();
+    edit(root);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    const withHeadFiles: Context = {
+      ...ctx,
+      headPaths: (prefix) => Object.keys(heads).filter((path) => path.startsWith(prefix)),
+      head: (path) => heads[path] ?? null,
+    };
+    return runRules(withHeadFiles, ['R2']).findings.map((f) => `${f.file}  ${f.message}`);
+  }
+
+  it('reports a lab id that a concept already uses', () => {
+    expect(
+      withLabHead({}, (root) =>
+        replaceIn(root, CONCEPTS, '- id: per-minute-rental\n', '- id: lab-m01-sort-the-bakes\n'),
+      ),
+    ).toEqual([
+      `${FIXTURE_LAB}  id 'lab-m01-sort-the-bakes' (lab) is already used by concept in ${CONCEPTS}`,
+    ]);
+  });
+
+  it('reports a lab of HEAD that is gone', () => {
+    const old = stringify(bakeryLab({ id: 'lab-m01-old-bakes' }));
+    expect(withLabHead({ [FIXTURE_LAB]: stringify(bakeryLab()), [OLD_LAB]: old })).toEqual([
+      `${OLD_LAB}  lab lab-m01-old-bakes was in HEAD and is gone; retire it instead`,
+    ]);
+  });
+
+  it('needs a higher rev for any edit to a lab of HEAD, and nothing for an unchanged lab', () => {
+    const head = { [FIXTURE_LAB]: stringify(bakeryLab()) };
+    expect(withLabHead(head)).toEqual([]);
+    expect(withLabHead(head, (root) => writeLab(root, bakeryLab({ title: 'Sort the loaves' })))).toEqual([
+      `${FIXTURE_LAB}  lab lab-m01-sort-the-bakes changed since HEAD, so it needs rev 2`,
+    ]);
+    expect(
+      withLabHead(head, (root) => writeLab(root, bakeryLab({ title: 'Sort the loaves', rev: 2 }))),
+    ).toEqual([]);
   });
 });

@@ -148,12 +148,12 @@ describe('report', () => {
           anchor: 'paying-by-the-minute',
           tasks: [{ id: '4.1', text: 'Fixture task statement 4.1' }],
           confusableWith: ['shared-kitchen'],
-          live: 0,
-          open: 1,
-          need: 1,
+          live: 1,
+          open: 2,
+          need: 0,
         },
       ],
-      existing: 2,
+      existing: 3,
     });
     writeFileSync(join(root, 'content/concepts.yaml'), '[]\n');
     expect(() => homed(load(root), 'm01/nowhere')).toThrow('m01/nowhere is not a lesson note');
@@ -185,7 +185,7 @@ describe('open questions per concept', () => {
   it('lists the notes whose concepts need questions, with the file to write and how many', () => {
     const root = makeFixtureRoot();
     expect(targets(load(root))).toEqual([
-      { note: 'm01/what-a-bakery-cloud-is', file: QUESTION_FILE, need: 2 },
+      { note: 'm01/what-a-bakery-cloud-is', file: QUESTION_FILE, need: 1 },
     ]);
     writeQuestions(root, [
       singleQuestion({ status: 'live' }),
@@ -275,7 +275,7 @@ describe('exam-pool counts in the report (spec 2.6)', () => {
     writePool(root, pool);
     expect(homed(load(root), 'm01/what-a-bakery-cloud-is').existing).toBe(before);
     expect(targets(load(root))).toEqual([
-      { note: 'm01/what-a-bakery-cloud-is', file: QUESTION_FILE, need: 2 },
+      { note: 'm01/what-a-bakery-cloud-is', file: QUESTION_FILE, need: 1 },
     ]);
   });
 });
