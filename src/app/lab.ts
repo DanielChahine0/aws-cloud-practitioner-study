@@ -95,3 +95,18 @@ export function simChartLabel(model: 'scaling' | 's3-lifecycle', series: readonl
     ? `${series.join(' and ')} for each hour from 0:00 to 23:00`
     : `${series.join(' and ')} at the end of each 30-day month`;
 }
+
+/**
+ * The points that get a label under the chart: the first, the quarters and the last,
+ * dropping a quarter that would crowd the last label (0:00, 6:00, 12:00, 18:00, 23:00 for a day).
+ */
+export function tickPoints(n: number): number[] {
+  if (n <= 0) return [];
+  const last = n - 1;
+  const quarters = [0, 1, 2, 3].map((q) => Math.round((n * q) / 4)).filter((i) => i < last);
+  const kept = [last];
+  for (const i of [...new Set(quarters)].reverse()) {
+    if ((kept[0] ?? last) - i >= n / 5) kept.unshift(i);
+  }
+  return kept;
+}

@@ -2254,6 +2254,32 @@ dialog.confirm .button {
   height: auto;
 }
 
+.sim-scale {
+  margin: 0 0 2px;
+  font-size: 0.75rem;
+}
+
+.sim-ticks {
+  position: relative;
+  height: 1.5em;
+  font-size: 0.75rem;
+}
+
+.sim-tick {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.sim-tick-start {
+  transform: none;
+}
+
+.sim-tick-end {
+  transform: translateX(-100%);
+}
+
 .sim-legend {
   display: flex;
   flex-wrap: wrap;
