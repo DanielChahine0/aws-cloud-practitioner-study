@@ -169,7 +169,10 @@ export interface BadgeView {
   arrives: 'labs' | 'missions' | 'capstone' | null;
 }
 
-/** What replay, stale detection and domain scores need of a form item, never its text. */
+/**
+ * What replay, stale detection and domain scores need of a form item, never its text.
+ * `concept` is the registered concept id, never an alias.
+ */
 export interface ExamItemRef {
   version: number;
   concept: string;

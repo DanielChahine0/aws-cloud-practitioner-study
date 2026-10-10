@@ -107,7 +107,8 @@ export function confusableLinks(concepts: readonly Concept[]): Map<string, strin
 /**
  * The mock forms (spec 4.3): one chunk per form, `content/exam-a.<hash8>.json` to `exam-d`, holding that form's live
  * items in form order, so an untaken form's text never loads outside its own mock. Pool items in no form never ship.
- * Errors name ids only, because exam-pool text must never reach tool output.
+ * The index files each item under its registered concept id, an alias resolved as R12 does, so an exam item and its
+ * practice variants share one concept key. Errors name ids only, because exam-pool text must never reach tool output.
  */
 function formChunks(
   ctx: Context,
@@ -117,6 +118,7 @@ function formChunks(
   const forms: ExamFormMeta[] = [];
   const items: Record<string, ExamItemRef> = {};
   if (ctx.forms === null) return { forms, items };
+  const canonical = new Map(ctx.concepts.flatMap((c) => (c.aliases ?? []).map((a) => [a, c.id] as const)));
   const pool = new Map(
     ctx.questions.filter(({ q }) => q.pool === 'exam').map((entry) => [entry.q.id, entry] as const),
   );
@@ -134,7 +136,7 @@ function formChunks(
       questions.push(questionView(entry, note));
       items[qid] = {
         version: entry.q.version,
-        concept: entry.q.concept,
+        concept: canonical.get(entry.q.concept) ?? entry.q.concept,
         task: entry.q.task,
         form: form.id,
         type: entry.q.type,
