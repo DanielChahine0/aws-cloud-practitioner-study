@@ -95,6 +95,9 @@ const session = (mode: SessionState['mode'], scope: string): SessionState => ({
   startedAt: '2026-10-10T08:00:00.000Z',
   submittedAt: null,
   abandoned: false,
+  form: null,
+  deadline: null,
+  submitId: null,
 });
 
 const QUEUE: ReviewQueue = {

@@ -47,6 +47,9 @@ export function answerOf(args: {
   relearn?: boolean;
   ms?: number;
   qv?: number;
+  picked?: string[];
+  flagged?: boolean;
+  changes?: string[][];
 }): NewEvent {
   const event: NewEvent = {
     t: 'answer',
@@ -55,10 +58,12 @@ export function answerOf(args: {
     qid: args.qid ?? `q-${args.concept}-1`,
     qv: args.qv ?? 1,
     concept: args.concept,
-    picked: ['a'],
+    picked: args.picked ?? ['a'],
     correct: args.correct,
     sure: args.sure,
     ms: args.ms ?? 20_000,
+    ...(args.flagged === undefined ? {} : { flagged: args.flagged }),
+    ...(args.changes === undefined ? {} : { changes: args.changes }),
   };
   return args.relearn === undefined ? event : { ...event, relearn: args.relearn };
 }
@@ -71,4 +76,39 @@ export function startOf(sid: string, mode: Mode, qids: readonly string[], scope 
 /** A session submit event. */
 export function submitOf(sid: string, mode: Mode): NewEvent {
   return { t: 'session', sid, mode, phase: 'submit', seed: 7 };
+}
+
+/** A boss or mock start: the scope (`m03` for a boss), the form (`A` to `D` or `remix`) and the deadline. */
+export function examStartOf(
+  sid: string,
+  mode: 'boss' | 'mock',
+  qids: readonly string[],
+  opts: { scope?: string; form?: string; deadline: string },
+): NewEvent {
+  return {
+    t: 'session',
+    sid,
+    mode,
+    phase: 'start',
+    seed: 7,
+    scope: opts.scope ?? '',
+    qids: [...qids],
+    deadline: opts.deadline,
+    ...(opts.form === undefined ? {} : { form: opts.form }),
+  };
+}
+
+/** A session abandon event. */
+export function abandonOf(sid: string, mode: Mode): NewEvent {
+  return { t: 'session', sid, mode, phase: 'abandon', seed: 7 };
+}
+
+/** An error-review cause for one item of a session. */
+export function causeOf(sid: string, qid: string, cause: 'unknown' | 'confused' | 'misread'): NewEvent {
+  return { t: 'cause', sid, qid, cause };
+}
+
+/** A recorded promotion. */
+export function rankOf(rank: string): NewEvent {
+  return { t: 'rank', rank };
 }

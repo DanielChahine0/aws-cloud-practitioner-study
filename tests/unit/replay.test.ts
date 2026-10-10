@@ -4,10 +4,13 @@ import {
   type ContentRefs,
   derive,
   ENGINE_VERSION,
+  examsOf,
   openSession,
   snapshotOf,
+  takenForms,
 } from '../../src/engine/replay.ts';
 import { eventsOf, SID, SID2 } from '../fixtures/events.ts';
+import { abandonOf, answerOf, causeOf, examStartOf, rankOf, startOf, submitOf } from '../fixtures/memory.ts';
 
 const answer = (qid: string, correct: boolean, sid = SID, concept = 'shared-kitchen'): NewEvent => ({
   t: 'answer',
@@ -154,5 +157,181 @@ describe('snapshotOf', () => {
     const snapshot = snapshotOf(derive(events, null)) as { answers: [string, unknown][] };
     expect(snapshot.answers.map(([qid]) => qid)).toEqual(['q1', 'q2']);
     expect(JSON.parse(JSON.stringify(snapshot))).toEqual(snapshot);
+  });
+});
+
+describe('exam sessions in replay (spec 4.1, 4.3, 4.4)', () => {
+  const BOSS_QIDS = ['qb1', 'qb2', 'qb3', 'qb4'];
+  const DEADLINE = '2026-10-10T08:30:00.000Z';
+  const bossAnswer = (qid: string, correct: boolean, picked: string[] = ['a']) =>
+    answerOf({ concept: 'oven', correct, sure: false, qid, mode: 'boss', picked });
+
+  it('records a boss result with unanswered items counted in the total', () => {
+    const events = eventsOf(
+      examStartOf(SID, 'boss', BOSS_QIDS, { scope: 'm01', deadline: DEADLINE }),
+      bossAnswer('qb1', true),
+      bossAnswer('qb2', false),
+      bossAnswer('qb3', false, []),
+      submitOf(SID, 'boss'),
+    );
+    const p = derive(events, null);
+    expect(p.exams.get(SID)).toEqual({
+      sid: SID,
+      mode: 'boss',
+      scope: 'm01',
+      form: null,
+      correct: 1,
+      answered: 2,
+      total: 4,
+      startedAt: events[0]?.at,
+      submittedAt: events[4]?.at,
+      day: events[4]?.day,
+      deadline: DEADLINE,
+      timedOut: false,
+      submitId: events[4]?.id,
+    });
+    expect(p.sessions.get(SID)).toMatchObject({ form: null, deadline: DEADLINE, submitId: events[4]?.id });
+  });
+
+  it('a second submit of one session changes nothing', () => {
+    const once = eventsOf(
+      examStartOf(SID, 'boss', BOSS_QIDS, { scope: 'm01', deadline: DEADLINE }),
+      bossAnswer('qb1', true),
+      submitOf(SID, 'boss'),
+    );
+    const twice = eventsOf(
+      examStartOf(SID, 'boss', BOSS_QIDS, { scope: 'm01', deadline: DEADLINE }),
+      bossAnswer('qb1', true),
+      submitOf(SID, 'boss'),
+      bossAnswer('qb2', true),
+      submitOf(SID, 'boss'),
+    );
+    const first = derive(once, null);
+    const second = derive(twice, null);
+    expect(second.exams.get(SID)).toEqual(first.exams.get(SID));
+    expect(second.sessions.get(SID)?.submittedAt).toBe(once[2]?.at);
+    expect(second.sessions.get(SID)?.submitId).toBe(once[2]?.id);
+  });
+
+  it('ignores a submit after an abandon', () => {
+    const p = derive(
+      eventsOf(
+        examStartOf(SID, 'boss', BOSS_QIDS, { scope: 'm01', deadline: DEADLINE }),
+        abandonOf(SID, 'boss'),
+        submitOf(SID, 'boss'),
+      ),
+      null,
+    );
+    expect(p.sessions.get(SID)).toMatchObject({ abandoned: true, submittedAt: null, submitId: null });
+    expect(p.exams.size).toBe(0);
+  });
+
+  it('marks a mock submitted at or after its deadline as timed out', () => {
+    const late = eventsOf(
+      examStartOf(SID, 'mock', ['qm1'], { form: 'A', deadline: '2026-10-10T08:01:00.000Z' }),
+      answerOf({ concept: 'oven', correct: true, sure: false, qid: 'qm1', mode: 'mock' }),
+      submitOf(SID, 'mock'),
+    );
+    expect(derive(late, null).exams.get(SID)).toMatchObject({ form: 'A', timedOut: true, correct: 1 });
+    const early = eventsOf(
+      examStartOf(SID, 'mock', ['qm1'], { form: 'A', deadline: DEADLINE }),
+      submitOf(SID, 'mock'),
+    );
+    expect(derive(early, null).exams.get(SID)).toMatchObject({ timedOut: false, correct: 0, answered: 0 });
+  });
+
+  it('keeps the first answer per question, so a second answer never changes the result', () => {
+    const p = derive(
+      eventsOf(
+        examStartOf(SID, 'boss', BOSS_QIDS, { scope: 'm01', deadline: DEADLINE }),
+        bossAnswer('qb1', false),
+        bossAnswer('qb1', true),
+        submitOf(SID, 'boss'),
+      ),
+      null,
+    );
+    expect(p.exams.get(SID)).toMatchObject({ correct: 0, answered: 1, total: 4 });
+  });
+
+  it('records the flag and the changed picks of an answer', () => {
+    const p = derive(
+      eventsOf(
+        answerOf({
+          concept: 'oven',
+          correct: false,
+          sure: false,
+          qid: 'qm1',
+          mode: 'mock',
+          flagged: true,
+          changes: [['a'], ['b']],
+        }),
+        answerOf({ concept: 'oven', correct: true, sure: true, qid: 'q1' }),
+      ),
+      null,
+    );
+    expect(p.answers.get('qm1')?.[0]).toMatchObject({ flagged: true, changes: [['a'], ['b']] });
+    expect(p.answers.get('q1')?.[0]).toMatchObject({ flagged: false, changes: [] });
+  });
+
+  it('keeps the latest cause per item and collects rank events', () => {
+    const p = derive(
+      eventsOf(
+        causeOf(SID, 'qb1', 'unknown'),
+        causeOf(SID, 'qb1', 'misread'),
+        causeOf(SID2, 'qb1', 'confused'),
+        rankOf('business-support-plus'),
+        rankOf('business-support-plus'),
+        rankOf('enterprise'),
+      ),
+      null,
+    );
+    expect([...p.causes]).toEqual([
+      [`${SID} qb1`, 'misread'],
+      [`${SID2} qb1`, 'confused'],
+    ]);
+    expect([...p.ranks]).toEqual(['business-support-plus', 'enterprise']);
+  });
+
+  it('counts a started mock as taken, even unsubmitted, and never a remix or a boss', () => {
+    const p = derive(
+      eventsOf(
+        examStartOf(SID, 'mock', ['qm1'], { form: 'B', deadline: DEADLINE }),
+        examStartOf(SID2, 'mock', ['qm2'], { form: 'remix', deadline: DEADLINE }),
+        startOf('01JA00000000000000000000S3', 'quiz', ['q1'], 'm01'),
+      ),
+      null,
+    );
+    expect([...takenForms(p)]).toEqual(['B']);
+    expect(p.sessions.get(SID2)?.form).toBe('remix');
+  });
+
+  it('lists exam results by mode and scope in submit order', () => {
+    const S3 = '01JA00000000000000000000S3';
+    const p = derive(
+      eventsOf(
+        examStartOf(SID2, 'boss', ['qb1'], { scope: 'm02', deadline: DEADLINE }),
+        examStartOf(SID, 'boss', ['qb1'], { scope: 'm01', deadline: DEADLINE }),
+        examStartOf(S3, 'mock', ['qm1'], { form: 'A', deadline: DEADLINE }),
+        submitOf(SID, 'boss'),
+        submitOf(S3, 'mock'),
+        submitOf(SID2, 'boss'),
+      ),
+      null,
+    );
+    expect(examsOf(p, 'boss').map((r) => r.scope)).toEqual(['m01', 'm02']);
+    expect(examsOf(p, 'boss', 'm02').map((r) => r.sid)).toEqual([SID2]);
+    expect(examsOf(p, 'mock').map((r) => r.form)).toEqual(['A']);
+  });
+
+  it('counts an exam answer to a question the content lacks only when refs are given', () => {
+    const events = eventsOf(
+      examStartOf(SID, 'mock', ['qm-gone'], { form: 'A', deadline: DEADLINE }),
+      answerOf({ concept: 'oven', correct: true, sure: false, qid: 'qm-gone', mode: 'mock' }),
+      submitOf(SID, 'mock'),
+    );
+    const refs: ContentRefs = { questions: new Map([['qm1', 1]]), notes: new Set() };
+    expect(derive(events, refs).unknownEvents).toBe(1);
+    expect(derive(events, null).unknownEvents).toBe(0);
+    expect(derive(events, refs).exams.get(SID)).toMatchObject({ correct: 1, total: 1 });
   });
 });
