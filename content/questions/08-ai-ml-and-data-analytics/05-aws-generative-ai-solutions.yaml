@@ -1,0 +1,468 @@
+questions:
+  - id: q-3q7r1n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sagemaker-jumpstart
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe has no ML specialists.
+      It wants to browse ready-made solutions for vision, language and tabular data, adapt one to its sales records and deploy it in a few clicks.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon SageMaker AI
+        why: SageMaker AI on its own is for building and training your own models, which needs the ML skills the cafe lacks.
+      - id: b
+        text: Amazon SageMaker JumpStart
+        correct: true
+        why: JumpStart is the model hub with vision, language and tabular solutions to fine-tune and deploy in a few clicks.
+      - id: c
+        text: Amazon Q Business
+        why: Q Business answers staff questions from company data; it does not offer models to tune and deploy.
+      - id: d
+        text: Amazon Bedrock
+        why: Bedrock serves managed foundation models through an API, not a catalog of tabular solutions to deploy.
+    evidence:
+      - Hub in SageMaker AI; vision, NLP, tabular solutions to fine-tune and deploy in clicks
+      - "Amazon SageMaker JumpStart: SageMaker AI model hub."
+    takeaway: A quick start from ready-made models inside SageMaker AI, with little ML expertise, points to SageMaker JumpStart.
+    history: []
+    verified:
+      keyHash: 4b3b8d05f5ac
+      fullHash: d29385759dc5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8jqk2d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sagemaker-jumpstart
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which description matches Amazon SageMaker JumpStart?
+    options:
+      - id: a
+        text: An assistant that answers staff questions from company files
+        why: That describes Amazon Q Business, which serves employees rather than offering models to deploy.
+      - id: b
+        text: An assistant that suggests whole functions inside code editors
+        why: That describes Amazon Q Developer, a coding assistant rather than a model hub.
+      - id: c
+        text: A hub of ready-made solutions to fine-tune and deploy quickly
+        correct: true
+        why: JumpStart lives inside SageMaker AI and lets teams fine-tune and deploy ready-made solutions quickly.
+      - id: d
+        text: A service for building and training your own models
+        why: That describes Amazon SageMaker AI itself, where teams build models rather than start from a hub.
+    evidence:
+      - "Amazon SageMaker JumpStart: SageMaker AI model hub."
+      - "JumpStart: fast model starts in SageMaker AI."
+    takeaway: SageMaker JumpStart is the model hub inside SageMaker AI for fast starts with ready-made solutions.
+    history: []
+    verified:
+      keyHash: e7a6fda59050
+      fullHash: e376c1d8623d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zr4w02
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-bedrock
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants to try foundation models from several AI companies and switch between them without rewriting its app or running any model servers.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SageMaker JumpStart
+        why: JumpStart models are deployed and run on the cafe's own endpoints, which means running the model servers the stem rules out.
+      - id: b
+        text: Amazon Q Business
+        why: Q Business is a ready assistant for staff questions, not a way to pick and swap foundation models in an app.
+      - id: c
+        text: Amazon SageMaker AI
+        why: SageMaker AI is for building and training your own models, not calling many managed ones through one API.
+      - id: d
+        text: Amazon Bedrock
+        correct: true
+        why: Bedrock offers managed foundation models from Amazon and other companies through a single API.
+    evidence:
+      - Managed FMs from Amazon and startups (Claude, Stable Diffusion) via one API; test, tune, integrate
+      - "Amazon Bedrock: Managed FMs, one API."
+    takeaway: Many managed foundation models reached through one API, with no servers to run, point to Amazon Bedrock.
+    history: []
+    verified:
+      keyHash: 44aa56b8f2a9
+      fullHash: 0d5dbf9c647b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qhrqnt
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-bedrock
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which statements describe Amazon Bedrock?
+    options:
+      - id: a
+        text: It can power agents that work with company data
+        correct: true
+        why: Bedrock can back agents that act on a company's own data in production apps.
+      - id: b
+        text: It is a model hub that lives inside SageMaker AI
+        why: That describes Amazon SageMaker JumpStart, not Bedrock's managed models behind one API.
+      - id: c
+        text: It offers managed models from several AI companies
+        correct: true
+        why: Bedrock hosts foundation models from Amazon and from other AI companies as a managed service.
+      - id: d
+        text: It suggests whole functions inside developer IDEs
+        why: Suggesting code in IDEs is what Amazon Q Developer does, not Bedrock.
+      - id: e
+        text: It deploys vision and tabular solutions in clicks
+        why: Click-deployed vision, NLP and tabular solutions describe SageMaker JumpStart, not Bedrock.
+    evidence:
+      - Secure, private, scalable production apps; text and image output; agents on company data
+      - Managed FMs from Amazon and startups (Claude, Stable Diffusion) via one API; test, tune, integrate
+    takeaway: Bedrock is a managed set of foundation models that can return text or images and back agents on company data.
+    history: []
+    verified:
+      keyHash: e9005395fb02
+      fullHash: 8226bfa14f5d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x0r79y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q-business
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's shift managers want an assistant that answers questions about supplier contracts and staff policies, and completes simple tasks, using the documents already kept in the company's repositories.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Q Developer
+        why: Q Developer helps programmers write and review code; it is not aimed at managers asking about contracts.
+      - id: b
+        text: Amazon Q Business
+        correct: true
+        why: Q Business answers staff questions and runs tasks using company repositories over secure connections.
+      - id: c
+        text: Amazon Translate
+        why: Translate converts text between languages and does not answer questions from company documents.
+      - id: d
+        text: Amazon SageMaker JumpStart
+        why: JumpStart is a hub for deploying models, so the cafe would still have to build the assistant itself.
+    evidence:
+      - Fields questions, fixes problems, runs tasks from company repositories over secure links
+      - Q Business serves staff; Q Developer serves coders.
+    takeaway: A ready assistant that answers staff questions and runs tasks from company data points to Amazon Q Business.
+    history: []
+    verified:
+      keyHash: 8f22963fe6b7
+      fullHash: 19d0b2d55ddd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ehhy2z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q-business
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which group is Amazon Q Business mainly built to help?
+    options:
+      - id: a
+        text: Developers writing code in their IDEs
+        why: Developers in IDEs are served by Amazon Q Developer, the coding assistant.
+      - id: b
+        text: Data scientists training their own models
+        why: Training custom models is the job of Amazon SageMaker AI, not Q Business.
+      - id: c
+        text: Employees working with company data
+        correct: true
+        why: Q Business serves staff by answering questions and running tasks from the company's own data.
+      - id: d
+        text: Listeners who want text read aloud
+        why: Reading text aloud is what Amazon Polly does, and it has nothing to do with Q Business.
+    evidence:
+      - Q Business serves staff; Q Developer serves coders.
+      - "Amazon Q Business: Company-data assistant."
+    takeaway: Amazon Q Business is the assistant for employees, built on the company's own data.
+    history: []
+    verified:
+      keyHash: 38d486b6ffb9
+      fullHash: e6e447b85a7f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-9887bn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q-developer
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      A programmer at the cafe is writing the ordering app in TypeScript and wants suggestions for whole functions right inside the code editor.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Bedrock
+        why: Bedrock gives apps access to foundation models through an API; it is not an assistant inside the editor.
+      - id: b
+        text: Amazon Q Business
+        why: Q Business answers staff questions from company data rather than suggesting code in an editor.
+      - id: c
+        text: Amazon Comprehend
+        why: Comprehend finds sentiment and key phrases in text and does not write code.
+      - id: d
+        text: Amazon Q Developer
+        correct: true
+        why: Q Developer suggests code, up to whole functions, in several IDEs and supports TypeScript.
+    evidence:
+      - Suggests code, even whole functions and logical blocks, in multiple IDEs; languages include C#, Java, JavaScript, Python, TypeScript
+    takeaway: Code suggestions inside the editor, up to whole functions, point to Amazon Q Developer.
+    history: []
+    verified:
+      keyHash: 10db012fb953
+      fullHash: 34f60d54b2d8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3s2rzn
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-q-developer
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which benefits does Amazon Q Developer bring to a software team?
+    options:
+      - id: a
+        text: Stronger application security
+        correct: true
+        why: Q Developer is credited with improving the security of the software the team builds.
+      - id: b
+        text: Spoken audio turned into text
+        why: Converting speech to text is what Amazon Transcribe does, not a coding assistant.
+      - id: c
+        text: Quicker writing of programs
+        correct: true
+        why: By suggesting functions and blocks, Q Developer speeds up how quickly the team writes software.
+      - id: d
+        text: Interactive dashboards of sales
+        why: Interactive dashboards come from a business intelligence service, not a coding assistant.
+      - id: e
+        text: Answers drawn from staff policies
+        why: Answering questions from company documents is the role of Amazon Q Business.
+    evidence:
+      - Faster coding, reliability, security, code reviews
+    takeaway: Amazon Q Developer speeds up coding and helps with code reviews, reliability and security.
+    history: []
+    verified:
+      keyHash: 349fa2837470
+      fullHash: 525479599b08
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7qae75
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: fine-tuning
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      What does fine-tuning a model mean?
+    options:
+      - id: a
+        text: Training a brand-new model from scratch on your data
+        why: Fine-tuning starts from a model that is already trained rather than from nothing.
+      - id: b
+        text: Further training a pre-trained model on your own data
+        correct: true
+        why: Fine-tuning takes a pre-trained model and adjusts it with your own data for your domain.
+      - id: c
+        text: Adding instructions and examples to each prompt you send
+        why: Shaping each prompt is prompt engineering; it leaves the model's learned weights unchanged.
+      - id: d
+        text: Running a trained model to make predictions on new input
+        why: Making predictions with a finished model is inference, which does not adapt the model.
+    evidence:
+      - "Fine-tuning: Adapting a pre-trained model with your data."
+    takeaway: Fine-tuning adapts a pre-trained model with your own data instead of training a model from scratch.
+    history: []
+    verified:
+      keyHash: 54b642ed194b
+      fullHash: 17452f4968a7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wp13bg
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: fine-tuning
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe found a pre-trained language model that writes decent product text, but it misses the cafe's own drink names and tone.
+      The cafe wants the model itself to learn them from its large set of past menu descriptions, while keeping what the model already knows.
+      What should it do?
+    options:
+      - id: a
+        text: Compare it with other models in JumpStart
+        why: JumpStart can compare models, but comparing them teaches none of them the cafe's drink names or tone.
+      - id: b
+        text: Run the menu set through Amazon Comprehend
+        why: Comprehend pulls key phrases and sentiment from text, but the language model itself learns nothing from it.
+      - id: c
+        text: Fine-tune the pre-trained model with the menu set
+        correct: true
+        why: Fine-tuning adapts the existing model with the cafe's own data so it learns that domain.
+      - id: d
+        text: Serve the model unchanged through Amazon Bedrock
+        why: Bedrock can host and serve models, but an unchanged model still lacks the cafe's own drink names and tone.
+    evidence:
+      - "Fine-tuning: Adapting a pre-trained model with your data."
+      - Deploys without expertise, domain fine-tuning, model comparison
+    takeaway: To fit a pre-trained model to your own domain, fine-tune it with your data rather than start over.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Key option 3 repeats the stem's 'pre-trained model', pointing at it."
+  - id: q-7f9y5e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multimodal-generative-ai
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      What makes a generative AI model multimodal?
+    options:
+      - id: a
+        text: It runs the same model in several Regions
+        why: Running in several Regions is about where a model is hosted, not the kinds of content it makes.
+      - id: b
+        text: It writes text in several human languages
+        why: Text in many languages is still one content type, so that alone is not multimodal.
+      - id: c
+        text: It is trained by several teams at one time
+        why: Who trains a model says nothing about the content types it can generate.
+      - id: d
+        text: It can generate several types of content
+        correct: true
+        why: Multimodal means generating more than one content type, such as both text and images.
+    evidence:
+      - "Multimodal: Generating several content types."
+    takeaway: A multimodal generative model produces more than one type of content, such as text and images.
+    history: []
+    verified:
+      keyHash: da563acbe95a
+      fullHash: 088b59448caa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-e75eyb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multimodal-generative-ai
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants one managed, enterprise-grade service that can generate both seasonal menu text and matching drink images for its app.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Bedrock
+        correct: true
+        why: Bedrock is managed, built for production apps and returns both text and image output.
+      - id: b
+        text: Amazon SageMaker JumpStart
+        why: JumpStart helps deploy models inside SageMaker AI, so the cafe would manage the result rather than use a managed service.
+      - id: c
+        text: Amazon Q Business
+        why: Q Business answers staff questions from company data and is not built to generate images for an app.
+      - id: d
+        text: Amazon Rekognition
+        why: Rekognition analyzes existing images and video; it does not generate new images or menu text.
+    evidence:
+      - Managed, enterprise-grade multimodal generation points to Bedrock, not JumpStart or Q Business.
+      - Secure, private, scalable production apps; text and image output; agents on company data
+    takeaway: Managed, enterprise-grade generation of several content types, such as text and images, points to Amazon Bedrock.
+    history: []
+    verified:
+      keyHash: c4784c924869
+      fullHash: 531b446e7f39
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q3t74m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: fine-tuning
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe picks a vision model in SageMaker JumpStart and runs a short extra training round on photos of its own pastries before deploying it.
+      Which term describes this step?
+    options:
+      - id: a
+        text: Pre-training
+        why: Pre-training is the large first round on massive data that happened before the cafe picked the model.
+      - id: b
+        text: Fine-tuning
+        correct: true
+        why: Adapting an existing model with the cafe's own pastry photos is fine-tuning.
+      - id: c
+        text: Multimodal generation
+        why: Multimodal generation means producing several content types, not adapting a model with new photos.
+      - id: d
+        text: Training from scratch
+        why: Training from scratch builds a brand-new model, while the cafe adapted a model that was already trained.
+    evidence:
+      - "**Fine-tuning**: Adapting a pre-trained model with your data."
+    takeaway: Giving a ready-made model extra training on your own data to fit your domain is fine-tuning.
+    history: []
+    verified:
+      keyHash: 2d534e3c53a4
+      fullHash: ccbaa053172c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,365 @@
+questions:
+  - id: q-evjyyh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's ordering site runs on several EC2 instances.
+      During the lunch rush one instance is swamped while the others barely work.
+      What should sit in front of the instances so the requests are shared out?
+    options:
+      - id: a
+        text: An Auto Scaling group
+        why: An Auto Scaling group changes how many instances run, but it does not choose which one gets each request.
+      - id: b
+        text: A load balancer
+        correct: true
+        why: A load balancer takes each incoming request and picks an instance for it, so no instance is swamped while others idle.
+      - id: c
+        text: An Amazon Machine Image
+        why: An AMI is a template for launching instances and plays no part in sending requests to them.
+      - id: d
+        text: An Availability Zone
+        why: An Availability Zone is a place where instances run, not a component that splits traffic between them.
+    evidence:
+      - A load balancer receives incoming requests and decides which instance serves each one.
+      - On AWS a load balancer plays the host, so no EC2 instance sits idle or overloaded.
+    takeaway: When some instances are overloaded and others idle, a load balancer in front spreads requests across them.
+    history: []
+    verified:
+      keyHash: 148b556e7afb
+      fullHash: 45a1a83b97fd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0n46s7
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 1
+    stem: >-
+      Why does spreading incoming requests over several resources improve performance?
+    options:
+      - id: a
+        text: Each resource is moved to a larger size
+        why: Spreading requests does not resize anything, and making one resource larger is vertical scaling.
+      - id: b
+        text: Each request is handled by all resources at once
+        why: A request goes to one resource, and sending it to all of them would waste capacity rather than help.
+      - id: c
+        text: No single resource is left carrying everything
+        correct: true
+        why: When the work is shared, no single resource is overloaded, so performance holds up.
+      - id: d
+        text: Each request waits until the busiest resource is free
+        why: Waiting on the busiest resource would slow requests, which is the opposite of what spreading achieves.
+    evidence:
+      - Spreading a workload keeps any one resource from carrying it all, which boosts performance.
+    takeaway: Load balancing improves performance by keeping any one resource from carrying the whole workload.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only true description of load balancing; 2, 3 and 4 are false on their own.)"
+  - id: q-0sxzy0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elastic-load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe runs third-party software on its own EC2 instance to hand each incoming order to one of its servers.
+      It is tired of patching, upgrading and handling failover for that software.
+      Which AWS service does the same job while AWS takes over the upkeep?
+    options:
+      - id: a
+        text: Amazon EC2 Auto Scaling
+        why: Auto Scaling adjusts the number of instances but does not route requests between them.
+      - id: b
+        text: Amazon CloudFront
+        why: CloudFront caches content close to viewers and is not a managed replacement for a load balancer in front of instances.
+      - id: c
+        text: AWS Global Accelerator
+        why: Global Accelerator speeds up the network path to an application rather than replacing the cafe's load balancer.
+      - id: d
+        text: Elastic Load Balancing
+        correct: true
+        why: ELB is the managed load balancer, so AWS handles its patches, upgrades and failover once it is set up.
+    evidence:
+      - "Third-party load balancers run on AWS, but you then own their upkeep: upgrades, patches, maintenance and failover."
+      - "Elastic Load Balancing (ELB) is AWS's managed option: set it up once and AWS does that upkeep."
+    takeaway: ELB is the managed load balancer, so AWS does the patching, upgrades and failover that a self-run one needs.
+    history: []
+    verified:
+      keyHash: 40e1d30e064f
+      fullHash: d6f31e9ece63
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vyvg99
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: elastic-load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's ordering front end keeps losing track of its back-end servers as they come and go.
+      The cafe puts ELB between the two tiers.
+      Which traits of ELB fix this problem?
+    options:
+      - id: a
+        text: AWS handles its patches and failover
+        why: This is true of ELB, but it removes upkeep work and does not stop the front end from tracking back ends.
+      - id: b
+        text: Front ends reach it at one Regional address
+        correct: true
+        why: With one Regional address to call, the front end no longer needs a list of back-end servers.
+      - id: c
+        text: It adds back-end servers as demand rises
+        why: ELB never adds or removes instances, since setting the instance count is the job of Auto Scaling.
+      - id: d
+        text: It handles internal and external traffic
+        why: This is true of ELB, but the kind of traffic it takes does nothing for the front end's tracking problem.
+      - id: e
+        text: New back ends tell it when they are ready
+        correct: true
+        why: A new back end signs in with ELB, unseen by the front end, so the front end never has to learn about it.
+    evidence:
+      - ELB is Regional, so front ends need only its single URL, and it passes each request to the back-end instance with the fewest outstanding requests.
+      - A new back-end instance just tells ELB it is ready, unseen by the front end, so each tier scales on its own and the architecture is decoupled.
+    takeaway: ELB decouples tiers because front ends call one Regional address and new back ends register with ELB, not with the front end.
+    history: []
+    verified:
+      keyHash: 774c0a913d78
+      fullHash: 494c4174f8be
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-aa5vr6
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: load-balancing-routing-methods
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 1
+    stem: >-
+      Match each ELB routing method to how it chooses a server.
+    pairs:
+      - left: Round Robin
+        right: Works through the servers in a fixed rotation
+        why: Round Robin cycles through the servers in a fixed order.
+      - left: Least Connections
+        right: Picks the server holding the fewest live sessions
+        why: Least Connections sends the request to the least busy server by open connections.
+      - left: IP Hash
+        right: Sends a given client to one server every time
+        why: IP Hash ties a client IP address to one server so its requests land there each time.
+      - left: Least Response Time
+        right: Picks the server with the lowest latency now
+        why: Least Response Time favors the quickest server to cut latency.
+    evidence:
+      - "**Round Robin**: routing that cycles through servers in order."
+      - "**IP Hash**: routing that pins each client IP address to one server."
+      - "**Least Response Time**: routing toward the fastest-responding server to cut latency."
+    takeaway: ELB can route in turn, by fewest connections, by client IP or by fastest response.
+    history: []
+    verified:
+      keyHash: a59ac1968769
+      fullHash: 8d3422705096
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jrdpck
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: load-balancing-routing-methods
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's loyalty app keeps each customer's session on one server, so a returning customer's device must keep landing on that same server.
+      Which routing method should the load balancer use?
+    options:
+      - id: a
+        text: Round Robin
+        why: Round Robin moves through the servers in turn, so a customer's requests would land on different servers.
+      - id: b
+        text: Least Connections
+        why: Least Connections picks whichever server is least busy, which can change from one request to the next.
+      - id: c
+        text: IP Hash
+        correct: true
+        why: IP Hash ties each client IP address to one server, so a customer keeps reaching the same one.
+      - id: d
+        text: Least Response Time
+        why: Least Response Time picks the quickest server at that moment, not the same server each time.
+    evidence:
+      - "**IP Hash**: routing that pins each client IP address to one server."
+    takeaway: To keep each client on the same server by IP address, route with IP Hash.
+    history: []
+    verified:
+      keyHash: b11f328dab4e
+      fullHash: a6fb8b6744f7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bk419k
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elastic-load-balancing-with-auto-scaling
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's menu site runs on a fleet of servers behind ELB and gets a rush every Saturday morning.
+      Which service decides how many servers are running during the rush?
+    options:
+      - id: a
+        text: Amazon EC2 Auto Scaling
+        correct: true
+        why: Auto Scaling sets the instance count, adding instances for the rush and removing them afterward.
+      - id: b
+        text: Elastic Load Balancing
+        why: ELB only spreads traffic across the instances that exist and never adds or removes any.
+      - id: c
+        text: AWS Compute Optimizer
+        why: Compute Optimizer recommends better instance sizes but does not add or remove instances for the rush.
+      - id: d
+        text: AWS Lambda
+        why: Lambda runs code in response to events and does not manage how many EC2 instances run.
+    evidence:
+      - "They are separate services with complementary jobs: Auto Scaling sets how many instances run, and ELB spreads traffic across them."
+      - ELB never adds, removes or resizes instances itself.
+    takeaway: In an ELB plus Auto Scaling setup, Auto Scaling sets the instance count and ELB only routes traffic.
+    history: []
+    verified:
+      keyHash: 05970cc44dbf
+      fullHash: 2b0cb75f41a4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-80t69j
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: elastic-load-balancing-with-auto-scaling
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 1
+    stem: >-
+      The cafe pairs Elastic Load Balancing with Amazon EC2 Auto Scaling.
+      Which jobs belong to ELB rather than to Auto Scaling?
+    options:
+      - id: a
+        text: Adding instances when demand climbs
+        why: Adding instances is Auto Scaling's job, since ELB never adds or removes instances.
+      - id: b
+        text: Spreading requests across instances
+        correct: true
+        why: ELB routes traffic, spreading requests over whatever instances Auto Scaling keeps running.
+      - id: c
+        text: Removing instances when demand drops
+        why: Removing instances is also Auto Scaling's job, and ELB leaves the count alone.
+      - id: d
+        text: Giving front ends one address to call
+        correct: true
+        why: ELB is the single Regional entry point, so front ends call it instead of tracking each instance.
+      - id: e
+        text: Holding a minimum count of instances
+        why: Keeping a floor of running instances is set on the Auto Scaling group, not on ELB.
+    evidence:
+      - Auto Scaling changes the instance count, and ELB only routes traffic across those instances.
+      - ELB never adds, removes or resizes instances itself.
+      - ELB is Regional, so front ends need only its single URL, and it passes each request to the back-end instance with the fewest outstanding requests.
+    takeaway: Auto Scaling changes how many instances run, and ELB only spreads traffic across them.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 are the only two load balancer jobs; 2, 4 and 5 are all Auto Scaling, so the select-2 count points at the pair.)"
+  - id: q-bt0e83
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 1
+    stem: >-
+      What does a load balancer do with each incoming request?
+    options:
+      - id: a
+        text: Adds a new instance to handle it
+        why: Adding instances changes the fleet size, which a load balancer does not do.
+      - id: b
+        text: Holds it until a consumer reads it
+        why: Holding work until a consumer is ready describes a message queue, not a load balancer.
+      - id: c
+        text: Copies it to every running instance
+        why: A load balancer sends each request to one instance rather than to all of them.
+      - id: d
+        text: Picks which instance will serve it
+        correct: true
+        why: A load balancer takes in each request and decides which instance should serve it.
+    evidence:
+      - A load balancer receives incoming requests and decides which instance serves each one.
+    takeaway: A load balancer receives each request and chooses the instance that serves it.
+    history: []
+    verified:
+      keyHash: b4518b394102
+      fullHash: e3dc2d02e627
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1degbd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elastic-load-balancing-with-auto-scaling
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      During the Saturday rush, Amazon EC2 Auto Scaling adds servers to the cafe's menu site fleet, which sits behind ELB.
+      Which fact explains how the new servers start getting customer requests?
+    options:
+      - id: a
+        text: Auto Scaling sets how many instances are running
+        why: This is true, but setting the count only adds the servers and sends them no requests.
+      - id: b
+        text: ELB routes requests across all running instances
+        correct: true
+        why: ELB is the single entry point and spreads requests over whatever instances Auto Scaling has running.
+      - id: c
+        text: ELB is a Regional service that AWS manages
+        why: Being Regional and managed is true of ELB but does not explain how new servers get traffic.
+      - id: d
+        text: ELB grows with traffic at no added hourly cost
+        why: ELB's own elasticity is true, yet it says nothing about requests reaching the new servers.
+    evidence:
+      - In front of an Auto Scaling group it is the single entry point, spreading requests evenly over whatever instances exist.
+      - "They are separate services with complementary jobs: Auto Scaling sets how many instances run, and ELB spreads traffic across them."
+    takeaway: Auto Scaling adds the instances, and ELB, as the single entry point, spreads traffic onto them.
+    history: []
+    verified:
+      keyHash: 19fdb0ab96e7
+      fullHash: aa5d815146aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

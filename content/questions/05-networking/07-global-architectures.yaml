@@ -1,0 +1,78 @@
+questions:
+  - id: q-k5ncm7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: direct-connect-failover
+    note: m05/global-architectures
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's roasting plant sends its order data to a VPC over a single AWS Direct Connect line.
+      The owners worry that a road crew could cut that cable one day.
+      What can stand by so the plant still reaches the VPC if the line goes down?
+    options:
+      - id: a
+        text: AWS Site-to-Site VPN
+        correct: true
+        why: An encrypted VPN tunnel from the plant to the VPC can carry the traffic while the cut Direct Connect line is repaired.
+      - id: b
+        text: AWS Transit Gateway
+        why: A transit gateway is a hub joining networks, but it is not itself a second path from the plant if the only line is cut.
+      - id: c
+        text: AWS Global Accelerator
+        why: Global Accelerator speeds application traffic for users to endpoints, not a backup link from the plant's data center.
+      - id: d
+        text: A NAT gateway
+        why: A NAT gateway lets private instances start outbound connections, so it gives the plant no path into the VPC.
+    evidence:
+      - Direct Connect is a physical cable that can be cut, so a VPN often stands by as its failover, or a second Direct Connect line does.
+    takeaway: A VPN connection, or a second Direct Connect line, can take over when the primary Direct Connect cable fails.
+    history: []
+    verified:
+      keyHash: 44ee02f44f23
+      fullHash: 79f4e4c6ce15
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-svt3f5
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: direct-connect-failover
+    note: m05/global-architectures
+    task: "3.5"
+    level: 1
+    stem: >-
+      A company links its data center to a VPC with several AWS Direct Connect connections instead of just one.
+      What does it gain from the extra connections?
+    options:
+      - id: a
+        text: The lines keep traffic flowing if one of them fails
+        correct: true
+        why: With several lines in place, losing one cable leaves the others to carry traffic, which is failover.
+      - id: b
+        text: The lines add up to more total bandwidth together
+        correct: true
+        why: Connections used together add up to a larger aggregate bandwidth than any single line gives.
+      - id: c
+        text: The lines carry traffic on a private dedicated path
+        why: A single Direct Connect line is already a private dedicated path, so this is not something the extra lines add.
+      - id: d
+        text: The lines reach the VPC through a virtual private gateway
+        why: Even one Direct Connect line enters the VPC through a virtual private gateway, so the extra lines add nothing here.
+      - id: e
+        text: The lines move bulk data faster than a VPN does
+        why: One Direct Connect line already beats a VPN for bulk transfers, so this is not the gain from adding more.
+    evidence:
+      - Direct Connect is a physical cable that can be cut, so a VPN often stands by as its failover, or a second Direct Connect line does.
+      - Several connections can also be bundled for more total (aggregate) bandwidth.
+    takeaway: Extra Direct Connect connections give both failover when one fails and more aggregate bandwidth when used together.
+    history: []
+    verified:
+      keyHash: c236deb46d87
+      fullHash: 722ddcc550c1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

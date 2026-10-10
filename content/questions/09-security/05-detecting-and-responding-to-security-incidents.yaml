@@ -1,0 +1,390 @@
+questions:
+  - id: q-zjaktz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-inspector
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe worries that the EC2 instances behind its till system run software packages with known flaws.
+      It wants those instances checked automatically, with each problem ranked by how serious it is.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon GuardDuty
+        why: GuardDuty watches account and network activity for threats, not the software installed on the instances.
+      - id: b
+        text: Amazon Inspector
+        correct: true
+        why: Inspector scans EC2 instances for vulnerable software and ranks each finding by severity with a fix.
+      - id: c
+        text: Amazon Detective
+        why: Detective investigates the root cause of an issue after detection rather than scanning for software flaws.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against broad best practices, not each instance's software for known flaws.
+    evidence:
+      - Automatically scans EC2, containers and Lambda for vulnerabilities and best-practice gaps, like open EC2 access or vulnerable software.
+      - Ranks findings by severity, each with a fix, in the console or API.
+    takeaway: Scanning workloads for vulnerable software and ranking the results by severity is the job of Amazon Inspector.
+    history: []
+    verified:
+      keyHash: 5923db241c9d
+      fullHash: cdf6be348ce2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yks4a3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-inspector
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement describes what Amazon Inspector hands the team after a scan?
+    options:
+      - id: a
+        text: Findings ranked by severity, each paired with a fix
+        correct: true
+        why: Inspector orders its findings by severity and pairs each one with a fix, viewable in the console or API.
+      - id: b
+        text: Findings sorted into actionable groups called insights
+        why: Sorting findings into actionable groups called insights is what AWS Security Hub does, not Inspector.
+      - id: c
+        text: Charts of user activity over a time window you set
+        why: Charting resource and user activity over a chosen window is how Amazon Detective investigates, not Inspector.
+      - id: d
+        text: Alerts on calls from known malicious IP addresses
+        why: Matching activity against known malicious IP addresses is part of how Amazon GuardDuty spots threats.
+    evidence:
+      - Ranks findings by severity, each with a fix, in the console or API.
+    takeaway: Inspector's findings come ranked by severity, and each carries a fix to apply.
+    history: []
+    verified:
+      keyHash: a43892f57542
+      fullHash: ae7bb62d5c08
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rnmh2h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-guardduty
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe wants a service that keeps watching its AWS account and network traffic around the clock.
+      It should raise an alert if, for example, an instance starts talking to an address known to be malicious.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Inspector
+        why: Inspector scans workloads for vulnerable software rather than watching live account and network activity.
+      - id: b
+        text: Amazon Macie
+        why: Macie looks for sensitive data stored in Amazon S3, not for suspicious network activity.
+      - id: c
+        text: Amazon GuardDuty
+        correct: true
+        why: GuardDuty continuously analyzes account and network activity and uses threat intelligence such as bad IP lists.
+      - id: d
+        text: AWS Security Hub
+        why: Security Hub collects findings from other services into one view instead of analyzing traffic itself.
+    evidence:
+      - Continuously analyzes account metadata and network activity for threats.
+      - Mixes threat intelligence, like known malicious IP addresses, with anomaly detection and ML for accuracy.
+    takeaway: Ongoing threat detection from account and network activity, including known bad IPs, points to Amazon GuardDuty.
+    history: []
+    verified:
+      keyHash: d778411113c0
+      fullHash: 5f86f9f386b3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-s20x65
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-guardduty
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 1
+    stem: >-
+      How does Amazon GuardDuty keep its findings accurate?
+    options:
+      - id: a
+        text: It ranks each finding by severity and pairs it with a fix
+        why: Ranking findings by severity with a fix for each is what Amazon Inspector does, and it does not explain GuardDuty's accuracy.
+      - id: b
+        text: It blends known bad IP lists with anomaly detection and ML
+        correct: true
+        why: GuardDuty pairs known malicious IP addresses with anomaly detection and ML to sharpen accuracy.
+      - id: c
+        text: It gathers logs itself and charts activity with graph analytics
+        why: Gathering logs and charting activity with graph analytics describes Amazon Detective, not GuardDuty.
+      - id: d
+        text: It merges partner tool findings into one shared format
+        why: Merging findings from AWS and partner services into one format is the job of AWS Security Hub.
+    evidence:
+      - Mixes threat intelligence, like known malicious IP addresses, with anomaly detection and ML for accuracy.
+    takeaway: GuardDuty combines threat intelligence with anomaly detection and ML to spot threats accurately.
+    history: []
+    verified:
+      keyHash: e87f0f8e144b
+      fullHash: 1c19ff0e1d4e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x35wp5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-detective
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 3
+    stem: >-
+      A threat alert has already fired for one of the cafe's accounts.
+      The security lead now wants to walk back through what happened over the past week to find where it started.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Detective
+        correct: true
+        why: Detective traces the root cause after detection, charting resource and user activity over a chosen window.
+      - id: b
+        text: Amazon GuardDuty
+        why: GuardDuty raised the kind of alert the cafe already has but lacks interactive views for investigating it.
+      - id: c
+        text: AWS Security Hub
+        why: Security Hub shows overall posture and compliance rather than deep forensics across a stretch of time.
+      - id: d
+        text: Amazon Inspector
+        why: Inspector looks for software vulnerabilities ahead of time instead of investigating an incident.
+    evidence:
+      - After detection, it traces the root cause across your accounts.
+      - GuardDuty detects threats but lacks Detective's interactive investigation views.
+    takeaway: Once a threat is found, Amazon Detective is the tool for tracing back to its root cause.
+    history: []
+    verified:
+      keyHash: 09b9099f24e0
+      fullHash: 3fdc9c1d0fb9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vs4y7q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-detective
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which description matches how Amazon Detective builds its picture of an incident?
+    options:
+      - id: a
+        text: It scans EC2, containers and Lambda functions for vulnerable software
+        why: Scanning EC2, containers and Lambda for vulnerable software is what Amazon Inspector does, not Detective.
+      - id: b
+        text: It merges AWS and partner findings into one shared format
+        why: Merging findings from AWS and partner services into one format is what AWS Security Hub does.
+      - id: c
+        text: It pulls in logs and charts activity as a graph over time
+        correct: true
+        why: Detective gathers logs on its own and uses ML and graph analytics to chart activity over a set time window.
+      - id: d
+        text: It blends known malicious IP lists with anomaly detection
+        why: Mixing threat intelligence such as malicious IP addresses with anomaly detection is how Amazon GuardDuty works.
+    evidence:
+      - It gathers logs itself, then uses ML and graph analytics to chart resource and user activity over a time window you set, plus fixes.
+    takeaway: Detective collects logs on its own and uses ML and graph analytics to visualize activity over time.
+    history: []
+    verified:
+      keyHash: 8528fbaafc36
+      fullHash: 5f5384f8c3c2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hpre3s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-hub
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe gets findings from several AWS services and from a partner tool, each in its own format.
+      The owner wants all of them in one place, in one format, to judge the cafe's overall posture and compliance.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs its own best-practice checks rather than merging findings from other services and partners.
+      - id: b
+        text: Amazon CloudWatch
+        why: CloudWatch monitors resource and app metrics instead of gathering security findings into one view.
+      - id: c
+        text: Amazon Detective
+        why: Detective investigates a single incident's root cause rather than summing up overall posture.
+      - id: d
+        text: AWS Security Hub
+        correct: true
+        why: Security Hub pulls findings from AWS and partner services into one format and one view of posture and compliance.
+    evidence:
+      - Pulls findings from AWS and partner services into one format and one view of security and compliance.
+    takeaway: To see findings from many AWS and partner sources in one view, use AWS Security Hub.
+    history: []
+    verified:
+      keyHash: c7fe6fcdce39
+      fullHash: 13b31231c14e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jfx7gr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-hub
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does AWS Security Hub call the actionable groups it sorts findings into?
+    options:
+      - id: a
+        text: Alarms
+        why: Alarms are CloudWatch metric thresholds, not the groups Security Hub builds from findings.
+      - id: b
+        text: Insights
+        correct: true
+        why: Security Hub organizes its findings into actionable groups that it calls insights.
+      - id: c
+        text: Config rules
+        why: Config rules are standards AWS Config checks resources against, not Security Hub groupings.
+      - id: d
+        text: Event history
+        why: Event history is CloudTrail's searchable view of past events rather than a Security Hub feature.
+    evidence:
+      - Sorts them into actionable groups called insights, and automated remediation shortens time to resolution (TTR).
+    takeaway: Security Hub groups related findings into actionable insights so teams know what to fix first.
+    history: []
+    verified:
+      keyHash: cd6983ccd5a1
+      fullHash: 54d7f5b762f6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wdqghw
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: security-incident-response
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 2
+    stem: >-
+      Match each situation at the cafe with the detection service that handles it.
+    pairs:
+      - left: The kitchen app EC2 backend may run flawed, outdated software
+        right: Amazon Inspector
+        why: Inspector scans EC2 workloads for vulnerable software and ranks what it finds.
+      - left: A late-night login to the cafe account comes from an unusual place
+        right: Amazon GuardDuty
+        why: GuardDuty continuously watches account and network activity for suspicious behavior.
+      - left: The team needs to see step by step how last night's breach spread
+        right: Amazon Detective
+        why: Detective visually traces how a threat unfolded to reach its root cause.
+      - left: The owner wants every service's findings shown on one screen
+        right: AWS Security Hub
+        why: Security Hub gathers findings from many services into a single view.
+    evidence:
+      - "Unknown software flaws on EC2: Amazon Inspector."
+      - "Suspicious account or network activity: Amazon GuardDuty."
+      - "Tracing how a threat unfolded: Amazon Detective."
+    takeaway: Inspector finds flaws, GuardDuty spots threats, Detective traces them and Security Hub shows everything together.
+    history: []
+    verified:
+      keyHash: 899d9c5e2291
+      fullHash: e6500a0f5dee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-cymwtj
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: security-incident-response
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe already locks down access and patches its servers.
+      Why should it still run detection services on top of those safeguards?
+    options:
+      - id: a
+        text: Least privilege limits what each identity may do
+        why: Least privilege is true and useful, but it is part of the prevention the cafe already has, not a reason to detect.
+      - id: b
+        text: Prevention can miss flaws nobody knows about yet
+        correct: true
+        why: Prevention can miss flaws nobody knows about yet, so the cafe must detect and respond quickly.
+      - id: c
+        text: Default deny refuses every action until allowed
+        why: Default deny is true of IAM, but it is another safeguard and does not explain why detection is still needed.
+      - id: d
+        text: Encryption keeps stolen data unreadable without a key
+        why: Encryption is true protection for data, but it prevents harm rather than explaining why detection is needed.
+    evidence:
+      - Prevention can miss unknown software flaws, so detect and react fast.
+    takeaway: Prevention alone can miss unknown flaws, so detecting and responding fast is part of security.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the only limitation; the other three are named security principles stated as strengths.)"
+  - id: q-fxg96d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-incident-response
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe's incident plan names one service that keeps watching its account and network activity for threats.
+      A second service then charts what happened over a chosen time window to find the root cause.
+      Which pair fills those two roles?
+    options:
+      - id: a
+        text: Amazon Inspector, then AWS Security Hub
+        why: Inspector scans workloads for software flaws, and Security Hub gathers findings into one view without deep forensics.
+      - id: b
+        text: Amazon GuardDuty, then AWS Security Hub
+        why: GuardDuty fits the watching role, but Security Hub shows posture and compliance rather than tracing a root cause.
+      - id: c
+        text: Amazon Inspector, then Amazon Detective
+        why: Detective fits the tracing role, but Inspector scans for vulnerabilities rather than watching activity for threats.
+      - id: d
+        text: Amazon GuardDuty, then Amazon Detective
+        correct: true
+        why: GuardDuty continuously analyzes activity for threats, and Detective then charts activity over time to find the root cause.
+    evidence:
+      - Continuously analyzes account metadata and network activity for threats.
+      - After detection, it traces the root cause across your accounts.
+      - It gathers logs itself, then uses ML and graph analytics to chart resource and user activity over a time window you set, plus fixes.
+    takeaway: In a response, GuardDuty detects the threat first and Detective then traces its root cause.
+    history: []
+    verified:
+      keyHash: 5b1803ffd235
+      fullHash: 9c9dbafb2764
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,71 @@
+questions:
+  - id: q-rzd6s3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-hosted-vs-managed-databases
+    note: m07/introduction-to-databases
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe's loyalty records live in a MySQL database installed on an Amazon EC2 instance.
+      Who applies the security patches to that database and to the server's operating system?
+    options:
+      - id: a
+        text: AWS for both
+        why: AWS patches only what it manages, and a database installed on an EC2 instance is not managed by AWS.
+      - id: b
+        text: The cafe for both
+        correct: true
+        why: On a self-hosted EC2 database the cafe installs, patches, backs up and scales both the database and its OS.
+      - id: c
+        text: AWS for the OS, the cafe for MySQL
+        why: With the database hosted on EC2, the operating system is also the cafe's job, not something AWS patches.
+      - id: d
+        text: The cafe for the OS, AWS for MySQL
+        why: AWS does not patch database software the cafe installed itself on an EC2 instance.
+    evidence:
+      - With EC2 hosted databases you still install, patch, back up and scale the database and its operating system yourself, while AWS managed databases such as Amazon RDS hand those tasks to AWS.
+    takeaway: A database you install on EC2 leaves patching of both the database and its OS with you, unlike a managed service such as RDS.
+    history: []
+    verified:
+      keyHash: 7fb9c2c6f18e
+      fullHash: c93b69728140
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-sezv43
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-hosted-vs-managed-databases
+    note: m07/introduction-to-databases
+    task: "3.4"
+    level: 3
+    stem: >-
+      A team needs to change settings in the operating system that runs beneath its relational database.
+      Which way of running the database fits?
+    options:
+      - id: a
+        text: Amazon RDS for MySQL
+        why: RDS takes over upkeep of the server, so the team gets no access to tune its operating system.
+      - id: b
+        text: Amazon Aurora MySQL
+        why: Aurora is a managed relational engine, so AWS runs the operating system and the team cannot change it.
+      - id: c
+        text: MySQL on Amazon EC2
+        correct: true
+        why: Self-hosting on an EC2 instance gives the team full control, including the operating system under the database.
+      - id: d
+        text: Amazon RDS for PostgreSQL
+        why: Like every RDS engine, PostgreSQL on RDS leaves the operating system to AWS, so the team cannot change it.
+    evidence:
+      - Self-hosting on EC2 is for full control, OS included, and is not automatically cheaper or faster.
+    takeaway: Choose a database on EC2 over RDS only when you need operating system control, since you then own all its upkeep.
+    history: []
+    verified:
+      keyHash: 9296a6bf8272
+      fullHash: c65d8f77fcb0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

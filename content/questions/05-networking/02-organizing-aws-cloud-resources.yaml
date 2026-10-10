@@ -1,0 +1,257 @@
+questions:
+  - id: q-pmk7g4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: internet-gateway
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe hosts its online ordering site on EC2 instances in its VPC.
+      Customers on their home laptops and phones must be able to open the site and place orders.
+      Which component must the cafe attach to the VPC so that this outside traffic can flow in?
+    options:
+      - id: a
+        text: A NAT gateway
+        why: A NAT gateway lets private instances start outbound connections, but it blocks connections that customers start from outside.
+      - id: b
+        text: An internet gateway
+        correct: true
+        why: An internet gateway joins the VPC to the internet, and without one no customer request can reach the ordering site.
+      - id: c
+        text: A virtual private gateway
+        why: A virtual private gateway admits traffic only from an approved private network, not from customers on the open internet.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub that links VPCs and on-premises networks, so it does not open the site to the public internet.
+    evidence:
+      - An internet gateway joins a VPC to the internet, and you must attach one before public traffic can flow in or out.
+      - "Coffee shop: it is the front door, and without it no customer can get in."
+    takeaway: Public internet traffic reaches a VPC only through an attached internet gateway, the VPC's front door.
+    history: []
+    verified:
+      keyHash: a6eed08bd843
+      fullHash: 9b50c8f60aac
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kce939
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: internet-gateway
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which statements correctly describe an internet gateway?
+    options:
+      - id: a
+        text: It admits traffic only from one approved network into a private VPC.
+        why: Admitting only an approved network into a private VPC is what a virtual private gateway does, not an internet gateway.
+      - id: b
+        text: It is a managed VPC part that scales out and stays highly available.
+        correct: true
+        why: AWS runs the internet gateway as a managed, highly available part of the VPC that scales horizontally.
+      - id: c
+        text: It wraps traffic in an encrypted tunnel across the public internet.
+        why: An encrypted tunnel across the internet is a VPN, while an internet gateway simply joins the VPC to the internet.
+      - id: d
+        text: It lets public requests into the VPC and their replies back out.
+        correct: true
+        why: The gateway carries traffic both ways, so requests can come in from the internet and replies can go out.
+      - id: e
+        text: It provides a private fiber line from a data center into the VPC.
+        why: A private fiber line from a data center is AWS Direct Connect, which does not use the public internet at all.
+    evidence:
+      - The assessment adds that it is a managed, highly available VPC part that scales horizontally and carries traffic both ways.
+    takeaway: An internet gateway is a managed, highly available, horizontally scaling VPC part that carries traffic both in and out.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 describe an internet gateway; 1 is Direct Connect, 4 a virtual private gateway and 5 a VPN.)"
+  - id: q-pyekcy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: virtual-private-gateway
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe chain keeps its payroll app in a VPC that no outside visitor should ever reach.
+      Only staff at the head office, working from the office network, may connect to it.
+      Which component on the AWS side lets the office's traffic into the VPC?
+    options:
+      - id: a
+        text: An internet gateway
+        why: An internet gateway opens the VPC to the public internet, which is exactly what the payroll app must avoid.
+      - id: b
+        text: A NAT gateway
+        why: A NAT gateway lets private instances start outbound connections, so it does not admit the office's incoming traffic.
+      - id: c
+        text: A virtual private gateway
+        correct: true
+        why: A virtual private gateway is the AWS-side entry that admits protected traffic only from an approved network like the head office.
+      - id: d
+        text: A public subnet
+        why: A public subnet exposes resources to the internet, while the payroll app must stay private to the office network.
+    evidence:
+      - A VPC with only private resources skips the internet gateway and uses a virtual private gateway, which admits traffic only from an approved network.
+      - The virtual private gateway is the AWS-side piece that lets this protected traffic into the VPC from your own data center or company network.
+    takeaway: A private-only VPC uses a virtual private gateway so that only an approved company network can get in.
+    history: []
+    verified:
+      keyHash: 4652d5936ecd
+      fullHash: 6158b113f304
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6njd0d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: virtual-private-gateway
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 1
+    stem: >-
+      What role does a virtual private gateway play for a VPC?
+    options:
+      - id: a
+        text: It lets traffic from any visitor on the web into the VPC.
+        why: Opening the VPC to any internet visitor is what an internet gateway does, not a virtual private gateway.
+      - id: b
+        text: It sets a logical boundary around a group of resources.
+        why: Drawing the boundary around resources is the role of the VPC itself, not of a gateway attached to it.
+      - id: c
+        text: It runs a dedicated physical line from a data center to AWS.
+        why: A dedicated physical line between a data center and AWS is AWS Direct Connect.
+      - id: d
+        text: It lets traffic from a chosen company network into the VPC.
+        correct: true
+        why: The virtual private gateway is the entry point on the AWS side that admits protected traffic from approved networks only.
+    evidence:
+      - "**Virtual private gateway**: lets protected traffic enter the VPC."
+      - "**Virtual private gateway**: the AWS-side component that lets protected traffic from approved networks into a VPC."
+    takeaway: A virtual private gateway is the AWS-side door that admits protected traffic from approved networks into a VPC.
+    history: []
+    verified:
+      keyHash: 8fa85bc679f8
+      fullHash: fe12436ab309
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q57y0m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vpn
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's head office sends supplier invoices to its VPC over the public internet.
+      The owner worries that the internet provider or an eavesdropper could read the invoices on the way.
+      What should carry this traffic?
+    options:
+      - id: a
+        text: A NAT gateway
+        why: A NAT gateway lets private instances start outbound connections, but it does not encrypt traffic from the office.
+      - id: b
+        text: An internet gateway
+        why: An internet gateway only connects the VPC to the internet and adds no protection to the invoices in transit.
+      - id: c
+        text: A VPN connection
+        correct: true
+        why: A VPN wraps the traffic in an encrypted tunnel across the internet, hiding the invoices from providers and snoopers.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub that links networks together, and it is not the encrypted tunnel that hides the invoices.
+    evidence:
+      - The internet is like the public road to the coffee shop, and a VPN is an encrypted tunnel along it that hides your traffic from ISPs and snoopers.
+      - "**VPN**: encrypts traffic against interception or monitoring."
+    takeaway: A VPN encrypts traffic crossing the public internet so providers and eavesdroppers cannot read it.
+    history: []
+    verified:
+      keyHash: a54bb584924a
+      fullHash: 02483a39e147
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7k689q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vpn
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe uploads each night's sales to its VPC through a VPN.
+      On busy nights the upload crawls even though the encryption is working as expected.
+      What best explains the slowdown?
+    options:
+      - id: a
+        text: The VPN shares its network with other users' traffic.
+        correct: true
+        why: A VPN tunnel rides on a network that others also use, so heavy traffic on that network can slow the upload.
+      - id: b
+        text: The VPN hides the sales data from eavesdroppers on the way.
+        why: Hiding the data from eavesdroppers is true of a VPN, but it says nothing about why busy nights slow the upload.
+      - id: c
+        text: The VPN reaches the VPC through a virtual private gateway.
+        why: The VPN does enter through a virtual private gateway, but that entry point is the same on quiet and busy nights.
+      - id: d
+        text: The VPN links the cafe's own network to the VPC.
+        why: Linking the cafe's network to the VPC is what the VPN is for, and it does not explain the slower busy nights.
+    evidence:
+      - "Trade-off: a VPN is encrypted but shares a network with others, so heavy use can slow it."
+    takeaway: A VPN is encrypted but shares network capacity, so its speed can drop when that network is busy.
+    history: []
+    verified:
+      keyHash: ea7ba793d26c
+      fullHash: 5b164eedd2ef
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jy84fh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: internet-gateway
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's menu servers in its VPC must take requests from customers on the web and send the answers back to them.
+      The cafe wants the piece that carries this traffic to be managed for it and to grow with visits on its own.
+      Which component fits?
+    options:
+      - id: a
+        text: A NAT gateway
+        why: A NAT gateway lets instances start connections outward, but it turns away the requests that customers start from the web.
+      - id: b
+        text: A virtual private gateway
+        why: A virtual private gateway admits traffic only from an approved company network, so web customers could not reach the menu servers.
+      - id: c
+        text: An internet gateway
+        correct: true
+        why: An internet gateway is a managed, highly available part of the VPC that scales out by itself and carries web traffic in both directions.
+      - id: d
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated line from the cafe's own data center, not a path for customers browsing from the public web.
+    evidence:
+      - The assessment adds that it is a managed, highly available VPC part that scales horizontally and carries traffic both ways.
+      - An internet gateway joins a VPC to the internet, and you must attach one before public traffic can flow in or out.
+    takeaway: An internet gateway is a managed, horizontally scaling VPC component that carries internet traffic both in and out.
+    history: []
+    verified:
+      keyHash: 0b4e4ac70996
+      fullHash: 905fb9cbacad
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,355 @@
+questions:
+  - id: q-mj8gyy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-migration
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe has several AWS projects on its list this year.
+      Which project counts as a cloud migration?
+    options:
+      - id: a
+        text: Building a brand-new menu app in AWS with no earlier version
+        why: A new app built in AWS has nothing on premises or elsewhere to move, so it is not a migration.
+      - id: b
+        text: Adding more storage to an ordering app that already runs in AWS
+        why: The app already runs in AWS, so growing its storage moves nothing into AWS.
+      - id: c
+        text: Moving the stock database from a back-office server into AWS
+        correct: true
+        why: Shifting a database from an on-premises server into AWS is exactly what a cloud migration is.
+      - id: d
+        text: Linking the back-office server to AWS with a private network line
+        why: A network link connects the two sites, but the server and its workloads stay on premises.
+    evidence:
+      - Moving apps, databases and other IT resources from on premises or another cloud to AWS.
+    takeaway: Cloud migration means moving IT resources from on premises or another cloud into AWS.
+    history: []
+    verified:
+      keyHash: bbf2daeae2bb
+      fullHash: 80386df99043
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-p2kt6z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-migration
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe owner expects the work to be over for good once the ordering system and stock database run in AWS.
+      Which idea corrects this expectation?
+    options:
+      - id: a
+        text: Migration Evaluator turns findings into a cost-backed business case
+        why: This is true of the assess phase, but it says nothing about whether the work ends after the move.
+      - id: b
+        text: Migration repeats planning, moving and upkeep in iterative stages
+        correct: true
+        why: Migration is iterative rather than one and done, so planning and upkeep continue after the systems run in AWS.
+      - id: c
+        text: Application Discovery Service maps how servers depend on each other
+        why: This is true of the mobilize phase, but it does not address what happens after the move.
+      - id: d
+        text: Application Migration Service moves app servers from on premises into AWS
+        why: This describes a tool for the move itself, not whether work continues once the move is done.
+    evidence:
+      - It takes planning, the move and upkeep, often in iterative stages AWS supports.
+      - Migration is iterative, not one and done.
+    takeaway: A cloud migration is an iterative effort of planning, moving and upkeep rather than a one-time event.
+    history: []
+    verified:
+      keyHash: b5055c6c50e2
+      fullHash: 5b75deffd907
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-098xht
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: three-phase-migration-process
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe owner has just approved the business case for moving to AWS.
+      What happens next in the three-phase process?
+    options:
+      - id: a
+        text: Readiness is gauged and goals for the move are set
+        why: Gauging readiness and setting goals is assess work, which ends with the approved business case.
+      - id: b
+        text: Each app is architected, moved and validated
+        why: Moving and validating apps is the last phase, which waits until a plan exists.
+      - id: c
+        text: The organization is readied and the plan is written
+        correct: true
+        why: Mobilize comes right after assess, readying the organization and writing the migration plan.
+      - id: d
+        text: Findings are weighed to see whether moving pays off
+        why: Weighing findings into a business case is assess work, and the case is already approved.
+    evidence:
+      - "Order: assess, mobilize, migrate and modernize."
+    takeaway: A large migration runs assess, then mobilize, then migrate and modernize.
+    history: []
+    verified:
+      keyHash: bf5d2c47a2e9
+      fullHash: 4211510a75d9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-egvebm
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: three-phase-migration-process
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 1
+    stem: >-
+      The cafe is moving its systems to AWS in phases.
+      Match each phase to the main thing it produces.
+    pairs:
+      - left: Assess
+        right: A business case for moving
+        why: Assess gauges readiness and weighs the findings into a business case.
+      - left: Mobilize
+        right: A migration plan built around app dependencies
+        why: Mobilize readies the organization and writes the plan around how apps depend on each other.
+      - left: Migrate and modernize
+        right: Apps that are moved and validated in AWS
+        why: The last phase architects, moves and validates each app.
+    evidence:
+      - Assess yields the business case; mobilize, the plan.
+      - "**Migrate and modernize**: architect, migrate and validate each app, alone or with specialists and competency partners."
+    takeaway: Assess yields the business case, mobilize yields the plan, and the last phase moves and validates each app.
+    history: []
+    verified:
+      keyHash: 3bed09201a04
+      fullHash: 1cef909b44bc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-twp24b
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-assess-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 3
+    stem: >-
+      Before committing to AWS, the cafe owner wants a cost-backed business case showing whether moving is worth it.
+      Which service fits this first phase of the migration?
+    options:
+      - id: a
+        text: AWS Application Discovery Service
+        why: Discovery Service inventories servers and their links to shape the plan in mobilize, not the business case.
+      - id: b
+        text: Migration Evaluator
+        correct: true
+        why: Migration Evaluator supports the assess phase by turning findings into a cost-backed business case.
+      - id: c
+        text: AWS Application Migration Service
+        why: Application Migration Service moves apps in the last phase, after the business case is settled.
+      - id: d
+        text: AWS DataSync
+        why: DataSync moves data during the last phase and does not judge whether to migrate.
+    evidence:
+      - "**Assess**: gauge readiness, set outcomes, goals and the need to move, then weigh findings into a business case (Migration Evaluator)."
+    takeaway: The assess phase builds the business case, and Migration Evaluator is its tool.
+    history: []
+    verified:
+      keyHash: 2af227003c3b
+      fullHash: df378340f621
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-my7waj
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: migration-assess-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe has just started the assess phase of its move to AWS.
+      Which tasks belong in this phase?
+    options:
+      - id: a
+        text: Gauge how ready the cafe is to run on AWS
+        correct: true
+        why: Checking readiness is the opening work of the assess phase.
+      - id: b
+        text: Map which apps depend on the payment database
+        why: Mapping app dependencies feeds the migration plan, which is mobilize work.
+      - id: c
+        text: Set the goals and reasons for making the move
+        correct: true
+        why: Assess sets the outcomes, goals and need to move before any plan is written.
+      - id: d
+        text: Validate the ordering app once it runs in AWS
+        why: Validating a moved app happens in the migrate and modernize phase.
+      - id: e
+        text: Close the skill gaps of the staff running the move
+        why: Closing readiness gaps is part of mobilize, after the business case exists.
+    evidence:
+      - "**Assess**: gauge readiness, set outcomes, goals and the need to move, then weigh findings into a business case (Migration Evaluator)."
+    takeaway: Assess checks readiness and sets the goals and reasons to move, ending in a business case.
+    history: []
+    verified:
+      keyHash: f24fc00ac8a2
+      fullHash: 6b484443ceab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jkkxf7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-mobilize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe's business case is approved.
+      Now it needs an inventory of its back-office servers and how each connects to the loyalty database, so the plan can group them.
+      Which service helps with this step?
+    options:
+      - id: a
+        text: Migration Evaluator
+        why: Migration Evaluator builds the business case in assess, which the cafe already has.
+      - id: b
+        text: AWS Database Migration Service (AWS DMS)
+        why: AWS DMS moves the database in the last phase and does not map server dependencies.
+      - id: c
+        text: AWS Transfer Family
+        why: Transfer Family moves files over transfer protocols and does not inventory servers.
+      - id: d
+        text: AWS Application Discovery Service
+        correct: true
+        why: Discovery Service inventories servers and their connections, which the mobilize plan is built around.
+    evidence:
+      - "**Mobilize**: ready the organization and resources, write the plan around app dependencies, close readiness gaps and pick strategies (Application Discovery Service, Migration Hub)."
+    takeaway: Mobilize writes the plan around app dependencies, which Application Discovery Service helps uncover.
+    history: []
+    verified:
+      keyHash: 9574f6d3e950
+      fullHash: 8d9ff758baeb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-p22dzy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-mobilize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 1
+    stem: >-
+      What is the main result of the mobilize phase?
+    options:
+      - id: a
+        text: A business case for the move
+        why: The business case comes out of assess, the phase before mobilize.
+      - id: b
+        text: A written plan for the move
+        correct: true
+        why: Mobilize readies the organization and writes the plan that guides the move.
+      - id: c
+        text: A set of validated apps
+        why: Validated apps are the result of the migrate and modernize phase.
+      - id: d
+        text: A score for cloud readiness
+        why: Gauging readiness is part of assess, before mobilize begins.
+    evidence:
+      - Assess yields the business case; mobilize, the plan.
+      - "**Mobilize phase**: Preparing the organization and writing the migration plan."
+    takeaway: Mobilize prepares the organization and produces the migration plan.
+    history: []
+    verified:
+      keyHash: b30e47efd313
+      fullHash: 0a84a7a8a7f5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7tgb80
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migrate-and-modernize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's migration plan is done, and it is time to move the ordering app's servers into AWS.
+      Which service carries out this move?
+    options:
+      - id: a
+        text: AWS Application Migration Service
+        correct: true
+        why: Application Migration Service moves apps to AWS, which is the work of the migrate and modernize phase.
+      - id: b
+        text: AWS Application Discovery Service
+        why: Discovery Service maps servers to shape the plan in mobilize, and the plan is already done.
+      - id: c
+        text: Migration Evaluator
+        why: Migration Evaluator builds the business case in assess and does not move any servers.
+      - id: d
+        text: AWS Schema Conversion Tool (AWS SCT)
+        why: AWS SCT converts database schemas between engines and does not move the app servers.
+    evidence:
+      - "Last-phase tools: Application Migration Service, AWS Database Migration Service (AWS DMS), Migration Hub, and DataSync, Transfer Family or the Snow Family for data."
+    takeaway: Moving the apps themselves is the migrate and modernize phase, done with tools such as Application Migration Service.
+    history: []
+    verified:
+      keyHash: 185bff7f9d3e
+      fullHash: b5e6da6070a8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ppfrb7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migrate-and-modernize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe has reached the migrate and modernize phase for its ordering, loyalty and stock apps.
+      Which approach fits this phase?
+    options:
+      - id: a
+        text: Weigh each app's costs to decide if moving pays off
+        why: Weighing whether the move pays off is the business case work of assess.
+      - id: b
+        text: Map how the apps depend on each other to write the plan
+        why: Mapping dependencies to write the plan is mobilize work, already finished.
+      - id: c
+        text: Architect, move and validate each app in turn
+        correct: true
+        why: This phase architects, moves and validates each app, with or without competency partners.
+      - id: d
+        text: Close the staff's skill gaps before picking strategies
+        why: Closing readiness gaps and picking strategies is mobilize work, done before this phase.
+    evidence:
+      - "**Migrate and modernize**: architect, migrate and validate each app, alone or with specialists and competency partners."
+    takeaway: In migrate and modernize, each app is architected, moved and validated, alone or with partners.
+    history: []
+    verified:
+      keyHash: e1d37d29f567
+      fullHash: 79457af7f7ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

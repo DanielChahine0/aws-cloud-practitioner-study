@@ -1,0 +1,632 @@
+questions:
+  - id: q-cgtcjw
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: purpose-built-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which principle sits behind the purpose-built approach to databases on AWS?
+    options:
+      - id: a
+        text: Match each job to the engine built for it
+        correct: true
+        why: The purpose-built idea matches each database to the job it must do, since no single engine suits every need.
+      - id: b
+        text: Let AWS take over patching and backups
+        why: Handing upkeep to AWS is the idea behind managed services, not behind choosing purpose-built engines.
+      - id: c
+        text: Pay only for the capacity that gets used
+        why: Paying for use is a pricing idea, and it says nothing about which engine fits which data.
+      - id: d
+        text: Keep copies across several Availability Zones
+        why: Spreading copies over zones is about resilience, not about fitting each database to its job.
+    evidence:
+      - Fit the database to the business need, not the data to the database, as none suits every job.
+    takeaway: Purpose-built databases mean choosing the engine that fits each workload rather than forcing all data into one.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Key option 1 'built for it' echoes the stem's 'purpose-built'."
+  - id: q-tnjhy3
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: purpose-built-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A new developer at the cafe suggests keeping the loyalty points, the menu catalog and the supplier map in one relational database to keep things simple.
+      Which statements reflect the purpose-built approach AWS recommends instead?
+    options:
+      - id: a
+        text: No single database suits every kind of job
+        correct: true
+        why: Each of these data sets has its own shape, and no one engine serves them all well.
+      - id: b
+        text: Each data set goes to the engine that fits it
+        correct: true
+        why: AWS steers each kind of data to the tool built for it, so the three data sets may land in different engines.
+      - id: c
+        text: Managed databases hand their patching to AWS
+        why: This is true of managed services, but it says nothing about which database each data set should use.
+      - id: d
+        text: A cache sits beside a database, never replacing it
+        why: This is true of caching, but it does not argue for splitting the data across purpose-built databases.
+      - id: e
+        text: Self-hosting on EC2 gives control of the OS
+        why: This is true of self-managed databases, but operating system control has no bearing on matching data to engines.
+    evidence:
+      - Fit the database to the business need, not the data to the database, as none suits every job.
+      - AWS steers each workload to its best-fit purpose-built tool, and offers more than the course covers.
+    takeaway: Different data shapes call for different engines, so split workloads across best-fit databases instead of one.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 restate the same idea (one engine per job), so they pair up against the rest.)"
+  - id: q-8c83x8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: semistructured-data
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What is the term for varied, complex data that is too irregular to fit neatly into rows and columns?
+    options:
+      - id: a
+        text: Semistructured data
+        correct: true
+        why: Semistructured data varies from record to record and resists a rigid table schema.
+      - id: b
+        text: Relational table data
+        why: Relational data is the rows-and-columns kind, the very format this data does not fit.
+      - id: c
+        text: Fixed-width record data
+        why: Fixed-width records follow a strict layout, the opposite of data that varies in shape.
+      - id: d
+        text: Key-value pair data
+        why: Key-value data is simple lookups by key, not the complex nested data the stem describes.
+    evidence:
+      - Where DynamoDB handles key-value data, DocumentDB takes semistructured data too complex for rows and columns.
+    takeaway: Data too varied and complex for a rigid rows-and-columns schema is called semistructured data.
+    history: []
+    verified:
+      keyHash: 7e081eb9435a
+      fullHash: bab667b2a972
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vqd3y5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: semistructured-data
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe stores its menu items as JSON-like records.
+      Some carry allergens and cup sizes, seasonal drinks add extra notes, and the fields change every few weeks.
+      How is this data best described?
+    options:
+      - id: a
+        text: Semistructured data
+        correct: true
+        why: Records with differing, often changing fields are semistructured and suit a dynamic-schema store.
+      - id: b
+        text: Highly connected data
+        why: The menu items are not defined by links between them, so this is not a web of relationships.
+      - id: c
+        text: Fixed-schema tabular data
+        why: A fixed schema would break each time the menu fields change, which this data does often.
+      - id: d
+        text: Simple key-value data
+        why: Each item holds nested, varying details, not just a single value looked up by key.
+    evidence:
+      - Fully managed, it stores, queries and indexes JSON-like documents with dynamic schemas, ideal when schemas change often.
+      - Where DynamoDB handles key-value data, DocumentDB takes semistructured data too complex for rows and columns.
+    takeaway: JSON-like records whose fields vary and change often are semistructured data, not rigid tables.
+    history: []
+    verified:
+      keyHash: 4a434d47e78c
+      fullHash: e76c98fe4434
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ywm5sp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-documentdb
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's catalog team already uses MongoDB drivers and code for a product catalog of JSON-like items whose fields change often.
+      Which AWS database lets the team move over with few code changes?
+    options:
+      - id: a
+        text: Amazon DocumentDB
+        correct: true
+        why: DocumentDB is MongoDB compatible and built for JSON-like documents with changing schemas.
+      - id: b
+        text: Amazon DynamoDB
+        why: DynamoDB is a key-value store and does not accept the team's MongoDB drivers and code.
+      - id: c
+        text: Amazon Neptune
+        why: Neptune is a graph database for connected data, not a home for a document catalog.
+      - id: d
+        text: Amazon ElastiCache
+        why: ElastiCache is an in-memory cache, not a MongoDB-compatible store for the catalog.
+    evidence:
+      - "**MongoDB compatibility**: MongoDB APIs, drivers, tools, code and skills carry over with few changes."
+      - "Use cases: content management, catalogs and inventory, user profiles and personalization."
+    takeaway: A catalog of changing JSON-like documents already on MongoDB moves to DocumentDB with few code changes.
+    history: []
+    verified:
+      keyHash: 7e5933c0f030
+      fullHash: 5bcfbb77b325
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5kfmss
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-documentdb
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      How does Amazon DocumentDB handle storage as a database grows?
+    options:
+      - id: a
+        text: It adds space by itself in fixed-size steps
+        correct: true
+        why: DocumentDB adds storage on its own as data grows, so no one has to resize it.
+      - id: b
+        text: Its compute capacity scales up or down as needed
+        why: This is true of DocumentDB, but it is about compute, not how storage keeps pace with growing data.
+      - id: c
+        text: It keeps continuous backups without extra setup
+        why: This is true of DocumentDB, but backups protect data rather than make room for a growing database.
+      - id: d
+        text: It accepts existing MongoDB drivers and code
+        why: This is true of DocumentDB, but MongoDB compatibility is about moving code over, not about storage growth.
+    evidence:
+      - "**Scaling**: storage grows on its own in 10 GB steps to 64 TB, compute scales either way, and it serves millions of requests per second."
+    takeaway: DocumentDB storage scales automatically in 10 GB steps up to 64 TB, so it never needs manual resizing.
+    history: []
+    verified:
+      keyHash: 2a3f4e5eee42
+      fullHash: 19da31f5a4e4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4h028f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-neptune
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe wants to recommend drinks based on what a customer's friends, and their friends in turn, have ordered.
+      The links between customers form a dense web that must be queried in real time.
+      Which AWS database fits?
+    options:
+      - id: a
+        text: Amazon Neptune
+        correct: true
+        why: Neptune is a managed graph database that answers fast over highly connected data such as social links.
+      - id: b
+        text: Amazon DocumentDB
+        why: DocumentDB stores JSON-like documents and is not tuned for walking many links between people.
+      - id: c
+        text: Amazon Redshift
+        why: Redshift is a data warehouse for analytics, not a real-time store for friend-of-friend links.
+      - id: d
+        text: Amazon ElastiCache
+        why: ElastiCache speeds up reads from memory but does not model or query relationships.
+    evidence:
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+      - "Use cases: social network mapping, fraud detection, search and recommendations."
+    takeaway: Real-time recommendations over a dense web of social links point to Neptune.
+    history: []
+    verified:
+      keyHash: 293ae12ee115
+      fullHash: 5c64a615cbd6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-y0bpqs
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-neptune
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which data models does Amazon Neptune support for mapping relationships and matching patterns?
+    options:
+      - id: a
+        text: Document and key-value
+        why: Document and key-value models fit DocumentDB and DynamoDB, not Neptune's relationship mapping.
+      - id: b
+        text: Relational and wide-column
+        why: Relational tables handle dense links clumsily, and neither model is how Neptune maps relationships.
+      - id: c
+        text: Property graph and RDF
+        correct: true
+        why: Neptune offers the property graph and RDF models for mapping relationships and matching patterns.
+      - id: d
+        text: Time series and ledger
+        why: Time series and ledger models track values over time and change history, not links between items.
+    evidence:
+      - "**Relationships**: property graph and RDF (Resource Description Framework) models for mapping relationships and matching patterns."
+    takeaway: Neptune models relationships with two graph models, property graph and RDF.
+    history: []
+    verified:
+      keyHash: fdc948c08d6c
+      fullHash: 0e0bab2ac593
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6f91nw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: graph-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's fraud team needs to spot rings of loyalty accounts that share cards, phones and addresses by following many hops of links between them.
+      Which type of database fits this job best?
+    options:
+      - id: a
+        text: Graph database
+        correct: true
+        why: A graph database is built around connections, so following many hops between accounts is what it does best.
+      - id: b
+        text: Relational database
+        why: Many hops of links mean many table joins, which grow clumsy and slow in a relational design.
+      - id: c
+        text: Key-value database
+        why: Key-value lookups fetch one item by key and cannot follow chains of links between accounts.
+      - id: d
+        text: Document database
+        why: Documents hold self-contained records, not the web of shared links the fraud team must trace.
+    evidence:
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+      - "Use cases: social network mapping, fraud detection, search and recommendations."
+    takeaway: When the answer lies in chains of links between records, such as fraud rings, use a graph database.
+    history: []
+    verified:
+      keyHash: ec341dbd2209
+      fullHash: 40d4f4a83e78
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vjk57f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: graph-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What is a graph database designed around?
+    options:
+      - id: a
+        text: Connections between items
+        correct: true
+        why: A graph database stores items together with the links between them and is built for traversing those links.
+      - id: b
+        text: Rows grouped into fixed tables
+        why: Fixed tables of rows describe a relational database, which handles dense links clumsily.
+      - id: c
+        text: Unique keys mapped to values
+        why: Keys mapped to values describe a key-value store, which does not model relationships.
+      - id: d
+        text: Self-describing JSON documents
+        why: JSON documents describe a document database, which centers on records rather than links.
+    evidence:
+      - "**Graph database**: one built around connections."
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+    takeaway: A graph database centers on the connections between items, which suits highly connected data.
+    history: []
+    verified:
+      keyHash: dc5517f0bbfb
+      fullHash: d459f3fc4cd7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zvvc7n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-managed-blockchain
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's coffee bean supplier wants growers, shippers and the cafe to share one distributed ledger that no single party controls, so each bean shipment can be traced from farm to counter.
+      Which AWS service runs that shared network?
+    options:
+      - id: a
+        text: Amazon Managed Blockchain
+        correct: true
+        why: Managed Blockchain builds and runs blockchain networks, such as one for tracing food shipments.
+      - id: b
+        text: Amazon DocumentDB (with MongoDB compatibility)
+        why: DocumentDB stores JSON-like documents but does not run a blockchain network shared by partners.
+      - id: c
+        text: Amazon Neptune
+        why: Neptune maps connected data in a graph, not a blockchain network for tracing shipments.
+      - id: d
+        text: Amazon DynamoDB
+        why: DynamoDB is a key-value database and does not run a blockchain network.
+    evidence:
+      - "**Amazon Managed Blockchain** runs blockchain networks, such as a grocer's food-safety shipment tracking."
+      - "A grocer tracing shipments: Managed Blockchain."
+    takeaway: Tracing shipments across partners on a shared blockchain network points to Amazon Managed Blockchain.
+    history: []
+    verified:
+      keyHash: 3fcce7cbe703
+      fullHash: 3b7fc5e2f98c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-h8a6b0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-managed-blockchain
+    note: m07/additional-database-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      What does Amazon Managed Blockchain do?
+    options:
+      - id: a
+        text: Runs distributed ledger networks
+        correct: true
+        why: Managed Blockchain creates and operates blockchain networks, which are distributed ledgers shared by their members.
+      - id: b
+        text: Caches DynamoDB reads in memory
+        why: An in-memory cache for DynamoDB reads is DAX, not Managed Blockchain.
+      - id: c
+        text: Maps highly connected graph data
+        why: Mapping connected graph data is the job of Amazon Neptune, not Managed Blockchain.
+      - id: d
+        text: Centralizes backup plans across services
+        why: Central backup management across services is AWS Backup, not Managed Blockchain.
+    evidence:
+      - "**Amazon Managed Blockchain**: a service for building and running blockchain networks."
+    takeaway: Amazon Managed Blockchain is the AWS service for building and running blockchain networks.
+    history: []
+    verified:
+      keyHash: 440d3dca0369
+      fullHash: 455919fde73f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mm16v8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-accelerator
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's ordering app reads loyalty balances from its serverless NoSQL table, and those reads slow down during the morning rush.
+      The team wants a cache that comes built into that NoSQL service rather than a separate caching service it must run.
+      Which option fits?
+    options:
+      - id: a
+        text: DynamoDB Accelerator (DAX)
+        correct: true
+        why: DAX is the cache built into DynamoDB that sharply cuts read times for the loyalty balances.
+      - id: b
+        text: Amazon ElastiCache
+        why: ElastiCache is a separate caching service, not the cache built into the NoSQL service itself.
+      - id: c
+        text: Amazon CloudFront
+        why: CloudFront caches content at edge locations near users, not reads from a NoSQL table.
+      - id: d
+        text: Amazon RDS read replicas
+        why: Read replicas offload reads from a relational database, not from a serverless NoSQL table.
+    evidence:
+      - "**DynamoDB Accelerator (DAX)** is a built-in cache that sharply cuts DynamoDB read times."
+    takeaway: To speed up DynamoDB reads with a cache built into DynamoDB, use DAX.
+    history: []
+    verified:
+      keyHash: 0ce1940f6049
+      fullHash: 80e27c42f807
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-e7vf4f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-accelerator
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What does DynamoDB Accelerator (DAX) add to Amazon DynamoDB?
+    options:
+      - id: a
+        text: A built-in cache that cuts read times
+        correct: true
+        why: DAX is a cache built into DynamoDB that sharply shortens the time reads take.
+      - id: b
+        text: A copy of each table in other Regions
+        why: Copying tables across Regions is not what DAX does; DAX speeds up reads with a cache.
+      - id: c
+        text: A graph engine for linked records
+        why: Graph queries over linked records belong to Amazon Neptune, not DAX.
+      - id: d
+        text: A shared ledger for tracking shipments
+        why: A shared ledger is a blockchain feature of Amazon Managed Blockchain, not DAX.
+    evidence:
+      - "**DynamoDB Accelerator (DAX)**: a built-in DynamoDB cache."
+      - "**DynamoDB Accelerator (DAX)** is a built-in cache that sharply cuts DynamoDB read times."
+    takeaway: DAX is DynamoDB's built-in cache, and its job is to cut read times.
+    history: []
+    verified:
+      keyHash: 6d9fbde7d687
+      fullHash: 2c6a8be24aee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tgjces
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-backup
+    note: m07/additional-database-services
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe copies its EBS volumes, Amazon EFS, RDS and DynamoDB, plus its on-premises server, on separate schedules set up in each service, and the overlap confuses the team.
+      It wants one dashboard to set every schedule and see every restore point.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Backup
+        correct: true
+        why: AWS Backup unifies backup plans for these services and on-premises data in one dashboard.
+      - id: b
+        text: AWS Elastic Disaster Recovery
+        why: Elastic Disaster Recovery replicates servers for failover, not one place to manage backups across services.
+      - id: c
+        text: AWS Storage Gateway
+        why: Storage Gateway connects on-premises storage to AWS but does not centralize backup plans across services.
+      - id: d
+        text: Amazon Data Lifecycle Manager
+        why: Data Lifecycle Manager automates EBS snapshots only, not backups for EFS, RDS and DynamoDB too.
+    evidence:
+      - Separate disk and database backup plans overlap and confuse, so it unifies them in one dashboard.
+      - It covers EBS, Amazon EFS, RDS, DynamoDB and more, even on-premises data.
+    takeaway: Backups scattered across many services and on premises point to AWS Backup for one central dashboard.
+    history: []
+    verified:
+      keyHash: 1d1a25ada488
+      fullHash: fc8441ae1049
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mp3t83
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-backup
+    note: m07/additional-database-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe uses AWS Backup.
+      Match each of the cafe's needs to the AWS Backup feature that meets it.
+    pairs:
+      - left: Recover even if every data center in its home area goes offline
+        right: Cross-Region backup copies
+        why: Copies kept in another Region let the cafe restore even during a Regional outage.
+      - left: Prove to an inspector what was copied and when
+        right: Audit logs and reports
+        why: Audit logs and reports give an inspector evidence of each backup job and its timing.
+      - left: Cover a table the team launches next month with no plan edits
+        right: Auto-protection of new resources
+        why: Auto-protection brings a newly launched table under the plan without anyone adding it by hand.
+    evidence:
+      - "**Cross-Region redundancy**: copies in other Regions allow restores during a Regional outage."
+      - "**Compliance**: audit logs, reports, organization-wide policies and activity tracking."
+      - "**Central management**: one view of jobs, restore points and compliance across services and accounts, with schedules, encryption and auto-protection of new resources."
+    takeaway: AWS Backup adds cross-Region copies, audit reporting and auto-protection on top of central backup management.
+    history: []
+    verified:
+      keyHash: 3ed2ce827ae9
+      fullHash: c35c57927096
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-17h7g7
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: purpose-built-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe is adding a feature that tracks which customers refer their friends.
+      Under the approach AWS recommends, what should drive the team's choice of database for it?
+    options:
+      - id: a
+        text: Keeping all cafe data in one engine so it can be joined
+        why: Pulling the referrals into one shared engine fits the data to the database, which AWS advises against.
+      - id: b
+        text: Choosing a managed service so AWS handles the patching
+        why: Managed upkeep is a real benefit, but many engines offer it, so it cannot decide which one suits referrals.
+      - id: c
+        text: Fitting the engine to how the referral data is used
+        correct: true
+        why: AWS advises fitting the database to the business need, so the referral data's shape and use come first.
+      - id: d
+        text: Picking the engine with the strongest availability
+        why: Availability matters, but it says nothing about whether an engine suits the shape of referral data.
+    evidence:
+      - Fit the database to the business need, not the data to the database, as none suits every job.
+    takeaway: Choose a database by what the workload needs, not by what the team already runs.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 restates the purpose-built database principle and is the only one naming how the data is used.)"
+  - id: q-sw0mr3
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: purpose-built-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe runs its orders in Amazon RDS, its session data in Amazon ElastiCache and its referral map in Amazon Neptune.
+      Which idea explains why it chose three different services rather than one?
+    options:
+      - id: a
+        text: Giving each workload a copy in a second Region
+        why: Nothing in the setup places copies in another Region, and one service could do that just as well.
+      - id: b
+        text: Giving each workload a separate backup schedule
+        why: Backup schedules can differ within one service, so they do not explain picking three different ones.
+      - id: c
+        text: Giving each workload a service that AWS patches
+        why: One managed service would also be patched by AWS, so upkeep does not explain using three of them.
+      - id: d
+        text: Giving each workload a store suited to its data
+        correct: true
+        why: Each kind of data sits in a service chosen for it, which is the best-fit approach AWS recommends.
+    evidence:
+      - AWS steers each workload to its best-fit purpose-built tool, and offers more than the course covers.
+    takeaway: Using different databases for orders, sessions and relationships shows each workload placed in its best-fit engine.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: 'critic: the cue round found the key from the options alone (tell: Option 3 echoes the purpose-built idea with "a store suited to its data".)'

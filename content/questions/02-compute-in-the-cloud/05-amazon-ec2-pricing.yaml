@@ -1,0 +1,615 @@
+questions:
+  - id: q-y78t9a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: on-demand-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe is trying a new seasonal ordering app and has no idea yet how much compute it will use.
+      It wants to avoid any long-term commitment while it finds out.
+      Which pricing option fits?
+    options:
+      - id: a
+        text: Amazon EC2 On-Demand Instances
+        correct: true
+        why: On-Demand asks for no commitment and is how the cafe can learn the app's baseline usage first.
+      - id: b
+        text: Amazon EC2 Reserved Instances
+        why: A reservation locks the cafe into a multi-year term before it knows what the app needs.
+      - id: c
+        text: AWS Savings Plans
+        why: A Savings Plan commits to an hourly spend for a term, which the cafe cannot size yet.
+      - id: d
+        text: Amazon EC2 Dedicated Hosts
+        why: A whole physical server costs more and answers licensing or compliance needs the app does not have.
+    evidence:
+      - On-Demand bills per hour or second, by instance type and OS, and is where most customers learn their baseline usage.
+      - "Match the model to the usage: unknown means On-Demand, steady means Savings Plans or RIs, and interruptible but never critical means Spot."
+    takeaway: When usage is new or unknown, On-Demand lets you run with no commitment and learn your baseline first.
+    history: []
+    verified:
+      keyHash: 8325fea9434d
+      fullHash: 0a8833ff1a85
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ct0qs3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: on-demand-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    stem: >-
+      Which statement describes how Amazon EC2 On-Demand Instances are billed?
+    options:
+      - id: a
+        text: A committed hourly spend held for a set term of years
+        why: That describes a Savings Plan, which trades a spend commitment for a lower rate.
+      - id: b
+        text: A deep discount on spare capacity that AWS may take back
+        why: That describes Spot Instances, which AWS can reclaim when it needs the capacity.
+      - id: c
+        text: A per-second or per-hour charge with no term attached
+        correct: true
+        why: On-Demand charges only for the time an instance runs and asks for no term or upfront payment.
+      - id: d
+        text: A charge for a whole physical server kept for one customer
+        why: That describes a Dedicated Host, which reserves an entire server rather than billing per use.
+    evidence:
+      - On-Demand bills per hour or second, by instance type and OS, and is where most customers learn their baseline usage.
+      - "**On-Demand Instances**: pay-while-running compute with no commitment."
+    takeaway: On-Demand bills per hour or second for the time an instance runs, with no commitment of any kind.
+    history: []
+    verified:
+      keyHash: 5ae3b24ca89e
+      fullHash: 27f7bf6c2e97
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-9k5c7n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: savings-plans
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe runs steady compute all year across Amazon EC2 for its website, AWS Fargate for its order queue and AWS Lambda for receipts.
+      It wants one discount that covers all three.
+      Which pricing option fits?
+    options:
+      - id: a
+        text: Reserved Instances
+        why: A reservation discounts only EC2 in one family and Region, so Fargate and Lambda get nothing.
+      - id: b
+        text: Savings Plans
+        correct: true
+        why: A Savings Plan applies its lower rate across EC2, Fargate and Lambda for one steady spend commitment.
+      - id: c
+        text: Spot Instances
+        why: Spot discounts only interruptible EC2 capacity and does not reach Fargate or Lambda at all.
+      - id: d
+        text: Capacity Reservations
+        why: A Capacity Reservation holds EC2 capacity at the On-Demand rate and gives no discount.
+    evidence:
+      - "Steady usage across EC2, Fargate and Lambda: one Savings Plan."
+      - "Savings Plans flex across families, Regions and serverless services, and RIs do not."
+    takeaway: One Savings Plan can discount steady use across EC2, Fargate and Lambda together.
+    history: []
+    verified:
+      keyHash: bc30d95633d8
+      fullHash: 29803afb4356
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mr2y2e
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: savings-plans
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe plans to move its order system between EC2 instance families as it grows, and it also runs AWS Lambda functions.
+      It wants one discount that keeps covering all of this compute.
+      Which statements about AWS Savings Plans explain why they fit?
+    options:
+      - id: a
+        text: Their discount applies across instance families and sizes.
+        correct: true
+        why: A Savings Plan keeps applying when the order system moves to another family or size.
+      - id: b
+        text: Their discount also reaches serverless compute such as Lambda.
+        correct: true
+        why: Savings Plans cover serverless services such as Lambda, so the cafe's functions share the discount.
+      - id: c
+        text: They accept all upfront, partial upfront or no upfront payment.
+        why: The payment choices are true of Savings Plans, but they do not explain covering both kinds of compute.
+      - id: d
+        text: They run for a term of one or three years.
+        why: The term length is true of Savings Plans, but it says nothing about which compute the discount covers.
+      - id: e
+        text: They suit critical workloads that want a predictable bill.
+        why: Steady, critical use does fit Savings Plans, but that is not why one discount spans families and Lambda.
+    evidence:
+      - A Savings Plan applies whatever the Region, tenancy, OS, family or size, while an RI stays within its family and Region.
+      - "Savings Plans flex across families, Regions and serverless services, and RIs do not."
+    takeaway: A Savings Plan discount follows compute across families, sizes and serverless services such as Lambda.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 both open with 'Their discount' and are the only flexibility claims.)"
+  - id: q-qngdwe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: reserved-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    stem: >-
+      Which pricing option discounts Amazon EC2 in exchange for a 1- or 3-year term in one instance family and Region?
+    options:
+      - id: a
+        text: Spot Instances
+        why: Spot needs no term at all and gets its discount from spare capacity AWS can reclaim.
+      - id: b
+        text: On-Demand Instances
+        why: On-Demand asks for no term at all and bills at the full rate, so it gives no discount.
+      - id: c
+        text: Capacity Reservations
+        why: A Capacity Reservation holds capacity at the On-Demand rate and asks for no term, so it is not a discount.
+      - id: d
+        text: Reserved Instances
+        correct: true
+        why: Reserved Instances give their discount for a term commitment that stays inside one family and Region.
+    evidence:
+      - "**Reserved Instances (RIs)**: discounts for a 1- or 3-year term in one family and Region."
+    takeaway: Reserved Instances trade a 1- or 3-year term in one family and Region for a lower EC2 rate.
+    history: []
+    verified:
+      keyHash: bc63e28bdb38
+      fullHash: da6be3819165
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-z6d4te
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: reserved-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe is buying Reserved Instances for its point-of-sale servers.
+      It wants to pay nothing when the term begins, so its cash stays free this quarter.
+      Which payment option fits?
+    options:
+      - id: a
+        text: No upfront, with the cost spread over the term
+        correct: true
+        why: The no upfront choice asks for nothing at the start, so the cafe keeps its cash this quarter.
+      - id: b
+        text: All upfront, with one payment when the term starts
+        why: All upfront is a real RI choice, but it spends the most cash at the very start of the term.
+      - id: c
+        text: Partial upfront, with the rest spread over the term
+        why: Partial upfront is a real RI choice, but it still takes some cash when the term begins.
+      - id: d
+        text: Per-second billing, the way On-Demand use is charged
+        why: Per-second billing is how On-Demand works, not a way to pay for a Reserved Instance term.
+    evidence:
+      - Savings Plans and RIs both accept all upfront, partial upfront or no upfront payment.
+    takeaway: Reserved Instances can be paid all upfront, partial upfront or no upfront to suit the cash plan.
+    history: []
+    verified:
+      keyHash: beb8a7d2edb6
+      fullHash: f8c464ad7ce0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rqh507
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: reserved-instance-flexibility
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe bought a regional reservation for one general purpose instance type.
+      It moved the workload to a bigger type in the same family, in another Availability Zone of that Region, and the bill still shows the reservation's discount.
+      Which feature explains this?
+    options:
+      - id: a
+        text: Amazon EC2 Spot Instances
+        why: Spot discounts apply to spare capacity AWS can reclaim, and the cafe bought a reservation instead.
+      - id: b
+        text: Reserved Instance flexibility
+        correct: true
+        why: RI flexibility moves the discount automatically across sizes in the family and across the Region's zones.
+      - id: c
+        text: Amazon EC2 Capacity Reservations
+        why: A Capacity Reservation holds capacity at the On-Demand rate, so it explains no discount.
+      - id: d
+        text: AWS Savings Plans
+        why: The cafe holds a reservation, not a Savings Plan, so a plan's discount is not what the bill shows.
+    evidence:
+      - "RI flexibility: the discount flows automatically to other sizes in the family, by instance size footprint, and across the Region's AZs, aiding distribution and fault tolerance."
+    takeaway: A regional RI discount follows other sizes in its family and other AZs in its Region automatically.
+    history: []
+    verified:
+      keyHash: 6dbae51707ce
+      fullHash: 483193f1a933
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1nmwyj
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: reserved-instance-flexibility
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    stem: >-
+      A regional Reserved Instance discount applies automatically to which usage?
+    options:
+      - id: a
+        text: Other sizes within its instance family
+        correct: true
+        why: For most instance types the discount covers any size in the family, measured by size footprint.
+      - id: b
+        text: Other Availability Zones within its Region
+        correct: true
+        why: A regional reservation is not pinned to one zone, so its discount reaches every zone in the Region.
+      - id: c
+        text: Other Regions within its AWS account
+        why: The discount stays inside its own Region, which is a limit Savings Plans do not have.
+      - id: d
+        text: Other instance families within its Region
+        why: Flexibility works across sizes inside one family, not across families.
+      - id: e
+        text: Other compute services within its Region
+        why: Reserved Instances discount EC2 only, while services such as Lambda need a Savings Plan.
+    evidence:
+      - Reserved Instance flexibility means a regional Reserved Instance discount applies in any Availability Zone of its Region and, for most instance types, to any size in the same instance family.
+      - "Savings Plans flex across families, Regions and serverless services, and RIs do not."
+    takeaway: RI flexibility spans sizes within one family and AZs within one Region, but never other families or Regions.
+    history: []
+    verified:
+      keyHash: 44e7a38ff6d2
+      fullHash: b2d5d9f18d2c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kc0z3b
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: spot-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      Each night the cafe runs a batch job that resizes menu photos.
+      The job can stop at any point and pick up later, and nothing depends on when it finishes.
+      Which pricing option costs the least for this job?
+    options:
+      - id: a
+        text: Amazon EC2 Dedicated Instances
+        why: Dedicated hardware adds isolation the photo job does not need and gives no deep discount.
+      - id: b
+        text: Amazon EC2 On-Demand Instances
+        why: On-Demand works but charges full price for a job that could run on cheaper spare capacity.
+      - id: c
+        text: Amazon EC2 Spot Instances
+        correct: true
+        why: Spot gives the deepest discount, and an interruption only pauses a job that can resume later.
+      - id: d
+        text: Amazon EC2 Reserved Instances
+        why: A reservation suits steady, always-on use, not a short nightly job that can be interrupted.
+    evidence:
+      - "Match the model to the usage: unknown means On-Demand, steady means Savings Plans or RIs, and interruptible but never critical means Spot."
+      - "**Spot Instances**: discounted spare capacity that AWS can reclaim."
+    takeaway: Interruptible, non-critical batch work fits Spot Instances and their deep discount on spare capacity.
+    history: []
+    verified:
+      keyHash: f1315c123a3c
+      fullHash: ca20f659fff9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-d0qqqp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: spot-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    stem: >-
+      Which feature of Amazon EC2 Spot Instances lets a long batch job avoid losing its work when its capacity is interrupted?
+    options:
+      - id: a
+        text: A steep discount below On-Demand prices
+        why: The deep discount is true of Spot, but it does nothing to help a job keep its work.
+      - id: b
+        text: A two-minute warning ahead of a reclaim
+        correct: true
+        why: The two-minute warning lets the job save its progress and resume once capacity returns.
+      - id: c
+        text: Capacity drawn from spare, unused EC2 servers
+        why: Spot does run on spare capacity, but that is why it can be interrupted, not how work is kept.
+      - id: d
+        text: No term or upfront payment needed to use it
+        why: Spot asks for no commitment, but that says nothing about keeping work through an interruption.
+    evidence:
+      - AWS warns two minutes before reclaiming a Spot Instance, so the job can save progress and resume later.
+      - "**Spot Instances**: discounted spare capacity that AWS can reclaim."
+    takeaway: AWS gives a two-minute warning before reclaiming a Spot Instance, so jobs should save progress and resume.
+    history: []
+    verified:
+      keyHash: 8e23d0d7e1d6
+      fullHash: ad1211669256
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7hgys4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: dedicated-hosts
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 3
+    stem: >-
+      The cafe's accounting software uses a SQL Server license tied to the physical server it runs on.
+      The cafe must control which server its instances are placed on.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon EC2 Dedicated Instances
+        why: Dedicated Instances isolate the hardware, but AWS picks the server, so placement stays out of reach.
+      - id: b
+        text: Amazon EC2 Spot Instances
+        why: Spot capacity can be reclaimed and gives no say over which server the license runs on.
+      - id: c
+        text: Amazon EC2 Dedicated Hosts
+        correct: true
+        why: A Dedicated Host is a whole server you control placement on, which suits server-bound licenses.
+      - id: d
+        text: Amazon EC2 On-Demand Instances
+        why: Default On-Demand instances run on shared hardware that AWS chooses for you.
+    evidence:
+      - A Dedicated Host gives control over instance placement and resource allocation, which helps with compliance and with licensing such as Windows or SQL Server.
+    takeaway: When licensing or compliance needs control over the physical server, choose a Dedicated Host.
+    history: []
+    verified:
+      keyHash: 52b7df56ce6d
+      fullHash: 73dfd47a720c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6xfkr6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: dedicated-hosts
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    stem: >-
+      Which statement about Amazon EC2 Dedicated Hosts is accurate?
+    options:
+      - id: a
+        text: They cost more than Reserved Instances and give server control.
+        correct: true
+        why: Dedicated Hosts are pricier than RIs, so they make sense only when server control is required.
+      - id: b
+        text: They cost less than Spot Instances because AWS can reclaim them.
+        why: Reclaimable capacity describes Spot, and a Dedicated Host is not cheaper than Spot.
+      - id: c
+        text: They share one physical server with other accounts to cut cost.
+        why: A Dedicated Host is a whole server for one customer, not shared hardware.
+      - id: d
+        text: They hold spare capacity in one zone at the On-Demand rate.
+        why: Holding capacity at the On-Demand rate describes a Capacity Reservation, not a Dedicated Host.
+    evidence:
+      - Dedicated Hosts cost more than RIs, so use them only when you need server control.
+      - "**Dedicated Hosts**: whole physical servers reserved for one customer."
+    takeaway: Dedicated Hosts cost more than RIs, so pick them only when you need control of the physical server.
+    history: []
+    verified:
+      keyHash: 80c448d6ba75
+      fullHash: 006998a1f096
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0ht5t1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: dedicated-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe's payment team wants its servers kept apart from other AWS customers' workloads.
+      It has no need to pick or manage the physical server itself.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon EC2 Spot Instances
+        why: Spot runs on shared spare capacity and gives no isolation from other customers.
+      - id: b
+        text: Amazon EC2 Capacity Reservations
+        why: A Capacity Reservation holds capacity in one zone but does not keep other accounts off the hardware.
+      - id: c
+        text: Amazon EC2 Dedicated Hosts
+        why: A Dedicated Host adds server control the team does not need, at a higher price.
+      - id: d
+        text: Amazon EC2 Dedicated Instances
+        correct: true
+        why: Dedicated Instances isolate the team's hardware from other accounts while AWS still picks the server.
+    evidence:
+      - "Isolation from other customers without choosing servers: Dedicated Instances."
+    takeaway: For isolation from other accounts without managing the server, choose Dedicated Instances.
+    history: []
+    verified:
+      keyHash: 004282b8e1df
+      fullHash: 723e38d8c389
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-02xsx4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: dedicated-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    stem: >-
+      Which statement describes Amazon EC2 Dedicated Instances?
+    options:
+      - id: a
+        text: Hardware just for your account, on a server AWS picks
+        correct: true
+        why: They sit outside the multi-tenant model while AWS keeps the choice of server.
+      - id: b
+        text: A whole physical server whose placement you control
+        why: Control over a whole server and its placement describes a Dedicated Host instead.
+      - id: c
+        text: Spare shared capacity that AWS can take back at times
+        why: Reclaimable spare capacity is how Spot Instances work, with no isolation from others.
+      - id: d
+        text: Capacity held for you in one zone at On-Demand rates
+        why: Holding capacity in one zone describes a Capacity Reservation, which does not isolate hardware.
+    evidence:
+      - Dedicated Instances are isolated from other accounts, though AWS picks the server, so they sit outside the [multi-tenant](01-introduction-to-amazon-ec2.md) model while keeping shared-infrastructure savings.
+    takeaway: Dedicated Instances give hardware isolation from other accounts while AWS still chooses the server.
+    history: []
+    verified:
+      keyHash: 1860efa2494b
+      fullHash: 82d2ac23466e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pdew15
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: capacity-reservations
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 3
+    stem: >-
+      The cafe is launching a holiday preorder site and must be certain it can start the servers it needs in one Availability Zone on launch day.
+      Which option guarantees that?
+    options:
+      - id: a
+        text: Amazon EC2 On-Demand Instances
+        why: On-Demand launches rely on whatever is free at that moment, so nothing is held in advance.
+      - id: b
+        text: Amazon EC2 Capacity Reservations
+        correct: true
+        why: A Capacity Reservation keeps capacity waiting in one zone, so the launch is certain to have it.
+      - id: c
+        text: Amazon EC2 Spot Instances
+        why: Spot capacity can be reclaimed, which is the opposite of a guarantee for a critical launch.
+      - id: d
+        text: AWS Savings Plans
+        why: A Savings Plan is a billing commitment for lower rates and does not set aside any capacity.
+    evidence:
+      - "A critical launch needing guaranteed capacity in one AZ: a Capacity Reservation."
+      - Amazon EC2 Capacity Reservations hold capacity in one AZ for critical workloads, billed at the On-Demand rate even when unused.
+    takeaway: To guarantee capacity in one AZ for a critical event, use a Capacity Reservation, not a discount model.
+    history: []
+    verified:
+      keyHash: 6b0f0cdd9f62
+      fullHash: 989a40e0415d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-h87v5k
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: capacity-reservations
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe set aside room in one Availability Zone for its kitchen display system, then launched nothing there for a week.
+      Its bill still charged the full On-Demand rate for that week.
+      Which option was the cafe using?
+    options:
+      - id: a
+        text: Amazon EC2 On-Demand Instances
+        why: On-Demand bills only while an instance runs, so a week with nothing launched would cost nothing.
+      - id: b
+        text: AWS Savings Plans
+        why: A Savings Plan charges its commitment at a rate below On-Demand and sets aside no room in a zone.
+      - id: c
+        text: Amazon EC2 Capacity Reservations
+        correct: true
+        why: Capacity Reservations bill at the On-Demand rate for the held capacity even when it is unused.
+      - id: d
+        text: Amazon EC2 Reserved Instances
+        why: A reservation bills at a discounted rate for its term, not at the full On-Demand rate.
+    evidence:
+      - Amazon EC2 Capacity Reservations hold capacity in one AZ for critical workloads, billed at the On-Demand rate even when unused.
+    takeaway: A Capacity Reservation bills at the On-Demand rate whether or not you launch instances into it.
+    history: []
+    verified:
+      keyHash: 343d9b404d12
+      fullHash: 6afd5e557a47
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0f1a14
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: savings-plans
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    stem: >-
+      What does a customer commit to in exchange for an AWS Savings Plans discount?
+    options:
+      - id: a
+        text: A whole physical server for its own use
+        why: Reserving a whole physical server describes a Dedicated Host, not a Savings Plan.
+      - id: b
+        text: A set amount of compute use per hour
+        correct: true
+        why: A Savings Plan lowers prices in return for committing to a set amount of hourly compute use for a term.
+      - id: c
+        text: A single instance family in one Region
+        why: Tying a discount to one family and Region describes a Reserved Instance, not a Savings Plan.
+      - id: d
+        text: Capacity held in one Availability Zone
+        why: Holding capacity in one Availability Zone describes a Capacity Reservation, which gives no discount.
+    evidence:
+      - AWS Savings Plans give prices below On-Demand rates in exchange for committing to a set amount of compute usage per hour for one or three years.
+    takeaway: Savings Plans trade a commitment to steady hourly compute use for prices below On-Demand rates.
+    history: []
+    verified:
+      keyHash: c67173e0ba15
+      fullHash: 5f6bacdbc515
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

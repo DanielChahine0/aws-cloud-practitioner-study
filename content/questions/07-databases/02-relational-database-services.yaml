@@ -1,0 +1,338 @@
+questions:
+  - id: q-0xr69j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: relational-databases
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe keeps its orders and loyalty members in linked tables that all follow one fixed layout.
+      It wants to spot members who keep ordering the same drink.
+      Which kind of database fits this data?
+    options:
+      - id: a
+        text: A NoSQL database
+        why: A NoSQL store uses a flexible schema, while this data follows one fixed layout across linked tables.
+      - id: b
+        text: A relational database
+        correct: true
+        why: Related tables under a fixed schema suit transactional records like orders and loyalty members.
+      - id: c
+        text: A graph database
+        why: A graph store centers on connections between items, not on rows in tables with a set layout.
+      - id: d
+        text: An in-memory cache
+        why: A cache holds hot data in RAM for a short time and is not the main home for order records.
+    evidence:
+      - Transactional data, like the coffee shop's orders and loyalty records, usually sits in a relational database management system.
+      - Tables of rows and columns follow a rigid schema and share attributes, so one query spans customers and orders.
+    takeaway: Transactional records in linked tables with a fixed schema belong in a relational database.
+    history: []
+    verified:
+      keyHash: 644ab75c2aac
+      fullHash: 6010eeecbbd0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dk1gdn
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: relational-databases
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which traits describe how a relational database organizes its data?
+    options:
+      - id: a
+        text: Data sits in tables of rows and columns
+        correct: true
+        why: A relational database stores records as rows in tables, with each column holding one attribute.
+      - id: b
+        text: Each item may carry its own set of fields
+        why: Per-item fields describe a flexible NoSQL schema, not the fixed layout of relational tables.
+      - id: c
+        text: Every row follows one rigid, shared schema
+        correct: true
+        why: Relational tables enforce a fixed schema, so every row shares the same attributes.
+      - id: d
+        text: Records are kept as nodes and their links
+        why: Nodes joined by links describe a graph database, which models connections rather than tables.
+      - id: e
+        text: Data lives only in RAM for quick reads
+        why: Holding data only in memory describes a cache layer, not how a relational database stores records.
+    evidence:
+      - Tables of rows and columns follow a rigid schema and share attributes, so one query spans customers and orders.
+    takeaway: A relational database stores rows and columns in tables that all follow one rigid schema.
+    history: []
+    verified:
+      keyHash: 9a7fe62f0ae6
+      fullHash: c79bfee6061b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-t0kb63
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: sql
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      The cafe keeps its order records in a relational database on Amazon RDS.
+      Which language do staff usually use to read and change those records?
+    options:
+      - id: a
+        text: GraphQL
+        why: GraphQL is an API query language for web and mobile clients, not the usual relational interface.
+      - id: b
+        text: Python
+        why: Python is a general programming language, and an app written in it still sends queries to the engine in another language.
+      - id: c
+        text: SQL
+        correct: true
+        why: SQL is the standard way to query and update rows in the relational engines that Amazon RDS runs.
+      - id: d
+        text: JavaScript
+        why: JavaScript runs app and web page logic, and it is not the language relational engines on RDS accept for queries.
+    evidence:
+      - SQL is the usual interface, on engines like MySQL, PostgreSQL and Microsoft SQL Server, and the model keeps structured data consistent and scalable.
+    takeaway: SQL is the standard language for querying relational databases, including those on Amazon RDS.
+    history: []
+    verified:
+      keyHash: fc6a30ef6ecb
+      fullHash: fec48057db99
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bfpgwx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: sql
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's relational database on Amazon RDS links each customer record to an order history.
+      The manager wants to list every customer who ordered the same latte many times.
+      How should the data be retrieved?
+    options:
+      - id: a
+        text: A lookup of each customer by primary key
+        why: A key lookup returns one customer at a time and does not combine customer and order records.
+      - id: b
+        text: A read of copies held in a cache layer
+        why: A cache returns stored copies of hot data and does not run a search across related records.
+      - id: c
+        text: A scan of order files exported to storage
+        why: Scanning loose files skips the database and loses the links between customers and orders.
+      - id: d
+        text: A SQL query that joins the two tables
+        correct: true
+        why: One SQL query can join the customer and order tables to find repeat drink orders.
+    evidence:
+      - Tables of rows and columns follow a rigid schema and share attributes, so one query spans customers and orders.
+      - SQL is the usual interface, on engines like MySQL, PostgreSQL and Microsoft SQL Server, and the model keeps structured data consistent and scalable.
+    takeaway: A single SQL query can join related tables, such as customers and orders, in one request.
+    history: []
+    verified:
+      keyHash: 319e32298d81
+      fullHash: 29b287a5b708
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-j4gayv
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-rds
+    note: m07/relational-database-services
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe moves its order database to Amazon RDS.
+      Which jobs stay with the cafe rather than with AWS?
+    options:
+      - id: a
+        text: Patching the database engine and its operating system
+        why: RDS applies patches to the engine and operating system, so this job moves to AWS.
+      - id: b
+        text: Encrypting the data both at rest and in transit
+        correct: true
+        why: Under RDS the customer still owns encryption of stored and moving data, so the cafe keeps this job.
+      - id: c
+        text: Running the scheduled automated database backups
+        why: RDS takes automated backups on the schedule the cafe sets, so AWS carries out this job.
+      - id: d
+        text: Failing over to a standby when an instance fails
+        why: RDS automates failover, so AWS moves traffic to the standby without the cafe stepping in.
+      - id: e
+        text: Maintaining the servers and storage hardware
+        why: AWS runs the infrastructure under RDS, so the cafe no longer handles any hardware.
+      - id: f
+        text: Choosing the security measures that guard the data
+        correct: true
+        why: Security measures stay with the customer under RDS, so the cafe decides how the data is guarded.
+    evidence:
+      - AWS runs infrastructure, OS, patching and backups, while you own security measures and encryption at rest and in transit.
+    takeaway: With Amazon RDS, AWS handles patching and backups while the customer keeps security and encryption.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 are the only customer duties for RDS; the other four are all AWS duties, so a select-2 split gives it away.)"
+  - id: q-qde6tq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-rds
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's online shop records every sale and tracks bean stock in MySQL tables.
+      It wants AWS to take over patching, backups and failover for this day-to-day workload.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Redshift
+        why: Redshift is a data warehouse for analysis at scale, not a store for day-to-day sales and stock.
+      - id: b
+        text: Amazon DynamoDB
+        why: DynamoDB is a NoSQL store with a flexible schema and does not run the shop's MySQL tables.
+      - id: c
+        text: Amazon Neptune
+        why: Neptune is a graph database built around connections, not a managed MySQL engine.
+      - id: d
+        text: Amazon RDS
+        correct: true
+        why: RDS runs MySQL for operational workloads such as e-commerce inventory and automates patching and backups.
+    evidence:
+      - A relational service for operational workloads, not data warehousing, that automates patching, backups, provisioning, failover and disaster recovery.
+      - "Use cases: web apps, enterprise workloads, e-commerce inventories."
+    takeaway: Amazon RDS runs operational relational workloads, while Amazon Redshift is meant for data warehousing.
+    history: []
+    verified:
+      keyHash: ee2d4c80f4e4
+      fullHash: 5f0f57f156ff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7pzs11
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-aurora
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe chain pays steep license fees for a high-end commercial database behind its busy ordering system.
+      It wants a MySQL-compatible relational service with similar performance at a much lower cost.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon DynamoDB
+        why: DynamoDB is a NoSQL store with a flexible schema, so it is not a MySQL-compatible replacement.
+      - id: b
+        text: Amazon Aurora
+        correct: true
+        why: Aurora is MySQL-compatible and matches commercial database performance at a fraction of the cost.
+      - id: c
+        text: Amazon Redshift
+        why: Redshift is a data warehouse for analysis, not a relational engine for live ordering traffic.
+      - id: d
+        text: Amazon DocumentDB
+        why: DocumentDB is a MongoDB-compatible document store, not a drop-in MySQL-compatible database.
+    evidence:
+      - MySQL- and PostgreSQL-compatible, built to cut needless I/O (the video also lists distributed SQL, DSQL).
+      - About one-tenth the cost of high-end commercial databases at similar performance, so it suits replacing pricey commercial engines.
+    takeaway: Aurora gives MySQL- and PostgreSQL-compatible performance on par with commercial engines at far lower cost.
+    history: []
+    verified:
+      keyHash: fff49d2530ef
+      fullHash: 3b1a9f3094bd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-22s7z2
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-aurora
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      How does Amazon Aurora keep a database available when part of its infrastructure fails?
+    options:
+      - id: a
+        text: It keeps six copies of the data over three AZs
+        correct: true
+        why: Aurora spreads six copies across three Availability Zones, so losing one AZ does not lose the data.
+      - id: b
+        text: It works with MySQL and PostgreSQL applications
+        why: MySQL and PostgreSQL compatibility is true of Aurora but eases moves, not recovery from failures.
+      - id: c
+        text: It fails over to one of up to 15 Aurora Replicas
+        correct: true
+        why: Traffic can move to a healthy Aurora Replica without data loss when the primary has a problem.
+      - id: d
+        text: It costs about one-tenth of commercial engines
+        why: The lower cost is true of Aurora, but price does nothing to keep the database up during a failure.
+      - id: e
+        text: It is built to cut out needless I/O work
+        why: Cutting needless I/O is true of Aurora, but it improves speed rather than surviving a failure.
+    evidence:
+      - Six copies over three AZs, 99.99% availability, failover to healthy replicas without data loss, and up to 15 Aurora Replicas.
+    takeaway: Aurora stays available by keeping six copies over three AZs and failing over to Aurora Replicas.
+    history: []
+    verified:
+      keyHash: 6c4f5e165e9a
+      fullHash: 3f7d12974733
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zqewtq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-rds
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      Before a big change to its ordering system, the cafe wants a full copy of its Amazon RDS database that it can restore later or keep as an archive.
+      Which RDS feature fits?
+    options:
+      - id: a
+        text: A read replica
+        why: A read replica takes read traffic off the primary, but it tracks live changes rather than freezing a copy to restore.
+      - id: b
+        text: A Multi-AZ standby
+        why: A Multi-AZ standby takes over when the primary fails, and it is not a saved copy kept for later restores.
+      - id: c
+        text: A manual DB snapshot
+        correct: true
+        why: A manual DB snapshot is a full copy the cafe takes on demand, for point-in-time recovery or an archive.
+      - id: d
+        text: Performance Insights
+        why: Performance Insights shows the live load on the database, and it keeps no copy of the data.
+    evidence:
+      - "Resilience: Multi-AZ, automated backups on your schedule, and manual DB snapshots (full copies for point-in-time recovery or archives)."
+    takeaway: A manual DB snapshot gives an RDS database a full on-demand copy for later recovery or archiving.
+    history: []
+    verified:
+      keyHash: 3d0f9f3cd22a
+      fullHash: 90cfd5c69cd3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

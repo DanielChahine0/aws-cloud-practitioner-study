@@ -1,0 +1,207 @@
+questions:
+  - id: q-v1zaws
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: authentication
+    note: m09/introduction-to-security-on-aws
+    task: "2.3"
+    level: 3
+    stem: >-
+      The cafe's staff portal asks a new barista for a username and password before it shows any page.
+      Which security step is the portal carrying out at that moment?
+    options:
+      - id: a
+        text: Authorization
+        why: Authorization comes after sign-in and limits actions, but no identity has been proven yet here.
+      - id: b
+        text: Authentication
+        correct: true
+        why: Checking the username and password is how the portal confirms who the barista is.
+      - id: c
+        text: Data encryption
+        why: Encryption encodes data and is separate from checking the barista's credentials.
+      - id: d
+        text: Access log auditing
+        why: Auditing reviews logs of past activity rather than checking credentials at sign-in.
+    evidence:
+      - Authentication checks credentials, like a username and password, to prove identity.
+    takeaway: Checking credentials such as a username and password to confirm identity is authentication.
+    history: []
+    verified:
+      keyHash: 51d5c1796a40
+      fullHash: 012d47e2166d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zvnsqx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: authentication
+    note: m09/introduction-to-security-on-aws
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does a successful authentication establish about a person who signs in?
+    options:
+      - id: a
+        text: Who the person is
+        correct: true
+        why: Authentication exists to prove identity, which is exactly who the person is.
+      - id: b
+        text: What the person may do
+        why: Limiting what a proven identity may do is the job of authorization, a later step.
+      - id: c
+        text: How the person's data is encoded
+        why: Encoding data is encryption, which protects the data but says nothing about who signed in.
+      - id: d
+        text: Which actions the person took before
+        why: Reviewing past actions in logs is auditing, not the sign-in check itself.
+    evidence:
+      - Authentication checks credentials, like a username and password, to prove identity.
+      - Encryption (encoding data) and auditing (reviewing logs) are separate.
+    takeaway: Authentication answers who you are; it proves identity before any rights are checked.
+    history: []
+    verified:
+      keyHash: e53f53e8ef38
+      fullHash: f636c0e8243b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-be8m5y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: authorization
+    note: m09/introduction-to-security-on-aws
+    task: "2.3"
+    level: 2
+    stem: >-
+      After signing in, a cashier at the cafe can view the day's sales but cannot open the payroll records.
+      Which security idea keeps the payroll records out of the cashier's reach?
+    options:
+      - id: a
+        text: Authorization
+        correct: true
+        why: The cashier is already signed in, and granted rights now limit which records they may open.
+      - id: b
+        text: Authentication
+        why: Authentication already happened at sign-in and only proved who the cashier is.
+      - id: c
+        text: Encryption
+        why: Encryption encodes stored data but does not decide which signed-in user may open it.
+      - id: d
+        text: Auditing
+        why: Auditing reviews logs afterward and does not block the cashier from opening records.
+    evidence:
+      - Authorization then uses granted rights to limit that identity's actions.
+      - "A signed-in user's request is checked against their rights: authorization."
+    takeaway: Once identity is proven, authorization uses granted rights to limit what that user can reach.
+    history: []
+    verified:
+      keyHash: fa110df4328e
+      fullHash: 28632e475c93
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vp8c4e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: authorization
+    note: m09/introduction-to-security-on-aws
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement describes authorization?
+    options:
+      - id: a
+        text: It checks credentials, such as a password, to prove who someone is.
+        why: Checking credentials to prove identity describes authentication, the step before authorization.
+      - id: b
+        text: It uses granted rights to limit what a proven identity can do.
+        correct: true
+        why: Authorization starts from a proven identity and limits its actions by the rights it was granted.
+      - id: c
+        text: It encodes stored data so that only key holders can read it.
+        why: Encoding data is encryption, which guards stored data rather than limiting what an identity can do.
+      - id: d
+        text: It reviews activity logs to find out what happened earlier.
+        why: Reviewing logs is auditing, which looks back rather than limiting actions.
+    evidence:
+      - Authorization then uses granted rights to limit that identity's actions.
+      - Encryption (encoding data) and auditing (reviewing logs) are separate.
+    takeaway: Authorization decides what an already proven identity may do, based on the rights it holds.
+    history: []
+    verified:
+      keyHash: 253eaa799c84
+      fullHash: 49555a8f8ba5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-d6fyet
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-security-controls
+    note: m09/introduction-to-security-on-aws
+    task: "2.2"
+    level: 1
+    stem: >-
+      Match each goal of security controls on AWS to the activity it covers.
+    pairs:
+      - left: Prevent
+        right: Managing who can access resources so incidents never start
+        why: Prevention works through access management, stopping an incident before it begins.
+      - left: Protect
+        right: Safeguarding networks, applications and data
+        why: The protect goal covers keeping networks, apps and data safe.
+      - left: Detect and respond
+        right: Spotting an incident and acting on it
+        why: Detection finds an incident that is underway, and response deals with it.
+    evidence:
+      - Controls **prevent** incidents by access management, **protect** networks, apps and data, and **detect and respond** to incidents.
+    takeaway: Security controls on AWS aim to prevent, protect, and detect and respond to incidents.
+    history: []
+    verified:
+      keyHash: ba90f0f9f327
+      fullHash: e86d2bbff135
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8vn3kj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-controls
+    note: m09/introduction-to-security-on-aws
+    task: "2.4"
+    level: 2
+    stem: >-
+      The cafe's team gets an alert about unusual sign-in attempts on the ordering system and moves quickly to contain them.
+      Which goal of security controls does this work serve?
+    options:
+      - id: a
+        text: Prevent incidents
+        why: Prevention stops incidents through access management before they start, not once one is underway.
+      - id: b
+        text: Protect resources
+        why: Protection keeps networks, apps and data safe, while this work reacts to an incident already seen.
+      - id: c
+        text: Detect and respond
+        correct: true
+        why: The team noticed an incident through an alert and then acted to contain it.
+      - id: d
+        text: Authorize every request
+        why: Authorization limits a proven identity's actions, while this team is reacting to an incident already seen.
+    evidence:
+      - Controls **prevent** incidents by access management, **protect** networks, apps and data, and **detect and respond** to incidents.
+    takeaway: Noticing an incident and acting to contain it is the detect and respond goal of security controls.
+    history: []
+    verified:
+      keyHash: 42d6b183ac1c
+      fullHash: 40a55a0b7e6b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

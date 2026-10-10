@@ -1,0 +1,538 @@
+questions:
+  - id: q-s038yb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-marketplace
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe wants to buy a ready-made inventory tool from an outside vendor, try it first and have the charges land on its AWS bill.
+      Where should it shop?
+    options:
+      - id: a
+        text: AWS Marketplace
+        correct: true
+        why: Marketplace is the catalog for finding, trying and buying third-party software, billed with the AWS account.
+      - id: b
+        text: AWS Partner Network
+        why: The partner community is where the cafe hires firms for help, not a store for packaged software.
+      - id: c
+        text: AWS Professional Services
+        why: This is consulting from AWS itself, so it sells project work rather than a vendor's inventory tool.
+      - id: d
+        text: AWS Service Catalog
+        why: Service Catalog lists products a company has approved internally, not a store of outside vendors' tools.
+    evidence:
+      - It spans discovery, trial, purchase, deployment and management, with pricing and reviews per listing.
+      - Buying is simpler, deploying and scaling are quick, and charges join your AWS bill.
+    takeaway: To find, try and buy third-party software billed through your AWS account, go to AWS Marketplace.
+    history: []
+    verified:
+      keyHash: a1d9d9b503b3
+      fullHash: 3f1dfcde263a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1v72k1
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-marketplace
+    note: m11/aws-marketplace-and-aws-partners
+    task: "2.4"
+    level: 2
+    stem: >-
+      The cafe needs a firewall product from a security vendor.
+      It wants the firewall protecting the ordering app soon, and it wants to pay through its existing AWS account instead of a separate vendor account.
+      Which AWS Marketplace benefits match those two goals?
+    options:
+      - id: a
+        text: Charges for listings are added to the AWS bill
+        correct: true
+        why: Marketplace purchases join the AWS bill, so the cafe does not set up a separate payment with the vendor.
+      - id: b
+        text: Compliance-ready software is quicker than an in-house build
+        correct: true
+        why: Ready security software gets the ordering app protected sooner than building a firewall itself would.
+      - id: c
+        text: Listings include prebuilt image recognition models
+        why: Prebuilt ML models are a real Marketplace offering, but they do nothing for a quick firewall or for billing.
+      - id: d
+        text: The catalog also sells datasets for analytics
+        why: Datasets are sold in Marketplace too, yet they do not speed up the firewall or change how the cafe pays.
+      - id: e
+        text: Listings can be browsed by industry, like healthcare
+        why: Industry views help buyers find tools, but they meet neither the speed goal nor the payment goal.
+    evidence:
+      - Buying is simpler, deploying and scaling are quick, and charges join your AWS bill.
+      - Compliance-ready software is quicker than an in-house build or working from documentation.
+      - Pricing can be free, pay-as-you-go or annual.
+    takeaway: Marketplace security tools arrive compliance-ready and bill through the AWS account, saving time over an in-house build.
+    history: []
+    verified:
+      keyHash: c551d1cf6146
+      fullHash: c7d129871e37
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4hpqch
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: independent-software-vendors
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      Who supplies most of the listings in AWS Marketplace?
+    options:
+      - id: a
+        text: Independent software vendors
+        correct: true
+        why: Third-party sellers known as ISVs provide the bulk of the products in the Marketplace catalog.
+      - id: b
+        text: System integrators
+        why: System integrators deliver services that build and run customer workloads, not most of the catalog's listings.
+      - id: c
+        text: AWS Professional Services
+        why: This is AWS's own consulting team, which delivers project work rather than supplying Marketplace listings.
+      - id: d
+        text: AWS solutions architects
+        why: Solutions architects help customers design apps and are not the sellers behind most Marketplace listings.
+    evidence:
+      - A curated catalog of thousands of listings, mostly from independent software vendors (ISVs).
+    takeaway: Most Marketplace listings come from independent software vendors, the third-party sellers in the catalog.
+    history: []
+    verified:
+      keyHash: 65c6071f2d87
+      fullHash: 8580bfebeef2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-d1zhma
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: independent-software-vendors
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      An outside company makes a staff-scheduling app for restaurants and sells it to the cafe as a listing in AWS Marketplace.
+      What role does that company play?
+    options:
+      - id: a
+        text: Independent software vendor
+        correct: true
+        why: A third party that sells its own product through Marketplace is an ISV.
+      - id: b
+        text: System integrator
+        why: A system integrator builds and runs workloads for a customer rather than selling a packaged app.
+      - id: c
+        text: Solutions architect
+        why: A solutions architect is an AWS expert who helps design apps, not an outside seller of one.
+      - id: d
+        text: Technical account manager
+        why: A technical account manager is an AWS support contact, not an outside seller of an app.
+    evidence:
+      - "**Independent software vendor (ISV)**: A third-party seller on Marketplace."
+    takeaway: An outside company that sells its own software through Marketplace is an independent software vendor.
+    history: []
+    verified:
+      keyHash: 00a0bd6d2fae
+      fullHash: f4ade20c8b4a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6mvwks
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-network
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe wants to hire an outside consulting firm that works with AWS to add machine learning menu suggestions to its app.
+      Where should it look for that firm?
+    options:
+      - id: a
+        text: AWS Partner Network
+        correct: true
+        why: The APN is the community of outside consulting and technology firms that customers can hire for AWS projects.
+      - id: b
+        text: AWS Professional Services
+        why: This team is part of AWS itself, so it is not the outside firm the cafe wants to hire.
+      - id: c
+        text: AWS re:Post
+        why: This is a community question-and-answer site, not a place to engage a firm for a project.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs automated account checks and does not connect the cafe with consultants.
+    evidence:
+      - Customers can hire partners, like a retailer adding ML personalization.
+    takeaway: To hire an outside firm that builds on AWS, look to the AWS Partner Network rather than AWS's own consultants.
+    history: []
+    verified:
+      keyHash: 3a8b35db4719
+      fullHash: 11025fd52b92
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5bssjw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-network
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      Which description fits the AWS Partner Network?
+    options:
+      - id: a
+        text: A worldwide group of technology and consulting firms building on AWS
+        correct: true
+        why: The APN is a global community of firms that create customer solutions with AWS.
+      - id: b
+        text: A curated store of third-party software, data and services for sale
+        why: That describes AWS Marketplace, where customers buy products rather than join a firm community.
+      - id: c
+        text: The consulting team employed by AWS for complex migration projects
+        why: That describes AWS Professional Services, which is staffed by AWS rather than outside firms.
+      - id: d
+        text: A public question-and-answer forum where AWS users help one another out
+        why: That describes AWS re:Post, a community site for questions rather than a network of firms.
+    evidence:
+      - A global community of tech and consulting firms building customer solutions with AWS, solving problems and adding value.
+    takeaway: The AWS Partner Network is a global community of technology and consulting firms that build solutions with AWS.
+    history: []
+    verified:
+      keyHash: 93e8598b9c65
+      fullHash: 9ecaa222df28
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xmgxrd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-funding
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A small firm that builds AWS ordering systems for cafes has joined the AWS Partner Network.
+      It plans a campaign to market and sell its system alongside AWS, but it lacks the budget to run it.
+      Which partner benefit fits?
+    options:
+      - id: a
+        text: Funding through partner programs
+        correct: true
+        why: Partner programs provide funding so partners can build, market and sell their solutions with AWS.
+      - id: b
+        text: Webinars and in-person partner events
+        why: Events offer networking and updates with AWS experts, not backing for a marketing and sales campaign.
+      - id: c
+        text: Partner-centered training and certification
+        why: Training builds the firm's skills but does not pay for marketing or selling its solution.
+      - id: d
+        text: Volume discounts for partners
+        why: Volume discounts lower what the firm pays AWS, rather than backing a campaign to market and sell.
+    evidence:
+      - Funding, via partner programs, to build, market and sell with AWS.
+    takeaway: AWS Partner funding, delivered through partner programs, helps partners build, market and sell with AWS.
+    history: []
+    verified:
+      keyHash: 97800418a4d6
+      fullHash: 30097d0927c0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6ymyys
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-funding
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      What can AWS Partner funding help a partner firm do?
+    options:
+      - id: a
+        text: Build, market and sell its solutions with AWS
+        correct: true
+        why: Funding from partner programs supports building, marketing and selling solutions with AWS.
+      - id: b
+        text: Meet, network and learn alongside AWS experts
+        why: Meeting and networking with AWS experts is what partner events offer, not what funding pays for.
+      - id: c
+        text: Study, train and certify its technical staff
+        why: Certification paths come from partner-centered training content, a separate benefit from funding.
+      - id: d
+        text: Buy, run and grow its AWS usage at lower prices
+        why: Lower prices on higher usage come from partner volume discounts, a separate benefit from funding.
+    evidence:
+      - Funding, via partner programs, to build, market and sell with AWS.
+      - Funding is a key partner benefit.
+    takeaway: Partner funding is a key APN benefit that helps partners build, market and sell with AWS.
+    history: []
+    verified:
+      keyHash: 587b02dcb65c
+      fullHash: e616e5f1404d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kbgd4h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-events
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A partner firm that connects cafe point-of-sale systems to AWS wants to network with other partners, hear the latest updates and talk with AWS experts.
+      Which partner benefit fits?
+    options:
+      - id: a
+        text: Partner events
+        correct: true
+        why: Partner webinars, workshops and in-person events exist for networking, updates and access to AWS experts.
+      - id: b
+        text: Partner program funding
+        why: Funding pays for building, marketing and selling, not for meeting other partners and experts.
+      - id: c
+        text: Partner certification courses
+        why: Certification content builds skills rather than offering networking and live updates.
+      - id: d
+        text: Partner volume discounts
+        why: Volume discounts lower costs and do not bring the firm together with other partners or experts.
+    evidence:
+      - Events (webinars, workshops, in person) for networking, updates and AWS experts.
+    takeaway: AWS Partner events give partners networking, updates and time with AWS experts.
+    history: []
+    verified:
+      keyHash: 7d5a866b6d8e
+      fullHash: 6a5b023e4b36
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-je7peh
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: aws-partner-events
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      In which formats are AWS Partner events offered?
+    options:
+      - id: a
+        text: Webinars
+        correct: true
+        why: Online webinars are one of the formats partner events take.
+      - id: b
+        text: Workshops
+        correct: true
+        why: Workshops are one of the formats partner events take.
+      - id: c
+        text: In-person sessions
+        correct: true
+        why: Partner events also happen in person, which helps with networking.
+      - id: d
+        text: Self-paced courses
+        why: Self-paced learning belongs to partner training content, not to the events partners attend.
+      - id: e
+        text: Funding applications
+        why: Applying for funding goes through partner programs and is not a format of partner events.
+      - id: f
+        text: Forum discussions
+        why: Forum threads happen on community sites such as AWS re:Post, not as a partner event format.
+    evidence:
+      - Events (webinars, workshops, in person) for networking, updates and AWS experts.
+    takeaway: AWS Partner events run as webinars, workshops and in-person gatherings.
+    history: []
+    verified:
+      keyHash: acb99520c56c
+      fullHash: e267cffdc178
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nzgywc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-training-and-certification
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A consulting partner that helps cafes move to AWS wants its staff to earn AWS certifications and learn one service in depth.
+      Which partner benefit fits?
+    options:
+      - id: a
+        text: Partner-centered training content
+        correct: true
+        why: Partner training covers paths from full certification down to a single service or goal.
+      - id: b
+        text: Funding through partner programs
+        why: Funding pays for building, marketing and selling, not for the staff's learning paths.
+      - id: c
+        text: Webinars and in-person events
+        why: Events focus on networking and updates rather than structured certification paths.
+      - id: d
+        text: Volume discounts for joining the network
+        why: Discounts lower the partner's costs but do not teach its staff or lead to certification.
+    evidence:
+      - Partner-centered content within the wider AWS Training and Certification, from certification to one service or goal.
+    takeaway: Partner-centered training content prepares partner staff for certification or for one service or goal.
+    history: []
+    verified:
+      keyHash: ed190235c935
+      fullHash: b88c370f49aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xv6dsf
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-partner-training-and-certification
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      What range of content does the partner-centered training in the AWS Partner Network span?
+    options:
+      - id: a
+        text: From discovery and trial to purchase and deployment
+        why: This range describes the AWS Marketplace buying lifecycle, not partner training content.
+      - id: b
+        text: From certification down to one service or goal
+        correct: true
+        why: Partner-centered training sits in AWS Training and Certification and runs from full certification to one service or goal.
+      - id: c
+        text: From building through marketing to selling with AWS
+        why: Building, marketing and selling with AWS is what partner funding supports, not the training content.
+      - id: d
+        text: From online webinars to in-person workshops
+        why: Webinars and workshops are partner events for networking and updates, a separate benefit.
+    evidence:
+      - Partner-centered content within the wider AWS Training and Certification, from certification to one service or goal.
+    takeaway: Partner-centered training sits in AWS Training and Certification and spans full certification down to one service or goal.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: picked c, the key is b"
+  - id: q-21gvex
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: system-integrators
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe chain wants an outside AWS partner to build its new ordering workloads on AWS and then keep running them as a managed service.
+      Which kind of partner fits?
+    options:
+      - id: a
+        text: A system integrator
+        correct: true
+        why: System integrators are services partners that deliver professional or managed services to build and run workloads.
+      - id: b
+        text: An independent software vendor
+        why: An ISV sells its own packaged software rather than building and running the cafe's workloads.
+      - id: c
+        text: AWS Professional Services
+        why: This consulting team belongs to AWS itself, so it is not the outside partner the cafe wants.
+      - id: d
+        text: An AWS Marketplace listing
+        why: A listing is a product to buy, not a partner that builds and operates workloads for the cafe.
+    evidence:
+      - System integrators are AWS services partners that deliver professional or managed services to help customers build and run their workloads on AWS.
+    takeaway: An outside partner that builds and runs your AWS workloads as a service is a system integrator.
+    history: []
+    verified:
+      keyHash: e4f655f5910c
+      fullHash: f92cac21d52e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m9ak14
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: system-integrators
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      What do system integrators in the AWS Partner Network deliver to customers?
+    options:
+      - id: a
+        text: Services that build and run workloads on AWS
+        correct: true
+        why: System integrators provide professional or managed services that build and operate customer workloads.
+      - id: b
+        text: Packaged software products sold in AWS Marketplace
+        why: Packaged products for sale come from independent software vendors, not system integrators.
+      - id: c
+        text: Partner funding to market and sell AWS solutions
+        why: Funding is a benefit AWS gives partners, not something integrators deliver to customers.
+      - id: d
+        text: Community answers to customer technical questions
+        why: Community answers come from AWS re:Post, not from the services a system integrator delivers.
+    evidence:
+      - System integrators are AWS services partners that deliver professional or managed services to help customers build and run their workloads on AWS.
+    takeaway: System integrators deliver professional or managed services that build and run customer workloads on AWS.
+    history: []
+    verified:
+      keyHash: 5931823cc1dd
+      fullHash: ed8afbf5112d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0359kg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-training-and-certification
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A partner firm that builds ordering systems for cafes wants its sales staff to study learning content made for AWS partners, aimed at one business goal.
+      Which partner benefit fits?
+    options:
+      - id: a
+        text: AWS Partner events
+        why: Events offer networking, updates and time with AWS experts rather than a course of study toward a goal.
+      - id: b
+        text: AWS Partner funding
+        why: Funding pays toward building, marketing and selling with AWS; it is not learning content for staff.
+      - id: c
+        text: AWS Professional Services
+        why: Professional Services is AWS consulting for customer projects, not partner learning content.
+      - id: d
+        text: AWS Partner training
+        correct: true
+        why: Partner-centered training covers material from certification down to a single service or goal.
+    evidence:
+      - Partner-centered content within the wider AWS Training and Certification, from certification to one service or goal.
+    takeaway: APN partners get partner-centered training within AWS Training and Certification, including content focused on one goal.
+    history: []
+    verified:
+      keyHash: a1071167f4b3
+      fullHash: df26747c4b09
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

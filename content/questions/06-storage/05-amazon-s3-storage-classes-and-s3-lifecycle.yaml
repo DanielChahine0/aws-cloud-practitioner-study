@@ -1,0 +1,578 @@
+questions:
+  - id: q-7kq2k0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-storage-classes
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which statement explains what mainly decides the price of keeping an object in Amazon S3?
+    options:
+      - id: a
+        text: The class sets the rate, retrieval fees and minimum stay
+        correct: true
+        why: The class is the main price lever, since it fixes the per-GB rate, retrieval charges and any minimum duration.
+      - id: b
+        text: A bucket can hold objects in several different classes
+        why: Mixing classes in one bucket is true, but it does not say what sets the price of an object.
+      - id: c
+        text: S3 Standard applies when an upload names no other class
+        why: Standard being the default is true, but it does not explain what drives the price of storage.
+      - id: d
+        text: Lifecycle transitions keep objects in the same bucket
+        why: Transitions do stay in one bucket, but that describes how objects move, not what sets their price.
+    evidence:
+      - "Cost depends mainly on the class: per-GB storage rate, retrieval charges and minimum storage duration (none for S3 Standard, 180 days for S3 Glacier Deep Archive)."
+      - One bucket can mix classes, chosen per object by access pattern.
+      - Transitions happen within the same bucket, with no manual copying between buckets.
+    takeaway: In Amazon S3 the storage class is the main lever on price, through its storage rate, retrieval fees and minimum duration.
+    history: []
+    verified:
+      keyHash: eead993e2aa7
+      fullHash: 16a6e3084f19
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jqzvqw
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: s3-storage-classes
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe keeps menu photos that its app loads all day and old supplier invoices that nobody opens in the same Amazon S3 bucket.
+      Which facts let it pay less to store the invoices than the photos?
+    options:
+      - id: a
+        text: A class is picked for each object rather than for the whole bucket
+        correct: true
+        why: Because the class is set per object, the idle invoices can sit in a cheaper class beside the busy photos.
+      - id: b
+        text: Each class sets its own mix of speed, resiliency and price
+        correct: true
+        why: Classes weigh speed against price differently, so the invoices can trade speed they never use for a lower rate.
+      - id: c
+        text: The bucket's Region affects the price of the objects stored in it
+        why: Region does affect price, but photos and invoices in one bucket share a Region, so it cannot set them apart.
+      - id: d
+        text: S3 Standard is the class used when an upload names no other class
+        why: The default only says what happens when no class is chosen, and it would price both kinds the same.
+      - id: e
+        text: S3 Outposts brings S3 storage to an on-premises Outposts setup
+        why: Outposts is about keeping data on premises, which does nothing to lower the invoices' storage price.
+    evidence:
+      - One bucket can mix classes, chosen per object by access pattern.
+      - Each class balances performance, access, resiliency and cost, and some target data residency, unpredictable access or archiving.
+      - The bucket's Region affects price too, though the class is a primary driver.
+    takeaway: Storage classes are chosen per object by access pattern, so one bucket can mix classes that balance speed and cost differently.
+    history: []
+    verified:
+      keyHash: 21aa937d4e3e
+      fullHash: 4e27122bdc7c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-341rna
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-standard
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 1
+    stem: >-
+      An object is uploaded to Amazon S3 without naming any storage class.
+      Which class does it use?
+    options:
+      - id: a
+        text: S3 Standard
+        correct: true
+        why: S3 Standard is the general-purpose default that applies when an upload names no class.
+      - id: b
+        text: S3 Intelligent-Tiering
+        why: Intelligent-Tiering must be chosen on purpose for data whose access pattern is unknown.
+      - id: c
+        text: S3 Standard-IA
+        why: Standard-IA is picked for data read less often and is not applied by default.
+      - id: d
+        text: S3 Glacier Instant Retrieval
+        why: This archive class is chosen for rarely read data and is never the default for uploads.
+    evidence:
+      - "S3 Standard: the general-purpose default when no class is named, with fast retrieval at an affordable price, for apps, games, dynamic websites, content distribution and big data analytics."
+    takeaway: S3 Standard is the default storage class, used whenever an upload does not name another class.
+    history: []
+    verified:
+      keyHash: acf829cfeea5
+      fullHash: 104bad60d5c1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-63f9nw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-standard
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe's ordering website loads its product images from Amazon S3 thousands of times every day, and each page must show them quickly.
+      Which storage class fits these images best?
+    options:
+      - id: a
+        text: S3 Standard
+        correct: true
+        why: Standard gives fast retrieval at an affordable price for busy content such as a dynamic website.
+      - id: b
+        text: S3 Standard-IA
+        why: Standard-IA charges per GiB retrieved, which adds up quickly for images read thousands of times a day.
+      - id: c
+        text: S3 Glacier Flexible Retrieval
+        why: This archive class takes minutes to hours to return data, far too slow for a live web page.
+      - id: d
+        text: S3 Glacier Deep Archive
+        why: Deep Archive is the slowest class to return data, which no page visitor would wait for.
+    evidence:
+      - "S3 Standard: the general-purpose default when no class is named, with fast retrieval at an affordable price, for apps, games, dynamic websites, content distribution and big data analytics."
+      - "S3 Standard-IA: data used less often but needed fast, with S3 Standard's durability, throughput and latency, cheaper storage and a per-GiB retrieval fee, for backups and disaster recovery files."
+    takeaway: Data read often and needed fast belongs in S3 Standard, since infrequent-access classes add retrieval fees on every read.
+    history: []
+    verified:
+      keyHash: 9d3e5f861e0c
+      fullHash: d377d71d6193
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m0bknd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-intelligent-tiering
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe is building a data lake of sales records, and nobody can yet say which files analysts will read often or for how long.
+      The team wants storage costs to follow actual use without writing any rules.
+      Which storage class fits?
+    options:
+      - id: a
+        text: S3 Intelligent-Tiering
+        correct: true
+        why: Intelligent-Tiering tracks each object's use and moves it to the cheapest suitable tier with no rules to manage.
+      - id: b
+        text: S3 Standard
+        why: Standard keeps every object at its frequent-access rate, even files that analysts stop reading.
+      - id: c
+        text: S3 Standard-IA
+        why: Standard-IA adds a retrieval fee on each read, which hurts if some files turn out to be busy.
+      - id: d
+        text: S3 Glacier Instant Retrieval
+        why: This class suits rarely read archives, not a dataset whose usage is still unknown and shifting.
+    evidence:
+      - "S3 Intelligent-Tiering: for unknown or shifting access, S3 tracks use and moves each object to its cheapest suitable tier, with no lifecycle rules to manage."
+      - Good for data lakes and large datasets whose usage changes.
+    takeaway: When access patterns are unknown or changing, S3 Intelligent-Tiering moves objects between tiers by itself.
+    history: []
+    verified:
+      keyHash: 311b8fa5a8dd
+      fullHash: fdd48c482903
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-f3970d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-intelligent-tiering
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 1
+    stem: >-
+      How does S3 Intelligent-Tiering decide which access tier each object sits in?
+    options:
+      - id: a
+        text: S3 watches how each object is used and moves it to its cheapest suitable tier
+        correct: true
+        why: Intelligent-Tiering monitors use per object and shifts it between tiers without any rules from you.
+      - id: b
+        text: You write lifecycle rules that move objects to new tiers once they reach a set age
+        why: Age-based rules are S3 Lifecycle, which Intelligent-Tiering removes the need to manage.
+      - id: c
+        text: You pick a tier for every object at upload time, and it stays there until you change it
+        why: A fixed tier set at upload is the opposite of the automatic moves this class makes.
+      - id: d
+        text: S3 Storage Class Analysis reviews the bucket and moves objects to new tiers each month
+        why: Storage Class Analysis only studies access patterns to suggest changes and does not move objects.
+    evidence:
+      - "S3 Intelligent-Tiering: for unknown or shifting access, S3 tracks use and moves each object to its cheapest suitable tier, with no lifecycle rules to manage."
+    takeaway: S3 Intelligent-Tiering moves each object between its tiers based on observed use, with no lifecycle rules needed.
+    history: []
+    verified:
+      keyHash: 90c4d241e93f
+      fullHash: 25728aae211d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kk8t7w
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-standard-ia
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe keeps disaster recovery files in Amazon S3 that are opened only during an outage, but then they must load right away.
+      The files must also stay protected across several Availability Zones, and the cafe wants the lowest storage rate that meets both needs.
+      Which storage class fits?
+    options:
+      - id: a
+        text: S3 Standard-IA
+        correct: true
+        why: Standard-IA stores rarely used data more cheaply while still returning it as fast as S3 Standard.
+      - id: b
+        text: S3 Standard
+        why: Standard charges its higher storage rate for files that sit untouched almost all the time.
+      - id: c
+        text: S3 Glacier Flexible Retrieval
+        why: Retrieval takes minutes to hours, too slow when the files are needed the moment an outage starts.
+      - id: d
+        text: S3 One Zone-IA
+        why: One Zone-IA keeps data in a single Availability Zone, so it does not meet the multi-zone need.
+    evidence:
+      - "S3 Standard-IA: data used less often but needed fast, with S3 Standard's durability, throughput and latency, cheaper storage and a per-GiB retrieval fee, for backups and disaster recovery files."
+      - "S3 One Zone-IA: one Availability Zone instead of Standard-IA's three, so cheaper, for secondary backups or easily recreated data without high availability needs."
+    takeaway: Rarely used data that must return fast and stay multi-zone, such as recovery files, fits S3 Standard-IA.
+    history: []
+    verified:
+      keyHash: ffeae17f86d3
+      fullHash: 2e5b205d65c3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-cby8rs
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-standard-ia
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 1
+    stem: >-
+      In exchange for a lower storage price than S3 Standard, what does S3 Standard-IA charge for?
+    options:
+      - id: a
+        text: Each GiB of data that is retrieved
+        correct: true
+        why: Standard-IA adds a per-GiB retrieval fee, which is the tradeoff for its cheaper storage.
+      - id: b
+        text: Keeping the data in more than one Availability Zone
+        why: Standard-IA does not bill a separate fee for zone coverage, so this is not its tradeoff.
+      - id: c
+        text: Faster responses than S3 Standard can give
+        why: Standard-IA matches the latency and throughput of S3 Standard rather than beating it.
+      - id: d
+        text: Each object moved between tiers automatically
+        why: Automatic moves between tiers describe Intelligent-Tiering, not Standard-IA.
+    evidence:
+      - "S3 Standard-IA: data used less often but needed fast, with S3 Standard's durability, throughput and latency, cheaper storage and a per-GiB retrieval fee, for backups and disaster recovery files."
+    takeaway: S3 Standard-IA trades cheaper storage for a per-GiB retrieval fee while keeping S3 Standard's speed.
+    history: []
+    verified:
+      keyHash: 0a518d38cd16
+      fullHash: 103434b12634
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ej43a3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-one-zone-ia
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe stores thumbnail images in Amazon S3 that it can rebuild from the original photos at any time.
+      The thumbnails are read rarely, should load quickly when they are, and high availability is unimportant for them.
+      Which storage class keeps them most cheaply?
+    options:
+      - id: a
+        text: S3 One Zone-IA
+        correct: true
+        why: One Zone-IA uses a single Availability Zone, so it costs less and suits easily recreated, rarely read data.
+      - id: b
+        text: S3 Standard-IA
+        why: Standard-IA pays for three Availability Zones of resilience that easily rebuilt thumbnails do not need.
+      - id: c
+        text: S3 Standard
+        why: Standard charges a frequent-access storage rate for images that are read only rarely.
+      - id: d
+        text: S3 Express One Zone
+        why: Express One Zone targets the hottest, latency-sensitive data, not images that are rarely opened.
+    evidence:
+      - "S3 One Zone-IA: one Availability Zone instead of Standard-IA's three, so cheaper, for secondary backups or easily recreated data without high availability needs."
+    takeaway: Rarely read data that is easy to recreate and needs no high availability fits the cheaper S3 One Zone-IA.
+    history: []
+    verified:
+      keyHash: 3de3e53cd6c2
+      fullHash: 7fabd05eef24
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-aek2xv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-one-zone-ia
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe keeps a second copy of its backups in Amazon S3.
+      It rarely reads the copy and could easily recreate it, so a single Availability Zone is acceptable for it.
+      It still wants the copy back fast when needed.
+      Which storage class fits at the lowest cost?
+    options:
+      - id: a
+        text: S3 One Zone-IA
+        correct: true
+        why: It gives up multi-zone resilience for a lower price than Standard-IA, which suits a fast-to-read copy that can be rebuilt.
+      - id: b
+        text: S3 Express One Zone
+        why: Express One Zone targets the hottest, latency-sensitive data, not a rarely read backup copy kept cheaply.
+      - id: c
+        text: S3 Glacier Flexible Retrieval
+        why: It takes minutes to hours to return data, which misses the need to get the copy back fast.
+      - id: d
+        text: S3 Standard-IA
+        why: Standard-IA spreads data over three zones and costs more, paying for resilience this easily recreated copy does not need.
+    evidence:
+
+      - "S3 One Zone-IA: one Availability Zone instead of Standard-IA's three, so cheaper, for secondary backups or easily recreated data without high availability needs."
+      - "S3 Express One Zone: a single-zone class for the hottest, latency-sensitive data, answering consistently in single-digit milliseconds."
+    takeaway: S3 One Zone-IA is Standard-IA in a single Availability Zone, cheaper but less resilient.
+    history: []
+    verified:
+      keyHash: 0bad950b0a13
+      fullHash: 24cfa98d1238
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rdg6r2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-express-one-zone
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe runs a recommendation job that reads the same hot dataset from Amazon S3 constantly.
+      The job needs consistent single-digit millisecond responses, and the team accepts keeping the data in one Availability Zone.
+      Which storage class fits?
+    options:
+      - id: a
+        text: S3 Express One Zone
+        correct: true
+        why: Express One Zone serves the hottest, latency-sensitive data with consistent single-digit millisecond responses.
+      - id: b
+        text: S3 Standard
+        why: Standard is fast and general purpose, but Express One Zone is the class built for this level of speed.
+      - id: c
+        text: S3 One Zone-IA
+        why: One Zone-IA also uses one zone, but it is priced for rarely read data and adds retrieval fees.
+      - id: d
+        text: S3 Intelligent-Tiering
+        why: Intelligent-Tiering saves money on shifting access, not on serving constantly hot data at top speed.
+    evidence:
+      - "S3 Express One Zone: a single-zone class for the hottest, latency-sensitive data, answering consistently in single-digit milliseconds."
+    takeaway: The hottest, latency-sensitive data that can live in one zone fits S3 Express One Zone.
+    history: []
+    verified:
+      keyHash: 8a0c913f5566
+      fullHash: 8dbad0621258
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dpajrh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-express-one-zone
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe moves its busiest order-lookup data to the S3 class built for the hottest, latency-sensitive data, which answers in single-digit milliseconds.
+      What risk does the cafe accept by choosing that class?
+    options:
+      - id: a
+        text: Losing data if the one Availability Zone holding it is damaged
+        correct: true
+        why: This speed class keeps data in a single zone, so damage to that zone can lose the order-lookup data.
+      - id: b
+        text: Waiting many hours by default for each retrieval to finish
+        why: Hours-long default retrieval belongs to S3 Glacier Deep Archive, not to a class built for speed.
+      - id: c
+        text: Paying for a long minimum storage duration on every object
+        why: A long minimum duration is tied to archive classes such as S3 Glacier Deep Archive, not this one.
+      - id: d
+        text: Having idle objects moved into archive tiers without notice
+        why: Automatic moves between tiers belong to S3 Intelligent-Tiering, not to this speed class.
+    evidence:
+      - Both one-zone classes cut cost or add speed but risk data loss if that zone is damaged.
+      - "S3 Express One Zone: a single-zone class for the hottest, latency-sensitive data, answering consistently in single-digit milliseconds."
+    takeaway: S3 Express One Zone buys speed with a single zone, so damage to that zone can mean data loss.
+    history: []
+    verified:
+      keyHash: 2cde313fd210
+      fullHash: 59d3f17df1da
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-j4kg28
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: s3-glacier-storage-classes
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 1
+    stem: >-
+      Match each S3 Glacier storage class to how quickly it returns archived data.
+    pairs:
+      - left: S3 Glacier Instant Retrieval
+        right: Within milliseconds
+        why: Instant Retrieval returns rarely read archives in milliseconds, as fast as Standard-IA.
+      - left: S3 Glacier Flexible Retrieval
+        right: Within minutes to hours
+        why: Flexible Retrieval ranges from expedited reads in minutes to free bulk reads in hours.
+      - left: S3 Glacier Deep Archive
+        right: In about 12 hours by default
+        why: Deep Archive is the cheapest class and returns data in about 12 hours by default.
+    evidence:
+      - "Glacier classes are for archives: Instant Retrieval in milliseconds, Flexible Retrieval in minutes to hours, Deep Archive in about 12 hours at the lowest price."
+    takeaway: The three Glacier classes trade retrieval speed for price, from milliseconds to minutes or hours to about 12 hours.
+    history: []
+    verified:
+      keyHash: e33a1b86686a
+      fullHash: 00a728c151ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x8g2j3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-glacier-storage-classes
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      Regulators require the cafe to keep its yearly tax records for 7-10 years, and it expects to open them perhaps once a year.
+      Waiting several hours for a retrieval is fine.
+      Which storage class keeps these records at the lowest cost?
+    options:
+      - id: a
+        text: S3 Glacier Deep Archive
+        correct: true
+        why: Deep Archive is the lowest-cost class, built for long-term compliance archives opened about once a year.
+      - id: b
+        text: S3 Standard-IA
+        why: Standard-IA pays for fast access the records never need, so it costs more to hold them for years.
+      - id: c
+        text: S3 Intelligent-Tiering
+        why: Intelligent-Tiering suits unknown access, but this access pattern is already known to be very rare.
+      - id: d
+        text: S3 Glacier Instant Retrieval
+        why: Instant Retrieval pays for millisecond reads, which records that can wait hours do not need.
+    evidence:
+      - "S3 Glacier Deep Archive: the lowest-cost class, for data touched perhaps once or twice a year, with a default 12-hour retrieval."
+      - Meant for long-term retention and digital preservation, such as compliance archives that finance, healthcare or government keep 7-10 years or more.
+    takeaway: Long-term compliance archives that can wait hours to retrieve fit S3 Glacier Deep Archive, the cheapest class.
+    history: []
+    verified:
+      keyHash: 160f25b92233
+      fullHash: 161ed5c08bfd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-t2w4yb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-lifecycle
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's daily order logs in Amazon S3 are read often for a week, rarely after a month, and can be deleted once nobody needs them.
+      Which feature moves and then removes the logs on that schedule with no manual work?
+    options:
+      - id: a
+        text: An S3 Lifecycle configuration
+        correct: true
+        why: Lifecycle transition actions move the logs to cheaper classes as they age, and an expiration action deletes them.
+      - id: b
+        text: S3 Versioning on the log bucket
+        why: Versioning keeps earlier copies of objects, which adds storage rather than moving or deleting logs.
+      - id: c
+        text: S3 Storage Class Analysis reports
+        why: Storage Class Analysis only shows when a cheaper class pays off and does not move or delete anything.
+      - id: d
+        text: Amazon Data Lifecycle Manager policies
+        why: Data Lifecycle Manager handles EBS snapshots and AMIs, not objects stored in S3 buckets.
+    evidence:
+      - Lifecycle configurations automate this for an object or group of objects with two kinds of action.
+      - Typical candidates are periodic logs kept a week or a month, and documents that cool off, are archived for a set period, then deleted.
+    takeaway: S3 Lifecycle moves objects to cheaper classes and deletes them on an age-based schedule as interest fades.
+    history: []
+    verified:
+      keyHash: 1bdc9110bc08
+      fullHash: 6427b883ad8d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xfj8n4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-lifecycle
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe wants old receipts in Amazon S3 to be deleted for good once compliance no longer requires keeping them.
+      What should the cafe set up to do that?
+    options:
+      - id: a
+        text: An S3 Lifecycle expiration action
+        correct: true
+        why: An expiration action permanently deletes the receipts once compliance stops requiring them.
+      - id: b
+        text: An S3 Lifecycle transition action
+        why: A transition action moves the receipts to another storage class but keeps them stored.
+      - id: c
+        text: An S3 Versioning setting
+        why: Versioning keeps earlier copies of the receipts rather than deleting them on a schedule.
+      - id: d
+        text: An S3 Storage Class Analysis report
+        why: Storage Class Analysis studies how the receipts are accessed and never deletes any of them.
+    evidence:
+      - Expiration actions delete objects for good, such as when compliance no longer needs them.
+      - Transition actions move objects to another class at a set age, such as Standard-IA after 30 days or Glacier Deep Archive after a year.
+    takeaway: In S3 Lifecycle, transition actions move objects between classes and expiration actions delete them for good.
+    history: []
+    verified:
+      keyHash: 69256a99f00f
+      fullHash: 51577b38bdff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

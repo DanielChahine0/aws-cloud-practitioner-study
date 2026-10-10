@@ -1,0 +1,639 @@
+questions:
+  - id: q-k2rayx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-encryption
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe wants loyalty members' phone numbers scrambled so that only staff holding the right key can turn them back into readable text.
+      Which technique fits?
+    options:
+      - id: a
+        text: Hashing
+        why: A hash is one-way, so even the cafe could never turn the phone numbers back into text.
+      - id: b
+        text: Encryption
+        correct: true
+        why: Encryption locks the numbers so that only a holder of the right key can read them again.
+      - id: c
+        text: Masking
+        why: Masking hides data without any key, so there is no key for staff to unlock it with.
+      - id: d
+        text: Multi-factor authentication
+        why: MFA protects who can sign in, but it does not scramble the phone numbers themselves.
+    evidence:
+      - "Encryption is a lock: only holders of the right key can read data such as customers' phone and card details."
+      - Hashing and salting, used for stored passwords, are one-way and cannot be reversed.
+    takeaway: Encryption is reversible only with the right key, unlike one-way hashing or keyless masking.
+    history: []
+    verified:
+      keyHash: eaf7b1516d82
+      fullHash: 805c0bf024f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bn8cq7
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: data-encryption
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe wants one key to encrypt customers' card details and a different key to decrypt them.
+      Which statement fits this plan?
+    options:
+      - id: a
+        text: Separate keys can split encrypting and decrypting.
+        correct: true
+        why: Encryption can use one key for both steps or a separate key for each, so this plan works.
+      - id: b
+        text: Hashing lets the cafe read the card details back.
+        why: Hashing is one-way and cannot be reversed, so it could never give the card details back.
+      - id: c
+        text: Masking hides card details using a pair of keys.
+        why: Masking protects data without any keys, so it does not use a pair of keys.
+      - id: d
+        text: SSL/TLS keys protect card details kept in a database.
+        why: SSL/TLS encrypts a connection for data on the move, not card details stored in a database.
+    evidence:
+      - One key can lock and unlock, or separate encryption and decryption keys can split the work.
+      - Hashing and salting, used for stored passwords, are one-way and cannot be reversed.
+      - Tokenization and masking protect data without keys.
+    takeaway: Encryption can use one key to encrypt and decrypt, or separate keys for each step.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true statement; masking uses no key pair, hashing is one-way and TLS is in transit.)"
+  - id: q-1ts5ye
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: encryption-at-rest
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe stores its customer profiles in an Amazon DynamoDB table and has changed no security settings.
+      Which statement describes how the profiles sitting in that table are protected?
+    options:
+      - id: a
+        text: The profiles sit on an encrypted EBS volume.
+        why: The profiles live in a DynamoDB table, not on an EBS volume, so EBS encryption does not apply.
+      - id: b
+        text: The profiles are encrypted only while moving to an app.
+        why: DynamoDB also encrypts the table data sitting at rest, not only data on the move.
+      - id: c
+        text: The profiles are encrypted at rest with AWS KMS keys.
+        correct: true
+        why: DynamoDB encrypts all table data at rest on the server side using AWS KMS keys, with no setting to change.
+      - id: d
+        text: The profiles stay unencrypted until someone turns it on.
+        why: DynamoDB needs no setting change, because all table data is already encrypted at rest.
+    evidence:
+      - "**Amazon DynamoDB**: all table data is encrypted at rest server-side with AWS KMS keys."
+    takeaway: DynamoDB encrypts every table at rest by default, using AWS KMS keys on the server side.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only true statement, since DynamoDB encrypts all data at rest with KMS keys by default.)"
+  - id: q-v89tg9
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: encryption-at-rest
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe is listing which of its data needs protection while it sits idle in storage.
+      Which items are data at rest?
+    options:
+      - id: a
+        text: Customer records held in the cafe's database
+        correct: true
+        why: Records sitting in a database are idle, which makes them data at rest.
+      - id: b
+        text: Order records on their way from the database to the app
+        why: Records moving from a database to an app are data in transit, not at rest.
+      - id: c
+        text: An Amazon EBS snapshot of the cafe's server
+        correct: true
+        why: A stored EBS snapshot is idle data, and EBS snapshots can be encrypted at rest.
+      - id: d
+        text: A phone number passing between services for a text
+        why: A number travelling between services to send a text is moving, so it is in transit.
+      - id: e
+        text: A secret recipe file saved in an Amazon S3 bucket
+        correct: true
+        why: A file saved in an S3 bucket is stored, and S3 encrypts uploads at rest automatically.
+      - id: f
+        text: A menu page travelling to a browser over HTTPS
+        why: A page delivered to a browser over HTTPS is moving across the network, so it is in transit.
+    evidence:
+      - "**At rest**: idle data, such as records in a database."
+      - "**Amazon EBS**: volumes and snapshots, boot and data volumes alike, can be encrypted at rest."
+      - "**Amazon S3**: new buckets have encryption configured, and uploads are encrypted at rest automatically."
+    takeaway: Data at rest is idle data in storage, such as database records, EBS snapshots and S3 files.
+    history: []
+    verified:
+      keyHash: 012565e848c0
+      fullHash: 638c63574f4c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xn81x8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-kms
+    note: m09/protecting-data
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe wants to create the random digit strings that lock its stored data and decide which IAM roles may use them.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Secrets Manager
+        why: Secrets Manager stores secrets such as passwords, not the encryption keys the cafe wants to create.
+      - id: b
+        text: AWS Certificate Manager (ACM)
+        why: ACM manages SSL/TLS certificates, not general-purpose keys for stored data.
+      - id: c
+        text: AWS Key Management Service (AWS KMS)
+        correct: true
+        why: AWS KMS creates and controls cryptographic keys and sets which IAM users and roles may use them.
+      - id: d
+        text: Amazon Macie
+        why: Macie finds sensitive data in S3, but it does not create or control encryption keys.
+    evidence:
+      - "**AWS Key Management Service (AWS KMS)**: creates and controls cryptographic keys, the random digit strings that lock and unlock data."
+      - You set which IAM users and roles may manage keys and where they are used, keys never leave KMS, and a key can be disabled temporarily.
+    takeaway: To create encryption keys and control who may use them, choose AWS KMS.
+    history: []
+    verified:
+      keyHash: 7ee1e394231a
+      fullHash: 76fd9e46727b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fxzzez
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-kms
+    note: m09/protecting-data
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement is accurate about AWS KMS?
+    options:
+      - id: a
+        text: Its keys are the SSL/TLS certificates behind HTTPS.
+        why: SSL/TLS certificates are managed in ACM, while KMS handles general-purpose encryption keys.
+      - id: b
+        text: Its keys stay in it and can be disabled for a while.
+        correct: true
+        why: KMS keeps every key inside the service and lets you disable a key temporarily.
+      - id: c
+        text: Its keys are copied out to every app that uses them.
+        why: Keys never leave KMS, so they are not copied out to the apps that use them.
+      - id: d
+        text: Its keys can be managed only by the root user.
+        why: You choose which IAM users and roles may manage KMS keys, so it is not limited to the root user.
+    evidence:
+      - You set which IAM users and roles may manage keys and where they are used, keys never leave KMS, and a key can be disabled temporarily.
+      - ACM is for certificates, and AWS KMS for general-purpose encryption keys.
+    takeaway: AWS KMS keys never leave the service, and a key can be disabled temporarily.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only true KMS fact; keys never leave KMS, are not TLS certs and are not root-only.)"
+  - id: q-y8hk72
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-certificate-manager
+    note: m09/protecting-data
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe wants one place to manage the SSL/TLS proof of identity that puts HTTPS on its ordering site across its AWS services.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Key Management Service (AWS KMS)
+        why: KMS controls general-purpose encryption keys, not the certificates behind HTTPS.
+      - id: b
+        text: AWS Secrets Manager
+        why: Secrets Manager stores secrets such as passwords, not SSL/TLS certificates for sites.
+      - id: c
+        text: AWS WAF
+        why: AWS WAF filters web requests, but it does not issue or manage certificates.
+      - id: d
+        text: AWS Certificate Manager (ACM)
+        correct: true
+        why: ACM centrally manages the SSL/TLS certificates that secure HTTPS for AWS services.
+    evidence:
+      - "**AWS Certificate Manager (ACM)**: central management of SSL/TLS certificates for AWS services and connected on-premises resources."
+      - ACM is for certificates, and AWS KMS for general-purpose encryption keys.
+    takeaway: Managing SSL/TLS certificates in one place points to ACM, while KMS handles encryption keys.
+    history: []
+    verified:
+      keyHash: c4d0fc72e28d
+      fullHash: 89d5b939ad7c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0n5zwr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-certificate-manager
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's ordering site runs on AWS, while its loyalty kiosk runs on a server in the back office, and both use HTTPS.
+      Which item can ACM manage centrally for both?
+    options:
+      - id: a
+        text: General-purpose encryption keys
+        why: General-purpose keys are created and controlled in AWS KMS, not ACM.
+      - id: b
+        text: IAM users and their roles
+        why: Users and roles are managed in IAM, which ACM does not handle.
+      - id: c
+        text: SSL/TLS certificates
+        correct: true
+        why: ACM is the central place to manage SSL/TLS certificates for AWS services and connected on-premises resources.
+      - id: d
+        text: Stored database passwords
+        why: Storing and rotating database passwords is the job of AWS Secrets Manager, not ACM.
+    evidence:
+      - "**AWS Certificate Manager (ACM)**: central management of SSL/TLS certificates for AWS services and connected on-premises resources."
+    takeaway: ACM centrally manages SSL/TLS certificates for AWS services and connected on-premises resources.
+    history: []
+    verified:
+      keyHash: eeabd8e7bf8a
+      fullHash: f63212d846ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jr4y6g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-macie
+    note: m09/protecting-data
+    task: "2.4"
+    level: 2
+    stem: >-
+      The cafe has many S3 buckets and is unsure which ones hold customers' personal details.
+      Which service can find and keep watch on that data?
+    options:
+      - id: a
+        text: Amazon GuardDuty
+        why: GuardDuty looks for threats in account activity, not for personal data inside S3 objects.
+      - id: b
+        text: Amazon Macie
+        correct: true
+        why: Macie uses ML and automation to find and monitor sensitive data stored in S3.
+      - id: c
+        text: Amazon Inspector
+        why: Inspector checks workloads for software flaws, not S3 buckets for personal data.
+      - id: d
+        text: AWS Config
+        why: Config tracks resource settings over time, but it does not look inside objects for personal data.
+    evidence:
+      - "**Amazon Macie**: uses machine learning (ML) and automation to find and monitor sensitive data at rest in S3, aiding security posture reviews and compliance."
+    takeaway: To find where personal data sits across S3 buckets, use Amazon Macie.
+    history: []
+    verified:
+      keyHash: e97afa2cfa98
+      fullHash: 4dc51c5e3594
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vkj2tn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-macie
+    note: m09/protecting-data
+    task: "2.2"
+    level: 1
+    stem: >-
+      How does Amazon Macie discover sensitive data?
+    options:
+      - id: a
+        text: Machine learning on objects stored in Amazon S3
+        correct: true
+        why: Macie applies ML and automation to sensitive data sitting at rest in S3.
+      - id: b
+        text: Rule checks on settings recorded by AWS Config
+        why: Checking recorded resource settings against rules is the job of AWS Config, not Macie.
+      - id: c
+        text: Filters on web requests passing through AWS WAF
+        why: Filtering web requests is the work of AWS WAF, not how Macie finds sensitive data.
+      - id: d
+        text: Reviews of API calls logged by AWS CloudTrail
+        why: Logging and reviewing API calls is account auditing in CloudTrail, not finding sensitive data.
+    evidence:
+      - "**Amazon Macie**: uses machine learning (ML) and automation to find and monitor sensitive data at rest in S3, aiding security posture reviews and compliance."
+    takeaway: Amazon Macie uses machine learning to find and monitor sensitive data at rest in S3.
+    history: []
+    verified:
+      keyHash: 75c5eb858dd8
+      fullHash: dc9fdf56d0ef
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-97hqmn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: encryption-in-transit
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe app passes a customer's phone number between AWS services to text them that an order is ready.
+      What protects the number while it is moving?
+    options:
+      - id: a
+        text: Encryption at rest on the database table
+        why: At-rest encryption covers stored records, not a number travelling between services.
+      - id: b
+        text: A strong password on the cafe's account
+        why: Strong passwords protect access to the account, not data moving between services.
+      - id: c
+        text: An encrypted SSL/TLS connection
+        correct: true
+        why: SSL/TLS encrypts the connection, which protects the phone number while it is in transit.
+      - id: d
+        text: MFA on the staff members' sign-ins
+        why: MFA guards who can sign in, but it does not protect data that is in transit.
+    evidence:
+      - "Example: the coffee shop app sends a phone number between AWS services to text a customer that an order is ready."
+      - MFA and strong passwords protect access, not data in transit.
+      - A key alone does not secure data in transit, but SSL/TLS does.
+    takeaway: Data moving between services is protected in transit by an encrypted SSL/TLS connection.
+    history: []
+    verified:
+      keyHash: 924b2058a62e
+      fullHash: 625db2b34142
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zaap9c
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: encryption-in-transit
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe is listing where its data needs encryption in transit.
+      Which data belongs on that list?
+    options:
+      - id: a
+        text: Records sitting in an Amazon DynamoDB table
+        why: Records sitting in a table are idle data at rest, so they need encryption at rest instead.
+      - id: b
+        text: Snapshots kept from an EBS volume
+        why: Stored snapshots are idle data at rest, which EBS encryption at rest covers.
+      - id: c
+        text: Objects stored in an S3 bucket
+        why: Objects kept in a bucket are idle data at rest, which S3 encrypts at rest.
+      - id: d
+        text: Records sent from a database to an app
+        correct: true
+        why: Records moving from a database to an app are data in transit, which is what encryption in transit protects.
+    evidence:
+      - "**In transit**: moving data, such as records sent from a database to an app."
+      - "**At rest**: idle data, such as records in a database."
+    takeaway: Encryption in transit protects data on the move, such as records sent from a database to an app.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only data in motion; the other three are all data at rest.)"
+  - id: q-vg6ppm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ssl-tls-certificates
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      A customer opens the cafe's ordering site and sees a padlock beside an HTTPS address.
+      What does that signal?
+    options:
+      - id: a
+        text: The site's database is encrypted at rest.
+        why: The padlock is about the connection to the browser, not how the database stores data.
+      - id: b
+        text: The customer signed in with MFA.
+        why: MFA protects sign-in access, and the padlock appears whether or not anyone signs in.
+      - id: c
+        text: The site uses an SSL/TLS certificate.
+        correct: true
+        why: A padlock and an HTTPS address show the site uses an SSL/TLS certificate for the connection.
+      - id: d
+        text: The site's passwords are hashed and salted.
+        why: Hashing protects stored passwords one-way, and the padlock says nothing about how they are kept.
+    evidence:
+      - A browser padlock and an HTTPS address signal an SSL/TLS certificate.
+    takeaway: A browser padlock and an HTTPS address mean the site uses an SSL/TLS certificate.
+    history: []
+    verified:
+      keyHash: 5d73a68fd5e4
+      fullHash: 258bd3f4884e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-v172na
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ssl-tls-certificates
+    note: m09/protecting-data
+    task: "2.2"
+    level: 1
+    stem: >-
+      What do SSL and its successor TLS use certificates for?
+    options:
+      - id: a
+        text: To verify identity, then encrypt the connection
+        correct: true
+        why: SSL/TLS certificates prove who is on the other end, and then the connection is encrypted.
+      - id: b
+        text: To salt stored passwords, then hash them one-way
+        why: Hashing and salting stored passwords is a one-way technique that does not use certificates.
+      - id: c
+        text: To create a key, then lock idle files in storage
+        why: Files sitting idle are data at rest, while SSL/TLS protects data on the move.
+      - id: d
+        text: To scan stored objects, then flag sensitive data
+        why: Finding sensitive data in storage is a discovery task, not what certificates do.
+    evidence:
+      - SSL and its successor TLS use certificates to verify identity, then encrypt the connection.
+    takeaway: SSL/TLS certificates first verify identity and then encrypt the connection.
+    history: []
+    verified:
+      keyHash: c27b6216cac9
+      fullHash: 9b30a1b36616
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-e1h7b1
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: data-encryption
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe encrypts the card details it keeps on file for loyalty members.
+      A thief copies that stored file off a stolen office laptop.
+      What keeps the thief from reading the card details?
+    options:
+      - id: a
+        text: MFA asks for a second factor at every sign-in
+        why: The thief already holds a copy of the file, so a sign-in check never comes into play.
+      - id: b
+        text: Only holders of the right key can read the data
+        correct: true
+        why: Encryption works like a lock, so the copied details stay unreadable to anyone without the right key.
+      - id: c
+        text: Least privilege limits each user to needed access
+        why: Permissions govern signed-in users, and they do not reach a file copy that has already left the cafe.
+      - id: d
+        text: TLS scrambles data while it crosses the network
+        why: TLS protects data in motion, while this file sat at rest on the laptop when it was copied.
+    evidence:
+      - "Encryption is a lock: only holders of the right key can read data such as customers' phone and card details."
+    takeaway: Encrypted data stays unreadable to everyone except those who hold the right key.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: Option 1 repeats the stem's 'read' and is a general principle while the other options each name a mechanism, so grammar points at the key."
+  - id: q-mbppzp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: encryption-at-rest
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe keeps snapshots of its till server's EBS data volume in storage until it needs to restore one.
+      Which protection covers the snapshots while they wait there?
+    options:
+      - id: a
+        text: Encryption in transit
+        why: In-transit protection covers data moving between systems, not snapshots sitting in storage.
+      - id: b
+        text: Encryption at rest
+        correct: true
+        why: Stored snapshots are idle data, and EBS snapshots can be encrypted at rest.
+      - id: c
+        text: An SSL/TLS certificate
+        why: A certificate secures a connection while data moves, so it does nothing for stored snapshots.
+      - id: d
+        text: Multi-factor authentication
+        why: MFA guards who can sign in, but it does not encrypt the stored snapshot data.
+    evidence:
+      - "**Amazon EBS**: volumes and snapshots, boot and data volumes alike, can be encrypted at rest."
+    takeaway: Idle stored data such as EBS snapshots is protected by encryption at rest.
+    history: []
+    verified:
+      keyHash: 0e30a816be4f
+      fullHash: f8a9f4be5f62
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xsjmvk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-kms
+    note: m09/protecting-data
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe suspects a leak and wants to stop, for a while, the use of the cryptographic key that locks its order records.
+      It wants to keep the key so it can switch it back on later.
+      Which service lets it do this?
+    options:
+      - id: a
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates secrets such as passwords, not the keys that lock data.
+      - id: b
+        text: AWS Certificate Manager
+        why: Certificate Manager handles SSL/TLS certificates rather than general-purpose encryption keys.
+      - id: c
+        text: AWS KMS
+        correct: true
+        why: KMS creates and controls encryption keys, and a key in it can be disabled temporarily.
+      - id: d
+        text: Amazon Macie
+        why: Macie finds sensitive data in S3 and has no control over the keys that lock it.
+    evidence:
+      - You set which IAM users and roles may manage keys and where they are used, keys never leave KMS, and a key can be disabled temporarily.
+    takeaway: AWS KMS controls encryption keys, including disabling a key for a time without deleting it.
+    history: []
+    verified:
+      keyHash: 7ca1d4267564
+      fullHash: 5a942cdcbcfb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-n9wq3q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: encryption-in-transit
+    note: m09/protecting-data
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which term names the protection of data while it moves, such as records sent from a database to an app?
+    options:
+      - id: a
+        text: Tokenization
+        why: Tokenization swaps data for stand-ins without keys and is not specific to data on the move.
+      - id: b
+        text: Encryption at rest
+        why: At-rest protection covers idle stored data, not records on their way to an app.
+      - id: c
+        text: Hashing
+        why: Hashing is a one-way change used for stored passwords and cannot be read back by the app.
+      - id: d
+        text: Encryption in transit
+        correct: true
+        why: This is the name for protecting data while it moves between systems.
+    evidence:
+      - "**In transit**: moving data, such as records sent from a database to an app."
+    takeaway: Data moving between systems needs encryption in transit, while stored data needs encryption at rest.
+    history: []
+    verified:
+      keyHash: aad1c314145b
+      fullHash: 3966816b4b6d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

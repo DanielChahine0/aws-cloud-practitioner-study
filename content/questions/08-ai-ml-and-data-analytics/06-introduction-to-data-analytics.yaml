@@ -1,0 +1,427 @@
+questions:
+  - id: q-jvhyc4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-analytics
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 1
+    stem: >-
+      What does data analytics do with a business's raw historical data?
+    options:
+      - id: a
+        text: Turns it into insights and trends
+        correct: true
+        why: Analysts study the past records to find patterns and insights the business can act on.
+      - id: b
+        text: Trains a model to generate new content
+        why: Generating new content is the work of generative AI, not of analysing past records.
+      - id: c
+        text: Converts it to one format before loading
+        why: Reformatting before loading is the transform step of ETL, which only prepares data for analysis.
+      - id: d
+        text: Keeps it in one central store as-is
+        why: Pooling data unchanged in one place describes a data lake, which holds data rather than analysing it.
+    evidence:
+      - "Data analytics: analysts turn raw history into insights and trends."
+    takeaway: Data analytics means analysts turning past raw data into insights and trends.
+    history: []
+    verified:
+      keyHash: 3ae0606c7d35
+      fullHash: 29031ca1bdba
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pngbbd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-analytics
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe asks its bank for a loan to open a second shop.
+      The bank decides with traditional data analytics rather than an AI model, because it must later tell the owner exactly why the request was declined.
+      What makes traditional analytics the better fit here?
+    options:
+      - id: a
+        text: It writes new text and images from prompts
+        why: Creating new content from prompts is what generative AI does, and it does not explain a loan outcome.
+      - id: b
+        text: Its reasoning is easy for people to follow
+        correct: true
+        why: Analysts can trace and state how past records led to the result, which a declined loan must be explained by.
+      - id: c
+        text: It finds patterns in huge unlabeled datasets
+        why: Mining huge unlabeled datasets is a machine learning strength, and it does not make a decision easy to explain.
+      - id: d
+        text: It works with no clean or prepared data
+        why: Analytics and AI/ML both rely on plenty of clean, easy-to-reach data, so this is not an advantage here.
+    evidence:
+      - "Explaining a loan decision: traditional analytics."
+      - "Still vital: explaining loan decisions, hypothesis tests on clinical trials, insurance risk models regulators can understand and approve, and cheaper, more efficient work on small datasets."
+    takeaway: When people must follow and explain a decision, such as a declined loan, traditional analytics still beats AI/ML.
+    history: []
+    verified:
+      keyHash: 5b6113213b0c
+      fullHash: 786746f6aeb2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mw658d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-lakes
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's till sales, app logins and website browsing records sit in separate systems and in different formats.
+      The owner wants all of it pooled in one central place.
+      What should the cafe set up?
+    options:
+      - id: a
+        text: A data lake
+        correct: true
+        why: A data lake gathers data from many systems and formats into one central store, which is the goal here.
+      - id: b
+        text: An ETL job
+        why: An ETL job reshapes and moves data, but it is not itself the central place that holds everything.
+      - id: c
+        text: A zero-ETL setup
+        why: Zero-ETL uses data where it already sits, while this data is still scattered across systems.
+      - id: d
+        text: A BI dashboard
+        why: A dashboard charts data for people to read, and it does not pool raw data from many systems.
+    evidence:
+      - "Purchases, logins and browsing leave data scattered across systems and formats, and a data lake, pictured as a huge reservoir, gathers it all."
+    takeaway: Data scattered across many systems and formats is pooled in a data lake.
+    history: []
+    verified:
+      keyHash: ffc8c37954c7
+      fullHash: 7e5789df9f4b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xzb5ex
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-lakes
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which description fits a data lake?
+    options:
+      - id: a
+        text: A central store that pools data from many systems
+        correct: true
+        why: A data lake brings a business's scattered data together in one central store.
+      - id: b
+        text: An automated line that ingests, processes and serves data
+        why: An automated ingest, process and serve line is a data pipeline, which moves data rather than holding it.
+      - id: c
+        text: A dashboard that charts sales trends for managers
+        why: A sales dashboard is a business intelligence view on top of data, not the store that holds it.
+      - id: d
+        text: A step that reformats data before it is loaded
+        why: Reformatting before loading is the transform step of ETL, not a place where data is kept.
+    evidence:
+      - "Purchases, logins and browsing leave data scattered across systems and formats, and a data lake, pictured as a huge reservoir, gathers it all."
+      - A data lake centralizes scattered data.
+    takeaway: A data lake is one central store that gathers data from all of a business's systems.
+    history: []
+    verified:
+      keyHash: 1c47d126a5fd
+      fullHash: 656034fab6c4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x772cs
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: etl
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 1
+    stem: >-
+      In an ETL process, when is the data transformed?
+    options:
+      - id: a
+        text: After it is loaded
+        why: Transforming after loading is ELT, which reverses the order of the last two steps.
+      - id: b
+        text: Before it is loaded
+        correct: true
+        why: ETL extracts the data, transforms it into one format and only then loads it into the warehouse.
+      - id: c
+        text: Never; it is used as-is
+        why: Using data with no transform step is zero-ETL, not ETL.
+      - id: d
+        text: Only when a report runs
+        why: ETL reshapes the data during the process itself, not each time someone opens a report.
+    evidence:
+      - "ETL: extract and store, transform to one format, load into a warehouse or analytics platform."
+    takeaway: ETL transforms data into one format before it is loaded into the warehouse.
+    history: []
+    verified:
+      keyHash: d92ee228eb03
+      fullHash: eceb926f1251
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-swcapk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: etl
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's till exports CSV files and its app writes JSON, but its analytics platform reads only one format.
+      The data must already be in that format when it arrives on the platform.
+      Which order of steps fits?
+    options:
+      - id: a
+        text: Convert the data, then load it
+        correct: true
+        why: Converting first and loading second is ETL, so the data reaches the platform already in its one format.
+      - id: b
+        text: Load the data, then convert it
+        why: Loading first and converting later is ELT, so the data would reach the platform in its mixed formats.
+      - id: c
+        text: Load the data and never convert it
+        why: Skipping the conversion leaves the CSV and JSON mix in place, which the platform cannot read.
+      - id: d
+        text: Leave the data where it is now
+        why: Using data in place only works when it is already usable, and this data is in the wrong formats.
+    evidence:
+      - "ETL: extract and store, transform to one format, load into a warehouse or analytics platform."
+      - ETL transforms before loading, ELT after, and zero-ETL not at all.
+    takeaway: When data must reach the platform already in one format, transform first with ETL.
+    history: []
+    verified:
+      keyHash: 9ec0f86f4a09
+      fullHash: 451b4b1deb89
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-y66658
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elt
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants its order records in the warehouse right away, before its analysts have decided which views they need.
+      Each view will need the records shaped differently.
+      Which approach fits?
+    options:
+      - id: a
+        text: ETL
+        why: ETL reshapes the records before loading, which means fixing one shape before the analysts know their views.
+      - id: b
+        text: Zero-ETL
+        why: Zero-ETL never reshapes the data, but each view here needs the records shaped differently.
+      - id: c
+        text: ELT
+        correct: true
+        why: ELT loads the records first and transforms them later, as the analysts settle on each view.
+      - id: d
+        text: Reverse ETL
+        why: Reverse ETL pushes warehouse data back out to business apps, and it does not load the new order records in.
+    evidence:
+      - "ELT: load first, transform as needed; needs and infrastructure decide."
+      - ETL transforms before loading, ELT after, and zero-ETL not at all.
+    takeaway: Loading raw data first and reshaping it later on demand is ELT.
+    history: []
+    verified:
+      keyHash: 27adf31cbcbe
+      fullHash: 8cbcf46e6464
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jqjpjv
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: elt
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 1
+    stem: >-
+      A team must choose between ELT and ETL for a new pipeline.
+      What should decide that choice?
+    options:
+      - id: a
+        text: Whether the data is already usable in place
+        why: Data that is already usable in place points to zero-ETL, not to a choice between ELT and ETL.
+      - id: b
+        text: Whether the data sits in an S3 data lake
+        why: A data lake can feed either approach, so where the data is stored does not settle the order of steps.
+      - id: c
+        text: What its needs and infrastructure call for
+        correct: true
+        why: Whether to load first and transform later comes down to the team's needs and its infrastructure.
+      - id: d
+        text: Whether a pipeline automates each run
+        why: A pipeline makes either approach repeat reliably, so automation does not decide between them.
+    evidence:
+      - "ELT: load first, transform as needed; needs and infrastructure decide."
+    takeaway: The choice of ELT over ETL comes down to the team's needs and infrastructure.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only vague, hedged 'what its needs call for' answer against three specific conditions.)"
+  - id: q-z4gbe2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: zero-etl
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's sales records are already in a format its analytics tool reads, and they already sit where the tool reads from.
+      What should the cafe do with the records?
+    options:
+      - id: a
+        text: Reshape the records, then load them
+        why: Reshaping and then loading is ETL, which adds needless work for records that are already usable and in place.
+      - id: b
+        text: Load the records, then reshape them
+        why: Loading and later reshaping is ELT, though nothing here needs moving or reshaping.
+      - id: c
+        text: Copy the records into a data lake
+        why: A copy in a new central store adds work, since the tool can already read the records where they are.
+      - id: d
+        text: Use the records in place, as-is
+        correct: true
+        why: This is zero-ETL, which uses data as-is when it is already usable and in place, like these records.
+    evidence:
+      - "Zero-ETL: skip it when data is already usable and in place."
+    takeaway: When data is already usable and in place, zero-ETL skips the transform and load work.
+    history: []
+    verified:
+      keyHash: 1e7c2551a531
+      fullHash: 2ab0127f31fa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dn1rh9
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: zero-etl
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which conditions make zero-ETL a fit?
+    options:
+      - id: a
+        text: The data is usable without any reshaping
+        correct: true
+        why: Zero-ETL skips the transform step, which works only when the data needs no reshaping.
+      - id: b
+        text: The data gets reshaped once it has loaded
+        why: Reshaping data after loading is ELT, so the transform step is still there rather than skipped.
+      - id: c
+        text: The data already sits where the tool reads it
+        correct: true
+        why: Zero-ETL skips moving the data, which works only when it is already in place for the tool.
+      - id: d
+        text: The data is reshaped to one format first
+        why: Reshaping data to one format before loading is ETL, so the transform step is still there.
+      - id: e
+        text: A pipeline copies the data over to the tool
+        why: Copying data over to the tool means it was not already in place, which zero-ETL relies on.
+    evidence:
+      - "Zero-ETL: skip it when data is already usable and in place."
+    takeaway: Zero-ETL fits only when data is both already usable and already in place.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 both describe data needing no work, a matched pair against 2, 4 and 5 which all describe ETL steps.)"
+  - id: q-wd9xep
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elt
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's pipeline copies raw till records straight into its warehouse.
+      Analysts reshape the records there later, only when a report calls for it.
+      Which approach is the cafe using?
+    options:
+      - id: a
+        text: ETL
+        why: ETL reshapes the records into one format before they reach the warehouse, not afterward.
+      - id: b
+        text: Zero-ETL
+        why: Zero-ETL uses data as-is with no reshaping, but these records are reshaped later.
+      - id: c
+        text: ELT
+        correct: true
+        why: Loading raw records first and transforming them in the warehouse as needed is ELT.
+      - id: d
+        text: Streaming ETL
+        why: Streaming ETL still reshapes records in flight before they land, but these records land raw and are reshaped later.
+    evidence:
+      - "ELT: load first, transform as needed; needs and infrastructure decide."
+    takeaway: When raw data is loaded first and transformed later as needed, the approach is ELT.
+    history: []
+    verified:
+      keyHash: ed5c1e9c4f94
+      fullHash: fb8153d6594c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vqgkas
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: zero-etl
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 1
+    stem: >-
+      The cafe's reporting tool will use a dataset through zero-ETL.
+      How is that data prepared first?
+    options:
+      - id: a
+        text: It is converted to one format each night
+        why: A nightly format conversion is a transform step, which zero-ETL leaves out.
+      - id: b
+        text: It is reshaped, then moved into a store
+        why: Reshaping and then loading is ETL, which zero-ETL skips for data that is already usable.
+      - id: c
+        text: It is left just as it already is
+        correct: true
+        why: Zero-ETL uses data that is already usable and in place, so nothing is reshaped or moved first.
+      - id: d
+        text: It is moved into a store, then reshaped
+        why: Loading and then transforming is ELT, which still reshapes the data that zero-ETL leaves alone.
+    evidence:
+      - "**Zero-ETL**: Using already-usable data as-is."
+    takeaway: Zero-ETL means the data is already usable where it sits, so the tool analyzes it with no transform or load.
+    history: []
+    verified:
+      keyHash: 6f06d89d0375
+      fullHash: 30de65d78c09
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

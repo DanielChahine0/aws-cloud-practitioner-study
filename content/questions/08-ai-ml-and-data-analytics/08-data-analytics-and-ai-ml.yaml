@@ -1,0 +1,216 @@
+questions:
+  - id: q-cypn6t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-pipelines
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's app keeps its order history in Amazon DynamoDB and suggests pastries from a model that needs retraining on fresh orders.
+      Its analysts also want to query that same order data.
+      Which setup keeps both groups supplied with fresh orders, hands-off?
+    options:
+      - id: a
+        text: Point Athena and SageMaker AI at the DynamoDB table
+        why: DynamoDB is fast for app reads and writes, but scanning all of it for training is impractical.
+      - id: b
+        text: Export the orders to S3 by hand when a group asks
+        why: Manual exports are neither hands-off nor repeatable, so the model and analysts wait on someone each time.
+      - id: c
+        text: Run a scheduled pipeline that fills a second DynamoDB table
+        why: A second DynamoDB table has the same problem, since scanning all of it for training is still impractical.
+      - id: d
+        text: Run a scheduled pipeline that fills an S3 data lake
+        correct: true
+        why: One scheduled pipeline into the S3 data lake feeds the model's retraining and the analysts' queries from the same data.
+    evidence:
+      - Customer history sits in Amazon DynamoDB, great for fast reads and writes but impractical to scan in full for training, so the data must move to a data lake.
+      - One scheduled pipeline feeds both Athena analysis and SageMaker AI training from the same S3 data.
+    takeaway: Retraining and analysis on the same data are best served by one scheduled pipeline into a shared S3 data lake.
+    history: []
+    verified:
+      keyHash: 76f3fc8c9f42
+      fullHash: a5a7c9c54f45
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7hpd9n
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: data-pipelines
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 1
+    stem: >-
+      The cafe's ordering app keeps customer history and suggests pastries from a recommendation model.
+      An automated pipeline moves that history so analysts can query it and the model can be retrained.
+      Match each stage of the pipeline to the AWS service that handles it.
+    pairs:
+      - left: Hold the app's customer history for fast reads and writes
+        right: Amazon DynamoDB
+        why: DynamoDB is the app's store, quick for single reads and writes but poor for full training scans.
+      - left: Aggregate incoming changes and deliver them onward
+        right: Amazon Data Firehose
+        why: Firehose gathers the streamed changes in near real time and delivers them to the data lake.
+      - left: Keep all analytics and ML data in one data lake
+        right: Amazon S3
+        why: The S3 data lake is the shared home that many consumers read from.
+      - left: Retrain the recommendation model on the lake's data
+        right: Amazon SageMaker AI
+        why: SageMaker AI pulls the S3 data so ML engineers can retrain the model.
+    evidence:
+      - "**2 Store app data**: DynamoDB keeps the customer history."
+      - "**5 Deliver data**: Firehose writes it to the S3 data lake, which holds all the company's ML and analytics data for many consumers."
+      - "**8 Train model**: Amazon SageMaker AI pulls that same S3 data so ML engineers can retrain the recommendation model."
+    takeaway: A pipeline moves data from the app store through ingestion into an S3 lake that both analytics and model training read.
+    history: []
+    verified:
+      keyHash: debafd7c4d98
+      fullHash: accd8105af6e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ahb2x6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-glue-data-catalog
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 1
+    stem: >-
+      In a data pipeline that ends in an Amazon S3 data lake, what job does an AWS Glue Data Catalog table do?
+    options:
+      - id: a
+        text: It gathers streamed changes and delivers them to S3
+        why: Gathering and delivering streamed changes is Amazon Data Firehose's step, not the catalog table's.
+      - id: b
+        text: It converts incoming JSON records into .csv files
+        why: Reshaping records in flight is done by an AWS Lambda function that Firehose invokes.
+      - id: c
+        text: It notes the data's schema and its place in S3
+        correct: true
+        why: A catalog table records the structure of the data and where it sits, so queries can find it.
+      - id: d
+        text: It pulls the lake's data to retrain a model
+        why: Pulling the lake's data for retraining is Amazon SageMaker AI's step, not the catalog table's.
+    evidence:
+      - "**6 Catalog data**: an AWS Glue Data Catalog table notes the data's schema and where it sits in S3, so ad hoc queries can find it."
+    takeaway: A Glue Data Catalog table holds a dataset's schema and S3 location so query tools can find and read it.
+    history: []
+    verified:
+      keyHash: 475427981cf1
+      fullHash: f895ca759817
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-749yxz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-glue-data-catalog
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's sales records now land in an S3 data lake as .csv files.
+      Its analysts want to run ad hoc SQL queries, but the query tool cannot tell how the files are laid out.
+      What should the cafe add to the pipeline?
+    options:
+      - id: a
+        text: An Amazon Kinesis Data Streams stream
+        why: A stream carries changes into the pipeline but does not describe the layout of files already in S3.
+      - id: b
+        text: An AWS Glue Data Catalog table
+        correct: true
+        why: A catalog table records the files' schema and S3 location, which the query tool reads to see the layout.
+      - id: c
+        text: An Amazon Data Firehose stream
+        why: Firehose delivers records to S3 but leaves no description of their structure for queries.
+      - id: d
+        text: An AWS Lambda function
+        why: A function can reshape records in flight, yet it does not tell later queries how the data is laid out.
+    evidence:
+      - "**6 Catalog data**: an AWS Glue Data Catalog table notes the data's schema and where it sits in S3, so ad hoc queries can find it."
+      - "**7 Perform data analytics**: data scientists query S3 in place with standard SQL in Amazon Athena, which reads the catalog table to recognize the structure."
+    takeaway: Ad hoc queries on an S3 data lake rely on a Glue Data Catalog table to learn the data's schema and location.
+    history: []
+    verified:
+      keyHash: 0d0ad0468de4
+      fullHash: a0eaa6da63ab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8snpzv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-athena
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's analysts want to ask questions of the order files in its S3 data lake using standard SQL.
+      They want to query the files right where they sit, without setting up or running a data warehouse.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Redshift
+        why: Redshift is a data warehouse the cafe would have to set up and run, which the analysts want to avoid.
+      - id: b
+        text: Amazon EMR
+        why: EMR runs big data processing clusters rather than serving quick SQL queries on files in place.
+      - id: c
+        text: Amazon Athena
+        correct: true
+        why: Athena runs standard SQL directly against the data where it sits in S3, with nothing to load first.
+      - id: d
+        text: Amazon RDS
+        why: RDS hosts a relational database that would need the order data loaded into it before any query.
+    evidence:
+      - "**7 Perform data analytics**: data scientists query S3 in place with standard SQL in Amazon Athena, which reads the catalog table to recognize the structure."
+    takeaway: To run standard SQL on data in S3 without loading it anywhere, use Amazon Athena.
+    history: []
+    verified:
+      keyHash: cf782d7068d9
+      fullHash: 84e487385b8e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6hrb51
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-athena
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 1
+    stem: >-
+      How does Amazon Athena learn the structure of the data it queries in an S3 data lake?
+    options:
+      - id: a
+        text: It reads an AWS Glue Data Catalog table
+        correct: true
+        why: Athena looks up the catalog table, which holds the data's schema and S3 location.
+      - id: b
+        text: It runs standard SQL against the files in S3
+        why: Running SQL is what Athena does with the data, but it says nothing about how it learns the layout.
+      - id: c
+        text: It queries the data without loading it first
+        why: Querying in place is true of Athena, yet it does not explain where the structure comes from.
+      - id: d
+        text: It queries the same data SageMaker AI trains on
+        why: Sharing the S3 data with SageMaker AI is true, but SageMaker AI does not describe its structure.
+    evidence:
+      - "**7 Perform data analytics**: data scientists query S3 in place with standard SQL in Amazon Athena, which reads the catalog table to recognize the structure."
+    takeaway: Athena reads a Glue Data Catalog table to recognize the schema of the S3 data it queries.
+    history: []
+    verified:
+      keyHash: 206578488a4a
+      fullHash: 0cc499738a46
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

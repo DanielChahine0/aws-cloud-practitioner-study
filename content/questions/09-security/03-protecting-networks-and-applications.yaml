@@ -1,0 +1,545 @@
+questions:
+  - id: q-9v0w33
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: ddos-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 1
+    stem: >-
+      What sets a distributed denial of service (DDoS) attack apart from a plain denial of service (DoS) attack?
+    options:
+      - id: a
+        text: It uses one machine to flood the app.
+        why: A flood from a single machine is a plain DoS attack, which is what a DDoS goes beyond.
+      - id: b
+        text: It uses many infected machines at once.
+        correct: true
+        why: A DDoS spreads the flood across many infected machines whose owners do not know they take part.
+      - id: c
+        text: It floods the app until customers get no answer.
+        why: Starving real customers of answers is the goal of every DoS attack, so it does not set DDoS apart.
+      - id: d
+        text: It exhausts capacity rather than stealing data.
+        why: Exhausting capacity rather than stealing data is true of both kinds, so it is no difference.
+    evidence:
+      - One machine is not enough, so a distributed (DDoS) attack adds many infected computers, or zombie bots, whose owners have no idea.
+      - A denial of service (DoS) attack exhausts an app's capacity so real customers get no answer.
+    takeaway: A DDoS attack is a DoS attack launched from many compromised machines at once.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one naming many machines, the trait that marks an attack as distributed.)"
+  - id: q-dgncfp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ddos-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.2"
+    level: 2
+    stem: >-
+      At lunch, the cafe's ordering site stops answering real customers.
+      The logs show a wave of junk requests from thousands of home computers whose owners never meant to send them.
+      What is the cafe facing?
+    options:
+      - id: a
+        text: A DDoS attack
+        correct: true
+        why: Many unknowing infected computers exhausting the site's capacity is exactly a DDoS attack.
+      - id: b
+        text: A DoS attack
+        why: A plain DoS comes from one source, while these requests arrive from thousands of machines.
+      - id: c
+        text: A phishing attack
+        why: Phishing tricks people out of their credentials and does not flood the site with requests.
+      - id: d
+        text: A ransomware attack
+        why: Ransomware locks data for payment rather than burying the site in junk requests.
+    evidence:
+      - A denial of service (DoS) attack exhausts an app's capacity so real customers get no answer.
+      - One machine is not enough, so a distributed (DDoS) attack adds many infected computers, or zombie bots, whose owners have no idea.
+    takeaway: Junk traffic from many unknowing infected machines that starves real customers is a DDoS attack.
+    history: []
+    verified:
+      keyHash: 2867b005ea50
+      fullHash: 9d6196a71e22
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yxt2n9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: udp-flood-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 1
+    stem: >-
+      Which attack forges the victim's address on requests to a public service so that the service buries the victim in replies?
+    options:
+      - id: a
+        text: A SYN flood
+        why: A SYN flood opens half-finished connections straight to the victim instead of bouncing replies off a public service.
+      - id: b
+        text: A UDP flood
+        correct: true
+        why: A UDP flood fakes the victim as the sender, so the public service's replies all land on the victim.
+      - id: c
+        text: An HTTP flood
+        why: An HTTP flood sends masses of web requests straight to the victim's site rather than redirecting replies.
+      - id: d
+        text: A ping flood
+        why: A ping flood fires echo requests directly at the victim and does not use a public service to swamp it.
+    evidence:
+      - Bots ask a helpful public service, like the National Weather Service, for forecasts, forging your address as the sender.
+    takeaway: A UDP flood forges the victim's address so a public service floods the victim with replies.
+    history: []
+    verified:
+      keyHash: 7ed7c13bb4d2
+      fullHash: 24ae3c7aafd4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hgw6m0
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: udp-flood-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 2
+    stem: >-
+      The cafe's web server slows to a crawl while it sorts through masses of weather forecasts it never asked for.
+      Which statements explain how this UDP flood works?
+    options:
+      - id: a
+        text: The bots' requests named the cafe's server as the sender.
+        correct: true
+        why: Forging the cafe's address is what sends the weather service's replies to the cafe's server.
+      - id: b
+        text: Each small request triggered a much larger reply.
+        correct: true
+        why: The size gap means little effort from the bots turns into a heavy load on the cafe's server.
+      - id: c
+        text: The bots first broke into the weather service's servers.
+        why: The bots only ask the public service for forecasts, so no break-in is needed for this flood.
+      - id: d
+        text: The replies carried code that took over the server.
+        why: The replies are plain forecast data, and the harm comes from their volume, not from hidden code.
+      - id: e
+        text: Each bot sent its requests straight to the cafe's server.
+        why: The bots send requests to the weather service, which then floods the cafe with the replies.
+    evidence:
+      - Bots ask a helpful public service, like the National Weather Service, for forecasts, forging your address as the sender.
+      - Small requests trigger big replies, so your server stalls sorting unwanted data.
+    takeaway: A UDP flood pairs a forged sender address with small requests that trigger big replies.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 4 describe a reflection and amplification attack; 3 and 5 are not how a DDoS works.)"
+  - id: q-gxf0xv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-shield-standard
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe wants protection against common DDoS attacks on its site.
+      It wants this at no added cost and with zero setup work.
+      Which option fits?
+    options:
+      - id: a
+        text: AWS Shield Advanced
+        why: Shield Advanced is a paid service, so it adds cost the cafe wants to avoid.
+      - id: b
+        text: AWS WAF
+        why: AWS WAF filters requests with web ACL rules that the cafe would have to set up.
+      - id: c
+        text: Amazon GuardDuty
+        why: GuardDuty looks for threats in account activity and is not a built-in DDoS defense.
+      - id: d
+        text: AWS Shield Standard
+        correct: true
+        why: Shield Standard is free and defends against common DDoS attacks automatically.
+    evidence:
+      - "**AWS Shield Standard**: free, automatic, real-time defense against common DDoS attacks, built into ELB, CloudFront and Route 53."
+    takeaway: Free, automatic defense against common DDoS attacks is AWS Shield Standard.
+    history: []
+    verified:
+      keyHash: 334724e0cd20
+      fullHash: 6c7e44ce2476
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2ys5qe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-shield-standard
+    note: m09/protecting-networks-and-applications
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's menu site is served through Amazon CloudFront, with Elastic Load Balancing in front of its servers.
+      Which statement describes AWS Shield Standard protection for this site?
+    options:
+      - id: a
+        text: It is already on, but it adds a monthly fee.
+        why: Shield Standard is already on for this site, but it is free, so there is no fee.
+      - id: b
+        text: It needs sign-up, and it adds a monthly fee.
+        why: Shield Standard needs no sign-up and charges nothing, so both halves are wrong.
+      - id: c
+        text: It is already on, and it costs nothing extra.
+        correct: true
+        why: Shield Standard is built into CloudFront and ELB, so it protects the site automatically and for free.
+      - id: d
+        text: It needs sign-up, but it costs nothing extra.
+        why: Shield Standard is free, but it is built into CloudFront and ELB, so no sign-up is needed.
+    evidence:
+      - "**AWS Shield Standard**: free, automatic, real-time defense against common DDoS attacks, built into ELB, CloudFront and Route 53."
+    takeaway: Shield Standard is already on for ELB, CloudFront and Route 53, with no setup or cost.
+    history: []
+    verified:
+      keyHash: 371be12619ff
+      fullHash: 7aa056efbbde
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b79zqn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-shield-advanced
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      After a sophisticated DDoS attack slipped past its basic protection, the cafe chain wants detailed diagnostics of each attack and stronger detection and mitigation.
+      It is ready to pay for this.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Shield Advanced
+        correct: true
+        why: Shield Advanced is the paid tier that adds in-depth diagnostics and handles sophisticated DDoS attacks.
+      - id: b
+        text: AWS Shield Standard
+        why: Shield Standard is the basic free protection against common attacks that was already in place.
+      - id: c
+        text: AWS Firewall Manager
+        why: Firewall Manager sets firewall rules across accounts and gives no attack diagnostics.
+      - id: d
+        text: Amazon Inspector
+        why: Inspector scans workloads for software flaws and does not mitigate DDoS attacks.
+    evidence:
+      - "**AWS Shield Advanced**: paid, with in-depth diagnostics and detection and mitigation of sophisticated DDoS attacks, integrating with CloudFront, Route 53 and ELB."
+    takeaway: Paid, in-depth DDoS diagnostics and mitigation for sophisticated attacks point to Shield Advanced.
+    history: []
+    verified:
+      keyHash: fdd571d5aac0
+      fullHash: 154763e83e79
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-aa4jj7
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-shield-advanced
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 1
+    stem: >-
+      Which statements describe AWS Shield Advanced?
+    options:
+      - id: a
+        text: It is free for every AWS account.
+        why: Being free describes Shield Standard, while Shield Advanced is paid.
+      - id: b
+        text: It gives in-depth diagnostics of DDoS attacks.
+        correct: true
+        why: Shield Advanced adds detailed diagnostics of each attack on top of the basic tier.
+      - id: c
+        text: It works with CloudFront, Route 53 and ELB.
+        correct: true
+        why: Shield Advanced integrates with these services to protect what sits behind them.
+      - id: d
+        text: It sets firewall rules across all accounts.
+        why: Setting rules across an organization's accounts is the role of AWS Firewall Manager.
+      - id: e
+        text: It scans instances for software flaws.
+        why: Scanning for software flaws is a job for Amazon Inspector, not a DDoS service.
+    evidence:
+      - "**AWS Shield Advanced**: paid, with in-depth diagnostics and detection and mitigation of sophisticated DDoS attacks, integrating with CloudFront, Route 53 and ELB."
+    takeaway: Shield Advanced is the paid DDoS tier that integrates with CloudFront, Route 53 and ELB.
+    history: []
+    verified:
+      keyHash: ae870ed75e9a
+      fullHash: a5c15c542fcc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xtx60w
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-waf
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe's web app keeps getting malicious requests from a handful of known IP addresses.
+      The cafe wants its web app to refuse every request from those addresses.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Shield Standard
+        why: Shield Standard absorbs common DDoS floods automatically and keeps no list of IP addresses to refuse.
+      - id: b
+        text: Amazon GuardDuty
+        why: GuardDuty flags suspicious activity but does not turn away web requests by address.
+      - id: c
+        text: AWS WAF
+        correct: true
+        why: AWS WAF refuses requests from IP addresses that its web ACL blocks.
+      - id: d
+        text: Amazon Inspector
+        why: Inspector checks workloads for software flaws and does not filter incoming requests.
+    evidence:
+      - "**AWS WAF**: a web application firewall that refuses requests from IP addresses blocked in its web ACL (web access control list)."
+    takeaway: Turning away web requests from known bad IP addresses is a job for AWS WAF.
+    history: []
+    verified:
+      keyHash: 0d4d07b6c21f
+      fullHash: 5d619fd7699c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x3wtyb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-waf
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 1
+    stem: >-
+      In AWS WAF, what holds the rules that decide which IP addresses get their requests refused?
+    options:
+      - id: a
+        text: A route table
+        why: A route table steers traffic between subnets and does not block requests in AWS WAF.
+      - id: b
+        text: An IAM policy
+        why: An IAM policy grants or denies permissions to identities, not to web requests.
+      - id: c
+        text: A security group
+        why: A security group filters traffic for an instance and is separate from AWS WAF.
+      - id: d
+        text: A web ACL
+        correct: true
+        why: AWS WAF checks each request against its web access control list of blocked addresses.
+    evidence:
+      - "**AWS WAF**: a web application firewall that refuses requests from IP addresses blocked in its web ACL (web access control list)."
+    takeaway: AWS WAF decides which requests to refuse using its web ACL.
+    history: []
+    verified:
+      keyHash: 9d13860c06e6
+      fullHash: 47425d73ea86
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6t8ybh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-firewall-manager
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe group runs one AWS account per cafe, all in one organization.
+      Its security lead wants to set AWS WAF rules and security group rules once and have them enforced in every account.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS WAF
+        why: AWS WAF applies web ACL rules but does not push them across every account in the organization.
+      - id: b
+        text: AWS Firewall Manager
+        correct: true
+        why: Firewall Manager centrally sets and enforces WAF and security group rules across the organization's accounts.
+      - id: c
+        text: AWS Shield Advanced
+        why: Shield Advanced adds paid DDoS mitigation and does not manage firewall rules across accounts.
+      - id: d
+        text: AWS Shield Standard
+        why: Shield Standard gives automatic DDoS protection and has no rules for the cafe to manage.
+    evidence:
+      - AWS Firewall Manager centrally configures and enforces firewall rules, such as AWS WAF rules, security group rules and AWS Network Firewall firewalls, across the accounts in your organization.
+    takeaway: Managing firewall rules from one place across an organization's accounts points to Firewall Manager.
+    history: []
+    verified:
+      keyHash: ea2fc7143dcb
+      fullHash: ba393b48d6c7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x8zkm2
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: aws-firewall-manager
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 1
+    stem: >-
+      Which kinds of protection can AWS Firewall Manager configure and enforce across the accounts in an organization?
+    options:
+      - id: a
+        text: AWS WAF rules
+        correct: true
+        why: Firewall Manager can roll out AWS WAF rules to every account in the organization.
+      - id: b
+        text: IAM permission policies
+        why: IAM policies grant access to identities, which Firewall Manager does not configure or enforce.
+      - id: c
+        text: Security group rules
+        correct: true
+        why: Firewall Manager can enforce security group rules across the organization's accounts.
+      - id: d
+        text: S3 bucket policies
+        why: Bucket policies control access to S3 data and are not among the rules Firewall Manager enforces.
+      - id: e
+        text: AWS Network Firewall firewalls
+        correct: true
+        why: Firewall Manager can configure Network Firewall firewalls centrally for the organization.
+      - id: f
+        text: Service control policies
+        why: Service control policies set limits for accounts through AWS Organizations, not through Firewall Manager.
+    evidence:
+      - AWS Firewall Manager centrally configures and enforces firewall rules, such as AWS WAF rules, security group rules and AWS Network Firewall firewalls, across the accounts in your organization.
+    takeaway: Firewall Manager centrally enforces WAF rules, security group rules and Network Firewall firewalls.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 repeats the stem's word 'Firewall' from Firewall Manager, which points at a key."
+  - id: q-wdc48t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ddos-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.2"
+    level: 2
+    stem: >-
+      A rival rents one powerful server and floods the cafe's ordering site from it until real customers get no answer.
+      Which kind of attack is this?
+    options:
+      - id: a
+        text: A denial of service (DoS) attack
+        correct: true
+        why: The flood comes from one machine, which makes it a DoS attack rather than a distributed one.
+      - id: b
+        text: A distributed denial of service (DDoS) attack
+        why: A DDoS attack uses many compromised computers, but this flood comes from a single server.
+      - id: c
+        text: A UDP flood attack
+        why: A UDP flood tricks a public service into replying to a forged address, which this rival did not do.
+      - id: d
+        text: A stolen credential attack
+        why: The rival never signs in to anything and only exhausts the site's capacity with traffic.
+    evidence:
+      - A denial of service (DoS) attack exhausts an app's capacity so real customers get no answer.
+      - One machine is not enough, so a distributed (DDoS) attack adds many infected computers, or zombie bots, whose owners have no idea.
+    takeaway: A flood from one machine is a DoS attack, and it becomes a DDoS attack when many compromised machines join in.
+    history: []
+    verified:
+      keyHash: 6fa60d21ff94
+      fullHash: d82e6f295f50
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-9zfvr8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: udp-flood-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 2
+    stem: >-
+      Bots send small forecast requests to a public weather service and put the cafe server's address on them as the sender.
+      Why does the cafe's server end up overwhelmed?
+    options:
+      - id: a
+        text: The weather service forwards each small bot request to the cafe's server
+        why: The service answers the requests itself, and small forwarded requests alone would not swamp the server.
+      - id: b
+        text: The weather service sends its large replies to the cafe's server
+        correct: true
+        why: The forged sender address makes the service aim its big replies at the cafe, which stalls sorting them.
+      - id: c
+        text: The bots open half-finished connections on the cafe's server
+        why: Half-open connections describe a different flood, while here the bots never contact the cafe directly.
+      - id: d
+        text: The bots send large forecast files straight to the cafe's server
+        why: The bots send only small requests, and the large data comes from the fooled public service.
+    evidence:
+      - Bots ask a helpful public service, like the National Weather Service, for forecasts, forging your address as the sender.
+      - Small requests trigger big replies, so your server stalls sorting unwanted data.
+    takeaway: A UDP flood forges the victim's address so a public service answers small requests with big replies aimed at the victim.
+    history: []
+    verified:
+      keyHash: 3cb18e85976e
+      fullHash: ec3b0ae4fbc8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-19vf7h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-firewall-manager
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe group keeps adding cafe accounts to its organization.
+      Its security lead wants the group's web ACL rules and security group rules applied to each new account without setting them up by hand in each one.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS WAF
+        why: WAF filters web requests by its web ACL but does not push rules across every account on its own.
+      - id: b
+        text: AWS Shield Advanced
+        why: Shield Advanced adds paid DDoS diagnostics and mitigation rather than central rule enforcement.
+      - id: c
+        text: AWS Firewall Manager
+        correct: true
+        why: Firewall Manager centrally configures and enforces WAF and security group rules across the organization.
+      - id: d
+        text: AWS Security Hub
+        why: Security Hub gathers security findings into one view but does not apply rules to accounts.
+    evidence:
+      - AWS Firewall Manager centrally configures and enforces firewall rules, such as AWS WAF rules, security group rules and AWS Network Firewall firewalls, across the accounts in your organization.
+    takeaway: Firewall Manager sets WAF and security group rules once and enforces them across the organization's accounts.
+    history: []
+    verified:
+      keyHash: e46dcf526cfa
+      fullHash: f01b1725c404
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

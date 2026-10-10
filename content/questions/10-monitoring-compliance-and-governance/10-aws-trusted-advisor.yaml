@@ -1,0 +1,322 @@
+questions:
+  - id: q-vfayk9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-trusted-advisor
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe's owner wants an automated reviewer that keeps checking the whole account and suggests ways to cut cost, close security gaps and improve performance.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Inspector
+        why: Inspector scans workloads for software vulnerabilities and gives no cost or performance advice.
+      - id: b
+        text: AWS Trusted Advisor
+        correct: true
+        why: Trusted Advisor runs ongoing best-practice checks that cover cost, security and performance together.
+      - id: c
+        text: IAM Access Analyzer
+        why: Access Analyzer refines IAM permissions and does not review spending or performance.
+      - id: d
+        text: AWS Config
+        why: Config records resource settings against your own rules rather than giving best-practice savings advice.
+    evidence:
+      - For ongoing cost, security and performance advice, pick Trusted Advisor over Inspector or IAM Access Analyzer.
+      - "AWS Trusted Advisor is that expert, automated: it runs live best-practice checks across your account."
+    takeaway: Ongoing best-practice advice on cost, security and performance across an account points to Trusted Advisor.
+    history: []
+    verified:
+      keyHash: 35935fb678fa
+      fullHash: 28ac904fa33d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-f966dp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-trusted-advisor
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 1
+    stem: >-
+      Two AWS accounts both use AWS Trusted Advisor, yet one sees far more checks than the other.
+      What decides how many checks an account gets?
+    options:
+      - id: a
+        text: The number of IAM users in the account
+        why: Trusted Advisor does not scale its check list by how many IAM users an account holds.
+      - id: b
+        text: The number of Regions the account uses
+        why: Using more Regions does not unlock extra Trusted Advisor checks.
+      - id: c
+        text: The AWS Support plan on the account
+        correct: true
+        why: Every account gets a core set, and a higher Support plan unlocks the larger set of checks.
+      - id: d
+        text: The total monthly bill of the account
+        why: A larger bill alone does not add checks; only the Support plan changes the set.
+    evidence:
+      - Your support plan sets how many checks you get.
+    takeaway: The Support plan on an account sets how many Trusted Advisor checks it can use.
+    history: []
+    verified:
+      keyHash: d8fc8c0735f2
+      fullHash: a2e9e13b11c7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qtvkey
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: trusted-advisor-check-categories
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 2
+    stem: >-
+      Trusted Advisor flags several findings in the cafe's account.
+      Match each finding to the check category that reports it.
+    pairs:
+      - left: The root user has no MFA turned on
+        right: Security
+        why: An unprotected root user leaves the account exposed, which is a security finding.
+      - left: An RDS database has sat idle for weeks
+        right: Cost optimization
+        why: An idle database still bills, so scaling it down or deleting it saves money.
+      - left: An EBS volume has never had a snapshot taken
+        right: Fault tolerance
+        why: With no backup copy, a failure could lose the volume's data for good.
+      - left: Usage of a resource is close to its cap
+        right: Service limits
+        why: Nearing a cap is what the service limits category watches for.
+    evidence:
+      - "Its checks fall into five categories: security, cost optimization, performance, service limits and fault tolerance."
+    takeaway: Trusted Advisor sorts its findings into security, cost optimization, performance, service limits and fault tolerance.
+    history: []
+    verified:
+      keyHash: fe4695b677e3
+      fullHash: b92fa6babdd8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qmb4qt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: trusted-advisor-check-categories
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 2
+    stem: >-
+      All of the cafe's ordering servers run in one Availability Zone, and Trusted Advisor warns that a single outage there could halt the app.
+      Which check category raised this warning?
+    options:
+      - id: a
+        text: Performance
+        why: Performance checks look at things like throughput limits, not whether one zone can take the app down.
+      - id: b
+        text: Cost optimization
+        why: Cost checks look for idle or underused resources, not for a single point of failure.
+      - id: c
+        text: Service limits
+        why: Service limit checks watch usage against caps, not how instances are spread across zones.
+      - id: d
+        text: Fault tolerance
+        correct: true
+        why: Fault tolerance checks flag instances that are not balanced across zones, since one failure could stop the app.
+    evidence:
+      - "EC2 instances crowded into one AZ: spread them across AZs so one failure cannot halt the app."
+      - "Its checks fall into five categories: security, cost optimization, performance, service limits and fault tolerance."
+    takeaway: Instances packed into one Availability Zone show up under Trusted Advisor's fault tolerance checks.
+    history: []
+    verified:
+      keyHash: b95a0f4285d7
+      fullHash: 724fd6361da3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ws4g1y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: service-limits
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 2
+    stem: >-
+      Before a holiday promotion, Trusted Advisor shows the cafe is close to a soft limit on one service.
+      What lets the cafe use more of that service?
+    options:
+      - id: a
+        text: Upgrade the Support plan to unlock more Trusted Advisor checks
+        why: A higher plan adds checks, but more checks do not lift the limit the cafe is about to hit.
+      - id: b
+        text: Request an increase to that service's quota
+        correct: true
+        why: A soft limit can be raised to a degree, so asking AWS for a higher quota lets the cafe use more.
+      - id: c
+        text: Add the operations team to Trusted Advisor email alerts
+        why: Email alerts tell the team about the finding, but the limit stays where it is.
+      - id: d
+        text: Spread its EC2 instances across more Availability Zones
+        why: Spreading across zones improves fault tolerance and does nothing to raise a service limit.
+    evidence:
+      - "**Soft limit**: a service limit that can be raised to a degree."
+    takeaway: When usage nears a soft limit, the cafe can ask for an increase, because soft limits can be raised.
+    history: []
+    verified:
+      keyHash: 92ab2a2c92e5
+      fullHash: 07453d2255c7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2hcxtf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: service-limits
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 1
+    stem: >-
+      Trusted Advisor reports that the cafe's usage is near a soft limit on one service.
+      What does calling the limit soft tell the cafe?
+    options:
+      - id: a
+        text: Trusted Advisor flags usage as it gets near it
+        why: Trusted Advisor does flag usage near a limit, but that is true of any limit and is not what soft means.
+      - id: b
+        text: It falls under a Trusted Advisor check category
+        why: Service limits are one of the check categories, but that holds for every limit, soft or not.
+      - id: c
+        text: It caps how much of one service the account uses
+        why: Every service limit caps usage; this does not say what makes this limit soft.
+      - id: d
+        text: It can be raised by asking for an increase
+        correct: true
+        why: A soft limit is a service limit that an account can ask to raise up to a point.
+    evidence:
+      - "**Soft limit**: a service limit that can be raised to a degree."
+    takeaway: A soft limit is a service limit that can be raised to a degree, unlike a fixed cap.
+    history: []
+    verified:
+      keyHash: 6d5775fecf1d
+      fullHash: f3f0b8156001
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b72pdq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-access-analyzer
+    note: m10/aws-trusted-advisor
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe suspects some staff roles still hold permissions they no longer use, and a few policies grant far too much.
+      Which tool helps trim those permissions toward least privilege?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        why: CloudTrail records API calls as an audit log but does not review or trim IAM policies.
+      - id: b
+        text: Amazon Inspector
+        why: Inspector scans workloads for software vulnerabilities, not IAM permissions.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks security broadly but does not refine fine-grained IAM permissions.
+      - id: d
+        text: IAM Access Analyzer
+        correct: true
+        why: Access Analyzer finds unused or overly broad access so the cafe can cut it back.
+    evidence:
+      - It validates and auto-reviews IAM policies, shows who can access what, and trims unused or overly broad access toward least privilege.
+      - Trusted Advisor checks security broadly, but fine-grained IAM permissions need IAM Access Analyzer.
+    takeaway: To prune unused or overly broad IAM permissions toward least privilege, use IAM Access Analyzer.
+    history: []
+    verified:
+      keyHash: 74b7688d2e9f
+      fullHash: a696d414a5ea
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4jzzrf
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: iam-access-analyzer
+    note: m10/aws-trusted-advisor
+    task: "2.3"
+    level: 1
+    stem: >-
+      Which tasks does IAM Access Analyzer perform?
+    options:
+      - id: a
+        text: Checks permission policies against security standards
+        correct: true
+        why: Access Analyzer checks policies against corporate security standards and validates them.
+      - id: b
+        text: Flags security groups open to the public
+        why: Spotting security groups open to anyone is one of AWS Trusted Advisor's broad security checks.
+      - id: c
+        text: Shows which outside parties can reach resources
+        correct: true
+        why: Access Analyzer analyzes external access so you can see who can reach what.
+      - id: d
+        text: Records which user called each API
+        why: Keeping a log of who called each API is the job of AWS CloudTrail.
+      - id: e
+        text: Grants users access by attaching policies
+        why: Granting access by attaching policies is done in IAM itself; Access Analyzer reviews those policies.
+    evidence:
+      - It analyzes external access and checks policies against corporate security standards, so you can set, verify and refine permissions.
+    takeaway: IAM Access Analyzer validates IAM policies and reveals external access to set, verify and refine permissions.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 4 are the only pair that describe one service (IAM Access Analyzer); each other option maps to a different service.)"
+  - id: q-wgqfrw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-access-analyzer
+    note: m10/aws-trusted-advisor
+    task: "2.3"
+    level: 2
+    stem: >-
+      Before attaching a new permissions policy, the cafe's admin wants it checked against company security standards.
+      She also wants to see which parties outside the account could reach the cafe's resources.
+      Which tool fits?
+    options:
+      - id: a
+        text: Amazon Inspector
+        why: Inspector scans workloads for software vulnerabilities; it does not validate policies or show outside access.
+      - id: b
+        text: IAM Access Analyzer
+        correct: true
+        why: Access Analyzer validates policies against security standards and analyzes which outside parties can reach resources.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs broad best-practice checks; fine-grained policy review needs IAM Access Analyzer.
+      - id: d
+        text: AWS CloudTrail
+        why: CloudTrail records API calls already made; it does not review a policy before it is attached.
+    evidence:
+      - It analyzes external access and checks policies against corporate security standards, so you can set, verify and refine permissions.
+      - Trusted Advisor checks security broadly, but fine-grained IAM permissions need IAM Access Analyzer.
+    takeaway: To validate IAM policies and see outside access to resources, use IAM Access Analyzer.
+    history: []
+    verified:
+      keyHash: bc5f9fec8996
+      fullHash: 319db374dd2c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,524 @@
+questions:
+  - id: q-cse1r3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: database-performance-bottlenecks
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's online menu became popular, and its Amazon RDS database now slows down because thousands of visitors keep loading the same menu, which changes only once a season.
+      Which change best relieves the database?
+    options:
+      - id: a
+        text: Increase the storage allocated to the database
+        why: More storage gives room for data but does not cut the flood of identical menu reads.
+      - id: b
+        text: Add a Multi-AZ standby for the database
+        why: A standby waits to take over on failure and does not answer the repeated menu reads.
+      - id: c
+        text: Put a caching layer in front of the database
+        correct: true
+        why: Repeated reads of rarely changing data are what a cache absorbs, so the database stops answering the same query.
+      - id: d
+        text: Turn on Performance Insights for the database
+        why: Performance Insights shows where the load comes from but does not take any reads off the database.
+    evidence:
+      - Read-heavy traffic for data that rarely changes is common, and a caching layer is one of the best remedies.
+    takeaway: Heavy repeated reads of data that rarely changes are a classic case for adding a cache in front of the database.
+    history: []
+    verified:
+      keyHash: a82630395546
+      fullHash: 742b49786618
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vv6me8
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: database-performance-bottlenecks
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which conditions commonly turn a relational database into a bottleneck as an application grows?
+    options:
+      - id: a
+        text: A flood of read requests
+        correct: true
+        why: Growth sends far more reads to the database, and answering them all strains the back end.
+      - id: b
+        text: Heavy queries on large datasets
+        correct: true
+        why: Complex queries over big tables take a lot of work each time, which slows the database.
+      - id: c
+        text: A steady trickle of small writes
+        why: A light, even stream of small writes is easy work and is not the growth pattern that bottlenecks a database.
+      - id: d
+        text: Rare reports on small tables
+        why: Occasional queries over little data put almost no load on the database, so they do not slow it.
+      - id: e
+        text: Reads that a cache answers first
+        why: Reads served from a cache never reach the database, so they take load off it rather than adding any.
+    evidence:
+      - Growth brings read floods and heavy queries on big datasets, bottlenecking relational back ends like Amazon RDS.
+    takeaway: Read floods and heavy queries on big datasets are what usually slow a growing relational database.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 1 and 4 are the only heavy-load options ('heavy', 'flood') while options 2, 3 and 5 describe light load, so the keys stand out without knowledge."
+  - id: q-1q7mfh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: in-memory-caching
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What mainly makes Amazon ElastiCache answer reads so much faster than a disk-based database?
+    options:
+      - id: a
+        text: It keeps the hot data in RAM
+        correct: true
+        why: Memory is read far faster than disk, so keeping frequently used data in RAM cuts latency.
+      - id: b
+        text: It uses faster solid state disks
+        why: Even fast disks are still disks, so they would not give the cache its memory speed.
+      - id: c
+        text: It serves copies from edge locations
+        why: Edge locations belong to a content delivery network, not to what makes the cache fast.
+      - id: d
+        text: It spreads reads over replica databases
+        why: Spreading reads over database copies is what read replicas do, not the source of the cache's speed.
+    evidence:
+      - A cache keeps hot data in RAM, which reads hundreds to thousands of times faster than disk.
+    takeaway: An in-memory cache is fast because it serves frequently used data from RAM instead of disk.
+    history: []
+    verified:
+      keyHash: eab7e931b360
+      fullHash: c21dfba09d2c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5a4qmz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: in-memory-caching
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A cafe developer suggests dropping the Amazon RDS database and keeping all order records only in an in-memory cache, since the cache is faster.
+      Why is this a poor plan?
+    options:
+      - id: a
+        text: A cache does not scale the database's storage
+        why: This is true, but with the database dropped there is no database storage left to scale, so it is not the problem.
+      - id: b
+        text: A cache lacks lasting storage and rich queries
+        correct: true
+        why: Order records need durable storage and flexible queries, which a cache does not provide, so it can only sit beside the database.
+      - id: c
+        text: A cache is not meant for storing secrets
+        why: This is true, but order records are not secrets, so it gives no reason against the plan.
+      - id: d
+        text: A cache may need resizing as demand shifts
+        why: This is true of a node-based cache, but resizing is routine upkeep and not why the database must stay.
+    evidence:
+      - Lacking a database's lasting storage and rich queries, a cache complements the database, never replaces it.
+    takeaway: A cache complements a database for fast repeat reads but never replaces its durable storage and queries.
+    history: []
+    verified:
+      keyHash: 52008236bf1a
+      fullHash: e76176afeb48
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vxdn07
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-elasticache
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's loyalty app keeps reading the same session data, and the team wants a fully managed in-memory store that works with its existing Redis OSS tools.
+      Which service fits?
+    options:
+      - id: a
+        text: DynamoDB Accelerator (DAX)
+        why: DAX is an in-memory layer built only for DynamoDB, so it does not work with the team's Redis OSS tools.
+      - id: b
+        text: Amazon RDS read replicas
+        why: Read replicas are disk-based copies of a relational database, not an in-memory store that speaks Redis OSS.
+      - id: c
+        text: Amazon DynamoDB
+        why: DynamoDB is a serverless NoSQL database for lasting data, not a Redis OSS compatible in-memory store.
+      - id: d
+        text: Amazon ElastiCache
+        correct: true
+        why: ElastiCache is the managed in-memory service that supports Redis OSS, so the existing tools keep working.
+    evidence:
+      - Fully managed caching compatible with Redis OSS, Valkey and Memcached, so existing tools keep working.
+      - "Use cases: session data, faster queries, game leaderboards."
+    takeaway: A managed in-memory store compatible with Redis OSS, Valkey or Memcached points to Amazon ElastiCache.
+    history: []
+    verified:
+      keyHash: 4a72f760c2a8
+      fullHash: fa18a4442801
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yph3ws
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-elasticache
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe adds Amazon ElastiCache in front of its Amazon RDS database, and most menu reads now come from the cache.
+      Which cost saving can follow?
+    options:
+      - id: a
+        text: The database can stay the lasting store of records
+        why: This is true, since a cache does not replace the database, but it saves the cafe nothing.
+      - id: b
+        text: The database can move to smaller instances
+        correct: true
+        why: With the cache taking the repeat reads, the database does less work and can be sized down for less money.
+      - id: c
+        text: The cache can scale apart from database storage
+        why: This is true, since ElastiCache scales only the cache, but it does not lower what the cafe pays.
+      - id: d
+        text: The database can still be read on each cache miss
+        why: This is true of a caching layer, but it describes the miss path rather than any cost saving.
+    evidence:
+      - Reading from the cache can let you run smaller, cheaper database instances.
+      - It scales the cache only, not the database's storage.
+    takeaway: Offloading repeat reads to ElastiCache can let the database run on smaller, cheaper instances.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one describing a change gained; the others describe what stays the same with 'still' or 'stay'.)"
+  - id: q-pbmwv1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-elasticache-serverless
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      Read traffic to the cafe's in-memory data store swings without warning between quiet afternoons and sudden promotions, and the team wants capacity to follow demand by itself rather than adding or removing nodes by hand.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon ElastiCache Serverless
+        correct: true
+        why: The serverless option scales the in-memory store with demand by itself, so no one resizes nodes.
+      - id: b
+        text: DynamoDB Accelerator (DAX)
+        why: DAX is an in-memory layer for DynamoDB only, and it is not the option that scales itself with no nodes to manage.
+      - id: c
+        text: Amazon RDS read replicas
+        why: Read replicas are extra database copies that someone must add, not in-memory capacity that follows demand.
+      - id: d
+        text: Amazon DynamoDB auto scaling
+        why: DynamoDB auto scaling adjusts a NoSQL table's throughput, not the capacity of an in-memory store.
+    evidence:
+      - You resize the cache with demand, or let the serverless option scale itself, while AWS runs the infrastructure.
+    takeaway: When cache demand is unpredictable and no one wants to manage nodes, ElastiCache Serverless scales itself.
+    history: []
+    verified:
+      keyHash: 93a1fb19196e
+      fullHash: 7156e3697abe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hb3x8v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-elasticache-serverless
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What sets the serverless option of Amazon ElastiCache apart from an ElastiCache setup where the team picks the nodes?
+    options:
+      - id: a
+        text: It keeps hot data in memory for fast reads
+        why: Every ElastiCache setup serves hot data from memory, so this does not set the serverless option apart.
+      - id: b
+        text: It encrypts traffic to the cache with TLS
+        why: TLS in transit is available across ElastiCache, so it is not what makes the serverless option different.
+      - id: c
+        text: It scales capacity with demand by itself
+        correct: true
+        why: The serverless option adjusts capacity to demand on its own, while the other setup needs nodes added or removed.
+      - id: d
+        text: It works with existing Redis OSS tools
+        why: Redis OSS compatibility is part of ElastiCache in general, so it does not single out the serverless option.
+    evidence:
+      - "**ElastiCache serverless**: an option that scales with demand by itself."
+      - You resize the cache with demand, or let the serverless option scale itself, while AWS runs the infrastructure.
+    takeaway: ElastiCache Serverless scales cache capacity with demand automatically, so you never resize nodes.
+    history: []
+    verified:
+      keyHash: b53a77e8b2d1
+      fullHash: b66dae2114db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yhxeqg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-elasticache-high-availability
+    note: m07/in-memory-caching-services
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe wants its Amazon ElastiCache cache to keep serving orders even if an outage takes down one of the isolated locations inside its Region.
+      Which ElastiCache feature supports that?
+    options:
+      - id: a
+        text: Larger nodes with more memory
+        why: Bigger nodes add capacity, but they fail along with the location they sit in.
+      - id: b
+        text: Multi-AZ replication of nodes
+        correct: true
+        why: Placing the primary and its replicas in separate Availability Zones lets a replica take over when one zone fails.
+      - id: c
+        text: TLS encryption to the nodes
+        why: TLS protects data in transit but does nothing to keep the cache running through a zone outage.
+      - id: d
+        text: Encryption at rest on the nodes
+        why: Encrypting stored data protects it from being read, not from going offline in a zone outage.
+    evidence:
+      - Primary and replicas in separate AZs survive a zone outage
+    takeaway: Multi-AZ replication places ElastiCache primary and replica nodes in different zones to survive a zone outage.
+    history: []
+    verified:
+      keyHash: 5722288c351e
+      fullHash: 5a2d521b0646
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-t2e1c1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-elasticache-high-availability
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What happens when the primary node of an Amazon ElastiCache cache fails?
+    options:
+      - id: a
+        text: The app reads the database on any miss
+        why: This is true of a caching layer, but it describes a cache miss, not recovery from a failed primary.
+      - id: b
+        text: A replica copy takes over its role
+        correct: true
+        why: ElastiCache promotes a replica copy so the cache keeps running, usually within minutes.
+      - id: c
+        text: Cache data stays encrypted on disk and backups
+        why: Encryption at rest is true of ElastiCache, but it protects data rather than restoring a failed primary.
+      - id: d
+        text: Cache capacity can be resized with demand
+        why: Resizing is true of ElastiCache, but it answers changing demand, not the loss of the primary node.
+    evidence:
+      - "**Replica node**: a copy promoted if the primary fails."
+    takeaway: When an ElastiCache primary node fails, a replica is promoted and the failed node is replaced automatically.
+    history: []
+    verified:
+      keyHash: 068c50ef5aba
+      fullHash: e68c3c79d3ab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pr3fw8
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: caching-layer
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Match each part of the cafe's web stack to its role when a caching layer is in use.
+    pairs:
+      - left: Amazon EC2
+        right: Runs the application that handles each request
+        why: In this setup EC2 hosts the app, which decides whether to read the cache or the database.
+      - left: Amazon RDS
+        right: Holds the lasting data the cache draws from
+        why: RDS is the database behind the cache and is read only when the cache misses.
+      - left: Amazon ElastiCache
+        right: Answers repeat reads before the database is asked
+        why: ElastiCache sits alongside the app and database and is tried first, so hits skip the database.
+    evidence:
+      - EC2 runs the app, RDS is the database, and ElastiCache sits alongside both.
+      - The app tries the cache first and returns any hit at once.
+    takeaway: In a caching layer, the app on EC2 checks ElastiCache first and falls back to RDS for misses.
+    history: []
+    verified:
+      keyHash: 63c5001f74b7
+      fullHash: cd2325df10b7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pvkrzg
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: caching-layer
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A customer opens a pastry page on the cafe's site, and the app finds nothing for it in Amazon ElastiCache.
+      What does the app do next?
+    options:
+      - id: a
+        text: Wait for ElastiCache to load it from RDS
+        why: The cache does not fetch missing data on its own here, so the app must read the database itself.
+      - id: b
+        text: Promote an ElastiCache replica, then retry
+        why: Promoting a replica is how ElastiCache recovers from a failed primary, not how the app handles a miss.
+      - id: c
+        text: Read RDS, cache the result, then reply
+        correct: true
+        why: Storing the result after the database read means the next request for the page is a hit.
+      - id: d
+        text: Read RDS and reply, leaving the cache as is
+        why: Skipping the cache write means the next request for the page misses again and goes back to the database.
+    evidence:
+      - On a miss, it reads RDS, caches the result and replies, so the next request hits.
+    takeaway: On a cache miss, the app reads the database and stores the result so the next request hits the cache.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the lazy-loading cache-miss flow; ElastiCache does not load from RDS on its own and promotion is unrelated.)"
+  - id: q-mn81vz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: database-performance-bottlenecks
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's Amazon RDS database slows down every morning.
+      Monitoring shows thousands of identical requests for the day's specials, which change once a day, while new orders arrive at a steady, modest pace.
+      What is most likely causing the slowdown?
+    options:
+      - id: a
+        text: A flood of repeated reads for the same data
+        correct: true
+        why: Many identical reads of data that rarely changes are a common bottleneck, and they fit what monitoring shows.
+      - id: b
+        text: A flood of new order writes from the tills
+        why: Monitoring shows orders arriving at a modest pace, so writes are not what overloads the database.
+      - id: c
+        text: A rigid schema that forces the same columns
+        why: A fixed layout shapes how rows are stored, but it does not explain a slowdown tied to repeated requests.
+      - id: d
+        text: Foreign keys that link orders to customers
+        why: Foreign keys relate the tables, and they do not explain thousands of identical requests swamping the database.
+    evidence:
+      - Growth brings read floods and heavy queries on big datasets, bottlenecking relational back ends like Amazon RDS.
+      - Read-heavy traffic for data that rarely changes is common, and a caching layer is one of the best remedies.
+    takeaway: Floods of repeated reads for data that rarely changes are a common way a relational database becomes a bottleneck.
+    history: []
+    verified:
+      keyHash: 0d736dfa9155
+      fullHash: 0d4bbda4e6a9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-akwcm9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-elasticache
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's loyalty game shows a leaderboard that thousands of players refresh all day.
+      The scores live in Amazon RDS, and the team wants a managed service that answers those reads from memory in under a millisecond.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon RDS read replicas
+        why: Read replicas take reads off the primary, but they are database copies rather than an in-memory cache.
+      - id: b
+        text: Amazon Aurora Replicas
+        why: Aurora Replicas spread reads and serve failover inside an Aurora cluster, not as a memory cache for RDS.
+      - id: c
+        text: DynamoDB Accelerator (DAX)
+        why: DAX is the built-in cache for DynamoDB, so it does not sit in front of data stored in RDS.
+      - id: d
+        text: Amazon ElastiCache
+        correct: true
+        why: ElastiCache is a fully managed in-memory cache with sub-millisecond reads, and leaderboards are a typical use.
+    evidence:
+      - Sub-millisecond reads and writes (the video says microsecond reads).
+      - "Use cases: session data, faster queries, game leaderboards."
+    takeaway: For sub-millisecond reads of hot data in front of RDS, such as a leaderboard, use Amazon ElastiCache.
+    history: []
+    verified:
+      keyHash: 4ecf847fc71d
+      fullHash: f00001bb2170
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m0h6dn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: caching-layer
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A customer reloads a pastry page on the cafe's site, and the app stored that page's data in Amazon ElastiCache a moment ago.
+      Where does the app get the data this time?
+    options:
+      - id: a
+        text: From Amazon RDS, after it checks ElastiCache
+        why: The data is already in the cache, so the app has no reason to go on to RDS.
+      - id: b
+        text: From ElastiCache, which it returns at once
+        correct: true
+        why: The app checks the cache first, and a hit is returned right away without touching RDS.
+      - id: c
+        text: From Amazon RDS, without trying ElastiCache
+        why: With a caching layer the app always tries the cache first, so it does not skip straight to RDS.
+      - id: d
+        text: From ElastiCache, after it confirms with RDS
+        why: A cache hit is returned at once, so the app does not check RDS before replying.
+    evidence:
+      - The app tries the cache first and returns any hit at once.
+    takeaway: With a caching layer, the app checks the cache first and returns a hit at once without reaching the database.
+    history: []
+    verified:
+      keyHash: 55947fb17792
+      fullHash: d503e3642787
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

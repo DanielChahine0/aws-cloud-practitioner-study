@@ -1,0 +1,642 @@
+questions:
+  - id: q-218dgn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: messaging-and-queuing
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe's ordering app hands each order straight to its kitchen app, and orders get dropped whenever the kitchen app is busy or offline.
+      Which service lets the ordering app keep sending orders while the kitchen app is unavailable?
+    options:
+      - id: a
+        text: Amazon SQS
+        correct: true
+        why: An SQS queue holds each order until the kitchen app picks it up, so the ordering app never waits for it.
+      - id: b
+        text: Amazon SNS
+        why: SNS pushes messages to subscribers but does not park them for later, so an offline kitchen app misses them.
+      - id: c
+        text: Elastic Load Balancing
+        why: ELB spreads requests over running instances, and it has nowhere to hold orders while the kitchen app is down.
+      - id: d
+        text: Amazon EC2 Auto Scaling
+        why: Auto Scaling changes how many instances run, but it does not hold orders while the kitchen app is unavailable.
+    evidence:
+      - If the barista is busy or on break, the cashier is stuck and orders slow down or get dropped.
+      - Posting orders to an order board removes that dependency, and buffering messages this way is called messaging and queuing.
+      - It moves any volume of messages between components without losing them, and the receiver need not be available at send time.
+    takeaway: Messaging and queuing puts a buffer such as an SQS queue between sender and receiver, so the sender never waits on the receiver.
+    history: []
+    verified:
+      keyHash: 1b36297180a1
+      fullHash: 4415bafaaa46
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-74mzy3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: messaging-and-queuing
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which description matches the idea of messaging and queuing?
+    options:
+      - id: a
+        text: Applications pass data through a holding area read later
+        correct: true
+        why: Messaging and queuing puts a buffer between applications, so data waits there until the receiver handles it.
+      - id: b
+        text: Applications pass data through direct calls that wait
+        why: Direct calls that wait for a reply are a tightly coupled handoff, not a buffer between applications.
+      - id: c
+        text: Applications pass requests through a balancer to servers
+        why: Spreading requests across servers is load balancing, which does not hold data for a receiver to read later.
+      - id: d
+        text: Applications pass data through copies in a second Region
+        why: Copying data to another Region protects against outages but does not buffer data between applications.
+    evidence:
+      - "**Messaging and queuing**: passing messages between applications through a buffer."
+    takeaway: Messaging and queuing passes messages between applications through a buffer instead of a direct handoff.
+    history: []
+    verified:
+      keyHash: af9a6c2a0100
+      fullHash: 3c41c2756b21
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ammqvf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: loose-coupling
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's ordering app calls its receipt app directly, and whenever the receipt app crashes the ordering app starts failing too.
+      Which design change keeps the ordering app working while the receipt app is down?
+    options:
+      - id: a
+        text: Put a message queue between the two apps
+        correct: true
+        why: With a queue in between, the ordering app keeps sending and the messages wait until the receipt app recovers.
+      - id: b
+        text: Run the ordering app in two Availability Zones
+        why: Two Availability Zones protect the ordering app from a data center outage, but it still calls the crashed receipt app directly.
+      - id: c
+        text: Scale the ordering app with EC2 Auto Scaling
+        why: Auto Scaling adds ordering capacity as demand rises, but every new instance still fails when the receipt app is down.
+      - id: d
+        text: Take regular backups of the receipt app data
+        why: Backups let the receipt app's data be restored later, but they do not stop the direct calls from failing now.
+    evidence:
+      - "**Tightly coupled**: components talk directly, so a failure or change in one hurts the others or the whole system, as when Application B goes down and Application A starts failing."
+      - "**Loosely coupled**: a message queue sits between them, so A keeps sending while B is down and messages wait until B handles them."
+    takeaway: A queue between components loosely couples them, so one component failing does not drag the other down.
+    history: []
+    verified:
+      keyHash: c9900ccd593b
+      fullHash: 871bc367c2b9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-818ghx
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: loose-coupling
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's ordering app now sends orders to its kitchen app through a message queue instead of calling it directly.
+      Which benefits does this loose coupling give the cafe?
+    options:
+      - id: a
+        text: A failure in the kitchen app stays contained
+        correct: true
+        why: Loose coupling keeps the two apps independent, so a kitchen app failure does not cascade to ordering.
+      - id: b
+        text: The ordering app keeps sending while the kitchen app is down
+        correct: true
+        why: Orders wait in the queue until the kitchen app is back, so the ordering app is not blocked.
+      - id: c
+        text: Each order in the queue is a message with a payload
+        why: This is true of a queue, but it describes what a message holds rather than a benefit of the decoupling.
+      - id: d
+        text: A consumer deletes each message once it is processed
+        why: This is true of SQS, but it is a step in handling messages, not a benefit the cafe gains from loose coupling.
+      - id: e
+        text: Amazon SNS does not hold messages for later delivery
+        why: This is true of SNS, but it is about a different service and names no benefit of the cafe's queue.
+    evidence:
+      - "**Loosely coupled**: a message queue sits between them, so A keeps sending while B is down and messages wait until B handles them."
+      - Loose coupling contains failures instead of letting them cascade, and it is the target for AWS architectures.
+    takeaway: Loosely coupled components fail independently and keep sending while a receiver is unavailable.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 are the only outcomes of decoupling; the rest describe queue mechanics.)"
+  - id: q-ynmr52
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: monolithic-vs-microservices
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's website bundles its menu pages, payment logic and database code into one application, and a payment bug takes the whole site offline.
+      Which design would keep the menu pages up when payments fail?
+    options:
+      - id: a
+        text: Split its parts into separate microservices
+        correct: true
+        why: Microservices keep the menu pages separate from payments, so they keep running when payments fail.
+      - id: b
+        text: Run several copies of it behind a load balancer
+        why: Every copy carries the same payment bug, so the load balancer has no healthy copy left to send visitors to.
+      - id: c
+        text: Place it in an Auto Scaling group across two zones
+        why: Auto Scaling adds more copies of the same coupled application, and each one fails on the payment bug.
+      - id: d
+        text: Keep a standby copy of it ready in a second Region
+        why: The standby copy holds the same payment bug, so switching to it still takes the whole site down.
+    evidence:
+      - A traditional monolith tightly couples its database logic, web servers, user interface and business logic, so one failure can take down the whole application.
+      - Microservices loosely couple those parts, so the rest keep working and talking when one fails, adding availability, resilience and flexibility.
+    takeaway: Breaking a monolith into loosely coupled microservices lets the rest of an application run when one part fails.
+    history: []
+    verified:
+      keyHash: 80c6013ba3ff
+      fullHash: c2cb13cf8cfb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wnksjn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: monolithic-vs-microservices
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which term names an application whose database logic, web servers, user interface and business logic are all tightly coupled?
+    options:
+      - id: a
+        text: Monolithic application
+        correct: true
+        why: A monolith binds all of those parts tightly together, so one failure can take down the whole application.
+      - id: b
+        text: Microservices architecture
+        why: Microservices loosely couple those parts, the opposite of the tight binding the stem describes.
+      - id: c
+        text: Event-driven architecture
+        why: An event-driven design has independent services react to events instead of binding the parts tightly.
+      - id: d
+        text: Publish-subscribe messaging
+        why: Publish-subscribe sends messages to topic subscribers and does not describe parts bound into one application.
+    evidence:
+      - A traditional monolith tightly couples its database logic, web servers, user interface and business logic, so one failure can take down the whole application.
+      - "**Monolithic application**: an application whose components are tightly coupled."
+    takeaway: An application whose parts are all tightly coupled is a monolith, so one failure can stop the whole thing.
+    history: []
+    verified:
+      keyHash: 4210cb8cc5df
+      fullHash: a0132c9eeb73
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-sb3k75
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-eventbridge
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe's app, several AWS services and a third-party payment tool each send a notice whenever something happens, such as a new order.
+      Each notice must be filtered and reshaped, then forwarded to only the services that need it.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EventBridge
+        correct: true
+        why: EventBridge takes in notices from custom apps, AWS services and third-party tools, then filters, transforms and delivers them.
+      - id: b
+        text: Amazon Simple Queue Service (Amazon SQS)
+        why: SQS holds messages for a consumer to pick up later, but it does not filter, reshape and route them to many services.
+      - id: c
+        text: Amazon Simple Notification Service (Amazon SNS)
+        why: SNS pushes each message to its topic subscribers, but it does not reshape the messages from third-party tools first.
+      - id: d
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams ingests streaming data for apps to read, not filtering, reshaping and routing notices between services.
+    evidence:
+      - "EventBridge is serverless: custom apps, AWS services or third-party software feed it events, and it forwards them to the applications that need them."
+      - "It handles the event pipeline end to end: intake, filtering, transformation and delivery."
+    takeaway: When events from many sources need filtering, transforming and routing to several services, choose EventBridge.
+    history: []
+    verified:
+      keyHash: 5d28edd7d5a2
+      fullHash: 0e1b5b554258
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-cpczsr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-eventbridge
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which statement describes Amazon EventBridge?
+    options:
+      - id: a
+        text: A serverless router linking applications and services
+        correct: true
+        why: EventBridge is a serverless router that forwards what happens in one application to the services that need it.
+      - id: b
+        text: A queue that keeps each message until one consumer takes it
+        why: Keeping messages for a single consumer to pick up later describes Amazon SQS, not EventBridge.
+      - id: c
+        text: A service that sends marketing and receipt email to customers
+        why: Sending email from applications is the job of Amazon SES, not a serverless router.
+      - id: d
+        text: A service that collects streaming data for real-time analysis
+        why: Collecting streaming data for analysis describes Amazon Kinesis Data Streams, not EventBridge.
+    evidence:
+      - "**Amazon EventBridge**: a serverless event router between applications and services."
+    takeaway: Amazon EventBridge is a serverless event router that connects applications and services.
+    history: []
+    verified:
+      keyHash: 23f341223379
+      fullHash: d98a58658f24
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-chm27h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: event-driven-architecture
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      When a customer places an order in the cafe's delivery app, payment, a kitchen alert, a stock check and driver dispatch must all start at once.
+      Which design fits this setup?
+    options:
+      - id: a
+        text: Each service reacts on its own to an order-placed event
+        correct: true
+        why: Each service reacts independently to the same order event, so all four start at once, which is an event-driven design.
+      - id: b
+        text: Each service polls one shared queue and takes orders in turn
+        why: A queue hands each order to a single consumer, so only one of the four services would get each order.
+      - id: c
+        text: The ordering service calls each of the other services in sequence
+        why: Direct calls in sequence tightly couple the services and start them one after another, not all at once.
+      - id: d
+        text: A load balancer sends each order to one of the four services
+        why: A load balancer picks one target per request, so one order would start only one of the four services.
+    evidence:
+      - "**Food delivery example**: one meal order must trigger payment, a restaurant alert, an inventory check and driver dispatch at once."
+      - EventBridge routes events like "order placed" to each service, copes with peaks, keeps services independent and holds events for a service that is down until it recovers.
+    takeaway: In an event-driven design, one event such as an order can trigger several independent services at once.
+    history: []
+    verified:
+      keyHash: cf3db95a36e7
+      fullHash: 9e217f5f6329
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1cm9h9
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: event-driven-architecture
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which AWS services support scalable event-driven or message-based communication between the parts of an application?
+    options:
+      - id: a
+        text: Amazon EventBridge
+        correct: true
+        why: EventBridge routes events between application parts, so it supports event-driven communication.
+      - id: b
+        text: Amazon SQS
+        correct: true
+        why: SQS passes messages between components through a queue, so it supports message-based communication.
+      - id: c
+        text: Amazon SNS
+        correct: true
+        why: SNS pushes messages from publishers to subscribers, so it supports message-based communication.
+      - id: d
+        text: Amazon API Gateway
+        why: API Gateway builds and manages APIs that clients call, and it does not carry events or messages between application parts.
+      - id: e
+        text: AWS Lambda
+        why: Lambda runs code when an event arrives, but it does not route or hold events and messages between application parts.
+      - id: f
+        text: Amazon SES
+        why: SES sends bulk email from apps to people, and it does not carry events or messages between application parts.
+    evidence:
+      - EventBridge, SNS and SQS all support scalable event-driven or message-based communication between application parts.
+    takeaway: EventBridge, SNS and SQS are the AWS services for event-driven and message-based communication between components.
+    history: []
+    verified:
+      keyHash: d4c489db03d5
+      fullHash: 3886aac22dea
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-63w3ny
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sqs
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe's catering app logs large orders faster than the kitchen planner can review them, and the planner is sometimes offline.
+      Which service lets the orders wait until the planner is ready to work through them?
+    options:
+      - id: a
+        text: Amazon Simple Queue Service (Amazon SQS)
+        correct: true
+        why: SQS keeps each order in a queue until the planner is ready, even when the planner is offline at send time.
+      - id: b
+        text: Amazon Simple Notification Service (Amazon SNS)
+        why: SNS pushes messages to subscribers right away and does not keep them for a planner who is offline.
+      - id: c
+        text: Elastic Load Balancing (ELB)
+        why: ELB spreads incoming requests across running targets, and it does not hold orders for a planner who is offline.
+      - id: d
+        text: Amazon API Gateway
+        why: API Gateway builds and manages APIs, and it does not buffer orders until a busy receiver is free.
+    evidence:
+      - It moves any volume of messages between components without losing them, and the receiver need not be available at send time.
+      - "Work arrives while the processing service is busy or offline: queue it in Amazon SQS."
+    takeaway: When work arrives faster than a receiver can handle it, or while it is offline, queue it in Amazon SQS.
+    history: []
+    verified:
+      keyHash: 8d960124e40d
+      fullHash: 5747ef57dbcc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bqxbs5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sqs
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 1
+    stem: >-
+      In Amazon SQS, which step comes right after a consumer finishes processing a message?
+    options:
+      - id: a
+        text: The consumer deletes it from the queue
+        correct: true
+        why: An SQS consumer picks up a message, processes it and then deletes it from the queue.
+      - id: b
+        text: The consumer picks it up from the queue
+        why: Picking the message up is a real SQS step, but it comes before processing, not after.
+      - id: c
+        text: The consumer reads the payload inside it
+        why: Reading the payload is part of processing the message, so it happens before the step the stem asks about.
+      - id: d
+        text: The producer drops it into the queue
+        why: The producer adds the message at the very start, long before any consumer processes it.
+    evidence:
+      - "SQS is a message queue: producers drop messages in, and a consumer later picks each one up, processes it and deletes it."
+    takeaway: In SQS, producers add messages and a consumer later picks each one up, processes it and deletes it.
+    history: []
+    verified:
+      keyHash: a19f8ad37905
+      fullHash: 8b085da971cc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-t3s9r7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sns
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe wants to text and email each customer the moment their drink is ready, with nothing held back for later.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Simple Notification Service (Amazon SNS)
+        correct: true
+        why: SNS pushes each message to subscribers at once and can reach people by text message and email.
+      - id: b
+        text: Amazon Simple Queue Service (Amazon SQS)
+        why: SQS holds messages until a consumer is ready, so it suits deferred work rather than instant alerts to people.
+      - id: c
+        text: Amazon EventBridge
+        why: EventBridge routes events between applications and services, and it does not text or email customers directly.
+      - id: d
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams collects streaming data for processing and does not notify people by text or email.
+    evidence:
+      - Amazon SNS pushes each message to topic subscribers immediately, including people by push, SMS and email.
+      - Use SQS when work can be processed later and SNS when recipients must hear at once.
+    takeaway: When people must hear right away by text, email or push, use SNS; SQS is for work that can wait.
+    history: []
+    verified:
+      keyHash: 27578955adf6
+      fullHash: 20a517e9c9b6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r02xbt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sns
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      In the cafe, which everyday action works most like Amazon SNS?
+    options:
+      - id: a
+        text: The barista announcing that a drink is ready
+        correct: true
+        why: An announcement reaches everyone listening at once and is not kept for later, just like an SNS message.
+      - id: b
+        text: Orders pinned to a board until someone is free
+        why: A board that keeps orders until someone is free works like an SQS queue, which SNS is not.
+      - id: c
+        text: The cashier writing a name on each paper cup
+        why: Writing details on a cup is like the payload of a message, not the way SNS delivers it.
+      - id: d
+        text: The register adding up the total for each bill
+        why: Totaling a bill is processing work, not pushing a message out to many listeners.
+    evidence:
+      - Unlike SQS, SNS does not park messages for later, so in the coffee shop it is the barista calling out a finished drink, not the order board.
+    takeaway: SNS pushes a message to every listener at once instead of parking it in a queue for later.
+    history: []
+    verified:
+      keyHash: 08a4ba712bdd
+      fullHash: d9f8dc4f6036
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wv6495
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: publish-subscribe
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe emails one newsletter covering every subject to all customers, and many of them stop reading it.
+      Which change lets customers pick the subjects they receive?
+    options:
+      - id: a
+        text: Publish each kind of update to its own SNS topic
+        correct: true
+        why: With one topic per kind of update, each customer subscribes only to the topics they want.
+      - id: b
+        text: Publish every update to one shared SNS topic
+        why: One shared topic still sends every update to every subscriber, so customers cannot pick what they get.
+      - id: c
+        text: Hold every update in an SQS queue before sending
+        why: A queue only delays the updates for later processing, and every customer still gets every subject.
+      - id: d
+        text: Send every update as bulk email with Amazon SES
+        why: SES delivers bulk email reliably, but every customer still receives the same newsletter on every subject.
+    evidence:
+      - "**Product updates example**: one email on every topic left customers unhappy and disengaged, so the company split updates into topics for new products, offers and events, and customers subscribe only to what they want."
+      - "Customers want only some kinds of updates: separate Amazon SNS topics."
+    takeaway: Separate publish-subscribe topics let each subscriber receive only the kinds of messages they signed up for.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 3 form a contrast pair and 2 is the more specific one, splitting updates per kind.)"
+  - id: q-c63zd1
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: publish-subscribe
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 1
+    stem: >-
+      Match each publish-subscribe role to what it does.
+    pairs:
+      - left: Publisher
+        right: Sends a message to a topic
+        why: A publisher sends its message to a topic rather than to each recipient one by one.
+      - left: Topic
+        right: The channel that recipients sign up for
+        why: A topic is the channel publishers send to and subscribers sign up for.
+      - left: Subscriber
+        right: Receives each message sent to its topic
+        why: A subscriber, such as an email address or a Lambda function, gets every message published to its topic.
+    evidence:
+      - "SNS is publish-subscribe: publishers send a message to a topic, and subscribers such as web servers, email addresses and Lambda functions receive it."
+      - "**SNS topic**: the channel publishers send to and subscribers sign up for."
+    takeaway: In publish-subscribe, publishers send to a topic and every subscriber of that topic receives the message.
+    history: []
+    verified:
+      keyHash: 3a095e66ebc6
+      fullHash: ef5a5c9e0622
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tfzxzc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: loose-coupling
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which design approach does AWS aim for so that a failure in one component stays contained?
+    options:
+      - id: a
+        text: Tight coupling
+        why: Tightly coupled components depend on each other directly, so one failure spreads to the rest.
+      - id: b
+        text: Vertical scaling
+        why: Vertical scaling changes one instance's CPU and memory, which does not stop failures spreading.
+      - id: c
+        text: Loose coupling
+        correct: true
+        why: Loose coupling keeps components independent, so a failure stays contained, and it is the AWS target.
+      - id: d
+        text: Multi-tenancy
+        why: Multi-tenancy is about instances sharing one physical host, not about how components depend on each other.
+    evidence:
+      - Loose coupling contains failures instead of letting them cascade, and it is the target for AWS architectures.
+    takeaway: AWS architectures aim for loose coupling so a failure in one component stays contained.
+    history: []
+    verified:
+      keyHash: 0079d3e92fa7
+      fullHash: 24de308c037b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-cwvs7g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: publish-subscribe
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe publishes one "drink ready" message to an SNS topic that has a web server, a staff email address and a Lambda function subscribed.
+      Which statement describes what happens to that message?
+    options:
+      - id: a
+        text: Subscribers choose which topics they join
+        why: This is true of SNS, but all three already subscribe, so it does not say what happens to the message.
+      - id: b
+        text: A queue would hold it until a consumer polls
+        why: That describes SQS, while this message goes to an SNS topic that parks nothing for later.
+      - id: c
+        text: Every subscriber gets it at the same time
+        correct: true
+        why: In publish-subscribe, a message sent to a topic is pushed at once to all of its subscribers.
+      - id: d
+        text: SNS can also notify people by text message
+        why: Text messages are a true SNS option, but none of these three subscribers is a phone number.
+    evidence:
+      - "SNS is publish-subscribe: publishers send a message to a topic, and subscribers such as web servers, email addresses and Lambda functions receive it."
+    takeaway: In publish-subscribe, one message sent to a topic goes straight to every subscriber.
+    history: []
+    verified:
+      keyHash: 04b98073d860
+      fullHash: 1202517cf665
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

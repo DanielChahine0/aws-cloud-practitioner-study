@@ -1,0 +1,642 @@
+questions:
+  - id: q-2eddfb
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: cloud-governance
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does governance mean for an AWS deployment?
+    options:
+      - id: a
+        text: An approach that bills each team only for the resources it uses
+        why: That describes pay-as-you-go pricing, not the rules that keep work aligned with goals.
+      - id: b
+        text: An approach that adds capacity automatically as customer demand grows
+        why: That describes elasticity, which matches capacity to demand rather than setting rules for how work is done.
+      - id: c
+        text: An approach that keeps the work efficient and in line with company aims
+        correct: true
+        why: Governance is the set of rules that keeps a deployment efficient and in line with business goals.
+      - id: d
+        text: An approach that keeps applications running when a single component fails
+        why: That describes high availability, which keeps service up rather than steering how teams build.
+    evidence:
+      - Governance means rules that keep building and running a deployment efficient and aligned with business goals.
+    takeaway: Governance is the rule set that keeps cloud work efficient and aligned with business goals.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only abstract, goal-oriented phrasing among concrete technical approaches.)"
+  - id: q-emkm99
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-governance
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe grew from one AWS account to many, and new teams now launch services every week.
+      The owner sees accounts, costs and settings drifting away from what the business wants.
+      What does the cafe most need to add?
+    options:
+      - id: a
+        text: Elasticity
+        why: Elasticity matches capacity to demand, but it sets no rules to keep teams aligned with business goals.
+      - id: b
+        text: Governance
+        correct: true
+        why: Growth makes accounts and services harder to keep in check, and governance supplies the rules that keep them aligned.
+      - id: c
+        text: High availability
+        why: High availability keeps services running through failures, which does not address drifting accounts and settings.
+      - id: d
+        text: Scalability
+        why: Scalability lets the cafe grow its capacity, but the problem here is control over that growth.
+    evidence:
+      - Growth makes accounts, services and licenses harder to keep in check.
+      - Governance means rules that keep building and running a deployment efficient and aligned with business goals.
+    takeaway: As accounts and teams multiply, governance rules keep cloud work efficient and aligned with the business.
+    history: []
+    verified:
+      keyHash: c0666b87c5d8
+      fullHash: 0bfc81b5aba7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7tfvm6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-control-tower
+    note: m10/governance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's head office opens an AWS account for each new franchise location.
+      It wants every one of those accounts to meet its approved security and compliance rules, overseen from one place.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        why: CloudTrail records API calls for later review, but it does not set up or govern new accounts.
+      - id: b
+        text: AWS License Manager
+        why: License Manager tracks software licenses, not the compliance of each new account.
+      - id: c
+        text: AWS Service Catalog
+        why: Service Catalog offers approved resources inside accounts, while governing account creation is another service's job.
+      - id: d
+        text: AWS Control Tower
+        correct: true
+        why: Control Tower applies security and compliance rules to every account from one place and issues compliant accounts.
+    evidence:
+      - "A government agency wants each new account to meet approved requirements: Control Tower, not CloudTrail (records API calls) or License Manager (licenses)."
+      - "It is Cloud Town's control room: one place to apply security, operations and compliance rules to every account and organization, however many."
+    takeaway: To make every new account meet approved rules from one place, use AWS Control Tower.
+    history: []
+    verified:
+      keyHash: 4c5a511a41ac
+      fullHash: 41ef06714c6d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rwjfcg
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-control-tower
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Match each part of AWS Control Tower to the job it does.
+    pairs:
+      - left: Landing zone
+        right: Holds every governed OU, account, user and resource
+        why: The landing zone is the outer multi-account boundary that everything under compliance rules sits inside.
+      - left: Account Factory
+        right: Creates each new account from one template
+        why: Account Factory builds new accounts from a single configurable template.
+      - left: Controls (guardrails)
+        right: Blocks and fixes noncompliant deployments
+        why: Controls are high-level rules that stop nonconforming deployments and correct noncompliant resources.
+      - left: Dashboard
+        right: Shows a running summary of compliance status
+        why: The dashboard gives an ongoing visual view of accounts, controls and compliance status.
+    evidence:
+      - "**Landing zone**: the outer, best-practice multi-account boundary; every OU, account, user and resource you want under compliance rules lives inside it."
+      - "**Account Factory**: stamps out each new account from one configurable template."
+      - "**Dashboard**: an ongoing visual summary of provisioned accounts, controls and compliance status."
+    takeaway: Control Tower combines a landing zone, Account Factory, controls and a dashboard to govern many accounts.
+    history: []
+    verified:
+      keyHash: 74a70a47ec74
+      fullHash: 5d333ec9f539
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-w0r5ae
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-landing-zone
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      In AWS Control Tower, which part is the outer multi-account boundary that holds every OU, account, user and resource under compliance rules?
+    options:
+      - id: a
+        text: Account Factory
+        why: Account Factory creates new accounts from a template, but it is not the boundary that holds them.
+      - id: b
+        text: Landing zone
+        correct: true
+        why: The landing zone is the outer, best-practice boundary that every governed OU, account, user and resource sits inside.
+      - id: c
+        text: Dashboard
+        why: The dashboard summarizes accounts and compliance status, but it does not contain them.
+      - id: d
+        text: Controls
+        why: Controls are rules applied to accounts, not the boundary that groups those accounts.
+    evidence:
+      - "**Landing zone**: the outer, best-practice multi-account boundary; every OU, account, user and resource you want under compliance rules lives inside it."
+    takeaway: The landing zone is Control Tower's outer boundary around everything that must follow its compliance rules.
+    history: []
+    verified:
+      keyHash: 3677925404ab
+      fullHash: d6689f2a6d63
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hemj5e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-landing-zone
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's cloud lead sets up AWS Control Tower and adds a new account for the delivery app.
+      She wants that account and its resources to fall under the company's compliance rules.
+      Where must the account sit?
+    options:
+      - id: a
+        text: In the Account Factory template
+        why: The template builds accounts, but an account falls under the rules by where it sits, which is the landing zone.
+      - id: b
+        text: In a Service Catalog portfolio
+        why: A portfolio holds approved resources for staff to launch, not accounts placed under compliance rules.
+      - id: c
+        text: In the landing zone boundary
+        correct: true
+        why: Everything meant to follow the compliance rules, including accounts and resources, lives inside the landing zone.
+      - id: d
+        text: In the same Region as the dashboard
+        why: Sharing a Region with the dashboard does not bring the account under the rules, because the landing zone is the governed boundary.
+    evidence:
+      - "**Landing zone**: the outer, best-practice multi-account boundary; every OU, account, user and resource you want under compliance rules lives inside it."
+    takeaway: An account falls under Control Tower's compliance rules only when it sits inside the landing zone.
+    history: []
+    verified:
+      keyHash: a9f0b4e1b981
+      fullHash: 71f9b8c30da9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x77v8v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-account-factory
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe opens a new location every few weeks, and each one needs its own AWS environment with the same baseline settings.
+      Which part of AWS Control Tower sets up each one from a single configurable template?
+    options:
+      - id: a
+        text: Landing zone
+        why: The landing zone is the boundary new accounts live in, not the part that builds them.
+      - id: b
+        text: Dashboard
+        why: The dashboard reports on provisioned accounts after they exist, and it does not create them.
+      - id: c
+        text: Controls
+        why: Controls enforce rules on accounts and resources, but they do not stamp out new accounts.
+      - id: d
+        text: Account Factory
+        correct: true
+        why: Account Factory creates each new account from one configurable template, so every location starts the same.
+    evidence:
+      - "**Account Factory**: stamps out each new account from one configurable template."
+    takeaway: When many accounts must be set up the same way, Control Tower's Account Factory builds them from one template.
+    history: []
+    verified:
+      keyHash: c465bfc4f4f5
+      fullHash: 812fb71af144
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qk76js
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-account-factory
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does Account Factory do in AWS Control Tower?
+    options:
+      - id: a
+        text: Shows a running summary of accounts and their compliance status
+        why: That is the dashboard's job, which reports on accounts rather than creating them.
+      - id: b
+        text: Creates each new account from one configurable template
+        correct: true
+        why: Account Factory builds every new account from a single template that can be configured.
+      - id: c
+        text: Blocks deployments that break the high-level governance rules
+        why: That is what controls do, while Account Factory focuses on building accounts.
+      - id: d
+        text: Draws the outer boundary that holds all of the governed accounts
+        why: That boundary is the landing zone, which Account Factory places new accounts into.
+    evidence:
+      - "**Account Factory**: stamps out each new account from one configurable template."
+    takeaway: Account Factory is the Control Tower part that builds every new account from one template.
+    history: []
+    verified:
+      keyHash: 91fe5a4f3ed8
+      fullHash: d010e2d72ab2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7ttm5t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-controls
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      In AWS Control Tower, what are controls, also called guardrails?
+    options:
+      - id: a
+        text: Templates that build each new account with the same settings
+        why: That describes Account Factory, which creates accounts rather than enforcing rules on them.
+      - id: b
+        text: Visual summaries of provisioned accounts and their status
+        why: That describes the dashboard, which reports on compliance but does not enforce it.
+      - id: c
+        text: High-level rules that block and fix noncompliant deployments
+        correct: true
+        why: Controls are governance rules that stop nonconforming deployments and catch and fix noncompliant resources.
+      - id: d
+        text: Boundaries that group every governed OU, account and user
+        why: That describes the landing zone, which holds accounts rather than setting rules for them.
+    evidence:
+      - "**Controls (guardrails)**: high-level rules, like road crash barriers, that block nonconforming deployments and catch and fix noncompliant accounts and resources."
+    takeaway: Control Tower controls are high-level rules that prevent and correct noncompliant deployments.
+    history: []
+    verified:
+      keyHash: afbeab2d53c6
+      fullHash: eb58ad62af35
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-cya6fz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-controls
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A cafe developer tries to deploy a resource that breaks the company's governance rules, and the deployment is stopped before it goes live.
+      Later, an older resource that drifted out of compliance is flagged and corrected.
+      Which part of AWS Control Tower did both?
+    options:
+      - id: a
+        text: Account Factory
+        why: Account Factory builds new accounts from a template, but it does not stop or fix deployments.
+      - id: b
+        text: Controls
+        correct: true
+        why: Controls block nonconforming deployments and also catch and fix accounts and resources that fall out of compliance.
+      - id: c
+        text: Landing zone
+        why: The landing zone is the boundary resources live in, while the rules that enforce compliance are separate.
+      - id: d
+        text: Dashboard
+        why: The dashboard shows compliance status, but it does not block or correct anything itself.
+    evidence:
+      - "**Controls (guardrails)**: high-level rules, like road crash barriers, that block nonconforming deployments and catch and fix noncompliant accounts and resources."
+    takeaway: Control Tower controls both prevent bad deployments and detect and fix resources that drift out of compliance.
+    history: []
+    verified:
+      keyHash: 153c2be1eaeb
+      fullHash: c66e125521d3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-j0vnm1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-service-catalog
+    note: m10/governance
+    task: "2.2"
+    level: 3
+    stem: >-
+      New cafe staff keep asking the cloud lead what they may launch, and some guess at the settings instead.
+      The lead wants staff to launch vetted networking and security setups themselves without waiting on her.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Control Tower
+        why: Control Tower governs account creation and sets rules, but it gives staff no self-serve menu of vetted setups to launch.
+      - id: b
+        text: AWS License Manager
+        why: License Manager tracks and limits software licenses, which does not give staff approved resources.
+      - id: c
+        text: AWS Service Catalog
+        correct: true
+        why: Service Catalog lets the cloud lead publish approved resources so staff can self-serve without guessing.
+      - id: d
+        text: AWS Organizations
+        why: Organizations groups and manages accounts centrally, but it does not offer a catalog of approved resources.
+    evidence:
+      - "Staff unsure which resources to launch: Service Catalog."
+      - It lets you build, share and organize a curated catalog of approved resources, such as baseline networking and security tools for new accounts, for consistent governance.
+    takeaway: When staff need to self-serve from preapproved resources, AWS Service Catalog fits.
+    history: []
+    verified:
+      keyHash: 80b7ab867b9a
+      fullHash: 8a4d3baa83ed
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dqy86n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-service-catalog
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement describes AWS Service Catalog?
+    options:
+      - id: a
+        text: It creates every new account from one shared template.
+        why: Building accounts is Control Tower's job, while Service Catalog governs resources.
+      - id: b
+        text: It tracks software licenses and enforces their limits.
+        why: That describes License Manager, which handles licenses rather than approved resources.
+      - id: c
+        text: It records the API calls made in each account for audits.
+        why: That describes CloudTrail, which logs activity rather than offering resources to launch.
+      - id: d
+        text: It offers a curated set of approved resources to launch.
+        correct: true
+        why: Service Catalog lets teams share and organize approved resources that staff can launch themselves.
+    evidence:
+      - It lets you build, share and organize a curated catalog of approved resources, such as baseline networking and security tools for new accounts, for consistent governance.
+      - It governs resources, while Control Tower governs account creation.
+    takeaway: Service Catalog governs resources through a curated catalog, while Control Tower governs account creation.
+    history: []
+    verified:
+      keyHash: a273ba02571d
+      fullHash: ee2ce415cb24
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-14az9x
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-license-manager
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe moves its accounting software to AWS along with the vendor entitlements it already bought.
+      It wants to count how many are in use, cap that number and block any launch that would go over the cap.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Service Catalog
+        why: Service Catalog offers approved resources to staff, but it does not track license counts or caps.
+      - id: b
+        text: AWS License Manager
+        correct: true
+        why: License Manager tracks licenses and curbs noncompliance with usage caps and blocked launches.
+      - id: c
+        text: AWS Config
+        why: Config records resource configurations and checks them against rules, not software license usage.
+      - id: d
+        text: AWS Control Tower
+        why: Control Tower governs how accounts are set up, not how many software licenses are in use.
+    evidence:
+      - License Manager tracks and controls those licenses and tunes their cost.
+      - It curbs noncompliance with usage caps, blocked launches and other controls.
+    takeaway: To track licenses and stop launches that exceed them, use AWS License Manager.
+    history: []
+    verified:
+      keyHash: 86b230d292cd
+      fullHash: 613c584bd9d5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wjvkrg
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-license-manager
+    note: m10/governance
+    task: "1.4"
+    level: 1
+    stem: >-
+      Which capabilities does AWS License Manager provide?
+    options:
+      - id: a
+        text: Provisions new accounts from one baseline template
+        why: Account creation from a template is Control Tower's Account Factory, not License Manager.
+      - id: b
+        text: Caps usage and blocks launches that exceed it
+        correct: true
+        why: License Manager curbs noncompliance with usage caps and by blocking launches that would break them.
+      - id: c
+        text: Offers staff a portfolio of approved products
+        why: A catalog of approved resources is what Service Catalog provides, not License Manager.
+      - id: d
+        text: Automates rollout of usage rights across accounts
+        correct: true
+        why: License Manager automates how license entitlements are distributed across accounts.
+      - id: e
+        text: Records account API activity as audit trails
+        why: Recording API activity is CloudTrail's role, and License Manager does not log API calls.
+    evidence:
+      - It curbs noncompliance with usage caps, blocked launches and other controls.
+      - It also eases Microsoft License Mobility through Software Assurance and automates entitlement rollout across accounts.
+    takeaway: License Manager enforces license limits and automates entitlement rollout across accounts.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 both repeat the word 'usage', marking them as a pair.)"
+  - id: q-yqtcbv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: bring-your-own-license
+    note: m10/governance
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe already paid a vendor for Microsoft licenses on its back-office servers and is moving them to EC2 Dedicated Hosts.
+      It wants to keep using those licenses rather than pay AWS for new ones.
+      Which approach fits?
+    options:
+      - id: a
+        text: License-included instances
+        why: With license-included instances AWS supplies and charges for the license, so the cafe would pay again.
+      - id: b
+        text: Reserved Instances
+        why: Reserved Instances discount compute for a term commitment, but they do not reuse licenses the cafe owns.
+      - id: c
+        text: Savings Plans
+        why: Savings Plans lower compute rates for a spending commitment, which has nothing to do with existing licenses.
+      - id: d
+        text: Bring your own license
+        correct: true
+        why: BYOL reuses licenses bought from a vendor on EC2 Dedicated Hosts, often far cheaper than licenses bought through AWS.
+    evidence:
+      - BYOL reuses vendor-bought licenses (Microsoft, say) on EC2 Dedicated Hosts or Amazon WorkSpaces, flexibly and often far cheaper than AWS-bought ones.
+      - "Microsoft licenses moving to EC2 Dedicated Hosts: BYOL plus License Manager."
+    takeaway: Reusing licenses you already own on Dedicated Hosts is BYOL, often cheaper than AWS-supplied licenses.
+    history: []
+    verified:
+      keyHash: 73a39f22d39c
+      fullHash: 7a9de065575c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6f457e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: bring-your-own-license
+    note: m10/governance
+    task: "1.4"
+    level: 1
+    stem: >-
+      Which statement describes the BYOL model on AWS?
+    options:
+      - id: a
+        text: AWS supplies the software license and handles its cost and compliance.
+        why: That is true of license-included instances, the opposite of BYOL, where the license comes from you.
+      - id: b
+        text: Licenses already bought from a vendor are reused on AWS resources.
+        correct: true
+        why: With BYOL you reuse licenses you already own, such as Microsoft licenses on EC2 Dedicated Hosts.
+      - id: c
+        text: A service tracks license use and blocks launches that go over a cap.
+        why: That is true of AWS License Manager, which manages licenses but is not the BYOL model itself.
+      - id: d
+        text: A physical server is set aside for the use of a single customer.
+        why: That is true of EC2 Dedicated Hosts, where BYOL licenses can run, but it does not describe BYOL.
+    evidence:
+      - With the Bring Your Own License (BYOL) model you reuse licenses you already own on AWS, while with included licenses, such as SQL Server license-included instances on Amazon EC2, AWS supplies the license and handles its cost and compliance.
+    takeaway: BYOL reuses licenses you own, while license-included instances have AWS supply and manage the license.
+    history: []
+    verified:
+      keyHash: 5328e7cd9066
+      fullHash: 7f5e7d501886
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1p19nw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-governance
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe lets each team launch AWS resources on its own.
+      The owner adds one rule: every resource must carry a department tag so costs can be split by team.
+      What is the owner practicing?
+    options:
+      - id: a
+        text: Fault tolerance
+        why: Fault tolerance keeps a workload running when a part fails; a tagging rule does not do that.
+      - id: b
+        text: Monitoring
+        why: Monitoring tracks health and performance over time, not rules about how resources must be set up.
+      - id: c
+        text: Elasticity
+        why: Elasticity adds and removes capacity with demand, which a tagging rule has nothing to do with.
+      - id: d
+        text: Governance
+        correct: true
+        why: Governance sets rules, such as required tags, that keep teams' work efficient and in line with business aims.
+    evidence:
+      - On AWS, a rule might require department tags for costs, though any root user could in theory ignore it.
+      - Governance means rules that keep building and running a deployment efficient and aligned with business goals.
+    takeaway: Rules that let teams act freely but keep their work aligned with business aims, like required tags, are governance.
+    history: []
+    verified:
+      keyHash: a208a70ae6d4
+      fullHash: 8cf769e207a4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-242v2e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-license-manager
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      During a vendor review, the cafe cannot say which of its purchased database software entitlements are in use on which EC2 instances.
+      Which service keeps track of them?
+    options:
+      - id: a
+        text: AWS Service Catalog
+        why: Service Catalog offers approved resources for staff to launch; it does not track software entitlements.
+      - id: b
+        text: AWS License Manager
+        correct: true
+        why: License Manager tracks and controls software licenses used on AWS and helps tune their cost.
+      - id: c
+        text: AWS Control Tower
+        why: Control Tower sets up and polices a governed multi-account environment, not software entitlements.
+      - id: d
+        text: AWS Artifact
+        why: Artifact serves AWS's audit reports and agreements, not a record of the cafe's own software licenses.
+    evidence:
+      - License Manager tracks and controls those licenses and tunes their cost.
+      - "**AWS License Manager**: manages software licenses and their cost."
+    takeaway: To know which software licenses are in use where on AWS, track them with AWS License Manager.
+    history: []
+    verified:
+      keyHash: 7562b65dd4c8
+      fullHash: d31cea1ebe9a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

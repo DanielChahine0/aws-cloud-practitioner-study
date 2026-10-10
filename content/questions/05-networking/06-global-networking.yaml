@@ -1,0 +1,422 @@
+questions:
+  - id: q-4zwsa2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-networking
+    note: m05/global-networking
+    task: "3.2"
+    level: 1
+    stem: >-
+      Which description matches the idea of edge networking?
+    options:
+      - id: a
+        text: Placing compute and storage close to where users and data are
+        correct: true
+        why: Edge networking moves processing and storage toward the people and places that create and use the data.
+      - id: b
+        text: Copying data across several Availability Zones in one Region
+        why: Spreading copies across Availability Zones is about resilience inside a Region, not about moving work toward users.
+      - id: c
+        text: Linking an on-premises data center to AWS over a private line
+        why: A private line to a data center is a hybrid connection, not a way of placing compute near end users.
+      - id: d
+        text: Splitting a private network in the cloud into isolated subnets
+        why: Subnets organize resources inside a VPC and do not bring computing any closer to users.
+    evidence:
+      - Edge networking pushes compute and storage toward where data is created and used, giving user-facing apps secure, speedy networking.
+    takeaway: Edge networking places compute and storage near users and data sources so user-facing apps respond quickly.
+    history: []
+    verified:
+      keyHash: 4b8b9c206d88
+      fullHash: fdf31c7af964
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jtdh3r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-networking
+    note: m05/global-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      Customers far from the Region that hosts the cafe's ordering app complain that pages respond slowly.
+      Which approach cuts this delay?
+    options:
+      - id: a
+        text: Running the app across more Availability Zones
+        why: Extra Availability Zones add resilience inside the same Region, but distant customers still face a long network trip.
+      - id: b
+        text: Processing and caching content at the edge
+        correct: true
+        why: Handling work near the customers shortens each trip, which is how edge networking lowers latency.
+      - id: c
+        text: Linking the cafe's office to AWS over a private line
+        why: A private line helps traffic from the cafe's own office, not the trip from faraway customers to the app.
+      - id: d
+        text: Moving the app's database to a larger instance
+        why: A larger database server can speed queries, but the network distance to distant customers stays the same.
+    evidence:
+      - Processing or caching near users lowers latency and keeps the organization in control of its infrastructure.
+    takeaway: When distance causes lag, edge networking helps by processing or caching near the users.
+    history: []
+    verified:
+      keyHash: f82c155c57d6
+      fullHash: c37cfb3b51eb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jwsjm1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: domain-name-system
+    note: m05/global-networking
+    task: "3.5"
+    level: 1
+    stem: >-
+      What job does DNS perform on the internet?
+    options:
+      - id: a
+        text: It encrypts traffic between a browser and a web server
+        why: Encrypting traffic in transit is the work of protocols such as HTTPS, not of name lookups.
+      - id: b
+        text: It spreads incoming requests across several servers
+        why: Spreading requests across servers is load balancing, which happens after the address is already known.
+      - id: c
+        text: It looks up the IP address that matches a website
+        correct: true
+        why: DNS acts like a phone book, turning the names people type into the addresses computers connect to.
+      - id: d
+        text: It assigns private IP address ranges to the subnets
+        why: Address ranges for subnets are set when a VPC is designed, not looked up through DNS.
+    evidence:
+      - DNS is the internet's phone book, turning names people read into IP (Internet Protocol) addresses computers use.
+    takeaway: DNS works like a phone book, translating human-readable names into the IP addresses computers use.
+    history: []
+    verified:
+      keyHash: d0435b9f5b1c
+      fullHash: c37bdd57e409
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-79pgbm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: domain-name-system
+    note: m05/global-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      A diner types the cafe's web address into a browser.
+      Which component does the browser hand that name to first?
+    options:
+      - id: a
+        text: The company's DNS server
+        why: The company's DNS server answers with the address, but only after the resolver asks it.
+      - id: b
+        text: A domain name registrar
+        why: A registrar records who owns a domain, and the browser does not ask it to look up the name.
+      - id: c
+        text: A customer DNS resolver
+        correct: true
+        why: The browser hands the name to the customer DNS resolver, which then queries the company's DNS server.
+      - id: d
+        text: A CloudFront edge location
+        why: An edge location serves content only after the name has been resolved to an address.
+    evidence:
+      - "Resolution: the browser hands the name to a customer DNS resolver, which asks the company's DNS server, which replies with the IP address (192.0.2.0 for AnyCompany)."
+    takeaway: In a DNS lookup the browser asks a customer DNS resolver, which queries the company's DNS server for the IP address.
+    history: []
+    verified:
+      keyHash: 95ee9a90d8e0
+      fullHash: 1ca80206444f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2tqgfm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-route-53
+    note: m05/global-networking
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe owns several domain names, each registered with a different outside registrar.
+      It wants to move all of them into one AWS service that also answers DNS queries for them.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Global Accelerator
+        why: Global Accelerator steers app traffic over the AWS network, but it does not register or hold domain names.
+      - id: b
+        text: Elastic Load Balancing
+        why: A load balancer spreads requests across targets and has no role in managing domain registrations.
+      - id: c
+        text: Amazon CloudFront
+        why: CloudFront caches content near customers and does not take over domains from other registrars.
+      - id: d
+        text: Amazon Route 53
+        correct: true
+        why: Route 53 is the AWS DNS service, and it can register domains and take over records from other registrars.
+    evidence:
+      - It also runs health checks, registers new domains and takes over DNS records from other registrars, so all your domains live in one place.
+    takeaway: To gather domains from many registrars in one place and serve their DNS, pick Route 53.
+    history: []
+    verified:
+      keyHash: e236c79d2c77
+      fullHash: 981c855dd08e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wdt2p1
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-route-53
+    note: m05/global-networking
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which tasks can Amazon Route 53 carry out?
+    options:
+      - id: a
+        text: Register new domain names
+        correct: true
+        why: Route 53 can register fresh domains, so names and DNS records sit in the same service.
+      - id: b
+        text: Cache images at edge locations
+        why: Caching content near users is what CloudFront does, not the DNS service.
+      - id: c
+        text: Run health checks on endpoints
+        correct: true
+        why: Route 53 checks whether endpoints are healthy so it can avoid sending users to a failed one.
+      - id: d
+        text: Serve videos from near viewers
+        why: Serving videos from locations near viewers is CloudFront's content delivery, not DNS work.
+      - id: e
+        text: Give an app static IP addresses
+        why: Static IP addresses for an app come from Global Accelerator, not from Route 53.
+    evidence:
+      - It also runs health checks, registers new domains and takes over DNS records from other registrars, so all your domains live in one place.
+    takeaway: Besides answering DNS queries, Route 53 registers domains and runs health checks on endpoints.
+    history: []
+    verified:
+      keyHash: a45dda6e3091
+      fullHash: 6fdd0297a283
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r8ed0z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: route-53-routing-policies
+    note: m05/global-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe runs its ordering app in a North American Region and in the Dublin Region.
+      It wants Route 53 to send customers in Ireland to Dublin purely because of the country they are in.
+      Which routing policy fits?
+    options:
+      - id: a
+        text: Latency-based routing
+        why: Latency-based routing picks whichever endpoint answers fastest, not the one tied to the customer's country.
+      - id: b
+        text: Weighted round robin routing
+        why: Weighted round robin splits traffic by set shares and ignores where each customer is.
+      - id: c
+        text: Geolocation routing
+        correct: true
+        why: Geolocation routing chooses the endpoint by where the customer is, such as Ireland going to Dublin.
+      - id: d
+        text: Geoproximity routing
+        why: Geoproximity weighs the distance between users and resources rather than the country the user is in.
+    evidence:
+      - Geolocation routes by where the customer is, so North America goes to a North American Region and Ireland to the Dublin Region.
+    takeaway: Routing customers to a Region by the place they are in is the job of Route 53 geolocation routing.
+    history: []
+    verified:
+      keyHash: 3ccd3d6f8058
+      fullHash: 58e8ca3d7de3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jme4ta
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: route-53-routing-policies
+    note: m05/global-networking
+    task: "3.5"
+    level: 1
+    stem: >-
+      Match each Route 53 routing policy to how it picks an endpoint.
+    pairs:
+      - left: Weighted round robin
+        right: Splits traffic among endpoints by shares you set
+        why: Weighted round robin hands out requests in the proportions assigned to each endpoint.
+      - left: Latency-based
+        right: Sends users to the endpoint with the lowest delay
+        why: Latency-based routing favors the endpoint that responds fastest for that user.
+      - left: Geolocation
+        right: Picks the endpoint tied to the user's country
+        why: Geolocation routing maps the user's location, such as a country, to a chosen Region.
+    evidence:
+      - "Routing policies: weighted round robin, latency-based, geolocation and geoproximity."
+      - Geolocation routes by where the customer is, so North America goes to a North American Region and Ireland to the Dublin Region.
+    takeaway: Route 53 policies pick endpoints by set shares, by lowest latency, or by the user's location.
+    history: []
+    verified:
+      keyHash: a19b166c7d2d
+      fullHash: 031080741da4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gw61gp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-cloudfront
+    note: m05/global-networking
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe's website is hosted in one Region, yet customers around the world load its menu photos and recipe videos.
+      It wants copies of that content served from locations near each customer.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon CloudFront
+        correct: true
+        why: CloudFront is a CDN that serves copies of content from edge locations close to each customer.
+      - id: b
+        text: AWS Global Accelerator
+        why: Global Accelerator routes traffic over the AWS network to healthy endpoints but does not keep cached copies.
+      - id: c
+        text: Amazon Route 53
+        why: Route 53 resolves the site's name to an address but does not store or deliver the photos and videos.
+      - id: d
+        text: AWS CloudFormation
+        why: CloudFormation builds resources from templates and has nothing to do with delivering content to visitors.
+    evidence:
+      - CloudFront is a CDN (content delivery network) that securely serves static and dynamic web content from edge locations near customers, for faster loads, lower cost and reliability.
+    takeaway: Serving cached copies of web content from edge locations near customers is CloudFront's role as a CDN.
+    history: []
+    verified:
+      keyHash: f32e213314ea
+      fullHash: e133fe87dc3d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1ep4q6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-cloudfront
+    note: m05/global-networking
+    task: "3.2"
+    level: 1
+    stem: >-
+      In the analogy of a truck fleet that parks copies of goods in local depots, what does the single main warehouse stand for in Amazon CloudFront?
+    options:
+      - id: a
+        text: The edge location
+        why: Edge locations are the local depots that hold copies, not the single main warehouse.
+      - id: b
+        text: The origin server
+        correct: true
+        why: The main warehouse is the origin server, where the original content lives before CloudFront copies it.
+      - id: c
+        text: The DNS resolver
+        why: A DNS resolver looks up addresses and plays no part in storing the content being delivered.
+      - id: d
+        text: The load balancer
+        why: A load balancer spreads requests across servers and is not the home of the original content.
+    evidence:
+      - "Analogy: a global truck fleet parks copies of your content in local depots, so requests stop trekking to the single main warehouse (your origin server)."
+    takeaway: CloudFront keeps copies at edge locations so requests no longer travel all the way to the origin server.
+    history: []
+    verified:
+      keyHash: 0a7fc88829e7
+      fullHash: 16233fa73309
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-a7gr7y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-global-accelerator
+    note: m05/global-networking
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe's ordering app runs in two Regions.
+      The cafe wants fixed IP addresses for the app and fast failover to the healthy Region if one goes down, with traffic kept on the AWS network.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Route 53
+        why: Route 53 answers DNS queries and runs health checks, but it does not give the app fixed IP addresses.
+      - id: b
+        text: Amazon CloudFront
+        why: CloudFront caches content near customers rather than steering app traffic between Regions on fixed addresses.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect links an on-premises site to AWS and does not route public customers to a healthy Region.
+      - id: d
+        text: AWS Global Accelerator
+        correct: true
+        why: Global Accelerator gives static IP addresses and fails over quickly to healthy endpoints over the AWS network.
+    evidence:
+      - The assessment adds static IP addresses and a best-endpoint choice based on endpoint health, user location and your policies.
+      - Fast failover when one app location fails is the clue that separates it from Route 53 (DNS, domains, health checks) and CloudFront (content caching).
+    takeaway: Static IP addresses plus fast failover between app locations point to Global Accelerator.
+    history: []
+    verified:
+      keyHash: c4fb35678059
+      fullHash: ed9f9650898a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-y02c7g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-global-accelerator
+    note: m05/global-networking
+    task: "3.2"
+    level: 1
+    stem: >-
+      How does AWS Global Accelerator improve availability and performance for users?
+    options:
+      - id: a
+        text: It keeps cached copies of content at edge locations
+        why: Caching content at edge locations describes CloudFront, not Global Accelerator.
+      - id: b
+        text: It translates domain names into numeric IP addresses
+        why: Translating names into addresses is DNS work, which Route 53 handles.
+      - id: c
+        text: It carries traffic over the private AWS network
+        correct: true
+        why: Global Accelerator moves traffic off crowded public routes onto the AWS private global network.
+      - id: d
+        text: It spreads requests across instances in one Region
+        why: Spreading requests inside one Region is load balancing, not the global routing Global Accelerator offers.
+    evidence:
+      - Global Accelerator moves app traffic off crowded public routes onto the AWS private global network for better availability, performance and security.
+    takeaway: Global Accelerator speeds apps by moving traffic off the public internet onto the AWS private global network.
+    history: []
+    verified:
+      keyHash: c0a4c06a4094
+      fullHash: 70565d22ec54
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,361 @@
+questions:
+  - id: q-vs9t9x
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: region-selection
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's new ordering app will serve customers who live mostly in Singapore, and no law limits where its data may be kept.
+      Which Region selection factor most directly points the cafe to the Singapore Region?
+    options:
+      - id: a
+        text: Compliance
+        why: No law restricts where the data lives here, so compliance does not pick the Region.
+      - id: b
+        text: Proximity
+        correct: true
+        why: Hosting near the customers in Singapore cuts the delay and keeps the app responsive.
+      - id: c
+        text: Feature availability
+        why: Nothing in the scenario says a needed service is missing from any candidate Region.
+      - id: d
+        text: Pricing
+        why: The choice here is driven by where the customers are, not by comparing Regional rates.
+    evidence:
+      - Customers mostly in Singapore -> the Singapore Region, not Virginia.
+      - A distant Region adds delay, which can hurt user satisfaction and overall efficiency.
+    takeaway: With no legal limits on data location, placing the Region close to most users lowers latency.
+    history: []
+    verified:
+      keyHash: 6ff290bdc913
+      fullHash: b8f0e46d57da
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b3he22
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: region-selection
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 1
+    stem: >-
+      When weighing the factors for choosing an AWS Region, which factor should a business check first because it can settle the choice on its own?
+    options:
+      - id: a
+        text: Proximity
+        why: Distance to users matters, but it is weighed after any legal rule on data location.
+      - id: b
+        text: Pricing
+        why: Regional rates are compared only once the legally allowed Regions are known.
+      - id: c
+        text: Compliance
+        correct: true
+        why: A law on where data may live can rule out every other Region before anything else is weighed.
+      - id: d
+        text: Feature availability
+        why: Service availability has no fixed rank and cannot override a legal requirement.
+    evidence:
+      - Check compliance first, since a legal rule can settle the Region alone, but most businesses have none and move on to the rest.
+      - Compliance comes first and can decide alone; the other three have no fixed ranking.
+    takeaway: Compliance is checked first because a data location law can decide the Region by itself.
+    history: []
+    verified:
+      keyHash: d07e020dbacf
+      fullHash: 4cce15976e52
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wnmrtr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-govcloud-regions
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe wins a contract to run meal ordering for a US federal agency, and the agency requires strict physical, operational and personnel controls on the hosting site.
+      Where should the cafe run this workload?
+    options:
+      - id: a
+        text: AWS GovCloud Regions
+        correct: true
+        why: These Regions carry the strict controls built for US federal bodies and the contractors working for them.
+      - id: b
+        text: A standard AWS Region
+        why: A standard Region lacks the extra physical, operational and personnel controls the agency requires.
+      - id: c
+        text: AWS Outposts on premises
+        why: Outposts puts AWS hardware in the cafe's own site, which does not supply the agency-grade controls.
+      - id: d
+        text: Amazon CloudFront edge locations
+        why: Edge locations cache content near users and are not where a federal workload is hosted.
+    evidence:
+      - AWS GovCloud Regions carry strict physical, operational and personnel controls for US government bodies and contractors.
+      - US government workload -> AWS GovCloud Regions.
+    takeaway: A US government workload, or a contractor's, needing strict controls belongs in AWS GovCloud Regions.
+    history: []
+    verified:
+      keyHash: 642c1e6d4e86
+      fullHash: 6d3e89de1296
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-03808j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-govcloud-regions
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which trait sets AWS GovCloud Regions apart from standard AWS Regions?
+    options:
+      - id: a
+        text: Walls that keep data from crossing into other Regions
+        why: Every Region is isolated from the others, so this trait does not set GovCloud Regions apart.
+      - id: b
+        text: Rates shaped by local operating costs and taxes
+        why: Each Region has its own rates, so local pricing is shared by standard Regions and GovCloud alike.
+      - id: c
+        text: Extra physical, operational and personnel controls
+        correct: true
+        why: GovCloud Regions add strict controls on site, operations and staff for US government bodies and contractors.
+      - id: d
+        text: Data bound by the laws of the host country
+        why: Data in any Region follows the host country's laws, so this is not unique to GovCloud Regions.
+    evidence:
+      - AWS GovCloud Regions carry strict physical, operational and personnel controls for US government bodies and contractors.
+      - "Isolation is a security feature: each Region is walled off from all others, and data crosses that line only with your explicit permission."
+    takeaway: AWS GovCloud Regions stand out from standard Regions by adding strict controls for US government work.
+    history: []
+    verified:
+      keyHash: 1df072149afd
+      fullHash: 4665c614406f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-d8nb9v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: regional-pricing
+    note: m04/choosing-aws-regions
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe prices the same set of servers in two AWS Regions and sees a different rate in each.
+      What explains the gap?
+    options:
+      - id: a
+        text: Each Region is walled off from every other Region
+        why: Isolation is true of every Region, but it is a security feature and does not set a Region's rates.
+      - id: b
+        text: Each Region has its own local costs and taxes
+        correct: true
+        why: Operating and energy costs, local taxes and tax incentives vary by Region, so rates vary too.
+      - id: c
+        text: Each Region gets new features on its own schedule
+        why: Gradual feature rollout affects which services exist there, not what the same servers cost.
+      - id: d
+        text: Each Region keeps data inside unless you allow it out
+        why: Keeping data in place without permission is a security trait and does not explain a price gap.
+    evidence:
+      - AWS pricing is transparent and granular, yet each Region has its own rates.
+      - "Isolation is a security feature: each Region is walled off from all others, and data crosses that line only with your explicit permission."
+    takeaway: The same resources can cost more or less by Region because local operating costs and taxes differ.
+    history: []
+    verified:
+      keyHash: 836a4d8c5da3
+      fullHash: 266b438c5912
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-aq8k5m
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: regional-pricing
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 1
+    stem: >-
+      Which local conditions help set the AWS rates in a given Region?
+    options:
+      - id: a
+        text: Energy and operating costs
+        correct: true
+        why: The cost of running and powering facilities in that place feeds into the Region's rates.
+      - id: b
+        text: Local taxes and tax incentives
+        correct: true
+        why: Taxes and incentives differ from place to place and shape what each Region charges.
+      - id: c
+        text: Software licensing fees
+        why: Licensing is an on-premises concern and is not one of the local conditions behind Regional rates.
+      - id: d
+        text: Server hardware specs
+        why: Hardware specs are an on-premises concern, since AWS picks and runs the hardware in every Region.
+      - id: e
+        text: Uptime and performance levels
+        why: Uptime and performance are broadly equal across Regions, so they do not explain differing rates.
+    evidence:
+      - AWS pricing is transparent and granular, yet each Region has its own rates.
+      - Uptime and performance are broadly equal across Regions, and licensing or hardware specs are on-premises concerns.
+    takeaway: Regional AWS rates follow local operating and energy costs plus local taxes and tax incentives.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are the real drivers of Region price differences; hardware, uptime and licensing do not vary by Region.)"
+  - id: q-w2pk5v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: gdpr
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe opens an online shop selling coffee beans to customers across the EU.
+      Which regulation requires it to get consent before collecting their personal data?
+    options:
+      - id: a
+        text: HIPAA
+        why: HIPAA is a US law about health information, not EU shoppers' personal data.
+      - id: b
+        text: PCI
+        why: PCI covers payment card handling and is not the EU privacy law on consent.
+      - id: c
+        text: GDPR
+        correct: true
+        why: The EU privacy law makes an online shop ask for consent before collecting personal data.
+      - id: d
+        text: Data sovereignty laws
+        why: These laws are about keeping data inside a country, not about collecting consent.
+    evidence:
+      - Under GDPR, the EU privacy law, an EU online shop must get consent before collecting personal data and let people see or erase it.
+      - EU online retailer -> GDPR compliance.
+    takeaway: An online shop selling to EU customers must follow GDPR, starting with consent before collecting personal data.
+    history: []
+    verified:
+      keyHash: 392fc884ba01
+      fullHash: 39a78a54092c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2jhv42
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: gdpr
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 1
+    stem: >-
+      What does GDPR require of an online shop in the EU that handles personal data?
+    options:
+      - id: a
+        text: Ask for consent before gathering personal data
+        correct: true
+        why: GDPR makes the shop get people's agreement before it gathers their personal data.
+      - id: b
+        text: Store all personal data in AWS GovCloud Regions
+        why: GovCloud Regions serve US government bodies and contractors, not EU privacy rules.
+      - id: c
+        text: Allow people to view or delete their own data
+        correct: true
+        why: GDPR gives people the right to see the data held about them and to have it removed.
+      - id: d
+        text: Handle personal data under HIPAA health rules
+        why: Health record rules come from HIPAA, a US law, rather than from the EU privacy law.
+      - id: e
+        text: Delete personal data after each completed order
+        why: GDPR lets people ask for erasure, but it does not force the shop to wipe data after every order.
+    evidence:
+      - Under GDPR, the EU privacy law, an EU online shop must get consent before collecting personal data and let people see or erase it.
+    takeaway: GDPR requires consent before collecting personal data and lets people see or erase what is held.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 4 are the only true GDPR-style duties; 1, 3 and 5 are not requirements of a privacy law like GDPR.)"
+  - id: q-0n09j0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: regional-pricing
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe has two candidate Regions that both meet its legal rules, sit equally near its customers and offer every service it uses.
+      One of them has lower energy costs and a local tax incentive.
+      Which Region selection factor now settles the choice?
+    options:
+      - id: a
+        text: Compliance
+        why: Both Regions already meet the cafe's legal rules, so compliance cannot separate them here.
+      - id: b
+        text: Proximity
+        why: The stem says both Regions sit equally near the cafe's customers, so distance is a tie.
+      - id: c
+        text: Feature availability
+        why: Every service the cafe uses runs in both Regions, so this factor gives no reason to prefer one.
+      - id: d
+        text: Pricing
+        correct: true
+        why: Energy costs and tax incentives shape each Region's own rates, which is the one factor still differing.
+    evidence:
+      - AWS pricing is transparent and granular, yet each Region has its own rates.
+    takeaway: When compliance, proximity and services tie, a Region's own rates, shaped by local costs and taxes, can decide.
+    history: []
+    verified:
+      keyHash: 6b7127e7f6a6
+      fullHash: 6f5f96a1de06
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-f0c0eq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: gdpr
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 2
+    stem: >-
+      A shopper in France asks the cafe's EU coffee bean shop to show her the personal details it holds on her and then remove them.
+      Which set of rules gives her the right to ask for this?
+    options:
+      - id: a
+        text: PCI rules
+        why: PCI rules cover payment card handling, not a shopper's right to see or erase her personal details.
+      - id: b
+        text: GDPR rules
+        correct: true
+        why: GDPR is the EU privacy law that lets people see the personal data a shop holds and have it erased.
+      - id: c
+        text: HIPAA rules
+        why: HIPAA is a US health information law, so it does not govern an EU coffee shop's customer records.
+      - id: d
+        text: Data sovereignty rules
+        why: These rules decide where data must be stored, not whether a shopper can view or erase her own records.
+    evidence:
+      - Under GDPR, the EU privacy law, an EU online shop must get consent before collecting personal data and let people see or erase it.
+    takeaway: GDPR gives people in the EU the right to see the personal data a shop holds on them and have it erased.
+    history: []
+    verified:
+      keyHash: 29c42828be2b
+      fullHash: bd2d41db6b86
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

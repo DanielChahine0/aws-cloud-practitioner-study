@@ -1,0 +1,363 @@
+questions:
+  - id: q-vgr3hk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: foreign-keys
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe keeps a customers table and an orders table in Amazon RDS.
+      Each order must point back to the customer who placed it so a join can list that customer's orders.
+      What relates the two tables?
+    options:
+      - id: a
+        text: A partition key
+        why: A partition key identifies items in a DynamoDB table and does not tie one RDS table to another.
+      - id: b
+        text: A foreign key
+        correct: true
+        why: A foreign key in the orders table references the customers table, which is what lets the join match them.
+      - id: c
+        text: A DB instance identifier
+        why: The identifier only names the RDS instance and says nothing about how its tables relate.
+      - id: d
+        text: An endpoint and port
+        why: The endpoint and port tell a client where to connect, not how the tables link to each other.
+    evidence:
+      - SQL then created users, products and orders tables tied by foreign keys, inserted rows, and joined them to list one user's orders.
+      - "**Foreign key**: the link relating one RDS table to another, absent in DynamoDB."
+    takeaway: In Amazon RDS, foreign keys tie related tables together so joins can combine their rows.
+    history: []
+    verified:
+      keyHash: 491d7d133c4e
+      fullHash: 0f24e15fbb5b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-p3wbsa
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: foreign-keys
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 1
+    stem: >-
+      The cafe is comparing Amazon RDS and Amazon DynamoDB for its order data.
+      Which difference between the two comes down to foreign keys?
+    options:
+      - id: a
+        text: RDS tables link to each other, and DynamoDB tables stand alone.
+        correct: true
+        why: Foreign keys are what link RDS tables together, and DynamoDB tables have none, so each stands alone.
+      - id: b
+        text: RDS queries are written in SQL, and DynamoDB has its own language.
+        why: This is a real difference, but it is about the query language, not about foreign keys.
+      - id: c
+        text: RDS rows fill the same columns, and DynamoDB items can vary.
+        why: This is a real difference, but it comes from rigid versus flexible schemas, not from foreign keys.
+      - id: d
+        text: RDS clients use an endpoint, and DynamoDB apps call the AWS SDK.
+        why: This is a real difference in how apps connect, and it has nothing to do with foreign keys.
+    evidence:
+      - "**Foreign key**: the link relating one RDS table to another, absent in DynamoDB."
+      - RDS links rigid tables with foreign keys, and DynamoDB tables stand alone with flexible schemas.
+    takeaway: Foreign keys and joins belong to relational RDS tables, while DynamoDB tables carry no foreign keys.
+    history: []
+    verified:
+      keyHash: 021f533e6063
+      fullHash: e8d68f143f60
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-k4whk4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-partition-key
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 2
+    stem: >-
+      A barista creates a DynamoDB table in the console to track loyalty members.
+      Besides a table name, what must the barista set before the table can hold items?
+    options:
+      - id: a
+        text: A foreign key
+        why: Foreign keys link RDS tables, and DynamoDB tables have none to set.
+      - id: b
+        text: A DB instance identifier
+        why: An instance identifier names an RDS instance, and DynamoDB works with tables rather than instances.
+      - id: c
+        text: A partition key
+        correct: true
+        why: A DynamoDB table is created from just a name and a partition key, which every item then uses as its identifier.
+      - id: d
+        text: A free tier template
+        why: The free tier template is an RDS setup preset, not a setting on a DynamoDB table.
+    evidence:
+      - A table needs only a name (orders) and a partition key (order number, type Number), and is usable once active.
+      - A DynamoDB table needs just a name and a partition key.
+    takeaway: Creating a DynamoDB table takes only a table name and a partition key.
+    history: []
+    verified:
+      keyHash: c865f81e9307
+      fullHash: 2c19c7223b97
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xzhftz
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-dynamodb-partition-key
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which statements about a DynamoDB table follow from its partition key?
+    options:
+      - id: a
+        text: Every item must carry a value for one required attribute.
+        correct: true
+        why: The partition key is the one attribute each item is required to carry, while other attributes may vary.
+      - id: b
+        text: No foreign key links the table to any other table.
+        why: This is true of DynamoDB, but it holds because DynamoDB has no foreign keys, not because of the partition key.
+      - id: c
+        text: A query fetches the items that match a given value.
+        correct: true
+        why: A DynamoDB query looks up items by their partition key value, so the key is what a query matches on.
+      - id: d
+        text: A scan reads back every item that the table holds.
+        why: This is true, but a scan reads the whole table without using the partition key at all.
+      - id: e
+        text: Apps add items by calling its APIs through the AWS SDK.
+        why: This is true of how apps reach DynamoDB, and it does not follow from the partition key.
+    evidence:
+      - Each item must carry a partition key value, while its other attributes can vary.
+      - "**Partition key**: the required attribute that identifies DynamoDB items and that a query looks up."
+    takeaway: The partition key is required on every DynamoDB item and is the value a query uses to find items.
+    history: []
+    verified:
+      keyHash: 1f508ecabc66
+      fullHash: 95e3e1d32b9d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2njgtf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-scan
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's small DynamoDB table of seasonal drinks has an allergen attribute on only some items.
+      A manager wants to read back the whole table in the console to see which drinks carry it.
+      Which read fits?
+    options:
+      - id: a
+        text: A query on one partition key value
+        why: A query returns only the items matching one partition key value, so most drinks would be left out.
+      - id: b
+        text: A scan of the table
+        correct: true
+        why: A scan reads every item in the table, so the manager sees all drinks and which ones have the attribute.
+      - id: c
+        text: A SQL join across related tables
+        why: Joins combine related RDS tables through foreign keys, and DynamoDB tables have no foreign keys to join on.
+      - id: d
+        text: A SQL client on the endpoint and port
+        why: Connecting through an endpoint and port is how clients reach RDS, while DynamoDB is reached through its APIs.
+    evidence:
+      - A scan (Explore table items, then Run) read back everything, and a notes attribute appeared on only some items.
+    takeaway: A DynamoDB scan reads every item in a table, which suits reviewing a whole small table.
+    history: []
+    verified:
+      keyHash: fc7a2594ef2d
+      fullHash: 60b8d7450d32
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-js422n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-scan
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 1
+    stem: >-
+      What does a scan of a DynamoDB table return?
+    options:
+      - id: a
+        text: The items matching one partition key value
+        why: Returning items by partition key value is what a query does, not a scan.
+      - id: b
+        text: Rows combined from tables tied by foreign keys
+        why: Combining rows through foreign keys is an RDS join, and DynamoDB has no foreign keys.
+      - id: c
+        text: Every item stored in the table
+        correct: true
+        why: A scan reads the whole table, returning each item it holds.
+      - id: d
+        text: Only the attributes that every item shares
+        why: A scan returns whole items, including attributes that appear on only some of them.
+    evidence:
+      - "**Scan**: a DynamoDB read of every item in a table."
+      - A scan returns the whole table, while a query fetches items by partition key.
+    takeaway: A DynamoDB scan returns every item in the table, with whatever attributes each item has.
+    history: []
+    verified:
+      keyHash: 1a01ddcf93b0
+      fullHash: 45cbc7bb17ff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r8dgnf
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-query
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's DynamoDB orders table uses the order number as its partition key and gets bigger every day.
+      A cashier needs to pull up a single order fast, without reading the rest of the table.
+      Which read should the cashier's tool use?
+    options:
+      - id: a
+        text: A scan of every order item
+        why: A scan reads every item, which does more work as the table grows when only one order is wanted.
+      - id: b
+        text: A query on the order number
+        correct: true
+        why: The order number is the partition key, so a query on it returns just the one matching order.
+      - id: c
+        text: A query on the order date
+        why: The order date is not the partition key, so a query cannot look an order up by it.
+      - id: d
+        text: A query on the customer name
+        why: A query looks items up by the partition key value, and the customer name is not that key here.
+    evidence:
+      - A query for order number 5 returned that single item, the better tool as tables grow.
+      - "Finding one order in a growing table: query the partition key instead of scanning."
+    takeaway: To find one item in a growing DynamoDB table, query its partition key rather than scanning everything.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 queries on the order number, the only field that is a natural unique key.)"
+  - id: q-xgk78h
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-dynamodb-query
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 1
+    stem: >-
+      A cashier tool fetches single orders from the cafe's growing DynamoDB orders table, keyed by order number.
+      Which statements explain why a query suits this job?
+    options:
+      - id: a
+        text: It reads only the items matching the partition key value
+        correct: true
+        why: A query reads just the items whose partition key matches, so the tool gets the one order it asked for.
+      - id: b
+        text: It reaches DynamoDB through the AWS SDK like other reads
+        why: This is true, but every read, scans included, goes through the SDK, so it does not favor a query.
+      - id: c
+        text: It keeps its edge over a scan as the orders table grows
+        correct: true
+        why: Because a query skips the items that do not match, it keeps beating a scan as the orders table gets larger.
+      - id: d
+        text: It returns items whose other attributes can still vary
+        why: This is true of DynamoDB items, but a flexible schema says nothing about why a query fits the lookup.
+      - id: e
+        text: It runs on a stand-alone table that has no foreign keys
+        why: This is true of DynamoDB, but the lack of foreign keys does not explain why a query fits the lookup.
+    evidence:
+      - "**Query**: a DynamoDB read of the items matching a partition key value."
+      - A query for order number 5 returned that single item, the better tool as tables grow.
+    takeaway: A DynamoDB query fetches items by partition key value and suits growing tables better than a scan.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 4 and 5 are the only ones about how a query reads data and scales; the others are generic DynamoDB facts.)"
+  - id: q-g6ht3v
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-query
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's DynamoDB orders table now holds thousands of items, and staff look up orders one at a time by their order number, which is the table's partition key.
+      Which way of reading the table keeps working well as it grows?
+    options:
+      - id: a
+        text: A scan that reads every item in the table
+        why: A scan reads the whole table each time, which gets slower and costlier as the table grows.
+      - id: b
+        text: A query that fetches only the matching items
+        correct: true
+        why: A query fetches only the items that match the order number, so it suits single lookups in a growing table.
+      - id: c
+        text: A join that links it to a customers table
+        why: Joins across tables tied by foreign keys belong to relational databases, and DynamoDB tables stand alone.
+      - id: d
+        text: A SQL statement sent through a database endpoint
+        why: Connecting through an endpoint and sending SQL is how RDS is reached, while apps call DynamoDB's APIs.
+    evidence:
+      - A query for order number 5 returned that single item, the better tool as tables grow.
+      - A scan returns the whole table, while a query fetches items by partition key.
+    takeaway: To fetch specific items from a large DynamoDB table, query by partition key instead of scanning.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the efficient DynamoDB read; joins and a SQL database endpoint are not DynamoDB features and a scan is the costly path.)"
+  - id: q-sjtm11
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-query
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 1
+    stem: >-
+      What does a DynamoDB query return?
+    options:
+      - id: a
+        text: Every item stored in the table
+        why: Reading back every item is what a scan does, not a query.
+      - id: b
+        text: The rows joined across related tables
+        why: Joining related tables is an RDS pattern with foreign keys, which DynamoDB does not use.
+      - id: c
+        text: The items that match a partition key value
+        correct: true
+        why: A query looks up the partition key value it is given and returns only the matching items.
+      - id: d
+        text: The settings that were chosen for the table
+        why: A query reads the data in the table, not the name and key chosen when the table was created.
+    evidence:
+      - "**Query**: a DynamoDB read of the items matching a partition key value."
+    takeaway: A DynamoDB query returns just the items whose partition key matches the value asked for.
+    history: []
+    verified:
+      keyHash: fc9dd9a60c04
+      fullHash: 18e63390d082
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -354,3 +354,38 @@ questions:
     review:
       attempts: 3
       lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one using 'different' and is the textbook high-availability choice; 1 and 4 repeat 'same zone' and 2 jumps Regions, so 3 stands out as the balanced middle option.)"
+  - id: q-032ns6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: availability-zones
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's IT lead plans to create one Availability Zone that stretches across the Ohio and Dublin Regions.
+      Which fact about Availability Zones shows why this plan cannot work?
+    options:
+      - id: a
+        text: Each zone has its own power and networking within a Region.
+        why: Independent power and networking are true of every zone but say nothing about how many Regions a zone can cover.
+      - id: b
+        text: Each zone holds its own data centers within a Region.
+        why: Holding its own data centers is true of a zone, yet it does not stop a zone from spanning Ohio and Dublin.
+      - id: c
+        text: Each zone is kept physically apart from others within a Region.
+        why: Keeping zones apart limits how far one disaster spreads, which is unrelated to a zone covering Ohio and Dublin.
+      - id: d
+        text: Each zone belongs to a single Region and never spans more.
+        correct: true
+        why: A zone belongs to a single Region and never spans Regions, so no zone can cover both Ohio and Dublin.
+    evidence:
+      - Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ
+    takeaway: An Availability Zone always sits inside a single Region, so covering two Regions takes zones in each Region.
+    history: []
+    verified:
+      keyHash: 8cc1f7599429
+      fullHash: 683484b4bfca
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

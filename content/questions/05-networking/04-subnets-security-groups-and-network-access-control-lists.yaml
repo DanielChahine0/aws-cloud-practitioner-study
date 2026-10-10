@@ -1,0 +1,468 @@
+questions:
+  - id: q-ezcwsp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: subnets
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe keeps its ordering website in a public subnet and its loyalty database in a private subnet of the same VPC.
+      The website must look up members' order histories in that database.
+      What makes this possible?
+    options:
+      - id: a
+        text: Rules can let one subnet talk to another
+        correct: true
+        why: Rules between subnets let the public website query the private database without exposing it to the internet.
+      - id: b
+        text: An internet gateway links the VPC to the internet
+        why: The internet gateway carries traffic to and from the internet, not lookups between the cafe's own subnets.
+      - id: c
+        text: A subnet groups resources by security needs
+        why: Grouping explains why the website and database sit apart, not how the website reaches the database.
+      - id: d
+        text: A private subnet cannot use the internet gateway
+        why: This keeps the database off the internet, but it does not let the website reach the database.
+    evidence:
+      - Rules can let subnets talk to each other, for example public EC2 instances querying private databases.
+    takeaway: A public subnet's instances can query a private subnet's database when rules let the two subnets talk.
+    history: []
+    verified:
+      keyHash: b7ac49951385
+      fullHash: 8fad444d8dd0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-segn0a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: subnets
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 1
+    stem: >-
+      What sets a public subnet apart from a private subnet in a VPC?
+    options:
+      - id: a
+        text: Access to the internet gateway
+        correct: true
+        why: Subnets exist largely to control gateway access, and only public subnets may use the internet gateway.
+      - id: b
+        text: A larger block of IP addresses
+        why: The size of a subnet's address range does not decide whether the public can reach what it holds.
+      - id: c
+        text: A separate Availability Zone
+        why: Public and private subnets can share an Availability Zone, so the zone does not make a subnet public.
+      - id: d
+        text: A security group on each instance
+        why: Every instance gets a security group at launch, in a private subnet just as in a public one.
+    evidence:
+      - "A main reason to have subnets is to decide who gets to the gateways: public subnets can use the internet gateway, private ones cannot."
+    takeaway: Public subnets can use the internet gateway and private subnets cannot, which is how subnets control who reaches the internet.
+    history: []
+    verified:
+      keyHash: d5fa0ac9c164
+      fullHash: 4007282dc299
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0xxnwk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: packets
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      A customer's order request reaches the cafe's VPC as packets and crosses into the subnet that holds the ordering servers.
+      What does the check at that crossing look at in each packet?
+    options:
+      - id: a
+        text: The order items inside it
+        why: The check never looks at what a packet carries, so the order items play no part in it.
+      - id: b
+        text: The sender and how it communicates
+        correct: true
+        why: Each packet is judged only on who sent it and how it is trying to communicate.
+      - id: c
+        text: The earlier request it answers
+        why: The subnet check keeps no memory of earlier requests, so it judges each packet on its own.
+      - id: d
+        text: The encryption applied to it
+        why: The check looks at whether the sender is approved, not at whether the packet was encrypted.
+    evidence:
+      - A packet is one unit of data on a network, and a customer's request arrives as packets through the internet gateway.
+      - Each packet crossing a subnet edge, in either direction, is judged by that subnet's network ACL on who sent it and how it is trying to communicate.
+      - The check looks only at whether the sender is approved, never at what the packet carries.
+    takeaway: A packet crossing a subnet edge is judged on its sender and how it communicates, never on the data it carries.
+    history: []
+    verified:
+      keyHash: e81a2a23c54a
+      fullHash: 7c5732d908cd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pzhg1s
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: packets
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      A packet travels from the cafe's order server in one subnet to its inventory server in another subnet of the same VPC.
+      Match each check along the way, in order, with the control that makes it.
+    pairs:
+      - left: First check
+        right: Security group of the sending instance
+        why: The sending instance's security group is the first control, and it lets outbound traffic go by default.
+      - left: Second check
+        right: Network ACL of the sending subnet
+        why: The sending subnet's network ACL applies its own outbound list whatever the security group decided.
+      - left: Third check
+        right: Network ACL of the receiving subnet
+        why: The receiving subnet's network ACL checks the packet as it crosses into that subnet.
+      - left: Fourth check
+        right: Security group of the receiving instance
+        why: The receiving instance's security group is the last check before the packet arrives.
+    evidence:
+      - "Outbound leg: A's security group lets it out by default, subnet 1's network ACL applies its own outbound list no matter what the security group decided, then subnet 2's network ACL and B's security group check it on the way in."
+    takeaway: A packet between subnets passes the sender's security group, both network ACLs and then the receiver's security group.
+    history: []
+    verified:
+      keyHash: 6199bc9945df
+      fullHash: baf86872819c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hwpxt3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: network-acls
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe wants one rule that turns away traffic from a known bad address range before it enters any instance in its ordering subnet.
+      The rule must explicitly deny that range for the whole subnet.
+      Which control fits?
+    options:
+      - id: a
+        text: A security group
+        why: A security group works per instance and supports allow rules only, so it cannot hold a deny rule.
+      - id: b
+        text: An internet gateway
+        why: An internet gateway connects the VPC to the internet and does not filter senders with rules.
+      - id: c
+        text: A network ACL
+        correct: true
+        why: A network ACL guards the whole subnet edge and supports deny rules as well as allow rules.
+      - id: d
+        text: A route table
+        why: A route table decides where subnet traffic goes, not which senders are turned away.
+    evidence:
+      - "Picture the network ACL as the subnet's border guard: a virtual firewall judging everything that enters or leaves the whole subnet."
+      - Network ACLs work at the subnet level, are stateless, and support both allow and deny rules.
+    takeaway: To deny traffic for a whole subnet, use a network ACL, since security groups allow rules only and work per instance.
+    history: []
+    verified:
+      keyHash: f717a60ddd81
+      fullHash: bac128b0433d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7jxytm
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: network-acls
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which statements describe what a network ACL allows before anyone adds or edits its rules?
+    options:
+      - id: a
+        text: The default network ACL passes every packet
+        correct: true
+        why: Every account's default network ACL lets everything through until someone edits it.
+      - id: b
+        text: A custom network ACL blocks every packet
+        correct: true
+        why: A newly created custom network ACL blocks everything until you add allow rules.
+      - id: c
+        text: The default network ACL judges both directions
+        why: True, but it says where the checks happen, not which packets pass before any rules are edited.
+      - id: d
+        text: A custom network ACL rechecks every reply
+        why: True, since it is stateless, but it says nothing about what passes before the rules are edited.
+      - id: e
+        text: A custom network ACL guards a whole subnet
+        why: True, but this is where the network ACL works, not what it lets through out of the box.
+    evidence:
+      - Every AWS account comes with a default network ACL that lets everything through until you edit its rules.
+      - "A custom network ACL starts the other way round: nothing passes until you add allow rules."
+    takeaway: The default network ACL allows everything, while a custom one denies everything until you add allow rules.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 5 form a mirrored pair, blocks every packet versus passes every packet.)"
+  - id: q-3jft13
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: stateless-packet-filtering
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      The network ACL on the cafe's menu subnet admits a customer's request on its inbound list.
+      Nothing on its outbound list matches the reply.
+      What happens to the reply?
+    options:
+      - id: a
+        text: It leaves because the request was admitted
+        why: A stateless filter keeps no memory of the request, so admission earns the reply nothing.
+      - id: b
+        text: It leaves because outbound traffic is open
+        why: A network ACL checks outbound packets against its own list, and here nothing matches the reply.
+      - id: c
+        text: It is rejected by the final deny rule
+        correct: true
+        why: The reply is checked from scratch, and the final explicit deny rule rejects it when no rule matches.
+      - id: d
+        text: It is held until the security group decides
+        why: The network ACL decides on its own lists, whatever the security group allows.
+    evidence:
+      - "**Stateless**: it has no memory, so even the reply to a request that already left is checked from scratch."
+      - Its inbound and outbound lists are separate and may differ, so being admitted does not guarantee the reply can leave.
+      - Each network ACL also ends in an explicit deny rule that rejects any packet no other rule matched.
+    takeaway: A stateless filter checks every reply from scratch, so a reply needs its own matching rule to leave the subnet.
+    history: []
+    verified:
+      keyHash: c2afc6f391c0
+      fullHash: 8b9e79e82814
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-a7aq0a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: stateless-packet-filtering
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which description fits stateless packet filtering?
+    options:
+      - id: a
+        text: Every packet is checked in both directions with no memory of earlier traffic
+        correct: true
+        why: Stateless filtering keeps no record, so each packet, replies included, is checked against the rules.
+      - id: b
+        text: Replies to allowed requests are passed without being checked against rules
+        why: Letting replies through because a request was allowed is stateful filtering, not stateless.
+      - id: c
+        text: Only the contents of each packet are inspected against the allow list
+        why: Packet filtering judges the sender and how it communicates, never what the packet carries.
+      - id: d
+        text: Packets are checked once on arrival and never again on the way out
+        why: A stateless filter checks traffic leaving as well as arriving, each time from scratch.
+    evidence:
+      - "**Stateless packet filtering**: checking every packet in both directions with no memory of earlier traffic."
+    takeaway: Stateless filtering, as network ACLs do, checks every packet in both directions with no memory of earlier traffic.
+    history: []
+    verified:
+      keyHash: d6642e04bb61
+      fullHash: 579b3974cbf7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jgx1ne
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-groups
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe's web server and its reporting server sit in the same subnet.
+      The web server should accept only HTTPS, while the reporting server needs a different port open.
+      Which control lets the cafe set these rules separately for each server?
+    options:
+      - id: a
+        text: A network ACL
+        why: A network ACL applies to the whole subnet, so it cannot give two instances in it different rules.
+      - id: b
+        text: A security group
+        correct: true
+        why: A security group filters traffic for one instance, so each server can have its own port rules.
+      - id: c
+        text: An internet gateway
+        why: An internet gateway links the VPC to the internet and holds no per-server port rules.
+      - id: d
+        text: A NAT gateway
+        why: A NAT gateway lets private instances start outside connections and does not set port rules per server.
+    evidence:
+      - Instances in one subnet may need different rules about who may contact them and on which ports, which calls for instance-level control.
+      - You open it with allow rules, such as accepting only HTTPS on a web server, with separate inbound and outbound rules, and anything not allowed stays blocked.
+    takeaway: When instances in one subnet need different port rules, use security groups, which work per instance.
+    history: []
+    verified:
+      keyHash: f1a306464594
+      fullHash: 11230663efd8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m2tdyx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-groups
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe launches EC2 instances for its ordering app and must decide which traffic may reach them.
+      Under the AWS shared responsibility model, who sets up the security groups for these instances?
+    options:
+      - id: a
+        text: AWS, as part of security of the cloud
+        why: Security of the cloud covers AWS hardware, software and facilities, not the rules around the cafe's instances.
+      - id: b
+        text: The cafe, as part of security in the cloud
+        correct: true
+        why: Configuring security groups for its own resources is the customer's job, as security in the cloud.
+      - id: c
+        text: AWS, as part of security in the cloud
+        why: Security in the cloud is the customer's share, so AWS does not set up the cafe's security groups.
+      - id: d
+        text: The cafe, as part of security of the cloud
+        why: Security of the cloud is AWS's share, covering its hardware and facilities, not the cafe's instance traffic.
+    evidence:
+      - Under the AWS Shared Responsibility Model, setting up network ACLs and security groups for your subnets and resources is your job.
+      - That is security IN the cloud, the traffic protection around your own applications.
+    takeaway: Configuring security groups is the customer's job under the shared responsibility model, as security in the cloud.
+    history: []
+    verified:
+      keyHash: 8823337dac42
+      fullHash: afa1cf647e47
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bnkz4w
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: stateful-packet-filtering
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's ordering instance sends a request to a supplier's price service.
+      Its security group has no inbound rule that matches the supplier's reply.
+      What happens to the reply at the security group?
+    options:
+      - id: a
+        text: It is let in because the request was remembered
+        correct: true
+        why: A stateful security group remembers the outgoing request and lets its reply in whatever the inbound rules say.
+      - id: b
+        text: It is blocked because no inbound rule matches
+        why: That would be a stateless check, but the security group recognizes the reply to its own request.
+      - id: c
+        text: It is blocked until an explicit deny rule is removed
+        why: Security groups support allow rules only, so there is no deny rule to remove.
+      - id: d
+        text: It is let in only if the packet content is approved
+        why: The security group does not read packet content; it passes the reply because it saw the request.
+    evidence:
+      - "**Stateful**: it remembers an outgoing request and lets the matching reply back in whatever the inbound rules say."
+    takeaway: A stateful security group remembers allowed requests, so their replies return without matching an inbound rule.
+    history: []
+    verified:
+      keyHash: 7ae2372aa40b
+      fullHash: 24487c923818
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8ztmh0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: stateful-packet-filtering
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which term names filtering that remembers earlier decisions so that replies to allowed requests pass automatically?
+    options:
+      - id: a
+        text: Stateless packet filtering
+        why: Stateless filtering keeps no memory and checks each reply from scratch against the rules.
+      - id: b
+        text: Explicit deny rule
+        why: An explicit deny rule rejects unmatched packets at the end of a network ACL and remembers nothing.
+      - id: c
+        text: Stateful packet filtering
+        correct: true
+        why: Stateful filtering keeps track of allowed requests and lets their replies through without a new check.
+      - id: d
+        text: Default network ACL
+        why: The default network ACL allows all traffic until edited, and it still keeps no memory of requests.
+    evidence:
+      - "**Stateful packet filtering**: remembering earlier decisions so replies to allowed requests pass automatically."
+    takeaway: Stateful packet filtering remembers allowed requests and passes their replies, which is how security groups work.
+    history: []
+    verified:
+      keyHash: dab3c35e90db
+      fullHash: 6bcd109720bb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xspwy0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: network-acls
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "2.4"
+    level: 2
+    stem: >-
+      The cafe creates a custom network ACL for its new payments subnet and links the two, but nobody has added any rules to it yet.
+      What happens to traffic at the edge of that subnet?
+    options:
+      - id: a
+        text: Packets in both directions are turned away
+        correct: true
+        why: A custom network ACL passes nothing until allow rules are added, so every packet in and out of the subnet is rejected.
+      - id: b
+        text: Packets in both directions are let through
+        why: Letting everything through is how the default network ACL behaves, not a newly created custom one.
+      - id: c
+        text: Inbound packets are turned away, outbound let through
+        why: Blocking inbound while passing outbound describes a new security group, not a custom network ACL with no rules.
+      - id: d
+        text: Inbound packets are let through, outbound turned away
+        why: A custom network ACL with no rules has nothing that admits inbound packets, so they are rejected as well.
+    evidence:
+      - "A custom network ACL starts the other way round: nothing passes until you add allow rules."
+      - Every AWS account comes with a default network ACL that lets everything through until you edit its rules.
+    takeaway: A new custom network ACL blocks all traffic both ways until you add allow rules, unlike the allow-all default one.
+    history: []
+    verified:
+      keyHash: 0a9e13bf5ddc
+      fullHash: 968e8557e875
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

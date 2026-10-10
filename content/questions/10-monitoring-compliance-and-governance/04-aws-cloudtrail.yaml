@@ -1,0 +1,433 @@
+questions:
+  - id: q-v9q3c2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-auditing
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 1
+    stem: >-
+      What about the way AWS works lets one service log all of an account's activity in a single place?
+    options:
+      - id: a
+        text: Each action is sent as an API request
+        correct: true
+        why: Because each action is an API request, one service can log all of them in a single place.
+      - id: b
+        text: IAM grants each user only needed rights
+        why: Least privilege limits who can change things, but it is not what lets all activity be logged in one place.
+      - id: c
+        text: Accounts can be grouped into one organization
+        why: Grouping accounts helps manage them together, yet it is not what makes each action something a service can log.
+      - id: d
+        text: Resources can carry tags naming their owner
+        why: Tags label resources for tracking and cost, but they do not turn activity into a record kept in one place.
+    evidence:
+      - On AWS every action is an API call, so all can be logged centrally.
+    takeaway: On AWS every action is an API call, which is what lets all activity be logged in one place.
+    history: []
+    verified:
+      keyHash: 936816d10c81
+      fullHash: 0080d3ddbb4d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-31vngx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-auditing
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      In the cafe's old back-office server room, a staffer once changed a setting by mistake and nobody could ever trace it.
+      After the move to AWS, what makes a slip like that traceable?
+    options:
+      - id: a
+        text: Each action on AWS goes through an API call
+        correct: true
+        why: Even an accidental change is an API request on AWS, so it lands in the central activity record.
+      - id: b
+        text: AWS takes care of the physical server hardware
+        why: AWS does run the hardware, but that shift in duties does not record who changed a setting.
+      - id: c
+        text: IAM can limit each staffer to only needed rights
+        why: Tighter permissions can make slips less likely, but they leave no trace of a slip that still happens.
+      - id: d
+        text: Staff sign in with multi-factor authentication
+        why: A second sign-in factor proves who logged in, yet on its own it does not record the setting they altered.
+    evidence:
+      - On premises, changes can slip by unrecorded, even accidental ones.
+      - On AWS every action is an API call, so all can be logged centrally.
+    takeaway: Changes that slip by unrecorded on premises become traceable on AWS because each one is a loggable API call.
+    history: []
+    verified:
+      keyHash: 67c4865fc8d1
+      fullHash: ed6cd4e0829a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5dadmr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudtrail
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      A security group rule on the cafe's loyalty database vanished overnight.
+      The manager wants to know which user removed it, at what time and from which IP address.
+      Which service answers this?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        correct: true
+        why: CloudTrail records each API call with the caller, the time, the source IP and the result.
+      - id: b
+        text: AWS Config
+        why: AWS Config tracks resource settings and checks them against rules, not the caller and source IP of each request.
+      - id: c
+        text: AWS Control Tower
+        why: Control Tower sets up and governs a multi-account environment, so it does not answer who made one call.
+      - id: d
+        text: Amazon CloudWatch
+        why: CloudWatch watches metrics and application logs, not the identity behind each API request.
+    evidence:
+      - "Who called, when, from which IP, and the result: a new state or a denial."
+    takeaway: To learn who made a change, when and from where, look to CloudTrail's record of API calls.
+    history: []
+    verified:
+      keyHash: c20113ab94d5
+      fullHash: 7fe5fdf12106
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1f4v6b
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-cloudtrail
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 1
+    stem: >-
+      The cafe's manager opens one AWS CloudTrail event about a deleted security group rule.
+      Which statements describe details stored inside that event?
+    options:
+      - id: a
+        text: It names the identity that made the call
+        correct: true
+        why: Each event records who called, which is how the manager traces the deletion to a person or role.
+      - id: b
+        text: It notes the IP address the call came from
+        correct: true
+        why: Each event records the source IP, which shows where the deletion request was sent from.
+      - id: c
+        text: It stays in event history free for 90 days
+        why: That is how long event history keeps the event, not a detail written inside the event itself.
+      - id: d
+        text: It can be copied to Amazon S3 by a trail
+        why: A trail can deliver events to S3, but where the event can go is not a detail it stores.
+      - id: e
+        text: It can feed Insights once a trail enables it
+        why: Insights studies management events once enabled, which is a use of the event rather than its content.
+    evidence:
+      - "Who called, when, from which IP, and the result: a new state or a denial."
+      - Single actions (API or console calls); event history shows 90 days of management events per Region, free, searchable, downloadable, unchangeable
+    takeaway: A CloudTrail record names who called, when, from which IP and with what result.
+    history: []
+    verified:
+      keyHash: d757e8164b89
+      fullHash: 19d905f2ea3e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dkpd60
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: log-file-integrity-validation
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      An auditor asks the cafe to prove that nobody altered its CloudTrail log files after they were delivered.
+      What should the cafe do?
+    options:
+      - id: a
+        text: Enable CloudTrail Insights to watch the trail's activity
+        why: Insights flags unusual API volume or error rates, which says nothing about edits to a log file.
+      - id: b
+        text: Turn on log file integrity validation for the trail
+        correct: true
+        why: Integrity validation shows whether a delivered log file was changed, which is the proof the auditor wants.
+      - id: c
+        text: Send the trail's log files to CloudWatch Logs as well
+        why: A second copy in CloudWatch Logs adds a place to read events, but it does not prove a file is unchanged.
+      - id: d
+        text: Deliver the trail's log files to a separate account
+        why: A separate log account blocks root-level edits, but it does not prove after the fact that no file changed.
+    evidence:
+      - Integrity validation exposes tampering, and a separate log account blocks root-level edits.
+    takeaway: To prove CloudTrail log files were not altered after delivery, turn on log file integrity validation.
+    history: []
+    verified:
+      keyHash: a3e555e11770
+      fullHash: 5fea97cfee65
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xbe8wj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: log-file-integrity-validation
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does CloudTrail log file integrity validation do?
+    options:
+      - id: a
+        text: It reveals whether a log file was changed after delivery
+        correct: true
+        why: Validation detects tampering after delivery, so an edited or deleted log file shows up as altered.
+      - id: b
+        text: It flags API call volume that strays from the usual level
+        why: Spotting unusual API volume is the job of CloudTrail Insights, not of integrity validation.
+      - id: c
+        text: It keeps 90 days of management events free to search
+        why: A free 90-day searchable view is event history, which does not check log files for tampering.
+      - id: d
+        text: It sends log files to Amazon S3 with no 90-day cap
+        why: Delivering log files to S3 is what a trail does, while validation only checks whether a file changed.
+    evidence:
+      - Integrity validation exposes tampering, and a separate log account blocks root-level edits.
+      - "**Log file integrity validation**: reveals tampered logs."
+    takeaway: Integrity validation detects tampering with delivered log files, unlike Insights, event history or delivery to S3.
+    history: []
+    verified:
+      keyHash: bfdc01b9ab61
+      fullHash: 2787f0f15d31
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-k2990j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudtrail-event-history
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      Last week someone changed a security group in the cafe's account.
+      The admin never created a trail, and she wants to look up that change today at no charge.
+      Where should she look?
+    options:
+      - id: a
+        text: CloudTrail event history
+        correct: true
+        why: Event history shows recent management events in each Region for free, with no trail to set up.
+      - id: b
+        text: CloudTrail logs in Amazon S3
+        why: Log files only reach S3 once a trail delivers them, and the admin never created one.
+      - id: c
+        text: CloudTrail Insights
+        why: Insights flags unusual API volume or error rates once enabled, rather than listing a single past change.
+      - id: d
+        text: CloudWatch Logs
+        why: CloudWatch Logs holds what applications write about themselves, not the account's API calls.
+    evidence:
+      - Single actions (API or console calls); event history shows 90 days of management events per Region, free, searchable, downloadable, unchangeable
+    takeaway: For a recent management event with no trail set up, the free event history is the place to search.
+    history: []
+    verified:
+      keyHash: d49f9d6e13cc
+      fullHash: 0dd58b6c36bd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0h8evj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudtrail-event-history
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's admin opens CloudTrail event history in one Region, and she has never created a trail.
+      What can she find there?
+    options:
+      - id: a
+        text: Recent management events recorded in that Region
+        correct: true
+        why: Event history shows 90 days of management events for each Region at no charge, with no trail needed.
+      - id: b
+        text: Log files that a trail has delivered to Amazon S3
+        why: S3 log files exist only once a trail delivers them, and the admin never created one.
+      - id: c
+        text: Flags for API volume that strays from normal levels
+        why: Those flags come from CloudTrail Insights, which must first be enabled on a trail or event data store.
+      - id: d
+        text: Error messages that the cafe's apps sent to CloudWatch Logs
+        why: App messages live in CloudWatch Logs, which watches app internals rather than API activity.
+    evidence:
+      - Single actions (API or console calls); event history shows 90 days of management events per Region, free, searchable, downloadable, unchangeable
+      - "**Event history**: free 90-day view of management events."
+    takeaway: Event history is a free, unchangeable view of 90 days of management events in each Region.
+    history: []
+    verified:
+      keyHash: 24547fc4a8f8
+      fullHash: 1eb6ffb837f3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-g3h4hw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudtrail-logs
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe takes card payments, and its PCI auditors want a record of API activity that reaches back well past 90 days.
+      What should the cafe keep for them?
+    options:
+      - id: a
+        text: CloudTrail event history
+        why: Event history only reaches back 90 days, which falls short of what the auditors ask for.
+      - id: b
+        text: CloudTrail logs in Amazon S3
+        correct: true
+        why: Log files in S3 have no 90-day cap and can serve as proof for PCI audits.
+      - id: c
+        text: CloudTrail Insights on the trail
+        why: Insights flags unusual API patterns, but it is not the stored record of every call an auditor reviews.
+      - id: d
+        text: Amazon CloudWatch alarms
+        why: Alarms react when a metric crosses a threshold, and they keep no lasting record of API calls.
+    evidence:
+      - The files holding events, sent to S3 or CloudWatch Logs, no 90-day cap, usable as PCI or HIPAA proof
+      - Event history is free for 90 days, while S3 logs serve long audits.
+    takeaway: For audits that look back beyond 90 days, keep CloudTrail log files in S3.
+    history: []
+    verified:
+      keyHash: 493ae93c07a2
+      fullHash: 78838bc476bd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-75t2c9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudtrail-logs
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe already sends its ordering app's own error messages to CloudWatch Logs.
+      Its auditor now wants stored files recording every API call in the account, kept longer than 90 days.
+      What should the cafe set up?
+    options:
+      - id: a
+        text: A trail that writes CloudTrail logs
+        correct: true
+        why: A trail delivers files of API events with no 90-day cap, which is the record the auditor asks for.
+      - id: b
+        text: A new log group in CloudWatch Logs
+        why: Another log group would still hold app output, since CloudWatch Logs watches app internals, not API calls.
+      - id: c
+        text: A CloudWatch alarm on the app errors
+        why: An alarm reacts to app errors and stores nothing about who called which API.
+      - id: d
+        text: A search of CloudTrail event history
+        why: Event history stops at 90 days, so it cannot meet the longer retention the auditor wants.
+    evidence:
+      - CloudWatch Logs watches app internals, while CloudTrail records API activity.
+      - The files holding events, sent to S3 or CloudWatch Logs, no 90-day cap, usable as PCI or HIPAA proof
+    takeaway: App output belongs in CloudWatch Logs, while a lasting record of API calls comes from CloudTrail logs.
+    history: []
+    verified:
+      keyHash: dec9efa0d336
+      fullHash: a02c3395b4c4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mtt3wd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudtrail-insights
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      One night the cafe's account suddenly makes far more delete calls than it ever does.
+      Which CloudTrail feature would flag this jump?
+    options:
+      - id: a
+        text: CloudTrail Insights
+        correct: true
+        why: Insights learns the usual API volume and error rates and flags a sharp swing like this one.
+      - id: b
+        text: CloudTrail event history
+        why: Event history lists the calls, but it does not compare them to a normal level or flag a spike.
+      - id: c
+        text: Log file integrity validation
+        why: Integrity validation checks whether log files were tampered with, not whether call volume is unusual.
+      - id: d
+        text: CloudTrail logs in Amazon S3
+        why: Log files in S3 store each delete call, but they do not compare volume to a normal level or flag a spike.
+    evidence:
+      - Studies management events for normal API volume and error rates, and flags deviations once enabled on a trail or event data store
+    takeaway: A sudden swing in API call volume or errors is what CloudTrail Insights is built to flag.
+    history: []
+    verified:
+      keyHash: e058ee747616
+      fullHash: 3d4d73ae8831
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gahgvh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudtrail-insights
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 1
+    stem: >-
+      What baseline does CloudTrail Insights measure activity against before it raises a flag?
+    options:
+      - id: a
+        text: Typical call volume and error rates
+        correct: true
+        why: Insights builds a baseline of normal call volume and error rates from management events and flags deviations.
+      - id: b
+        text: CPU and memory metrics from each instance
+        why: Instance metrics are what CloudWatch tracks, and Insights looks at API activity instead.
+      - id: c
+        text: Resource settings against compliance rules
+        why: Checking settings against rules is the work of AWS Config, not of CloudTrail Insights.
+      - id: d
+        text: Each log file against its original digest
+        why: Checking a log file against its original is integrity validation, which finds tampering, not unusual activity.
+    evidence:
+      - Studies management events for normal API volume and error rates, and flags deviations once enabled on a trail or event data store
+      - "**CloudTrail Insights**: spots abnormal API activity."
+    takeaway: CloudTrail Insights compares API activity to its normal volume and error rates and flags what strays.
+    history: []
+    verified:
+      keyHash: 2bb0d1070951
+      fullHash: 5d590801e706
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

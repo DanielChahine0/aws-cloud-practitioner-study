@@ -1,0 +1,612 @@
+questions:
+  - id: q-52v54j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-well-architected-framework
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      What does the AWS Well-Architected Framework give a team that builds on AWS?
+    options:
+      - id: a
+        text: A free service that reviews a workload and suggests fixes
+        why: That describes the AWS Well-Architected Tool, whose question-based review applies the framework rather than being it.
+      - id: b
+        text: A six-pillar method for designing and judging designs
+        correct: true
+        why: The framework is a consistent, six-pillar way to design an architecture and assess how well it holds up.
+      - id: c
+        text: A phased plan for moving a business into the cloud
+        why: A migration plan is a different kind of guidance and does not score a design against pillars.
+      - id: d
+        text: A pricing model that rewards a steady usage commitment
+        why: A pricing model lowers a bill, while the framework is a method for judging the architecture itself.
+    evidence:
+      - "**AWS Well-Architected Framework**: AWS's six-pillar method for designing and judging architectures."
+      - The framework aims past merely working, at secure, high-performing, resilient and efficient designs, with one consistent method for any workload.
+    takeaway: The Well-Architected Framework is a six-pillar method for designing and judging architectures, not a service.
+    history: []
+    verified:
+      keyHash: 2294b529d76a
+      fullHash: c6644e7b8867
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-z7gd70
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-well-architected-framework
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's online ordering site already works well, yet the owner still reviews it against the Well-Architected pillars every few months.
+      Why does the framework encourage this?
+    options:
+      - id: a
+        text: Regions hold several AZs, so a site can run in more than one
+        why: This is true of AWS infrastructure, but it says nothing about why a working design gets reviewed again.
+      - id: b
+        text: AWS runs the data centers, so the cafe never buys its own servers
+        why: This is true of the cloud model, but it is not the reason the framework asks for repeat reviews.
+      - id: c
+        text: Workloads change, so sizes and processes drift from what fits
+        correct: true
+        why: As the ordering site's workload becomes clearer and changes, the pillars push the owner to refine, resize and trim waste.
+      - id: d
+        text: AWS secures the hardware, so the cafe guards only its own layer
+        why: This is true under the shared responsibility model, but it does not explain revisiting the design.
+    evidence:
+      - Needs change, so the pillars keep asking you to refine processes, resize as the workload becomes clearer and trim waste.
+    takeaway: A working design still gets revisited, because changing needs call for refining, resizing and cutting waste.
+    history: []
+    verified:
+      keyHash: 47c618d25acb
+      fullHash: d6e7c7ae2a5a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-f17dmz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: operational-excellence-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      Staff push menu updates to the cafe's site by hand, so each release follows different steps and the test and live setups drift apart.
+      The owner adds an automated release pipeline so every release runs the same way.
+      Which pillar does this change serve?
+    options:
+      - id: a
+        text: Performance Efficiency
+        why: Performance Efficiency sizes resources to the workload, not how releases are run.
+      - id: b
+        text: Operational Excellence
+        correct: true
+        why: Automating releases through a pipeline improves how the cafe runs and changes its systems, which is Operational Excellence.
+      - id: c
+        text: Security
+        why: Security covers access and data protection, and a release pipeline is not mainly a protection measure.
+      - id: d
+        text: Cost Optimization
+        why: Cost Optimization lowers spend, while the pipeline's aim here is safer, repeatable releases.
+    evidence:
+      - "Hand-run releases causing outages and drifting environments: a CI/CD pipeline such as AWS CodePipeline (Operational Excellence)."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Automating releases to stop hand-run outages and drift is an Operational Excellence improvement.
+    history: []
+    verified:
+      keyHash: 9f26751eb764
+      fullHash: f90fd7e6e56a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-354st0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: operational-excellence-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which practice belongs to the Operational Excellence pillar?
+    options:
+      - id: a
+        text: Granting each user only the access the job needs
+        why: Least-privilege access is a Security pillar practice.
+      - id: b
+        text: Spreading the database across several Availability Zones
+        why: Running in multiple Availability Zones to recover from failure is a Reliability practice.
+      - id: c
+        text: Monitoring systems and improving how they are run
+        correct: true
+        why: Operational Excellence is about running and monitoring systems for business value and refining those processes.
+      - id: d
+        text: Moving a steady workload onto a cheaper purchase option
+        why: Choosing purchase options to lower spend is a Cost Optimization practice.
+    evidence:
+      - "**Operational Excellence**: running and monitoring systems for business value, improving processes, pipeline-automated releases and good event response."
+    takeaway: Operational Excellence covers running, monitoring and improving systems, including automated releases and event response.
+    history: []
+    verified:
+      keyHash: f7d19b8dafd6
+      fullHash: a368c28e37ae
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zdpybc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's loyalty database stores customer emails.
+      The owner wants each staff role to have only the permissions it needs and the data encrypted at rest and in transit.
+      Which pillar guides these choices?
+    options:
+      - id: a
+        text: Security
+        correct: true
+        why: Least-privilege permissions and encryption build protection into the design, which is the Security pillar.
+      - id: b
+        text: Reliability
+        why: Reliability plans recovery from failures and does not decide who may read the customer emails.
+      - id: c
+        text: Operational Excellence
+        why: Operational Excellence improves how systems are run and released, not how the data is protected.
+      - id: d
+        text: Performance Efficiency
+        why: Performance Efficiency fits resource size to the workload and does not cover permissions or encryption.
+    evidence:
+      - "**Security**: protection built in, with least-privilege access, intact data and guarded systems."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Least-privilege access and encryption of data point to the Security pillar.
+    history: []
+    verified:
+      keyHash: 5a62bcb5e7aa
+      fullHash: 1b64e42ab3f1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tgfjdq
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: security-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which practices belong to the Security pillar of the AWS Well-Architected Framework?
+    options:
+      - id: a
+        text: Deploying the workload across several Availability Zones
+        why: Multiple Availability Zones help a workload survive a failure, which is a Reliability practice.
+      - id: b
+        text: Giving every identity only the permissions it needs
+        correct: true
+        why: Least-privilege access limits what each identity can do, a core Security practice.
+      - id: c
+        text: Releasing changes through an automated pipeline
+        why: Automated releases improve how systems are run, which is Operational Excellence.
+      - id: d
+        text: Encrypting data at rest and while it is in transit
+        correct: true
+        why: Encryption keeps data protected and intact, which the Security pillar asks for.
+      - id: e
+        text: Planning automated recovery when a component fails
+        why: Planning recovery from failures is the heart of the Reliability pillar, not Security.
+      - id: f
+        text: Updating runbooks after each software release
+        why: Keeping runbooks current as releases go out improves how systems are run, which is Operational Excellence.
+    evidence:
+      - "**Security**: protection built in, with least-privilege access, intact data and guarded systems."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: The Security pillar builds in protection through least-privilege access and encryption at rest and in transit.
+    history: []
+    verified:
+      keyHash: 090ab9b79f3a
+      fullHash: 820dfd4628cf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zjcsrb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: reliability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's order system must keep working if one Availability Zone fails, recover on its own, and keep up as new cafe locations open.
+      Which pillar is the owner focusing on?
+    options:
+      - id: a
+        text: Performance Efficiency
+        why: Performance Efficiency sizes resources to the workload, but planning recovery from failure belongs elsewhere.
+      - id: b
+        text: Cost Optimization
+        why: Cost Optimization lowers spend and does not plan how the order system survives a failure.
+      - id: c
+        text: Reliability
+        correct: true
+        why: Planning recovery from failures and adapting as the business grows is the Reliability pillar.
+      - id: d
+        text: Sustainability
+        why: Sustainability reduces energy use and impact, not the order system's ability to recover.
+    evidence:
+      - "**Reliability**: planning recovery from failures and adapting as business and customer needs grow."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Multiple Availability Zones, automated recovery and adapting to growth point to the Reliability pillar.
+    history: []
+    verified:
+      keyHash: 782efe488e65
+      fullHash: 19ca670ee2b0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-z38rk9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: reliability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which focus belongs to the Reliability pillar?
+    options:
+      - id: a
+        text: Matching an instance's size to its memory needs
+        why: Fitting resource size to the workload is a Performance Efficiency focus.
+      - id: b
+        text: Planning how the system recovers from failures
+        correct: true
+        why: Reliability is about planning recovery from failures and adapting as needs grow.
+      - id: c
+        text: Granting each role only the access it needs
+        why: Least-privilege access is a Security focus, not recovery from failure.
+      - id: d
+        text: Releasing changes through an automated pipeline
+        why: Automated releases improve how systems are run, which is an Operational Excellence focus.
+    evidence:
+      - "**Reliability**: planning recovery from failures and adapting as business and customer needs grow."
+    takeaway: The Reliability pillar centers on planning recovery from failures and adapting as needs grow.
+    history: []
+    verified:
+      keyHash: 3930d07050b0
+      fullHash: eafa465403c7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-88c3tv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: performance-efficiency-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      After a month of running the cafe's inventory app on an EC2 instance, the team sees that memory is the bottleneck.
+      They pick an instance size that fits the app's memory needs and plan to check again as usage changes.
+      Which pillar does this follow?
+    options:
+      - id: a
+        text: Reliability
+        why: Reliability plans recovery from failures, while this change fits the instance to the workload.
+      - id: b
+        text: Operational Excellence
+        why: Operational Excellence improves how systems are run and released, not how an instance is sized.
+      - id: c
+        text: Security
+        why: Security protects access and data, and choosing an instance size for memory is not a protection measure.
+      - id: d
+        text: Performance Efficiency
+        correct: true
+        why: Sizing the instance to the app's memory needs and revisiting it as needs move is Performance Efficiency.
+    evidence:
+      - "**Performance Efficiency**: sizing resources, such as an EC2 instance, to workload and memory needs, and revisiting that as needs move."
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+    takeaway: Fitting a resource's size to the workload's real needs, and revisiting it, is Performance Efficiency.
+    history: []
+    verified:
+      keyHash: 00a7faa79950
+      fullHash: 7631c9f0bf41
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fqn8q1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: performance-efficiency-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's order database is underprovisioned and slows down during the lunch rush, though it never fails.
+      The team moves it to a larger size that fits the real workload, accepting a higher bill.
+      Which pillar does this change follow?
+    options:
+      - id: a
+        text: Cost Optimization
+        why: The change raises spend rather than lowering it, so it is not a Cost Optimization move.
+      - id: b
+        text: Performance Efficiency
+        correct: true
+        why: Sizing the database to fit its real workload, here a lunch-rush load it could not keep up with, is Performance Efficiency.
+      - id: c
+        text: Reliability
+        why: The database never fails, so there is no recovery from failure to plan; the issue is a size that does not fit the load.
+      - id: d
+        text: Sustainability
+        why: A larger always-on database uses more energy, so energy and carbon are not what this change targets.
+    evidence:
+      - "**Performance Efficiency**: sizing resources, such as an EC2 instance, to workload and memory needs, and revisiting that as needs move."
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+    takeaway: Sizing a resource up to fit its real workload, even at higher cost, is a Performance Efficiency choice.
+    history: []
+    verified:
+      keyHash: 1852757d1786
+      fullHash: 379a60a4322e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4azmqg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cost-optimization-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe keeps paying for a test service nobody uses anymore and for an instance that sits mostly idle.
+      The owner deprovisions the test service and moves the instance to smaller specs, with spend as the only goal.
+      Which pillar is the owner applying?
+    options:
+      - id: a
+        text: Cost Optimization
+        correct: true
+        why: Deprovisioning unneeded services and smaller specs for an underused instance, done to cut spend, is Cost Optimization.
+      - id: b
+        text: Sustainability
+        why: Sustainability also favors removing idle resources, but its aim is energy and carbon, and here the stated goal is spend alone.
+      - id: c
+        text: Reliability
+        why: Reliability plans recovery from failures and is not about cutting the monthly bill.
+      - id: d
+        text: Security
+        why: Security protects access and data, and removing an unused service here is about spend.
+    evidence:
+      - "**Cost Optimization**: lower spend through smarter allocation, such as cheaper specs for an underused instance and deprovisioning unneeded services."
+      - "**Deprovisioning**: Removing an unneeded resource to end its cost."
+    takeaway: Deprovisioning unneeded resources and cheaper specs for underused ones point to Cost Optimization.
+    history: []
+    verified:
+      keyHash: 30ecf7192580
+      fullHash: ef77d8bef5b4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3y19jw
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: cost-optimization-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe's servers run On-Demand around the clock, though weekend traffic jumps while weekday use barely changes.
+      Under the Cost Optimization pillar, which change fits?
+    options:
+      - id: a
+        text: Spread the servers across several Availability Zones
+        why: Multiple Availability Zones are a sound Reliability step, but they do not lower what the servers cost.
+      - id: b
+        text: Move each server to a larger instance type
+        why: A larger instance type changes performance, not the purchase option, and it raises rather than lowers the bill.
+      - id: c
+        text: Pay through Savings Plans and Spot Instances
+        correct: true
+        why: Matching purchase options to the traffic pattern cuts spend, a Cost Optimization move.
+      - id: d
+        text: Encrypt the order data at rest and in transit
+        why: Encryption is a sound Security step, but it leaves the On-Demand spend unchanged.
+    evidence:
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+      - "Fitting size to workload points to Performance Efficiency, purchase options and deprovisioning to Cost Optimization, serverless over always-on to Sustainability."
+    takeaway: Choosing purchase options that fit the traffic pattern is a Cost Optimization lever.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Key option 3 puts a customer-facing site on Spot Instances, which can be reclaimed, so the key is debatable. A Well-Architected pillar question fits task 1.2 better than 1.4."
+  - id: q-wfye2v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: sustainability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe resizes receipt images a few minutes each hour on an EC2 instance that runs nonstop.
+      To cut energy use and carbon, which change fits the Sustainability pillar?
+    options:
+      - id: a
+        text: Move the job to AWS Lambda
+        correct: true
+        why: Lambda runs only when the job does, avoiding an always-on instance and its energy use.
+      - id: b
+        text: Move the job to a larger EC2 instance
+        why: A larger instance that still runs nonstop uses more energy, not less.
+      - id: c
+        text: Move the job to Amazon Lightsail
+        why: A Lightsail server is still always on between jobs, so the idle energy use remains.
+      - id: d
+        text: Move the job to an EC2 Reserved Instance
+        why: A Reserved Instance changes the price, but the instance still runs nonstop and uses energy while idle.
+    evidence:
+      - "**Sustainability**: energy-efficient, lower-impact designs that avoid always-on resources, like Lambda over a nonstop EC2 instance or a smaller RDS instance, cutting cost, energy and carbon."
+    takeaway: Replacing always-on resources with serverless ones like Lambda is a Sustainability improvement.
+    history: []
+    verified:
+      keyHash: 95cf64e68073
+      fullHash: 7536f39c395e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m0ntdd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: sustainability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which pillar focuses on energy-efficient designs that lower a workload's environmental impact?
+    options:
+      - id: a
+        text: Performance Efficiency
+        why: Performance Efficiency fits resources to the workload's needs rather than targeting environmental impact.
+      - id: b
+        text: Reliability
+        why: Reliability plans recovery from failures and is not aimed at energy use.
+      - id: c
+        text: Cost Optimization
+        why: Cost Optimization targets spend, even though lower waste can also save energy.
+      - id: d
+        text: Sustainability
+        correct: true
+        why: Sustainability is the pillar for energy-efficient, lower-impact designs.
+    evidence:
+      - "**Sustainability**: energy-efficient, lower-impact designs that avoid always-on resources, like Lambda over a nonstop EC2 instance or a smaller RDS instance, cutting cost, energy and carbon."
+    takeaway: The Sustainability pillar is about energy-efficient designs with a smaller environmental footprint.
+    history: []
+    verified:
+      keyHash: ad506168f962
+      fullHash: bd7797ddfea9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5zr89x
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-well-architected-tool
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's architect wants a free AWS service that reviews the ordering workload against the six pillars and reports each issue with a best-practice fix.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Config
+        why: Config tracks resource settings against rules, not a pillar-by-pillar review of the workload.
+      - id: b
+        text: AWS Application Discovery Service
+        why: This service gathers data about on-premises servers for a migration, not a pillar review.
+      - id: c
+        text: AWS Well-Architected Tool
+        correct: true
+        why: The WA Tool is the free self-service review of a defined workload against the six pillars, with a fix for each issue.
+      - id: d
+        text: AWS Cost Explorer
+        why: Cost Explorer views and forecasts spend and does not review the design against the pillars.
+    evidence:
+      - A free, self-service AWS service for reviewing and improving workloads against the six pillars.
+      - You define a workload, run the review on your account and get a report of issues, each with a best-practice fix.
+    takeaway: The free AWS Well-Architected Tool reviews a workload against the six pillars and suggests a fix for each issue.
+    history: []
+    verified:
+      keyHash: 3fbdb5b10854
+      fullHash: b7aac9742c88
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3dea6c
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-well-architected-tool
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      Match each AWS Well-Architected Tool feature to what it does.
+    pairs:
+      - left: Custom lens
+        right: Tailors the review and its improvement plan
+        why: A custom lens adapts what the review checks and the improvement plan it produces.
+      - left: Milestone tracking
+        right: Records a workload's progress over time
+        why: Milestones capture the state of a workload so later reviews can show what improved.
+      - left: Not applicable marking
+        right: Skips a question that does not fit the workload
+        why: A question can be marked not applicable when it has no bearing on the workload.
+      - left: IAM and API integration
+        right: Lets several teams work and track progress together
+        why: IAM and API support let architects, engineers and compliance teams share the review work.
+    evidence:
+      - "Features: workload reviews at its core, milestone tracking and custom lenses that adapt evaluations and improvement plans."
+      - Questions can be marked not applicable and advice overridden.
+      - IAM and API integration support teamwork and progress tracking for architects, engineers and compliance teams.
+    takeaway: The WA Tool adds custom lenses, milestones, not-applicable marking and IAM and API teamwork to its core reviews.
+    history: []
+    verified:
+      keyHash: 513e4df3e1a8
+      fullHash: 1e65eaed099e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-j30p1a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cost-optimization-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe owner sets a monthly budget with alerts and checks the AWS bill each week, so she can act before it passes the limit.
+      Which pillar does this practice support?
+    options:
+      - id: a
+        text: Performance Efficiency
+        why: Performance Efficiency fits capacity to the workload, while this practice only watches and limits spend.
+      - id: b
+        text: Operational Excellence
+        why: Operational Excellence covers running systems and automated releases, not tracking the bill against a limit.
+      - id: c
+        text: Cost Optimization
+        correct: true
+        why: Setting budgets and tracking spend as it happens are ways to lower and control cost under this pillar.
+      - id: d
+        text: Sustainability
+        why: Sustainability aims to cut energy use and carbon, while a spending alert targets the bill alone.
+    evidence:
+      - "Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization."
+    takeaway: Budgets, spending alerts and live cost tracking are Cost Optimization practices.
+    history: []
+    verified:
+      keyHash: 02047e81e5ca
+      fullHash: e48567df6740
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

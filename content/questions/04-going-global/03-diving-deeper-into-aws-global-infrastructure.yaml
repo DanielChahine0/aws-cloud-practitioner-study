@@ -1,0 +1,254 @@
+questions:
+  - id: q-1xez0y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-az-deployment
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 3
+    stem: >-
+      The cafe's ordering app runs in one Availability Zone, and its customer data must stay inside a single Region.
+      Which design keeps the app running if that Availability Zone fails?
+    options:
+      - id: a
+        text: A multi-Region architecture
+        why: Copying the app to a second Region would move customer data outside the one Region it must stay in.
+      - id: b
+        text: A multi-AZ deployment
+        correct: true
+        why: Spreading the app across Availability Zones in the same Region rides out one AZ failing and keeps data in that Region.
+      - id: c
+        text: An edge location cache
+        why: Edge locations cache content for speed and are not a place to run the app or its data as a backup.
+      - id: d
+        text: An AWS Outposts rack
+        why: Outposts runs AWS services in the cafe's own building, which adds no backup Availability Zone.
+    evidence:
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+    takeaway: When one AZ failure is the risk and data must stay in one Region, spread across AZs in that Region.
+    history: []
+    verified:
+      keyHash: 1bfe5c27fe01
+      fullHash: 0bb8165ed004
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pq6kpe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-az-deployment
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe runs its ordering app in two isolated groups of data centers inside one Region, with a backup ready in the second group.
+      Which outage is this design built to survive?
+    options:
+      - id: a
+        text: One entire Region going offline
+        why: Both groups sit in the same Region, so losing that whole Region takes a multi-Region design instead.
+      - id: b
+        text: One edge location going offline
+        why: Edge locations only cache content near users, so losing one is not the failure this backup addresses.
+      - id: c
+        text: One Availability Zone going offline
+        correct: true
+        why: Each isolated group is an Availability Zone, so the app moves to the backup AZ when its current AZ fails.
+      - id: d
+        text: The customers' internet going offline
+        why: A customer's own link outage cuts access to every AZ alike, so a second group of data centers cannot help.
+    evidence:
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+    takeaway: A multi-AZ deployment protects an app from the failure of a single Availability Zone.
+    history: []
+    verified:
+      keyHash: cd6ccd88d8bd
+      fullHash: 2b21aa8172a7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-098bfp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-region-architecture
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe chain's leadership wants online ordering to stay up even if every Availability Zone in its Region goes dark at once.
+      Which design meets that goal?
+    options:
+      - id: a
+        text: A multi-AZ deployment
+        why: Every AZ in the Region is down in this case, so a backup AZ in that same Region is gone too.
+      - id: b
+        text: An Amazon CloudFront distribution
+        why: CloudFront speeds delivery from edge caches but still needs a working origin to run the ordering app.
+      - id: c
+        text: An Amazon EC2 Auto Scaling group
+        why: Adding instances inside the failed Region does not help when the whole Region is offline.
+      - id: d
+        text: A multi-Region architecture
+        correct: true
+        why: Running copies in a second Region lets ordering continue when the first Region goes down entirely.
+    evidence:
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+      - AZ or Region outage -> switch to a configured backup AZ or another Region.
+    takeaway: Only a multi-Region design keeps an app running through the loss of a whole Region.
+    history: []
+    verified:
+      keyHash: afe9a165433e
+      fullHash: 152e6dafb7d7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-v5y6wc
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: multi-region-architecture
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 1
+    stem: >-
+      Which statements describe a multi-Region architecture?
+    options:
+      - id: a
+        text: It keeps an app available when a whole Region fails.
+        correct: true
+        why: Copies of the app in another Region carry on serving users after the first Region is lost.
+      - id: b
+        text: It caches content at sites that sit outside Regions.
+        why: Caching at sites outside Regions describes edge locations, not a design that spans Regions.
+      - id: c
+        text: It gives users high availability and fault tolerance.
+        correct: true
+        why: Spreading copies across Regions lets the app keep running and stay reachable when a hosting location fails.
+      - id: d
+        text: It runs AWS services inside your own data center.
+        why: Running AWS services on premises is what AWS Outposts does, not a spread across Regions.
+      - id: e
+        text: It places every copy of an app inside one Region.
+        why: Keeping every copy in one Region leaves the app down if that Region fails, the opposite of this design.
+    evidence:
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+      - Multi-AZ and multi-Region designs give high availability, fault tolerance and low latency for end users.
+    takeaway: Multi-Region extends redundancy past multi-AZ so an app survives the loss of an entire Region.
+    history: []
+    verified:
+      keyHash: 98e310649dc0
+      fullHash: b9e106d7db36
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5t4245
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-locations
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      Customers on another continent say the cafe's menu photos load slowly from the Region that hosts the site.
+      The cafe wants to keep hosting the site in that one Region only.
+      Which part of the AWS global infrastructure can hold copies of the photos close to those customers?
+    options:
+      - id: a
+        text: Availability Zones
+        why: AZs sit inside the hosting Region, so serving from them leaves the photos just as far from the customers.
+      - id: b
+        text: Edge locations
+        correct: true
+        why: Edge locations sit outside Regions near users and cache content such as images for faster loading.
+      - id: c
+        text: Additional Regions
+        why: Copying the site into a second Region breaks the plan to keep hosting it in one Region only.
+      - id: d
+        text: AWS Outposts racks
+        why: Outposts runs AWS services inside the cafe's own building, which puts nothing closer to customers on another continent.
+    evidence:
+      - Edge locations sit apart from Regions, in spots like Atlanta and Shanghai, and cache data, video and apps for higher transfer speeds and lower latency.
+      - Slow-loading images in the shop's app -> CloudFront.
+    takeaway: Edge locations cache content close to distant users to cut latency and speed up transfers.
+    history: []
+    verified:
+      keyHash: 973028a393cc
+      fullHash: 72f039715049
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6vamf1
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: edge-locations
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      A cafe developer suggests moving the main order database onto edge locations so it sits nearer to customers.
+      Which fact about edge locations argues against the plan?
+    options:
+      - id: a
+        text: They sit outside Regions rather than inside AZs.
+        why: Being outside Regions and AZs is true, but it says nothing about whether a database can run there.
+      - id: b
+        text: They cache content rather than run databases.
+        correct: true
+        why: Edge locations are caching sites, so the order database belongs in a Region that runs such services.
+      - id: c
+        text: They answer DNS lookups through Amazon Route 53.
+        why: Route 53 does run on edge locations, but hosting DNS does not tell the developer where a database belongs.
+      - id: d
+        text: They serve images near users through Amazon CloudFront.
+        why: CloudFront does cache images there, but that fact does not rule out or support placing a database.
+    evidence:
+      - Regions run most AWS services; edge locations are not for heavy compute, databases or redundant storage.
+      - Edge locations sit apart from Regions, in spots like Atlanta and Shanghai, and cache data, video and apps for higher transfer speeds and lower latency.
+    takeaway: Edge locations cache content near users, while databases and heavy compute belong in a Region.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 repeats the stem's word 'database', which points at the key."
+  - id: q-k02cy9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-locations
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 1
+    stem: >-
+      Where do edge locations sit within the AWS global infrastructure?
+    options:
+      - id: a
+        text: Inside each Availability Zone of a Region
+        why: AZs are data centers inside a Region, while edge locations are separate caching sites.
+      - id: b
+        text: Inside each Region, alongside its AZs
+        why: Edge locations are not part of a Region at all, so they do not sit beside its AZs.
+      - id: c
+        text: In sites apart from any Region or AZ
+        correct: true
+        why: Edge locations are caching sites placed outside Regions and AZs, in cities chosen to be near users.
+      - id: d
+        text: In a customer's own on-premises data center
+        why: Running AWS services on premises is what AWS Outposts does, not what edge locations are.
+    evidence:
+      - Edge locations sit apart from Regions, in spots like Atlanta and Shanghai, and cache data, video and apps for higher transfer speeds and lower latency.
+      - "**AWS Outposts**: Running AWS services on premises."
+    takeaway: Edge locations are caching sites outside any Region or AZ, placed near users to cut latency.
+    history: []
+    verified:
+      keyHash: be4721533312
+      fullHash: "767055e66666"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

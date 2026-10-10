@@ -1,0 +1,576 @@
+questions:
+  - id: q-2hznsw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: consolidated-billing
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      Each of the cafe's shops runs in its own AWS account, and the owner gets a separate bill from each one.
+      What lets the head office pay a single bill that covers every shop?
+    options:
+      - id: a
+        text: AWS Budgets
+        why: Budgets warns when spend nears a limit, but each shop would still get its own bill.
+      - id: b
+        text: Consolidated billing
+        correct: true
+        why: Linking the shop accounts to a primary account sends one bill for all of them to head office.
+      - id: c
+        text: AWS Cost Explorer
+        why: Cost Explorer charts past spend; it does not merge the separate bills into one.
+      - id: d
+        text: Cost allocation tags
+        why: Tags group costs inside a bill by label, but they do not join bills from separate accounts.
+    evidence:
+      - With consolidated billing, subaccounts (by team, project, department or any split) link to a primary account that alone receives the bill and sees all spend.
+    takeaway: Consolidated billing links many accounts to one primary account that pays a single bill.
+    history: []
+    verified:
+      keyHash: 5116efa13d20
+      fullHash: 8497a25e7eb9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q4crdt
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: consolidated-billing
+    note: m11/aws-pricing-and-billing-services
+    task: "4.1"
+    level: 1
+    stem: >-
+      The cafe's catering team and loyalty-app team each run their own AWS account.
+      The owner wants a single bill that also shows each team's spend.
+      What should the owner set up?
+    options:
+      - id: a
+        text: Setting a budget alert for each account
+        why: AWS Budgets warns near a limit, but each account would still get its own separate bill.
+      - id: b
+        text: Linking both accounts to one primary account
+        correct: true
+        why: With consolidated billing, the primary account alone receives the bill and sees every linked account's spend.
+      - id: c
+        text: Tagging each team's resources by project
+        why: Tags help split costs within reports, but they do not merge two accounts into one bill.
+      - id: d
+        text: Estimating each account in Pricing Calculator
+        why: The calculator prices designs before deployment and has no part in who receives the bill.
+    evidence:
+      - With consolidated billing, subaccounts (by team, project, department or any split) link to a primary account that alone receives the bill and sees all spend.
+    takeaway: Linking accounts to one primary account gives one bill that still shows the spend of each linked account.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is consolidated billing, the only option that combines accounts; the others act per account.)"
+  - id: q-x003qz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-billing-and-cost-management-dashboard
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe's company card expired, and the owner also needs to download last month's AWS invoice for the bookkeeper.
+      Where should the owner go to handle both tasks?
+    options:
+      - id: a
+        text: AWS Cost and Usage Report
+        why: The report drops detailed cost files into an S3 bucket; it cannot change the card that pays.
+      - id: b
+        text: AWS Health Dashboard
+        why: This dashboard reports events affecting the account's resources, not invoices or payment cards.
+      - id: c
+        text: AWS Pricing Calculator
+        why: The calculator estimates planned designs and has no access to past invoices or payment cards.
+      - id: d
+        text: AWS Billing and Cost Management
+        correct: true
+        why: The billing dashboard holds invoices and payment methods, so both tasks happen there.
+    evidence:
+      - The dashboard is the first stop for charges and payments.
+      - Monthly forecast, top services by cost, charges, usage, reports, invoices, payment methods
+    takeaway: Invoices, payment methods and a first look at charges live in the Billing and Cost Management dashboard.
+    history: []
+    verified:
+      keyHash: 4f88c5607a00
+      fullHash: 2f107d4dd678
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7he2y3
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-billing-and-cost-management-dashboard
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 1
+    stem: >-
+      The cafe's owner opens the AWS Billing and Cost Management dashboard for a quick check.
+      Which two items will the owner find in the dashboard itself, rather than in another AWS tool?
+    options:
+      - id: a
+        text: A forecast for the month
+        correct: true
+        why: The dashboard opens with a monthly forecast as part of its first look at spend.
+      - id: b
+        text: Accounts grouped into units
+        why: Grouping and governing accounts is the job of AWS Organizations, not the dashboard.
+      - id: c
+        text: The most expensive services
+        correct: true
+        why: The dashboard lists the top services by cost so the biggest items stand out.
+      - id: d
+        text: An estimate for an unbuilt design
+        why: Estimates for designs that do not exist yet come from the AWS Pricing Calculator.
+      - id: e
+        text: Policies that limit accounts
+        why: Account-level security policies are set through AWS Organizations, not the billing dashboard.
+    evidence:
+      - Monthly forecast, top services by cost, charges, usage, reports, invoices, payment methods
+      - The dashboard links to budget and consolidated billing features, but AWS Organizations groups the accounts.
+    takeaway: The billing dashboard gives a quick view of the month's forecast and top-cost services, while Organizations groups accounts.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 are Cost Explorer views; 3 and 5 are Organizations and 4 is Pricing Calculator.)"
+  - id: q-gn5az9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-budgets
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe owner has set a ceiling for monthly AWS spend and wants an email as soon as charges get close to it.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        why: Cost Explorer can forecast spend, but it does not send a warning when a limit is near.
+      - id: b
+        text: AWS Pricing Calculator
+        why: The calculator estimates costs before deploying and has no view of live charges.
+      - id: c
+        text: AWS Budgets
+        correct: true
+        why: Budgets is built to warn when spend approaches or passes a limit the owner sets.
+      - id: d
+        text: AWS Cost and Usage Report
+        why: The report delivers detailed cost files to a bucket but raises no alert on a limit.
+    evidence:
+      - Budgets and Cost Explorer both forecast, but only Budgets sends threshold alerts.
+      - "A monthly cost limit needing notifications: AWS Budgets."
+    takeaway: A spending limit that must trigger a notification points to AWS Budgets.
+    history: []
+    verified:
+      keyHash: 0721f5b2e73d
+      fullHash: 8fd0a2fb7546
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-55f13n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-budgets
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe signed a one-term spending commitment for its ordering servers.
+      The owner wants an email whenever the cafe falls short of making full use of it.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Budgets
+        correct: true
+        why: Budgets can track Savings Plans and Reserved Instance utilization and send an alert when it drops.
+      - id: b
+        text: AWS Cost Explorer
+        why: Cost Explorer charts usage and forecasts spend, but it sends no alert when use falls short.
+      - id: c
+        text: AWS Pricing Calculator
+        why: The calculator prices a design ahead of time and cannot watch how a commitment is used.
+      - id: d
+        text: AWS Cost and Usage Report
+        why: The report delivers detailed cost files to a bucket but raises no alert when use falls short.
+    evidence:
+      - Only AWS Budgets alerts on thresholds.
+      - Custom budgets by service, cost category or tag, including Savings Plans and Reserved Instance utilization or coverage
+    takeaway: AWS Budgets can watch Savings Plans and Reserved Instance utilization and warn when it drops.
+    history: []
+    verified:
+      keyHash: 33837a5aa37b
+      fullHash: 450c36fd74c9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-aggze2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cost-explorer
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe's AWS charges have crept up over the last few months.
+      The owner wants a chart of past spend broken down by service to see what is pushing the total higher.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Organizations
+        why: Organizations groups and governs accounts but does not chart spend by service over time.
+      - id: b
+        text: AWS Cost Explorer
+        correct: true
+        why: Cost Explorer charts cost and usage over time by service, showing what drives the increase.
+      - id: c
+        text: AWS Pricing Calculator
+        why: The calculator prices a design before deploying, not the spend that already happened.
+      - id: d
+        text: AWS Budgets
+        why: Budgets warns about limits, but analyzing which services drive spend is a different job.
+    evidence:
+      - Cost Explorer analyzes and forecasts spend, including by tag.
+    takeaway: To chart past spend and see which services drive it, use AWS Cost Explorer.
+    history: []
+    verified:
+      keyHash: 1036c798851b
+      fullHash: fa97eb1c921c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-07pp3q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cost-explorer
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe's servers have run on AWS for a while, and the owner wants advice on whether buying Reserved Instances would lower the bill, based on the usage it already has.
+      Which tool gives that advice?
+    options:
+      - id: a
+        text: AWS Pricing Calculator
+        why: The calculator works from figures the owner types in for a planned design, not from actual usage.
+      - id: b
+        text: AWS Cost and Usage Report
+        why: The report delivers raw cost files to a bucket and does not suggest what to buy.
+      - id: c
+        text: AWS Cost Explorer
+        correct: true
+        why: Cost Explorer looks at past usage and offers Reserved Instance advice alongside its trend charts.
+      - id: d
+        text: AWS Billing and Cost Management dashboard
+        why: The dashboard gives a first look at charges and payments, not purchase advice from usage history.
+    evidence:
+      - Charts of cost and usage over time by service, linked account or tag, with trends and Reserved Instance advice
+      - The Pricing Calculator estimates costs before deployment.
+    takeaway: Advice drawn from usage you already have comes from Cost Explorer; the Pricing Calculator only prices plans.
+    history: []
+    verified:
+      keyHash: c84633cf485a
+      fullHash: a7e84a0223ca
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dcragh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-pricing-calculator
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe plans an online ordering site that is still on paper.
+      Before building anything, the owner wants a monthly cost figure based on the server types and storage the site would use.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        why: Cost Explorer analyzes spend from resources already running, and this site has none yet.
+      - id: b
+        text: AWS Budgets
+        why: Budgets tracks live spend against a limit and cannot price a site before it is built.
+      - id: c
+        text: AWS Pricing Calculator
+        correct: true
+        why: The calculator turns the planned server types and storage into a cost estimate before deploying.
+      - id: d
+        text: AWS Cost and Usage Report
+        why: The report lists costs that have already been charged, so a planned site has nothing to show.
+    evidence:
+      - The Pricing Calculator estimates costs before deployment.
+    takeaway: To price something before it is deployed, use the AWS Pricing Calculator.
+    history: []
+    verified:
+      keyHash: 6db5090d8c8f
+      fullHash: 56029c37f456
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vp4w9m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-pricing-calculator
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe's developer has sketched two designs for a new loyalty app, one with a few large servers and one with many small ones.
+      The owner wants to compare what each would cost before choosing.
+      What should the developer use?
+    options:
+      - id: a
+        text: AWS Pricing Calculator
+        correct: true
+        why: The calculator builds an itemized estimate for each design so the two can be compared before deploying.
+      - id: b
+        text: AWS Compute Optimizer
+        why: Compute Optimizer suggests sizes from running workloads, and neither design is running yet.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks resources already in the account and cannot price a sketched design.
+      - id: d
+        text: AWS Cost Explorer
+        why: Cost Explorer reports spend that has happened, so it has no data for designs not yet built.
+    evidence:
+      - The Pricing Calculator estimates costs before deployment.
+      - "**AWS Pricing Calculator**: A web tool for cost estimates."
+    takeaway: Comparing the cost of designs that are not built yet is a job for the AWS Pricing Calculator.
+    history: []
+    verified:
+      keyHash: b394fe1346f8
+      fullHash: 5d593b49fe60
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-g27561
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cost-allocation-tags
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe labeled its resources with a project tag for catering and another for the loyalty app.
+      In Cost Explorer, the owner cannot group costs by that tag yet.
+      What step is missing?
+    options:
+      - id: a
+        text: Move each project into its own linked account
+        why: Separate accounts would split costs by account, but the tag itself would still not appear in Cost Explorer.
+      - id: b
+        text: Activate the tag in the billing console
+        correct: true
+        why: A tag shows up in Cost Explorer only after it is activated as a cost allocation tag.
+      - id: c
+        text: Search for all resources carrying the tag
+        why: A tag search finds related resources, but it does not make the tag usable for grouping costs.
+      - id: d
+        text: Filter a new budget by the project tag
+        why: A budget can use tags for alerts, but it does not make an inactive tag appear in Cost Explorer.
+    evidence:
+      - AWS cost allocation tags come in two types, AWS-generated and user-defined, and you must activate each before it appears in Cost Explorer or on a cost allocation report.
+    takeaway: A tag must be activated as a cost allocation tag before Cost Explorer can group costs by it.
+    history: []
+    verified:
+      keyHash: 55ce831f402f
+      fullHash: 6e8c70f799ff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-419np7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cost-allocation-tags
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 1
+    stem: >-
+      The cafe's owner added a tag named project to its resources to split costs between catering and the loyalty app.
+      Which type of cost allocation tag is it?
+    options:
+      - id: a
+        text: AWS-generated
+        why: AWS-generated tags are added by AWS itself, while this tag was created and named by the owner.
+      - id: b
+        text: Service-linked
+        why: Service-linked describes a kind of IAM role that a service uses, not a kind of cost allocation tag.
+      - id: c
+        text: User-defined
+        correct: true
+        why: A tag the customer creates and names is a user-defined cost allocation tag.
+      - id: d
+        text: Resource-based
+        why: Resource-based describes policies attached to a resource such as a bucket, not a kind of tag.
+    evidence:
+      - AWS cost allocation tags come in two types, AWS-generated and user-defined, and you must activate each before it appears in Cost Explorer or on a cost allocation report.
+    takeaway: A tag the customer creates is user-defined, while AWS-generated tags are the ones AWS adds itself.
+    history: []
+    verified:
+      keyHash: 1c2db032c553
+      fullHash: 6044b202d57e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ehd1v0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cost-and-usage-report
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe's accountant wants the most detailed record of AWS charges, broken down by hour and by tag, delivered as files the accountant can load into a spreadsheet.
+      Which option fits?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        why: Cost Explorer shows charts in the console rather than delivering the full detail as files.
+      - id: b
+        text: AWS Cost and Usage Report
+        correct: true
+        why: The report holds the most detailed cost and usage data, by hour and tag, delivered as files.
+      - id: c
+        text: AWS Budgets
+        why: Budgets compares spend with a limit and warns, but it does not hand over itemized files.
+      - id: d
+        text: AWS Billing and Cost Management dashboard
+        why: The dashboard gives a first look at charges, not the finest-grained data as files.
+    evidence:
+      - "The AWS Cost and Usage Report holds the most detailed AWS cost and usage data, broken down by hour, day or month and by your tags, delivered as files to an Amazon S3 bucket you own."
+    takeaway: For the finest-grained cost data delivered as files, use the AWS Cost and Usage Report.
+    history: []
+    verified:
+      keyHash: f320443ba1e3
+      fullHash: e61a4322f808
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-9ehzvn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cost-and-usage-report
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 1
+    stem: >-
+      Where does the AWS Cost and Usage Report deliver its data?
+    options:
+      - id: a
+        text: To an Amazon SNS topic that you subscribe to
+        why: SNS sends notifications, but the report arrives as files rather than messages.
+      - id: b
+        text: To a CloudWatch dashboard in your account
+        why: CloudWatch dashboards show metrics; the report does not land there.
+      - id: c
+        text: To the invoices page of the billing console
+        why: Invoices are viewed on that page, but the detailed report is written as files to an S3 bucket instead.
+      - id: d
+        text: To an Amazon S3 bucket that you own
+        correct: true
+        why: The report is written as files into an S3 bucket in the customer's own account.
+    evidence:
+      - "The AWS Cost and Usage Report holds the most detailed AWS cost and usage data, broken down by hour, day or month and by your tags, delivered as files to an Amazon S3 bucket you own."
+    takeaway: The AWS Cost and Usage Report arrives as files in an Amazon S3 bucket you own.
+    history: []
+    verified:
+      keyHash: 1a77c810c5c4
+      fullHash: 31f3cb615037
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hhkszn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: consolidated-billing
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe runs separate AWS accounts for its bakery, its catering arm and its loyalty app.
+      The owner wants to turn on consolidated billing so that only one account receives the bill.
+      Which service sets this up?
+    options:
+      - id: a
+        text: AWS Organizations
+        correct: true
+        why: Organizations links the accounts under a primary account, which alone receives the combined bill.
+      - id: b
+        text: AWS Billing and Cost Management
+        why: The billing dashboard links to consolidated billing features, but it does not group the accounts itself.
+      - id: c
+        text: AWS Cost Explorer
+        why: Cost Explorer charts spend by linked account once billing is combined, but it does not combine it.
+      - id: d
+        text: AWS Budgets
+        why: Budgets sends alerts near a spending limit and leaves each account with its own separate bill.
+    evidence:
+      - AWS Organizations sets this up, adding central management, discounts and stronger security.
+      - The dashboard links to budget and consolidated billing features, but AWS Organizations groups the accounts.
+    takeaway: Consolidated billing comes from AWS Organizations, which links accounts so a single primary account pays one bill.
+    history: []
+    verified:
+      keyHash: 88d4a6f34161
+      fullHash: d51fafc467b9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xdj5qf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-billing-and-cost-management-dashboard
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe's bookkeeper wants one AWS page that shows the forecast for this month and also lists past invoices to download.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        why: Cost Explorer forecasts and charts spend, but invoices are not kept there for download.
+      - id: b
+        text: AWS Budgets
+        why: Budgets can forecast against a limit and send alerts, but it holds no invoices.
+      - id: c
+        text: AWS Billing and Cost Management
+        correct: true
+        why: The billing dashboard shows a monthly forecast next to charges, invoices and payment methods.
+      - id: d
+        text: AWS Cost and Usage Report
+        why: This report delivers detailed cost files to an S3 bucket rather than a forecast page with invoices.
+    evidence:
+      - Monthly forecast, top services by cost, charges, usage, reports, invoices, payment methods
+      - The dashboard is the first stop for charges and payments.
+    takeaway: The Billing and Cost Management dashboard pairs a monthly forecast with invoices and payment details in one place.
+    history: []
+    verified:
+      keyHash: f6f2655ed489
+      fullHash: b487db5b9ca2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

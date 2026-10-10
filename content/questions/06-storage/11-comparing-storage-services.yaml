@@ -1,0 +1,219 @@
+questions:
+  - id: q-hh9gw7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-static-website-hosting
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's website is only HTML, CSS, JavaScript and photos of the menu.
+      The owner wants to publish it without running any servers and without planning for busy days.
+      Which AWS service should host it?
+    options:
+      - id: a
+        text: Amazon EFS
+        why: EFS is a shared file system for many connected machines, and it still needs servers to serve the pages.
+      - id: b
+        text: Amazon S3
+        correct: true
+        why: S3 static website hosting serves the uploaded files from a bucket and absorbs traffic jumps without scaling work.
+      - id: c
+        text: Amazon EBS
+        why: An EBS volume is a disk for an EC2 instance, so the cafe would have to run and scale that web server.
+      - id: d
+        text: Amazon FSx
+        why: FSx runs managed file systems such as Windows File Server, not a serverless way to publish a website.
+    evidence:
+      - Setup is uploading HTML, CSS, JavaScript and media files and switching hosting on.
+      - A sudden jump in website visitors needs no scaling work when the site is hosted on S3.
+    takeaway: A site made only of static files can be served straight from an S3 bucket with no servers to manage or scale.
+    history: []
+    verified:
+      keyHash: 73f855d4f4df
+      fullHash: 8d2808e6930f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mmtvvg
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: s3-static-website-hosting
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 1
+    stem: >-
+      The cafe serves its menu site with S3 static website hosting.
+      Which statements describe how that site handles traffic and cost?
+    options:
+      - id: a
+        text: The bill follows the hours its web servers run.
+        why: The S3-hosted site runs on no web servers, so there are no server hours to bill.
+      - id: b
+        text: The bill follows stored data plus data sent out.
+        correct: true
+        why: The S3-hosted site is billed on the stored files plus the data transferred out to visitors.
+      - id: c
+        text: The bill follows a fixed monthly hosting fee.
+        why: S3 charges for what is stored and sent out, not a flat fee for hosting the site.
+      - id: d
+        text: Visitor spikes need no scaling work by the cafe.
+        correct: true
+        why: S3 absorbs any traffic level itself, so a rush of visitors to the menu site needs no scaling work.
+      - id: e
+        text: Visitor spikes need servers added by the cafe.
+        why: S3 handles the extra traffic itself, so the cafe never adds servers for the menu site.
+    evidence:
+      - S3 absorbs any traffic level itself, and you pay for storage plus data transferred out.
+    takeaway: S3 static website hosting scales with visitors by itself and bills for storage plus outbound data.
+    history: []
+    verified:
+      keyHash: 11a550540b3f
+      fullHash: d0d78604055d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-66znqn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: choosing-storage-services
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 3
+    stem: >-
+      Baristas at every cafe location open and edit the same large training files at once, and each change must show up for all of them in real time.
+      Every tablet and laptop mounts these files as one shared folder.
+      Which storage service fits this access pattern?
+    options:
+      - id: a
+        text: Amazon S3
+        why: S3 is an object store for web assets and backups, not a file system that many devices mount and share.
+      - id: b
+        text: Amazon EBS
+        why: An EBS volume gives block storage to an EC2 instance, so it does not serve one dataset to many sites at once.
+      - id: c
+        text: Amazon EFS
+        correct: true
+        why: Many devices in many places using the same files at once call for a shared file system, which EFS provides.
+      - id: d
+        text: Amazon EC2 instance store
+        why: Instance store is temporary disk on one host and its data is lost when the instance stops.
+    evidence:
+      - Staff at many locations opening the same large media files at once need a shared file system such as EFS.
+      - EFS provides managed shared file systems for fast, simultaneous file access.
+    takeaway: Many users and sites opening the same files at once points to a shared file system such as EFS.
+    history: []
+    verified:
+      keyHash: 7d3207e21609
+      fullHash: 64311beb0e15
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ezetr4
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: choosing-storage-services
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      Match each of the cafe's storage needs to the service that fits its access pattern.
+    pairs:
+      - left: Menu photos and nightly backups kept as objects
+        right: Amazon S3
+        why: S3 is the scalable object store for web assets, backups and similar content.
+      - left: An order database on EC2 that rewrites data constantly
+        right: Amazon EBS
+        why: Constant database rewrites need block-level access, which EBS volumes give EC2 instances.
+      - left: Recipe files every location edits at the same time
+        right: Amazon EFS
+        why: Simultaneous access from many places calls for a managed shared file system such as EFS.
+    evidence:
+      - S3 is the scalable object store for web assets, backups and similar content.
+      - EBS gives EC2 instances and databases block storage, and Provisioned IOPS SSD performs best.
+      - EFS provides managed shared file systems for fast, simultaneous file access.
+    takeaway: Pick object, block or shared file storage by how the data is used for an efficient, cost-effective design.
+    history: []
+    verified:
+      keyHash: 6af9ddcb4dd9
+      fullHash: 06682ab62afb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-e1tr15
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: provisioned-iops-ssd
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's ordering database runs on EC2 and already stores its data on EBS.
+      During the morning rush it slows down, and orders need consistently low latency.
+      What is the best fix?
+    options:
+      - id: a
+        text: Move the data to an Amazon S3 bucket
+        why: Object storage is not built for the constant rapid rewrites that a busy database makes.
+      - id: b
+        text: Move the data to a Provisioned IOPS SSD volume
+        correct: true
+        why: Moving to the top-performing EBS volume type speeds up the database without changing services.
+      - id: c
+        text: Move the data to an Amazon EFS file system
+        why: EFS is for files shared across many devices, not the block-level access a transactional database needs.
+      - id: d
+        text: Move the data to the EC2 instance store
+        why: Instance store is temporary, so the order data would be lost when the instance stops.
+    evidence:
+      - A slow database already on EBS can be sped up by moving to a faster volume type instead of switching services.
+      - The fix is moving to Provisioned IOPS SSD, the top-performing volume type for mission-critical apps.
+    takeaway: A slow database on EBS gets faster by moving to Provisioned IOPS SSD rather than to another storage service.
+    history: []
+    verified:
+      keyHash: 2aaa56f8b709
+      fullHash: 24bf8465b663
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q67804
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: provisioned-iops-ssd
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which description fits the Provisioned IOPS SSD option for Amazon EBS?
+    options:
+      - id: a
+        text: The EBS volume type with the lowest price
+        why: Provisioned IOPS SSD is the highest-performance type, which carries a higher price rather than the lowest.
+      - id: b
+        text: The EBS volume type that stores data on HDD
+        why: As its name says, Provisioned IOPS SSD runs on SSD media, not on HDD.
+      - id: c
+        text: The EBS volume type with the top performance
+        correct: true
+        why: Provisioned IOPS SSD is the top-performing EBS volume type, meant for mission-critical workloads.
+      - id: d
+        text: The EBS volume type balanced for everyday use
+        why: Provisioned IOPS SSD is built for top performance in mission-critical work, not as a balanced everyday choice.
+
+    evidence:
+      - "**Provisioned IOPS SSD**: the highest-performance EBS volume type, for mission-critical workloads."
+    takeaway: Provisioned IOPS SSD is the EBS volume type to choose when a mission-critical workload needs top performance.
+    history: []
+    verified:
+      keyHash: bd44397150d3
+      fullHash: d7ab9ece4e7f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

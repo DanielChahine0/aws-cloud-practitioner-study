@@ -1,0 +1,72 @@
+questions:
+  - id: q-d3fpze
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: secure-monitor-audit-comply-progression
+    note: m10/introduction-to-monitoring-compliance-and-governance-in-the-aws-cloud
+    task: "2.2"
+    level: 2
+    stem: >-
+      Once a quarter, the cafe's manager reviews whether the access rules on the till system still work as intended and whether staff follow them.
+      Which step of the progression is this?
+    options:
+      - id: a
+        text: Secure
+        why: Securing puts the access rules in place, while this review checks rules that already exist.
+      - id: b
+        text: Monitor
+        why: Monitoring watches activity nonstop, but this review happens only once a quarter.
+      - id: c
+        text: Audit
+        correct: true
+        why: An audit is a periodic check that controls work and that policies are being followed.
+      - id: d
+        text: Comply
+        why: Complying means proving practices meet outside rules, not testing the cafe's own controls.
+    evidence:
+      - "**Audit**: check periodically that controls work and policies are followed."
+      - Monitoring is constant, audits periodic.
+    takeaway: A scheduled check that controls work and policies are followed is an audit, unlike monitoring, which never stops.
+    history: []
+    verified:
+      keyHash: 931ac27ec237
+      fullHash: cfa4d0922bcc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jsxzmm
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: secure-monitor-audit-comply-progression
+    note: m10/introduction-to-monitoring-compliance-and-governance-in-the-aws-cloud
+    task: "2.2"
+    level: 2
+    stem: >-
+      Match each task at the cafe to the step of the secure, monitor, audit, comply progression it belongs to.
+    pairs:
+      - left: Requiring staff to sign in before they can open the order system
+        right: Secure
+        why: Sign-in blocks unauthorized access, which is the job of the securing step.
+      - left: Watching card traffic around the clock for unusual activity
+        right: Monitor
+        why: Scanning activity without pause for anomalies is what the monitoring step does.
+      - left: Reviewing every few months that the sign-in rules are still followed
+        right: Audit
+        why: A periodic review that controls work and policies are followed is an audit.
+      - left: Showing a card network that the cafe meets its payment rules
+        right: Comply
+        why: Proving that practices meet a standard or contract is the compliance step.
+    evidence:
+      - "Order: secure, monitor, audit, comply."
+      - "**Monitor**: scan security events, traffic and activity nonstop for threats or anomalies."
+      - "**Comply**: prove practices meet regulations, standards and contracts."
+    takeaway: Secure blocks access, monitoring watches nonstop, audits check controls periodically, and compliance proves rules are met.
+    history: []
+    verified:
+      keyHash: fca46e763713
+      fullHash: 78a656ef528a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

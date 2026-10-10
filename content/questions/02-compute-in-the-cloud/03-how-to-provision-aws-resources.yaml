@@ -1,0 +1,418 @@
+questions:
+  - id: q-sm5zv8
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-apis
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's manager stops one EC2 instance by clicking in the AWS Management Console, and the IT lead stops another by typing an AWS CLI command.
+      Why do both actions have the same effect?
+    options:
+      - id: a
+        text: Both tools run inside the same browser session
+        why: The console runs in a browser while the CLI runs in a terminal, so a shared session is not the link.
+      - id: b
+        text: Both tools call the same underlying AWS APIs
+        correct: true
+        why: Every AWS task, including stopping an instance, is an API request no matter which tool sends it.
+      - id: c
+        text: Both tools run the same saved script for the task
+        why: The manager clicked rather than ran a script, so a shared script cannot explain the matching result.
+      - id: d
+        text: Both tools work only through AWS CloudShell
+        why: CloudShell is one terminal for CLI commands, and the console click never passes through it.
+    evidence:
+      - Every AWS task, from launching to stopping or changing an instance, is an API request.
+      - The console, the AWS CLI and the AWS SDK all call the same APIs.
+    takeaway: Console clicks, CLI commands and SDK code all turn into the same AWS API calls underneath.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement; console and CLI share no script, session or CloudShell limit.)"
+  - id: q-c2jr2a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-apis
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 1
+    stem: >-
+      In AWS, what is an application programming interface (API)?
+    options:
+      - id: a
+        text: A set of permissions that controls who may act
+        why: Permissions that control who may act are IAM policies, which decide access rather than define how calls are made.
+      - id: b
+        text: A set of templates that declare resources as code
+        why: Templates that declare resources are AWS CloudFormation templates, which themselves rely on the APIs to build.
+      - id: c
+        text: A set of entry points for managing resources
+        correct: true
+        why: An API defines fixed entry points that software uses to provision, configure and manage resources.
+      - id: d
+        text: A set of data centers in one geographic area
+        why: Data centers grouped in one geographic area describe AWS Global Infrastructure, not a way to manage resources.
+    evidence:
+      - An application programming interface (API) gives fixed entry points to provision, configure and manage resources.
+    takeaway: An AWS API is the fixed set of entry points that every tool uses to manage resources.
+    history: []
+    verified:
+      keyHash: df4d82d6f446
+      fullHash: bff66dbeb066
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fhrmv8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-management-console
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's owner has no technical background and wants to look over this month's AWS bill once, by pointing and clicking.
+      Which way of working with AWS fits best?
+    options:
+      - id: a
+        text: AWS CLI
+        why: The CLI expects typed commands, which suits scripting more than a one-time look by a non-technical owner.
+      - id: b
+        text: AWS SDK
+        why: The SDK is for calling AWS from application code, which the owner does not write.
+      - id: c
+        text: AWS CloudShell
+        why: CloudShell opens a command terminal, which still requires typing CLI commands.
+      - id: d
+        text: AWS Management Console
+        correct: true
+        why: The console is a visual browser interface that suits bills, non-technical tasks and one-time checks.
+    evidence:
+      - Best for learning, test environments, bills, monitoring, non-technical tasks and one-time manual setups.
+    takeaway: Visual, one-off and non-technical work such as checking a bill fits the AWS Management Console.
+    history: []
+    verified:
+      keyHash: 16316689f94c
+      fullHash: 378f7da4b896
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-brb8vd
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-management-console
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      Every week the cafe's staff launch the same production servers by clicking through the AWS Management Console.
+      What problem does this habit invite?
+    options:
+      - id: a
+        text: The launches will bypass the AWS APIs entirely
+        why: Console clicks still become API requests, so clicking does not skip the APIs at all.
+      - id: b
+        text: Some launches may miss a setting by mistake
+        correct: true
+        why: Repeating the same screens by hand is slow and makes it easy to miss a checkbox now and then.
+      - id: c
+        text: The servers will be billed even while stopped
+        why: Only running instances are billed, whichever tool launched them, so stopped servers cost nothing here.
+      - id: d
+        text: The console will block a repeated server launch
+        why: The console lets staff launch the same kind of server as often as they like, so nothing is blocked.
+    evidence:
+      - Repeating its screens for every production launch is slow and invites slips like a missed checkbox.
+    takeaway: Clicking through the console for repeated production launches is slow and prone to missed settings.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true statement; 1, 3 and 4 are false about console launches and billing.)"
+  - id: q-azhc3p
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cli
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 3
+    stem: >-
+      The cafe's IT lead wants to launch the same set of test instances every Monday by running a script of typed commands in the terminal app of a macOS laptop, with no browser involved.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS CLI
+        correct: true
+        why: The CLI turns API calls into text commands on macOS that can be scripted and repeated the same way each week.
+      - id: b
+        text: AWS SDK
+        why: The SDK is for calling AWS from application code in a language like Java, not a script of shell commands.
+      - id: c
+        text: AWS Management Console
+        why: The console is clicked through by hand, so it cannot run the weekly launch as a script.
+      - id: d
+        text: AWS CloudShell
+        why: CloudShell opens in a web browser, and the stem rules out using a browser for this weekly launch.
+    evidence:
+      - The AWS Command Line Interface (AWS CLI) issues API calls as text commands on Windows, macOS or Linux, so repetitive work can be scripted, and automation keeps deployments predictable.
+    takeaway: Repeated work scripted as typed commands on your own machine points to the AWS CLI.
+    history: []
+    verified:
+      keyHash: ebc3e8eca405
+      fullHash: 9ba3578b3912
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4xxz67
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cli
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 1
+    stem: >-
+      What makes the AWS CLI a good way to keep deployments predictable?
+    options:
+      - id: a
+        text: It shows guided visual workflows
+        why: Guided visual workflows belong to the console, which relies on manual clicks.
+      - id: b
+        text: It runs scriptable commands
+        correct: true
+        why: Typed commands can be saved in a script and rerun, and that automation keeps deployments consistent.
+      - id: c
+        text: It ships as libraries for .NET
+        why: Language libraries for .NET describe the AWS SDK, not the command line tool.
+      - id: d
+        text: It tracks billing on a phone
+        why: Checking billing from a phone is a job for the console's mobile app, not the CLI.
+    evidence:
+      - The AWS Command Line Interface (AWS CLI) issues API calls as text commands on Windows, macOS or Linux, so repetitive work can be scripted, and automation keeps deployments predictable.
+    takeaway: The AWS CLI turns API calls into commands you can script, so repeated deployments run the same way.
+    history: []
+    verified:
+      keyHash: 474332bc80f2
+      fullHash: 3a38f8642e97
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-511j3s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudshell
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's shift lead works from a shared computer where no software can be installed, yet needs to run a few AWS CLI commands.
+      What should the shift lead use?
+    options:
+      - id: a
+        text: The AWS SDK for Python
+        why: The SDK must be added to a project and called from code, which the locked-down computer cannot support.
+      - id: b
+        text: AWS CloudFormation
+        why: CloudFormation deploys resources from templates, and it is not a terminal for running CLI commands.
+      - id: c
+        text: AWS CloudShell
+        correct: true
+        why: CloudShell is a terminal that AWS manages in the cloud with the CLI ready, so nothing needs installing.
+      - id: d
+        text: AWS Systems Manager
+        why: Systems Manager manages and patches nodes, and it is not a terminal that comes with the CLI set up.
+    evidence:
+      - AWS CloudShell is an AWS-managed cloud terminal with the AWS CLI ready.
+    takeaway: AWS CloudShell gives a ready-made cloud terminal with the AWS CLI, so no local install is needed.
+    history: []
+    verified:
+      keyHash: 7cbcbdb4b450
+      fullHash: d6c1a3d035db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-khbvkt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudshell
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 1
+    stem: >-
+      Which AWS offering is a terminal that AWS manages in the cloud, with the AWS CLI already set up?
+    options:
+      - id: a
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk turns code into a running web environment, and it is not a command terminal.
+      - id: b
+        text: AWS CloudShell
+        correct: true
+        why: CloudShell is the AWS-managed cloud terminal that comes with the AWS CLI ready to use.
+      - id: c
+        text: AWS CloudFormation
+        why: CloudFormation deploys resources from infrastructure as code templates, not from a terminal session.
+      - id: d
+        text: AWS Systems Manager
+        why: Systems Manager can open sessions on your own instances, but it is not an AWS-managed terminal with the CLI set up.
+    evidence:
+      - AWS CloudShell is an AWS-managed cloud terminal with the AWS CLI ready.
+    takeaway: AWS CloudShell is the cloud terminal AWS manages, with the AWS CLI preinstalled.
+    history: []
+    verified:
+      keyHash: "553946841921"
+      fullHash: 0214a27ba941
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pc9ejy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-sdk
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's loyalty app is written in Java, and its own code must list the cafe's EC2 instances each night.
+      Which tool lets the app make those calls?
+    options:
+      - id: a
+        text: The AWS Management Console
+        why: The console is a visual interface for people, so the app's code cannot call AWS through it.
+      - id: b
+        text: AWS CloudShell
+        why: CloudShell is a terminal for typing commands, not a library that Java code can use.
+      - id: c
+        text: The AWS SDK
+        correct: true
+        why: The SDK gives Java code libraries that call the AWS APIs directly from within the app.
+      - id: d
+        text: The AWS CLI
+        why: The CLI runs typed commands at a shell prompt rather than calls from inside Java application code.
+    evidence:
+      - The AWS Software Development Kit (AWS SDK) lets code in languages like Python, C++, Java and .NET call AWS, with AWS docs and sample code.
+    takeaway: When an application's own code must call AWS, use the AWS SDK for its language.
+    history: []
+    verified:
+      keyHash: deec72b058ce
+      fullHash: f5eaea980c39
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5qjk8d
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-sdk
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 1
+    stem: >-
+      Which statements describe the AWS SDK?
+    options:
+      - id: a
+        text: It lets app code in Python or Java call AWS
+        correct: true
+        why: The SDK provides language libraries so programs in Python, C++, Java or .NET can call AWS.
+      - id: b
+        text: It turns template code into running resources
+        why: Turning templates into resources is AWS CloudFormation, which deploys infrastructure as code rather than giving libraries.
+      - id: c
+        text: It comes with AWS docs and sample code
+        correct: true
+        why: AWS backs the SDK with documentation and sample code to help developers get started.
+      - id: d
+        text: It runs typed commands at a shell prompt
+        why: Typed commands at a shell prompt describe the AWS CLI, not code libraries for a language.
+      - id: e
+        text: It is a cloud terminal that AWS hosts
+        why: A cloud terminal hosted by AWS is CloudShell, which comes with the CLI rather than the SDK.
+    evidence:
+      - The AWS Software Development Kit (AWS SDK) lets code in languages like Python, C++, Java and .NET call AWS, with AWS docs and sample code.
+    takeaway: The AWS SDK gives language libraries, docs and sample code so application code can call AWS.
+    history: []
+    verified:
+      keyHash: 693534ac10bf
+      fullHash: 5fc807b0dee1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kwq018
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-apis
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 1
+    stem: >-
+      Whether an EC2 instance is launched, stopped or changed, and whichever tool starts the task, what does that task become when it reaches AWS?
+    options:
+      - id: a
+        text: An AWS CloudShell session
+        why: CloudShell is one place to type CLI commands, and the commands still reach AWS as API requests.
+      - id: b
+        text: An API request
+        correct: true
+        why: Every AWS task, from a launch to a stop or a change, is carried out as an API request.
+      - id: c
+        text: A security group rule
+        why: A security group rule filters an instance's traffic and is not what an AWS task turns into.
+      - id: d
+        text: An Amazon Machine Image
+        why: An AMI is the OS and software an instance starts from, not the form a task takes.
+    evidence:
+      - Every AWS task, from launching to stopping or changing an instance, is an API request.
+    takeaway: Every action on AWS, whatever tool starts it, is carried out as an API request.
+    history: []
+    verified:
+      keyHash: aad4bee83fa6
+      fullHash: 8586c6e7f6f0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jrh2fb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-management-console
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's owner is away from the shop and wants to glance at alarms and the AWS bill from a phone.
+      Which option fits best?
+    options:
+      - id: a
+        text: An AWS CLI script on a laptop
+        why: The owner has only a phone and wants a quick look, not a typed script run from a computer.
+      - id: b
+        text: An AWS SDK program in Python
+        why: Writing code is meant for applications that call AWS, not for a quick check from a phone.
+      - id: c
+        text: The console's mobile app
+        correct: true
+        why: The console's mobile app lets the owner check resources, alarms and billing from a phone.
+      - id: d
+        text: A terminal in AWS CloudShell
+        why: CloudShell gives a command line for typed commands, which is not a point-and-look check.
+    evidence:
+      - Its mobile app checks resources, alarms and billing for several signed-in identities.
+    takeaway: The AWS Management Console mobile app suits quick checks of resources, alarms and billing on the go.
+    history: []
+    verified:
+      keyHash: 1562292946bd
+      fullHash: f0c85f0f70f3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

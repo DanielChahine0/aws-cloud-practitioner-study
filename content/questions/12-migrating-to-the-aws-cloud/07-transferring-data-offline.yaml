@@ -1,0 +1,328 @@
+questions:
+  - id: q-vvf3qr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: offline-data-transfer
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's roastery sits in a remote valley with no internet service and no Direct Connect link.
+      Years of roasting logs there must reach AWS.
+      Which approach fits?
+    options:
+      - id: a
+        text: Ship the data to AWS on a physical device
+        correct: true
+        why: With no network path at all, carrying the data on a device is the only way it can reach AWS.
+      - id: b
+        text: Upload the data across the public internet
+        why: An upload needs internet service, and the roastery has none to send the logs over.
+      - id: c
+        text: Keep the data on a local device at the roastery
+        why: A local device keeps the logs safe on site, but the data never reaches AWS that way.
+      - id: d
+        text: Move the data over a dedicated private link
+        why: A dedicated link is what Direct Connect provides, and the roastery has no such link.
+    evidence:
+      - "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
+    takeaway: When a site has no internet or Direct Connect path, offline transfer on a physical device is the way to move its data.
+    history: []
+    verified:
+      keyHash: 4d4c1b470716
+      fullHash: 3b7eeb803977
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bc8c0w
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: offline-data-transfer
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which conditions point a migration toward moving data offline instead of over the network?
+    options:
+      - id: a
+        text: Very limited network bandwidth
+        correct: true
+        why: Thin bandwidth makes a large upload crawl, so shipping a device can finish sooner.
+      - id: b
+        text: A site with no internet or Direct Connect
+        correct: true
+        why: Without any network path, a physical device is the only way to carry the data out.
+      - id: c
+        text: Petabytes that would take too long to upload
+        correct: true
+        why: At petabyte scale, shipping the data on devices can beat even a good network.
+      - id: d
+        text: A fast link with spare bandwidth to use
+        why: A fast link with room to spare can carry the data online, so there is no need to ship a device.
+      - id: e
+        text: A few gigabytes that upload in minutes
+        why: A small amount that uploads quickly is well suited to an online move, not a shipped device.
+      - id: f
+        text: Data that must sync with AWS all the time
+        why: Ongoing sync is an online transfer need, which an offline device does not fit.
+    evidence:
+      - "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
+      - Many customers prefer online moves; offline means sending data on a physical device when DataSync falls short.
+      - Being offline, they do not fit online transfer needs.
+    takeaway: Thin bandwidth, no connectivity or huge volume are the signals to move data offline.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1, 2 and 4 are the classic Snowball cases; 3, 5 and 6 are clear reasons to upload online instead.)"
+  - id: q-71ted3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-snow-family
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe chain keeps a huge archive of store camera footage at an old warehouse where internet service is unreliable.
+      It wants to move the whole archive to AWS once and then close the warehouse.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: AWS Snow Family
+        correct: true
+        why: Snow Family devices carry large data sets to AWS physically, so the weak internet does not matter.
+      - id: b
+        text: AWS Storage Gateway
+        why: Storage Gateway links a site to cloud storage over the network, which the weak internet cannot support.
+      - id: c
+        text: AWS DataSync
+        why: DataSync copies data across the network, so the unreliable internet would slow or stall the move.
+      - id: d
+        text: AWS Transfer Family
+        why: Transfer Family runs managed file transfers over network protocols, not on shipped devices.
+    evidence:
+      - AWS Snow Family devices with NVMe storage for multi-petabyte moves from on-premises sites where internet may be unavailable.
+    takeaway: A one-time bulk move from a poorly connected site points to the offline devices of the AWS Snow Family.
+    history: []
+    verified:
+      keyHash: 2c0ace80d7db
+      fullHash: 512eade3ce69
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mx19yg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-snow-family
+    note: m12/transferring-data-offline
+    task: "3.8"
+    level: 1
+    stem: >-
+      The cafe's IT lead reads about rugged AWS devices with NVMe storage that are shipped to a site, filled with data and sent back to AWS.
+      Which AWS offering are these devices part of?
+    options:
+      - id: a
+        text: AWS Outposts
+        why: Outposts places AWS hardware in a data center to run workloads there, not to be shipped back with data.
+      - id: b
+        text: AWS Snow Family
+        correct: true
+        why: Shipped NVMe devices that carry data to AWS belong to the Snow Family, the AWS devices for offline transfer.
+      - id: c
+        text: AWS Transfer Family
+        why: Transfer Family is a managed service for file transfers over network protocols, with no devices.
+      - id: d
+        text: AWS Storage Gateway
+        why: Storage Gateway is a hybrid storage service that works over the network, not a device family.
+    evidence:
+      - AWS Snow Family devices with NVMe storage for multi-petabyte moves from on-premises sites where internet may be unavailable.
+    takeaway: Rugged devices shipped to a site to carry data to AWS are part of the AWS Snow Family.
+    history: []
+    verified:
+      keyHash: baf40d2f59cf
+      fullHash: 41d74fed5f36
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-c69by0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-snowball-edge-storage-optimized
+    note: m12/transferring-data-offline
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which statement describes AWS Snowball Edge Storage Optimized?
+    options:
+      - id: a
+        text: A local appliance that links on-premises apps to cloud storage
+        why: This describes AWS Storage Gateway, which reaches AWS storage over the network rather than being shipped.
+      - id: b
+        text: A rack of AWS hardware that runs services in your data center
+        why: This describes AWS Outposts, which stays on site to run workloads rather than carrying data to AWS.
+      - id: c
+        text: A rugged NVMe appliance that ships multi-petabyte data offline
+        correct: true
+        why: Snowball Edge Storage Optimized is an NVMe device built to move multi-petabyte data sets offline.
+      - id: d
+        text: A dedicated physical network link from a data center to AWS
+        why: This describes AWS Direct Connect, a network link rather than hardware that is shipped.
+    evidence:
+      - AWS Snow Family devices with NVMe storage for multi-petabyte moves from on-premises sites where internet may be unavailable.
+    takeaway: Snowball Edge Storage Optimized is an NVMe device for offline moves of multi-petabyte data.
+    history: []
+    verified:
+      keyHash: b5d6482bcf37
+      fullHash: 1143f726cd42
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qna4rv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-snowball-edge-storage-optimized
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe has a fast internet link and wants its sales files copied to Amazon S3 every night, with no end date.
+      A team member suggests a Snowball Edge Storage Optimized device.
+      Why is that a poor fit?
+    options:
+      - id: a
+        text: The device stores data on NVMe drives
+        why: NVMe storage is true of the device but makes it fast, so it is not why a nightly sync fails.
+      - id: b
+        text: The device moves data offline by shipping
+        correct: true
+        why: The device is shipped to move data offline, so it cannot run an ongoing nightly sync over the network.
+      - id: c
+        text: The device also serves rugged edge computing
+        why: Edge computing is a true extra use of the device, but it says nothing about a nightly network sync.
+      - id: d
+        text: The device is part of the AWS Snow Family
+        why: Belonging to the Snow Family is true, but the family name does not explain the poor fit.
+    evidence:
+      - Being offline, they do not fit online transfer needs.
+      - AWS Snow Family devices with NVMe storage for multi-petabyte moves from on-premises sites where internet may be unavailable.
+    takeaway: Snowball Edge Storage Optimized moves data offline, so it does not fit ongoing online transfer needs.
+    history: []
+    verified:
+      keyHash: f586e15a05eb
+      fullHash: d45438098f1a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xqcnkd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-computing
+    note: m12/transferring-data-offline
+    task: "3.1"
+    level: 3
+    stem: >-
+      The cafe's partner coffee farm is far from any network and wants to process its crop sensor data on site.
+      It needs hardware that is rugged and secure enough for field conditions.
+      Which option fits?
+    options:
+      - id: a
+        text: A CloudFront edge location
+        why: An edge location caches content near users over the network, and the farm cannot reach one.
+      - id: b
+        text: An EC2 instance in a Region
+        why: An instance in a Region needs a network link to receive the data, which the farm lacks.
+      - id: c
+        text: A Snowball Edge device
+        correct: true
+        why: A Snowball Edge device runs compute on site and is built to be rugged and secure for edge work.
+      - id: d
+        text: An AWS Global Accelerator endpoint
+        why: Global Accelerator routes traffic over the AWS network, which does not help a site with no network.
+    evidence:
+      - They bring strong compute, large capacity and gigabytes per second, and also serve rugged, secure edge computing.
+    takeaway: Rugged, secure compute at a disconnected site is edge computing on a Snowball Edge device, not a CloudFront edge location.
+    history: []
+    verified:
+      keyHash: d639a7a6bdf0
+      fullHash: d9afcda1b0f8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-p4a1s0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-computing
+    note: m12/transferring-data-offline
+    task: "3.8"
+    level: 1
+    stem: >-
+      Besides carrying data to AWS, which other use case do Snowball Edge devices serve?
+    options:
+      - id: a
+        text: Serving cached content to nearby users
+        why: Caching content near users is what CloudFront does from its locations, not a shipped device.
+      - id: b
+        text: Replicating live databases without downtime
+        why: Ongoing database replication is the job of AWS DMS over the network, not a shipped device.
+      - id: c
+        text: Exchanging files with partners over SFTP
+        why: Protocol-based file transfer is the role of AWS Transfer Family, not a Snowball Edge device.
+      - id: d
+        text: Running compute at remote field sites
+        correct: true
+        why: Snowball Edge devices bring their own compute and are built to run rugged, secure edge workloads.
+    evidence:
+      - They bring strong compute, large capacity and gigabytes per second, and also serve rugged, secure edge computing.
+    takeaway: Snowball Edge devices double as rugged, secure hardware for edge computing, not only for data transfer.
+    history: []
+    verified:
+      keyHash: c91b35cd0c49
+      fullHash: 1ca6cc226b73
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-n6bsjs
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: offline-data-transfer
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe chain's head office has a working internet link, but its archive of security video runs to petabytes.
+      Uploading it would take far longer than the deadline allows.
+      Which AWS offering fits?
+    options:
+      - id: a
+        text: AWS DataSync
+        why: DataSync automates transfers over the network, which is the path that is too slow for petabytes here.
+      - id: b
+        text: AWS Transfer Family
+        why: Transfer Family moves files over network protocols, so it still faces the slow upload.
+      - id: c
+        text: AWS Snow Family
+        correct: true
+        why: Petabytes that ship faster than they upload call for an offline transfer on a Snow Family device.
+      - id: d
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated network link, so the petabytes would still have to travel over a connection.
+    evidence:
+      - "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
+    takeaway: Even with a working link, petabytes that would ship faster than they upload call for an offline transfer.
+    history: []
+    verified:
+      keyHash: ca19ede9a6d4
+      fullHash: 8730a3f3167e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

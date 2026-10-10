@@ -1,0 +1,293 @@
+questions:
+  - id: q-ey44rx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: online-data-transfer
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe plans to move its on-premises order database to AWS over the network.
+      Which service should carry the database part of the move?
+    options:
+      - id: a
+        text: AWS Transfer Family
+        why: Transfer Family moves files over protocols such as SFTP, not a live database.
+      - id: b
+        text: AWS DMS
+        correct: true
+        why: Database moves go to AWS DMS, while DataSync covers most other kinds of data.
+      - id: c
+        text: AWS DataSync
+        why: DataSync suits most non-database data, but databases are routed to AWS DMS.
+      - id: d
+        text: AWS Direct Connect
+        why: Direct Connect only provides the network path and does not migrate anything.
+    evidence:
+      - Databases use AWS DMS; DataSync suits most other data.
+    takeaway: In an online move, databases go through AWS DMS and most other data goes through DataSync.
+    history: []
+    verified:
+      keyHash: d9f6d041060c
+      fullHash: c672ef31f564
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5b7fde
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: online-data-transfer
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe is planning several online transfers into AWS.
+      Match each need to the service that fits it.
+    pairs:
+      - left: Copy the shared drive of recipes and photos into Amazon S3 on a schedule
+        right: AWS DataSync
+        why: DataSync runs scheduled, managed moves from on-premises storage into AWS storage.
+      - left: Let a supplier drop invoice files into Amazon S3 over SFTP
+        right: AWS Transfer Family
+        why: Transfer Family gives a managed SFTP endpoint that writes straight into Amazon S3.
+      - left: Get a private, higher-bandwidth line from the office to its VPC
+        right: AWS Direct Connect
+        why: Direct Connect is a dedicated private link that adds bandwidth but manages no move.
+      - left: Move the order database to AWS
+        right: AWS Database Migration Service (AWS DMS)
+        why: Databases are moved with AWS DMS rather than with a file transfer service.
+    evidence:
+      - Databases use AWS DMS; DataSync suits most other data.
+      - Direct Connect is a link, not a migration manager.
+    takeaway: Pick the online tool by the need - DataSync for bulk data, Transfer Family for protocols, Direct Connect for the link.
+    history: []
+    verified:
+      keyHash: aa1598d65dc5
+      fullHash: 664038936c2e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-56y53s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-datasync
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe wants to copy its large on-premises file share into Amazon S3 over the network.
+      It wants the copy to run at night, cap its bandwidth use and produce a report of each run.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Snow Family
+        why: Snow Family ships physical devices for offline moves, not scheduled network copies.
+      - id: b
+        text: AWS Storage Gateway
+        why: Storage Gateway links on-premises apps to cloud storage rather than running copy tasks.
+      - id: c
+        text: AWS DataSync
+        correct: true
+        why: DataSync runs online moves into Amazon S3 and lets tasks be scheduled, throttled and reported.
+      - id: d
+        text: AWS Transfer Family
+        why: Transfer Family serves protocol-based file exchange, not scheduled bulk copy tasks.
+    evidence:
+      - Automates and speeds large, secure moves from on-premises storage into AWS storage like Amazon S3.
+      - It handles instances, encryption and network tuning, and lets you throttle, schedule, filter and report on tasks.
+    takeaway: A scheduled, throttled online copy from on-premises storage into AWS with reports points to DataSync.
+    history: []
+    verified:
+      keyHash: 6d6e0cb73339
+      fullHash: 7b77218eef4d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7q4gqy
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-datasync
+    note: m12/transferring-data-online
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which tasks does AWS DataSync take off the customer's hands during a data move?
+    options:
+      - id: a
+        text: Encrypting the data while it moves
+        correct: true
+        why: DataSync handles encryption for the transfer so the customer does not set it up.
+      - id: b
+        text: Tuning the network for the transfer
+        correct: true
+        why: DataSync handles network tuning to speed up the move into AWS storage.
+      - id: c
+        text: Shipping a storage device to AWS
+        why: Shipping a device is an offline approach, while DataSync moves data over the network.
+      - id: d
+        text: Laying a private line to the VPC
+        why: A private line comes from Direct Connect, which DataSync can use but does not provide.
+      - id: e
+        text: Hosting an SFTP endpoint for partners
+        why: An SFTP endpoint for outside partners comes from Transfer Family, not DataSync.
+    evidence:
+      - It handles instances, encryption and network tuning, and lets you throttle, schedule, filter and report on tasks.
+    takeaway: DataSync itself manages encryption, network tuning and the transfer instances during a move.
+    history: []
+    verified:
+      keyHash: 26945b9ca349
+      fullHash: 73e46a467beb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r5vaxh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-transfer-family
+    note: m12/transferring-data-online
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe's coffee supplier can only send its daily invoices over SFTP.
+      The cafe wants them to land in Amazon S3 without running its own file server.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Direct Connect
+        why: Direct Connect is a private network line and does not accept files over SFTP.
+      - id: b
+        text: AWS Transfer Family
+        correct: true
+        why: Transfer Family offers a managed SFTP endpoint that stores the files in Amazon S3.
+      - id: c
+        text: AWS DataSync
+        why: DataSync moves the cafe's own storage into AWS rather than taking partner SFTP uploads.
+      - id: d
+        text: AWS Snow Family
+        why: Snow Family moves data on shipped devices, not daily uploads from a supplier.
+    evidence:
+      - Fully managed file transfer in and out of Amazon S3 and Amazon EFS over FTP, SFTP, FTPS and other transfer protocols.
+      - It adds encryption and authentication with less infrastructure to manage.
+    takeaway: Partners sending files over SFTP into Amazon S3 without a self-run server points to Transfer Family.
+    history: []
+    verified:
+      keyHash: 94d66d55b730
+      fullHash: 915c5fc7db0b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-74qh3z
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-transfer-family
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 1
+    stem: >-
+      AWS Transfer Family moves files in and out of which AWS storage services?
+    options:
+      - id: a
+        text: Amazon EFS
+        correct: true
+        why: Transfer Family can read and write files in Amazon EFS file systems.
+      - id: b
+        text: Amazon EBS
+        why: Amazon EBS volumes attach to instances and are not a Transfer Family destination.
+      - id: c
+        text: Amazon S3
+        correct: true
+        why: Transfer Family can read and write objects in Amazon S3 buckets.
+      - id: d
+        text: Amazon DynamoDB
+        why: DynamoDB stores items in NoSQL tables, so it is not a place where Transfer Family lands files.
+      - id: e
+        text: Amazon EC2 instance store
+        why: Instance store is temporary storage on a host and is not a Transfer Family target.
+    evidence:
+      - Fully managed file transfer in and out of Amazon S3 and Amazon EFS over FTP, SFTP, FTPS and other transfer protocols.
+    takeaway: Transfer Family exchanges files with Amazon S3 and Amazon EFS over standard file protocols.
+    history: []
+    verified:
+      keyHash: 04279d8a5a18
+      fullHash: 9c07a42a561c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-prt2n9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: transfer-protocols
+    note: m12/transferring-data-online
+    task: "3.8"
+    level: 1
+    stem: >-
+      What is a transfer protocol?
+    options:
+      - id: a
+        text: A private path that carries data between places
+        why: A private path is a network link such as Direct Connect, which carries data but sets no rules for it.
+      - id: b
+        text: A schedule for when data moves between places
+        why: A schedule only sets the timing of a move, while a protocol sets the rules the data follows.
+      - id: c
+        text: A rule set for how data moves between places
+        correct: true
+        why: A transfer protocol defines the rules that data follows as it moves from one place to another.
+      - id: d
+        text: A storage area that holds data between places
+        why: A storage area keeps data at rest, while a protocol governs how the data travels.
+    evidence:
+      - "**Transfer protocol**: A rule set for how data moves between places."
+    takeaway: A transfer protocol is the set of rules data follows as it moves, such as FTP, SFTP or FTPS.
+    history: []
+    verified:
+      keyHash: 5fb10c2faa8f
+      fullHash: 7a97fafd11f5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wpax40
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: transfer-protocols
+    note: m12/transferring-data-online
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe's bookkeeper sends monthly reports to AWS using FTPS through AWS Transfer Family.
+      Which part of this setup is FTPS?
+    options:
+      - id: a
+        text: The storage that keeps the reports
+        why: The reports are kept in a storage service such as Amazon S3, not in FTPS.
+      - id: b
+        text: The rules the files follow in transit
+        correct: true
+        why: FTPS is a transfer protocol, the rule set that governs how the files move.
+      - id: c
+        text: The service that manages the upload
+        why: Transfer Family is the managed service, and it speaks FTPS rather than being it.
+      - id: d
+        text: The private network line from the office
+        why: A private line would be Direct Connect, which is a path and not a protocol.
+    evidence:
+      - Fully managed file transfer in and out of Amazon S3 and Amazon EFS over FTP, SFTP, FTPS and other transfer protocols.
+      - "**Transfer protocol**: A rule set for how data moves between places."
+    takeaway: FTP, SFTP and FTPS are transfer protocols, the rules for moving files, which Transfer Family speaks.
+    history: []
+    verified:
+      keyHash: cfff450f6f5d
+      fullHash: 1e262fc1f65c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

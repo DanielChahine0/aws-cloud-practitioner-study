@@ -1,0 +1,499 @@
+questions:
+  - id: q-7w1h2h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-config
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      To keep spending down, the cafe lets its developers launch only a short, approved list of EC2 instance types.
+      Which service keeps checking every running instance against that guideline and flags any that break it?
+    options:
+      - id: a
+        text: AWS Trusted Advisor
+        why: Trusted Advisor compares the account with general best practices, not with the cafe's own instance list.
+      - id: b
+        text: AWS Config
+        correct: true
+        why: Config evaluates each instance's configuration against the cafe's own rule and reports any that fail it.
+      - id: c
+        text: AWS Control Tower
+        why: Control Tower sets up and governs a multi-account environment rather than checking each instance's settings.
+      - id: d
+        text: AWS CloudTrail
+        why: CloudTrail logs the API call that launched an instance but never judges its type against a rule.
+    evidence:
+      - "Developers must use only an approved, low-cost list of EC2 types: AWS Config."
+      - Configuration guidelines point to Config, even when cost is mentioned.
+    takeaway: A configuration guideline to check resources against points to AWS Config, even when the reason behind it is cost.
+    history: []
+    verified:
+      keyHash: c2afe3c75e56
+      fullHash: 534eea4d567d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zzxv59
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-config
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's cloud team uses AWS Config for several jobs.
+      Match each job with the kind of Config use it is.
+    pairs:
+      - left: Confirm every register server still matches the setup the cafe approved
+        right: Desired-state check
+        why: Comparing each server with the setup the cafe chose is a desired-state check.
+      - left: Work out why the menu app stopped loading this morning
+        right: Troubleshooting
+        why: Config's history of configurations helps trace a fault in the menu app back to its cause.
+      - left: Track how the order network's settings changed over the past month
+        right: Change management
+        why: Config records each change to a resource's configuration, which gives the history change management needs.
+      - left: Keep checking firewall and access protections all year, not just once
+        right: Ongoing security audit
+        why: Config keeps watching resources, so protection checks run continually rather than at one point in time.
+    evidence:
+      - "Uses: desired-state checks, ongoing security audits, troubleshooting, change management."
+      - AWS Config records configurations, tracks changes and checks them against your rules.
+    takeaway: AWS Config serves desired-state checks, ongoing security audits, troubleshooting and change management.
+    history: []
+    verified:
+      keyHash: 9a2be8b001d1
+      fullHash: 596a3580ca87
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-98zx2j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: config-rules
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      In AWS Config, what is a Config rule?
+    options:
+      - id: a
+        text: A cap on the API actions that one member account may use
+        why: That describes a service control policy in AWS Organizations, not a standard Config evaluates.
+      - id: b
+        text: A prebuilt mapping of resources to an outside regulation
+        why: That describes an AWS Audit Manager framework, which supports proving compliance to auditors.
+      - id: c
+        text: A standard that resources are checked against
+        correct: true
+        why: A Config rule states the configuration a resource should have, and Config tests resources against it.
+      - id: d
+        text: A permission policy that is attached to an IAM user
+        why: An IAM policy grants or denies access; it does not define a configuration to evaluate.
+    evidence:
+      - "**Config rule**: a standard Config checks resources against."
+      - Firms set configuration rules per resource and must audit against them.
+    takeaway: A Config rule is the configuration standard that AWS Config evaluates each resource against.
+    history: []
+    verified:
+      keyHash: a83d69a1bbc1
+      fullHash: 88e82f2edd9b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6whd9b
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: config-rules
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe has a Config rule that every S3 bucket holding receipts must have versioning turned on.
+      A new receipts bucket is created with versioning off.
+      What does AWS Config do with this bucket?
+    options:
+      - id: a
+        text: It marks the bucket as noncompliant and alerts the team.
+        correct: true
+        why: Config evaluates the bucket against the rule, marks it noncompliant and alerts the cafe about it.
+      - id: b
+        text: It blocks the bucket from being created in the first place.
+        why: Config evaluates resources that already exist; it does not stop a bucket from being created.
+      - id: c
+        text: It records the API call that created the bucket in a trail.
+        why: Recording the API call in a trail is AWS CloudTrail's job, not how Config treats a failing bucket.
+      - id: d
+        text: It places the bucket's settings in an audit-ready report.
+        why: Building audit-ready reports is AWS Audit Manager's job, not what Config does with a failing bucket.
+    evidence:
+      - It alerts you to noncompliant resources and can fix them automatically.
+      - It reports pass and fail and keeps watching so settings stay put, as compliance is ongoing.
+    takeaway: A resource that breaks a Config rule is reported as failing and flagged, and Config keeps checking it over time.
+    history: []
+    verified:
+      keyHash: 9b7ff2e37c05
+      fullHash: 3372cb2b0e29
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-873xfj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: automated-remediation
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A developer at the cafe changes a storage setting so that it no longer meets a rule the cafe set for that resource.
+      The cafe wants the setting put back to the compliant value without anyone stepping in.
+      Which capability does this?
+    options:
+      - id: a
+        text: AWS CloudTrail log file integrity validation
+        why: Integrity validation shows whether log files were tampered with; it never changes a resource setting.
+      - id: b
+        text: AWS Config automated remediation
+        correct: true
+        why: Automated remediation applies a fix that brings the noncompliant setting back into compliance on its own.
+      - id: c
+        text: AWS Audit Manager prebuilt frameworks
+        why: A framework maps resources to a standard for audit proof; it does not repair a resource.
+      - id: d
+        text: AWS Trusted Advisor best-practice checks
+        why: Trusted Advisor recommends improvements but does not restore a setting against the cafe's own rule.
+    evidence:
+      - It alerts you to noncompliant resources and can fix them automatically.
+      - Config checks configurations against your rules and can auto-fix.
+    takeaway: AWS Config automated remediation puts a noncompliant resource back into compliance without manual work.
+    history: []
+    verified:
+      keyHash: 9997eab1d004
+      fullHash: c127a8379b5c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r4x2s9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: automated-remediation
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does automated remediation do in AWS Config?
+    options:
+      - id: a
+        text: It collects proof of working controls for an auditor.
+        why: Collecting audit proof is the job of AWS Audit Manager, not of a fix applied by Config.
+      - id: b
+        text: It records each API call made in the account.
+        why: Recording API calls is what AWS CloudTrail does, and it changes no resource.
+      - id: c
+        text: It restores noncompliant resources to compliance.
+        correct: true
+        why: Remediation applies a fix to a resource that fails a rule so that it complies again.
+      - id: d
+        text: It serves AWS's own reports from outside auditors.
+        why: AWS Artifact serves those reports, which describe AWS rather than fixing your resources.
+    evidence:
+      - "**Automated remediation**: fixes that restore compliance."
+    takeaway: Automated remediation is a fix that Config applies to bring a resource that fails a rule back into compliance.
+    history: []
+    verified:
+      keyHash: 2832e85a6ea0
+      fullHash: cba4cf4317c9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-cqg9g7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-audit-manager
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's bank asks it to prove, with reports ready for the bank's examiners, that its payment controls actually work.
+      Which service gathers the proof and tests those controls?
+    options:
+      - id: a
+        text: AWS Config
+        why: Config checks resource settings against rules but does not build audit reports proving controls work.
+      - id: b
+        text: AWS CloudTrail
+        why: CloudTrail records API calls, which is one log, not a tested set of controls with reports.
+      - id: c
+        text: AWS Audit Manager
+        correct: true
+        why: Audit Manager collects evidence, tests whether controls work and builds reports ready for auditors.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices and offers no audit reports or control tests.
+    evidence:
+      - It tests whether controls (policies, procedures, activities) work, runs stakeholder reviews and builds audit-ready reports.
+      - Regulated firms must also prove it, as a financial firm must show it handles money safely.
+    takeaway: When a firm must prove its controls work with audit-ready reports, AWS Audit Manager fits, not AWS Config.
+    history: []
+    verified:
+      keyHash: 0da29499daea
+      fullHash: ca40e9027df4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yg53ry
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-audit-manager
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which tasks does AWS Audit Manager perform?
+    options:
+      - id: a
+        text: Test whether controls such as policies work
+        correct: true
+        why: Audit Manager tests whether the policies, procedures and activities being audited actually work.
+      - id: b
+        text: Restore settings that drift from the rules
+        why: Fixing settings is AWS Config's remediation, and Audit Manager only has read-only access.
+      - id: c
+        text: Support a firm's internal risk assessments
+        correct: true
+        why: Audit Manager supports the internal risk assessments a firm runs on its own controls.
+      - id: d
+        text: Record the API calls made in an account
+        why: Recording API calls is the job of AWS CloudTrail, not of Audit Manager.
+      - id: e
+        text: Spot signs of threats in account activity
+        why: Watching activity for threats is the job of Amazon GuardDuty, not of Audit Manager.
+    evidence:
+      - It tests whether controls (policies, procedures, activities) work, runs stakeholder reviews and builds audit-ready reports.
+      - Read-only access protects audit integrity, and it supports internal risk assessments.
+    takeaway: AWS Audit Manager tests whether controls work and supports internal risk assessments, all through read-only access.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 fit AWS Audit Manager; 1 is AWS Config, 3 is GuardDuty and 4 is CloudTrail.)"
+  - id: q-c8d2s6
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: automated-evidence-collection
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      Before each compliance review, the cafe's finance and IT teams spend weeks pulling together screenshots and logs as proof that their controls work.
+      Which approach cuts most of this manual work?
+    options:
+      - id: a
+        text: Use AWS CloudTrail to share API call history
+        why: Sharing API call history still leaves the teams assembling proof for every other control by hand.
+      - id: b
+        text: Use AWS Artifact to share AWS's own reports
+        why: Artifact reports describe AWS's controls, not the cafe's, so the teams still gather their own proof.
+      - id: c
+        text: Use AWS Audit Manager to gather the proof
+        correct: true
+        why: Audit Manager collects evidence automatically and continually across teams, so no one gathers it by hand.
+      - id: d
+        text: Use AWS Config to record resource settings
+        why: Config records and checks settings but does not gather proof of controls across the teams.
+    evidence:
+      - Audit Manager is fully managed, audits usage continually and automates evidence collection across teams.
+    takeaway: AWS Audit Manager replaces manual, team-by-team proof gathering with continual automated evidence collection.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Key option 2 'gather the proof' reuses the stem's word 'proof'."
+  - id: q-9taz85
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: automated-evidence-collection
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does automated evidence collection in AWS Audit Manager take off a firm's hands?
+    options:
+      - id: a
+        text: Checking each resource's settings against the firm's rules
+        why: Checking settings against rules is AWS Config's job, not part of gathering audit evidence.
+      - id: b
+        text: Gathering proof that the firm's controls work
+        correct: true
+        why: Audit Manager gathers audit evidence automatically, so teams no longer collect it manually.
+      - id: c
+        text: Logging who made each API call and when
+        why: Logging API calls is what AWS CloudTrail does, and it is not audit evidence gathering by itself.
+      - id: d
+        text: Watching account activity for signs of threats
+        why: Threat detection is the job of Amazon GuardDuty, not of collecting evidence for an audit.
+    evidence:
+      - "**AWS Audit Manager**: automates audit evidence collection."
+      - Audit Manager automates evidence and offers prebuilt frameworks.
+    takeaway: Automated evidence collection means Audit Manager gathers audit proof so teams do not collect it by hand.
+    history: []
+    verified:
+      keyHash: b5f33b2d804f
+      fullHash: 71bac668cf78
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-h8y5ph
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: audit-manager-frameworks
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe takes card payments and must show it meets the PCI regulations.
+      For its audit, it wants a starting point that maps its own resources to that standard.
+      What should it use?
+    options:
+      - id: a
+        text: A managed AWS Config rule
+        why: A Config rule checks one setting on a resource; it does not map the cafe's resources to a regulation.
+      - id: b
+        text: An AWS Audit Manager framework
+        correct: true
+        why: A prebuilt framework maps the cafe's resources to a standard or regulation, ready to use.
+      - id: c
+        text: An AWS Organizations service control policy
+        why: A service control policy caps the actions an account may take and maps nothing to a regulation.
+      - id: d
+        text: An AWS Artifact compliance report
+        why: An Artifact report covers AWS's own controls, not a mapping of the cafe's resources to PCI.
+    evidence:
+      - Prebuilt frameworks map your resources to standards and regulations.
+    takeaway: A prebuilt Audit Manager framework maps a firm's resources to a standard such as PCI as an audit starting point.
+    history: []
+    verified:
+      keyHash: bd628b3adffd
+      fullHash: 4c590cdcdc7e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-j1sgps
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: audit-manager-frameworks
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      What does a framework in AWS Audit Manager provide?
+    options:
+      - id: a
+        text: A template that creates each new account the same way
+        why: That describes Account Factory in AWS Control Tower, not an Audit Manager framework.
+      - id: b
+        text: A curated list of approved resources staff can deploy
+        why: That describes AWS Service Catalog, which offers approved resources rather than audit mappings.
+      - id: c
+        text: A cap on the services that one member account may use
+        why: That describes a service control policy, which limits access and maps nothing to a standard.
+      - id: d
+        text: A prebuilt mapping of resources to a standard
+        correct: true
+        why: A framework ties your resources to a standard or regulation, so the audit starts from a ready map.
+    evidence:
+      - "**Framework**: prebuilt mapping of resources to a standard."
+    takeaway: An Audit Manager framework is a prebuilt mapping of your resources to a standard or regulation.
+    history: []
+    verified:
+      keyHash: 09f6c5b145b5
+      fullHash: 02bf9a23f82e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-abjf1z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-audit-manager
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's own risk team, acting on its own initiative, wants to test each quarter whether its staff access-review procedure really works.
+      It also wants managers to sign off on the results.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Config
+        why: Config checks resource settings against rules, but it does not test whether a procedure works or run sign-offs.
+      - id: b
+        text: AWS Artifact
+        why: Artifact serves AWS's own audit reports, not tests of the cafe's internal procedures.
+      - id: c
+        text: AWS Audit Manager
+        correct: true
+        why: Audit Manager tests whether controls such as procedures work, runs stakeholder reviews and supports internal risk assessments.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices, not whether a staff procedure works.
+    evidence:
+      - It tests whether controls (policies, procedures, activities) work, runs stakeholder reviews and builds audit-ready reports.
+      - Read-only access protects audit integrity, and it supports internal risk assessments.
+    takeaway: Audit Manager also serves internal risk checks, testing whether controls work and running stakeholder reviews.
+    history: []
+    verified:
+      keyHash: f4bf3e0b3e51
+      fullHash: dc707934c104
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nfaqhr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: automated-evidence-collection
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      Before every audit, the cafe's finance, IT and supply teams each spend days copying records by hand to show their controls work.
+      Which AWS Audit Manager feature removes that chore?
+    options:
+      - id: a
+        text: Prebuilt frameworks mapped to standards
+        why: Frameworks map resources to a standard, but someone still has to gather the proof without automation.
+      - id: b
+        text: Read-only access to resources
+        why: Read-only access keeps the audit intact, but it does not gather any records for the teams.
+      - id: c
+        text: Automated collection of evidence
+        correct: true
+        why: Audit Manager gathers evidence automatically and continually across teams, replacing the manual copying.
+      - id: d
+        text: Sign-off reviews by stakeholders
+        why: Stakeholder reviews approve results, but they do not collect the records the teams copy by hand.
+    evidence:
+      - Audit Manager is fully managed, audits usage continually and automates evidence collection across teams.
+    takeaway: Audit Manager's automated evidence collection replaces hand-gathered audit proof across many teams.
+    history: []
+    verified:
+      keyHash: 94cada759141
+      fullHash: 6ad4457658c8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

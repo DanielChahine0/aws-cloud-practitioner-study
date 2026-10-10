@@ -1,0 +1,151 @@
+questions:
+  - id: q-50x168
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: architecture-evaluation
+    note: m13/introduction-to-well-architected-solutions
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's new ordering app has handled every order for a month without an error.
+      The owner says this proves the app's design is sound.
+      Which statement answers the owner's claim?
+    options:
+      - id: a
+        text: A design can run on AWS and still leave some security work to the cafe.
+        why: This is true under shared responsibility, but it does not say whether error-free running proves the design sound.
+      - id: b
+        text: A design can work well today and still hide weak spots in how it is built.
+        correct: true
+        why: A working app can still hide weak spots, so running without errors does not prove the design is sound.
+      - id: c
+        text: A design can serve one Region today and still expand to more Regions later.
+        why: This is true, but room to expand to new Regions does not tell the owner whether a working app is well designed.
+      - id: d
+        text: A design can use managed services and still be billed only for what it uses.
+        why: This is true of pay-as-you-go pricing, but billing says nothing about whether the cafe's design is sound.
+    evidence:
+      - Building blocks allow almost any design, but is yours good?
+      - Running does not mean well designed.
+    takeaway: An app that runs without errors is not proof of good design; it still needs a review against best practices.
+    history: []
+    verified:
+      keyHash: 52cbe530abed
+      fullHash: 1ee41a4f8c07
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-s3cv0f
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: architecture-evaluation
+    note: m13/introduction-to-well-architected-solutions
+    task: "1.2"
+    level: 1
+    stem: >-
+      When the AWS Well-Architected Framework is used to judge a design,
+      which qualities does it check the design for?
+    options:
+      - id: a
+        text: Secure
+        correct: true
+        why: The Framework asks whether the design keeps data and systems protected.
+      - id: b
+        text: Novel
+        why: Being new or unusual is not one of the qualities the Framework checks a design for.
+      - id: c
+        text: Efficient
+        correct: true
+        why: The Framework asks whether the design uses its resources well rather than wastefully.
+      - id: d
+        text: Quick to launch
+        why: How fast a design goes live is not one of the qualities the Framework checks a design for.
+      - id: e
+        text: Built to last
+        correct: true
+        why: The Framework asks whether the design will keep working well over time.
+      - id: f
+        text: Fully custom
+        why: Building every part in-house is not one of the qualities the Framework checks a design for.
+    evidence:
+      - The AWS Well-Architected Framework, a leading AWS aid, tests if a design is functional, efficient, secure, built to last.
+      - Judge designs with the Framework.
+    takeaway: Judging a design means checking that it works, is efficient and secure, and will last over time.
+    history: []
+    verified:
+      keyHash: 9cd4cfdd16be
+      fullHash: 24797b910d8b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7hs4bw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: purpose-built-services
+    note: m13/introduction-to-well-architected-solutions
+    task: "3.8"
+    level: 1
+    stem: >-
+      Beyond the core building blocks, AWS offers groups of purpose-built services.
+      Which group is one of them?
+    options:
+      - id: a
+        text: Compute services
+        why: Compute is one of the core building blocks, not one of the purpose-built groups that come after them.
+      - id: b
+        text: Storage services
+        why: Storage is one of the core building blocks, not one of the purpose-built groups that come after them.
+      - id: c
+        text: IoT services
+        correct: true
+        why: IoT is one of the purpose-built groups, alongside development, business and end-user computing.
+      - id: d
+        text: Networking services
+        why: Networking is one of the core building blocks, not one of the purpose-built groups that come after them.
+    evidence:
+      - "Next: development, business, end-user computing and IoT services."
+    takeaway: Beyond core building blocks, AWS's purpose-built groups are development, business, end-user computing and IoT.
+    history: []
+    verified:
+      keyHash: 6a1de08502b5
+      fullHash: 7074029139cb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kwkhet
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: purpose-built-services
+    note: m13/introduction-to-well-architected-solutions
+    task: "3.8"
+    level: 2
+    stem: >-
+      Match each cafe need to the group of purpose-built AWS services made for it.
+    pairs:
+      - left: Sending fridge temperature readings to a cloud app
+        right: IoT
+        why: Linking physical devices with sensors, such as fridges, to cloud apps is the job of IoT services.
+      - left: Giving staff a managed desktop they reach from anywhere
+        right: End-user computing
+        why: Managed cloud desktops for staff are what end-user computing services provide.
+      - left: Releasing app updates automatically after each change
+        right: Development
+        why: Automating how app changes are built, tested and released is the job of development services.
+      - left: Answering customer calls and chats from one cloud center
+        right: Business
+        why: Handling customer calls and chats is customer service work, which the business group supports with a cloud contact center.
+    evidence:
+      - "Next: development, business, end-user computing and IoT services."
+    takeaway: Beyond core building blocks, AWS offers purpose-built services for development, business, end-user computing and IoT.
+    history: []
+    verified:
+      keyHash: 9215949b4ef4
+      fullHash: af39cb1465ab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

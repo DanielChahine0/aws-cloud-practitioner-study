@@ -1,0 +1,399 @@
+questions:
+  - id: q-mdxy1n
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: launching-ec2-instances
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 1
+    stem: >-
+      Match each setting chosen while launching an EC2 instance to the job it does.
+    pairs:
+      - left: AMI
+        right: Supplies the operating system and bundled software
+        why: The image decides which OS and software the new instance starts with.
+      - left: Instance type
+        right: Sets the CPU and memory the instance gets
+        why: The instance type picks the hardware capacity behind the instance.
+      - left: Storage
+        right: Provides the disk volume the instance uses
+        why: The storage setting attaches the volume that acts as the instance's disk.
+      - left: Key pair
+        right: Lets an administrator sign in to the instance
+        why: The key pair holds the keys used to log in to the running instance.
+      - left: Network settings
+        right: Controls which traffic can reach the instance
+        why: Network settings decide what traffic, such as web requests, is allowed in.
+    evidence:
+      - "Each setting has a job: AMI for software, instance type for hardware, storage for disk, key pair for login, network settings for traffic."
+    takeaway: Every launch setting covers one area - software, hardware, disk, login or traffic.
+    history: []
+    verified:
+      keyHash: d59f20ac3a94
+      fullHash: 6bac788243f2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zrkp7p
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: launching-ec2-instances
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe launched an EC2 instance to host its menu page, but browsers on the internet cannot load it.
+      Which launch setting should the team check first?
+    options:
+      - id: a
+        text: Instance type
+        why: The instance type sets CPU and memory, not whether web requests are let in.
+      - id: b
+        text: Network settings
+        correct: true
+        why: Network settings decide whether HTTP traffic from the internet may reach the instance.
+      - id: c
+        text: Storage volume
+        why: The storage volume gives the instance a disk and has no say over incoming traffic.
+      - id: d
+        text: Instance name
+        why: The name only helps the team find the instance later and does not affect access.
+    evidence:
+      - "**Network settings**: allow HTTP from the internet."
+    takeaway: Whether web visitors can reach an instance depends on the traffic its network settings allow.
+    history: []
+    verified:
+      keyHash: 89fb8d44fcaa
+      fullHash: 7662899b06e2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pt59pb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-key-pairs
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "2.3"
+    level: 1
+    stem: >-
+      The cafe's IT lead launched an EC2 instance and set up SSH sign-in during the launch flow.
+      Which item does the IT lead hold on to in order to sign in to that instance later?
+    options:
+      - id: a
+        text: The public IP address
+        why: The public IP address shows where to connect but does not prove who is signing in.
+      - id: b
+        text: The public key
+        why: The public key is placed on the instance itself, so it is not the item the IT lead keeps.
+      - id: c
+        text: The private key
+        correct: true
+        why: The IT lead keeps the private key and presents it to sign in to the instance.
+      - id: d
+        text: The image ID
+        why: The image ID only names the AMI the instance was launched from and plays no part in signing in.
+    evidence:
+      - "**Key pair**: a public key on the instance and a private key you keep for logging in, created at launch or reused."
+    takeaway: A key pair splits into a public key on the instance and a private key the user keeps to log in.
+    history: []
+    verified:
+      keyHash: dacd77881984
+      fullHash: 77efda0de21e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vkhksk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-key-pairs
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe already made a key pair when it launched its first EC2 instance.
+      It now launches a second instance and wants to sign in with the same private key.
+      What can it do?
+    options:
+      - id: a
+        text: Select the existing key pair at launch
+        correct: true
+        why: A key pair can be reused at launch, so the same private key works on both instances.
+      - id: b
+        text: Create a new key pair at launch
+        why: A new key pair comes with a new private key, so the old private key would not sign in.
+      - id: c
+        text: Pick the same instance type as before
+        why: Matching the instance type copies the hardware size, not the key used to sign in.
+      - id: d
+        text: Use the same AMI as the first one
+        why: The AMI supplies the OS and software, while the sign-in key comes from the key pair setting.
+    evidence:
+      - "**Key pair**: a public key on the instance and a private key you keep for logging in, created at launch or reused."
+    takeaway: An existing key pair can be picked again at launch instead of creating a new one.
+    history: []
+    verified:
+      keyHash: 58336a891b34
+      fullHash: 84ae1d1eb607
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bym9aw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-user-data
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe launches an EC2 instance from a generic Amazon Linux AMI and wants Nginx installed and running as soon as it boots, without anyone logging in.
+      Which launch setting handles this?
+    options:
+      - id: a
+        text: Key pair
+        why: A key pair lets someone sign in by hand, which the cafe wants to avoid.
+      - id: b
+        text: Instance type
+        why: The instance type picks CPU and memory but cannot install software.
+      - id: c
+        text: Storage
+        why: The storage setting sizes the disk and does not run any setup commands.
+      - id: d
+        text: User data
+        correct: true
+        why: User data runs a script at launch, so it can install and start Nginx automatically.
+    evidence:
+      - "**User data**: a launch script, here installing and starting Nginx, which the generic AMI lacks."
+      - "A generic Linux instance must serve web pages: install Nginx with user data."
+    takeaway: To add software a generic AMI lacks at first boot, put the install steps in user data.
+    history: []
+    verified:
+      keyHash: 58e677e0f938
+      fullHash: 8e58cde6d38f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-my2p44
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-user-data
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 1
+    stem: >-
+      What does the user data field of an EC2 launch hold?
+    options:
+      - id: a
+        text: The keys used to sign in to the instance
+        why: Sign-in keys come from the key pair setting, not from user data.
+      - id: b
+        text: A script that configures the new instance
+        correct: true
+        why: User data is a script that runs at launch to configure the new instance.
+      - id: c
+        text: The rules for which traffic can reach it
+        why: Allowed traffic is decided by the network settings, not by user data.
+      - id: d
+        text: The operating system and software it boots with
+        why: The OS and bundled software come from the AMI, not from user data.
+    evidence:
+      - "User data configures an instance at launch."
+    takeaway: User data is a script that sets up an instance at the moment it launches.
+    history: []
+    verified:
+      keyHash: 10940459506f
+      fullHash: b0cd9151f9f5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-s7cy7d
+    version: 1
+    status: live
+    type: multi
+    pool: practice
+    concept: amazon-machine-image
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 1
+    select: 3
+    stem: >-
+      The cafe picks an Amazon Machine Image (AMI) for a new EC2 instance.
+      Which items does it choose as separate launch settings, apart from the AMI?
+    options:
+      - id: a
+        text: The operating system
+        why: The operating system comes inside the AMI, so it is not chosen separately.
+      - id: b
+        text: The instance size
+        correct: true
+        why: The AMI does not set size, which comes from the instance type chosen at launch.
+      - id: c
+        text: Preinstalled software
+        why: Software baked into the image arrives with the AMI and needs no separate choice.
+      - id: d
+        text: The network settings
+        correct: true
+        why: The AMI does not set networking, so traffic rules are chosen separately at launch.
+      - id: e
+        text: Launch permissions
+        why: Launch permissions are part of the AMI and control who may launch from it.
+      - id: f
+        text: The key pair
+        correct: true
+        why: The key pair is a launch setting, created at launch or reused, not part of the image.
+    evidence:
+      - An AMI holds the OS, architecture, storage layout, preinstalled software and launch permissions.
+      - It does not set size or networking, and it is no data store or backup, since instance data typically lives on volumes like Amazon EBS.
+      - "**Key pair**: a public key on the instance and a private key you keep for logging in, created at launch or reused."
+    takeaway: An AMI brings the OS, software and launch permissions, while size, networking and the key pair are chosen at launch.
+    history: []
+    verified:
+      keyHash: a5ef868cb1ed
+      fullHash: fc817d82ebaf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-sxarw4
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-machine-image
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's manager plans to rely on the web server's AMI as the backup for its daily order records.
+      Why is this a poor plan?
+    options:
+      - id: a
+        text: An AMI cannot be shared with other accounts
+        why: Launch permissions let an AMI be shared, and sharing has nothing to do with keeping order records.
+      - id: b
+        text: An AMI holds setup, not the data instances write
+        correct: true
+        why: An AMI captures how an instance is set up, while order data lives on volumes such as Amazon EBS.
+      - id: c
+        text: An AMI cannot include any preinstalled software
+        why: An AMI can bundle preinstalled software, and that is not why it fails to protect order records.
+      - id: d
+        text: An AMI works only for Amazon Linux instances
+        why: AMIs exist for many operating systems, and the OS choice is not why it fails as a backup.
+    evidence:
+      - It does not set size or networking, and it is no data store or backup, since instance data typically lives on volumes like Amazon EBS.
+      - An AMI is a configuration template, not a backup.
+    takeaway: An AMI captures how an instance is set up, so business data needs its own storage and backups.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement about AMIs; options 1, 2 and 4 are false.)"
+  - id: q-qtsy84
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ami-repeatability
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      Ahead of the holiday rush, the cafe needs several more web servers that run the same OS, software and setup as its current one.
+      Which approach achieves this?
+    options:
+      - id: a
+        text: Use the same key pair for every server
+        why: A shared key pair only changes who can log in, not what software each server runs.
+      - id: b
+        text: Launch every server from one AMI
+        correct: true
+        why: Servers launched from the same image start with the same OS, software and setup.
+      - id: c
+        text: Pick the same instance type for each
+        why: A matching instance type gives equal hardware but does not copy the software setup.
+      - id: d
+        text: Give each one the same size EBS volume
+        why: Equal disk space per server does not make their software and setup the same.
+    evidence:
+      - "Identical servers for scaling out: launch them from one AMI."
+    takeaway: Launching every new server from a single AMI keeps a scaled-out fleet identical.
+    history: []
+    verified:
+      keyHash: c3426916c2ac
+      fullHash: 69d20049e0a2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0j73hb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ami-repeatability
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 1
+    stem: >-
+      A team launches all of its servers from one AMI through automated deployments.
+      Which benefit does this give the team?
+    options:
+      - id: a
+        text: Hardware sized to each workload
+        why: Sizing hardware comes from the instance type, not from sharing one AMI.
+      - id: b
+        text: Sign-in protected by a private key
+        why: Protected sign-in comes from the key pair, not from launching from one image.
+      - id: c
+        text: Matching setups across dev and test
+        correct: true
+        why: Every environment starts from the same image, so development and test match.
+      - id: d
+        text: Web traffic let in from the internet
+        why: Letting web traffic in is the job of network settings, not of a shared AMI.
+    evidence:
+      - Launching from one AMI with automated deployments gives identical setups, consistent dev and test, fewer errors, easier scaling and simpler large fleets.
+    takeaway: One AMI plus automated deployments gives every environment the same setup and fewer errors.
+    history: []
+    verified:
+      keyHash: b09b8befd2d6
+      fullHash: 63f4bd61ad73
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6xqs3n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-machine-image
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is launching a web server and wants it to start with a chosen operating system and its preinstalled software.
+      Which launch setting decides this?
+    options:
+      - id: a
+        text: The instance type
+        why: The instance type sets the hardware, such as CPU and memory, not the software on the server.
+      - id: b
+        text: The key pair
+        why: The key pair controls logging in to the instance, not which software it starts with.
+      - id: c
+        text: The AMI
+        correct: true
+        why: The AMI holds the operating system and preinstalled software the new server starts from.
+      - id: d
+        text: The storage volume
+        why: The storage volume gives the server its disk space, not its operating system or software.
+    evidence:
+      - An AMI holds the OS, architecture, storage layout, preinstalled software and launch permissions.
+      - "Each setting has a job: AMI for software, instance type for hardware, storage for disk, key pair for login, network settings for traffic."
+    takeaway: At launch, the AMI decides the operating system and software an EC2 instance starts with.
+    history: []
+    verified:
+      keyHash: 7b2dcc52958c
+      fullHash: 30faab530e95
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

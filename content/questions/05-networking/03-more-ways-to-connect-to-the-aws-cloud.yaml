@@ -1,0 +1,574 @@
+questions:
+  - id: q-ghgse6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-client-vpn
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe's bookkeeper and shift planners now work from home on their own laptops.
+      Each of them needs a secure way into the cafe's VPC, and the cafe wants to avoid sizing any hardware for it.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Site-to-Site VPN
+        why: Site-to-Site VPN joins whole locations such as an office to the VPC, not individual people on laptops.
+      - id: b
+        text: AWS Client VPN
+        correct: true
+        why: Client VPN is the managed VPN for individual remote users, and it scales with demand with no hardware to plan.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated line from a network to AWS, far beyond what a few home workers need.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink gives a VPC private access to services, not a way for remote people to sign in to the VPC.
+    evidence:
+      - "For people: a fully managed, elastic VPN linking remote staff (and on-premises networks) to AWS that scales with demand."
+      - It needs no hardware or user-count guessing and adds strong authentication.
+    takeaway: When individual people working remotely need secure access to AWS, the answer is AWS Client VPN.
+    history: []
+    verified:
+      keyHash: 5680dbe91f36
+      fullHash: 03e20e646ecf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mh03at
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-client-vpn
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which AWS service gives remote staff a fully managed VPN that scales with demand, with no hardware or user-count planning?
+    options:
+      - id: a
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub that links VPCs and on-premises networks, and it is not a VPN for remote staff.
+      - id: b
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated private line from a network, not a managed VPN for individual staff.
+      - id: c
+        text: AWS Client VPN
+        correct: true
+        why: Client VPN is the managed, elastic VPN for remote staff, and it needs no hardware or user-count guessing.
+      - id: d
+        text: AWS Site-to-Site VPN
+        why: Site-to-Site VPN links sites such as data centers to a VPC, rather than individual remote staff.
+    evidence:
+      - "For people: a fully managed, elastic VPN linking remote staff (and on-premises networks) to AWS that scales with demand."
+      - It needs no hardware or user-count guessing and adds strong authentication.
+    takeaway: AWS Client VPN is the managed, elastic VPN for remote staff, with no hardware or user-count planning.
+    history: []
+    verified:
+      keyHash: 228dde7284f5
+      fullHash: 9eed1d07befe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rv7skh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-site-to-site-vpn
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe opens a second branch with its own small office network.
+      The branch needs an encrypted link to the cafe's VPC, and its traffic is light, so no dedicated line is needed.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Site-to-Site VPN
+        correct: true
+        why: Site-to-Site VPN gives a branch office an encrypted link to a VPC without a dedicated line.
+      - id: b
+        text: AWS Client VPN
+        why: Client VPN serves individual remote users, not a whole branch office network.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect is worth it only when the bandwidth is needed, and this branch's traffic is light.
+      - id: d
+        text: Amazon API Gateway
+        why: API Gateway creates and manages APIs, and it does not link an office network to a VPC.
+    evidence:
+      - "For sites: encrypted links from data centers or branch offices to your VPC, with high availability, private sessions and faster apps."
+      - It suits app migration and remote-location links, and wins when no dedicated line or extra bandwidth is needed.
+    takeaway: An encrypted link from a branch office to a VPC, with no need for extra bandwidth, points to Site-to-Site VPN.
+    history: []
+    verified:
+      keyHash: 38a69ed87f5d
+      fullHash: e0a8360a7990
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5hne9v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-site-to-site-vpn
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      What does AWS Site-to-Site VPN connect?
+    options:
+      - id: a
+        text: A single remote worker's laptop to AWS
+        why: A single remote worker is the job of AWS Client VPN, which is built for people.
+      - id: b
+        text: Several VPCs through one central hub
+        why: A central hub for many VPCs describes AWS Transit Gateway, not Site-to-Site VPN.
+      - id: c
+        text: A data center or branch office to a VPC
+        correct: true
+        why: Site-to-Site VPN builds encrypted links from locations such as data centers and branch offices to a VPC.
+      - id: d
+        text: A VPC to an outside service as if it were local
+        why: Reaching a service privately as if it sat in the VPC is what AWS PrivateLink does.
+    evidence:
+      - "For sites: encrypted links from data centers or branch offices to your VPC, with high availability, private sessions and faster apps."
+    takeaway: Site-to-Site VPN is for sites, linking data centers and branch offices to a VPC over encrypted links.
+    history: []
+    verified:
+      keyHash: a839059ead91
+      fullHash: 3fd95130d84c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-071q34
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-privatelink
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe's ordering app runs in its VPC and must call a bakery supplier's stock service that lives in another VPC.
+      The cafe wants to reach only that one service, with no public IP addresses on either side.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub that joins whole networks, rather than exposing one chosen service privately.
+      - id: b
+        text: NAT gateway
+        why: A NAT gateway lets private instances call out to outside hosts, which sends traffic beyond the VPC.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated line from an on-premises network, not private access to one service in a VPC.
+      - id: d
+        text: AWS PrivateLink
+        correct: true
+        why: PrivateLink gives private access to a chosen service in another VPC as if it were local, with no public IP.
+    evidence:
+      - "For resources: highly available, scalable private access from a VPC to services as if they were inside it, including other VPCs, other clouds and on-premises networks."
+      - It needs no public IP, NAT device, internet gateway, VPN or Direct Connect, and you pick exactly what is reachable, so traffic stays protected and rules simple.
+    takeaway: Private access to one chosen service in another VPC, with no public IP, points to AWS PrivateLink.
+    history: []
+    verified:
+      keyHash: b671b25adba1
+      fullHash: 4726cd54168c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dxzmf5
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-privatelink
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which statements describe AWS PrivateLink?
+    options:
+      - id: a
+        text: It works without a public IP address.
+        correct: true
+        why: PrivateLink keeps the connection private, so no public IP address is needed to reach the service.
+      - id: b
+        text: It needs a NAT device in the VPC.
+        why: PrivateLink needs no NAT device, because the service is reached as if it sat inside the VPC.
+      - id: c
+        text: You pick exactly which targets are reachable.
+        correct: true
+        why: With PrivateLink you choose exactly what is reachable, which keeps traffic protected and rules simple.
+      - id: d
+        text: Its traffic leaves through an internet gateway.
+        why: PrivateLink needs no internet gateway, since the traffic never has to cross the public internet.
+      - id: e
+        text: It needs a VPN to keep traffic private.
+        why: PrivateLink needs no VPN, because the access is private without building an encrypted tunnel.
+    evidence:
+      - It needs no public IP, NAT device, internet gateway, VPN or Direct Connect, and you pick exactly what is reachable, so traffic stays protected and rules simple.
+    takeaway: PrivateLink needs no public IP and lets you choose exactly which services a VPC can reach.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 3 are true of a VPC endpoint; 2, 4 and 5 are false for private endpoint traffic.)"
+  - id: q-akkdy7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-direct-connect
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe chain is moving years of security camera video and nightly backups to AWS, and will keep some apps on premises for good.
+      Its shared internet links already jam during transfers.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Site-to-Site VPN
+        why: Site-to-Site VPN runs over shared links, so it does not add the bandwidth these large transfers need.
+      - id: b
+        text: AWS Direct Connect
+        correct: true
+        why: Direct Connect gives a dedicated private line with more bandwidth for huge transfers and lasting hybrid apps.
+      - id: c
+        text: AWS Client VPN
+        why: Client VPN connects individual people, and it does not raise bandwidth for bulk data moves.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink gives a VPC private access to services, not a dedicated line from the cafe's network.
+    evidence:
+      - Shared links can jam, so Direct Connect gives a dedicated private line from your network to a VPC (via a Direct Connect location and a virtual private gateway), cutting costs and raising bandwidth.
+      - "Fits: latency-sensitive apps like video streaming (no internet hop), huge transfers (analytics, backups, broadcast media) and hybrid apps across AWS and on premises."
+    takeaway: Huge transfers and lasting hybrid apps that outgrow shared links call for a dedicated Direct Connect line.
+    history: []
+    verified:
+      keyHash: 728c35f4508b
+      fullHash: 26a4c0994d53
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rw5kw1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-direct-connect
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      On the AWS side, which component does an AWS Direct Connect line reach on its way into a VPC?
+    options:
+      - id: a
+        text: Internet gateway
+        why: An internet gateway connects a VPC to the internet, and Direct Connect avoids the internet hop.
+      - id: b
+        text: NAT gateway
+        why: A NAT gateway lets private instances call out, and it is not the entry for a dedicated line.
+      - id: c
+        text: Amazon API Gateway
+        why: API Gateway builds and manages APIs, and it is not part of the Direct Connect path.
+      - id: d
+        text: Virtual private gateway
+        correct: true
+        why: Direct Connect runs through a Direct Connect location to a virtual private gateway attached to the VPC.
+    evidence:
+      - Shared links can jam, so Direct Connect gives a dedicated private line from your network to a VPC (via a Direct Connect location and a virtual private gateway), cutting costs and raising bandwidth.
+    takeaway: A Direct Connect line passes a Direct Connect location and enters the VPC through a virtual private gateway.
+    history: []
+    verified:
+      keyHash: 887f19f6aff6
+      fullHash: 9571babdb7bd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hb64nm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-transit-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe chain now runs several VPCs across Regions plus its head office network.
+      It wants one central hub that links them all, with peering between the Regions.
+      Which service fits?
+    options:
+      - id: a
+        text: Virtual private gateway
+        why: A virtual private gateway lets protected traffic from approved networks into one VPC, and it is not a hub.
+      - id: b
+        text: AWS Transit Gateway
+        correct: true
+        why: Transit Gateway is a central hub for VPCs and on-premises networks, with peering between Regions.
+      - id: c
+        text: Amazon API Gateway
+        why: API Gateway creates and manages APIs, and it does not route traffic between networks.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink exposes chosen services privately to a VPC, rather than joining many networks through a hub.
+    evidence:
+      - "**AWS Transit Gateway**: a central hub for VPCs and on-premises networks, with inter-Region peering between transit gateways."
+    takeaway: Many VPCs and on-premises networks joined through one hub, even across Regions, point to Transit Gateway.
+    history: []
+    verified:
+      keyHash: 7044d76999ed
+      fullHash: 1db532fc53be
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7hwmpm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-transit-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which description matches AWS Transit Gateway?
+    options:
+      - id: a
+        text: A component that lets private instances call out to the internet
+        why: Letting private instances call out while blocking calls in describes a NAT gateway.
+      - id: b
+        text: A service that publishes, secures and monitors APIs
+        why: Publishing, securing and monitoring APIs is the job of Amazon API Gateway.
+      - id: c
+        text: A central hub joining VPCs and on-premises networks
+        correct: true
+        why: Transit Gateway acts as the hub that VPCs and on-premises networks connect through.
+      - id: d
+        text: A private path to a service as if it sat inside the VPC
+        why: Private access to a service as if it were local describes AWS PrivateLink.
+    evidence:
+      - "**AWS Transit Gateway**: a central hub for VPCs and on-premises networks, with inter-Region peering between transit gateways."
+    takeaway: AWS Transit Gateway is a central hub that VPCs and on-premises networks connect through.
+    history: []
+    verified:
+      keyHash: 158c90a2bb82
+      fullHash: aeeeb3cf146f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-9a2p4s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: nat-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's inventory servers sit in a private subnet.
+      They must download software updates from the internet, but nobody outside may open a connection to them.
+      Which component fits?
+    options:
+      - id: a
+        text: Internet gateway
+        why: An internet gateway gives a public subnet two-way internet access, which would expose the servers.
+      - id: b
+        text: NAT gateway
+        correct: true
+        why: A NAT gateway lets private instances start outbound connections while outsiders cannot start ones to them.
+      - id: c
+        text: Virtual private gateway
+        why: A virtual private gateway admits protected traffic from approved networks, not internet downloads.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway links VPCs and on-premises networks, and it does not give private servers internet access.
+    evidence:
+      - "**NAT gateway**: private instances can start outside connections, but outsiders cannot start ones to them."
+    takeaway: Private instances that must call out but never be called in from outside need a NAT gateway.
+    history: []
+    verified:
+      keyHash: d9e84b70ba29
+      fullHash: 436ab2ae4b4e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-23aej4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: nat-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which traffic rule does a NAT gateway give instances in a private subnet?
+    options:
+      - id: a
+        text: Outside hosts can reach in, but the instances cannot reach out
+        why: This reverses the rule, since a NAT gateway allows outbound starts and blocks inbound ones.
+      - id: b
+        text: The instances and outside hosts can both start connections
+        why: Two-way starts would expose the private instances, which a NAT gateway prevents.
+      - id: c
+        text: The instances can reach out, but outside hosts cannot get in
+        correct: true
+        why: A NAT gateway lets private instances start outside connections while outsiders cannot start ones to them.
+      - id: d
+        text: Neither the instances nor outside hosts can start connections
+        why: A NAT gateway exists to let private instances reach out, so it does not block both directions.
+    evidence:
+      - "**NAT gateway**: private instances can start outside connections, but outsiders cannot start ones to them."
+    takeaway: A NAT gateway is one-way for starting connections, letting private instances out and keeping outsiders from getting in.
+    history: []
+    verified:
+      keyHash: a49a7d680b7e
+      fullHash: 7f8355cd0149
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xwehff
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-api-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe wants delivery partners' software to send orders straight into its ordering system through an entry point it publishes.
+      That entry point must be secured and monitored, and it should handle any volume of orders.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub for networks, and it does not publish or monitor an entry point for partner software.
+      - id: b
+        text: Virtual private gateway
+        why: A virtual private gateway lets approved networks into a VPC, and it does not manage APIs.
+      - id: c
+        text: Amazon API Gateway
+        correct: true
+        why: API Gateway creates APIs at any scale and publishes, secures, monitors and maintains them.
+      - id: d
+        text: NAT gateway
+        why: A NAT gateway lets private instances call out, and it does not expose an entry point to partners.
+    evidence:
+      - "**Amazon API Gateway**: creates APIs at any scale and publishes, secures, monitors and maintains them."
+    takeaway: Publishing a secured, monitored API for partners at any scale is the job of Amazon API Gateway.
+    history: []
+    verified:
+      keyHash: 23b808826786
+      fullHash: 5266a9fcafb1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pbzszm
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-api-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which tasks does Amazon API Gateway handle?
+    options:
+      - id: a
+        text: Running the code behind each API call
+        why: API Gateway passes calls on to a backend, but running that code is the job of a compute service such as AWS Lambda.
+      - id: b
+        text: Creating APIs that work at any scale
+        correct: true
+        why: API Gateway creates APIs at any scale so other software can use them.
+      - id: c
+        text: Securing and monitoring published APIs
+        correct: true
+        why: API Gateway also secures, monitors and maintains the APIs it publishes.
+      - id: d
+        text: Storing the records that each API returns
+        why: Keeping the records an API returns is the job of a database such as Amazon DynamoDB, not API Gateway.
+      - id: e
+        text: Spreading API traffic across instances
+        why: Spreading traffic across instances is what Elastic Load Balancing does, not API Gateway.
+    evidence:
+      - "**Amazon API Gateway**: creates APIs at any scale and publishes, secures, monitors and maintains them."
+    takeaway: Amazon API Gateway creates, publishes, secures and monitors APIs, while other services run the code and store the data.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 5 together paraphrase the API Gateway tagline (create, secure, monitor APIs at any scale); the rest map to other services.)"
+  - id: q-3q29c3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-privatelink
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe's loyalty app in its VPC needs to call a points service hosted in a partner's own data center.
+      The cafe's security team bans internet gateways, NAT devices and VPN tunnels in this VPC, and wants the app to reach that one service and nothing else.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Transit Gateway
+        why: Transit Gateway joins whole VPCs and on-premises networks into a hub, rather than exposing one chosen service to the app.
+      - id: b
+        text: AWS Site-to-Site VPN
+        why: Site-to-Site VPN builds an encrypted tunnel between sites, and the security team has ruled out VPN tunnels.
+      - id: c
+        text: AWS Client VPN
+        why: Client VPN connects remote people to AWS over VPN, which the team has banned, and it does not target one partner service.
+      - id: d
+        text: AWS PrivateLink
+        correct: true
+        why: PrivateLink gives the VPC private access to the one chosen service as if it were inside the VPC, without a gateway, NAT device or VPN.
+    evidence:
+      - "For resources: highly available, scalable private access from a VPC to services as if they were inside it, including other VPCs, other clouds and on-premises networks."
+      - It needs no public IP, NAT device, internet gateway, VPN or Direct Connect, and you pick exactly what is reachable, so traffic stays protected and rules simple.
+    takeaway: PrivateLink reaches a single chosen service privately, even on premises, with no internet gateway, NAT device or VPN.
+    history: []
+    verified:
+      keyHash: ad5a8c7eb180
+      fullHash: 50e52519b284
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gq3eer
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-api-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which AWS service is used to build the agreed interfaces through which other software talks to an application, and then to publish and maintain them?
+    options:
+      - id: a
+        text: Amazon EventBridge
+        why: EventBridge routes events between applications and services, but it does not build or publish the interfaces that software calls.
+      - id: b
+        text: Amazon API Gateway
+        correct: true
+        why: API Gateway creates APIs at any scale and then publishes, secures, monitors and maintains them.
+      - id: c
+        text: AWS Transit Gateway
+        why: Transit Gateway is a network hub joining VPCs and on-premises networks, not a tool for building software interfaces.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink gives a VPC private access to existing services, but it does not create or publish the interfaces themselves.
+    evidence:
+      - "**Amazon API Gateway**: creates APIs at any scale and publishes, secures, monitors and maintains them."
+      - "**API (application programming interface)**: how software systems agree to interact."
+    takeaway: Amazon API Gateway builds, publishes and maintains APIs, the interfaces other software uses to interact with an app.
+    history: []
+    verified:
+      keyHash: 2abd3b3fb4d5
+      fullHash: 31d7c2502159
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
