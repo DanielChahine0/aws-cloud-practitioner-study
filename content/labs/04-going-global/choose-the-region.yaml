@@ -1,0 +1,72 @@
+id: lab-m04-choose-the-region
+module: 4
+title: Choose the Region
+engine: configure
+tier: core
+status: live
+rev: 1
+concepts: [region-selection, regional-pricing]
+notes: [m04/choosing-aws-regions]
+minutes: 4
+brief: >-
+  A data sovereignty law in the cafe's country says the loyalty records of its customers must stay at home, and the new order app cannot run without a service that not every Region offers yet.
+  The law comes first, and the owner will pay a little more for a faster app, so pick the Region that keeps the records home, runs the service and sits nearest the customers.
+  Every latency and price below is a lab value, and prices are in lab credits.
+spec:
+  fields:
+    - kind: select
+      id: region
+      label: Region
+      options:
+        - id: ashcombe
+          label: Ashcombe
+          detail: Data is kept abroad. 63 ms to customers. Runs the order service. 10 lab credits an hour.
+        - id: farhaven
+          label: Farhaven
+          detail: Data is kept abroad. 88 ms to customers. Runs the order service. 5 lab credits an hour.
+        - id: harbour-point
+          label: Harbour Point
+          detail: Data stays in the cafe's country. 6 ms to customers. Order service not offered yet. 8 lab credits an hour.
+        - id: millbrook
+          label: Millbrook
+          detail: Data stays in the cafe's country. 14 ms to customers. Runs the order service. 9 lab credits an hour.
+        - id: stonegate
+          label: Stonegate
+          detail: Data stays in the cafe's country. 41 ms to customers. Runs the order service. 7 lab credits an hour.
+      initial: ashcombe
+  rules:
+    - { goal: g1, field: region, in: [harbour-point, millbrook, stonegate] }
+    - { goal: g2, field: region, in: [millbrook, stonegate] }
+    - { goal: g3, field: region, in: [millbrook] }
+goals:
+  - id: g1
+    label: The loyalty records stay inside the cafe's country
+    hint: A law about where data may live can settle the choice on its own, so check where each Region keeps the data before any other factor.
+  - id: g2
+    label: The lawful Region also runs the service the app needs
+    hint: New services reach Regions a few at a time, so a Region that obeys the law may still be unable to host the app today.
+  - id: g3
+    label: Of the lawful Regions with the service, the nearest one
+    hint: Among the Regions still in the running, the one closest to the customers cuts the delay they feel each time they order.
+solution:
+  - { t: set, field: region, value: millbrook }
+wrongPaths:
+  - mistake: Picks the cheapest Region even though the records would leave the country
+    failsGoal: g1
+    actions:
+      - { t: set, field: region, value: farhaven }
+  - mistake: Picks the nearest lawful Region before checking that it runs the service
+    failsGoal: g2
+    actions:
+      - { t: set, field: region, value: harbour-point }
+  - mistake: Thinks the lowest price always wins once compliance and features are met, whatever the business values
+    failsGoal: g3
+    actions:
+      - { t: set, field: region, value: stonegate }
+debrief:
+  lines:
+    - The cheapest Region was out before price came into it, because a data sovereignty law can force data to stay in the country.
+    - The nearest lawful Region could not host the app, since services arrive in each Region over time and it lacked the one the app needs.
+    - After compliance no factor has a fixed rank, so the cafe's own needs set the order, and here the app cannot run without its service and the owner puts speed ahead of price.
+    - Each Region has its own rates, so the nearest lawful Region with the service cost more than a slower one, a trade the owner chose to make.
+  questions: [q-b3he22, q-vs9t9x, q-d8nb9v]

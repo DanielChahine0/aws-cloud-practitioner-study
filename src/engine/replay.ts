@@ -10,8 +10,9 @@ import { FORM_IDS } from '../../schemas/ids.ts';
  * exam date, and counts the inherited card of a split concept not yet answered as due.
  * Version 5 pays lab XP, counts lab debriefs and gives Hands On per complete module, pays incident XP.
  * Version 5 also pays lightning XP and makes a missed lightning concept due today through `review.now`.
+ * Version 6 pays mission and capstone decision XP and keeps the first final grade per module.
  */
-export const ENGINE_VERSION = 5;
+export const ENGINE_VERSION = 6;
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;
@@ -313,15 +314,17 @@ export function takenForms(p: Progress): ReadonlySet<string> {
 }
 
 /**
- * The forms `A` to `D` whose mock is over, submitted or abandoned: only these may join practice (spec 4.3), so no
- * learn screen shows an item, its key or its explanation while its mock is still open.
+ * The forms `A` to `D` whose every mock is over, submitted or abandoned: only these may join practice (spec 4.3), so
+ * no learn screen shows an item, its key or its explanation while a mock of its form is still open.
  */
 export function practiceForms(p: Progress): ReadonlySet<string> {
   const closed = new Set<string>();
+  const open = new Set<string>();
   for (const s of p.sessions.values()) {
     if (s.mode !== 'mock' || s.form === null || !FORMS.has(s.form)) continue;
-    if (s.submittedAt !== null || s.abandoned) closed.add(s.form);
+    (s.submittedAt !== null || s.abandoned ? closed : open).add(s.form);
   }
+  for (const form of open) closed.delete(form);
   return closed;
 }
 
