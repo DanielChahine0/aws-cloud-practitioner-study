@@ -15,5 +15,9 @@ export default defineConfig({
       'tests/regressions/**/*.test.ts',
     ],
     environment: 'node',
+    // Parallel worktree builds share this machine and slow CPU-bound tests five to ten times, so a test that
+    // takes half a second alone can pass Vitest's 5 s default; 30 s (60 s for hooks) still fails a real hang.
+    testTimeout: 30_000,
+    hookTimeout: 60_000,
   },
 });
