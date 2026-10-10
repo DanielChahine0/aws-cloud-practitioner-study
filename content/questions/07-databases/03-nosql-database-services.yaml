@@ -1,0 +1,496 @@
+questions:
+  - id: q-yek13f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: nosql-databases
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe keeps loyalty profiles where one member has a favorite drink, another has a birthday, and new fields appear every few months.
+      Which kind of database suits these changing records best?
+    options:
+      - id: a
+        text: A relational database
+        why: A relational table needs a set schema up front, which copes poorly with fields that keep changing.
+      - id: b
+        text: A NoSQL database
+        correct: true
+        why: A nonrelational database lets each profile carry its own attributes, so new fields need no redesign.
+      - id: c
+        text: A data warehouse
+        why: A data warehouse is built for analytics across large datasets, not for storing each member's live profile.
+      - id: d
+        text: An in-memory cache
+        why: A cache speeds up repeated reads in front of a database but is not where the profiles themselves belong.
+    evidence:
+      - Relational databases (MySQL, say), long the default, need a set schema and SQL.
+      - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+    takeaway: Records whose fields vary and change over time point to a NoSQL database rather than a fixed relational schema.
+    history: []
+    verified:
+      keyHash: 7174a76a4ec0
+      fullHash: b235806eba9e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ee9z6a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: nosql-databases
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which statement names the main difference between a NoSQL database and a relational database?
+    options:
+      - id: a
+        text: NoSQL can answer queries quickly
+        why: Speed is not the dividing line, since either kind can be fast for the right workload.
+      - id: b
+        text: NoSQL indexes its primary key by default
+        why: This is true of NoSQL, but it does not set NoSQL apart from a relational database.
+      - id: c
+        text: NoSQL uses a flexible schema
+        correct: true
+        why: The core split is a flexible schema in NoSQL against the rigid, set schema of a relational table.
+      - id: d
+        text: NoSQL can grow with large workloads
+        why: Scaling is not the core difference, and relational databases can also grow with demand.
+    evidence:
+      - The core difference is flexible versus rigid schema, not speed or scaling, and NoSQL still indexes the primary key by default.
+    takeaway: NoSQL and relational databases differ mainly in schema, flexible versus rigid, rather than in speed or scaling.
+    history: []
+    verified:
+      keyHash: 0a9f66b8fe5b
+      fullHash: d59f71436032
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-sn75cr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: key-value-data-model
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      A NoSQL database is often compared to a dictionary, where a headword leads to its definition.
+      Which part of the data plays the role of the headword?
+    options:
+      - id: a
+        text: The item's unique key
+        correct: true
+        why: The unique key names a single item, just as a headword names the entry that holds its definition.
+      - id: b
+        text: An attribute's name
+        why: Attributes carry the item's values, so they play the part of the definition rather than the headword.
+      - id: c
+        text: An attribute's value
+        why: A value such as a number or a set is the content stored under the key, like the text of a definition.
+      - id: d
+        text: The item as a whole
+        why: The item is the full entry, the key plus its attributes, rather than the word that names it.
+    evidence:
+      - "NoSQL (nonrelational) databases hold key-value pairs: a unique key names an item and attributes carry its values, like a dictionary headword and definition."
+    takeaway: In the key-value model a unique key names each item, much like a headword, and attributes carry its values.
+    history: []
+    verified:
+      keyHash: f1e472de6b9e
+      fullHash: db93a6eed93c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fcmmjv
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: key-value-data-model
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe stores each loyalty member in a key-value table.
+      Match each part of the table to what it holds for the cafe.
+    pairs:
+      - left: Key
+        right: The member ID that picks out one member's record
+        why: The unique key names a single item, so the member ID is what finds that member.
+      - left: Attribute
+        right: A name and value such as favorite drink set to oat latte
+        why: Attributes are name-value pairs that carry the details stored for an item.
+      - left: Item
+        right: One member's whole record with all of its details
+        why: An item is one record, made up of its key and the attributes that belong to it.
+    evidence:
+      - "**Key-value pair**: a unique key plus an item's attributes."
+      - "**Item and attribute**: a DynamoDB record and its name-value pairs, with values such as numbers, sets or documents."
+    takeaway: A key-value table holds items, each named by a unique key and described by name-value attributes.
+    history: []
+    verified:
+      keyHash: 190204084c9f
+      fullHash: 1d5df1e36b5c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wnq3cs
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: flexible-schema
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe keeps loyalty members in a NoSQL table with a flexible schema and starts saving birthdays for the members who share one.
+      Which items end up holding a birthday attribute?
+    options:
+      - id: a
+        text: Every member item, with blanks for the rest
+        why: A flexible schema has no shared column list, so items without a birthday never gain an empty one.
+      - id: b
+        text: Only the items of members who shared one
+        correct: true
+        why: Items can differ in attributes, so only the members who share a birthday gain that attribute.
+      - id: c
+        text: Only the items created after the change
+        why: Older members who share a birthday gain it too, and newer members who skip it never do.
+      - id: d
+        text: None until the table design is altered
+        why: A flexible schema needs no table-wide change, so an attribute can be added to single items right away.
+    evidence:
+      - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+    takeaway: With a flexible schema an attribute can be added to some items only, leaving the rest untouched.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true DynamoDB behavior; option 3 describes a relational table.)"
+  - id: q-hr3kg3
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: flexible-schema
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which statements describe what a flexible schema allows in a NoSQL table?
+    options:
+      - id: a
+        text: Items in one table can hold different attributes
+        correct: true
+        why: A flexible schema lets each item carry its own set of attributes within the same table.
+      - id: b
+        text: The primary key is still indexed by default
+        why: This is true of NoSQL, but it holds whatever the schema and is not what flexibility allows.
+      - id: c
+        text: Adding an attribute needs no table-wide redesign
+        correct: true
+        why: Attributes come and go freely on each item, so a new one never forces the table to be redesigned.
+      - id: d
+        text: Every item follows one shared column layout
+        why: A shared column layout is the rigid schema of a relational table, the opposite of a flexible one.
+      - id: e
+        text: Records are linked across tables by SQL joins
+        why: Joining tables with SQL belongs to the relational model and is not something a flexible schema adds.
+    evidence:
+      - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+      - The core difference is flexible versus rigid schema, not speed or scaling, and NoSQL still indexes the primary key by default.
+    takeaway: A flexible schema lets items in one table differ in attributes and change them freely over time.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 both describe a flexible schema, while 3 is a hedged caveat with 'still' and 4 and 5 describe relational tables.)"
+  - id: q-fqvcnk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's ordering app needs a serverless key-value database as its main data store, with single-digit millisecond responses and no maintenance windows.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon RDS
+        why: RDS runs relational engines with a set schema and has maintenance windows for patching.
+      - id: b
+        text: Amazon ElastiCache
+        why: ElastiCache is an in-memory cache that sits in front of a database rather than serving as the main store.
+      - id: c
+        text: Amazon Aurora
+        why: Aurora is a relational database compatible with MySQL and PostgreSQL, not a key-value store.
+      - id: d
+        text: Amazon DynamoDB
+        correct: true
+        why: DynamoDB is a serverless NoSQL key-value database with single-digit millisecond latency and no maintenance windows.
+    evidence:
+      - Fully managed, serverless NoSQL for key-value and document data.
+      - Single-digit millisecond latency at any scale, with no patching, upgrades, maintenance windows, downtime or cold starts.
+    takeaway: A serverless key-value store with single-digit millisecond speed and no upkeep points to Amazon DynamoDB.
+    history: []
+    verified:
+      keyHash: e232d3b893be
+      fullHash: d5cdd2e3dc38
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bsrbjs
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-dynamodb
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      The cafe stores its order history in Amazon DynamoDB.
+      Which DynamoDB features protect that data or keep it available?
+    options:
+      - id: a
+        text: It encrypts data at rest and in transit
+        correct: true
+        why: DynamoDB encrypts data both at rest and in transit by default, which protects the order history.
+      - id: b
+        text: It bills per use rather than a flat fee
+        why: Pay-per-use billing is true of DynamoDB, but it shapes cost rather than protecting the data.
+      - id: c
+        text: It keeps copies in three facilities per Region
+        correct: true
+        why: DynamoDB stores copies in three facilities in each Region, which keeps the orders available.
+      - id: d
+        text: It lets items hold different attributes
+        why: A flexible schema is true of DynamoDB, but it governs record shape, not safety or availability.
+      - id: e
+        text: It answers in single-digit milliseconds
+        why: Low latency is true of DynamoDB, but speed does not protect the data or keep it available.
+    evidence:
+      - "**Availability**: 99.999%, copies in three facilities per Region and in other Regions."
+      - "**Encryption**: automatic at rest and in transit, with a choice of keys."
+      - Data spreads over many servers and SSDs with no practical size cap, you pay per use, and security is built in.
+    takeaway: DynamoDB protects data with automatic encryption and keeps it available with copies in three facilities per Region.
+    history: []
+    verified:
+      keyHash: 68761149de1b
+      fullHash: a4cd537d5a64
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gvbz81
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-global-tables
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe opens shops in several countries, and its mobile app keeps loyalty data in Amazon DynamoDB.
+      Which feature serves that same data to app users around the world?
+    options:
+      - id: a
+        text: DynamoDB Accelerator (DAX)
+        why: DAX adds an in-memory cache for faster reads but does not spread a table across the world.
+      - id: b
+        text: Amazon RDS read replicas
+        why: Read replicas copy a relational RDS database, not a DynamoDB table.
+      - id: c
+        text: DynamoDB global tables
+        correct: true
+        why: Global tables are the DynamoDB feature for apps whose users are spread around the world.
+      - id: d
+        text: A Multi-AZ deployment
+        why: Multi-AZ keeps a standby within one Region for failover rather than serving users worldwide.
+    evidence:
+      - "Use cases: gaming, finance and global mobile apps, served worldwide by **global tables**."
+    takeaway: A DynamoDB app with users across many countries points to DynamoDB global tables.
+    history: []
+    verified:
+      keyHash: ce31ea9d35da
+      fullHash: 21576f18aa15
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hdyvyn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-global-tables
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which statement describes DynamoDB global tables?
+    options:
+      - id: a
+        text: They cache table reads in memory for quicker answers
+        why: Caching reads in memory is what DynamoDB Accelerator (DAX) does, not global tables.
+      - id: b
+        text: They change read and write capacity to follow traffic
+        why: Following traffic with capacity changes is the job of DynamoDB auto scaling.
+      - id: c
+        text: They keep a table's data in more than one Region
+        correct: true
+        why: Global tables hold copies of a table in other Regions so worldwide apps can use it.
+      - id: d
+        text: They join items from many tables with SQL queries
+        why: Joining tables with SQL belongs to relational databases, not to a DynamoDB feature.
+    evidence:
+      - "**Availability**: 99.999%, copies in three facilities per Region and in other Regions."
+      - "**DynamoDB global tables**: the feature for worldwide DynamoDB apps, as on Prime Day."
+    takeaway: DynamoDB global tables copy a table across Regions so apps with users worldwide can use the same data.
+    history: []
+    verified:
+      keyHash: bf3d087b7fa5
+      fullHash: 9b54acd3af8e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3614kc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-auto-scaling
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's NoSQL orders table uses provisioned capacity, and traffic jumps during promotions and drops at night.
+      Which option keeps the table's throughput matched to real use?
+    options:
+      - id: a
+        text: Amazon EC2 Auto Scaling
+        why: EC2 Auto Scaling adds and removes EC2 instances, not the throughput of a DynamoDB table.
+      - id: b
+        text: Amazon DynamoDB auto scaling
+        correct: true
+        why: DynamoDB auto scaling moves provisioned throughput toward a target use, steady at peaks and cheaper when quiet.
+      - id: c
+        text: Amazon DynamoDB global tables
+        why: Global tables copy a table to other Regions for worldwide users and do not adjust its provisioned throughput.
+      - id: d
+        text: DynamoDB Accelerator (DAX)
+        why: DAX caches frequent reads in memory, which eases load but leaves the table's provisioned throughput fixed.
+    evidence:
+      - "**Auto scaling with provisioned capacity**: throughput automatically follows real use toward your target utilization, steady at peaks, cheaper when quiet."
+    takeaway: Unpredictable traffic on a provisioned DynamoDB table points to DynamoDB auto scaling, not EC2 Auto Scaling.
+    history: []
+    verified:
+      keyHash: 59b3c599002b
+      fullHash: bdb0f2876913
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-960dte
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-auto-scaling
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What problem does DynamoDB auto scaling solve compared with setting read and write capacity by hand?
+    options:
+      - id: a
+        text: Waste when quiet and slowdowns at peaks
+        correct: true
+        why: Hand-set capacity is either wasted when quiet or too small at peaks, and auto scaling avoids both.
+      - id: b
+        text: Lost data when one storage facility goes down
+        why: Keeping copies in several facilities protects against an outage, which is not a capacity problem.
+      - id: c
+        text: Slow answers for app users in faraway countries
+        why: Serving a table to users worldwide is the job of global tables, not of auto scaling.
+      - id: d
+        text: Exposed data while it moves across the network
+        why: DynamoDB encrypts data in transit automatically, which has nothing to do with capacity.
+    evidence:
+      - Auto scaling avoids the waste or slow peaks of hand-set read/write capacity.
+    takeaway: DynamoDB auto scaling avoids both wasted capacity and slow peaks that come with hand-set read and write capacity.
+    history: []
+    verified:
+      keyHash: c75dc88efb8f
+      fullHash: 73195d72fb8f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tg3wm7
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: flexible-schema
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's loyalty members live in a DynamoDB table.
+      The team wants to record a preferred milk only for the members who mention one, leaving every other item as it is.
+      Which step achieves this?
+    options:
+      - id: a
+        text: Turn on auto scaling for the table's capacity
+        why: Auto scaling is a real setting, but it tunes throughput and does not add a milk attribute to anyone.
+      - id: b
+        text: Pick a customer managed key for its encryption
+        why: DynamoDB does let the cafe choose its encryption key, but that protects data rather than recording milk.
+      - id: c
+        text: Write the field on just those members' items
+        correct: true
+        why: Items in a NoSQL table can differ, so the cafe adds the attribute only where a member gave one.
+      - id: d
+        text: Add a replica of the table in another Region
+        why: A replica in another Region is a real global tables step, but it copies data rather than adding milk.
+    evidence:
+      - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+    takeaway: A flexible schema lets the cafe add a new attribute to just the items that need it, with no schema change first.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only one tied to the scenario's specific members; the rest are generic table settings.)"
+  - id: q-az9tjx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: flexible-schema
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A new manager opens the cafe's DynamoDB loyalty table and sees that one member's item records an allergy while another's records a home store instead.
+      Which property of the table explains this?
+    options:
+      - id: a
+        text: Its partition key gives every item a unique value
+        why: The partition key identifies each item, but it does not explain why the items hold different data.
+      - id: b
+        text: Its global tables keep copies in other Regions
+        why: Global tables serve the data worldwide, and they have nothing to do with which data each item holds.
+      - id: c
+        text: Its auto scaling matches throughput to real use
+        why: Auto scaling adjusts capacity to traffic, and it does not decide what each item stores.
+      - id: d
+        text: Its flexible schema lets items carry their own data
+        correct: true
+        why: A NoSQL table does not force one layout, so each member's item can hold different attributes.
+    evidence:
+      - The core difference is flexible versus rigid schema, not speed or scaling, and NoSQL still indexes the primary key by default.
+      - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+    takeaway: In a NoSQL table, a flexible schema lets each item hold its own set of attributes.
+    history: []
+    verified:
+      keyHash: 7b57b9cbf7a8
+      fullHash: 39ab000a51d2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
