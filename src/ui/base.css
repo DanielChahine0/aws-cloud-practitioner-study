@@ -1456,6 +1456,39 @@ tr.evidence > :first-child {
   font-weight: 600;
 }
 
+/* The position, the clock and the buttons never wrap, so the bar stays 44 px tall and only the label gives way. */
+.focus-bar .topbar-button,
+.exam-pos,
+.exam-clock {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* A phone drops the key hints (no keyboard to press them) and lets a long label take two smaller lines. */
+@media (max-width: 480px) {
+  .focus-bar {
+    gap: 12px;
+  }
+
+  .exam-label {
+    display: -webkit-box;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .key-hint {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+}
+
 .exam-start .button-link,
 .exam-start .button {
   min-height: 44px;

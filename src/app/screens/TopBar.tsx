@@ -40,6 +40,7 @@ export function TopBar() {
  * The focus bar of a boss or mock (spec 7.2): `Mock A   23/65   61:12   Flag (f)   Grid (g)`, and nothing else, so
  * XP, the rank, due counts and the streak stay out of sight. Its text equals `examBarText`; the gaps are text nodes
  * that the flex layout does not render, so the bar spaces its parts with `gap` instead.
+ * On a phone the key hints are visually hidden, so the bar fits 360 px; they stay in each button's name and text.
  */
 function FocusBar({ info }: { info: NonNullable<typeof exam.value> }) {
   const controls = examControls.value;
@@ -62,7 +63,7 @@ function FocusBar({ info }: { info: NonNullable<typeof exam.value> }) {
           aria-pressed={controls?.flagged ?? false}
           onClick={() => controls?.flag()}
         >
-          Flag (f)
+          Flag<span class="key-hint"> (f)</span>
         </button>
         {BAR_GAP}
         <button
@@ -71,7 +72,7 @@ function FocusBar({ info }: { info: NonNullable<typeof exam.value> }) {
           aria-expanded={controls?.gridOpen ?? false}
           onClick={() => controls?.grid()}
         >
-          Grid (g)
+          Grid<span class="key-hint"> (g)</span>
         </button>
       </div>
     </header>
