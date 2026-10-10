@@ -227,12 +227,22 @@ describe('exam sessions in replay (spec 4.1, 4.3, 4.4)', () => {
   });
 
   it('marks a mock submitted at or after its deadline as timed out', () => {
-    const late = eventsOf(
-      examStartOf(SID, 'mock', ['qm1'], { form: 'A', deadline: '2026-10-10T08:01:00.000Z' }),
-      answerOf({ concept: 'oven', correct: true, sure: false, qid: 'qm1', mode: 'mock' }),
-      submitOf(SID, 'mock'),
-    );
-    expect(derive(late, null).exams.get(SID)).toMatchObject({ form: 'A', timedOut: true, correct: 1 });
+    const submittedBy = (deadline: string) =>
+      eventsOf(
+        examStartOf(SID, 'mock', ['qm1'], { form: 'A', deadline }),
+        answerOf({ concept: 'oven', correct: true, sure: false, qid: 'qm1', mode: 'mock' }),
+        submitOf(SID, 'mock'),
+      );
+    // The submit is the third event, stamped at 08:02 exactly.
+    const atDeadline = submittedBy('2026-10-10T08:02:00.000Z');
+    expect(atDeadline[2]?.at).toBe('2026-10-10T08:02:00.000Z');
+    expect(derive(atDeadline, null).exams.get(SID)).toMatchObject({ form: 'A', timedOut: true, correct: 1 });
+    const afterDeadline = submittedBy('2026-10-10T08:01:00.000Z');
+    expect(derive(afterDeadline, null).exams.get(SID)).toMatchObject({
+      form: 'A',
+      timedOut: true,
+      correct: 1,
+    });
     const early = eventsOf(
       examStartOf(SID, 'mock', ['qm1'], { form: 'A', deadline: DEADLINE }),
       submitOf(SID, 'mock'),
@@ -297,10 +307,16 @@ describe('exam sessions in replay (spec 4.1, 4.3, 4.4)', () => {
       eventsOf(
         examStartOf(SID, 'mock', ['qm1'], { form: 'B', deadline: DEADLINE }),
         examStartOf(SID2, 'mock', ['qm2'], { form: 'remix', deadline: DEADLINE }),
-        startOf('01JA00000000000000000000S3', 'quiz', ['q1'], 'm01'),
+        examStartOf('01JA00000000000000000000S3', 'boss', ['qb1'], {
+          scope: 'm01',
+          form: 'C',
+          deadline: DEADLINE,
+        }),
+        startOf('01JA00000000000000000000S4', 'quiz', ['q1'], 'm01'),
       ),
       null,
     );
+    expect(p.sessions.get('01JA00000000000000000000S3')?.form).toBe('C');
     expect([...takenForms(p)]).toEqual(['B']);
     expect(p.sessions.get(SID2)?.form).toBe('remix');
   });
