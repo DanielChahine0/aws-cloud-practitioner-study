@@ -4,6 +4,7 @@ import {
   BADGES,
   type BadgeId,
   CALIBRATION,
+  CORE_LABS_PER_MODULE,
   calibrationOf,
   decisionPasses,
   domainScores,
@@ -334,6 +335,24 @@ describe('badges in the memory replay (spec 3.10)', () => {
     const { before, after, last } = crossing(labsDone(content, 5), content, 'hands-on');
     expect(before).toBeUndefined();
     expect(after?.eventId).toBe(last.id);
+  });
+
+  it('Hands On never counts a module that lists only one core lab', () => {
+    expect(CORE_LABS_PER_MODULE).toBe(2);
+    const halfShipped = labContent(6, 1);
+    expect(deriveMemory(timelineOf(labsDone(halfShipped, 6)), halfShipped).badges.has('hands-on')).toBe(
+      false,
+    );
+    const mixed = contentOf([{ id: 'c-01', module: 1 }], new Map(), {
+      coreLabs: new Map([
+        [1, ids('lab-1', 2)],
+        [2, ids('lab-2', 2)],
+        [3, ids('lab-3', 2)],
+        [4, ids('lab-4', 2)],
+        [5, ids('lab-5', 1)],
+      ]),
+    });
+    expect(deriveMemory(timelineOf(labsDone(mixed, 5)), mixed).badges.has('hands-on')).toBe(false);
   });
 
   it('Lab Complete: all 26 core labs done', () => {

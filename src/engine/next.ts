@@ -6,7 +6,7 @@ import type { Progress, SessionState } from './replay.ts';
 
 /**
  * The Next action (spec 4.6): the one thing Home suggests, the first that applies, and the optional extras line.
- * Mission safety waits for missions (Phase 6); incident and lab extras wait for Phase 4.
+ * Mission safety waits for missions (Phase 6).
  */
 
 /** A lesson in course order; `first` marks a module's first lesson. */
@@ -97,19 +97,50 @@ export function nextMinutes(action: NextAction): number | null {
 }
 
 /** One entry of the extras line under Done for today. */
-export type Extra = { kind: 'boss'; module: number } | { kind: 'mock'; form: string };
+export type Extra =
+  | { kind: 'boss'; module: number }
+  | { kind: 'mock'; form: string }
+  | { kind: 'lab'; lab: string; module: number };
+
+/** The extras line shows at most this many entries (spec 4.6). */
+export const MAX_EXTRAS = 2;
 
 /** The mock extra needs this many passed bosses (spec 4.3). */
 export const MOCK_AFTER_BOSSES = 7;
 /** And at least this many days since the latest submitted mock (spec 10.2). */
 export const MOCK_GAP_DAYS = 3;
 
-/** The extras line (spec 4.6), at most two entries: the lowest ready boss out of its cooldown, then the next mock. */
+/**
+ * The lab extra (spec 4.6): among modules whose lessons are all read and which have an undone lab, the one with the
+ * lowest mastery, ties to the lower module, and its first undone lab in the given order; null when none qualifies.
+ */
+export function weakestLab(args: {
+  labs: readonly { id: string; module: number }[];
+  done: ReadonlySet<string>;
+  mastery: ReadonlyMap<number, number>;
+  lessonsRead: (module: number) => boolean;
+}): { lab: string; module: number } | null {
+  let best: { lab: string; module: number; mastery: number } | null = null;
+  for (const lab of args.labs) {
+    if (args.done.has(lab.id) || !args.lessonsRead(lab.module)) continue;
+    const mastery = args.mastery.get(lab.module) ?? 0;
+    const better =
+      best === null || mastery < best.mastery || (mastery === best.mastery && lab.module < best.module);
+    if (better) best = { lab: lab.id, module: lab.module, mastery };
+  }
+  return best === null ? null : { lab: best.lab, module: best.module };
+}
+
+/**
+ * The extras line (spec 4.6), at most `MAX_EXTRAS` entries in this order: the lowest ready boss out of its cooldown,
+ * the next mock, then the weakest module's core lab.
+ */
 export function extras(args: {
   bosses: ReadonlyMap<number, BossStatus>;
   progress: Progress;
   today: string;
   now: Date;
+  lab: { lab: string; module: number } | null;
 }): Extra[] {
   const out: Extra[] = [];
   const cooling = (status: BossStatus): boolean =>
@@ -124,5 +155,6 @@ export function extras(args: {
   const form = nextForm(args.progress);
   const rested = latest === undefined || daysBetween(latest.day, args.today) >= MOCK_GAP_DAYS;
   if (passed >= MOCK_AFTER_BOSSES && rested && form !== null) out.push({ kind: 'mock', form });
-  return out;
+  if (args.lab !== null) out.push({ kind: 'lab', lab: args.lab.lab, module: args.lab.module });
+  return out.slice(0, MAX_EXTRAS);
 }

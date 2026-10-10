@@ -12,7 +12,7 @@ import { derive } from '../../src/engine/replay.ts';
 import type { PoolQuestion } from '../../src/engine/select.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, contentOf, examStartOf, submitOf } from '../fixtures/memory.ts';
+import { answerOf, at, contentOf, examStartOf, labDoneOf, submitOf } from '../fixtures/memory.ts';
 
 /** One test per Phase 2 row of the anti-grind audit (spec 3.11), named after the row. */
 const CONTENT = contentOf([
@@ -26,7 +26,7 @@ const CONTENT = contentOf([
 ]);
 type Log = readonly (readonly [string, NewEvent])[];
 const memoryOf = (log: Log) => deriveMemory(timelineOf(log), CONTENT);
-const right = (concept: string, qid: string, mode: 'check' | 'quiz' = 'check') =>
+const right = (concept: string, qid: string, mode: 'check' | 'quiz' | 'debrief' = 'check') =>
   answerOf({ concept, qid, mode, correct: true, sure: true });
 const SID3 = '01JA00000000000000000000S3';
 
@@ -86,6 +86,24 @@ describe('anti-grind audit (spec 3.11)', () => {
     expect(memory.concepts.get('oven')?.card).toEqual(
       memoryOf(quiz('2026-10-10')).concepts.get('oven')?.card,
     );
+  });
+
+  it('Re-running a lab and its debrief', () => {
+    const run = (day: string, hints: number): Log => [
+      [at(day, 10), labDoneOf('lab-m01-a', hints)],
+      [at(day, 10, 1), right('oven', 'q-oven-1', 'debrief')],
+      [at(day, 10, 2), right('proofing', 'q-proofing-1', 'debrief')],
+    ];
+    const once = memoryOf(run('2026-10-10', 1));
+    const again = memoryOf([
+      ...run('2026-10-10', 1),
+      ...run('2026-10-10', 0),
+      [at('2026-10-11', 10), labDoneOf('lab-m01-a', 0)],
+    ]);
+    expect(once.xp).toBe(50);
+    expect(again.xp).toBe(once.xp);
+    expect(again.qualifyingDays.has('2026-10-11')).toBe(false);
+    expect(again.concepts.get('oven')?.card).toEqual(once.concepts.get('oven')?.card);
   });
 
   it('Reviewing early', () => {

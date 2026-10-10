@@ -8,7 +8,17 @@ import * as z from 'zod/mini';
 
 export { SCHEMA_VERSION } from './version.ts';
 
-export const MODES = ['check', 'quiz', 'focus', 'review', 'lightning', 'incident', 'boss', 'mock'] as const;
+export const MODES = [
+  'check',
+  'quiz',
+  'focus',
+  'review',
+  'lightning',
+  'incident',
+  'boss',
+  'mock',
+  'debrief',
+] as const;
 export const Mode = z.enum(MODES);
 export type Mode = z.infer<typeof Mode>;
 

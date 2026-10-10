@@ -8,7 +8,7 @@ import { toPlain } from '../../src/engine/replay.ts';
 import { SID, timelineOf } from '../fixtures/events.ts';
 import { grindLog, type Item, timeOf } from '../fixtures/grind-log.ts';
 import { JOURNEY_CONTENT } from '../fixtures/journeys/content.ts';
-import { answerOf, contentOf } from '../fixtures/memory.ts';
+import { answerOf, contentOf, labDoneOf } from '../fixtures/memory.ts';
 
 /** Grind invariance (spec 3.1 and 3.11): extra answers never pay or schedule twice, whatever the log. */
 const CONTENT = contentOf([
@@ -18,7 +18,17 @@ const CONTENT = contentOf([
   { id: 'menu', module: 2, tested: false },
 ]);
 const CONCEPTS = ['oven', 'proofing', 'crust', 'menu', 'old-oven', 'ghost'];
-const MODES: Mode[] = ['check', 'quiz', 'focus', 'review', 'lightning', 'boss', 'mock'];
+const MODES: Mode[] = [
+  'check',
+  'quiz',
+  'focus',
+  'review',
+  'lightning',
+  'incident',
+  'debrief',
+  'boss',
+  'mock',
+];
 const itemArb = (days: { min: number; max: number }): fc.Arbitrary<Item> =>
   fc.oneof(
     {
@@ -145,6 +155,34 @@ describe('grind invariance', () => {
     );
   });
 
+  it('pays any lab once, however often and on whatever days it is completed again', () => {
+    const repeatArb = fc.record({
+      lab: fc.constantFrom('lab-m01-a', 'lab-m02-a', 'lab-m09-gone'),
+      firstHints: fc.integer({ min: 0, max: 2 }),
+      again: fc.array(
+        fc.record({
+          day: fc.integer({ min: 20, max: 40 }),
+          minute: fc.integer({ min: 0, max: 1_000 }),
+          hints: fc.integer({ min: 0, max: 2 }),
+          rev: fc.integer({ min: 1, max: 4 }),
+        }),
+        { maxLength: 12 },
+      ),
+    });
+    fc.assert(
+      fc.property(historyArb, repeatArb, (history, { lab, firstHints, again }) => {
+        const first: Item = [timeOf(20, 0), labDoneOf(lab, firstHints)];
+        const more = again.map(
+          ({ day, minute, hints, rev }): Item => [timeOf(day, minute + 1), labDoneOf(lab, hints, rev)],
+        );
+        const once = deriveMemory(timelineOf([...history, first]), CONTENT);
+        const many = deriveMemory(timelineOf(sortItems([...history, first, ...more])), CONTENT);
+        expect(many.xp).toBe(once.xp);
+        expect(many.qualifyingDays).toEqual(once.qualifyingDays);
+      }),
+    );
+  });
+
   it('derives the same state for any order of the same events', () => {
     fc.assert(
       fc.property(
@@ -221,6 +259,22 @@ describe('replay cost', () => {
     const memory = deriveMemory(events, JOURNEY_CONTENT);
     const elapsed = performance.now() - started;
     expect(memory.concepts.size).toBe(130);
+    expect(elapsed).toBeLessThan(1_000);
+  });
+
+  it('replays the same log with a lab completion every day in under a second, paying each lab once', () => {
+    const labs = ['lab-m01-a', 'lab-m01-b', 'lab-m02-a', 'lab-m02-b', 'lab-m03-a', 'lab-m03-b'];
+    const done: Item[] = Array.from({ length: 100 }, (_, day) => [
+      timeOf(day, 750),
+      labDoneOf(labs[day % labs.length] as string, day % 3),
+    ]);
+    const events: StudyEvent[] = timelineOf(sortItems([...grindLog(), ...done]));
+    expect(events).toHaveLength(15_100);
+    const started = performance.now();
+    const memory = deriveMemory(events, JOURNEY_CONTENT);
+    const elapsed = performance.now() - started;
+    const base = deriveMemory(timelineOf(grindLog()), JOURNEY_CONTENT);
+    expect(memory.xp - base.xp).toBe(6 * 30 + 2 * 10);
     expect(elapsed).toBeLessThan(1_000);
   });
 });

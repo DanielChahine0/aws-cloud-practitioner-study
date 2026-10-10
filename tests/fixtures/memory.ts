@@ -129,3 +129,8 @@ export function causeOf(sid: string, qid: string, cause: 'unknown' | 'confused' 
 export function rankOf(rank: string): NewEvent {
   return { t: 'rank', rank };
 }
+
+/** A lab completion: the lab id, the hints opened during the run and the lab's `rev`. */
+export function labDoneOf(lab: string, hints = 0, rev = 1): NewEvent {
+  return { t: 'lab.done', lab, rev, hints };
+}

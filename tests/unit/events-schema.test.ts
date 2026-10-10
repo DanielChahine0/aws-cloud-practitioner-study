@@ -68,7 +68,17 @@ const VARIANTS: Record<string, Record<string, unknown>> = {
 describe('StudyEvent', () => {
   it('has schema version 1 and the spec modes', () => {
     expect(SCHEMA_VERSION).toBe(1);
-    expect(MODES).toEqual(['check', 'quiz', 'focus', 'review', 'lightning', 'incident', 'boss', 'mock']);
+    expect(MODES).toEqual([
+      'check',
+      'quiz',
+      'focus',
+      'review',
+      'lightning',
+      'incident',
+      'boss',
+      'mock',
+      'debrief',
+    ]);
   });
 
   for (const [name, variant] of Object.entries(VARIANTS)) {

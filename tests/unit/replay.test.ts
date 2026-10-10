@@ -11,7 +11,16 @@ import {
   takenForms,
 } from '../../src/engine/replay.ts';
 import { eventsOf, SID, SID2 } from '../fixtures/events.ts';
-import { abandonOf, answerOf, causeOf, examStartOf, rankOf, startOf, submitOf } from '../fixtures/memory.ts';
+import {
+  abandonOf,
+  answerOf,
+  causeOf,
+  examStartOf,
+  labDoneOf,
+  rankOf,
+  startOf,
+  submitOf,
+} from '../fixtures/memory.ts';
 
 const answer = (qid: string, correct: boolean, sid = SID, concept = 'shared-kitchen'): NewEvent => ({
   t: 'answer',
@@ -27,8 +36,37 @@ const answer = (qid: string, correct: boolean, sid = SID, concept = 'shared-kitc
 });
 
 describe('derive', () => {
-  it('has engine version 4', () => {
-    expect(ENGINE_VERSION).toBe(4);
+  it('has engine version 5', () => {
+    expect(ENGINE_VERSION).toBe(5);
+  });
+
+  it('keeps the first completion of each lab, with its rev and hints, and never replaces it', () => {
+    const events = eventsOf(
+      labDoneOf('lab-m01-a', 2, 1),
+      labDoneOf('lab-m01-a', 0, 2),
+      labDoneOf('lab-m01-b'),
+    );
+    const p = derive(events, null);
+    expect(p.labsDone.get('lab-m01-a')).toEqual({
+      at: events[0]?.at,
+      day: '2026-10-10',
+      rev: 1,
+      hints: 2,
+      eventId: events[0]?.id,
+    });
+    expect([...p.labsDone.keys()]).toEqual(['lab-m01-a', 'lab-m01-b']);
+  });
+
+  it('counts a lab the content does not ship as unknown, and still keeps its completion', () => {
+    const refs: ContentRefs = {
+      questions: new Map(),
+      notes: new Set(),
+      labs: new Set(['lab-m01-a']),
+      incidents: new Set(),
+    };
+    const p = derive(eventsOf(labDoneOf('lab-m01-a'), labDoneOf('lab-m09-gone')), refs);
+    expect(p.unknownEvents).toBe(1);
+    expect(p.labsDone.has('lab-m09-gone')).toBe(true);
   });
 
   it('records the event id, the concept and the relearn flag of each answer', () => {
@@ -108,7 +146,12 @@ describe('derive', () => {
   });
 
   it('counts an unknown question or note once, keeps it and never throws', () => {
-    const refs: ContentRefs = { questions: new Map([['q1', 1]]), notes: new Set(['m01/a']) };
+    const refs: ContentRefs = {
+      questions: new Map([['q1', 1]]),
+      notes: new Set(['m01/a']),
+      labs: new Set(),
+      incidents: new Set(),
+    };
     const events = eventsOf(answer('q1', true), answer('q-gone', true), {
       t: 'lesson.done',
       note: 'm09/gone',
@@ -362,7 +405,12 @@ describe('exam sessions in replay (spec 4.1, 4.3, 4.4)', () => {
       answerOf({ concept: 'oven', correct: true, sure: false, qid: 'qm-gone', mode: 'mock' }),
       submitOf(SID, 'mock'),
     );
-    const refs: ContentRefs = { questions: new Map([['qm1', 1]]), notes: new Set() };
+    const refs: ContentRefs = {
+      questions: new Map([['qm1', 1]]),
+      notes: new Set(),
+      labs: new Set(),
+      incidents: new Set(),
+    };
     expect(derive(events, refs).unknownEvents).toBe(1);
     expect(derive(events, null).unknownEvents).toBe(0);
     expect(derive(events, refs).exams.get(SID)).toMatchObject({ correct: 1, total: 1 });
