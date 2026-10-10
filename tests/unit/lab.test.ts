@@ -45,6 +45,7 @@ import {
   simChartLabel,
   statementText,
   TRAY_EMPTY,
+  tickPoints,
   traceRuleText,
 } from '../../src/app/lab.ts';
 import { replayLab } from '../../src/labs/contract.ts';
@@ -125,6 +126,15 @@ describe('Simulate copy', () => {
     expect(simChartLabel('s3-lifecycle', ['Cost so far'])).toBe(
       'Cost so far at the end of each 30-day month',
     );
+  });
+
+  it('labels the first, the quarter and the last points under a chart', () => {
+    expect(tickPoints(24)).toEqual([0, 6, 12, 18, 23]);
+    // A quarter too close to the last label gives way to it.
+    expect(tickPoints(12)).toEqual([0, 3, 6, 11]);
+    expect(tickPoints(2)).toEqual([0, 1]);
+    expect(tickPoints(1)).toEqual([0]);
+    expect(tickPoints(0)).toEqual([]);
   });
 });
 

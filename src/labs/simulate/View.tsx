@@ -1,10 +1,14 @@
 import type { SimulateAction, SimulateSpec } from '../../../schemas/lab.ts';
-import { SIM_IDLE, SIM_RESULTS, simChartLabel } from '../../app/lab.ts';
+import { SIM_IDLE, SIM_RESULTS, simChartLabel, tickPoints } from '../../app/lab.ts';
 import type { SimulateState } from './model.ts';
 import { fmt, metricInfo, type SimSeries } from './models.ts';
 
 const W = 480;
 const H = 160;
+/** Room under the baseline for the tick marks. */
+const TICK = 4;
+/** Space between the bars of one point, so each bar only has to stand out from the surface (WCAG 1.4.11). */
+const GAP = 2;
 const FILLS = ['var(--active)', 'var(--muted)'];
 
 /** Bars for one or two series on a shared scale, with a visually hidden table of the same numbers. */
@@ -12,17 +16,31 @@ function SimChart(props: { label: string; xs: string[]; series: SimSeries[] }) {
   const { label, xs, series } = props;
   const top = Math.max(1, ...series.flatMap((s) => s.values));
   const slot = W / Math.max(1, xs.length);
-  const bar = (slot * 0.8) / Math.max(1, series.length);
+  const count = Math.max(1, series.length);
+  const bar = (slot * 0.8 - GAP * (count - 1)) / count;
+  const ticks = tickPoints(xs.length);
+  const pct = (x: number) => `${(100 * x) / W}%`;
   return (
     <figure class="sim-chart">
-      <svg class="sim-plot" viewBox={`0 0 ${W} ${H + 1}`} role="img" aria-label={label} focusable="false">
+      {/* The sighted copy of the scale: the dashed top line stands for this value, the baseline for 0. */}
+      <p class="muted sim-scale" aria-hidden="true">
+        {fmt(top, series[0]?.unit ?? '')}
+      </p>
+      <svg
+        class="sim-plot"
+        viewBox={`0 0 ${W} ${H + TICK + 1}`}
+        role="img"
+        aria-label={label}
+        focusable="false"
+      >
+        <line x1="0" y1="0.5" x2={W} y2="0.5" stroke="var(--line)" stroke-dasharray="4 4" />
         {series.map((s, k) =>
           s.values.map((v, i) => {
             const h = (Math.max(0, v) / top) * H;
             return (
               <rect
                 key={`${s.label}-${xs[i] ?? i}`}
-                x={i * slot + slot * 0.1 + k * bar}
+                x={i * slot + slot * 0.1 + k * (bar + GAP)}
                 y={H - h}
                 width={bar}
                 height={h}
@@ -32,7 +50,30 @@ function SimChart(props: { label: string; xs: string[]; series: SimSeries[] }) {
           }),
         )}
         <line x1="0" y1={H + 0.5} x2={W} y2={H + 0.5} stroke="var(--line)" />
+        {ticks.map((i) => (
+          <line
+            key={i}
+            x1={(i + 0.5) * slot}
+            y1={H + 1}
+            x2={(i + 0.5) * slot}
+            y2={H + TICK + 1}
+            stroke="var(--muted)"
+          />
+        ))}
       </svg>
+      {/* HTML, not SVG text, so the labels keep their size on a phone; the hidden table reads them out. */}
+      <div class="muted sim-ticks" aria-hidden="true">
+        {ticks.map((i, j) => {
+          const edge = j === 0 ? ' sim-tick-start' : j === ticks.length - 1 ? ' sim-tick-end' : '';
+          // The end labels line up with the edge of their slot, so they never leave the chart.
+          const x = j === 0 ? i * slot : j === ticks.length - 1 ? (i + 1) * slot : (i + 0.5) * slot;
+          return (
+            <span key={i} class={`sim-tick${edge}`} style={{ left: pct(x) }}>
+              {xs[i]}
+            </span>
+          );
+        })}
+      </div>
       <figcaption class="muted sim-legend">
         {series.map((s, k) => (
           <span key={s.label} class="sim-key">

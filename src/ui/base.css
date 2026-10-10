@@ -2201,6 +2201,11 @@ dialog.confirm .button {
   border-color: var(--active);
 }
 
+/* The label takes the free width, so every count sits at the right edge, whatever the label's length. */
+.bucket-label {
+  flex: 1;
+}
+
 .bucket-n {
   display: inline-grid;
   place-items: center;
@@ -2237,12 +2242,14 @@ dialog.confirm .button {
   border-radius: 8px;
 }
 
+/* One flow for every goal: the icon and word, then the label right after them, then the message on a line of its own. */
 .goal-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 8px;
   margin: 0;
+}
+
+.goal-line svg {
+  margin-right: 6px;
+  vertical-align: -3px;
 }
 
 .goal-word {
@@ -2264,6 +2271,7 @@ dialog.confirm .button {
 }
 
 .goal-message {
+  display: block;
   font-size: 0.875rem;
 }
 
@@ -2495,6 +2503,32 @@ dialog.confirm .button {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.sim-scale {
+  margin: 0 0 2px;
+  font-size: 0.75rem;
+}
+
+.sim-ticks {
+  position: relative;
+  height: 1.5em;
+  font-size: 0.75rem;
+}
+
+.sim-tick {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.sim-tick-start {
+  transform: none;
+}
+
+.sim-tick-end {
+  transform: translateX(-100%);
 }
 
 .sim-legend {

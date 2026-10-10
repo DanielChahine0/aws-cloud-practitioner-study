@@ -392,7 +392,8 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
               >
                 <p class="goal-line">
                   {result !== null && <GoalIcon pass={result.pass} />}
-                  <span class="goal-word">{goalWord(result)}</span> {goal.label}
+                  <span class="goal-word">{goalWord(result)}</span>{' '}
+                  <span class="goal-label">{goal.label}</span>
                   {result !== null && result.message !== '' && (
                     <span class="muted goal-message"> {result.message}</span>
                   )}

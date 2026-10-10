@@ -61,7 +61,8 @@ export function SortView({ spec, state, held, onHold, onAction }: SortViewProps)
                 <span class="bucket-n" aria-hidden="true">
                   {i < 9 ? i + 1 : 0}
                 </span>{' '}
-                {b.label} <span class="bucket-count">({inside.length})</span>
+                <span class="bucket-label">{b.label}</span>{' '}
+                <span class="bucket-count">({inside.length})</span>
               </button>
               {b.detail !== undefined && <p class="muted bucket-detail">{b.detail}</p>}
               {inside.map(card)}
