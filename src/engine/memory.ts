@@ -319,8 +319,9 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     } else if (isNew) {
       earn(e, betXp(e.correct, e.sure));
     }
-    if (e.correct && !cm.successDays.includes(e.day)) cm.successDays.push(e.day);
-    return dueAtStart || isNew;
+    const counted = dueAtStart || isNew;
+    if (counted && e.correct && !cm.successDays.includes(e.day)) cm.successDays.push(e.day);
+    return counted;
   };
 
   const laterAnswer = (cm: MutableConcept, key: string, e: AnswerEvent, stale: boolean) => {
