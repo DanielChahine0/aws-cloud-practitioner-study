@@ -3,6 +3,7 @@ import type { ContentIndex, LabView, QuestionView } from '../../../schemas/chunk
 import type { NewEvent } from '../../../schemas/events.ts';
 import type { ConfigureSpec, SimulateSpec, SortAction, SortSpec } from '../../../schemas/lab.ts';
 import type { PlaceAction, PlaceSpec } from '../../../schemas/lab-place.ts';
+import type { TraceAction, TraceSpec } from '../../../schemas/lab-trace.ts';
 import { openSession } from '../../engine/replay.ts';
 import type { ConfigureState } from '../../labs/configure/model.ts';
 import { ConfigureView } from '../../labs/configure/View.tsx';
@@ -14,6 +15,8 @@ import type { SimulateState } from '../../labs/simulate/model.ts';
 import { SimulateView } from '../../labs/simulate/View.tsx';
 import type { SortState } from '../../labs/sort/model.ts';
 import { SortView } from '../../labs/sort/View.tsx';
+import type { TraceState } from '../../labs/trace/model.ts';
+import { TraceView } from '../../labs/trace/View.tsx';
 import { KV_KEYS } from '../../store/kv.ts';
 import { ulid } from '../../store/ulid.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
@@ -33,6 +36,9 @@ import {
   placedLine,
   RESET_ASK,
   returnedLine,
+  ruleOffLine,
+  ruleOnLine,
+  traceRuleText,
 } from '../lab.ts';
 import { type LabDraft, labDraftOf, labDraftsOf, withDraft, withHint } from '../lab-draft.ts';
 import { type LabCommand, labKey } from '../lab-keys.ts';
@@ -223,9 +229,17 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
     if (action.t === 'fail') setAnnounce(downLine(labelOf(action.container)));
     if (action.t === 'restore') setAnnounce(backLine(labelOf(was)));
   };
+  /** A switched Trace rule is announced by its text, never its id. */
+  const onTraceAction = (action: TraceAction): void => {
+    dispatch(action);
+    if (action.t !== 'toggle') return;
+    const text = traceRuleText(lab.spec as TraceSpec, action.rule);
+    if (text !== null) setAnnounce(action.on ? ruleOnLine(text) : ruleOffLine(text));
+  };
   const onBoardAction = (action: unknown): void => {
     if (lab.engine === 'sort') onSortAction(action as SortAction);
     else if (lab.engine === 'place') onPlaceAction(action as PlaceAction);
+    else if (lab.engine === 'trace') onTraceAction(action as TraceAction);
     else dispatch(action);
   };
 
@@ -512,6 +526,8 @@ function Board(props: {
           onAction={onAction}
         />
       );
+    case 'trace':
+      return <TraceView spec={lab.spec as TraceSpec} state={state as TraceState} onAction={onAction} />;
   }
 }
 
