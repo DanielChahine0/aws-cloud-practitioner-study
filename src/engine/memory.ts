@@ -129,6 +129,7 @@ interface MutableConcept extends ConceptMemory {
 }
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
+type ReviewNowEvent = Extract<StudyEvent, { t: 'review.now' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;
 
 const FORMS: ReadonlySet<string> = new Set(FORM_IDS);
@@ -206,7 +207,7 @@ interface Made {
  * One answer that reaches a card, with all it needs but the exam date, so a new date can run it again: a counted
  * answer that is the concept's first of the day or a later one, or a boss or mock answer applied on submit.
  */
-interface Step {
+interface AnswerStep {
   /** When it ran, on the replay's clock of steps, day openings and new keys. */
   readonly tick: number;
   readonly kind: 'first' | 'later' | 'exam';
@@ -216,6 +217,19 @@ interface Step {
   before: CardState;
   made: Made | null;
 }
+
+/**
+ * A `review.now` that reaches a card (spec 3.6): it makes the card due at the start of the event's study day,
+ * with no review and no rating, and stays on the track so a new exam date runs it again in its place.
+ */
+interface NowStep {
+  readonly tick: number;
+  readonly kind: 'now';
+  readonly e: ReviewNowEvent;
+  before: CardState;
+}
+
+type Step = AnswerStep | NowStep;
 
 /** The card history of one memory key, so a new exam date runs again only the steps whose outcome it changes. */
 interface Track {
@@ -287,6 +301,7 @@ function extraAgain(
  * at start or new; a concept already updated that day gets only the one extra Again of a later wrong answer.
  */
 function runStep(s: CardState, key: string, tested: boolean, step: Step, examDate: string | null): Outcome {
+  if (step.kind === 'now') return { state: dueToday(s, step.e), made: null, due: false };
   const { e, start, kind } = step;
   if (kind === 'later') return extraAgain(s, key, tested, e, step.stale, examDate);
   if (kind === 'exam' && s.fsrsDay === e.day) return extraAgain(s, key, tested, e, false, examDate);
@@ -300,6 +315,14 @@ function runStep(s: CardState, key: string, tested: boolean, step: Step, examDat
   const enteredOn = card === null ? e.day : s.enteredOn;
   const state = { ...s, card: u.card, long: u.long, enteredOn, fsrsDay: e.day, fsrsRating: rating };
   return { state, made: u.made, due };
+}
+
+/** The card made due at the start of the study day of `e`, unless it already falls due earlier. */
+function dueToday(s: CardState, e: ReviewNowEvent): CardState {
+  if (s.card === null) return s;
+  const due = Math.min(Date.parse(s.card.due), dayStartAt(e.day, e.tz).getTime());
+  if (due === Date.parse(s.card.due)) return s;
+  return { ...s, card: { ...s.card, due: new Date(due).toISOString() } };
 }
 
 /** The due a step's update would have under `examDate`, from the due FSRS gave it. */
@@ -337,7 +360,9 @@ function rebase(track: Track, initial: CardState, examDate: string | null): void
   if (initial === track.initial) {
     while (from < steps.length) {
       const step = steps[from] as Step;
-      if (step.made !== null && cappedUnder(step.made, key, step.e, examDate) !== step.made.capped) break;
+      if (step.kind !== 'now' && step.made !== null) {
+        if (cappedUnder(step.made, key, step.e, examDate) !== step.made.capped) break;
+      }
       from++;
     }
     if (from === steps.length) return;
@@ -348,7 +373,7 @@ function rebase(track: Track, initial: CardState, examDate: string | null): void
     const step = steps[i] as Step;
     step.before = s;
     const out = runStep(s, key, tested, step, examDate);
-    step.made = out.made;
+    if (step.kind !== 'now') step.made = out.made;
     s = out.state;
   }
   track.state = s;
@@ -403,6 +428,10 @@ function replay(
   const clearedMarks = new Set<string>();
   const longCards = new Set<string>();
   const labsDone = new Set<string>();
+  /** Study days whose first lightning round has started, so a later round that day pays nothing. */
+  const lightningDays = new Set<string>();
+  /** The paid round of each day, by session id: its deadline, the questions it has seen and the XP it paid. */
+  const lightningRounds = new Map<string, { deadline: number | null; seen: Set<string>; xp: number }>();
   /** Study days whose incident XP is paid; one incident pays per day (spec 3.2). */
   const incidentPaidDays = new Set<string>();
   const missionCleaned = new Map<string, string>();
@@ -565,13 +594,13 @@ function replay(
   const step = (
     cm: MutableConcept,
     key: string,
-    kind: Step['kind'],
+    kind: AnswerStep['kind'],
     e: AnswerEvent,
     stale: boolean,
   ): Outcome => {
     const track = tracks.get(key) as Track;
     const start = starts.get(e.sid) ?? { at: e.at, tz: e.tz };
-    const run: Step = { tick: tick++, kind, e, start, stale, before: track.state, made: null };
+    const run: AnswerStep = { tick: tick++, kind, e, start, stale, before: track.state, made: null };
     const out = runStep(track.state, key, track.tested, run, examDate);
     run.made = out.made;
     track.steps.push(run);
@@ -633,7 +662,45 @@ function replay(
     return shipped !== undefined && e.qv < shipped;
   };
 
+  /**
+   * A lightning answer (spec 3.2 and 3.11): in the day's paid round, the first answer to each question pays
+   * `XP.lightningPerCorrect` when right and given by the deadline, up to `XP.lightningDailyCap`; it never touches
+   * FSRS, counted answers, the calibration window or the day's qualification.
+   */
+  const applyLightning = (e: AnswerEvent) => {
+    answered.add(e.qid);
+    const round = lightningRounds.get(e.sid);
+    if (round === undefined || round.seen.has(e.qid)) return;
+    round.seen.add(e.qid);
+    if (!e.correct || (round.deadline !== null && Date.parse(e.at) > round.deadline)) return;
+    if (round.xp >= XP.lightningDailyCap) return;
+    round.xp += XP.lightningPerCorrect;
+    earn(e, XP.lightningPerCorrect);
+  };
+
+  /**
+   * A `review.now` (spec 3.6) makes the concept due today through a step on its track, so a later exam date keeps
+   * it. An unknown concept, one never studied, and one already answered today (whose one update of the day is spent,
+   * so it could never leave the queue today) are left alone.
+   */
+  const applyReviewNow = (e: ReviewNowEvent) => {
+    const key = keyOf(e.concept);
+    const cm = key === null ? undefined : concepts.get(key);
+    const track = key === null ? undefined : tracks.get(key);
+    if (key === null || cm === undefined || track === undefined || track.state.card === null) return;
+    if (cm.lastAnswerDay === e.day) return;
+    const run: NowStep = { tick: tick++, kind: 'now', e, before: track.state };
+    const out = runStep(track.state, key, track.tested, run, examDate);
+    track.steps.push(run);
+    track.state = out.state;
+    setCard(cm, out.state);
+  };
+
   const applyAnswer = (e: AnswerEvent) => {
+    if (e.mode === 'lightning') {
+      applyLightning(e);
+      return;
+    }
     const key = keyOf(e.concept);
     const stale = isStale(e);
     const isNew = !answered.has(e.qid);
@@ -780,6 +847,11 @@ function replay(
     switch (e.t) {
       case 'session':
         if (e.phase === 'start') starts.set(e.sid, { at: e.at, tz: e.tz });
+        if (e.phase === 'start' && e.mode === 'lightning' && !lightningDays.has(e.day)) {
+          lightningDays.add(e.day);
+          const deadline = e.deadline === undefined ? null : Date.parse(e.deadline);
+          lightningRounds.set(e.sid, { deadline, seen: new Set(), xp: 0 });
+        }
         if (EXAM_MODES.has(e.mode)) applyExamSession(e);
         if (e.phase === 'submit' && e.mode === 'check' && starts.has(e.sid)) grant('first-brew', e);
         break;
@@ -796,6 +868,9 @@ function replay(
         break;
       case 'lab.done':
         applyLab(e);
+        break;
+      case 'review.now':
+        applyReviewNow(e);
         break;
       case 'incident.done':
         if (!incidentPaidDays.has(e.day)) {

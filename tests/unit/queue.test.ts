@@ -12,7 +12,7 @@ import {
   reviewQueue,
 } from '../../src/engine/queue.ts';
 import { timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, type ConceptSpec, contentOf } from '../fixtures/memory.ts';
+import { answerOf, at, type ConceptSpec, contentOf, reviewNowOf } from '../fixtures/memory.ts';
 
 const good = (concept: string): NewEvent => answerOf({ concept, correct: true, sure: true });
 const queueAt = (content: MemoryContent, log: readonly (readonly [string, NewEvent])[], now: string) =>
@@ -279,5 +279,26 @@ describe('reviewQueue', () => {
       count: 1,
       at: '2026-10-13T02:00:00.000Z',
     });
+  });
+});
+
+describe('reviewQueue and review.now (spec 3.6)', () => {
+  it('puts a concept that a lightning miss sent back into the due set of the day', () => {
+    const content = contentOf([{ id: 'oven', module: 1 }]);
+    const log: (readonly [string, NewEvent])[] = [
+      [at('2026-10-01'), good('oven')],
+      [
+        at('2026-10-04'),
+        answerOf({ concept: 'oven', qid: 'q-oven-2', correct: true, sure: true, mode: 'review' }),
+      ],
+    ];
+    expect(queueAt(content, log, at('2026-10-10', 12)).items).toEqual([]);
+    const missed = queueAt(
+      content,
+      [...log, [at('2026-10-10', 11), reviewNowOf('oven')]],
+      at('2026-10-10', 12),
+    );
+    expect(missed.items).toEqual(['oven']);
+    expect(missed.due).toBe(1);
   });
 });

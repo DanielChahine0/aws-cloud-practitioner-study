@@ -9,6 +9,7 @@ import { FORM_IDS } from '../../schemas/ids.ts';
  * Version 4 judges past days with the exam date in force when they happened, keeps the schedule of the current
  * exam date, and counts the inherited card of a split concept not yet answered as due.
  * Version 5 pays lab XP, counts lab debriefs and gives Hands On per complete module, pays incident XP.
+ * Version 5 also pays lightning XP and makes a missed lightning concept due today through `review.now`.
  */
 export const ENGINE_VERSION = 5;
 

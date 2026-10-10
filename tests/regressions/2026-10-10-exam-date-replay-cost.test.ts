@@ -37,10 +37,11 @@ const spread = (count: number): number[] =>
   Array.from({ length: count }, (_, i) => Math.floor(((i + 1) * GRIND_DAYS) / (count + 1)));
 
 /**
- * The median time of `RUNS` replays of each log, run in turns after one warm-up each, so a busy machine slows
- * every log alike rather than whichever ran while it was busy.
+ * The fastest of `RUNS` replays of each log, run in turns after one warm-up each.
+ * Load from parallel builds only ever adds time, and it swung the median of the same log several times over
+ * between runs, so the fastest replay is the measure closest to the replay's own cost.
  */
-const mediansMs = (logs: readonly (readonly StudyEvent[])[]): number[] => {
+const fastestMs = (logs: readonly (readonly StudyEvent[])[]): number[] => {
   const times = logs.map((): number[] => []);
   for (const events of logs) deriveMemory(events, JOURNEY_CONTENT);
   for (let run = 0; run < RUNS; run++) {
@@ -50,7 +51,7 @@ const mediansMs = (logs: readonly (readonly StudyEvent[])[]): number[] => {
       times[i]?.push(performance.now() - started);
     }
   }
-  return times.map((t) => t.sort((a, b) => a - b)[Math.floor(RUNS / 2)] as number);
+  return times.map((t) => Math.min(...t));
 };
 
 describe('replay cost stays flat as the exam date changes', { timeout: HEAVY_TIMEOUT_MS }, () => {
@@ -61,18 +62,18 @@ describe('replay cost stays flat as the exam date changes', { timeout: HEAVY_TIM
       ['20 spread', withChanges(spread(20))],
       ['20 near the end', withChanges(Array.from({ length: 20 }, (_, i) => GRIND_DAYS - 20 + i))],
     ];
-    const within = (medians: readonly number[]) =>
-      medians.slice(1).every((ms) => ms <= 1.5 * (medians[0] ?? 0) + 15);
+    const within = (fastest: readonly number[]) =>
+      fastest.slice(1).every((ms) => ms <= 1.5 * (fastest[0] ?? 0) + 15);
     const measure = (): number[] => {
-      const medians = mediansMs(cases.map(([, events]) => events));
-      const line = cases.map(([name], i) => `${name} ${(medians[i] ?? 0).toFixed(1)} ms`).join(', ');
-      console.info(`deriveMemory median of ${RUNS}: ${line}`);
-      return medians;
+      const fastest = fastestMs(cases.map(([, events]) => events));
+      const line = cases.map(([name], i) => `${name} ${(fastest[i] ?? 0).toFixed(1)} ms`).join(', ');
+      console.info(`deriveMemory fastest of ${RUNS}: ${line}`);
+      return fastest;
     };
-    let medians = measure();
-    for (let attempt = 1; attempt < ATTEMPTS && !within(medians); attempt++) medians = measure();
-    expect(medians).toHaveLength(cases.length);
-    const base = medians[0] ?? 0;
-    for (const ms of medians.slice(1)) expect(ms).toBeLessThanOrEqual(1.5 * base + 15);
+    let fastest = measure();
+    for (let attempt = 1; attempt < ATTEMPTS && !within(fastest); attempt++) fastest = measure();
+    expect(fastest).toHaveLength(cases.length);
+    const base = fastest[0] ?? 0;
+    for (const ms of fastest.slice(1)) expect(ms).toBeLessThanOrEqual(1.5 * base + 15);
   });
 });

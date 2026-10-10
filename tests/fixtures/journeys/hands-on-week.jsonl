@@ -57,4 +57,10 @@
 {"t":"session","sid":"01JB0000000000000000000009","mode":"incident","phase":"submit","seed":9,"id":"01M5F5HJW00000000000000000","at":"2026-10-21T12:04:00.000Z","tz":0,"day":"2026-10-21"}
 {"t":"incident.done","incident":"inc-001","firstTry":true,"id":"01M5F5KDF00000000000000000","at":"2026-10-21T12:05:00.000Z","tz":0,"day":"2026-10-21"}
 {"t":"lab.done","lab":"lab-m03-a","rev":1,"hints":2,"id":"01M5HGV8800000000000000000","at":"2026-10-22T10:00:00.000Z","tz":0,"day":"2026-10-22"}
+{"t":"session","sid":"01JB0000000000000000000010","mode":"lightning","phase":"start","seed":10,"scope":"lightning","qids":["q-bake-01-01-a","q-bake-01-02-a","q-bake-01-03-a"],"deadline":"2026-10-22T19:01:30.000Z","id":"01M5JFR0W00000000000000000","at":"2026-10-22T19:00:00.000Z","tz":0,"day":"2026-10-22"}
+{"t":"answer","sid":"01JB0000000000000000000010","mode":"lightning","qid":"q-bake-01-01-a","qv":1,"concept":"bake-01-01","picked":["a"],"correct":true,"sure":false,"ms":5000,"id":"01M5JFR5R80000000000000000","at":"2026-10-22T19:00:05.000Z","tz":0,"day":"2026-10-22"}
+{"t":"answer","sid":"01JB0000000000000000000010","mode":"lightning","qid":"q-bake-01-02-a","qv":1,"concept":"bake-01-02","picked":["b"],"correct":false,"sure":false,"ms":5000,"id":"01M5JFRAMG0000000000000000","at":"2026-10-22T19:00:10.000Z","tz":0,"day":"2026-10-22"}
+{"t":"answer","sid":"01JB0000000000000000000010","mode":"lightning","qid":"q-bake-01-03-a","qv":1,"concept":"bake-01-03","picked":["a"],"correct":true,"sure":false,"ms":5000,"id":"01M5JFRFGR0000000000000000","at":"2026-10-22T19:00:15.000Z","tz":0,"day":"2026-10-22"}
+{"t":"session","sid":"01JB0000000000000000000010","mode":"lightning","phase":"submit","seed":10,"id":"01M5JFRMD00000000000000000","at":"2026-10-22T19:00:20.000Z","tz":0,"day":"2026-10-22"}
+{"t":"review.now","concept":"bake-01-02","id":"01M5JFRMD10000000000000000","at":"2026-10-22T19:00:20.001Z","tz":0,"day":"2026-10-22"}
 {"t":"lab.done","lab":"lab-m02-a","rev":1,"hints":0,"id":"01M5M37Z800000000000000000","at":"2026-10-23T10:00:00.000Z","tz":0,"day":"2026-10-23"}

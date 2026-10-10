@@ -12,7 +12,15 @@ import { derive } from '../../src/engine/replay.ts';
 import type { PoolQuestion } from '../../src/engine/select.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, contentOf, examStartOf, labDoneOf, submitOf } from '../fixtures/memory.ts';
+import {
+  answerOf,
+  at,
+  contentOf,
+  examStartOf,
+  labDoneOf,
+  lightningStartOf,
+  submitOf,
+} from '../fixtures/memory.ts';
 
 /** One test per Phase 2 row of the anti-grind audit (spec 3.11), named after the row. */
 const CONTENT = contentOf([
@@ -161,7 +169,43 @@ describe('anti-grind audit (spec 3.11)', () => {
     expect(later.get(3)).toBeGreaterThanOrEqual(85);
   });
 
-  it.todo('Lightning spam (lightning arrives in Phase 4)');
+  it('Lightning spam: the first round of a day pays at most 10, later rounds 0, no card moves, no streak', () => {
+    const studied: Log = [
+      [at('2026-10-10'), right('oven', 'q-oven-1')],
+      [at('2026-10-10', 10, 1), right('proofing', 'q-proofing-1')],
+    ];
+    const names = ['oven', 'proofing', 'crust', 'flour', 'yeast', 'salt', 'water'];
+    /** A round of 15 right answers on 2026-10-11 at `hour`, three seconds apart, inside its 90 seconds. */
+    const round = (sid: string, hour: number): Log => {
+      const qids = Array.from({ length: 15 }, (_, i) => `ql-${i}`);
+      const start = Date.parse(at('2026-10-11', hour));
+      return [
+        [at('2026-10-11', hour), lightningStartOf(sid, qids, new Date(start + 90_000).toISOString())],
+        ...qids.map(
+          (qid, i) =>
+            [
+              new Date(start + (i + 1) * 3_000).toISOString(),
+              answerOf({
+                concept: names[i % names.length] ?? 'oven',
+                qid,
+                correct: true,
+                sure: false,
+                mode: 'lightning',
+                sid,
+              }),
+            ] as const,
+        ),
+      ];
+    };
+    const base = memoryOf(studied);
+    const first = memoryOf([...studied, ...round(SID2, 10)]);
+    const both = memoryOf([...studied, ...round(SID2, 10), ...round(SID3, 11)]);
+    expect(first.xp - base.xp).toBe(10);
+    expect(both.xp - base.xp).toBe(10);
+    for (const concept of names)
+      expect(both.concepts.get(concept)?.card).toEqual(base.concepts.get(concept)?.card);
+    expect(both.qualifyingDays.has('2026-10-11')).toBe(false);
+  });
   it('Re-rolling a boss: a second pass pays nothing', () => {
     const module3 = ['flour', 'yeast', 'salt', 'water'];
     const first = memoryOf(examOf('2026-10-10', SID, 'boss', module3));
