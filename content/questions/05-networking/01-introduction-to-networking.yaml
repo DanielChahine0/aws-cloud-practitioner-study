@@ -1,0 +1,143 @@
+questions:
+  - id: q-vs17ax
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-networking
+    note: m05/introduction-to-networking
+    task: "3.5"
+    level: 1
+    stem: >-
+      Once the cafe moves its apps to AWS, what does the term networking cover there?
+    options:
+      - id: a
+        text: The users and permissions that control who can sign in
+        why: Deciding who can sign in is identity and access work, not the infrastructure that hosts and links workloads.
+      - id: b
+        text: The infrastructure and services that host your workloads
+        correct: true
+        why: In AWS, networking means the infrastructure and services hosting the cafe's workloads so they can share data.
+      - id: c
+        text: The disks and buckets that keep your files for later reads
+        why: Keeping files for later reads is storage, a separate idea from the infrastructure that links and hosts workloads.
+      - id: d
+        text: The bills and budgets that track what each team spends
+        why: Tracking spend by team is billing work and says nothing about how the cafe's workloads are hosted or linked.
+    evidence:
+      - Networking links devices to share data and resources, and in AWS it means the infrastructure and services hosting your workloads.
+    takeaway: In AWS, networking means the infrastructure and services that host your workloads and let them share data.
+    history: []
+    verified:
+      keyHash: aa3be5df3d77
+      fullHash: 6a6f51f68e93
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-12q7ah
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-networking
+    note: m05/introduction-to-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe uses its own counter to picture AWS networking.
+      The cashier serves customers all day, while the barista works behind the counter where customers never go.
+      Which kind of AWS resource does the barista stand for?
+    options:
+      - id: a
+        text: A resource copied across several Availability Zones
+        why: Copies across Availability Zones are about surviving a failed location, which the barista picture does not show.
+      - id: b
+        text: A resource the public cannot reach directly
+        correct: true
+        why: Customers never go behind the counter to the barista, like a private resource the public cannot get to.
+      - id: c
+        text: A resource that grows when the orders spike
+        why: Growing with demand is about scaling, while the barista picture is about who can reach whom.
+      - id: d
+        text: A resource in a Region close to the customers
+        why: Picking a nearby Region is about latency, not about keeping the barista away from customers.
+    evidence:
+      - "Coffee shop: cashiers face customers as public resources, while baristas stay private."
+      - Public resources can reach the internet and private ones cannot.
+    takeaway: Like a cashier and a barista, some AWS resources face the public while others stay private.
+    history: []
+    verified:
+      keyHash: 5ae5be6a9bd3
+      fullHash: 18409b342a69
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-dgdwkd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-vpc
+    note: m05/introduction-to-networking
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe is moving its ordering system to AWS.
+      It wants a private network of its own, walled off from other AWS customers, whose layout it designs itself.
+      Which service gives the cafe this?
+    options:
+      - id: a
+        text: AWS Site-to-Site VPN
+        why: Site-to-Site VPN encrypts a link between a site and a VPC; it does not create the isolated network itself.
+      - id: b
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated physical link into AWS, not an isolated network the cafe designs.
+      - id: c
+        text: Amazon VPC
+        correct: true
+        why: Amazon VPC provides a logically isolated part of the AWS Cloud with a virtual network you lay out.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub that joins existing networks; the cafe first needs the network to join.
+    evidence:
+      - Amazon VPC gives you a logically isolated part of the AWS Cloud with a virtual network you design.
+    takeaway: An isolated virtual network that you design inside the AWS Cloud is Amazon VPC, not a connection service.
+    history: []
+    verified:
+      keyHash: 665a2aba7730
+      fullHash: 07b65c763429
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gkphsa
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-vpc
+    note: m05/introduction-to-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe has set up an Amazon VPC for its loyalty app.
+      Which description fits that VPC?
+    options:
+      - id: a
+        text: A dedicated physical link from the cafe's shop into AWS
+        why: A dedicated physical link into AWS is AWS Direct Connect, not the network the loyalty app runs in.
+      - id: b
+        text: One or more data centers with redundant power and networking
+        why: That describes an Availability Zone, which the VPC uses but which is not the cafe's own network.
+      - id: c
+        text: An isolated network where the cafe sets resources and security
+        correct: true
+        why: A VPC is the cafe's own isolated network, so it decides what runs there and how it is secured.
+      - id: d
+        text: A separate geographic area picked for latency and data residency
+        why: That describes a Region, the area the VPC sits in, not the cafe's isolated network itself.
+    evidence:
+      - The VPC is your isolated network, where you control resources and security.
+    takeaway: Inside your VPC you control which resources run there and how they are secured, while AWS runs the facilities.
+    history: []
+    verified:
+      keyHash: 7e02ed3a60ab
+      fullHash: 6dfd68ac1c82
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
