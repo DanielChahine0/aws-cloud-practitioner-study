@@ -192,8 +192,15 @@ const labExtra = computed(() => {
   });
 });
 
-/** Today's offered incident and whether it is solved, or null before Home records the day's offer (spec 4.5). */
-export const incidentNow = computed(() => incidentToday(progress.value, studyDay(now.value)));
+/** The ids of the incidents the content index ships, which an offer must name to count as today's (spec 4.5). */
+export const shippedIncidents = computed<ReadonlySet<string>>(
+  () => new Set((index.value?.incidents ?? []).map((i) => i.id)),
+);
+
+/** Today's offered incident and whether it is solved, or null before Home records a shipped offer (spec 4.5). */
+export const incidentNow = computed(() =>
+  incidentToday(progress.value, studyDay(now.value), shippedIncidents.value),
+);
 
 /** The extras line's entries (spec 4.6): today's unsolved incident, a ready boss, a due mock and a lab, at most two. */
 export const extraItems = computed(() => {

@@ -89,7 +89,7 @@ export function Incident({ idx }: { idx: ContentIndex }) {
     ? null
     : !modulesRead(idx.modules, p.lessonsDone)(INCIDENT_UNLOCK_MODULE)
       ? INCIDENT_LOCKED
-      : today === null
+      : today === null || meta === undefined
         ? INCIDENT_NONE
         : today.done
           ? INCIDENT_SOLVED
