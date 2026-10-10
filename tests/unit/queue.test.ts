@@ -67,6 +67,25 @@ describe('reviewQueue', () => {
     expect(queue.items).toEqual(['m1', 'm2', 'd']);
   });
 
+  it('interleaves the first due concept against the last misconception', () => {
+    const content = contentOf([
+      { id: 'm', module: 1 },
+      { id: 'd1', module: 1 },
+      { id: 'd2', module: 2 },
+    ]);
+    const queue = queueAt(
+      content,
+      [
+        [at('2026-10-01'), good('d1')],
+        [at('2026-10-05'), good('d2')],
+        [at('2026-10-10'), answerOf({ concept: 'm', correct: false, sure: true })],
+      ],
+      at('2026-10-20'),
+    );
+    expect(queue.misconceptions).toBe(1);
+    expect(queue.items).toEqual(['m', 'd2', 'd1']);
+  });
+
   it('never pulls a due confusable partner into the misconception block', () => {
     const content = contentOf([
       { id: 'm1', module: 1, confusableWith: ['z'] },

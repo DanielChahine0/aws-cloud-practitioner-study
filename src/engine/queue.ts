@@ -33,12 +33,15 @@ interface Scored {
 
 const byRecall = (a: Scored, b: Scored): number => a.r - b.r || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
-/** Takes the first of the next `LOOKAHEAD` items whose module differs from the last placed one. */
-function interleave(ids: readonly string[], moduleOf: (id: string) => number): string[] {
+/**
+ * Takes the first of the next `LOOKAHEAD` items whose module differs from the last placed one.
+ * `prev` is the item placed just before `ids`, if any, so the first pick also avoids its module.
+ */
+function interleave(ids: readonly string[], moduleOf: (id: string) => number, prev?: string): string[] {
   const rest = [...ids];
   const out: string[] = [];
   while (rest.length > 0) {
-    const last = out.at(-1);
+    const last = out.at(-1) ?? prev;
     let pick = 0;
     if (last !== undefined) {
       const window = Math.min(LOOKAHEAD, rest.length);
@@ -116,8 +119,11 @@ export function reviewQueue(memory: MemoryState, content: MemoryContent, now: Da
     return card ? studyDayAt(new Date(card.due), tz) : null;
   };
   // Interleave and pair within each block, so no due concept ever moves ahead of a misconception.
-  const arrange = (ids: readonly string[]) => pairUp(interleave(ids, moduleOf), partnersOf, dueDayOf);
-  const items = [...arrange(marked.map((s) => s.id)), ...arrange(rest)];
+  // The due block starts against the last misconception, so the boundary interleaves too.
+  const arrange = (ids: readonly string[], prev?: string) =>
+    pairUp(interleave(ids, moduleOf, prev), partnersOf, dueDayOf);
+  const head = arrange(marked.map((s) => s.id));
+  const items = [...head, ...arrange(rest, head.at(-1))];
 
   const due = dueIds.size;
   const newToday = memory.newByDay.get(today) ?? 0;
