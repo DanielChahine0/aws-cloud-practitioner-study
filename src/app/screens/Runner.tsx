@@ -45,12 +45,13 @@ import { type RunnerCommand, runnerKey } from '../runner-keys.ts';
 import { highlight, navigate, overlay } from '../state.ts';
 import { NotFound } from './NotFound.tsx';
 
-type RunnerMode = 'check' | 'quiz' | 'focus' | 'review';
+/** The modes a `Session` runs; a lab debrief (spec 5.1) runs inside the lab screen, never at a runner route. */
+export type RunnerMode = 'check' | 'quiz' | 'focus' | 'review' | 'debrief';
 type FlagReason = Extract<StudyEvent, { t: 'flag' }>['reason'];
 
 interface Props {
   idx: ContentIndex;
-  mode: RunnerMode;
+  mode: Exclude<RunnerMode, 'debrief'>;
   /** `m03/aws-lambda` for a lesson check, `m03` for a module quiz, `2.3` or `m03` for a focus quiz, `review` for a review. */
   scope: string;
 }
@@ -467,7 +468,8 @@ interface SessionProps {
   slug: string | null;
 }
 
-function Session({ idx, shipped, pool, session, mode, module, slug }: SessionProps) {
+/** One session's questions, one at a time, then its end line; the lab screen embeds it for a debrief. */
+export function Session({ idx, shipped, pool, session, mode, module, slug }: SessionProps) {
   const items = sessionItems(session, (qid, concept) =>
     relearnVariant({ concept: memoryConcept(concept), avoid: qid, pool, seed: session.seed }),
   ).filter((item) => shipped.has(item.qid));
@@ -576,6 +578,10 @@ function EndLine({
               </li>
             )}
           </>
+        ) : mode === 'debrief' && module !== null ? (
+          <li>
+            <a href={`#/m/${pad2(module)}`}>Back to Module {module}</a>
+          </li>
         ) : mode === 'focus' ? (
           <>
             <li>
