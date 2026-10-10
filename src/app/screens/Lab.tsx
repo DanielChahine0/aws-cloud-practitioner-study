@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/ho
 import type { ContentIndex, LabView, QuestionView } from '../../../schemas/chunks.ts';
 import type { NewEvent } from '../../../schemas/events.ts';
 import type { ConfigureSpec, SimulateSpec, SortAction, SortSpec } from '../../../schemas/lab.ts';
+import type { InvestigateSpec } from '../../../schemas/lab-investigate.ts';
 import type { PlaceAction, PlaceSpec } from '../../../schemas/lab-place.ts';
 import type { TraceAction, TraceSpec } from '../../../schemas/lab-trace.ts';
 import { openSession } from '../../engine/replay.ts';
@@ -9,6 +10,8 @@ import type { ConfigureState } from '../../labs/configure/model.ts';
 import { ConfigureView } from '../../labs/configure/View.tsx';
 import { allPass, type GoalResult, replayLab } from '../../labs/contract.ts';
 import { checkLab, type EngineEntry, engineOf } from '../../labs/engines.ts';
+import type { InvestigateState } from '../../labs/investigate/model.ts';
+import { InvestigateView } from '../../labs/investigate/View.tsx';
 import { type PlaceState, placeSlots } from '../../labs/place/model.ts';
 import { PlaceView } from '../../labs/place/View.tsx';
 import type { SimulateState } from '../../labs/simulate/model.ts';
@@ -528,6 +531,14 @@ function Board(props: {
       );
     case 'trace':
       return <TraceView spec={lab.spec as TraceSpec} state={state as TraceState} onAction={onAction} />;
+    case 'investigate':
+      return (
+        <InvestigateView
+          spec={lab.spec as InvestigateSpec}
+          state={state as InvestigateState}
+          onAction={onAction}
+        />
+      );
   }
 }
 

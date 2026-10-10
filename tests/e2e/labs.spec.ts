@@ -9,6 +9,8 @@ import {
   labDoneCount,
   labFor,
   SYNTHETIC_CONFIGURE_LAB_ID,
+  SYNTHETIC_INVESTIGATE_LAB_ID,
+  SYNTHETIC_INVESTIGATE_TITLE,
   SYNTHETIC_PLACE_LAB_ID,
   SYNTHETIC_POLICY_LAB_ID,
   SYNTHETIC_SIMULATE_LAB_ID,
@@ -17,6 +19,7 @@ import {
   SYNTHETIC_TRACE_LAB_ID,
   storedDraftActions,
   syntheticConfigureLab,
+  syntheticInvestigateLab,
   syntheticPlaceLab,
   syntheticPolicyLab,
   syntheticSimulateLab,
@@ -739,5 +742,135 @@ test('Trace checkboxes and case summaries are at least 44 px tall on a phone', a
   ];
   expect(targets).toHaveLength(16);
   for (const target of targets) expect((await target.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
+  await expectNoSidewaysScroll(page);
+});
+
+const INVESTIGATE_URL = `/#/m/01/lab/${SYNTHETIC_INVESTIGATE_LAB_ID}`;
+const LEDGER = 'Pantry ledger, Flourtown bakery, 14 March, times in UTC';
+const WHO = 'Who threw the sourdough starter away?';
+const WHAT = 'Which event took the starter out of the pantry for good?';
+const WHEN = 'When did the starter leave the pantry?';
+const useInvestigateLab = (page: Page): Promise<void> =>
+  useLabAt(page, syntheticInvestigateLab, INVESTIGATE_URL);
+const ledgerRows = (page: Page): Locator => page.getByRole('region', { name: LEDGER }).locator('tbody tr');
+const select = (page: Page, label: string): Locator => page.getByLabel(label, { exact: true });
+
+/**
+ * Types the first letters of an option on the focused select, the way a keyboard user picks one; both browsers match
+ * the typed letters against the option labels without opening the menu.
+ */
+async function typeToChoose(page: Page, target: Locator, letters: string, value: string): Promise<void> {
+  await expect(target).toBeFocused();
+  await page.keyboard.type(letters);
+  await expect(target).toHaveValue(value);
+}
+
+test('an Investigate lab works by keyboard alone, filters its records and records its completion', async ({
+  page,
+  browserName,
+}) => {
+  const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+  await useInvestigateLab(page);
+  await expect(h1(page, SYNTHETIC_INVESTIGATE_TITLE)).toBeVisible();
+  await expect(ledgerRows(page)).toHaveCount(8);
+
+  // A filter narrows the records and says how many it shows; it never answers a question.
+  await tabTo(page, select(page, 'Event'), tab);
+  await typeToChoose(page, select(page, 'Event'), 'th', 'Throw away');
+  await expect(said(page, '2 of 8 records shown.')).toBeAttached();
+  await expect(ledgerRows(page)).toHaveCount(2);
+  await page.keyboard.press(tab);
+  await expect(select(page, 'Result')).toBeFocused();
+  await typeToChoose(page, select(page, 'Result'), 'r', 'Refused');
+  await expect(said(page, '1 of 8 records shown.')).toBeAttached();
+
+  // Enter in a select checks the board on demand.
+  await tabTo(page, select(page, WHO), tab);
+  await typeToChoose(page, select(page, WHO), 'i', 'ines');
+  await page.keyboard.press(tab);
+  await typeToChoose(page, select(page, WHAT), 'th', 'throw-away');
+  await page.keyboard.press('Enter');
+  await expect(said(page, '1 of 2 goals met.')).toBeAttached();
+  await expect(goal(page, 'Name who threw the starter away, and how')).toContainText('Met');
+  await expect(goal(page, 'Pin down when the starter left')).toContainText('Not met');
+
+  // The draft keeps every answer and filter across a reload.
+  // Each typed letter that moves the select is a change the draft stores, and a reload replays them all.
+  await expect.poll(() => storedDraftActions(page, SYNTHETIC_INVESTIGATE_LAB_ID)).toBeGreaterThan(0);
+  await page.reload();
+  await expect(h1(page, SYNTHETIC_INVESTIGATE_TITLE)).toBeVisible();
+  await expect(select(page, WHO)).toHaveValue('ines');
+  await expect(select(page, WHAT)).toHaveValue('throw-away');
+  await expect(select(page, 'Event')).toHaveValue('Throw away');
+  await expect(page.getByText('1 of 8 records shown.', { exact: true })).toBeVisible();
+  // Raw lab, question, option and record ids never show (spec 2.8).
+  expect(await page.locator('.lab').innerText()).not.toMatch(
+    /lab-m01-bakery-ledger|throw-away|at-0732|\br4\b/,
+  );
+
+  await tabTo(page, select(page, WHEN), tab);
+  await typeToChoose(page, select(page, WHEN), '07:3', 'at-0732');
+  await page.keyboard.press('Enter');
+  await expect(said(page, 'All 2 goals met. Plus 40 XP.')).toBeAttached();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+  await answerDebriefByKeys(page, SYNTHETIC_INVESTIGATE_LAB_ID);
+  await expect(page.getByRole('link', { name: 'Back to Module 1' })).toBeVisible();
+  await expect.poll(() => labDoneCount(page, SYNTHETIC_INVESTIGATE_LAB_ID)).toBe(1);
+});
+
+test('an Investigate lab has no axe violations and no sideways scroll', async ({ page }) => {
+  await useInvestigateLab(page);
+  await expect(h1(page, SYNTHETIC_INVESTIGATE_TITLE)).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+  await select(page, 'Who').selectOption('Tobin');
+  await expect(said(page, '3 of 8 records shown.')).toBeAttached();
+  await select(page, 'Result').selectOption('Done');
+  await select(page, 'Event').selectOption('Throw away');
+  await expect(page.getByText('No record matches these filters.', { exact: true })).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+  await select(page, WHO).selectOption('mara');
+  await checkButton(page).click();
+  await expect(said(page, '0 of 2 goals met.')).toBeAttached();
+  // A hint is free and reads the board as it is now.
+  await page.getByRole('button', { name: 'Hint' }).first().click();
+  await expect(
+    page.getByText(
+      'A refused event changes nothing in the pantry; only an event that is done removes the starter. 1 question still unanswered and 1 answer wrong.',
+    ),
+  ).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+});
+
+test('an Investigate lab works by taps on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useInvestigateLab(page);
+  await expect(h1(page, SYNTHETIC_INVESTIGATE_TITLE)).toBeVisible();
+  await select(page, 'Who').tap();
+  await select(page, 'Who').selectOption('Ines');
+  await expect(said(page, '2 of 8 records shown.')).toBeAttached();
+  for (const [label, option] of [
+    [WHO, 'Ines'],
+    [WHAT, 'Throw away'],
+    [WHEN, '07:32 UTC'],
+  ] as const) {
+    await select(page, label).tap();
+    await select(page, label).selectOption({ label: option });
+  }
+  await checkButton(page).tap();
+  await expect(said(page, 'All 2 goals met. Plus 40 XP.')).toBeAttached();
+});
+
+test('Investigate selects are at least 44 px tall on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useInvestigateLab(page);
+  await expect(h1(page, SYNTHETIC_INVESTIGATE_TITLE)).toBeVisible();
+  const selects = await page.locator('.inv select').all();
+  expect(selects).toHaveLength(6);
+  for (const control of selects) {
+    expect((await control.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
+  }
   await expectNoSidewaysScroll(page);
 });

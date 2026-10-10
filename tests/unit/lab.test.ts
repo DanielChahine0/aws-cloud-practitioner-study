@@ -6,8 +6,10 @@ import {
   TraceSpec,
 } from '../../schemas/lab-trace.ts';
 import {
+  ALL_VALUES,
   backLine,
   CASES_HEADING,
+  CHOOSE_ANSWER,
   CREDITS_NOTE,
   caseLine,
   checkLabel,
@@ -15,6 +17,7 @@ import {
   downLine,
   ENGINE_LABEL,
   FAILURE_LEGEND,
+  FILTERS_LEGEND,
   failureButton,
   goalWord,
   HOP_WORD,
@@ -23,11 +26,13 @@ import {
   labCheckLine,
   labDoneLine,
   labLede,
+  NO_RECORDS,
   naclRuleText,
   PIECES_EMPTY,
   PIECES_LEGEND,
   placedLine,
   policyLegend,
+  QUESTIONS_LEGEND,
   RESET_ASK,
   RESULT_WORD,
   returnedLine,
@@ -36,6 +41,7 @@ import {
   SIM_IDLE,
   SIM_RESULTS,
   sgRuleText,
+  shownLine,
   simChartLabel,
   statementText,
   TRAY_EMPTY,
@@ -264,5 +270,20 @@ describe('Trace copy', () => {
     expect(traceRuleText(net, 'read-recipes')).toBeNull();
     expect(ruleOnLine('Inbound TCP 443 from 0.0.0.0/0')).toBe('Inbound TCP 443 from 0.0.0.0/0 is on.');
     expect(ruleOffLine('Allow recipes:Get* on recipes/*')).toBe('Allow recipes:Get* on recipes/* is off.');
+  });
+});
+
+describe('Investigate copy', () => {
+  it('labels the filters, the questions and the records shown', () => {
+    expect([FILTERS_LEGEND, ALL_VALUES, QUESTIONS_LEGEND, CHOOSE_ANSWER]).toEqual([
+      'Filters',
+      'All',
+      'Questions',
+      'Choose an answer',
+    ]);
+    expect(NO_RECORDS).toBe('No record matches these filters.');
+    expect(shownLine(3, 8)).toBe('3 of 8 records shown.');
+    expect(shownLine(0, 8)).toBe('0 of 8 records shown.');
+    expect(checkLabel('investigate')).toBe('Check');
   });
 });

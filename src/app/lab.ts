@@ -192,3 +192,21 @@ export function traceRuleText(spec: TraceSpec, id: string): string | null {
 /** Announced when a Trace rule is switched. */
 export const ruleOnLine = (text: string): string => `${text} is on.`;
 export const ruleOffLine = (text: string): string => `${text} is off.`;
+
+/** The legend over an Investigate lab's filter selects. */
+export const FILTERS_LEGEND = 'Filters';
+
+/** A filter select's first option, which shows every value of its column. */
+export const ALL_VALUES = 'All';
+
+/** The legend over an Investigate lab's answer selects. */
+export const QUESTIONS_LEGEND = 'Questions';
+
+/** An answer select's first option until the question has an answer. */
+export const CHOOSE_ANSWER = 'Choose an answer';
+
+/** Shown in place of the records when the filters let none through. */
+export const NO_RECORDS = 'No record matches these filters.';
+
+/** Under the filters, and announced when they change: `3 of 8 records shown.`. */
+export const shownLine = (shown: number, total: number): string => `${shown} of ${total} records shown.`;
