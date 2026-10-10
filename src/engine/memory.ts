@@ -203,9 +203,8 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
   const missionCleaned = new Map<string, string>();
   const missionsClosed = new Set<string>();
   const finalDecisions = new Map<number, readonly number[]>();
-  let cleanDays = 0;
+  const cleanDays = new Set<string>();
   let reviewsToday = 0;
-  let lastEvent: StudyEvent | null = null;
   let xp = 0;
   let staleAnswers = 0;
 
@@ -249,26 +248,31 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
 
   const closeDay = () => {
     if (day === null) return;
-    const end = dayStartAt(addDays(day, 1), dayTz).getTime();
-    let clearCache: boolean | null = null;
-    const isClear = (): boolean => {
-      if (clearCache === null) clearCache = testedCards().every(([, card]) => Date.parse(card.due) >= end);
-      return clearCache;
-    };
-    if (reviewsToday >= CLEAN_QUEUE.reviews && isClear() && lastEvent !== null) {
-      cleanDays++;
-      if (cleanDays >= CLEAN_QUEUE.days) grant('clean-queue', lastEvent);
-    }
     if (completion || examsDone.has(day)) {
       qualifyingDays.add(day);
       return;
     }
     if (!countedAnswer) return;
-    const clear = isClear();
+    const end = dayStartAt(addDays(day, 1), dayTz).getTime();
+    const clear = testedCards().every(([, card]) => Date.parse(card.due) >= end);
     const today = day;
     const plan = catchUpPlans.get(today);
     const planDone = plan?.every((id) => concepts.get(id)?.lastAnswerDay === today) === true;
     if (clear || planDone) qualifyingDays.add(today);
+  };
+
+  /**
+   * Counts the study day of `e` toward Clean Queue at its first event with enough reviews and no tested card
+   * due before the day ends, and grants the badge at that event on the seventh distinct day. With no
+   * short-term steps every review is due a day or more later, so a day once clear stays clear and the grant
+   * never moves as more events of that day arrive.
+   */
+  const countCleanDay = (e: StudyEvent) => {
+    if (badges.has('clean-queue') || cleanDays.has(e.day) || reviewsToday < CLEAN_QUEUE.reviews) return;
+    const end = dayStartAt(addDays(e.day, 1), e.tz).getTime();
+    if (!testedCards().every(([, card]) => Date.parse(card.due) >= end)) return;
+    cleanDays.add(e.day);
+    if (cleanDays.size >= CLEAN_QUEUE.days) grant('clean-queue', e);
   };
 
   const update = (cm: MutableConcept, key: string, rating: SrsRating, e: AnswerEvent) => {
@@ -516,7 +520,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
       default:
         break;
     }
-    lastEvent = e;
+    countCleanDay(e);
   }
   closeDay();
 
