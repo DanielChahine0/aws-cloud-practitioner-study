@@ -10,7 +10,15 @@ import { ulid } from '../../store/ulid.ts';
 import { useTitle } from '../../ui/useTitle.ts';
 import { now } from '../clock.ts';
 import { ensureExamForm } from '../content.ts';
-import { type ExamCommand, examHashOf, examKey, examLabel, REMIX_FORM } from '../exam.ts';
+import {
+  type ExamCommand,
+  examHashOf,
+  examKey,
+  examLabel,
+  examPick,
+  examPickable,
+  REMIX_FORM,
+} from '../exam.ts';
 import {
   addTime,
   countsLine,
@@ -303,13 +311,8 @@ function ExamRun({ idx, session }: { idx: ContentIndex; session: SessionState })
   };
   const choose = (id: string): void => {
     if (q === undefined) return;
-    const before = draft.picks[qid] ?? [];
-    let picked: string[];
-    if (q.type === 'single') picked = [id];
-    else if (before.includes(id)) picked = before.filter((x) => x !== id);
-    else if (before.length >= (q.select ?? 0)) return;
-    else picked = [...before, id];
-    save(pick(draft, qid, picked));
+    const picked = examPick(q, draft.picks[qid] ?? [], id);
+    if (picked !== null) save(pick(draft, qid, picked));
   };
   const flag = (): void => save(toggleFlag(draft, qid));
   const toggleGrid = (): void => setView(view === 'grid' ? 'question' : 'grid');
@@ -530,6 +533,7 @@ function ExamQuestion(props: ExamQuestionProps) {
                   name={`q-${q.id}`}
                   value={id}
                   checked={chosen.includes(id)}
+                  disabled={!examPickable(q, chosen, id)}
                   onChange={() => props.onChoose(id)}
                 />
                 <span class="option-n" aria-hidden="true">

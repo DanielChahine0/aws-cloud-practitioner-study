@@ -1,5 +1,5 @@
 /** The exam shell's keys and its focus bar text (spec 7.2 and 7.4), pure so the tests run without a browser. */
-import type { ContentIndex } from '../../schemas/chunks.ts';
+import type { ContentIndex, QuestionView } from '../../schemas/chunks.ts';
 import type { SessionState } from '../engine/replay.ts';
 import { type MockRoute, toHash } from './router.ts';
 import { type RunnerKeyInput, runnerKey } from './runner-keys.ts';
@@ -84,4 +84,31 @@ export function examLabel(session: Pick<SessionState, 'mode' | 'scope' | 'form'>
     return `Boss: ${idx.modules.find((m) => m.n === module)?.short ?? `Module ${module}`}`;
   }
   return session.form === null || session.form === REMIX_FORM ? 'Remix mock' : `Mock ${session.form}`;
+}
+
+/**
+ * The picks after choosing option `id`: a single-answer item swaps its pick, a multi-response item toggles it,
+ * and null refuses a new pick on an item that already holds its `select` picks.
+ */
+export function examPick(
+  q: Pick<QuestionView, 'type' | 'select'>,
+  chosen: readonly string[],
+  id: string,
+): string[] | null {
+  if (q.type === 'single') return [id];
+  if (chosen.includes(id)) return chosen.filter((x) => x !== id);
+  if (chosen.length >= (q.select ?? 0)) return null;
+  return [...chosen, id];
+}
+
+/**
+ * False for an option `examPick` would refuse; the screen disables its checkbox, because a refused click
+ * changes no state, so Preact never re-renders and the native checkbox would stay checked.
+ */
+export function examPickable(
+  q: Pick<QuestionView, 'type' | 'select'>,
+  chosen: readonly string[],
+  id: string,
+): boolean {
+  return examPick(q, chosen, id) !== null;
 }
