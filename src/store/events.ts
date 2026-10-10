@@ -22,9 +22,3 @@ export async function allEvents(db: IDBDatabase): Promise<StudyEvent[]> {
   const events = (await request(tx.objectStore(STORES.events).getAll())) as StudyEvent[];
   return events.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }
-
-export async function clearEvents(db: IDBDatabase): Promise<void> {
-  const tx = db.transaction(STORES.events, 'readwrite');
-  tx.objectStore(STORES.events).clear();
-  await done(tx);
-}

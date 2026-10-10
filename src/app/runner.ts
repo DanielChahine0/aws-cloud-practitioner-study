@@ -1,6 +1,7 @@
 /** The runner's pure answer logic, so the tests run without a browser. */
 import type { ContentIndex, ModuleChunk, QuestionView } from '../../schemas/chunks.ts';
 import type { Mode } from '../../schemas/events.ts';
+import type { SessionSummary } from '../engine/memory.ts';
 import { mulberry32, seedFor, shuffle } from '../engine/rng.ts';
 
 /** Option ids, or `[leftId, rightId]` pairs for a match, with ids `l1`.. and `r1`.. in authored pair order. */
@@ -68,10 +69,33 @@ export function collapseSpace(text: string): string {
   return text.replace(/\s+/g, ' ').trim();
 }
 
-export function endLine(correct: number, total: number): string {
-  return `${correct}/${total} correct`;
+/** The end of a session (spec 7.3): `9/12 · +95 XP · 3 concepts back tomorrow`, leaving out each part at 0. */
+export function endSummaryLine(s: SessionSummary): string {
+  const parts = [`${s.correct}/${s.total}`];
+  if (s.xp > 0) parts.push(`+${s.xp} XP`);
+  if (s.backTomorrow > 0) {
+    parts.push(`${s.backTomorrow} ${s.backTomorrow === 1 ? 'concept' : 'concepts'} back tomorrow`);
+  }
+  return parts.join(' · ');
 }
 
+/** What the live region reads after an answer (spec 7.5): `Correct. Plus 10 XP`, or the verdict alone at 0 XP. */
+export function verdictAnnouncement(correct: boolean, xp: number): string {
+  const verdict = correct ? 'Correct.' : 'Incorrect.';
+  return xp > 0 ? `${verdict} Plus ${xp} XP` : verdict;
+}
+
+const MODE_LABELS: Record<Mode, string> = {
+  check: 'Lesson check',
+  quiz: 'Module quiz',
+  focus: 'Focus quiz',
+  review: 'Review',
+  lightning: 'Lightning round',
+  incident: 'Incident',
+  boss: 'Boss',
+  mock: 'Mock exam',
+};
+
 export function modeLabel(mode: Mode): string {
-  return mode === 'check' ? 'Lesson check' : 'Module quiz';
+  return MODE_LABELS[mode];
 }

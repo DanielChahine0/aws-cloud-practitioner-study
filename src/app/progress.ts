@@ -1,12 +1,15 @@
 /** The progress store: the event log and kv in signals, written through to IndexedDB (spec 8.1). */
 import { computed, signal } from '@preact/signals';
 import type { NewEvent, StudyEvent } from '../../schemas/events.ts';
+import { SCHEMA_VERSION } from '../../schemas/version.ts';
 import { studyDay, tzOffset } from '../engine/day.ts';
 import { type ContentRefs, derive } from '../engine/replay.ts';
 import { type BackupData, mergeEvents, mergeKv } from '../store/backup.ts';
-import { allEvents, appendEvent, clearEvents, putEvents } from '../store/events.ts';
+import { allEvents, appendEvent, putEvents } from '../store/events.ts';
 import { openDb } from '../store/idb.ts';
-import { allKv, clearKv, type KvRecords, putKv, setKv } from '../store/kv.ts';
+import { allKv, KV_KEYS, type KvRecords, putKv, setKv } from '../store/kv.ts';
+import { migrateLocal } from '../store/migrations/index.ts';
+import { replaceStores } from '../store/replace.ts';
 import { ulid } from '../store/ulid.ts';
 import { index } from './content.ts';
 import { pad2 } from './router.ts';
@@ -39,15 +42,52 @@ const failed = (): void => {
   saveError.value = SAVE_ERROR;
 };
 
-/** Opens the database and loads the log and kv; on failure the app keeps working with an in-memory log. */
+/**
+ * Brings a stored log and kv up to `SCHEMA_VERSION` (spec 8.2): a migration first keeps the old data under kv
+ * `preMigration` and rewrites both stores in one transaction; kv `schemaVersion` is stamped whenever it differs.
+ */
+async function migrateStored(
+  store: IDBDatabase,
+  loaded: StudyEvent[],
+  kv: KvRecords,
+): Promise<{ events: StudyEvent[]; kv: KvRecords }> {
+  const stored = kv[KV_KEYS.schemaVersion]?.value;
+  const result = migrateLocal(typeof stored === 'number' ? stored : null, { events: loaded, kv });
+  const now = new Date();
+  let out = { events: loaded, kv };
+  if (result.migrated) {
+    // Migration steps return events in the current schema, which the app writes itself, as record() does.
+    const migrated = result.data.events as StudyEvent[];
+    const nextKv: KvRecords = {
+      ...result.data.kv,
+      [KV_KEYS.preMigration]: {
+        value: { schemaVersion: result.from, events: loaded, kv },
+        updatedAt: now.toISOString(),
+      },
+    };
+    await replaceStores(store, migrated, nextKv);
+    out = { events: migrated, kv: nextKv };
+  }
+  if (out.kv[KV_KEYS.schemaVersion]?.value !== SCHEMA_VERSION) {
+    const stamp = await setKv(store, KV_KEYS.schemaVersion, SCHEMA_VERSION, now);
+    out = {
+      ...out,
+      kv: { ...out.kv, [KV_KEYS.schemaVersion]: { value: stamp.value, updatedAt: stamp.updatedAt } },
+    };
+  }
+  return out;
+}
+
+/** Opens the database, migrates and loads the log and kv; on failure the app keeps working with an in-memory log. */
 export async function initStore(): Promise<void> {
   if (started) return;
   started = true;
   try {
     db = await openDb();
     const [loaded, kv] = await Promise.all([allEvents(db), allKv(db)]);
-    events.value = mergeEvents(loaded, events.value);
-    kvRecords.value = { ...kv, ...kvRecords.value };
+    const current = await migrateStored(db, loaded, kv);
+    events.value = mergeEvents(current.events, events.value);
+    kvRecords.value = { ...current.kv, ...kvRecords.value };
   } catch {
     db = null;
     failed();
@@ -102,10 +142,7 @@ export async function replaceAll(backup: BackupData): Promise<number> {
   const next = mergeEvents(backup.events, []);
   if (db !== null) {
     try {
-      await clearEvents(db);
-      await clearKv(db);
-      await putEvents(db, next);
-      await putKv(db, backup.kv);
+      await replaceStores(db, next, backup.kv);
     } catch {
       failed();
     }

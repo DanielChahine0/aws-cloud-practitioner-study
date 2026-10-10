@@ -14,11 +14,16 @@ async function openSupportPlans(page: Page): Promise<Locator> {
   return page.locator('button.term').first();
 }
 
-test('Home lists the 13 modules', async ({ page }) => {
+test('Home shows 13 module hexes', async ({ page }) => {
   await page.goto('/');
   await expect(h1(page, HOME_TITLE)).toBeVisible();
-  await expect(page.locator('main a[href^="#/m/"]')).toHaveCount(13);
-  await expect(page.locator('main a[href="#/m/05"]')).toContainText('Networking');
+  await expect(page.locator('main a.hex')).toHaveCount(13);
+  await expect(
+    page.getByRole('link', { name: 'Module 5 Networking, mastery 0, not started' }),
+  ).toHaveAttribute('href', '#/m/05');
+  await expect(page.locator('main a[data-next]')).toContainText(
+    'Start Module 1: Welcome to AWS Cloud Practitioner Essentials',
+  );
 });
 
 test('a lesson shows its exam guide updates and a glossary popover that Escape closes', async ({ page }) => {

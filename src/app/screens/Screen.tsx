@@ -26,6 +26,8 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
       return <Runner key={route} idx={idx} mode="check" scope={`m${pad2(route.module)}/${route.slug}`} />;
     case 'quiz':
       return <Runner key={route} idx={idx} mode="quiz" scope={`m${pad2(route.module)}`} />;
+    case 'review':
+      return <Runner key={route} idx={idx} mode="review" scope="review" />;
     case 'not-found':
       return <NotFound hash={route.hash} />;
   }

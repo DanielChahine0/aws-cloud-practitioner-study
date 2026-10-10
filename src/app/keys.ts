@@ -10,6 +10,8 @@ export interface KeyInput {
   alt: boolean;
   /** True when the event comes from a text field. */
   typing: boolean;
+  /** True when focus is on a link, a button, a form field or a summary, which answer Enter themselves. */
+  control: boolean;
   /** The event's timestamp in milliseconds. */
   at: number;
 }
@@ -29,7 +31,11 @@ export type KeyCommand =
   | { kind: 'progress' }
   | { kind: 'close-term' }
   | { kind: 'g'; at: number }
-  | { kind: 'navigate'; hash: string };
+  | { kind: 'navigate'; hash: string }
+  /** Follow the Next button (`Enter` on Home). */
+  | { kind: 'next' }
+  /** Focus the next or previous `[data-nav-item]` (`j` and `k` on Home and module pages). */
+  | { kind: 'move'; delta: 1 | -1 };
 
 /** How long `g` waits for its second key. */
 export const G_WINDOW_MS = 1000;
@@ -68,6 +74,15 @@ export function keyCommand(input: KeyInput, ctx: KeyContext): KeyCommand | null 
       return gPending(input, ctx) ? { kind: 'navigate', hash: '#/' } : null;
     case 'p':
       return gPending(input, ctx) ? { kind: 'progress' } : null;
+    case 'r':
+      return gPending(input, ctx) ? { kind: 'navigate', hash: toHash({ kind: 'review' }) } : null;
+    case 'Enter':
+      return ctx.route.kind === 'home' && !input.control ? { kind: 'next' } : null;
+    case 'j':
+    case 'k':
+      return ctx.route.kind === 'home' || ctx.route.kind === 'module'
+        ? { kind: 'move', delta: key === 'j' ? 1 : -1 }
+        : null;
     case 'c':
       return ctx.route.kind === 'lesson'
         ? {

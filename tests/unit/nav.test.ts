@@ -72,4 +72,8 @@ describe('up', () => {
     });
     expect(up({ kind: 'quiz', module: 3 })).toEqual({ kind: 'module', module: 3 });
   });
+
+  it('goes from a review to Home', () => {
+    expect(up({ kind: 'review' })).toEqual({ kind: 'home' });
+  });
 });
