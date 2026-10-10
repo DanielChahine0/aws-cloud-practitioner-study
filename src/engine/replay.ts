@@ -313,15 +313,17 @@ export function takenForms(p: Progress): ReadonlySet<string> {
 }
 
 /**
- * The forms `A` to `D` whose mock is over, submitted or abandoned: only these may join practice (spec 4.3), so no
- * learn screen shows an item, its key or its explanation while its mock is still open.
+ * The forms `A` to `D` whose every mock is over, submitted or abandoned: only these may join practice (spec 4.3), so
+ * no learn screen shows an item, its key or its explanation while a mock of its form is still open.
  */
 export function practiceForms(p: Progress): ReadonlySet<string> {
   const closed = new Set<string>();
+  const open = new Set<string>();
   for (const s of p.sessions.values()) {
     if (s.mode !== 'mock' || s.form === null || !FORMS.has(s.form)) continue;
-    if (s.submittedAt !== null || s.abandoned) closed.add(s.form);
+    (s.submittedAt !== null || s.abandoned ? closed : open).add(s.form);
   }
+  for (const form of open) closed.delete(form);
   return closed;
 }
 
