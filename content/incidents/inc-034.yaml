@@ -1,0 +1,116 @@
+id: inc-034
+title: The rota bucket left open overnight
+modules: [10]
+concepts: [aws-cloudtrail, cloudtrail-insights, aws-config]
+brief: One morning the cafe's admin finds that the storage bucket holding the staff rotas was opened to the public during the night, and the owner wants to know how it happened and how to stop a repeat.
+steps:
+  - id: q-am8znv
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-cloudtrail
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's admin thinks someone tried several times overnight to change the access settings on the staff rota bucket, and was refused before one try went through.
+      She wants to see every try, refused or accepted, with who sent it and from which IP address.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon CloudWatch
+        why: CloudWatch tracks performance numbers and thresholds, not who called an API or what answer the call got.
+      - id: b
+        text: AWS Config
+        why: Config checks resource settings against rules, and it does not list each refused request with its sender.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs best-practice checks on the account, not a record of each request and who sent it.
+      - id: d
+        text: AWS CloudTrail
+        correct: true
+        why: CloudTrail records each request with its caller, time, IP address and result, whether a new state or a denial.
+    evidence:
+      - "Who called, when, from which IP, and the result: a new state or a denial."
+      - Every request counts, from launching EC2 to editing permissions.
+    takeaway: CloudTrail records refused requests as well as successful ones, each with its caller, time and IP address.
+    history: []
+    verified:
+      keyHash: ad95f822e081
+      fullHash: 9862a3e61913
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-t07bth
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: cloudtrail-insights
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's admin wants AWS to learn how often API calls in the account usually fail, then flag any sudden rise in failed calls without her reading through the records herself.
+      Which AWS CloudTrail feature should she turn on?
+    options:
+      - id: a
+        text: CloudTrail event history
+        why: Event history lets her look up past management events, but it does not learn a normal error rate or flag a rise.
+      - id: b
+        text: CloudTrail Insights
+        correct: true
+        why: Insights studies normal API volume and error rates, then flags deviations once enabled on a trail or event data store.
+      - id: c
+        text: Log file integrity validation
+        why: Integrity validation exposes tampered log files, and it does not watch how often calls fail.
+      - id: d
+        text: CloudTrail logs
+        why: Log files keep events in S3 for long audits, but she would still read them herself, and they learn no normal error rate.
+    evidence:
+      - "**CloudTrail Insights**: spots abnormal API activity."
+      - Insights flags unusual API activity.
+    takeaway: CloudTrail Insights learns normal API call volume and error rates, then flags unusual swings once you enable it.
+    history: []
+    verified:
+      keyHash: 34495f6bce2e
+      fullHash: a7666197b150
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-m9hy3k
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-config
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe has a rule that its staff rota buckets must never be public.
+      It wants a service that keeps a record of each bucket's settings as they change, checks them against that rule and alerts the admin about any bucket that breaks it.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Audit Manager
+        why: Audit Manager gathers evidence that controls work, and it does not evaluate each bucket's settings against the rule.
+      - id: b
+        text: AWS CloudTrail
+        why: CloudTrail records the API calls made in the account, but it does not judge resource settings against a rule.
+      - id: c
+        text: AWS Config
+        correct: true
+        why: Config records resource configurations, tracks their changes and flags any resource that breaks the cafe's rule.
+      - id: d
+        text: AWS Artifact
+        why: Artifact hands out AWS's own audit reports and agreements, not checks of the cafe's bucket settings.
+    evidence:
+      - AWS Config records configurations, tracks changes and checks them against your rules.
+      - It alerts you to noncompliant resources and can fix them automatically.
+    takeaway: Recording resource settings over time and flagging any that break your own rules is the job of AWS Config.
+    history: []
+    verified:
+      keyHash: 1ed3debd17fb
+      fullHash: ef06dafa88a0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
