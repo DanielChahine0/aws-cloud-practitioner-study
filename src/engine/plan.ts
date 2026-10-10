@@ -9,7 +9,7 @@ import { type ConceptName, citedText, type DecisionRecord, scoreTotal } from './
 export const PLAN_FILE = 'cafe-cloud-plan.md';
 
 /**
- * Copies of `ABBREVIATIONS` and `SENTENCE_BREAK` in `scripts/content/lib/text.ts`, which `src` cannot import;
+ * Copies of `ABBREVIATIONS`, `SENTENCE_BREAK` and `FENCE` in `scripts/content/lib/text.ts`, which `src` cannot import;
  * `tests/unit/plan.test.ts` pins them equal, so the export splits exactly where rule R8 would object.
  */
 export const ABBREVIATIONS = [
@@ -28,12 +28,25 @@ export const ABBREVIATIONS = [
   'p.m.',
 ];
 export const SENTENCE_BREAK = /(\S+)[.!?]["')\]]*\s+(?=[A-Z0-9"'([])/g;
+export const FENCE = /^\s*(`{3,}|~{3,})(.*)$/;
 
-const EM_DASH = /\s*\u2014\s*/g;
+/** Spaces and tabs only, so a dash at either end of a line never joins it to its neighbour. */
+const EM_DASH = /[ \t]*\u2014[ \t]*/g;
+
 const LIST_MARKER = /^\s*(?:[-*+]|\d+[.)])\s+/;
 /** Links, inline code and bare URLs are never split inside. */
 const PROTECTED = /\[[^\]]*\]\([^)]*\)|`[^`]*`|https?:\/\/\S*[^\s.,;:!?'")\]]/g;
 const NOT_WRITTEN = 'Not written yet';
+
+/** Each em dash and the spaces around it as ` - `, without the space that would sit at the start or end of a line. */
+function plainDashes(text: string): string {
+  return text.replace(EM_DASH, (dash: string, at: number) => {
+    const end = at + dash.length;
+    const before = at === 0 || text[at - 1] === '\n' ? '' : ' ';
+    const after = end === text.length || text[end] === '\n' ? '' : ' ';
+    return `${before}-${after}`;
+  });
+}
 
 function protectedRanges(line: string): [number, number][] {
   return [...line.matchAll(PROTECTED)].map((m) => [m.index, m.index + m[0].length]);
@@ -60,18 +73,37 @@ function splitLine(line: string): string[] {
   return pieces.filter((p) => p !== '').map((p, i) => (i === 0 ? marker : indent) + p);
 }
 
-/** Dani's text with em dashes as ` - ` and each sentence on its own line; blank lines and table rows stay. */
+/**
+ * Dani's text with em dashes as ` - ` and each sentence on its own line.
+ * Blank lines and table rows stay, and fenced code blocks pass through as typed, as rule R8 exempts them.
+ */
 export function oneSentencePerLine(text: string): string {
-  return text
-    .replaceAll('\r\n', '\n')
-    .replace(EM_DASH, ' - ')
-    .split('\n')
-    .flatMap((line) =>
-      line.trim() === '' || line.trimStart().startsWith('|') ? [line.trim()] : splitLine(line),
-    )
-    .join('\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+  const out: string[] = [];
+  let open: string | null = null;
+  for (const line of plainDashes(text.replaceAll('\r\n', '\n')).split('\n')) {
+    const fence = FENCE.exec(line);
+    const marker = fence?.[1] ?? '';
+    if (open !== null) {
+      out.push(line);
+      const closes =
+        fence !== null &&
+        marker[0] === open[0] &&
+        marker.length >= open.length &&
+        (fence[2] ?? '').trim() === '';
+      if (closes) open = null;
+    } else if (fence !== null) {
+      out.push(line);
+      open = marker;
+    } else if (line.trim() === '') {
+      if (out.length > 0 && out.at(-1) !== '') out.push('');
+    } else if (line.trimStart().startsWith('|')) {
+      out.push(line.trim());
+    } else {
+      out.push(...splitLine(line));
+    }
+  }
+  while (out.at(-1)?.trim() === '') out.pop();
+  return out.join('\n');
 }
 
 function cell(text: string): string {

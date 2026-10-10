@@ -29,7 +29,7 @@ export const ABBREVIATIONS = [
 ];
 export const SENTENCE_BREAK = /(\S+)[.!?]["')\]]*\s+(?=[A-Z0-9"'([])/g;
 const LIST_MARKER = /^\s*(?:[-*+]|\d+[.)])\s+/;
-const FENCE = /^\s*(`{3,}|~{3,})(.*)$/;
+export const FENCE = /^\s*(`{3,}|~{3,})(.*)$/;
 const FRONTMATTER = /^---\n[\s\S]*?\n---\n/;
 
 export function words(text: string): string[] {

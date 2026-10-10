@@ -4,11 +4,13 @@ import {
   emDashLines,
   multiSentenceLines,
   ABBREVIATIONS as SCRIPT_ABBREVIATIONS,
+  FENCE as SCRIPT_FENCE,
   SENTENCE_BREAK as SCRIPT_SENTENCE_BREAK,
 } from '../../scripts/content/lib/text.ts';
 import { type ConceptName, decisionsOf } from '../../src/engine/capstone.ts';
 import {
   ABBREVIATIONS,
+  FENCE,
   oneSentencePerLine,
   PLAN_FILE,
   planMarkdown,
@@ -55,6 +57,8 @@ describe('the export', () => {
     expect(ABBREVIATIONS).toEqual(SCRIPT_ABBREVIATIONS);
     expect(SENTENCE_BREAK.source).toBe(SCRIPT_SENTENCE_BREAK.source);
     expect(SENTENCE_BREAK.flags).toBe(SCRIPT_SENTENCE_BREAK.flags);
+    expect(FENCE.source).toBe(SCRIPT_FENCE.source);
+    expect(FENCE.flags).toBe(SCRIPT_FENCE.flags);
   });
 
   it('splits sentences, replaces em dashes and keeps list markers, abbreviations and links', () => {
