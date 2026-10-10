@@ -5,6 +5,7 @@ import type { Plugin } from 'vite';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { contentPlugin } from '../../scripts/content/vite-plugin.ts';
 import { makeFixtureRoot } from '../fixtures/content-root.ts';
+import { bakeryLab, writeLab } from '../fixtures/labs.ts';
 
 type HookName = 'configResolved' | 'buildStart' | 'generateBundle' | 'transformIndexHtml' | 'configureServer';
 interface Emitted {
@@ -67,6 +68,14 @@ describe('contentPlugin during vite build', () => {
     );
     expect(() => build(root)).toThrow(
       /broken link 02-gone\.md[\s\S]*content build: .*has no page on the site/,
+    );
+  });
+
+  it('fails the build with an R11 line for a lab whose solution misses a goal', () => {
+    const root = makeFixtureRoot();
+    writeLab(root, bakeryLab({ solution: bakeryLab().solution.slice(0, 3) }));
+    expect(() => build(root)).toThrow(
+      /R11 content\/labs\/01-baking-basics\/sort-the-bakes\.yaml +lab-m01-sort-the-bakes: the solution leaves g2 unmet: 1 of 2 right/,
     );
   });
 });

@@ -1,14 +1,17 @@
-/** The `--draft <file>` and `--demote` modes of pnpm content:validate (spec 2.7, 2.9 and 8.4). */
+/** The `--draft <file>` and `--demote` modes of pnpm content:validate (spec 2.7, 2.9, 5.1 and 8.4). */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { MAX_PER_CONCEPT } from '../../../src/engine/quotas.ts';
 import { formatFinding, isExamFile, redact, redactMessage } from '../rules/index.ts';
 import { r01 } from '../rules/r01-schema.ts';
+import { r02 } from '../rules/r02-ids.ts';
 import { r03 } from '../rules/r03-answer-counts.ts';
 import { r04 } from '../rules/r04-explanations.ts';
 import { r05 } from '../rules/r05-evidence.ts';
 import { r06 } from '../rules/r06-references.ts';
 import { r07 } from '../rules/r07-originality.ts';
+import { r08 } from '../rules/r08-style.ts';
+import { r11 } from '../rules/r11-labs.ts';
 import type { Rule } from '../rules/rule.ts';
 import type { Context, LessonNote, QuestionEntry } from './context.ts';
 import { examConceptCounts } from './coverage.ts';
@@ -67,6 +70,16 @@ export function draftCheck(ctx: Context, file: string): { questions: number; pro
     problems.push(`${file}  ${problem}`);
   }
   return { questions: entries.length, problems };
+}
+
+/** The rules a lab draft must pass, in id order: schema, ids, references, originality, style and the replay. */
+const LAB_DRAFT_RULES: readonly Rule[] = [r01, r02, r06, r07, r08, r11];
+
+/** Every problem `--draft` reports for one lab file: the findings of the lab rules on that file, R11 included. */
+export function labDraftCheck(ctx: Context, file: string): { labs: number; problems: string[] } {
+  const findings = LAB_DRAFT_RULES.flatMap((rule) => rule.run(ctx)).filter((f) => f.file === file);
+  findings.sort((a, b) => Number(a.rule.slice(1)) - Number(b.rule.slice(1)) || (a.line ?? 0) - (b.line ?? 0));
+  return { labs: ctx.labs.filter((e) => e.path === file).length, problems: findings.map(formatFinding) };
 }
 
 /** Sets every live question that fails R5 back to draft in its file, and returns one line per question it demoted. */

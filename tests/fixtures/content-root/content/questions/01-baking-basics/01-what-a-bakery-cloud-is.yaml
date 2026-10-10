@@ -54,3 +54,35 @@ questions:
     evidence:
       - Cabinets are billed only while dough proofs.
     takeaway: Rented cabinets cost money only for the minutes dough is proofing.
+  - id: q-d9p4r6
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: per-minute-rental
+    note: m01/what-a-bakery-cloud-is
+    task: "4.1"
+    level: 1
+    stem: The rye baker needs a proofing cabinet for half an hour each morning and none after lunch. How does the bakery cloud bill that cabinet?
+    options:
+      - id: a
+        text: For the minutes the rye dough is inside it
+        correct: true
+        why: Rented cabinets are billed only while dough proofs, so the empty afternoon costs nothing.
+      - id: b
+        text: For a full day whether or not it is used
+        why: A daily charge would bill the empty afternoon, which renting by the minute avoids.
+      - id: c
+        text: For a whole year paid in advance
+        why: A yearly payment buys idle months as well, the opposite of paying only while proofing.
+      - id: d
+        text: Nothing, because cabinets are always free
+        why: Cabinets do cost money, but only for the minutes dough spends inside them.
+    evidence:
+      - Cabinets are billed only while dough proofs.
+    takeaway: A rented cabinet costs money only while dough is proofing in it.
+    verified:
+      keyHash: 8f936a7d47b8
+      fullHash: d12a4da48328
+      checks: [solve-closed@1, solve-notes@1, critic@1]
+      on: "2026-10-10"

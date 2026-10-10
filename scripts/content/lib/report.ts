@@ -28,7 +28,10 @@ function styleLine(module: number, pool: Question['pool'], qs: readonly Question
   );
 }
 
-/** The default report: practice counts, one style line per module for each pool, and the concepts.md drift. */
+/**
+ * The default report: practice and lab counts, one style line per module for each pool, the live labs of each
+ * module, and the concepts.md drift.
+ */
 export function report(ctx: Context): string[] {
   const lessons = ctx.notes.filter((n) => n.kind === 'lesson');
   const modules = new Set(ctx.notes.map((n) => n.module)).size;
@@ -43,6 +46,12 @@ export function report(ctx: Context): string[] {
     `modules ${modules}, lessons ${lessons.length}, glossary terms ${terms}, concepts ${ctx.concepts.length} (${tested} tested)`,
     `questions: ${by('draft')} draft, ${by('live')} live, ${by('retired')} retired; live single ${liveBy('single')}, multi ${liveBy('multi')}, match ${liveBy('match')}`,
   ];
+  const labs = ctx.labs.filter((e) => e.lab.status === 'live').map((e) => e.lab);
+  const labsBy = (pick: (lab: (typeof labs)[number]) => string, value: string): number =>
+    labs.filter((lab) => pick(lab) === value).length;
+  out.push(
+    `Labs: ${labs.length} live (${labsBy((l) => l.tier, 'core')} core, ${labsBy((l) => l.tier, 'stretch')} stretch); sort ${labsBy((l) => l.engine, 'sort')}, configure ${labsBy((l) => l.engine, 'configure')}, simulate ${labsBy((l) => l.engine, 'simulate')}`,
+  );
   const modulesWithQuestions = [...new Set(ctx.questions.map((e) => e.module))].sort((a, b) => a - b);
   for (const m of modulesWithQuestions) {
     const of = (pool: Question['pool']): Question[] =>
@@ -50,6 +59,9 @@ export function report(ctx: Context): string[] {
     for (const line of [styleLine(m, 'practice', of('practice')), styleLine(m, 'exam', of('exam'))]) {
       if (line !== null) out.push(line);
     }
+  }
+  for (const m of [...new Set(labs.map((lab) => lab.module))].sort((a, b) => a - b)) {
+    out.push(`m${pad2(m)} labs: ${labs.filter((lab) => lab.module === m).length}`);
   }
   const drift = conceptsMdDrift(ctx);
   out.push(`concepts.md drift: ${drift.length}`, ...drift.slice(0, DRIFT_LINES).map((line) => `  ${line}`));
@@ -127,6 +139,52 @@ export function homed(ctx: Context, noteId: string): HomedConcepts {
     (e) => e.q.pool === 'practice' && e.noteId === noteId && e.q.status !== 'retired',
   ).length;
   return { note: noteId, title: note.fm?.title ?? note.slugFromPath, concepts, existing };
+}
+
+/** One module of `--lab-targets`: its folder, its labs, and each tested concept homed in it with its live practice ids. */
+export interface LabTarget {
+  module: number;
+  dir: string;
+  labs: string[];
+  concepts: {
+    id: string;
+    name: string;
+    note: string;
+    tasks: string[];
+    practice: { id: string; type: 'single' | 'multi' | 'match' }[];
+  }[];
+}
+
+/**
+ * `--lab-targets`: for each module, in order, its folder name, the lab ids already written, and each tested concept
+ * homed in it with the ids and types of its live practice questions (debrief candidates; never exam items).
+ */
+export function labTargets(ctx: Context): LabTarget[] {
+  const aliasOf = new Map<string, string>();
+  for (const c of ctx.concepts) for (const alias of c.aliases ?? []) aliasOf.set(alias, c.id);
+  const live = ctx.questions.filter((e) => e.q.pool === 'practice' && e.q.status === 'live');
+  const out: LabTarget[] = [];
+  for (const readme of ctx.notes.filter((n) => n.kind === 'module')) {
+    const m = readme.module;
+    const prefix = `m${pad2(m)}/`;
+    out.push({
+      module: m,
+      dir: readme.path.split('/')[1] ?? '',
+      labs: ctx.labs.filter((e) => e.module === m).map((e) => e.lab.id),
+      concepts: ctx.concepts
+        .filter((c) => c.tested !== false && c.home.startsWith(prefix))
+        .map((c) => ({
+          id: c.id,
+          name: c.name,
+          note: c.home,
+          tasks: [...c.tasks],
+          practice: live
+            .filter((e) => (aliasOf.get(e.q.concept) ?? e.q.concept) === c.id)
+            .map((e) => ({ id: e.q.id, type: e.q.type })),
+        })),
+    });
+  }
+  return out;
 }
 
 export interface Target {

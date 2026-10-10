@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
-import { asLive, demote, draftCheck } from '../../scripts/content/lib/draft.ts';
+import { asLive, demote, draftCheck, labDraftCheck } from '../../scripts/content/lib/draft.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { bakeryLab, dropFixtureLab, FIXTURE_LAB, writeLab } from '../fixtures/labs.ts';
 import {
   matchQuestion,
   POOL_FILE,
@@ -44,16 +45,16 @@ describe('asLive', () => {
 describe('draftCheck', () => {
   it('passes the fixture match, and reports only the coverage of the half-written file', () => {
     const { questions, problems } = draftCheck(load(makeFixtureRoot()), QUESTION_FILE);
-    expect(questions).toBe(2);
+    expect(questions).toBe(3);
     expect(problems.filter((p) => p.includes('q-3h8r2t'))).toEqual([]);
     expect(problems).toEqual([
       `${QUESTION_FILE}  concept shared-kitchen has 1 question that can still go live; it needs 2`,
-      `${QUESTION_FILE}  concept per-minute-rental has 1 question that can still go live; it needs 2`,
     ]);
   });
 
   it('reports an empty why only under --draft', () => {
     const root = makeFixtureRoot();
+    dropFixtureLab(root);
     const q = singleQuestion();
     const options = q.options.map((o) => (o.id === 'c' ? { ...o, why: '' } : o));
     writeQuestions(root, [{ ...q, options }, matchQuestion()]);
@@ -117,5 +118,38 @@ describe('draftCheck on an exam-pool file (spec 2.6)', () => {
     const root = makeFixtureRoot();
     writePool(root, [singleQuestion({ id: 'q-e00001', pool: 'exam' })]);
     expect(draftCheck(load(root), POOL_FILE).problems).toEqual([]);
+  });
+});
+
+describe('labDraftCheck (spec 5.1)', () => {
+  it('passes the fixture lab', () => {
+    expect(labDraftCheck(load(makeFixtureRoot()), FIXTURE_LAB)).toEqual({ labs: 1, problems: [] });
+  });
+
+  it('reports the R11 line of a lab whose solution misses a goal', () => {
+    const root = makeFixtureRoot();
+    writeLab(root, bakeryLab({ solution: bakeryLab().solution.slice(0, 3) }));
+    expect(labDraftCheck(load(root), FIXTURE_LAB)).toEqual({
+      labs: 1,
+      problems: [`R11 ${FIXTURE_LAB}  lab-m01-sort-the-bakes: the solution leaves g2 unmet: 1 of 2 right`],
+    });
+  });
+
+  it('reports a retired Support plan name, and the R1 line of a lab that breaks its schema', () => {
+    const root = makeFixtureRoot();
+    const lab = bakeryLab();
+    const spec = lab.spec as { cards: { text: string }[] };
+    const cards = spec.cards.map((c, i) =>
+      i === 0 ? { ...c, text: 'Phone help from Business Support at night' } : c,
+    );
+    writeLab(root, { ...lab, spec: { ...spec, cards } });
+    expect(labDraftCheck(load(root), FIXTURE_LAB).problems).toEqual([
+      `R11 ${FIXTURE_LAB}  lab-m01-sort-the-bakes: retired Support plan name in 'Phone help from Business Support at night'`,
+    ]);
+    writeLab(root, { ...lab, minutes: 1 });
+    expect(labDraftCheck(load(root), FIXTURE_LAB)).toEqual({
+      labs: 0,
+      problems: [`R1 ${FIXTURE_LAB}  minutes: Too small: expected number to be >=2`],
+    });
   });
 });
