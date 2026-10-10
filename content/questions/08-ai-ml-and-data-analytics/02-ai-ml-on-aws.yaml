@@ -1,0 +1,249 @@
+questions:
+  - id: q-fxtx9s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ai-ml-business-use-cases
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe wants a model that flags a card payment when it breaks that customer's normal spending pattern.
+      Which kind of machine learning job is this?
+    options:
+      - id: a
+        text: Predicting a future price
+        why: A prediction estimates a number ahead of time, such as next month's bean price, not whether one payment is odd.
+      - id: b
+        text: Detecting an anomaly
+        correct: true
+        why: Spotting a payment that breaks a customer's normal pattern is anomaly detection, the same job as catching banking fraud.
+      - id: c
+        text: Routing a spoken request
+        why: Routing decides where a caller should go based on what they say, which has nothing to do with odd payments.
+      - id: d
+        text: Recommending a related item
+        why: A recommendation suggests what a customer might buy next, rather than judging whether one payment looks unusual.
+    evidence:
+      - ML predicts (stock trends, prices of goods), decides (routing a caller by spoken request) and detects anomalies (online-banking fraud).
+    takeaway: Flagging a transaction that breaks a normal pattern is anomaly detection, one of the core jobs ML does for a business.
+    history: []
+    verified:
+      keyHash: 394957ecb4d0
+      fullHash: b6415a518e2a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yxxh59
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: ai-ml-business-use-cases
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which kinds of work can machine learning take on for a business?
+    options:
+      - id: a
+        text: Predicting values such as future prices
+        correct: true
+        why: Prediction is a core ML job, such as estimating where stock trends or prices of goods will head.
+      - id: b
+        text: Hard-coding rules such as a fixed pastry pairing
+        why: A hand-written rule is classical programming, the opposite of a model that learns its job from data.
+      - id: c
+        text: Making decisions such as routing a caller
+        correct: true
+        why: ML can decide where to send a caller by understanding what they asked for out loud.
+      - id: d
+        text: Detecting anomalies such as account fraud
+        correct: true
+        why: ML can learn normal behavior and flag the rare events, such as fraud, that do not fit it.
+      - id: e
+        text: Following scripts such as a rule-based phone menu
+        why: A rule-based menu runs fixed steps someone wrote, so it learns nothing from data and is not ML work.
+    evidence:
+      - ML predicts (stock trends, prices of goods), decides (routing a caller by spoken request) and detects anomalies (online-banking fraud).
+      - ML predicts, decides and detects anomalies.
+    takeaway: Business uses of ML fall into predicting values, making decisions and detecting anomalies.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 are both fixed rules or scripts, leaving the three ML-style items as the set.)"
+  - id: q-710dgr
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-ai-ml-stack
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      Match each cafe project to the tier of the AWS AI/ML stack it belongs in.
+    pairs:
+      - left: Read the daily specials aloud with a voice model that is ready to use
+        right: AI services
+        why: A pre-trained model that does one set job, like text to speech, sits in the AI services tier.
+      - left: Build and train its own sales model while AWS runs the tooling
+        right: ML services
+        why: Creating a custom model on a managed platform such as SageMaker AI is the ML services tier.
+      - left: Tune a fully custom model on purpose-built chips it sets up itself
+        right: ML frameworks and infrastructure
+        why: Specialized work on chosen frameworks and ML hardware the team manages is the bottom, fully custom tier.
+    evidence:
+      - "AI services: managed, pre-trained models for set jobs, such as Amazon Polly (text to speech) and Amazon Comprehend (text and sentiment)."
+      - "ML services: for more customization, you create, train and ship custom models in Amazon SageMaker AI while AWS manages infrastructure, tools and workflows, with experiments, data visuals, debugging and monitoring in one place."
+      - "ML frameworks and infrastructure: fully custom work for specialized needs, on purpose-built chips with popular frameworks or ML-optimized EC2."
+    takeaway: The more a project needs its own model and its own hardware choices, the further down the AI/ML stack it sits.
+    history: []
+    verified:
+      keyHash: 53d4febdb9cd
+      fullHash: f014d9c7e795
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-a15kj2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-ai-ml-stack
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which list orders the tiers of the AWS AI/ML stack from the most ready-made to the most custom?
+    options:
+      - id: a
+        text: ML frameworks and infrastructure, ML services, AI services
+        why: This runs the stack backward, from the most custom tier up to the ready-made one.
+      - id: b
+        text: ML services, ML frameworks and infrastructure, AI services
+        why: Pre-trained AI services are the most ready-made tier, so they belong first rather than last.
+      - id: c
+        text: AI services, ML services, ML frameworks and infrastructure
+        correct: true
+        why: Pre-trained AI services come first, managed custom models in ML services next, and fully custom frameworks last.
+      - id: d
+        text: ML frameworks and infrastructure, AI services, ML services
+        why: Frameworks and infrastructure are the fully custom tier, so they belong last, not ahead of the ready-made tier.
+    evidence:
+      - "Tiers run from ready-made (AI services) to your own models (SageMaker AI) to fully custom."
+      - "**AWS AI/ML stack**: AI services, ML services, and ML frameworks and infrastructure."
+    takeaway: The AWS AI/ML stack runs from pre-trained AI services, through ML services, to fully custom frameworks and infrastructure.
+    history: []
+    verified:
+      keyHash: 6a4a0ecbeeea
+      fullHash: 753af7790c15
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jk7gka
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-ml-services
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's small data team wants to build and train its own model that forecasts pastry demand from past sales.
+      They want AWS to handle the servers, tooling and monitoring for them.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon EC2 accelerated computing instances
+        why: These give raw ML hardware the team must set up and run itself, which is the fully custom tier they want to avoid.
+      - id: b
+        text: Amazon Comprehend
+        why: Comprehend is a pre-trained service for reading sentiment in text, not a place to train a demand model.
+      - id: c
+        text: Amazon SageMaker AI
+        correct: true
+        why: SageMaker AI lets the team create and train a custom model while AWS manages the infrastructure, tools and monitoring.
+      - id: d
+        text: Amazon Polly
+        why: Polly is a ready-made voice service that reads text aloud and cannot learn to forecast sales.
+    evidence:
+      - "ML services: for more customization, you create, train and ship custom models in Amazon SageMaker AI while AWS manages infrastructure, tools and workflows, with experiments, data visuals, debugging and monitoring in one place."
+      - "ML frameworks and infrastructure: fully custom work for specialized needs, on purpose-built chips with popular frameworks or ML-optimized EC2."
+    takeaway: A custom model with AWS managing the platform points to SageMaker AI, not self-managed ML instances or pre-trained AI services.
+    history: []
+    verified:
+      keyHash: 0b29c5cc3ad4
+      fullHash: 80d6652a789c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gs5f8c
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-ml-services
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      What does the ML services tier of the AWS AI/ML stack give a team?
+    options:
+      - id: a
+        text: Pre-trained models that each handle one set task out of the box
+        why: Ready-to-use models for one job describe the AI services tier, where no training is needed.
+      - id: b
+        text: A managed place to build, train and deploy models of their own
+        correct: true
+        why: The ML services tier, led by SageMaker AI, lets a team make custom models while AWS runs the platform.
+      - id: c
+        text: Purpose-built chips and frameworks they configure and run alone
+        why: Hardware and frameworks the team manages itself describe the fully custom frameworks and infrastructure tier.
+      - id: d
+        text: A voice model AWS already trained that reads text aloud
+        why: Text to speech from a pre-trained model, as Amazon Polly offers, is an AI services job with no model of the team's own.
+    evidence:
+      - "ML services: for more customization, you create, train and ship custom models in Amazon SageMaker AI while AWS manages infrastructure, tools and workflows, with experiments, data visuals, debugging and monitoring in one place."
+      - SageMaker AI is the main ML services example.
+    takeaway: The ML services tier is where a team builds its own models on a platform AWS manages, with SageMaker AI as the main example.
+    history: []
+    verified:
+      keyHash: e635a27e554d
+      fullHash: e9bdc9a8b52a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7dqjax
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ai-ml-business-use-cases
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's phone line should send each caller to catering, pickup orders or complaints, based on what the caller says they need.
+      Which kind of machine learning job is this?
+    options:
+      - id: a
+        text: Making a decision
+        correct: true
+        why: Choosing where each caller goes from their spoken request is ML making a decision.
+      - id: b
+        text: Predicting a value
+        why: A prediction estimates a number such as a future price, but here no value is being forecast.
+      - id: c
+        text: Detecting an anomaly
+        why: Anomaly detection flags unusual activity such as fraud, not the routing of normal calls.
+      - id: d
+        text: Recommending a product
+        why: A recommendation suggests items a customer may like, which is not what sending a caller onward does.
+    evidence:
+      - ML predicts (stock trends, prices of goods), decides (routing a caller by spoken request) and detects anomalies (online-banking fraud).
+    takeaway: Sending a caller to the right place from what they say is a decision task that ML can automate.
+    history: []
+    verified:
+      keyHash: 39c48a64b56e
+      fullHash: bea761da3ff9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

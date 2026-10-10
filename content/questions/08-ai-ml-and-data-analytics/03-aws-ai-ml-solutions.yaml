@@ -1,0 +1,688 @@
+questions:
+  - id: q-nmx60t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-ai-services
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe has no data scientists, and it wants to start sorting customer reviews by mood next week.
+      Which approach gets it there fastest?
+    options:
+      - id: a
+        text: Amazon SageMaker AI
+        why: SageMaker AI asks the team to build and train its own model, which needs ML skill the cafe lacks.
+      - id: b
+        text: Amazon Comprehend
+        correct: true
+        why: Comprehend comes pre-trained to read sentiment in text, so the cafe can sort reviews by mood with no ML staff.
+      - id: c
+        text: Amazon Personalize
+        why: Personalize is pre-trained too, but it makes per-customer picks rather than reading the mood of a review.
+      - id: d
+        text: Amazon Polly
+        why: Polly is a ready-made service, but it turns text into speech and judges nothing about how a review feels.
+    evidence:
+      - Ready-made and fastest to deploy; later tiers add customization and need more skill.
+      - "**Amazon Comprehend**: Text insights, such as sentiment."
+    takeaway: A team with no ML skill that needs review sentiment fast fits a pre-trained AI service such as Comprehend.
+    history: []
+    verified:
+      keyHash: 954364b707a3
+      fullHash: 1c893b4cc9ed
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-eexfj9
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-ai-services
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which statements describe the AWS pre-built AI services tier?
+    options:
+      - id: a
+        text: Its models come pre-trained by AWS
+        correct: true
+        why: Tier 1 services are trained by AWS already, so a customer just sends in data and gets results.
+      - id: b
+        text: It includes an IDE for experiments and debugging
+        why: An IDE with experiments and debugging is part of SageMaker AI in Tier 2, not of the ready-made services.
+      - id: c
+        text: It includes services for vision and search
+        correct: true
+        why: Vision and search is one of the service groups in this tier, next to language and conversation.
+      - id: d
+        text: It runs on infrastructure your team manages
+        why: Running your own infrastructure is the Tier 3 trade-off, while Tier 1 services run fully on AWS.
+      - id: e
+        text: It offers the most room to customize models
+        why: Customization grows in the later tiers, so the ready-made tier offers the least of it.
+    evidence:
+      - Ready-made and fastest to deploy; later tiers add customization and need more skill.
+      - "Groups: language (text or speech), vision and search (answers from files, images, video), conversation and personalization (talk to apps, tailored picks)."
+    takeaway: Tier 1 AI services come pre-trained by AWS and span groups such as language, vision and search.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 5 (key) 'pre-trained' echoes the stem's 'pre-built', a shared clue word."
+  - id: q-4xaq5m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-comprehend
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's feedback form has piled up a large backlog of written comments.
+      The owner wants to know which comments are unhappy without reading each one.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Lex
+        why: Lex builds chat and voice bots that talk with users; it does not score the mood of stored comments.
+      - id: b
+        text: Amazon Comprehend
+        correct: true
+        why: Comprehend uses NLP to detect sentiment across large amounts of text, such as customer comments.
+      - id: c
+        text: Amazon Translate
+        why: Translate converts text between languages, but it does not judge whether a comment is positive or negative.
+      - id: d
+        text: Amazon Rekognition
+        why: Rekognition analyzes images and video, not the feelings expressed in written text.
+    evidence:
+      - NLP for key phrases, language, sentiment in documents
+    takeaway: Finding the sentiment in large amounts of written feedback points to Amazon Comprehend.
+    history: []
+    verified:
+      keyHash: f56e62d57696
+      fullHash: 4b081c597d9e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mdprjh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-comprehend
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which AWS service reads documents and reports their key phrases and the language they are written in?
+    options:
+      - id: a
+        text: Amazon Kendra
+        why: Kendra searches company content to return answers, rather than reporting the phrases inside a document.
+      - id: b
+        text: Amazon Textract
+        why: Textract pulls the raw text out of forms and tables but does not analyze what that text means.
+      - id: c
+        text: Amazon Comprehend
+        correct: true
+        why: Comprehend applies NLP to text to find key phrases, the language used and the sentiment.
+      - id: d
+        text: Amazon Rekognition
+        why: Rekognition works on images and video, so it does not analyze the language of written documents.
+    evidence:
+      - NLP for key phrases, language, sentiment in documents
+      - "**Amazon Comprehend**: Text insights, such as sentiment."
+    takeaway: Amazon Comprehend draws insights such as key phrases, language and sentiment out of text.
+    history: []
+    verified:
+      keyHash: aff4ecae1f88
+      fullHash: 135ef640d42f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ysr1z5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-polly
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants its ordering kiosk to read the daily specials aloud for customers who cannot see the screen.
+      It has written text only and no recording studio.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Transcribe
+        why: Transcribe goes the other way, turning spoken audio into text, so it cannot voice the written specials.
+      - id: b
+        text: Amazon Polly
+        correct: true
+        why: Polly turns written text into lifelike speech, so the kiosk can speak the specials with no recording.
+      - id: c
+        text: Amazon Translate
+        why: Translate changes text from one language to another but produces no spoken audio.
+      - id: d
+        text: Amazon Comprehend
+        why: Comprehend analyzes text for meaning and sentiment and does not produce any speech.
+    evidence:
+      - "Text to lifelike speech; many languages, genders, accents"
+    takeaway: Turning written text into natural speech without a studio points to Amazon Polly.
+    history: []
+    verified:
+      keyHash: 34aa1d4fd919
+      fullHash: ede9a2d7f2ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wxy665
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-polly
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which AWS service produces natural-sounding speech from text in a choice of languages, genders and accents?
+    options:
+      - id: a
+        text: Amazon Lex
+        why: Lex runs conversations through language understanding and speech recognition rather than reading text aloud.
+      - id: b
+        text: Amazon Transcribe
+        why: Transcribe listens to speech and writes it down as text, the reverse of what the stem asks.
+      - id: c
+        text: Amazon Comprehend
+        why: Comprehend finds insights such as sentiment in text and returns no audio at all.
+      - id: d
+        text: Amazon Polly
+        correct: true
+        why: Polly is the text-to-speech service, with voices across many languages, genders and accents.
+    evidence:
+      - "**Amazon Polly**: Text to speech."
+    takeaway: Amazon Polly is the AWS text-to-speech service, the reverse of Amazon Transcribe.
+    history: []
+    verified:
+      keyHash: 597dd38926c8
+      fullHash: 14147b484cd6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-37t8z6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-translate
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      Tourists from many countries visit the cafe, and the owner wants the online menu shown in each visitor's own language.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Polly
+        why: Polly reads text aloud as speech but leaves it in the language it was written in.
+      - id: b
+        text: Amazon Comprehend
+        why: Comprehend can tell which language a text uses, but it does not rewrite the text in another one.
+      - id: c
+        text: Amazon Translate
+        correct: true
+        why: Translate converts text between languages, which suits a menu shown to visitors from many countries.
+      - id: d
+        text: Amazon Transcribe
+        why: Transcribe turns spoken audio into text and does not change the language of a written menu.
+    evidence:
+      - Live or batch translation for global communication
+    takeaway: Showing the same written content in several languages points to Amazon Translate.
+    history: []
+    verified:
+      keyHash: 684d52b9d70f
+      fullHash: 61971fcbaf70
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ew6pt5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-translate
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      A messaging app must convert user messages from one language to another, sometimes as they arrive and sometimes as a large overnight job.
+      Which AWS service handles both?
+    options:
+      - id: a
+        text: Amazon Kendra
+        why: Kendra searches company content for answers and does not convert messages between languages.
+      - id: b
+        text: Amazon Translate
+        correct: true
+        why: Translate works on text either live or in batches, so it covers both the instant and the overnight work.
+      - id: c
+        text: Amazon Comprehend
+        why: Comprehend detects the language and sentiment of a message but never rewrites it in another language.
+      - id: d
+        text: Amazon Polly
+        why: Polly speaks text aloud and offers no conversion of the message into a different language.
+    evidence:
+      - Live or batch translation for global communication
+      - "**Amazon Translate**: Text translation."
+    takeaway: Amazon Translate converts text between languages in real time or in batches.
+    history: []
+    verified:
+      keyHash: 058c13f7a7da
+      fullHash: 0dcfe0bc902a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jrynbv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-lex
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants a bot in its ordering app that customers can type to or talk to, which understands what they ask for and replies.
+      Which service builds that conversational interface?
+    options:
+      - id: a
+        text: Amazon Polly
+        why: Polly can give a bot a voice, but it does not understand what a customer types or says.
+      - id: b
+        text: Amazon Q Business
+        why: Q Business is an assistant that answers questions from company data, not a builder for customer chat bots.
+      - id: c
+        text: Amazon Lex
+        correct: true
+        why: Lex adds voice or text conversation to apps, using language understanding and speech recognition.
+      - id: d
+        text: Amazon Comprehend
+        why: Comprehend analyzes stored text for insights and does not hold a two-way conversation with a customer.
+    evidence:
+      - Lifelike voice or text chat via NLU and ASR (language understanding, speech recognition)
+    takeaway: Building a voice or text chat bot into an app points to Amazon Lex.
+    history: []
+    verified:
+      keyHash: 873755e2900d
+      fullHash: 18e9bc8e9ecf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5mm7y2
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-lex
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Amazon Lex works out what a user says or types by combining which technologies?
+    options:
+      - id: a
+        text: Natural language understanding
+        correct: true
+        why: Language understanding lets Lex work out what a user means from the words they use.
+      - id: b
+        text: Text translation between languages
+        why: Converting text between languages is the job of Amazon Translate, not how Lex interprets a request.
+      - id: c
+        text: Automatic speech recognition
+        correct: true
+        why: Speech recognition lets Lex turn a spoken request into words it can then interpret.
+      - id: d
+        text: Handwritten text extraction
+        why: Pulling handwriting from forms is what Amazon Textract does, and it plays no part in a conversation.
+      - id: e
+        text: Image and video labeling
+        why: Labeling images and video belongs to Amazon Rekognition, not to a conversational service.
+    evidence:
+      - Lifelike voice or text chat via NLU and ASR (language understanding, speech recognition)
+      - "**Amazon Lex**: Conversational app interfaces."
+    takeaway: Amazon Lex combines language understanding with speech recognition to power app conversations.
+    history: []
+    verified:
+      keyHash: 97e8e04db239
+      fullHash: 8ad0c042b0d7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0m2gyc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-personalize
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants its loyalty app to suggest drinks to each member based on what they ordered before.
+      It has no ML team and wants a ready-made service.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SageMaker AI
+        why: SageMaker AI could build such a model, but the cafe would have to create and train it, which needs ML skill.
+      - id: b
+        text: Amazon Kendra
+        why: Kendra answers search queries over company content rather than suggesting items to each customer.
+      - id: c
+        text: Amazon Comprehend
+        why: Comprehend analyzes text for sentiment and key phrases and does not recommend products.
+      - id: d
+        text: Amazon Personalize
+        correct: true
+        why: Personalize is a pre-built service that makes per-customer picks from past behavior with no ML team needed.
+    evidence:
+      - Per-customer picks from historical data
+      - "Tier 1: pre-trained and ready to use."
+    takeaway: Ready-made, per-customer recommendations from order history point to Amazon Personalize.
+    history: []
+    verified:
+      keyHash: e216547a271b
+      fullHash: f729a8d8d3bc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-v364mv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-personalize
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Amazon Personalize bases its recommendations on which kind of input?
+    options:
+      - id: a
+        text: Live speech recorded on support calls
+        why: Turning call audio into text is the work of Amazon Transcribe, not the input Personalize learns from.
+      - id: b
+        text: Records of past user activity
+        correct: true
+        why: Personalize learns from past behavior, such as earlier views or orders, to choose what each customer sees.
+      - id: c
+        text: Scanned paper forms and tables
+        why: Reading forms and tables is what Amazon Textract does, and it produces no recommendations.
+      - id: d
+        text: Photos and videos stored in S3
+        why: Analyzing stored images and video belongs to Amazon Rekognition rather than to a recommendation service.
+    evidence:
+      - Per-customer picks from historical data
+      - "**Amazon Personalize**: Personalized recommendations."
+    takeaway: Amazon Personalize turns each customer's past behavior into tailored recommendations.
+    history: []
+    verified:
+      keyHash: 301c2ed3ff9e
+      fullHash: 1f73c61a6aca
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3y01md
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sagemaker-ai
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe hired a data scientist to build and train its own model that forecasts pastry demand.
+      She would rather AWS run the servers for training and deployment.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon Personalize
+        why: Personalize builds product recommendations from customer data, not a custom pastry demand forecast.
+      - id: b
+        text: ML-optimized Amazon EC2
+        why: EC2 can train a custom model, but the cafe would then run and maintain those servers itself.
+      - id: c
+        text: Amazon SageMaker AI
+        correct: true
+        why: SageMaker AI lets her build, train and deploy her own model while AWS runs the infrastructure.
+      - id: d
+        text: Amazon Comprehend
+        why: Comprehend is a ready-made text analysis service and offers no way to train a forecasting model.
+    evidence:
+      - You build, train and deploy your own models while AWS runs the infrastructure.
+      - "Tier 2: your own models, no infrastructure to run."
+    takeaway: Building and training your own model without running the infrastructure points to SageMaker AI.
+    history: []
+    verified:
+      keyHash: c9078463eada
+      fullHash: e08061593f17
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nyzbg2
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-sagemaker-ai
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which benefits does Amazon SageMaker AI give a team that builds its own ML models?
+    options:
+      - id: a
+        text: Managed infrastructure that AWS runs
+        correct: true
+        why: AWS runs the servers behind training and deployment, so the team spends no time on hardware.
+      - id: b
+        text: Lifelike speech generated from typed text
+        why: Turning text into speech is what Amazon Polly does, not a benefit of building your own models.
+      - id: c
+        text: Standardized MLOps and audit governance
+        correct: true
+        why: SageMaker AI gives a consistent way to run and govern ML work, which helps when audits come.
+      - id: d
+        text: Pre-built components from a framework library
+        why: Framework libraries such as PyTorch supply those parts in Tier 3, where the team runs its own servers.
+      - id: e
+        text: Full control of servers your team runs
+        why: Running and controlling the servers yourself is the Tier 3 trade-off, while SageMaker AI has AWS run them.
+    evidence:
+      - "Benefits: tool choice for innovation (IDE for data scientists, no-code for analysts), fast, cheap managed infrastructure, and standardized MLOps and governance for audits."
+    takeaway: SageMaker AI pairs custom model building with managed infrastructure and standard MLOps governance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 (Polly text-to-speech) is off-category and easy to rule out next to SageMaker AI benefits."
+  - id: q-9tq910
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-frameworks-and-infrastructure
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      A coffee chain's ML experts need full control over every part of training a specialized model.
+      They also want to look after the servers it runs on themselves.
+      Which option fits?
+    options:
+      - id: a
+        text: PyTorch jobs in Amazon SageMaker AI
+        why: SageMaker AI can run PyTorch, but AWS runs the servers, so the team gives up the server control it asked to keep.
+      - id: b
+        text: Fine-tuning in Amazon Bedrock
+        why: Bedrock adapts existing foundation models on servers AWS runs, so the team neither shapes all training nor runs servers.
+      - id: c
+        text: PyTorch on ML-optimized Amazon EC2
+        correct: true
+        why: A framework on EC2 that the team manages gives full control over training, with the team running the servers.
+      - id: d
+        text: Pre-trained models in SageMaker JumpStart
+        why: JumpStart starts from pre-trained models on infrastructure AWS runs, which falls short of full control.
+    evidence:
+      - Full training control for specialized needs, using in-house skill, on infrastructure you manage.
+      - "Tier 3: full control, and you manage the infrastructure."
+    takeaway: Full training control on self-managed infrastructure points to ML frameworks on Tier 3.
+    history: []
+    verified:
+      keyHash: 250311c8db36
+      fullHash: 4884b793acc0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ysbndf
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: ml-frameworks-and-infrastructure
+    note: m08/aws-ai-ml-solutions
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which AWS services can supply the infrastructure that a team manages itself when it trains models with an ML framework?
+    options:
+      - id: a
+        text: Amazon EC2
+        correct: true
+        why: ML-optimized EC2 instances give the team servers it controls for training with a framework.
+      - id: b
+        text: AWS Fargate
+        why: Fargate runs containers on servers AWS manages, so it gives the team no infrastructure of its own to look after.
+      - id: c
+        text: Amazon EMR
+        correct: true
+        why: EMR runs large-scale data processing clusters that a team can use for framework-based ML work.
+      - id: d
+        text: AWS Lambda
+        why: Lambda runs short functions on servers AWS manages, so it neither hands the team its own infrastructure nor suits long training runs.
+      - id: e
+        text: Amazon ECS
+        correct: true
+        why: ECS runs containers that can package a framework and its training code on infrastructure the team manages.
+    evidence:
+      - "Infrastructure: ML-optimized EC2, Amazon EMR, Amazon ECS."
+    takeaway: Tier 3 ML frameworks run on infrastructure you manage, such as EC2, Amazon EMR and Amazon ECS.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Key option 4 (ECS) why says infrastructure the team manages, yet ECS can run on Fargate, which option 2 rejects as AWS-managed. ML frameworks infrastructure fits task 3.7 better than 3.3. Takeaway uses 'Tier 3' without the stem defining it."
+  - id: q-rvtxre
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-ai-services
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Compared with the other tiers of the AWS AI/ML stack, what is the main advantage of the AI services tier?
+    options:
+      - id: a
+        text: It standardizes MLOps and audit governance
+        why: Standardized MLOps and governance for audits is a benefit of SageMaker AI in the middle tier, not the ready-made services.
+      - id: b
+        text: It is the quickest tier to put into use
+        correct: true
+        why: The AI services come ready-made and already trained, so they are the fastest tier to deploy.
+      - id: c
+        text: It supports frameworks such as PyTorch
+        why: Frameworks such as PyTorch belong to the ML frameworks and infrastructure tier, where the team trains its own models.
+      - id: d
+        text: It offers an IDE built for data scientists
+        why: An IDE for data scientists is part of SageMaker AI, the tier where teams build and train their own models.
+    evidence:
+      - Ready-made and fastest to deploy; later tiers add customization and need more skill.
+    takeaway: The AI services tier trades customization for speed, since its ready-made models are the fastest to deploy.
+    history: []
+    verified:
+      keyHash: b5fbe1def605
+      fullHash: ea7366118568
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nz8jwx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sagemaker-ai
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's business analyst works only with no-code tools, while its data scientist prefers a full development environment.
+      Both want to create their own ML models in one managed AWS service that suits each way of working.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SageMaker AI
+        correct: true
+        why: SageMaker AI offers an IDE for data scientists and no-code tools for analysts, with AWS managing the infrastructure.
+      - id: b
+        text: Amazon Comprehend
+        why: Comprehend is a pre-trained text service, so neither person would create a model of their own with it.
+      - id: c
+        text: Amazon Personalize
+        why: Personalize returns recommendations from past activity rather than letting staff build models of their choosing.
+      - id: d
+        text: Amazon Bedrock
+        why: Bedrock offers managed foundation models from AI companies rather than tools for creating custom ML models.
+    evidence:
+      - "Benefits: tool choice for innovation (IDE for data scientists, no-code for analysts), fast, cheap managed infrastructure, and standardized MLOps and governance for audits."
+    takeaway: SageMaker AI fits coders and non-coders alike, with an IDE for data scientists and no-code tools for analysts.
+    history: []
+    verified:
+      keyHash: 74668f356d11
+      fullHash: 934e8093ed73
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-65tvh1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-frameworks-and-infrastructure
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      What does an ML framework such as TensorFlow give an experienced team?
+    options:
+      - id: a
+        text: Optimized components for training its own model
+        correct: true
+        why: A framework hands practitioners ready parts to build with, but the team still trains the model itself.
+      - id: b
+        text: Pre-trained models that are ready to call at once
+        why: Ready-to-call models are what the AI services tier offers, and a framework is not a pre-trained service.
+      - id: c
+        text: A managed workspace where AWS runs every server
+        why: A managed workspace describes SageMaker AI, while framework work runs on infrastructure the team manages.
+      - id: d
+        text: A hub of finished models to deploy in a few clicks
+        why: A few-click model hub describes SageMaker JumpStart, not a software library for building models.
+    evidence:
+      - An ML framework is a tool or software library that hands experienced practitioners optimized, pre-built components for model building.
+      - "It is not a pre-trained service like Tier 1: the team still trains its own model with it."
+    takeaway: An ML framework is a library of optimized building blocks, and the team still trains its own model with it.
+    history: []
+    verified:
+      keyHash: 310b60e354e5
+      fullHash: 684ef8fc3c62
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

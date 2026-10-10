@@ -1,0 +1,488 @@
+questions:
+  - id: q-rh0vxh
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: deep-learning
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      The theory behind deep learning has existed for decades, yet it became practical only recently.
+      What held it back for so long?
+    options:
+      - id: a
+        text: It waited on experts to hand-code every rule
+        why: Deep learning learns from data rather than written rules, so hand-coded rules were never what it lacked.
+      - id: b
+        text: It waited on hardware strong enough to train it
+        correct: true
+        why: The theory was ready long ago but waited on hardware strong enough to train layered networks.
+      - id: c
+        text: It waited on AWS to offer ready-made models
+        why: Pre-built AI services came long after the theory and are not what made layered networks trainable.
+      - id: d
+        text: It waited on cloud Regions near its users
+        why: Where the cloud sits affects latency for users, not whether a layered network can be trained at all.
+    evidence:
+      - ML subset with decades-old theory that needed modern hardware; neural networks pass summaries through layers of artificial neurons (math functions) to form a model, cracking harder problems like computer vision and NLP.
+    takeaway: Deep learning rests on decades-old theory that only became practical once modern hardware could run it.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true historical claim; options 1 and 3 are not real limits on ML and 2 describes the older approach.)"
+  - id: q-evmqy3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: deep-learning
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe tried hand-written rules to recognize pastries on a tray from a camera image, and the rules kept failing.
+      Which approach is suited to a hard computer vision problem like this?
+    options:
+      - id: a
+        text: Classical programming
+        why: Hand-coded fixed rules are exactly what kept failing, since pastries vary too much to describe rule by rule.
+      - id: b
+        text: Natural language processing
+        why: NLP works with spoken and written language, not with recognizing objects in a camera image.
+      - id: c
+        text: Deep learning
+        correct: true
+        why: Layered neural networks learn from examples and handle harder problems such as computer vision.
+      - id: d
+        text: Conversational AI
+        why: Conversational AI adapts its replies in a dialogue, which does not identify pastries in a picture.
+    evidence:
+      - ML subset with decades-old theory that needed modern hardware; neural networks pass summaries through layers of artificial neurons (math functions) to form a model, cracking harder problems like computer vision and NLP.
+      - "**Deep learning**: ML using layered neural networks."
+    takeaway: Hard perception problems such as computer vision are where deep learning's layered neural networks shine.
+    history: []
+    verified:
+      keyHash: 5e27ae5214f9
+      fullHash: 66aff41f12c6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yews69
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: neural-networks
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      A neural network is built from artificial neurons arranged in layers.
+      What is each artificial neuron?
+    options:
+      - id: a
+        text: A math function that passes on a summary
+        correct: true
+        why: Each neuron is a math function, and the layers hand summaries forward until they form a model.
+      - id: b
+        text: A hardware chip that speeds up the training
+        why: Hardware runs the network, but each neuron inside it is a math function, not a chip.
+      - id: c
+        text: A fixed rule that a programmer coded
+        why: Hand-written fixed rules belong to classical programming, while a network learns its behavior from data.
+      - id: d
+        text: A stored record of past training data
+        why: Past data is what a network learns from, not the neurons that process it.
+    evidence:
+      - ML subset with decades-old theory that needed modern hardware; neural networks pass summaries through layers of artificial neurons (math functions) to form a model, cracking harder problems like computer vision and NLP.
+      - "**Neural network**: Brain-inspired layers of artificial neurons."
+    takeaway: A neural network is brain-inspired layers of artificial neurons, each a math function passing summaries onward.
+    history: []
+    verified:
+      keyHash: f5e3b144d59a
+      fullHash: e431efd1a46c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5qbycx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: neural-networks
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      A data scientist explains the cafe's new model: input goes through one layer of math functions, each layer hands a summary to the next, and the stack as a whole forms the model.
+      What structure is she describing?
+    options:
+      - id: a
+        text: A data pipeline
+        why: A pipeline moves data through ingest, process and deliver steps, not through layers of math functions forming a model.
+      - id: b
+        text: A data warehouse
+        why: A warehouse stores structured data for reporting and does not pass summaries between layers of neurons.
+      - id: c
+        text: A rule-based system
+        why: A rule-based system follows fixed coded rules instead of layers of functions that form a learned model.
+      - id: d
+        text: A neural network
+        correct: true
+        why: Layers of artificial neurons that pass summaries forward to form a model is what a neural network is.
+    evidence:
+      - ML subset with decades-old theory that needed modern hardware; neural networks pass summaries through layers of artificial neurons (math functions) to form a model, cracking harder problems like computer vision and NLP.
+    takeaway: Layers of math functions passing summaries forward to build a model describe a neural network.
+    history: []
+    verified:
+      keyHash: 7c20f2e2e59b
+      fullHash: 10156325ceee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0av810
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: generative-ai
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      Each season the cafe wants fresh, original descriptions and short stories written for its new drinks, without staff drafting them.
+      Which approach produces new content like this?
+    options:
+      - id: a
+        text: Data analytics
+        why: Analytics finds trends in past data, such as top sellers, but does not write new stories or descriptions.
+      - id: b
+        text: Generative AI
+        correct: true
+        why: Generative AI uses deep learning to create original content such as stories and conversations.
+      - id: c
+        text: Classical programming
+        why: Fixed hand-coded rules can fill in templates but do not create genuinely new text.
+      - id: d
+        text: Predictive machine learning
+        why: Predictive ML forecasts from past patterns, such as which drinks will sell, rather than writing original stories.
+    evidence:
+      - Deep learning producing original content and ideas (conversations, stories, images, music), powered by foundation models (FMs), huge models pre-trained on massive data.
+    takeaway: When the goal is creating original content such as stories or images, the fit is generative AI.
+    history: []
+    verified:
+      keyHash: e1e531ac4de2
+      fullHash: d878e028ce81
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1k6gdz
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: generative-ai
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      How does generative AI relate to the other parts of artificial intelligence?
+    options:
+      - id: a
+        text: It creates new stories, images and music
+        why: That is what generative AI produces, not where it sits within the field of AI.
+      - id: b
+        text: It runs on FMs pre-trained on massive data
+        why: Foundation models power generative AI, but that says nothing about how it relates to ML or AI.
+      - id: c
+        text: It is one part of deep learning, itself in ML
+        correct: true
+        why: Generative AI is part of deep learning, which is part of ML, which is part of AI.
+      - id: d
+        text: It is offered on AWS through Amazon Bedrock
+        why: Bedrock is one way to use generative AI on AWS, not a statement of how it relates to the rest of AI.
+    evidence:
+      - Generative AI sits inside deep learning, inside ML, inside AI.
+    takeaway: Generative AI nests inside deep learning, which nests inside machine learning, which nests inside AI.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 uses the abbreviation 'FMs' without spelling out foundation models."
+  - id: q-fcnd42
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: foundation-models
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe wants one model to write menu text, answer customer chats and summarize reviews, where a classic ML model would handle only one of those jobs.
+      Which trait of a foundation model makes this possible?
+    options:
+      - id: a
+        text: It is offered through one Amazon Bedrock API
+        why: One API is how Bedrock serves its models, but access does not explain why one model can do three jobs.
+      - id: b
+        text: It adapts to many tasks after one training
+        correct: true
+        why: A single foundation model, trained once on massive data, serves many different jobs, such as these three.
+      - id: c
+        text: It forms its model through neuron layers
+        why: Layered neurons are how deep learning builds any model, including one-task models, so this is not the reason.
+      - id: d
+        text: It can be adapted privately with cafe data
+        why: Private adaptation tailors a model to the cafe, but it is not what lets one model cover many jobs.
+    evidence:
+      - One FM adapts to many tasks, while classic ML models do one.
+      - One FM, trained once on massive data, serves many jobs.
+    takeaway: A foundation model is trained once on massive data and then adapts to many tasks, unlike a one-task ML model.
+    history: []
+    verified:
+      keyHash: 364f6358efd0
+      fullHash: a15593288304
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qew3kx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: foundation-models
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants one huge pre-trained model that can create promo images and short videos for its menu as well as text.
+      Which kind of model fits?
+    options:
+      - id: a
+        text: A large language model
+        why: A large language model is trained on text for human language, so it does not cover images and video.
+      - id: b
+        text: A classic ML model
+        why: A classic ML model does one task, while the cafe needs one model for several kinds of output.
+      - id: c
+        text: A foundation model
+        correct: true
+        why: Foundation models are huge pre-trained models that can make images, video and music as well as text.
+      - id: d
+        text: A rule-based system
+        why: A rule-based system follows coded rules and cannot generate new images or videos.
+    evidence:
+      - LLMs are popular text-trained FMs for human language; FMs also make video, images, music.
+      - Deep learning producing original content and ideas (conversations, stories, images, music), powered by foundation models (FMs), huge models pre-trained on massive data.
+    takeaway: Foundation models can produce images, video and music, while an LLM is the text-focused kind of FM.
+    history: []
+    verified:
+      keyHash: 67ce003a36cd
+      fullHash: b4bd244bede4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-g2mv9q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: large-language-models
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which description fits a large language model?
+    options:
+      - id: a
+        text: A foundation model trained on text
+        correct: true
+        why: An LLM is a popular kind of foundation model trained on text to work with human language.
+      - id: b
+        text: Machine learning with layered networks
+        why: That describes deep learning as a whole, not the text-trained model an LLM is.
+      - id: c
+        text: Layers of brain-inspired math neurons
+        why: That describes a neural network in general rather than a text-trained foundation model.
+      - id: d
+        text: An AI assistant tailored to a business
+        why: That describes Amazon Q, an assistant product, not the text-trained model type an LLM is.
+    evidence:
+      - LLMs are popular text-trained FMs for human language; FMs also make video, images, music.
+      - "**Large language model (LLM)**: Text-trained FM."
+    takeaway: A large language model is a foundation model trained on text to understand and produce human language.
+    history: []
+    verified:
+      keyHash: 18af90458e8f
+      fullHash: 33821e476e77
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xr4dc7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: large-language-models
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe wants a chat helper that reads customers' written questions about allergens and replies in natural, everyday sentences.
+      Which kind of foundation model is built for this kind of work?
+    options:
+      - id: a
+        text: An image generation model
+        why: An image model creates pictures, while the cafe needs written replies in human language.
+      - id: b
+        text: A large language model
+        correct: true
+        why: An LLM is the text-trained foundation model made for understanding and writing human language.
+      - id: c
+        text: A music generation model
+        why: A music model produces audio, which does not answer typed questions in sentences.
+      - id: d
+        text: A video generation model
+        why: A video model produces clips, not the written conversation the cafe wants.
+    evidence:
+      - LLMs are popular text-trained FMs for human language; FMs also make video, images, music.
+    takeaway: Work that reads and writes human language, such as a text chat helper, calls for a large language model.
+    history: []
+    verified:
+      keyHash: def609afa378
+      fullHash: e0b7f8d82089
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4rfy1m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      Cafe managers want a ready-made AI assistant they can chat with that draws on the cafe's own internal documents to answer questions and carry out tasks.
+      Which AWS offering fits?
+    options:
+      - id: a
+        text: Amazon Bedrock
+        why: Bedrock gives access to foundation models through one API for building your own apps, not a ready-made assistant.
+      - id: b
+        text: Amazon SageMaker JumpStart
+        why: JumpStart is a hub for deploying and customizing models and prebuilt solutions, not an assistant to chat with.
+      - id: c
+        text: Amazon Polly
+        why: Polly turns text into speech and does not answer questions from the cafe's documents.
+      - id: d
+        text: Amazon Q
+        correct: true
+        why: Amazon Q is an assistant tied to company repositories that chats with context, offers solutions and takes actions.
+    evidence:
+      - "Amazon Q: assistant tied to company repositories for contextual chat, solutions and actions (Q Business, Q Developer)."
+    takeaway: A ready-made generative AI assistant grounded in a company's own data points to Amazon Q.
+    history: []
+    verified:
+      keyHash: 8aff02e82b86
+      fullHash: 960a5bea5c75
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3fzjqw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      What gives Amazon Q the context that makes its answers specific to one business?
+    options:
+      - id: a
+        text: It comes as Q Business and Q Developer
+        why: The two editions are real, but they do not explain where business-specific context comes from.
+      - id: b
+        text: It can take actions as well as chat
+        why: Taking actions is something Q does, not the source of the context behind its answers.
+      - id: c
+        text: It connects to the company's repositories
+        correct: true
+        why: Amazon Q connects to company repositories, which gives its chat, solutions and actions their context.
+      - id: d
+        text: It is one of the AWS generative AI options
+        why: Being an AWS generative AI offering is true but does not say where its business context comes from.
+    evidence:
+      - "Amazon Q: assistant tied to company repositories for contextual chat, solutions and actions (Q Business, Q Developer)."
+      - "**Amazon Q**: Business-tailored AI assistant."
+    takeaway: Amazon Q tailors its answers by connecting to the company's own data repositories.
+    history: []
+    verified:
+      keyHash: ee6ae507cb91
+      fullHash: 7435ca2ba385
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jawr99
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: deep-learning
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which description fits deep learning?
+    options:
+      - id: a
+        text: Machine learning built on layered neural networks
+        correct: true
+        why: Deep learning is the part of ML that forms its models from layers of artificial neurons.
+      - id: b
+        text: A branch of generative AI that makes new content
+        why: The nesting runs the other way, since generative AI is a part of deep learning.
+      - id: c
+        text: A set of fixed rules that programmers write by hand
+        why: Hand-written rules involve no learning from data, which is the opposite of deep learning.
+      - id: d
+        text: One huge pre-trained model that serves many tasks
+        why: That describes a foundation model, which deep learning makes possible but is not deep learning itself.
+    evidence:
+      - "**Deep learning**: ML using layered neural networks."
+      - Generative AI sits inside deep learning, inside ML, inside AI.
+    takeaway: Deep learning is the part of machine learning that builds its models from layered neural networks.
+    history: []
+    verified:
+      keyHash: 8fbc0fbedb9c
+      fullHash: b621a136d152
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1f5mjv
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: generative-ai
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      The cafe's marketing team uses generative AI to draft short stories about its drinks.
+      What kind of model does that work behind the scenes?
+    options:
+      - id: a
+        text: Rules written by hand by programmers
+        why: Hand-written rules cannot produce original stories, which generative AI creates from learned patterns.
+      - id: b
+        text: Huge models pre-trained on vast data
+        correct: true
+        why: Generative AI is powered by foundation models, huge models pre-trained on massive amounts of data.
+      - id: c
+        text: Classic ML models built for one task each
+        why: A classic single-task model is the contrast to the multi-task foundation models behind generative AI.
+      - id: d
+        text: Small models trained only on cafe data
+        why: A small model trained on one cafe's data lacks the massive pre-training that the foundation models behind generative AI have.
+    evidence:
+      - Deep learning producing original content and ideas (conversations, stories, images, music), powered by foundation models (FMs), huge models pre-trained on massive data.
+    takeaway: Generative AI runs on foundation models, which are huge models pre-trained on massive data.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the definition of foundation models; the other options do not describe generative AI.)"

@@ -1,0 +1,535 @@
+questions:
+  - id: q-pebdjx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-kinesis-data-streams
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants to take in kiosk orders as the first step of its data pipeline.
+      A live stock board and a fraud analytics app must both read every order the moment it lands, with no lag.
+      Which service should ingest the order data?
+    options:
+      - id: a
+        text: Amazon Kinesis Data Streams
+        correct: true
+        why: Kinesis Data Streams ingests data in real time and lets several apps, such as the stock board and the fraud check, read one stream at once.
+      - id: b
+        text: Amazon Data Firehose
+        why: Firehose delivers data in near real time to a destination, so it adds the small lag the cafe cannot accept.
+      - id: c
+        text: Amazon Simple Queue Service (Amazon SQS)
+        why: A queue hands each message to one consumer for processing, rather than letting two readers see every order live.
+      - id: d
+        text: AWS Glue
+        why: Glue runs transform jobs on data already stored, so it cannot ingest orders for live reads at the moment they land.
+    evidence:
+      - Kinesis Data Streams is real time with many readers, while Firehose is near real time with managed delivery.
+      - "Live stock data feeding instant trades: Kinesis Data Streams."
+    takeaway: When several apps must read the same events the moment they happen, ingest them with Kinesis Data Streams.
+    history: []
+    verified:
+      keyHash: 37a510e04623
+      fullHash: f00c91910968
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-74tgrr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-kinesis-data-streams
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which serverless service ingests terabytes of events from apps and sensors in real time, and can run in an on-demand mode that scales itself?
+    options:
+      - id: a
+        text: Amazon Data Firehose
+        why: Firehose works in near real time and focuses on delivering data to a destination, not on real-time reads.
+      - id: b
+        text: AWS Glue
+        why: Glue prepares and transforms data that is already stored, so it is not the ingestion step.
+      - id: c
+        text: Amazon Kinesis Data Streams
+        correct: true
+        why: It is the serverless real-time ingestion service, and its on-demand mode provisions and scales capacity for you.
+      - id: d
+        text: Amazon Simple Queue Service (Amazon SQS)
+        why: SQS decouples parts of an application with message queues rather than ingesting analytics data in real time.
+    evidence:
+      - "**Amazon Kinesis Data Streams**: Serverless real-time ingestion."
+    takeaway: Kinesis Data Streams is the serverless, real-time way to ingest large volumes of app and sensor events.
+    history: []
+    verified:
+      keyHash: c9ab002891b7
+      fullHash: 30acade93bfb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-a0tbg2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-data-firehose
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants readings from every espresso machine collected and landed in its data lake for long-term trend analysis.
+      A few seconds of delay is fine, and nobody wants to build the delivery step.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Kinesis Data Streams
+        why: It suits instant reads by several apps, which this long-term analysis does not need, and it leaves delivery to the cafe.
+      - id: b
+        text: Amazon Data Firehose
+        correct: true
+        why: Firehose is fully managed and delivers streaming data in near real time into lakes, warehouses or analytics tools.
+      - id: c
+        text: AWS DataSync
+        why: DataSync copies files between storage systems, not continuous readings streamed from machines.
+      - id: d
+        text: AWS Glue
+        why: Glue transforms data after it is stored, so it does not collect the machine readings in the first place.
+    evidence:
+      - Kinesis Data Streams is real time with many readers, while Firehose is near real time with managed delivery.
+      - "Gathering every smart home device's data for long-term analysis: Data Firehose."
+    takeaway: Near-real-time streaming that must land in a store with no delivery code to manage points to Amazon Data Firehose.
+    history: []
+    verified:
+      keyHash: 64001cdec1e0
+      fullHash: c20baa8f4778
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1ka2ax
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-data-firehose
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which managed service ingests streaming data in near real time and takes care of delivering it to a destination store?
+    options:
+      - id: a
+        text: Amazon EMR
+        why: EMR processes big data on Apache frameworks, so it does not ingest streams or manage their delivery.
+      - id: b
+        text: Amazon Athena
+        why: Athena runs SQL queries on data that is already stored, so it does not ingest or deliver streams.
+      - id: c
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams is built for real-time reads by many apps, and it does not manage delivery into a destination store.
+      - id: d
+        text: Amazon Data Firehose
+        correct: true
+        why: Firehose captures streaming data and delivers it in near real time to destinations such as lakes and warehouses.
+    evidence:
+      - "**Amazon Data Firehose**: Managed near-real-time ingestion and delivery."
+      - Kinesis Data Streams is real time with many readers, while Firehose is near real time with managed delivery.
+    takeaway: Amazon Data Firehose is the managed, near-real-time service that ingests streams and delivers them to a store.
+    history: []
+    verified:
+      keyHash: 2f237c337606
+      fullHash: 881fb13e04bc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8vc8kr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-redshift
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe chain wants one store for years of structured sales records from every branch, organized for business intelligence reports at petabyte scale.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon S3
+        why: S3 is the usual data lake for raw data of any shape, not a warehouse organized for business intelligence.
+      - id: b
+        text: Amazon Redshift
+        correct: true
+        why: Redshift is a managed data warehouse for structured or semistructured data at petabyte scale, built for reporting.
+      - id: c
+        text: Amazon DynamoDB
+        why: DynamoDB is a key-value database for fast app lookups, not a warehouse for analytical reports.
+      - id: d
+        text: Amazon ElastiCache
+        why: ElastiCache keeps data in memory to speed up reads, not years of records for business intelligence.
+    evidence:
+      - S3 is the lake for raw data of any shape, while Redshift is the warehouse for structured or semistructured data.
+      - "**Amazon Redshift**: Managed data warehouse."
+    takeaway: Structured data pooled for business intelligence at large scale belongs in the Amazon Redshift data warehouse.
+    history: []
+    verified:
+      keyHash: 7408418cd740
+      fullHash: 2cf8088a3d82
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nsq3kp
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-redshift
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which statements describe Amazon Redshift?
+    options:
+      - id: a
+        text: It runs SQL on big datasets using massively parallel processing.
+        correct: true
+        why: Columnar storage and massively parallel processing are how Redshift handles frequent, heavy SQL.
+      - id: b
+        text: It runs SQL on data where it lives and bills for each query.
+        why: Querying data in place with per-query billing describes Amazon Athena, not Redshift.
+      - id: c
+        text: It stores structured or semistructured data for business reports.
+        correct: true
+        why: Redshift is the managed data warehouse of the pipeline, built for structured data used in business intelligence.
+      - id: d
+        text: It stores raw data of any shape as the usual data lake.
+        why: An elastic object store used as a data lake describes Amazon S3, not Redshift.
+      - id: e
+        text: It queries sources on premises or in other clouds as well.
+        why: Serverless SQL over sources on premises or in other clouds describes Amazon Athena, not Redshift.
+    evidence:
+      - Athena queries data where it lives and bills per query, while Redshift handles frequent, heavy SQL.
+      - S3 is the lake for raw data of any shape, while Redshift is the warehouse for structured or semistructured data.
+    takeaway: Redshift is both the pipeline's data warehouse and a fast engine for heavy, frequent SQL on large datasets.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 3 and 4, the keys, are the two longest options, a length tell."
+  - id: q-8e2n1p
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-glue
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's small analytics team has no big data specialists.
+      It wants to clean and reshape nightly sales files with a visual job builder and built-in scheduling.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EMR
+        why: EMR suits complex jobs and custom framework settings run by people with big data expertise, which this team lacks.
+      - id: b
+        text: Amazon Athena
+        why: Athena queries data with SQL, but it does not build and schedule transformation jobs.
+      - id: c
+        text: AWS Glue
+        correct: true
+        why: Glue is managed ETL with a visual job builder and scheduling, a simple way to prepare data without specialists.
+      - id: d
+        text: Amazon Data Firehose
+        why: Firehose ingests and delivers streaming data rather than running scheduled jobs on stored sales files.
+    evidence:
+      - Glue suits a simplified approach, while EMR suits complex jobs, big data expertise and custom configurations.
+      - "**AWS Glue**: Managed ETL service."
+    takeaway: For simple, managed data preparation without big data experts, choose AWS Glue over Amazon EMR.
+    history: []
+    verified:
+      keyHash: dba7b90168f0
+      fullHash: 98aa7dfecaf0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-d5crf3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-glue
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which service includes a central metadata repository that keeps an inventory of an organization's data for analytics tools and transformation jobs to use?
+    options:
+      - id: a
+        text: Amazon Redshift
+        why: Redshift stores and queries warehouse data, but the central catalog of metadata lives elsewhere.
+      - id: b
+        text: AWS Glue
+        correct: true
+        why: The Data Catalog is a feature of Glue that serves metadata to stores, analytics tools and Glue jobs.
+      - id: c
+        text: Amazon Athena
+        why: Athena reads metadata to run its queries, but it is not the service that keeps the central catalog.
+      - id: d
+        text: Amazon EMR
+        why: EMR processes big data on Apache frameworks rather than acting as the pipeline's metadata inventory.
+    evidence:
+      - "**AWS Glue Data Catalog**: Central metadata repository within AWS Glue."
+    takeaway: The cataloging step of a pipeline uses the AWS Glue Data Catalog, a central store of metadata.
+    history: []
+    verified:
+      keyHash: 9f78a17ff5b6
+      fullHash: 406b1ed0b972
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6nmm7j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-emr
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe chain hired data engineers who know Apache Spark well.
+      They need a huge processing job with custom framework settings, and they want AWS to provision and scale the clusters.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Glue
+        why: Glue favors a simplified, code-free approach, while this team needs custom settings for a complex job.
+      - id: b
+        text: Amazon EMR
+        correct: true
+        why: EMR runs large jobs on Spark, Hadoop or Hive and handles the provisioning and scaling of the clusters.
+      - id: c
+        text: Amazon Athena
+        why: Athena runs SQL queries on stored data rather than custom Spark processing jobs.
+      - id: d
+        text: AWS Batch
+        why: Batch schedules general batch computing jobs, not managed Apache big data frameworks.
+    evidence:
+      - Glue suits a simplified approach, while EMR suits complex jobs, big data expertise and custom configurations.
+    takeaway: Complex big data jobs needing custom Apache framework settings and expertise point to Amazon EMR, not AWS Glue.
+    history: []
+    verified:
+      keyHash: 1ab7fc6b9d0a
+      fullHash: 156c0b4e766a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-93z28s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-emr
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which service runs big data processing on Apache Hadoop or Hive clusters and handles the provisioning and scaling of those clusters?
+    options:
+      - id: a
+        text: Amazon Redshift
+        why: Redshift is a data warehouse that runs SQL, not a platform for Apache Hadoop or Hive clusters.
+      - id: b
+        text: Amazon Athena
+        why: Athena is serverless SQL billed per query, so there are no Hadoop or Hive clusters for it to provision.
+      - id: c
+        text: AWS Batch
+        why: Batch runs general batch computing jobs and does not manage Apache big data frameworks.
+      - id: d
+        text: Amazon EMR
+        correct: true
+        why: EMR runs big data processing on Apache frameworks such as Hadoop and Hive, and it provisions and scales the clusters.
+    evidence:
+      - "**Amazon EMR**: Big data processing on Apache frameworks."
+    takeaway: Amazon EMR is the AWS service for big data processing on Apache frameworks like Spark, Hadoop and Hive.
+    history: []
+    verified:
+      keyHash: a79a903b6366
+      fullHash: f307a6038fce
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-20jg2m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-quicksight
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe owner, who has no coding skills, wants interactive dashboards and reports of weekly sales by branch without running any servers.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon OpenSearch Service
+        why: OpenSearch Service targets real-time search and monitoring of operational data, not business intelligence reports.
+      - id: b
+        text: Amazon Quick Sight
+        correct: true
+        why: Quick Sight lets non-experts build interactive business intelligence dashboards and reports with no infrastructure.
+      - id: c
+        text: Amazon Athena
+        why: Athena runs SQL queries but does not give the owner dashboards or reports to share.
+      - id: d
+        text: Amazon CloudWatch
+        why: CloudWatch shows metrics about AWS resources and apps, not business reports on sales.
+    evidence:
+      - QuickSight is for BI dashboards, while OpenSearch Service is for real-time search and monitoring.
+      - "**Amazon QuickSight**: BI dashboards and reports."
+    takeaway: Business intelligence dashboards that non-experts build themselves point to Amazon Quick Sight.
+    history: []
+    verified:
+      keyHash: 857698c60d7c
+      fullHash: 1a566d304ac9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-71mv1r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-quicksight
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which AWS service delivers AI-powered business intelligence at the visualize step of a data pipeline?
+    options:
+      - id: a
+        text: Amazon Redshift
+        why: Redshift stores and queries warehouse data, but it is not where users build the visuals.
+      - id: b
+        text: Amazon SageMaker AI
+        why: SageMaker AI builds and trains machine learning models rather than business intelligence dashboards.
+      - id: c
+        text: Amazon Quick Sight
+        correct: true
+        why: Quick Sight is the AI-powered business intelligence service for dashboards and reports at the end of the pipeline.
+      - id: d
+        text: Amazon OpenSearch Service
+        why: OpenSearch Service also visualizes data, but for real-time search and monitoring rather than business intelligence.
+    evidence:
+      - "AWS now spells the business intelligence service the course calls QuickSight as Amazon Quick Sight, which delivers AI-powered business intelligence."
+    takeaway: Amazon Quick Sight is AWS's AI-powered business intelligence service for the visualize phase.
+    history: []
+    verified:
+      keyHash: d730b7c7ab13
+      fullHash: edd5bdc39967
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nq5kfg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-opensearch-service
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe wants website visitors to find menu items by typing a keyword, and its operations team wants to analyze app logs as they arrive.
+      Which service covers both needs?
+    options:
+      - id: a
+        text: Amazon Quick Sight
+        why: Quick Sight builds business intelligence dashboards, not website search or live log analytics.
+      - id: b
+        text: Amazon Athena
+        why: Athena runs SQL queries on stored data, which does not power a website search box.
+      - id: c
+        text: Amazon Redshift
+        why: Redshift is a data warehouse for heavy SQL, not a real-time search and log analytics engine.
+      - id: d
+        text: Amazon OpenSearch Service
+        correct: true
+        why: OpenSearch Service is used for website search and log analytics, searching and analyzing data live.
+    evidence:
+      - QuickSight is for BI dashboards, while OpenSearch Service is for real-time search and monitoring.
+    takeaway: Website search and live log analytics point to Amazon OpenSearch Service, not a BI tool.
+    history: []
+    verified:
+      keyHash: 51d2158afe4b
+      fullHash: 8e56cc4e3315
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jjvfze
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-opensearch-service
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's app team wants to watch traces and metrics from its ordering app live on dashboards, and to pull up matching entries by asking a question in plain language.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon OpenSearch Service
+        correct: true
+        why: OpenSearch Service monitors operational data live, with dashboards for logs, traces and metrics and lookups in natural language.
+      - id: b
+        text: AWS Glue
+        why: Glue prepares and transforms stored data, so it does not offer live monitoring dashboards.
+      - id: c
+        text: Amazon EMR
+        why: EMR runs big data processing jobs rather than live search over the app's traces and metrics.
+      - id: d
+        text: Amazon Data Firehose
+        why: Firehose can deliver data to an analytics tool, but it does not search or chart that data itself.
+    evidence:
+      - "**Amazon OpenSearch Service**: Real-time search and monitoring."
+    takeaway: Live monitoring of operational data such as traces and metrics, with lookups in natural language, is a job for OpenSearch Service.
+    history: []
+    verified:
+      keyHash: 158e1136c571
+      fullHash: efc691c73469
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xg1jcz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-redshift
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      Many times each day, the cafe chain's analysts run complex SQL against a huge store of branch sales data.
+      They want a service built for frequent, heavy querying of that much data.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Athena
+        why: Athena bills per query over data where it lives, which suits occasional queries more than constant heavy SQL.
+      - id: b
+        text: Amazon OpenSearch Service
+        why: OpenSearch Service searches and monitors live operational data rather than running complex SQL reports.
+      - id: c
+        text: AWS Glue
+        why: Glue prepares and transforms data for analysis, but it is not where analysts run their SQL reports.
+      - id: d
+        text: Amazon Redshift
+        correct: true
+        why: Redshift pairs columnar storage with massively parallel processing for frequent, complex SQL on big datasets.
+    evidence:
+      - Athena queries data where it lives and bills per query, while Redshift handles frequent, heavy SQL.
+    takeaway: Frequent, complex SQL over big datasets points to Redshift, while Athena suits pay-per-query lookups in place.
+    history: []
+    verified:
+      keyHash: 3235ecf694a4
+      fullHash: 54c462c8c3a8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

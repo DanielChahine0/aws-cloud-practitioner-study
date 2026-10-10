@@ -1,0 +1,452 @@
+questions:
+  - id: q-gmg2z6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: artificial-intelligence
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which term names the wide field of computer systems built to carry out
+      tasks that normally take a person?
+    options:
+      - id: a
+        text: Machine learning
+        why: Machine learning is one narrower branch of this field, not the whole field itself.
+      - id: b
+        text: Artificial intelligence
+        correct: true
+        why: AI is the umbrella field for computer systems that perform humanlike tasks.
+      - id: c
+        text: Natural language processing
+        why: NLP covers understanding human language, which is only one humanlike task.
+      - id: d
+        text: Classical programming
+        why: Classical programming hand-codes fixed rules and is not a field of humanlike systems.
+    evidence:
+      - "AI: the broad field of computer systems that do humanlike tasks."
+    takeaway: AI is the broad umbrella for computer systems that perform tasks people normally do.
+    history: []
+    verified:
+      keyHash: 401a58910371
+      fullHash: 467ebf021f50
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-am3hnv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: artificial-intelligence
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe manager reads that the new pastry recommender is built with
+      machine learning and asks why that also makes it an AI system. Which
+      statement explains it?
+    options:
+      - id: a
+        text: AI kiosks can also take spoken counter orders.
+        why: True of conversational AI, but it says nothing about why an ML recommender counts as AI.
+      - id: b
+        text: AI services on AWS offer pre-built models too.
+        why: True of AWS, but pre-built models do not explain how ML relates to the AI field.
+      - id: c
+        text: ML is one branch inside the wider field of AI.
+        correct: true
+        why: ML is the part of AI where machines learn tasks from data, so the recommender is also AI.
+      - id: d
+        text: AI can forecast new hits from social trends.
+        why: True of predictive AI, but a forecasting use does not place ML inside the AI field.
+    evidence:
+      - "AI: the broad field of computer systems that do humanlike tasks."
+      - "ML: AI where machines learn complex jobs from data, not spelled-out instructions."
+    takeaway: Machine learning is a subset of AI, so an ML recommender is also an AI system.
+    history: []
+    verified:
+      keyHash: 63920374cd4a
+      fullHash: 51f1f94e4acf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-mkqfj1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: machine-learning
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe wants each regular to get a snack suggestion shaped by that
+      person's own past orders, with the system working out the patterns from
+      sales records on its own. Which approach fits?
+    options:
+      - id: a
+        text: Classical programming
+        why: Hand-written rules give every customer the same pairing and never learn from the records.
+      - id: b
+        text: Natural language processing
+        why: NLP lets a system understand human speech, which does not tailor snacks from order history.
+      - id: c
+        text: Machine learning
+        correct: true
+        why: ML learns patterns from data instead of written rules, so it can tailor each suggestion.
+      - id: d
+        text: Image recognition
+        why: Image recognition identifies what is in pictures, and these suggestions come from sales records.
+    evidence:
+      - "ML: AI where machines learn complex jobs from data, not spelled-out instructions."
+      - "Pastry suggestions from each customer's history: an ML recommendation engine, a headline ML use case."
+    takeaway: Suggestions tailored per customer from learned patterns in sales data point to machine learning.
+    history: []
+    verified:
+      keyHash: 547b87b79211
+      fullHash: 1fb6b4be638c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-jx9jwb
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: machine-learning
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 1
+    stem: >-
+      The cafe wants a machine learning system to suggest snacks. Which
+      statements explain why it must first collect clean sales data?
+    options:
+      - id: a
+        text: Inference applies a trained model to new order data.
+        why: True, but inference uses a model that already exists and does not explain the need for clean data.
+      - id: b
+        text: ML learns its patterns from data, not written rules.
+        correct: true
+        why: ML learns how to do a job from data rather than from spelled-out instructions, so it needs data first.
+      - id: c
+        text: Amazon SageMaker AI can train a model on sales data.
+        why: True, but naming the tool that trains a model does not explain why its data must be clean.
+      - id: d
+        text: An ML model is only as accurate as its data.
+        correct: true
+        why: A model learns from its data, so poor or messy data leads to poor predictions.
+      - id: e
+        text: Pre-built AI services can translate text data.
+        why: True, but a pre-built translation service has nothing to do with the cafe's own sales data.
+    evidence:
+      - "ML: AI where machines learn complex jobs from data, not spelled-out instructions."
+      - ML is only as accurate as its data.
+    takeaway: ML learns from data rather than written rules, so its accuracy rests on the quality of that data.
+    history: []
+    verified:
+      keyHash: c7975455826e
+      fullHash: f2501a11877e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-nqp995
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: classical-programming
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's register always offers a blueberry muffin to anyone who buys a
+      mocha, because a developer wrote that pairing into the code after looking
+      at last year's sales. Which approach does the register use?
+    options:
+      - id: a
+        text: Machine learning
+        why: ML would learn patterns itself and could fit the offer to each customer, not apply one coded pairing.
+      - id: b
+        text: Classical programming
+        correct: true
+        why: A developer hard-coded one fixed rule from past sales, which is classical programming.
+      - id: c
+        text: Conversational AI
+        why: Conversational AI adapts to a customer's replies, while this register follows one set rule.
+      - id: d
+        text: Model inference
+        why: Inference applies a trained model to new data, but no model was trained here.
+    evidence:
+      - Classical programming hard-codes a rule from past pairings (a cheese Danish with every caramel latte), ignoring the individual customer and product.
+      - A fixed pairing rule is classical programming, while per-customer suggestions come from ML.
+    takeaway: A fixed pairing rule written into code from past sales is classical programming, not ML.
+    history: []
+    verified:
+      keyHash: b32c564a9263
+      fullHash: d62e477af01b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-j3v8ah
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: classical-programming
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 1
+    stem: >-
+      What is a drawback of using classical programming to suggest add-on items
+      at a register?
+    options:
+      - id: a
+        text: It needs no trained model before it can run.
+        why: True, but running without a model is not a drawback; it is simply how coded rules work.
+      - id: b
+        text: A developer can base its rule on past sales.
+        why: True, and drawing a rule from past sales is not the weakness in suggesting add-ons.
+      - id: c
+        text: Its result for each order is easy to predict.
+        why: True, but a predictable result is not a drawback for the register.
+      - id: d
+        text: It gives every customer the same suggestion.
+        correct: true
+        why: A hard-coded rule offers the same item to everyone, regardless of who is ordering.
+    evidence:
+      - Classical programming hard-codes a rule from past pairings (a cheese Danish with every caramel latte), ignoring the individual customer and product.
+      - "**Classical programming**: Hand-coding fixed rules instead of learning them."
+    takeaway: Classical programming applies fixed hand-coded rules, so it cannot fit suggestions to each customer.
+    history: []
+    verified:
+      keyHash: f059b122a366
+      fullHash: 340c7e82dc2d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-1x20c9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-model-training
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe feeds years of past sales records into an ML system so it can
+      uncover buying patterns and produce a model. Which stage is this?
+    options:
+      - id: a
+        text: Inference
+        why: Inference uses an existing model on new data, while this step builds the model from history.
+      - id: b
+        text: Training
+        correct: true
+        why: Training searches historical data for patterns and outputs a model, which is this step.
+      - id: c
+        text: Data cleaning
+        why: Cleaning prepares the records before training, and it does not search them for patterns or output a model.
+      - id: d
+        text: Deployment
+        why: Deployment puts a finished model into use, and it does not search sales history for patterns.
+    evidence:
+      - "Training: ML finds hidden customer-sales patterns in lots of history and outputs a model."
+    takeaway: Training is the stage where ML finds patterns in historical data and produces a model.
+    history: []
+    verified:
+      keyHash: 12cbc30bdea0
+      fullHash: f13e84760bb2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-ajxd00
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-model-training
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe plans to train a demand model on sales records, social posts and
+      customer feedback forms. What has to happen to that data before training
+      starts?
+    options:
+      - id: a
+        text: It is searched for hidden buying patterns.
+        why: Searching for patterns is what training itself does, so it cannot come before training.
+      - id: b
+        text: It is gathered, cleaned and formatted.
+        correct: true
+        why: Training data needs collecting, cleaning and formatting, since a model is only as good as its data.
+      - id: c
+        text: It is turned into a model that predicts demand.
+        why: Producing the model is the output of training, not a step that comes before it.
+      - id: d
+        text: It is fed to Amazon SageMaker AI for training.
+        why: SageMaker AI can train custom models, but feeding data in is training, not the step before it.
+    evidence:
+      - Training data (sales, social posts, sensors, feedback forms) must be gathered, cleaned and formatted first.
+      - ML is only as accurate as its data.
+    takeaway: Training data must be gathered, cleaned and formatted before training, because data quality limits accuracy.
+    history: []
+    verified:
+      keyHash: 3cfb885122c4
+      fullHash: 7de2d04cdcce
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-v0f455
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-inference
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 3
+    stem: >-
+      A customer places an order in the cafe app, and the cafe's already-built
+      model uses that order to suggest a pastry right away. Which ML stage is
+      happening?
+    options:
+      - id: a
+        text: Training
+        why: Training builds the model from history, and this model already exists before the order arrives.
+      - id: b
+        text: Data cleaning
+        why: Cleaning prepares data before training, and it makes no suggestion for a live order.
+      - id: c
+        text: Data gathering
+        why: Gathering collects records ahead of training, and it makes no suggestion for a live order.
+      - id: d
+        text: Inference
+        correct: true
+        why: Inference feeds new data, such as this order, into a trained model to get a prediction.
+    evidence:
+      - "Inference: the model gets new data, like a fresh order, and predicts or decides."
+      - Training builds a model from history, and inference applies it to new data.
+    takeaway: Using an existing model on a fresh order to make a suggestion is inference, not training.
+    history: []
+    verified:
+      keyHash: 606e661091d7
+      fullHash: aea1f37eebd2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-4gdqg7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-inference
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 1
+    stem: >-
+      During ML inference, what goes into the model and what comes out?
+    options:
+      - id: a
+        text: New data goes in, and a prediction comes out.
+        correct: true
+        why: Inference hands fresh data to a trained model, which returns a prediction or decision.
+      - id: b
+        text: Past data goes in, and a new model comes out.
+        why: Turning historical data into a model describes training, the stage before inference.
+      - id: c
+        text: Raw data goes in, and cleaned data comes out.
+        why: Cleaning prepares data ahead of training and is not what a model does when it runs.
+      - id: d
+        text: Sales data goes in, and a fixed rule comes out.
+        why: Producing a fixed rule is the job of a developer in classical programming, not a model.
+    evidence:
+      - "Inference: the model gets new data, like a fresh order, and predicts or decides."
+      - "**Inference**: Applying a trained model to new data."
+    takeaway: Inference takes new data into a trained model and returns a prediction or decision.
+    history: []
+    verified:
+      keyHash: b52dd5249318
+      fullHash: 54915f9e2b11
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-sygm55
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: natural-language-processing
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe wants a counter kiosk where customers say their orders out loud,
+      and the kiosk grasps what they mean and suggests an extra add-on. Which AI
+      capability lets it understand the spoken order?
+    options:
+      - id: a
+        text: Social trend forecasting
+        why: Forecasting predicts future hits from trends and history and does not interpret what a customer says.
+      - id: b
+        text: Natural language processing
+        correct: true
+        why: NLP lets the kiosk make sense of human speech so it can take the order and offer add-ons.
+      - id: c
+        text: Real-time language translation
+        why: Translation converts words from one language to another, but grasping an order's meaning is NLP.
+      - id: d
+        text: Image recognition with cameras
+        why: Image recognition works on pictures, and this kiosk has to understand spoken words.
+    evidence:
+      - A counter kiosk could take spoken orders, enter them in the register for baristas and use natural language processing (NLP) to offer an extra shot or the new seasonal latte.
+      - "A kiosk taking spoken orders: conversational AI with NLP."
+    takeaway: Understanding customers' spoken words is the job of natural language processing.
+    history: []
+    verified:
+      keyHash: 8ff16f0224bb
+      fullHash: 3e93b120ef68
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+
+  - id: q-zxgw3w
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: natural-language-processing
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 1
+    stem: >-
+      How does a conversational AI kiosk that uses natural language processing
+      differ from a rule-based kiosk?
+    options:
+      - id: a
+        text: It enters each order in the register for baristas.
+        why: A rule-based kiosk can pass orders to the register too, so this is not the difference.
+      - id: b
+        text: It can offer an add-on such as an extra shot.
+        why: A rule-based kiosk can also offer a set add-on, so this does not tell the two apart.
+      - id: c
+        text: It shapes each follow-up to the customer's last reply.
+        correct: true
+        why: Conversational AI with NLP responds to each reply as it comes, unlike a rule-based system.
+      - id: d
+        text: It takes orders from customers at the counter.
+        why: Both kinds of kiosk take orders at the counter, so this is no difference between them.
+    evidence:
+      - Being conversational AI, not rule-based, it adapts to answers in real time.
+      - "**Conversational AI**: AI that adapts to replies, unlike rule-based systems."
+    takeaway: A conversational AI kiosk using NLP adapts to customers' replies, unlike a rule-based kiosk.
+    history: []
+    verified:
+      keyHash: 4246c1617692
+      fullHash: 31e058b02b3d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
