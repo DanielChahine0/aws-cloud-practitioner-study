@@ -4,11 +4,12 @@
  */
 import { effect, signal } from '@preact/signals';
 import type { ModuleChunk, QuestionView } from '../../schemas/chunks.ts';
+import type { StudyEvent } from '../../schemas/events.ts';
 import type { Progress, SessionState } from '../engine/replay.ts';
 import { KV_KEYS } from '../store/kv.ts';
 import { ensureExamForm, ensureModule, index, loadError, modules } from './content.ts';
 import { examDraftOf, newDraft, submitEvents } from './exam-session.ts';
-import { kvRecords, progress, recordAll, writeKv } from './progress.ts';
+import { events, kvRecords, progress, recordAll, writeKv } from './progress.ts';
 
 /** The wall clock in milliseconds, ticked every second by App while an exam is open; the focus bar reads it. */
 export const examTick = signal(Date.now());
@@ -79,6 +80,19 @@ export async function examQuestions(session: SessionState): Promise<Map<string, 
 const settling = new Set<string>();
 
 /**
+ * The time a settle is stamped with: `now` before the deadline, and after it the deadline itself, since that is when
+ * the exam ended, so an exam left open and settled on a later visit counts on the day it ran out (spec 3.5).
+ * It never stamps before the last event of the log, so ids stay in time order.
+ */
+export function settleTime(deadline: string | null, log: readonly StudyEvent[], now: Date): Date {
+  const end = deadline === null ? Number.NaN : Date.parse(deadline);
+  if (Number.isNaN(end) || now.getTime() < end) return now;
+  const last = Date.parse(log.at(-1)?.at ?? '');
+  const after = Number.isNaN(last) ? end : Math.max(end, last + 1);
+  return new Date(Math.min(after, now.getTime()));
+}
+
+/**
  * Records the answers and the submit of an open exam, then clears its draft; true when it recorded.
  * It is the only caller of `submitEvents`, ignores a second call while one is in flight, and re-reads the session
  * right before recording, so a duplicate submit can never reach the log; the answers and the submit are written as one
@@ -96,7 +110,8 @@ export async function settleExam(sid: string, now: Date): Promise<boolean> {
     const session = progress.peek().sessions.get(sid);
     if (session === undefined || session.submittedAt !== null || session.abandoned) return false;
     const draft = examDraftOf(kvRecords.peek()[KV_KEYS.examSession]?.value, sid) ?? newDraft(sid);
-    await recordAll(submitEvents({ draft, session, questions, mode: first.mode }), now);
+    const at = settleTime(session.deadline, events.peek(), now);
+    await recordAll(submitEvents({ draft, session, questions, mode: first.mode }), at);
     await writeKv(KV_KEYS.examSession, null, now);
     return true;
   } finally {
