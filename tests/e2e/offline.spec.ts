@@ -1,7 +1,12 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { expect, type Page, test } from '@playwright/test';
+import { parse } from 'yaml';
 import type { NewEvent } from '../../schemas/events.ts';
 import { eventsOf, timelineOf } from '../fixtures/events.ts';
 import { failOnPageProblems, h1, seedEvents } from './helpers.ts';
+import { labDoneCount } from './lab-helpers.ts';
 import { chunkFor } from './questions.ts';
 
 const HOME_TITLE = 'AWS Cloud Practitioner Essentials';
@@ -114,4 +119,52 @@ test('offline, a review shows a concept that fell due', async ({ page, context }
   await expect(runner).toBeVisible();
   const qid = await runner.getAttribute('data-qid');
   expect(questions.find((x) => x.id === qid)?.concept).toBe(q.concept);
+});
+
+/** The parts of a shipped Sort lab file this test reads. */
+interface SortLabFile {
+  id: string;
+  module: number;
+  title: string;
+  engine: string;
+  status?: string;
+  spec: { cards: { id: string; text: string }[] };
+  solution: { t: string; card?: string; bucket?: string }[];
+}
+
+/** The shipped `lab-m01-who-patches-what`, or the first live Sort lab in file order when that one was cut. */
+function shippedSortLab(): SortLabFile {
+  const root = fileURLToPath(new URL('../../content/labs/', import.meta.url));
+  const files = readdirSync(root)
+    .sort()
+    .flatMap((dir) =>
+      readdirSync(join(root, dir))
+        .filter((file) => file.endsWith('.yaml'))
+        .sort()
+        .map((file) => join(root, dir, file)),
+    );
+  const labs = files
+    .map((file) => parse(readFileSync(file, 'utf8')) as SortLabFile)
+    .filter((lab) => lab.engine === 'sort' && (lab.status ?? 'live') === 'live');
+  const lab = labs.find((l) => l.id === 'lab-m01-who-patches-what') ?? labs[0];
+  if (lab === undefined) throw new Error('no Sort lab has shipped');
+  return lab;
+}
+
+test('offline, a Sort lab never opened online runs and records lab.done', async ({ page, context }) => {
+  const lab = shippedSortLab();
+  await installWorker(page);
+
+  await context.setOffline(true);
+  await page.goto(`/#/m/${String(lab.module).padStart(2, '0')}/lab/${lab.id}`);
+  await expect(h1(page, lab.title)).toBeVisible();
+  for (const action of lab.solution) {
+    if (action.t !== 'place') continue;
+    const text = lab.spec.cards.find((c) => c.id === action.card)?.text ?? '';
+    await page.getByRole('group', { name: 'Cards' }).getByRole('button', { name: text, exact: true }).click();
+    await page.locator(`#bucket-${action.bucket}`).click();
+  }
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeVisible();
+  await expect.poll(() => labDoneCount(page, lab.id)).toBe(1);
 });

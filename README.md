@@ -19,7 +19,7 @@ The design is `docs/superpowers/specs/2026-10-09-aws-cpe-study-site-design.md`, 
 | `pnpm content:new-question [count]` | Prints fresh question ids, none used in the working tree or in `HEAD` |
 | `pnpm content:checks <command>` | Runs the agent checks: `prepare --modules 01,03` writes keyless batches, `lint <file>` checks an answer file, `grade` grades every answer |
 | `pnpm content:stamp` | Stamps each question whose three checks passed at its current hashes and sets it live; failed drafts get a `review` block |
-| `pnpm content:report` | Counts and style lines; `--coverage` lists coverage by task and missing blueprint terms, `--needs-dani` lists drafts that failed 3 check rounds, `--homed <note>` gives a note's concepts with their `live`, `open` and `need` counts, and `--targets` lists the notes whose concepts still need drafts |
+| `pnpm content:report` | Counts and style lines, labs included; `--coverage` lists coverage by task and missing blueprint terms, `--needs-dani` lists drafts that failed 3 check rounds, `--homed <note>` gives a note's concepts with their `live`, `open` and `need` counts, `--targets` lists the notes whose concepts still need drafts, and `--lab-targets` lists each module's concepts with their live practice ids for the lab writers |
 | `pnpm content:updates` | Checks (`--check <file>`) and applies (`--apply <dir>`) the update-writer results for missing blueprint terms |
 | `pnpm site:deploy` | Runs `pnpm verify`, then publishes `dist/` to the Mission 1 bucket and refreshes CloudFront |
 
@@ -81,6 +81,16 @@ A mock is 65 questions in 90 minutes on a wall-clock timer that cannot pause, sc
 Readiness blends memory and the latest unseen mocks, caps at 70 without a mock, and names the weakest task statement; from 7 to 2 days before the exam date, Home shows the go/no-go line while readiness is below Ready.
 Ranks follow the Support plans in `content/game/ranks.yaml` and never drop, and the 12 badges in `content/game/badges.yaml` are derived from the log.
 Rule R10 also checks the exam quotas (`examQuotas: true`), and rule R12 guards the frozen forms.
+
+## Labs
+
+Labs live in `content/labs/NN-module/<slug>.yaml`, one file per lab, with the id `lab-mNN-<slug>`, written by `agents/lab-writer.md` and judged by `agents/lab-critic.md`.
+Each module page lists its labs in a Labs section between Practice and Boss, and the palette finds them by title.
+A Sort lab is played by tapping a card, then its bucket; by keyboard, `Tab` moves between the tray, the buckets and the goal hints, the arrow keys move within one, `Space` picks a card up, `1` to `9` and `0` place it, `Backspace` sends it back and `Escape` puts it down.
+Goals are checked only when you press Check or `Enter`, `h` shows a hint, and `r` asks before it resets the board.
+Hints are free, but a lab finished without one pays 10 XP more; only a lab's first completion pays XP and counts for the streak, and every completion runs its 2 or 3 debrief questions.
+Unfinished work stays in the browser, so a lab resumes after a reload, and labs work offline like the rest of the site.
+`pnpm content:validate --draft <lab file>` checks one lab, and rule R11 replays every lab's solution and wrong paths on each commit.
 
 ## Course text stays out
 
