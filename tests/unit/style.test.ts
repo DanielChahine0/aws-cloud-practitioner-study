@@ -3,9 +3,9 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { LessonNote } from '../../scripts/content/lib/context.ts';
 import { loadContext } from '../../scripts/content/lib/context.ts';
-import { coverageProblems, moduleStyle, styleProblems } from '../../scripts/content/lib/style.ts';
+import { coverageProblems, isOpen, moduleStyle, styleProblems } from '../../scripts/content/lib/style.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
-import { matchQuestion, multiQuestion, singleQuestion } from '../fixtures/questions.ts';
+import { matchQuestion, multiQuestion, singleQuestion, writeQuestions } from '../fixtures/questions.ts';
 
 const FILE = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
 
@@ -126,18 +126,42 @@ describe('moduleStyle', () => {
   });
 });
 
+describe('isOpen', () => {
+  it('counts live questions and drafts below 3 review attempts, never retired ones', () => {
+    const failed = (attempts: number) => ({ attempts, lastFailure: 'critic: a tell' });
+    expect(isOpen(singleQuestion({ status: 'live' }))).toBe(true);
+    expect(isOpen(singleQuestion())).toBe(true);
+    expect(isOpen(singleQuestion({ review: failed(2) }))).toBe(true);
+    expect(isOpen(singleQuestion({ review: failed(3) }))).toBe(false);
+    expect(isOpen(singleQuestion({ status: 'retired' }))).toBe(false);
+  });
+});
+
 describe('coverageProblems', () => {
-  it('asks for 2 questions per concept homed in the note', () => {
+  it('asks for 2 questions per concept homed in the note that can still go live', () => {
     const root = makeFixtureRoot();
     const ctx = loadContext(root, { today: FIXTURE_TODAY });
     expect(coverageProblems(FILE, ctx)).toEqual([
-      'concept shared-kitchen has 1 question; it needs 2',
-      'concept per-minute-rental has 1 question; it needs 2',
+      'concept shared-kitchen has 1 question that can still go live; it needs 2',
+      'concept per-minute-rental has 1 question that can still go live; it needs 2',
     ]);
     writeFileSync(join(root, FILE), 'questions: []\n');
     expect(coverageProblems(FILE, loadContext(root, { today: FIXTURE_TODAY }))).toEqual([
-      'concept shared-kitchen has 0 questions; it needs 2',
-      'concept per-minute-rental has 0 questions; it needs 2',
+      'concept shared-kitchen has 0 questions that can still go live; it needs 2',
+      'concept per-minute-rental has 0 questions that can still go live; it needs 2',
+    ]);
+  });
+
+  it('does not count a draft that needs Dani, and counts a live question and a fresh draft', () => {
+    const root = makeFixtureRoot();
+    writeQuestions(root, [
+      singleQuestion({ status: 'live' }),
+      singleQuestion({ id: 'q-4j6k8m', review: { attempts: 3, lastFailure: 'critic: a tell' } }),
+      matchQuestion(),
+      matchQuestion({ id: 'q-5m7n9p' }),
+    ]);
+    expect(coverageProblems(FILE, loadContext(root, { today: FIXTURE_TODAY }))).toEqual([
+      'concept shared-kitchen has 1 question that can still go live; it needs 2',
     ]);
   });
 });

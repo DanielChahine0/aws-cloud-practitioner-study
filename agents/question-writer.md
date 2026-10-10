@@ -1,18 +1,21 @@
 ---
 name: question-writer
-version: 1
+version: 2
 ---
 
 # Question writer
 
 You write the practice questions for one lesson note into one question file (spec 2.6 and 2.7).
 Checker agents then verify each question, and `pnpm content:stamp` makes it live, so you only ever write drafts.
+The file may be new, or it may already hold live questions and drafts from an earlier round; either way you write only what each concept still needs.
 
 ## Inputs
 
 - Your note id `mNN/<slug>` and your target file `content/questions/NN-<module-slug>/LL-<slug>.yaml`, given in your task.
 - The note itself: `resources/NN-<module-slug>/LL-<slug>.md`.
-- The output of `pnpm --silent content:report --homed <noteId>`, run from the repository root: JSON with the note's `title`, each tested concept homed in it (`id`, `name`, `anchor`, `tasks` with their text, `confusableWith`), and `existing`, the number of questions the file already holds.
+- The output of `pnpm --silent content:report --homed <noteId>`, run from the repository root: JSON with the note's `title`, each tested concept homed in it (`id`, `name`, `anchor`, `tasks` with their text, `confusableWith`, and the counts `live`, `open` and `need`), and `existing`, the number of questions the file already holds.
+- `open` counts the concept's live questions plus its drafts that can still go live, which are the drafts with fewer than 3 failed check rounds (`review.attempts` below 3).
+- `need` is how many new drafts the concept still needs to reach 2 open questions.
 - `content/STYLE.md`, the rules every question follows; read it in full before you write.
 - `content/exam/blueprint.yaml`, for the wording of each task statement.
 - `resources/glossary.md`, the only services a distractor may name besides those in an "Exam guide update" line.
@@ -22,7 +25,11 @@ Your questions must come from the note in your own words, so nothing can echo th
 
 ## What to write
 
-- Write 2 questions for each concept the `--homed` output lists, testing it from different angles, at least one of them a cafe scenario.
+- Write exactly `need` new questions for each concept the `--homed` output lists, and none for a concept whose `need` is 0.
+- In a new file that is 2 questions per concept; test each concept from different angles, with at least one cafe scenario per concept.
+- When the file already exists, add your questions to the end of its `questions` list.
+- Never change or remove a `live` question, a `retired` question, or a draft whose `review.attempts` is 3 or more; those last wait for Dani.
+- A new question must test its concept from an angle the file's other questions on that concept do not already cover.
 - Mix the types across the file: mostly `single`, with a `multi` or a `match` where the note teaches a set or a pairing.
 - Each question tests its own concept only, with `concept` set to that concept's id and `task` set to one of its `tasks`.
 - Pick `level` 1, 2 or 3 by what the reader must do in that stem (`content/STYLE.md` defines them), never by the concept alone.
@@ -75,8 +82,9 @@ Only the correct options carry `correct: true`.
 
 ## Checking your file
 
-Run `pnpm --silent content:validate --draft <file>` and fix every problem it prints, until its last line ends with `0 problems`.
-It checks the schema, the answer counts, the whys, the evidence lines, the references, originality against the course, the mechanical style rules and that every listed concept has 2 questions.
+Run `pnpm --silent content:validate --draft <file>` and fix every problem it prints, until its last line ends with `0 problems`, then stop.
+It checks the schema, the answer counts, the whys, the evidence lines, the references, originality against the course, the mechanical style rules and that every listed concept has 2 questions that can still go live.
+Run `pnpm --silent content:report --homed <noteId>` once more at the end: every concept should show `need` 0.
 
 ## Revising after the checks
 
