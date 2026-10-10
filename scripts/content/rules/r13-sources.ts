@@ -1,4 +1,4 @@
-import { BLUEPRINT_FILE, type Finding } from '../lib/context.ts';
+import { BLUEPRINT_FILE, type Finding, RANKS_FILE } from '../lib/context.ts';
 import { fencedLines } from '../lib/text.ts';
 import { looksLikeUpdateLine, parseUpdateLine } from '../lib/update-line.ts';
 import { finding, type Rule } from './rule.ts';
@@ -31,12 +31,16 @@ export function sourceProblem(url: string, verifiedOn: string, today: string): s
   return null;
 }
 
-/** R13 Sources: every update line, blueprint entry and mission cites an AWS page re-checked within 180 days. */
+/**
+ * R13 Sources: every update line, blueprint entry and mission cites an AWS page re-checked within 180 days, and every
+ * rank fact is the sentence of a Module 11 Exam guide update line, word for word (spec 2.9 and 3.4).
+ */
 export const r13: Rule = {
   id: 'R13',
   title: 'Sources',
   run(ctx) {
     const out: Finding[] = [];
+    const module11 = new Set<string>();
     const check = (file: string, url: string, verifiedOn: string, line?: number): void => {
       const problem = sourceProblem(url, verifiedOn, ctx.today);
       if (problem !== null) out.push(finding('R13', file, problem, line));
@@ -54,6 +58,7 @@ export const r13: Rule = {
           );
         } else {
           check(note.path, update.url, update.verifiedOn, i + 1);
+          if (note.module === 11) module11.add(update.sentence);
         }
       }
     }
@@ -67,6 +72,20 @@ export const r13: Rule = {
 
     for (const mission of ctx.missions) {
       for (const source of mission.fm?.sources ?? []) check(mission.path, source.url, source.verified_on);
+    }
+
+    for (const rank of ctx.ranks ?? []) {
+      for (const [i, fact] of (rank.facts ?? []).entries()) {
+        if (!module11.has(fact)) {
+          out.push(
+            finding(
+              'R13',
+              RANKS_FILE,
+              `rank ${rank.id} fact ${i + 1} is not a Module 11 Exam guide update sentence`,
+            ),
+          );
+        }
+      }
     }
     return out;
   },

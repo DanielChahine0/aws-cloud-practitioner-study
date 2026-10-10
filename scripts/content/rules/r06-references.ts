@@ -120,7 +120,7 @@ export const r06: Rule = {
       const home = lesson === undefined ? undefined : questionFileOf(lesson.path);
       if (lesson === undefined) {
         report(`note ${q.note} does not exist`);
-      } else if (entry.path !== home) {
+      } else if (q.pool === 'practice' && entry.path !== home) {
         report(`note ${q.note} keeps its questions in ${home}, not in this file`);
       } else {
         const names = [concept.id, ...(concept.aliases ?? [])];

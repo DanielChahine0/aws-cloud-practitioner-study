@@ -1,7 +1,7 @@
 /** The `--draft <file>` and `--demote` modes of pnpm content:validate (spec 2.7, 2.9 and 8.4). */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { formatFinding } from '../rules/index.ts';
+import { formatFinding, isExamFile, redact, redactMessage } from '../rules/index.ts';
 import { r01 } from '../rules/r01-schema.ts';
 import { r03 } from '../rules/r03-answer-counts.ts';
 import { r04 } from '../rules/r04-explanations.ts';
@@ -31,14 +31,15 @@ export function draftCheck(ctx: Context, file: string): { questions: number; pro
   const live = asLive(ctx, file);
   const findings = DRAFT_RULES.flatMap((rule) => rule.run(live)).filter((f) => f.file === file);
   findings.sort((a, b) => Number(a.rule.slice(1)) - Number(b.rule.slice(1)) || (a.line ?? 0) - (b.line ?? 0));
-  const problems = findings.map(formatFinding);
+  const exam = isExamFile(file);
+  const problems = findings.map((f) => formatFinding(redact(f)));
   const notes = new Map(ctx.notes.map((n) => [n.id, n] as const));
   const entries = ctx.questions.filter((e) => e.path === file && e.q.status !== 'retired');
   for (const entry of entries) {
     const note = notes.get(entry.q.note);
     const lesson = note?.kind === 'lesson' ? (note as LessonNote) : undefined;
     for (const problem of styleProblems(entry.q, lesson)) {
-      problems.push(`${file}:${entry.line}  ${entry.q.id}: ${problem}`);
+      problems.push(`${file}:${entry.line}  ${entry.q.id}: ${exam ? redactMessage(problem) : problem}`);
     }
   }
   for (const problem of coverageProblems(file, ctx)) problems.push(`${file}  ${problem}`);

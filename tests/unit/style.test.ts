@@ -53,7 +53,7 @@ describe('styleProblems', () => {
     const { note, root } = fixture();
     const stem = 'The harbour branch needs 99.99% of its mornings covered by spare ovens.';
     expect(styleProblems({ ...singleQuestion(), stem }, note)).toEqual([
-      'the number 99.99% is not in m01/what-a-bakery-cloud-is',
+      'the number "99.99%" is not in m01/what-a-bakery-cloud-is',
     ]);
     const line = '\nOvens are ready 99.99% of the time.\n';
     const stated = { ...note, text: `${note.text}${line}`, body: `${note.body}${line}` };
@@ -67,7 +67,7 @@ describe('styleProblems', () => {
     const bare = { ...note, text: `---\nmodule: 1\nlesson: 4\n---\n${body}`, body };
     const stem = 'The harbour branch spreads its ovens across 4 kitchens. Which idea is this?';
     expect(styleProblems({ ...singleQuestion(), stem }, bare)).toEqual([
-      'the number 4 is not in m01/what-a-bakery-cloud-is',
+      'the number "4" is not in m01/what-a-bakery-cloud-is',
     ]);
   });
 
@@ -83,7 +83,7 @@ describe('styleProblems', () => {
     const q = matchQuestion();
     const pairs = q.pairs.map((p, i) => (i === 0 ? { ...p, right: 'Billed for 15 minutes' } : p));
     expect(styleProblems({ ...q, pairs }, note)).toEqual([
-      'the number 15 is not in m01/what-a-bakery-cloud-is',
+      'the number "15" is not in m01/what-a-bakery-cloud-is',
     ]);
   });
 

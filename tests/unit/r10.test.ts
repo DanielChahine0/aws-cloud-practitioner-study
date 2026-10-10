@@ -25,6 +25,7 @@ function contextWith(
       path: QUESTION_FILE,
       line: 100 + i,
       index: ctx.questions.length + i,
+      module: 1,
       noteId: 'm01/what-a-bakery-cloud-is',
       q,
     }),

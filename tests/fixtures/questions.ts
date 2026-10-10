@@ -1,5 +1,5 @@
-import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { stringify } from 'yaml';
 import type { MatchQuestion, MultiQuestion, Question, SingleQuestion } from '../../schemas/question.ts';
 
@@ -143,5 +143,14 @@ export function matchQuestion(over: Partial<MatchQuestion> = {}): MatchQuestion 
 
 /** Writes the given questions as the fixture tree's question file. */
 export function writeQuestions(root: string, questions: readonly Question[], file = QUESTION_FILE): void {
+  writeFileSync(join(root, file), stringify({ questions }, { lineWidth: 0 }));
+}
+
+/** The exam-pool file of the fixture tree's one module; the tree ships without it. */
+export const POOL_FILE = 'content/exam/pool/01-baking-basics.yaml';
+
+/** Writes the given questions as an exam-pool file, creating content/exam/pool/ when needed. */
+export function writePool(root: string, questions: readonly unknown[], file = POOL_FILE): void {
+  mkdirSync(dirname(join(root, file)), { recursive: true });
   writeFileSync(join(root, file), stringify({ questions }, { lineWidth: 0 }));
 }

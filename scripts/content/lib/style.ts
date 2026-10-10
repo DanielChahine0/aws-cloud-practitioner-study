@@ -54,7 +54,7 @@ export function styleProblems(q: Question, note: LessonNote | undefined): string
   for (const n of visible.flatMap(numbersIn)) {
     if (n === '' || stated.has(n) || reported.has(n)) continue;
     reported.add(n);
-    problems.push(`the number ${n} is not in ${q.note}`);
+    problems.push(`the number "${n}" is not in ${q.note}`);
   }
   if (allTexts(q).some((text) => OLD_PLANS.test(text))) {
     problems.push('names a Support plan the exam no longer uses');

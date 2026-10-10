@@ -7,7 +7,7 @@
 import { resolve } from 'node:path';
 import { loadContext } from './lib/context.ts';
 import { demote, draftCheck } from './lib/draft.ts';
-import { formatFinding, RULES, runRules } from './rules/index.ts';
+import { formatFinding, RULES, redact, runRules } from './rules/index.ts';
 
 const root = resolve(import.meta.dirname, '..', '..');
 const args = process.argv.slice(2);
@@ -33,7 +33,7 @@ const ctx = loadContext(root);
 const all = args.includes('--all');
 
 if (!all && ctx.config === null) {
-  for (const f of ctx.loadErrors) console.error(formatFinding(f));
+  for (const f of ctx.loadErrors) console.error(formatFinding(redact(f)));
   console.error('content:validate: content/validate.yaml is missing or invalid');
   process.exit(1);
 }
