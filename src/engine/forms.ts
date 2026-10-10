@@ -44,11 +44,8 @@ const domainList = (targets: FormTargets): Domain[] => [...domainTotals(targets)
 
 /** The first reason `count` forms cannot be built from `items` by counting alone, or null. */
 export function precheck(items: readonly FormItem[], targets: FormTargets, count: number): string | null {
-  const perConcept = new Map<string, number>();
-  for (const item of items) perConcept.set(item.concept, (perConcept.get(item.concept) ?? 0) + 1);
-  for (const [concept, n] of [...perConcept].sort((a, b) => a[0].localeCompare(b[0]))) {
-    if (n > count) return `concept ${concept} has ${n} items; a concept can sit in at most ${count} forms`;
-  }
+  // No per-concept count here: a concept with more items than forms just leaves spares unused (a remix asks for one
+  // form from items that repeat concepts across taken forms), and `Needs.fits` keeps a concept once per form.
   for (const [task, target] of Object.entries(targets.tasks)) {
     const n = items.filter((i) => i.task === task).length;
     if (n < count * target) return `task ${task} has ${n} live items; ${count} forms need ${count * target}`;

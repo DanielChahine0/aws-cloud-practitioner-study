@@ -149,15 +149,14 @@ describe('buildForms (spec 4.3)', () => {
     for (const form of forms) expect(formProblems(form, TARGETS)).toEqual([]);
   });
 
-  it('names the concept that holds five items', () => {
+  it('leaves the fifth item of a concept spare instead of refusing the split', () => {
     const items: FormItem[] = [
-      ...exactPool(),
+      ...sparePool(),
       { id: 'extra', concept: 'c-1-0', task: '1.1', type: 'single' },
     ];
-    expect(buildForms({ items, targets: TARGETS, count: 4, seed: 1 })).toEqual({
-      ok: false,
-      blocker: 'concept c-1-0 has 5 items; a concept can sit in at most 4 forms',
-    });
+    const forms = built(items);
+    expect(forms.flat()).toHaveLength(260);
+    for (const form of forms) expect(formProblems(form, TARGETS)).toEqual([]);
   });
 
   it('names the task that is one item short', () => {
