@@ -181,6 +181,12 @@ interface CardState {
   readonly extraAgainDay: string | null;
   /** Whether its latest FSRS update left a stability of `LONG_MEMORY.stabilityDays` or more. */
   readonly long: boolean;
+  /**
+   * The due the card had before a `review.now` brought it forward, until its next FSRS update or correct counted
+   * answer. Until that due, an answer is judged as early (spec 3.1, 3.11): the forced due puts the concept in the
+   * queue, but never turns a free lightning miss into a paid, schedule-moving review.
+   */
+  readonly nowDue: string | null;
 }
 
 const NO_CARD: CardState = {
@@ -190,7 +196,14 @@ const NO_CARD: CardState = {
   fsrsRating: null,
   extraAgainDay: null,
   long: false,
+  nowDue: null,
 };
+
+/** The state a split concept starts from: the card of the concept it was split from, with no update of its own. */
+const inherited = (source: CardState): CardState =>
+  source.card === null
+    ? NO_CARD
+    : { ...NO_CARD, card: source.card, enteredOn: source.enteredOn, nowDue: source.nowDue };
 
 interface SessionStart {
   at: string;
@@ -294,13 +307,15 @@ function extraAgain(
     (s.fsrsRating === 'hard' || s.fsrsRating === 'good');
   if (!applies) return { state: s, made: null, due: false };
   const { card, long, made } = updated(s, key, tested, 'again', e, examDate);
-  return { state: { ...s, card, long, extraAgainDay: e.day }, made, due: false };
+  return { state: { ...s, card, long, extraAgainDay: e.day, nowDue: null }, made, due: false };
 }
 
 /**
  * Runs a step on `s` under `examDate`. The day's first counted answer updates when due at start or new; a boss or
  * mock answer applies Again when wrong whatever the due state, and Hard (flagged) or Good when right only when due
  * at start or new; a concept already updated that day gets only the one extra Again of a later wrong answer.
+ * Due means due by the card's own schedule: a card a `review.now` made due is early until its real due, so the
+ * day's first answer to it applies Again when wrong and, when right, only puts its real due back.
  */
 function runStep(s: CardState, key: string, tested: boolean, step: Step, examDate: string | null): Outcome {
   if (step.kind === 'now') return { state: dueToday(s, step.e), made: null, due: false };
@@ -308,23 +323,39 @@ function runStep(s: CardState, key: string, tested: boolean, step: Step, examDat
   if (kind === 'later') return extraAgain(s, key, tested, e, step.stale, examDate);
   if (kind === 'exam' && s.fsrsDay === e.day) return extraAgain(s, key, tested, e, false, examDate);
   const card = s.card;
-  const due = card === null || isDue(card, new Date(start.at), start.tz);
+  const due = card === null || isDue({ ...card, due: s.nowDue ?? card.due }, new Date(start.at), start.tz);
+  const sentBack = card !== null && s.nowDue !== null && !due;
+  if (kind === 'first' && sentBack && e.correct && !step.stale) {
+    return { state: { ...s, card: { ...card, due: s.nowDue }, nowDue: null }, made: null, due };
+  }
   let rating: SrsRating | null = null;
-  if (kind === 'first') rating = due && !step.stale ? rate(e.correct, e.sure) : null;
+  // A wrong first answer to a card sent back applies Again, as it rates when due.
+  if (kind === 'first') rating = !step.stale && (due || sentBack) ? rate(e.correct, e.sure) : null;
   else if (!e.correct || due) rating = e.correct ? rate(true, e.flagged !== true) : 'again';
   if (rating === null) return { state: s, made: null, due };
   const u = updated(s, key, tested, rating, e, examDate);
   const enteredOn = card === null ? e.day : s.enteredOn;
-  const state = { ...s, card: u.card, long: u.long, enteredOn, fsrsDay: e.day, fsrsRating: rating };
+  const state = {
+    ...s,
+    card: u.card,
+    long: u.long,
+    enteredOn,
+    fsrsDay: e.day,
+    fsrsRating: rating,
+    nowDue: null,
+  };
   return { state, made: u.made, due };
 }
 
-/** The card made due at the start of the study day of `e`, unless it already falls due earlier. */
+/**
+ * The card made due at the start of the study day of `e`, unless it already falls due earlier, keeping the due it
+ * had so the answers before that due stay early.
+ */
 function dueToday(s: CardState, e: ReviewNowEvent): CardState {
   if (s.card === null) return s;
   const due = Math.min(Date.parse(s.card.due), dayStartAt(e.day, e.tz).getTime());
   if (due === Date.parse(s.card.due)) return s;
-  return { ...s, card: { ...s.card, due: new Date(due).toISOString() } };
+  return { ...s, card: { ...s.card, due: new Date(due).toISOString() }, nowDue: s.nowDue ?? s.card.due };
 }
 
 /** The due a step's update would have under `examDate`, from the due FSRS gave it. */
@@ -530,10 +561,11 @@ function replay(
       let initial = track.initial;
       if (track.from !== null) {
         const source = stateAt(tracks.get(track.from) as Track, track.created);
-        const same = source.card === initial.card && source.enteredOn === initial.enteredOn;
-        if (!same)
-          initial =
-            source.card === null ? NO_CARD : { ...NO_CARD, card: source.card, enteredOn: source.enteredOn };
+        const same =
+          source.card === initial.card &&
+          source.enteredOn === initial.enteredOn &&
+          source.nowDue === initial.nowDue;
+        if (!same) initial = inherited(source);
       }
       rebase(track, initial, next);
       setCard(concepts.get(track.key) as MutableConcept, track.state);
@@ -612,9 +644,8 @@ function replay(
     run.made = out.made;
     track.steps.push(run);
     track.state = out.state;
-    if (out.made === null) return out;
-    setCard(cm, out.state);
-    if (!track.tested) return out;
+    if (out.state !== run.before) setCard(cm, out.state);
+    if (out.made === null || !track.tested) return out;
     if (out.state.long) longCards.add(key);
     else longCards.delete(key);
     if (longCards.size >= LONG_MEMORY.concepts) grant('long-memory', e);
@@ -651,12 +682,10 @@ function replay(
     const cm = freshConcept();
     const from = content.concepts.get(key)?.splitFrom ?? null;
     const old = from === null ? undefined : concepts.get(from);
-    let initial = NO_CARD;
-    if (old?.card) {
-      cm.card = old.card;
-      cm.enteredOn = old.enteredOn;
-      initial = { ...NO_CARD, card: old.card, enteredOn: old.enteredOn };
-    }
+    const oldTrack = from === null ? undefined : tracks.get(from);
+    const initial = oldTrack === undefined ? NO_CARD : inherited(oldTrack.state);
+    cm.card = initial.card;
+    cm.enteredOn = initial.enteredOn;
     concepts.set(key, cm);
     const tested = content.concepts.get(key)?.tested === true;
     const source = old === undefined ? null : from;

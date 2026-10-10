@@ -618,6 +618,7 @@ export const recall = (card: Card, at: Date) => f.get_retrievability(card, at, f
 - **Lightning:** lightning answers never update FSRS, and a miss writes `review.now`, which makes the concept due today.
 - **Untested concepts** (`tested: false`) never enter FSRS.
 - NOTE: `review.now` is a step on the concept's card track that makes the card due at the start of its study day with no review, so a later exam date keeps it; it is ignored for an unknown or never studied concept and for one already answered that study day, whose one update of the day is spent (Phase 4).
+- NOTE: a card made due by `review.now` keeps its own due, and until that due its first answer of the day is judged as early (3.1): a wrong answer applies Again, and a right one makes no FSRS update, earns bet XP only on a never-answered question and puts the card's own due back, so a free lightning miss never turns an early review into a paid one (Phase 4).
 
 ### 3.7 Queue and daily load
 
@@ -693,9 +694,9 @@ Readiness = Mock ? 0.5*Memory + 0.5*Mock : min(Memory, 0.70)
 |---|---|
 | Re-answering the same concept | One counted answer per concept per day (property test) |
 | Re-running quizzes | First attempt per question id only |
-| Reviewing early | An early answer never updates FSRS and pays only once per never-answered question, and the effort bonus is about 0 at high R |
+| Reviewing early | An early answer never updates FSRS and pays only once per never-answered question, and the effort bonus is about 0 at high R; a card a lightning miss made due stays early until its own due |
 | Always pressing Sure | Proper payoffs, plus the misconception rule on scheduling |
-| Failing on purpose | Sure pays 0 when wrong, and ranks, mastery and readiness all fall |
+| Failing on purpose | Sure pays 0 when wrong, and ranks, mastery and readiness all fall; a deliberate lightning miss earns the next review nothing an early answer would not |
 | Lightning spam | First round per day, capped at 10 XP, no FSRS update, no streak credit |
 | Cramming a module | 7-day horizon and the 2-day success gate |
 | Re-rolling a boss | 20 h cooldown, a new draw, XP only on the first pass |
@@ -821,6 +822,7 @@ debrief: { lines: [ ... ], questions: [q-4m2x8c, q-9tq3vd] }
 - Every interaction works by tap-to-select then tap-to-place, which the keyboard mirrors, so dragging is never required (WCAG 2.5.7).
 - Hints are free, and a lab completed without hints earns the +10 XP.
 - Labs do not update FSRS directly, but each debrief ends with 2 to 3 verified practice questions, and those are counted answers (3.1).
+- NOTE: each debrief question, like each step of a shipped incident, is on a concept no other question of it is on, since only one counted answer per concept a day pays; R6 reports a repeat (Phase 4).
 - Lab concepts must be registered concepts (rule 6), and card sets use the exam's current names (2.3).
 - NOTE: the engine contract has no `schema` member, because the zod spec and action schemas live in `schemas/lab.ts` so zod stays out of the app, and every check runs through the engine registry in `src/labs/engines.ts`, whose `settle` actions run before any check and whose `complete` says a board is finished (Phase 4).
 - NOTE: a lab file also carries a `title`, the `notes` it is grounded in, a `status` of `live` or `retired`, and a `mistake` on each wrong path naming the learner error it models (Phase 4).

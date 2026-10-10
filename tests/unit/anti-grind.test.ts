@@ -19,6 +19,7 @@ import {
   examStartOf,
   labDoneOf,
   lightningStartOf,
+  reviewNowOf,
   submitOf,
 } from '../fixtures/memory.ts';
 
@@ -127,6 +128,23 @@ describe('anti-grind audit (spec 3.11)', () => {
     expect(memory.xpByDay.get('2026-10-11')).toBeUndefined();
     expect(memory.xpByDay.get('2026-10-12')).toBe(10);
     expect(effortBonus(0.97)).toBe(0);
+  });
+
+  it('Failing on purpose: a lightning miss then a review pays and schedules like an early answer', () => {
+    const review = (day: string, hour: number, correct: boolean) =>
+      [
+        at(day, hour),
+        answerOf({ concept: 'oven', qid: 'q-oven-1', mode: 'review', correct, sure: true }),
+      ] as const;
+    const settled: Log = [[at('2026-10-01'), right('oven', 'q-oven-1')], review('2026-10-04', 10, true)];
+    const miss = [at('2026-10-10', 11), reviewNowOf('oven')] as const;
+    const early = memoryOf([...settled, review('2026-10-10', 12, true)]);
+    const missed = memoryOf([...settled, miss, review('2026-10-10', 12, true)]);
+    expect(missed.xp).toBe(early.xp);
+    expect(missed.concepts.get('oven')?.card).toEqual(early.concepts.get('oven')?.card);
+    const wrong = memoryOf([...settled, miss, review('2026-10-10', 12, false)]);
+    expect(wrong.xpByDay.get('2026-10-10')).toBeUndefined();
+    expect(wrong.concepts.get('oven')?.card?.lapses).toBe(1);
   });
 
   it('Always pressing Sure', () => {
