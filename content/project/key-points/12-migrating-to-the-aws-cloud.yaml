@@ -1,0 +1,48 @@
+# Reference key points for decision 12: Migration strategies and data transfer.
+module: 12
+keyPoints:
+  - id: kp-12-strategy-per-system
+    status: live
+    text: Each existing system gets its own migration path rather than one rule for everything, so the cafe moves each piece the cheapest safe way and keeps disruption to the shops low.
+    concepts: [seven-migration-strategies]
+    evidence: Organizations often combine them into a tailored plan with less risk and disruption.
+    verified:
+      fullHash: d867f4d8b22f
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-12-replatform-pos-database
+    status: live
+    text: The sales database behind the point-of-sale server is replatformed onto Amazon RDS with no code changes, so the part-time IT person stops patching the database engine by hand.
+    concepts: [migration-strategy-replatform]
+    evidence: "MySQL to Amazon RDS with no code changes: replatform."
+    verified:
+      fullHash: 0fc6b4b5eabb
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-12-dms-keeps-tills-running
+    status: live
+    text: AWS DMS copies the sales history while the point-of-sale database keeps taking orders, so the shops only pause for a short switch-over instead of closing for the whole move.
+    concepts: [aws-database-migration-service]
+    evidence: You name the source and target, and a scheduled task on a replication VM copies the data while the source stays live.
+    verified:
+      fullHash: 253d79796a8d
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-12-datasync-moves-archive
+    status: live
+    text: The receipts and product photos travel online into Amazon S3 with AWS DataSync, scheduled and throttled outside opening hours so the copy never slows the shop's own connection.
+    concepts: [aws-datasync, online-data-transfer]
+    evidence: It handles instances, encryption and network tuning, and lets you throttle, schedule, filter and report on tasks.
+    verified:
+      fullHash: dab84596a257
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-12-skip-offline-devices
+    status: live
+    text: Shipping a Snow Family device is not worth it for the cafe, because its archive is far below petabyte scale and the shop has a working internet link to send it over.
+    concepts: [offline-data-transfer, aws-snow-family]
+    evidence: "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
+    verified:
+      fullHash: 63f9f8089543
+      checks: [ critic@1 ]
+      on: 2026-10-10

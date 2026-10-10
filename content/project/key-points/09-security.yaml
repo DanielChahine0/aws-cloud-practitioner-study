@@ -1,0 +1,48 @@
+# Reference key points for decision 9: Identity, encryption and edge protection.
+module: 9
+keyPoints:
+  - id: kp-09-lock-away-root-user
+    status: live
+    text: The owner's root user gets a strong password and MFA on day one and is then kept out of everyday jobs, since nothing can limit what it does in the cafe's account.
+    concepts: [aws-account-root-user, multi-factor-authentication]
+    evidence: Give it a strong password and turn on multi-factor authentication (MFA) right after the first root login.
+    verified:
+      fullHash: c48a48bf2b2c
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-09-least-privilege-per-job
+    status: live
+    text: The IT person and each shop manager sign in with their own identity in a group for their job, and each group's policy allows only that job's tasks, so a manager cannot touch the network or billing.
+    concepts: [principle-of-least-privilege, iam-policies]
+    evidence: "**Least privilege** is the guiding principle: allow only what a person or system needs."
+    verified:
+      fullHash: 0419a018e7fb
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-09-kms-keys-for-customer-data
+    status: live
+    text: Receipts and loyalty records stay encrypted at rest under keys held in AWS KMS, and the cafe chooses which roles may use those keys, so a stolen copy of customer details cannot be read.
+    concepts: [encryption-at-rest, aws-kms]
+    evidence: You set which IAM users and roles may manage keys and where they are used, keys never leave KMS, and a key can be disabled temporarily.
+    verified:
+      fullHash: d80ecf14ca9a
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-09-https-with-acm-certificates
+    status: live
+    text: The ordering site and loyalty app accept only HTTPS, using TLS certificates that ACM manages, so names, orders and stamp balances are encrypted on the way between phones and the cafe.
+    concepts: [encryption-in-transit, aws-certificate-manager]
+    evidence: SSL and its successor TLS use certificates to verify identity, then encrypt the connection.
+    verified:
+      fullHash: f30d5161ede8
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-09-shield-and-waf-at-edge
+    status: live
+    text: Customers reach the ordering site through a load balancer or CloudFront, where free Shield Standard soaks up common DDoS floods and AWS WAF rules turn away bad requests, so the morning rush still gets served.
+    concepts: [aws-shield-standard, aws-waf]
+    evidence: "**AWS Shield Standard**: free, automatic, real-time defense against common DDoS attacks, built into ELB, CloudFront and Route 53."
+    verified:
+      fullHash: 0ea95ea0fa9e
+      checks: [ critic@1 ]
+      on: 2026-10-10

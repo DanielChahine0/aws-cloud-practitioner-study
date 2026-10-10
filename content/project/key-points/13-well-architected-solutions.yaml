@@ -1,0 +1,48 @@
+# Reference key points for decision 13: Well-Architected review.
+module: 13
+keyPoints:
+  - id: kp-13-review-in-wa-tool
+    status: live
+    text: The cafe reviews its whole design in the free, self-service AWS Well-Architected Tool, checking it against all six pillars without adding anything to the capped monthly bill.
+    concepts: [aws-well-architected-tool, aws-well-architected-framework]
+    evidence: A free, self-service AWS service for reviewing and improving workloads against the six pillars.
+    verified:
+      fullHash: e8136a824b8f
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-13-pipeline-replaces-hand-releases
+    status: live
+    text: A top fix for operational excellence is shipping changes through AWS CodePipeline instead of by hand, so the lone part-time IT person avoids the outages and drifting setups that hand-run releases can cause.
+    concepts: [operational-excellence-pillar, aws-codepipeline]
+    evidence: "Hand-run releases causing outages and drifting environments: a CI/CD pipeline such as AWS CodePipeline (Operational Excellence)."
+    verified:
+      fullHash: 528ee0bb9176
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-13-least-privilege-and-encryption
+    status: live
+    text: Under the security pillar, the review checks that staff and services get only the permissions they need and that loyalty and order data stay encrypted, closing gaps a busy IT person could miss.
+    concepts: [security-pillar]
+    evidence: "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    verified:
+      fullHash: 17a11ff9b92f
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-13-plan-recovery-for-rush
+    status: live
+    text: The reliability check asks how ordering recovers when a server or zone fails mid-rush, so the cafe keeps orders flowing across zones with automated recovery as it adds shops.
+    concepts: [reliability-pillar]
+    evidence: "**Reliability**: planning recovery from failures and adapting as business and customer needs grow."
+    verified:
+      fullHash: 9f1d0e0c49af
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-13-rightsize-and-go-serverless
+    status: live
+    text: Rightsizing underused servers, choosing cheaper purchase options and preferring serverless over always-on machines serve performance, cost and sustainability together and keep the bill under its cap.
+    concepts: [performance-efficiency-pillar, cost-optimization-pillar, sustainability-pillar]
+    evidence: Fitting size to workload points to Performance Efficiency, purchase options and deprovisioning to Cost Optimization, serverless over always-on to Sustainability.
+    verified:
+      fullHash: 5c1b8d02da47
+      checks: [ critic@1 ]
+      on: 2026-10-10

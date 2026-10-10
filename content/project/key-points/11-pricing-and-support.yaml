@@ -1,0 +1,48 @@
+# Reference key points for decision 11: Cost, budgets and Support plan.
+module: 11
+keyPoints:
+  - id: kp-11-estimate-with-pricing-calculator
+    status: live
+    text: Before anything is deployed, the cafe enters its chosen instances, storage and expected traffic into the AWS Pricing Calculator, so it can check the monthly estimate against its cap and compare cheaper designs first.
+    concepts: [aws-pricing-calculator]
+    evidence: The Pricing Calculator estimates costs before deployment.
+    verified:
+      fullHash: cd07a8e7995c
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-11-price-the-three-drivers
+    status: live
+    text: The monthly estimate prices compute, storage and outbound data transfer, the three main cost drivers, so the cafe's cloud compute instances, the product photos it stores in the cloud and the data sent out to customers are all counted against the cap.
+    concepts: [cost-drivers, outbound-data-transfer]
+    evidence: The three main drivers are compute, storage and outbound data transfer.
+    verified:
+      fullHash: 0bcf897f7c83
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-11-budget-alerts-under-cap
+    status: live
+    text: An AWS Budgets budget set below the monthly cap warns the part-time IT person as spend nears or passes the limit, since Cost Explorer can forecast spend but never sends that alert.
+    concepts: [aws-budgets, aws-cost-explorer]
+    evidence: Budgets and Cost Explorer both forecast, but only Budgets sends threshold alerts.
+    verified:
+      fullHash: 432e8e5d8d58
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-11-tag-spend-by-shop
+    status: live
+    text: Every resource carries a shop tag that is activated for cost allocation, so Cost Explorer shows which new shop pushed the bill up and the cafe can adjust before the next opening.
+    concepts: [cost-allocation-tags, aws-cost-explorer]
+    evidence: Cost Explorer can allocate costs by tags such as project, department or environment, showing who drives spend.
+    verified:
+      fullHash: 9eb19dffb132
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-11-business-support-plus
+    status: live
+    text: The cafe picks AWS Business Support+ for its live ordering system, giving the lone IT person fast technical cases when something breaks, rather than a higher plan whose extras, such as a designated technical account manager, a small cafe does not need.
+    concepts: [aws-business-support-plus, aws-support-plans]
+    evidence: AWS calls Business Support+ the minimum plan it recommends for production workloads.
+    verified:
+      fullHash: 0eda3dfb9fac
+      checks: [ critic@1 ]
+      on: 2026-10-10

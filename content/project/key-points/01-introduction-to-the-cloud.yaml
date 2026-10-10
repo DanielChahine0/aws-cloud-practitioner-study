@@ -1,0 +1,48 @@
+# Reference key points for decision 1: Deployment model and shared responsibility.
+module: 1
+keyPoints:
+  - id: kp-01-go-cloud-based
+    status: live
+    text: The cafe picks a cloud-based deployment, since it has no regulated system that must stay in-house, so it starts small without buying servers and keeps hybrid only as a short bridge for the back-office till.
+    concepts: [cloud-based-deployment, hybrid-deployment]
+    evidence: It scales well with little upfront cost, but alone cannot keep sensitive data on premises for compliance.
+    verified:
+      fullHash: 2cc33b054348
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-01-variable-spend-fits-cap
+    status: live
+    text: Trading fixed for variable expense matters because the cafe pays only for what each shop uses each month, which keeps the bill small enough to stay inside its monthly budget cap.
+    concepts: [trade-fixed-expense-for-variable-expense]
+    evidence: On AWS the bill follows monthly usage, so you start small, spending matches consumption for more financial flexibility, and billing and budgeting tools help you save.
+    verified:
+      fullHash: 9fccdb5a67f6
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-01-grow-without-guessing
+    status: live
+    text: Stopping the guesswork on capacity matters because the cafe can size for its single shop now and add resources as each new shop opens, rather than buying hardware for a growth forecast.
+    concepts: [stop-guessing-capacity]
+    evidence: On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning.
+    verified:
+      fullHash: 47c664576797
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-01-no-server-room-upkeep
+    status: live
+    text: Leaving the running of data centers to AWS matters because the lone part-time IT person no longer racks, powers or repairs hardware and can spend those hours on the cafe's own systems.
+    concepts: [stop-spending-money-on-data-centers]
+    evidence: AWS runs that physical layer, freeing time and money for customers and strategy.
+    verified:
+      fullHash: 881e3f0830fb
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-01-draw-the-security-line
+    status: live
+    text: The line falls where AWS secures the buildings, hardware and hypervisor, while the cafe still patches any operating system it runs and controls its own data, apps and who can reach them.
+    concepts: [shared-responsibility-model, security-of-the-cloud, security-in-the-cloud]
+    evidence: AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+    verified:
+      fullHash: 9215da366950
+      checks: [ critic@1 ]
+      on: 2026-10-10
