@@ -185,6 +185,7 @@ export function watchRanks(): () => void {
     const due = rankToRecord(ranks.value, rankFacts.value, progress.value.ranks);
     if (due === null || writing.has(due.id)) return;
     writing.add(due.id);
-    void record({ t: 'rank', rank: due.id });
+    // Release the guard once the write settles, so a log replaced in place can earn the rank again.
+    void record({ t: 'rank', rank: due.id }).finally(() => writing.delete(due.id));
   });
 }
