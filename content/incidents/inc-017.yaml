@@ -1,0 +1,125 @@
+id: inc-017
+title: The order database outgrows its server
+modules:
+  - 6
+concepts:
+  - amazon-ebs
+  - ebs-volumes
+  - ebs-data-lifecycle
+brief: >-
+  Weekend orders now push the cafe's order database to its limits, and the EC2 instance it runs on is too small.
+  The manager wants the database on a larger server before Monday, with every order kept and backed up.
+steps:
+  - id: q-xv0vtr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ebs
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The order database keeps its data on an Amazon EBS volume attached to the small instance.
+      The cafe launches a larger instance type in the same Availability Zone.
+      Which property of the volume lets the order data reach the larger server without making a copy?
+    options:
+      - id: a
+        text: It can be detached and attached elsewhere
+        correct: true
+        why: An EBS volume lives apart from its instance, so it can be detached from the small one and attached to the larger one with the orders intact.
+      - id: b
+        text: It gives the database consistent low latency
+        why: Steady low latency helps the database run fast, but it does nothing to carry the data to another instance.
+      - id: c
+        text: It can be resized to add more capacity
+        why: Adding capacity changes how much the volume holds, not which instance it serves, so the data stays put.
+      - id: d
+        text: It comes in types that differ in IOPS
+        why: Picking a type tunes price and performance, and it plays no part in moving the data to the larger instance.
+    evidence:
+      - "Instance type changes: reattach a volume to a bigger or smaller instance and keep the data."
+      - A volume gives consistent low latency, attaches to one instance at a time, and can be backed up, resized and moved to another instance.
+    takeaway: An EBS volume is independent of its instance, so it can be reattached to a larger instance type with its data intact.
+    history: []
+    verified:
+      keyHash: f796c5f0455f
+      fullHash: f807b5a1bfb1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-xqe25h
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: ebs-volumes
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      Suppose the cafe had instead launched its larger instance in another isolated location of the same Region, away from where the order database's EBS volume was created.
+      What keeps the cafe from simply attaching that volume to the new instance?
+    options:
+      - id: a
+        text: A volume lives in a single Availability Zone
+        correct: true
+        why: A volume serves only instances in its own Availability Zone, so a snapshot has to carry the orders to a new volume where the instance runs.
+      - id: b
+        text: A volume keeps its data when its instance stops
+        why: Keeping data through a stop is why the orders are safe, but it does not stop the volume from reaching another zone.
+      - id: c
+        text: A volume never grows unless you modify it
+        why: Fixed capacity limits how much the volume holds, and it has nothing to do with which zone the instance runs in.
+      - id: d
+        text: A volume's type sets its price and speed
+        why: The type decides cost and IOPS, and no type lets a volume attach to an instance in another zone.
+    evidence:
+      - A volume lives in one Availability Zone, and so in one Region, and snapshots carry its data elsewhere.
+      - EBS replicates each volume automatically within its Availability Zone for availability and durability.
+    takeaway: An EBS volume is tied to one Availability Zone, so an instance in another zone reaches its data only through a snapshot.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The stem's 'had instead launched its larger instance' leans on an earlier step, so a reader who missed it lacks the setup."
+  - id: q-8em0qx
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: ebs-data-lifecycle
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "2.1"
+    level: 2
+    stem: >-
+      With the order database on its new server, the cafe takes regular snapshots of its EBS volume.
+      Under the shared responsibility model, several snapshot jobs fall to the cafe.
+      Which of them confirm that the backups would really bring the orders back?
+    options:
+      - id: a
+        text: Choosing how often snapshots are taken
+        why: The schedule sets how many recent orders a restore could miss, but it does not show that a restore works.
+      - id: b
+        text: Checking that each snapshot is intact
+        correct: true
+        why: Verifying integrity is the cafe's job and shows a snapshot holds the order data without damage.
+      - id: c
+        text: Deleting old snapshots to hold down cost
+        why: Pruning keeps the storage bill in check, yet it says nothing about whether the remaining snapshots restore.
+      - id: d
+        text: Encrypting snapshots of sensitive data
+        why: Encryption keeps the orders private, but a protected snapshot can still fail to restore if no one checks it.
+      - id: e
+        text: Restoring a snapshot as a trial run
+        correct: true
+        why: Testing restores is the cafe's job and proves the orders really come back before an emergency needs them.
+    evidence:
+      - "Your part: schedule snapshots, prune them to control cost, encrypt sensitive data, verify integrity and test restores."
+      - Your data is your job under shared responsibility, so you provision, move, deprovision and back up volumes.
+    takeaway: The cafe owns its EBS snapshots, and only checking their integrity and testing restores prove they can bring the data back.
+    history: []
+    verified:
+      keyHash: 2fd66e224623
+      fullHash: 4c0b4f79595e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

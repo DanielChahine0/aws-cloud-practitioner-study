@@ -1,0 +1,121 @@
+id: inc-018
+title: The S3 bill that keeps creeping up
+modules:
+  - 6
+concepts:
+  - s3-storage-classes
+  - s3-glacier-storage-classes
+  - s3-lifecycle
+brief: >-
+  The cafe's Amazon S3 bill has grown every month this year.
+  Menu photos, event pictures and daily order logs all sit in one bucket, and the owner wants the bill trimmed without losing anything staff still use.
+steps:
+  - id: q-nsmtyf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-storage-classes
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe keeps menu photos, event pictures and daily order logs in one Amazon S3 bucket.
+      Before moving any of them somewhere cheaper, the owner wants to see how often each group is actually read, so she knows where a move would pay off.
+      What should she use to get this view?
+    options:
+      - id: a
+        text: S3 Storage Class Analysis
+        correct: true
+        why: It watches how often each group of objects is read and shows where a cheaper class would save money, the view the owner wants before moving anything.
+      - id: b
+        text: S3 Intelligent-Tiering
+        why: It moves objects among its own tiers by itself, but it gives the owner no report on each group to plan her own moves from.
+      - id: c
+        text: S3 Lifecycle configuration
+        why: It moves or deletes objects on a schedule the owner sets, so it acts on a plan rather than showing her how often each group is read.
+      - id: d
+        text: Amazon S3 Access Points
+        why: They give each group of users its own access policy on shared data, which says nothing about how often the photos or logs are read.
+    evidence:
+      - S3 Storage Class Analysis studies access patterns to show when a cheaper class pays off.
+    takeaway: S3 Storage Class Analysis studies how objects are read to show when moving them to a cheaper class pays off.
+    history: []
+    verified:
+      keyHash: 621fb497561f
+      fullHash: 6c649b82b00b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-89stbz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-glacier-storage-classes
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe's old event photos are opened only a few times a year.
+      When a customer asks to see one, though, staff must show it on the spot.
+      Which storage class keeps these photos most cheaply while meeting that need?
+    options:
+      - id: a
+        text: S3 Glacier Instant Retrieval
+        correct: true
+        why: It is built for rarely read archives that must still come back in milliseconds, at a low storage price.
+      - id: b
+        text: S3 Glacier Flexible Retrieval
+        why: Its retrievals take minutes to hours, so staff could not show a photo while the customer waits.
+      - id: c
+        text: S3 Glacier Deep Archive
+        why: It is the cheapest class, but a retrieval takes about 12 hours by default, far too slow for this need.
+      - id: d
+        text: S3 Standard
+        why: It suits data used often, so it costs more than needed for photos opened only a few times a year.
+    evidence:
+      - "S3 Glacier Instant Retrieval: rarely read archives returned in milliseconds, up to 68 percent cheaper than Standard-IA at equal speed, for things like medical images or media."
+      - "Glacier classes are for archives: Instant Retrieval in milliseconds, Flexible Retrieval in minutes to hours, Deep Archive in about 12 hours at the lowest price."
+    takeaway: Rarely opened data that must still come back in milliseconds fits S3 Glacier Instant Retrieval.
+    history: []
+    verified:
+      keyHash: a8a9459a54e0
+      fullHash: d26930924414
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kab237
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-lifecycle
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      A team member drafts an S3 Lifecycle rule that expires the daily order logs before the accountant has finished checking them.
+      What goes wrong if the cafe applies this rule?
+    options:
+      - id: a
+        text: The logs are deleted for good and cannot be brought back
+        correct: true
+        why: An expiration action removes objects permanently, so logs expired before the check ends are gone while the accountant still needs them.
+      - id: b
+        text: The logs are archived where each read takes hours to finish
+        why: Slow archive reads follow a transition to a Glacier class, while this rule expires the logs instead of moving them.
+      - id: c
+        text: The logs are copied into a second bucket and billed twice
+        why: Lifecycle actions work within the same bucket and never make a second billed copy of the logs.
+      - id: d
+        text: The logs are kept in one Availability Zone with no spare copy
+        why: An expiration action deletes objects rather than changing where or how they are stored.
+    evidence:
+      - Expiration actions delete objects for good, such as when compliance no longer needs them.
+      - Rules should follow the access curve, since archiving too early blocks quick access and expiring too early deletes needed data.
+    takeaway: Lifecycle rules should follow how data is used, because an expiration that fires too early permanently deletes data still needed.
+    history: []
+    verified:
+      keyHash: 9d1a9966265d
+      fullHash: fd0d0143e27f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
