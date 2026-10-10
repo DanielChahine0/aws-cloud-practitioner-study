@@ -62,12 +62,15 @@ describe('replay cost stays flat as the exam date changes', () => {
     ];
     const within = (medians: readonly number[]) =>
       medians.slice(1).every((ms) => ms <= 1.5 * (medians[0] ?? 0) + 15);
-    let medians: number[] = [];
-    for (let attempt = 0; attempt < ATTEMPTS && !within(medians); attempt++) {
-      medians = mediansMs(cases.map(([, events]) => events));
+    const measure = (): number[] => {
+      const medians = mediansMs(cases.map(([, events]) => events));
       const line = cases.map(([name], i) => `${name} ${(medians[i] ?? 0).toFixed(1)} ms`).join(', ');
       console.info(`deriveMemory median of ${RUNS}: ${line}`);
-    }
+      return medians;
+    };
+    let medians = measure();
+    for (let attempt = 1; attempt < ATTEMPTS && !within(medians); attempt++) medians = measure();
+    expect(medians).toHaveLength(cases.length);
     const base = medians[0] ?? 0;
     for (const ms of medians.slice(1)) expect(ms).toBeLessThanOrEqual(1.5 * base + 15);
   });
