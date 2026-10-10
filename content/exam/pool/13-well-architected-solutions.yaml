@@ -1,0 +1,482 @@
+questions:
+  - id: q-9gvyy0
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cost-optimization-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.4"
+    level: 2
+    stem: >-
+      A regional clinic finds that several test environments from a finished project are still running and billing every month.
+      The team shuts them down and removes them so the charges stop.
+      Which Well-Architected pillar does this practice support most directly?
+    options:
+      - id: a
+        text: Cost Optimization
+        correct: true
+        why: Removing resources nobody needs ends their charges, which is the spending focus of Cost Optimization.
+      - id: b
+        text: Reliability
+        why: Reliability is about recovering from failures and growing with demand, not about ending charges for idle resources.
+      - id: c
+        text: Operational Excellence
+        why: Operational Excellence covers running, monitoring and releasing systems well, while this change is about cutting spend.
+      - id: d
+        text: Performance Efficiency
+        why: Performance Efficiency fits resource sizes to a live workload, but these environments serve no workload at all.
+    evidence:
+      - "**Cost Optimization**: lower spend through smarter allocation, such as cheaper specs for an underused instance and deprovisioning unneeded services."
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+    takeaway: Deprovisioning resources that no longer serve a purpose is a Cost Optimization practice, because it ends charges for unused capacity.
+    history: []
+    verified:
+      keyHash: 2af72ba70b7b
+      fullHash: ed7dc6245062
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rf5xbp
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: cost-optimization-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.4"
+    level: 2
+    stem: >-
+      A bike rental shop runs a steady booking workload all year and sees short, unpredictable surges on sunny weekends.
+      Its instances already match what the workload needs, but every one of them runs as an On-Demand Instance.
+      The owner commits to a Savings Plan for the year-round load and moves the weekend surge capacity to Spot Instances.
+      Which Well-Architected pillar does this change support most directly?
+    options:
+      - id: a
+        text: Performance Efficiency
+        why: The instances already fit the workload, and this change alters only how the same capacity is bought, not its size or type.
+      - id: b
+        text: Cost Optimization
+        correct: true
+        why: Moving from On-Demand to a Savings Plan for steady use and Spot for brief surges lowers the price of the same capacity, a Cost Optimization practice.
+      - id: c
+        text: Sustainability
+        why: Sustainability favors replacing always-on resources to cut energy use, while here the same instances keep running under new pricing.
+      - id: d
+        text: Reliability
+        why: Reliability plans recovery from failures and growth, and a new way of paying for instances does not change how bookings survive an outage.
+    evidence:
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+      - Fitting size to workload points to Performance Efficiency, purchase options and deprovisioning to Cost Optimization, serverless over always-on to Sustainability.
+    takeaway: Changing purchase options, such as a Savings Plan for steady load and Spot for surges, is a Cost Optimization practice rather than a sizing one.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The item asks which Well-Architected pillar a change supports, which task 1.2 design principles covers better than 1.4 cloud economics."
+  - id: q-n6z8bs
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: aws-well-architected-framework
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      An online bookstore has handled every order for a year on the same architecture, and nothing has gone down.
+      Which reasons does the AWS Well-Architected Framework give for examining this design again?
+    select: 2
+    options:
+      - id: a
+        text: The framework sorts its guidance into six pillars, from Operational Excellence to Sustainability.
+        why: The pillar structure is true of the framework, but it describes how the guidance is organized rather than why the bookstore's design needs another look.
+      - id: b
+        text: Requirements change over time, so sizes and processes picked at launch need a fresh look.
+        correct: true
+        why: The framework expects needs to change, so a design that fit last year should be resized, refined and trimmed of waste as the workload becomes clearer.
+      - id: c
+        text: The AWS Well-Architected Tool is a free, self-service way to check a workload against the pillars.
+        why: The tool being free is true, but its price is not a reason the framework gives for examining a design that already runs.
+      - id: d
+        text: The framework sets its bar at secure, resilient and efficient, which is higher than merely running.
+        correct: true
+        why: A year without downtime shows the design runs, but the framework also asks whether it is secure, resilient and efficient, which still needs checking.
+      - id: e
+        text: The AWS Well-Architected Tool lets a reviewer mark a question as not applicable to a workload.
+        why: Skipping questions is a true feature of the tool, but it explains how a review runs rather than why the bookstore should look at its design again.
+    evidence:
+      - The framework aims past merely working, at secure, high-performing, resilient and efficient designs, with one consistent method for any workload.
+      - Needs change, so the pillars keep asking you to refine processes, resize as the workload becomes clearer and trim waste.
+    takeaway: The Well-Architected Framework treats a working design as a starting point, because needs change and working is not the same as well built.
+    history: []
+    verified:
+      keyHash: aa673a459663
+      fullHash: e24f41f96b52
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7046zk
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: operational-excellence-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      A mobile game studio deploys updates by hand, and missed steps keep breaking production during launches.
+      It plans to push every release through an automated pipeline and to sharpen how staff respond to incidents.
+      Which Well-Architected pillar does this plan address?
+    options:
+      - id: a
+        text: Reliability
+        why: Reliability centers on recovering from failures and growing with demand, not on how releases are carried out.
+      - id: b
+        text: Security
+        why: Security is about least-privilege access and protecting data, which this release plan does not change.
+      - id: c
+        text: Operational Excellence
+        correct: true
+        why: Automated releases and better incident response are core parts of running systems well under Operational Excellence.
+      - id: d
+        text: Performance Efficiency
+        why: Performance Efficiency sizes resources to the workload, while the studio's problem is its manual release process.
+    evidence:
+      - "**Operational Excellence**: running and monitoring systems for business value, improving processes, pipeline-automated releases and good event response."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Automated release pipelines and well-run incident response are hallmarks of the Operational Excellence pillar.
+    history: []
+    verified:
+      keyHash: 6e1588501dbc
+      fullHash: 0b448aca0450
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8rsp1g
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: security-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      A credit union is checking its online banking design against the Security pillar of the AWS Well-Architected Framework.
+      Which practices belong to that pillar?
+    select: 2
+    options:
+      - id: a
+        text: Give each staff role only the permissions its work requires.
+        correct: true
+        why: Least-privilege access is a central Security practice, because it limits what any one identity can reach.
+      - id: b
+        text: Spread the database across several Availability Zones with automatic recovery.
+        why: Multiple Availability Zones and automatic recovery point to Reliability, which plans for failures.
+      - id: c
+        text: Encrypt member data both while stored and while it travels.
+        correct: true
+        why: Encrypting data at rest and in transit protects it from exposure, which is what the Security pillar asks for.
+      - id: d
+        text: Resize servers so their memory matches what the workload needs.
+        why: Matching server size to the workload is Performance Efficiency, which is about fit rather than protection.
+      - id: e
+        text: Send every release through an automated deployment pipeline.
+        why: Automated releases are an Operational Excellence practice, aimed at running systems well rather than guarding them.
+    evidence:
+      - "**Security**: protection built in, with least-privilege access, intact data and guarded systems."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Least-privilege access and encryption of data at rest and in transit are the clearest cues for the Security pillar.
+    history: []
+    verified:
+      keyHash: 44f3f04a00d8
+      fullHash: 6486281c7b9f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-d13dps
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: reliability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which pillar of the AWS Well-Architected Framework focuses on planning how a workload recovers from failures and adapts as demand grows?
+    options:
+      - id: a
+        text: Operational Excellence
+        why: Operational Excellence focuses on running and monitoring systems and improving processes, not on failure recovery plans.
+      - id: b
+        text: Reliability
+        correct: true
+        why: Reliability is the pillar that plans recovery from failures and lets a workload keep up as needs grow.
+      - id: c
+        text: Performance Efficiency
+        why: Performance Efficiency fits resource sizes to the workload, which is about fit rather than surviving failures.
+      - id: d
+        text: Security
+        why: Security protects data and systems with least-privilege access, which does not address recovering from failures.
+    evidence:
+      - "**Reliability**: planning recovery from failures and adapting as business and customer needs grow."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Planning for failure recovery and growth, often with multiple Availability Zones, is the job of the Reliability pillar.
+    history: []
+    verified:
+      keyHash: 2d41e06ba7fa
+      fullHash: 0c3b6add698b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-edk4p5
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: performance-efficiency-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 3
+    stem: >-
+      A video editing startup sees its rendering jobs run short of memory and slow down on the instance type it chose at launch.
+      The team switches to an instance type sized for the jobs' memory needs and schedules regular checks as the workload changes.
+      Which Well-Architected pillar does this work fall under?
+    options:
+      - id: a
+        text: Cost Optimization
+        why: Cost Optimization lowers spend, but the startup moved to a size that fits the jobs rather than a cheaper one.
+      - id: b
+        text: Sustainability
+        why: Sustainability favors avoiding always-on resources to cut energy use, which this sizing change does not aim at.
+      - id: c
+        text: Reliability
+        why: Reliability plans recovery from failures, while these jobs are slow because the instance does not fit their needs.
+      - id: d
+        text: Performance Efficiency
+        correct: true
+        why: Sizing resources to a workload's memory needs and revisiting that as needs shift is the focus of Performance Efficiency.
+    evidence:
+      - "**Performance Efficiency**: sizing resources, such as an EC2 instance, to workload and memory needs, and revisiting that as needs move."
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+    takeaway: Matching resource sizes to what a workload actually needs, and rechecking as it changes, belongs to the Performance Efficiency pillar.
+    history: []
+    verified:
+      keyHash: 78c69493a048
+      fullHash: 81d22fed62b5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2kgce1
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: sustainability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which Well-Architected pillar favors event-driven functions over servers left running around the clock in order to lower energy use and carbon impact?
+    options:
+      - id: a
+        text: Performance Efficiency
+        why: Performance Efficiency fits resource sizes to the workload, and its aim is a good fit rather than lower energy use.
+      - id: b
+        text: Reliability
+        why: Reliability plans recovery from failures and growth, which does not depend on cutting energy use.
+      - id: c
+        text: Sustainability
+        correct: true
+        why: Sustainability seeks energy-efficient, lower-impact designs, such as replacing always-on servers with functions that run on demand.
+      - id: d
+        text: Cost Optimization
+        why: Cost Optimization lowers spend through allocation and purchase choices, and its goal is the bill rather than carbon impact.
+    evidence:
+      - "**Sustainability**: energy-efficient, lower-impact designs that avoid always-on resources, like Lambda over a nonstop EC2 instance or a smaller RDS instance, cutting cost, energy and carbon."
+      - Fitting size to workload points to Performance Efficiency, purchase options and deprovisioning to Cost Optimization, serverless over always-on to Sustainability.
+    takeaway: Choosing serverless or elastic resources over always-on ones to cut energy and carbon is the Sustainability pillar's main cue.
+    history: []
+    verified:
+      keyHash: 80d072ae093a
+      fullHash: 2414454a40c8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-t276zs
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-well-architected-tool
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 3
+    stem: >-
+      A logistics company wants a free, self-service way to answer structured design questions about one of its workloads.
+      It wants to skip questions that are irrelevant to it, record milestones over time and receive a list of issues, each with a suggested fix.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs automated checks on an account, but it does not walk a team through design questions about a workload.
+      - id: b
+        text: AWS Config
+        why: AWS Config records and evaluates resource configurations, which is not a question-based design review with milestones.
+      - id: c
+        text: AWS Well-Architected Tool
+        correct: true
+        why: The Well-Architected Tool reviews a defined workload through questions, allows not-applicable answers, tracks milestones and reports fixes.
+      - id: d
+        text: AWS Cost Explorer
+        why: Cost Explorer views and forecasts spending, so it cannot run a design review of a workload.
+    evidence:
+      - You define a workload, run the review on your account and get a report of issues, each with a best-practice fix.
+      - "Features: workload reviews at its core, milestone tracking and custom lenses that adapt evaluations and improvement plans."
+      - A free, self-service AWS service for reviewing and improving workloads against the six pillars.
+    takeaway: The free AWS Well-Architected Tool runs question-based reviews of a workload and returns issues with suggested fixes and milestones.
+    history: []
+    verified:
+      keyHash: c9f4307fa7ab
+      fullHash: 09642d310513
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8zxn1k
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-x-ray
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      A travel booking website has a slow checkout, and each request passes through several backend services.
+      Developers want to follow individual requests end to end and see which service is causing the delay.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: AWS CodeBuild
+        why: CodeBuild compiles, tests and packages code, which does nothing to follow live requests through the app.
+      - id: b
+        text: AWS X-Ray
+        correct: true
+        why: X-Ray traces requests across the app and shows where time is spent, so developers can find the slow service.
+      - id: c
+        text: AWS CloudTrail
+        why: CloudTrail records API calls made in an account for auditing, not the path and timing of user requests.
+      - id: d
+        text: AWS AppSync
+        why: AppSync builds GraphQL APIs over data sources, and it does not trace requests to find bottlenecks.
+    evidence:
+      - "**AWS X-Ray**: monitors and traces requests so developers can visualize app behavior, find bottlenecks, debug faster and tune efficiency and reliability."
+      - CodeBuild does CI builds and CodePipeline the whole release, but only X-Ray visualizes and debugs app behavior.
+    takeaway: Tracing requests across services to find bottlenecks and debug an app points to AWS X-Ray.
+    history: []
+    verified:
+      keyHash: 42d3fba8944e
+      fullHash: 2789086fc4eb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-bzfxx6
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-connect
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which AWS service provides a cloud contact center that routes customer calls and chats to agents and records the conversations?
+    options:
+      - id: a
+        text: Amazon Simple Email Service (Amazon SES)
+        why: Amazon SES sends email from applications, and it does not handle calls, chats or agent routing.
+      - id: b
+        text: Amazon Lex
+        why: Amazon Lex builds conversational chatbots, but it is not a full contact center that routes and records calls.
+      - id: c
+        text: Amazon Connect
+        correct: true
+        why: Amazon Connect is the cloud contact center, with routing of calls and chats, recording and analytics.
+      - id: d
+        text: Amazon Simple Notification Service (Amazon SNS)
+        why: Amazon SNS pushes notifications to subscribers, which is not a service for agents to take customer calls.
+    evidence:
+      - "**Amazon Connect**: AI-powered cloud contact center for calls and chats, with call routing, recording, analytics and AWS integrations."
+      - Calls, routing and analytics mean Amazon Connect; SES is email only and WorkSpaces is a desktop.
+    takeaway: A cloud contact center that routes, records and analyzes customer calls and chats is Amazon Connect.
+    history: []
+    verified:
+      keyHash: c543bd1517eb
+      fullHash: cddc82cf0a1a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-svzr0m
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-workspaces
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      An architecture firm has staff who work from home and from client sites.
+      Each person needs a complete desktop that keeps their files and settings between sessions and works like an office computer.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon AppStream 2.0
+        why: AppStream 2.0 streams individual applications to a browser, not a complete persistent desktop for each person.
+      - id: b
+        text: Amazon WorkSpaces
+        correct: true
+        why: WorkSpaces delivers a fully managed, persistent desktop that staff reach securely from anywhere like an office PC.
+      - id: c
+        text: Amazon WorkSpaces Secure Browser
+        why: Secure Browser is a managed browser for web-only work, so it does not give staff a full desktop.
+      - id: d
+        text: Amazon Lightsail
+        why: Lightsail offers simple virtual servers for hosting, not managed desktops for staff to work in.
+    evidence:
+      - "**Amazon WorkSpaces**: fully managed virtual desktop infrastructure, a complete persistent desktop staff reach securely from anywhere and use like an office PC, cost-efficient and easy to run."
+      - WorkSpaces gives a full desktop, AppStream 2.0 streams apps (the course's pick for staff SaaS access) and Secure Browser suits web-only work.
+    takeaway: When staff need a full, persistent desktop reachable from anywhere, Amazon WorkSpaces fits rather than app streaming or a secure browser.
+    history: []
+    verified:
+      keyHash: 64bce8c8a32c
+      fullHash: 4536826f53b2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-3r5mzf
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-iot-core
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which AWS service securely connects sensor-equipped physical devices to cloud applications and helps ingest, process and act on the data they send?
+    options:
+      - id: a
+        text: Amazon EventBridge
+        why: EventBridge routes events between applications and services, but it is not built to connect and secure physical devices.
+      - id: b
+        text: AWS IoT Core
+        correct: true
+        why: IoT Core links devices to cloud apps with mutual authentication and encryption and handles the data they send.
+      - id: c
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams collects streaming records, but it does not authenticate and manage connections from devices.
+      - id: d
+        text: AWS AppSync
+        why: AppSync builds GraphQL APIs for web and mobile frontends, not secure links for sensor devices.
+    evidence:
+      - "**AWS IoT Core**: managed service that securely links devices to cloud apps and simplifies ingesting, processing and acting on their data, using mutual authentication, end-to-end encryption and a choice of protocols."
+      - IoT needs a sensing physical device, managed with AWS IoT Core; a plain app or software feature does not count.
+    takeaway: Securely connecting physical sensor devices to the cloud and acting on their data is the job of AWS IoT Core.
+    history: []
+    verified:
+      keyHash: ed6c34798f74
+      fullHash: 3e7af6d45494
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

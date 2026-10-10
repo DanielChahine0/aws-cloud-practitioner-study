@@ -1,0 +1,966 @@
+questions:
+  - id: q-5tanrf
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ebs-data-lifecycle
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "2.1"
+    level: 2
+    stem: >-
+      An online bookstore runs its order system on Amazon EC2 instances with Amazon EBS volumes.
+      It wants regular snapshots of those volumes, with the old snapshots removed over time.
+      Under the AWS shared responsibility model, how is this work split?
+    options:
+      - id: a
+        text: AWS schedules the snapshots, and the bookstore deletes the old ones
+        why: Scheduling backups is part of looking after the data, so it falls to the bookstore and not to AWS.
+      - id: b
+        text: The bookstore schedules the snapshots and deletes the old ones
+        correct: true
+        why: The data on the volumes is the customer's, so the bookstore both plans the snapshots and prunes old ones to control cost.
+      - id: c
+        text: AWS schedules the snapshots and deletes the old ones
+        why: AWS runs the hardware behind EBS, but backing up the data on the volumes and cleaning up old copies is the bookstore's job.
+      - id: d
+        text: The bookstore schedules the snapshots, and AWS deletes the old ones
+        why: Pruning old snapshots to keep costs down is also the bookstore's task, so AWS does not remove them on its behalf.
+    evidence:
+      - Your data is your job under shared responsibility, so you provision, move, deprovision and back up volumes.
+      - 'Your part: schedule snapshots, prune them to control cost, encrypt sensitive data, verify integrity and test restores.'
+    takeaway: The customer owns the EBS data lifecycle, from scheduling snapshots to deleting the ones it no longer needs.
+    history: []
+    verified:
+      keyHash: 260c1775b4f1
+      fullHash: 4c856f04efa4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kade9p
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ebs-data-lifecycle
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "2.1"
+    level: 2
+    stem: >-
+      A bike rental shop runs its booking app on Amazon EC2 and protects the app's Amazon EBS volumes with snapshots.
+      Under the AWS shared responsibility model, which task is the shop's own?
+    options:
+      - id: a
+        text: Replicating each volume within its Availability Zone
+        why: EBS copies every volume inside its zone automatically, so this protection is handled by AWS.
+      - id: b
+        text: Storing snapshots across several Availability Zones
+        why: Snapshots are kept in Amazon S3 with redundant copies in several zones, which AWS arranges without customer work.
+      - id: c
+        text: Removing old snapshots to keep costs down
+        correct: true
+        why: Pruning snapshots to control cost is part of looking after the data, which is the shop's share as the customer.
+      - id: d
+        text: Keeping each incremental snapshot usable as a full copy
+        why: AWS manages the links between incremental snapshots, so each one restores in full without customer effort.
+    evidence:
+      - 'Your part: schedule snapshots, prune them to control cost, encrypt sensitive data, verify integrity and test restores.'
+      - Each still acts as a full copy, AWS manages the links, and deleting one frees only data no other snapshot uses.
+      - Snapshots sit in Amazon S3, redundantly across several Availability Zones.
+    takeaway: AWS runs and replicates EBS, while the customer schedules, encrypts, prunes and test-restores its own snapshots.
+    history: []
+    verified:
+      keyHash: 6fb41b51620e
+      fullHash: 2809daaa1c4e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-q23t56
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: s3-bucket-policies
+    note: m06/amazon-s3-demonstration
+    task: "2.3"
+    level: 3
+    stem: >-
+      A regional clinic wants a partner laboratory's AWS account to upload test results into Amazon S3 storage that the clinic owns, on an ongoing basis.
+      A condition must keep the clinic in full control of every uploaded object.
+      What should the clinic use?
+    options:
+      - id: a
+        text: An identity-based policy on the clinic's IAM users
+        why: A policy on the clinic's own users only sets what those users may do, so it grants nothing to identities in the laboratory's account.
+      - id: b
+        text: An S3 bucket policy
+        correct: true
+        why: A bucket policy can name the partner account as principal, allow uploads and add a condition on object ownership.
+      - id: c
+        text: A presigned URL for each upload
+        why: A presigned URL expires, so it suits brief one-off access rather than lasting uploads from a partner account.
+      - id: d
+        text: S3 Block Public Access settings
+        why: Block Public Access only stops public access, so it grants nothing to the partner laboratory.
+    evidence:
+      - Bucket policies are JSON documents controlling who may reach the objects inside.
+      - The demo's policy lets another AWS account upload while the bucket owner keeps full control.
+    takeaway: Lasting, conditional access to a bucket for another AWS account is written as a resource-based S3 bucket policy.
+    history: []
+    verified:
+      keyHash: b11038788213
+      fullHash: aa76400631d2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5ww78a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: s3-presigned-urls
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "2.3"
+    level: 2
+    stem: >-
+      A small publishing house keeps manuscripts in a private Amazon S3 bucket.
+      It wants a freelance editor to download one manuscript over the next few days, without editing the bucket policy.
+      What should it do?
+    options:
+      - id: a
+        text: Generate a presigned URL for the object
+        correct: true
+        why: A presigned URL gives the editor time-limited access to that one object and leaves the bucket policy unchanged.
+      - id: b
+        text: Turn off S3 Block Public Access for the bucket
+        why: Lifting the block would still need a public policy and would expose far more than a single manuscript.
+      - id: c
+        text: Add the editor as a principal in the bucket policy
+        why: This edits the bucket policy, which the publishing house wants to leave alone.
+      - id: d
+        text: Switch on static website hosting for the bucket
+        why: Website hosting does not open private objects to anyone, and it would not limit access to a few days.
+    evidence:
+      - Presigned URLs grant expiring access without touching the bucket policy.
+      - Sharing a file briefly with an outside party fits a presigned URL.
+    takeaway: Short-lived access to one private object, with the bucket policy left alone, calls for an S3 presigned URL.
+    history: []
+    verified:
+      keyHash: c86e18d3aae1
+      fullHash: 69052f19bc89
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-9hbyxd
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: s3-block-public-access
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "2.3"
+    level: 2
+    stem: >-
+      An online art gallery gave its Amazon S3 bucket a policy that lets anyone read the images in it.
+      Anonymous visitors still get an access denied error for every image.
+      Which S3 feature is most likely stopping these requests?
+    options:
+      - id: a
+        text: S3 Versioning
+        why: Versioning keeps earlier copies of objects for restoring, and it never blocks a read that a policy allows.
+      - id: b
+        text: S3 Block Public Access
+        correct: true
+        why: Block Public Access overrides a bucket policy that would open data to the public, so the anonymous reads fail.
+      - id: c
+        text: Amazon S3 presigned URLs
+        why: A presigned URL grants extra, expiring access to one object, so it could open a read but cannot cause this denial.
+      - id: d
+        text: Amazon S3 Audit Logs
+        why: Audit logs record each request and who made it, but they only report on access and do not refuse any request.
+    evidence:
+      - Block Public Access, on the account or the bucket, overrides any bucket policy that would open data to the public.
+      - Presigned URLs grant expiring access without touching the bucket policy.
+    takeaway: S3 Block Public Access beats a permissive bucket policy, so public requests fail while the block is on.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 alone repeats the stem's word 'access', which points at the key. Option 2 'Amazon S3 Audit Logs' is not a real AWS feature name. Option names mix 'S3' and 'Amazon S3' prefixes, so the options are not parallel."
+  - id: q-nt7aq6
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: aws-storage-gateway
+    note: m06/aws-storage-gateway
+    task: "3.1"
+    level: 3
+    stem: >-
+      A law office is moving to a hybrid deployment: its document apps keep running in its own building, and AWS adds storage capacity behind them.
+      Staff must keep fast local access to the files they open most, and the apps should need little or no rework.
+      Which AWS service lets the office operate this way?
+    options:
+      - id: a
+        text: AWS Outposts
+        why: Outposts runs AWS infrastructure inside the building, so capacity stays on site instead of extending into storage in AWS.
+      - id: b
+        text: AWS Storage Gateway
+        correct: true
+        why: Storage Gateway bridges on-premises apps to virtually unlimited AWS storage and keeps frequently used files cached on site.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect is a private network link to AWS, and it neither stores the office's files nor caches them locally.
+      - id: d
+        text: AWS Site-to-Site VPN
+        why: A Site-to-Site VPN encrypts traffic between the office and a VPC, but it adds no storage capacity and no local cache.
+    evidence:
+      - A hybrid storage service bridging on-premises systems and AWS, giving local apps virtually unlimited cloud capacity with little or no rework.
+      - Local storage extends into AWS while frequently used data stays fast on site.
+    takeaway: A hybrid deployment that keeps apps on site but grows their storage into AWS with a local cache runs on AWS Storage Gateway.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 is the only option that repeats the stem's word 'storage', which points at the key."
+  - id: q-7j6z1d
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: hybrid-cloud-storage
+    note: m06/aws-storage-gateway
+    task: "3.1"
+    level: 1
+    stem: >-
+      AWS Storage Gateway links storage in a customer's own data center with storage in AWS.
+      Which deployment model does this support?
+    options:
+      - id: a
+        text: Cloud-based deployment
+        why: A cloud-based deployment runs everything in the cloud, while the gateway keeps systems on site in use.
+      - id: b
+        text: On-premises deployment
+        why: A purely on-premises deployment uses no AWS storage, but the gateway sends data into AWS.
+      - id: c
+        text: Hybrid deployment
+        correct: true
+        why: Joining on-site systems with cloud storage is what a hybrid deployment means, and the gateway exists to do it.
+      - id: d
+        text: Multi-cloud deployment
+        why: Multi-cloud spreads work over several cloud providers, while the gateway joins one data center with AWS.
+    evidence:
+      - A hybrid storage service bridging on-premises systems and AWS, giving local apps virtually unlimited cloud capacity with little or no rework.
+    takeaway: AWS Storage Gateway is a hybrid storage service that joins on-premises systems with storage in AWS.
+    history: []
+    verified:
+      keyHash: 1f96afceb8ab
+      fullHash: ac689753d8ea
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-v91w5p
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: ebs-snapshots
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.2"
+    level: 2
+    stem: >-
+      A video game studio keeps a build server's data on an Amazon EBS volume in one Availability Zone.
+      It wants the same data on a test server in a different AWS Region.
+      Which Amazon EBS capability should the studio use to get the data there?
+    options:
+      - id: a
+        text: Point-in-time snapshots of the volume
+        correct: true
+        why: A snapshot can be copied across Regions and used to create a new volume there with the same data.
+      - id: b
+        text: Automatic replication of the volume inside its zone
+        why: EBS does replicate each volume inside its zone, but those copies never leave that zone, so the test server cannot use them.
+      - id: c
+        text: Live changes to the volume's size and type
+        why: Changing size or type tunes the volume in place, and it leaves the data in the same zone as before.
+      - id: d
+        text: Reattachment of the volume to another instance
+        why: A volume attaches only to instances in its own zone, so the test server in another Region cannot mount it.
+    evidence:
+      - 'Benefits: recovery from corruption, deletion or failure; cross-Region migration, resizing, cloning and cross-account sharing; and lower cost from storing only changes.'
+      - A snapshot can create many new volumes, each an exact copy of the source at that moment.
+    takeaway: EBS snapshots move volume data across Availability Zones and Regions, which a volume cannot cross by itself.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The item tests an Amazon EBS capability, so task 3.6 storage services fits better than 3.2 global infrastructure."
+  - id: q-qm111r
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-elastic-disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.2"
+    level: 2
+    stem: >-
+      A pharmacy chain runs its prescription servers in its own data center.
+      If that site fails, the servers must come back in an AWS Region within minutes from an up-to-date copy, and the chain wants to avoid paying for a second data center.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Storage Gateway
+        why: Storage Gateway extends local storage into AWS, but it does not recover whole servers in a Region.
+      - id: b
+        text: AWS Elastic Disaster Recovery
+        correct: true
+        why: It replicates servers to AWS continuously, so they recover in the target Region within minutes with no standby site.
+      - id: c
+        text: Amazon Data Lifecycle Manager
+        why: Data Lifecycle Manager schedules EBS snapshots for resources already in AWS, so it cannot protect on-site servers.
+      - id: d
+        text: Amazon S3 Glacier Deep Archive
+        why: Deep Archive keeps cheap long-term copies with retrieval measured in hours, far too slow for server recovery.
+    evidence:
+      - Exact, current replicas let servers recover in the target AWS Region within minutes, with point-in-time recovery.
+      - 'No secondary data center: low-cost storage, minimal compute and pay-per-use pricing.'
+    takeaway: Fast recovery of on-premises servers into an AWS Region, without a standby data center, points to Elastic Disaster Recovery.
+    history: []
+    verified:
+      keyHash: 2c98a2554583
+      fullHash: 11e2bd118be6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-r1nxqa
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: block-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which type of storage splits data into fixed-size chunks so that an edit rewrites only the chunks that changed?
+    options:
+      - id: a
+        text: Object storage
+        why: Object storage rewrites the whole object on any change, rather than just the changed parts.
+      - id: b
+        text: File storage
+        why: File storage is defined by a shared folder hierarchy reached over a network, not by the fixed-size chunks with partial rewrites that the stem describes.
+      - id: c
+        text: Block storage
+        correct: true
+        why: Block storage writes only the changed blocks, which keeps frequent small updates fast.
+      - id: d
+        text: Ephemeral storage
+        why: Ephemeral describes how long data lasts, since it is lost on stop, and says nothing about how edits are written.
+    evidence:
+      - Data is split into blocks for fast access, and an edit rewrites only changed blocks, which suits frequently updated apps and databases.
+    takeaway: Block storage updates only the blocks that change, which suits databases and other frequently updated data.
+    history: []
+    verified:
+      keyHash: 73dacc81c192
+      fullHash: 3a0acc1d7034
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ktjnsc
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: object-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which statements describe object storage?
+    options:
+      - id: a
+        text: Each item is kept with a unique ID and metadata
+        correct: true
+        why: An object bundles its data with an identifier and descriptive metadata, which is how object storage keeps it.
+      - id: b
+        text: An edit rewrites only the blocks that changed
+        why: Rewriting only changed blocks is how block storage works, while an object is replaced as a whole.
+      - id: c
+        text: Items sit in a folder hierarchy shared over a network
+        why: A shared folder hierarchy describes file storage, while objects sit in flat buckets.
+      - id: d
+        text: An edit replaces the whole item, not only a part
+        correct: true
+        why: Objects are updated as complete units, which is why object storage suits files that rarely change.
+      - id: e
+        text: A volume attaches to one instance like a drive
+        why: A volume attached like a drive describes block storage, while objects are reached in buckets, not mounted on an instance.
+      - id: f
+        text: Many users open one file system over a network
+        why: One file system opened by many users describes file storage, while object storage keeps separate objects in buckets.
+    evidence:
+      - An object holds data, a unique ID and metadata, and any change rewrites the whole object.
+      - Objects sit in flat buckets with practically unlimited room for unstructured data, and rich metadata helps search and analytics.
+    takeaway: Object storage keeps self-contained objects of data, ID and metadata, and replaces a whole object on any change.
+    history: []
+    verified:
+      keyHash: c708ed4f3ae7
+      fullHash: 571c123593a3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-p7qv92
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: file-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 2
+    stem: >-
+      A university library wants staff in many departments to open and edit the same nested folders of documents over the network.
+      Its applications should need little or no code change.
+      Which type of storage fits?
+    options:
+      - id: a
+        text: Block storage
+        why: Block storage serves as a drive for one instance, so it does not give many departments one shared folder tree.
+      - id: b
+        text: Object storage
+        why: Object storage keeps whole objects in flat buckets, which would mean reworking apps that expect folders.
+      - id: c
+        text: Ephemeral storage
+        why: Ephemeral storage loses its data when the instance stops, so it cannot hold the library's shared documents.
+      - id: d
+        text: File storage
+        correct: true
+        why: File storage shares one hierarchical file system over the network, and existing apps use it with little change.
+    evidence:
+      - A hierarchical file system shared over a network, needing little or no code change and growing without hardware to manage.
+      - Fits shared-access apps such as content management systems.
+    takeaway: Shared folders that many users open over a network, with apps left as they are, point to file storage.
+    history: []
+    verified:
+      keyHash: 1dca8fd198f9
+      fullHash: 3071e08be20e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ja8zf5
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: ec2-instance-store
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 3
+    stem: >-
+      A weather research lab runs heavy simulations on one Amazon EC2 instance and writes scratch files it can lose without harm.
+      It wants the fastest disk the instance can reach, at no extra cost.
+      Which statements explain the best storage choice for those scratch files?
+    options:
+      - id: a
+        text: Amazon EBS keeps a volume's data through instance stops
+        why: EBS persistence is true but wasted here, since the scratch files can be lost and EBS volumes are billed on top of the instance.
+      - id: b
+        text: EC2 instance store sits on the host, so latency is very low
+        correct: true
+        why: Disk on the instance's own host gives the lowest latency and highest I/O, which is the speed the lab wants.
+      - id: c
+        text: Amazon EFS lets many instances share one file system
+        why: EFS sharing is true but not needed for one instance, and a local instance store disk is usually faster than EFS.
+      - id: d
+        text: EC2 instance store comes free with many instance types
+        correct: true
+        why: Instance store is included with many instance types at no extra cost, which meets the lab's cost goal.
+      - id: e
+        text: Amazon EBS volumes change size and type without downtime
+        why: Live EBS changes are true but beside the point, because the lab needs neither resizing nor persistence for scratch data.
+      - id: f
+        text: Amazon EFS grows and shrinks as files are added or removed
+        why: EFS elasticity is true but does not make it the fastest or a free disk, so it does not meet the lab's goals.
+    evidence:
+      - Being ephemeral, it suits data you can lose, such as buffers, caches and scratch space for heavy processing.
+      - 'Benefits: included with many instance types at no extra cost, with very low latency and high I/O because it sits on the host.'
+    takeaway: Instance store gives very fast, free disk for temporary data such as caches and scratch space that can be lost.
+    history: []
+    verified:
+      keyHash: 5fa2e6af75ac
+      fullHash: ff1d75f59e86
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zrhgqw
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-ebs
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which AWS service provides block storage volumes for Amazon EC2 instances that keep their data after the instance stops or terminates?
+    options:
+      - id: a
+        text: Amazon EC2 instance store
+        why: Instance store is block storage on the host, and its data is erased when the instance stops or terminates.
+      - id: b
+        text: Amazon EFS
+        why: EFS is a shared file system for many instances, and it does not attach as a block volume.
+      - id: c
+        text: Amazon EBS
+        correct: true
+        why: EBS volumes live apart from the host, so their data survives stops, starts and terminations.
+      - id: d
+        text: Amazon S3
+        why: S3 stores whole objects in buckets, and it does not attach to an instance as a block volume.
+    evidence:
+      - They live apart from the host on durable SSD or HDD media, so data survives stops, starts and terminations.
+      - EBS volumes are virtual hard drives that attach to instances like external drives.
+    takeaway: Amazon EBS gives EC2 persistent block volumes whose data outlives instance stops and terminations.
+    history: []
+    verified:
+      keyHash: 9a6079383c85
+      fullHash: 5e877e6b6e4d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-hfac0x
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ebs-volume-types
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      A ticketing company runs its database on an Amazon EBS volume.
+      At busy times checkout slows, because the volume cannot keep up with the number of reads and writes per second.
+      The company wants to stay on Amazon EBS.
+      What should it do?
+    options:
+      - id: a
+        text: Take snapshots of the volume more often
+        why: Snapshots back up the volume, and taking them more often adds nothing to its read and write performance.
+      - id: b
+        text: Switch the volume to a type with higher IOPS
+        correct: true
+        why: Volume types differ in performance measured in IOPS, and the type can be changed in place to serve more reads and writes.
+      - id: c
+        text: Copy the volume's snapshots to a second Region
+        why: Copies in another Region help with recovery and migration, but the volume in use stays exactly as fast as before.
+      - id: d
+        text: Turn on encryption for the volume
+        why: Encryption protects the stored data, and it does nothing to raise the number of operations the volume can serve.
+    evidence:
+      - Volume types differ in price and in performance, measured in IOPS (input/output operations per second) and tied to type and often size.
+      - 'Cost and performance tuning: change type, size or IOPS on the fly without downtime.'
+    takeaway: When an EBS volume cannot keep up, a volume type with higher IOPS raises performance without leaving EBS.
+    history: []
+    verified:
+      keyHash: 5eaa490d7b4d
+      fullHash: b1f65fde1373
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kcs1h9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: incremental-backups
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      A news website takes an Amazon EBS snapshot of a large volume every night.
+      Each nightly snapshot takes less time and adds less storage cost than the very first one did.
+      What explains this?
+    options:
+      - id: a
+        text: Snapshots are kept in Amazon S3 across several Availability Zones
+        why: This is where snapshots live, and it says nothing about why later ones are quicker and cheaper than the first.
+      - id: b
+        text: Each later snapshot stores only the blocks that changed
+        correct: true
+        why: After a full first snapshot, each later one saves only changed blocks and points back to the earlier ones.
+      - id: c
+        text: EBS replicates each volume within its Availability Zone
+        why: Replication inside the zone protects the live volume, and it does not shrink the work or cost of each backup.
+      - id: d
+        text: One snapshot can be used to create many new volumes
+        why: Creating volumes from a snapshot is a way to use backups, and it does not explain why later backups cost less.
+    evidence:
+      - The first snapshot is a full baseline of all blocks in use.
+      - Later ones store only changed blocks and reference earlier ones, forming a chain for point-in-time recovery.
+    takeaway: After a full first snapshot, each EBS snapshot stores only the changed blocks, which keeps backups fast and cheap.
+    history: []
+    verified:
+      keyHash: f20868649d51
+      fullHash: 6e057ce03309
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-77jwv7
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-data-lifecycle-manager
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      A film post-production studio has thousands of Amazon EBS volumes.
+      It wants snapshots of them taken on a schedule, kept for a set time and then deleted, all driven by policies instead of manual work.
+      Which service fits?
+    options:
+      - id: a
+        text: S3 Lifecycle transition actions
+        why: S3 Lifecycle moves objects between S3 storage classes, and it does not create or delete EBS snapshots.
+      - id: b
+        text: EFS lifecycle management
+        why: EFS lifecycle management moves files between EFS classes, so it does nothing for EBS volumes.
+      - id: c
+        text: AWS Storage Gateway
+        why: Storage Gateway connects on-premises storage to AWS, and it does not run snapshot schedules for EBS.
+      - id: d
+        text: Amazon Data Lifecycle Manager
+        correct: true
+        why: Its policies create, keep and delete EBS snapshots on a schedule, which removes the manual work at scale.
+    evidence:
+      - This fully managed service uses policies to create, keep and delete snapshots and EBS-backed AMIs on a schedule.
+      - Snapshotting thousands of volumes by hand each week is slow and error-prone.
+    takeaway: Policy-driven creation, retention and deletion of EBS snapshots is the job of Amazon Data Lifecycle Manager.
+    history: []
+    verified:
+      keyHash: cd664cdde085
+      fullHash: 16b97f7ec04b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-bh26z2
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: s3-durability
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "3.6"
+    level: 1
+    stem: >-
+      Most Amazon S3 storage classes are designed for 11 nines of durability.
+      Which trait of Amazon S3 is the source of that durability?
+    options:
+      - id: a
+        text: S3 encrypts objects at rest and in transit to keep them confidential
+        why: Encryption keeps data private, but it does not protect an object from being lost.
+      - id: b
+        text: S3 keeps copies of each object in several Availability Zones
+        correct: true
+        why: S3 automatically keeps redundant copies across several zones of the Region, which makes losing an object very unlikely.
+      - id: c
+        text: S3 Lifecycle can move objects to cheaper storage classes
+        why: Lifecycle rules lower storage cost as data ages, and they play no part in keeping objects intact.
+      - id: d
+        text: S3 scales a bucket's storage with no fixed ceiling
+        why: Unlimited room lets a bucket keep growing, but how much it can hold says nothing about how safely each object is kept.
+    evidence:
+      - For most storage classes AWS keeps redundant copies automatically, giving 11 nines (99.999999999 percent) of durability, so losing an object within a year is vanishingly unlikely.
+      - Each object is stored durably in multiple facilities, meaning several Availability Zones, within your chosen Region.
+    takeaway: S3 durability comes from automatic redundant copies across several Availability Zones in the chosen Region.
+    history: []
+    verified:
+      keyHash: 942c942a9508
+      fullHash: dde3e8287429
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0xqvfb
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: s3-versioning
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "3.6"
+    level: 2
+    stem: >-
+      A designer at a marketing agency deleted a client's logo from an Amazon S3 bucket by mistake.
+      Which S3 feature, if switched on beforehand, lets the agency bring the logo back?
+    options:
+      - id: a
+        text: S3 Lifecycle
+        why: Lifecycle rules move or expire objects as they age, so they cannot restore an object someone deleted.
+      - id: b
+        text: S3 Block Public Access
+        why: Block Public Access controls who may reach objects, and it keeps no earlier copies to restore.
+      - id: c
+        text: S3 Versioning
+        correct: true
+        why: Versioning keeps earlier versions of each object, so the deleted logo can be restored.
+      - id: d
+        text: S3 Intelligent-Tiering
+        why: Intelligent-Tiering moves objects between access tiers to save cost, and it keeps no earlier copies.
+    evidence:
+      - Versioning lets you bring back earlier versions after an accidental delete.
+    takeaway: S3 Versioning keeps earlier versions of objects, so accidental deletes and overwrites can be undone.
+    history: []
+    verified:
+      keyHash: b016a53d1353
+      fullHash: 98e097f96da8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-9yy9m7
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: s3-intelligent-tiering
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      A genomics lab stores a large dataset in Amazon S3, and nobody can predict which files researchers will open next month.
+      The lab wants each object kept at the lowest suitable cost without writing lifecycle rules.
+      Which storage class fits?
+    options:
+      - id: a
+        text: S3 Standard-IA
+        why: Standard-IA charges for each retrieval, which hurts when some files turn out to be read often.
+      - id: b
+        text: S3 Intelligent-Tiering
+        correct: true
+        why: Intelligent-Tiering watches access and moves each object to its cheapest suitable tier with no rules to manage.
+      - id: c
+        text: S3 Glacier Deep Archive
+        why: Deep Archive takes hours to return data, which suits files that are almost never read, unlike this dataset.
+      - id: d
+        text: S3 Standard
+        why: Standard keeps every object at the frequent-access price, even the files nobody opens for months.
+    evidence:
+      - 'S3 Intelligent-Tiering: for unknown or shifting access, S3 tracks use and moves each object to its cheapest suitable tier, with no lifecycle rules to manage.'
+      - Good for data lakes and large datasets whose usage changes.
+    takeaway: Unknown or shifting access patterns fit S3 Intelligent-Tiering, which moves objects between tiers by itself.
+    history: []
+    verified:
+      keyHash: b65c9b512297
+      fullHash: 0884b15957a9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ftv16t
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: s3-one-zone-ia
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which Amazon S3 storage class keeps infrequently accessed data in a single Availability Zone at a lower price than S3 Standard-IA?
+    options:
+      - id: a
+        text: S3 Express One Zone
+        why: Express One Zone is also single-zone, but it is built for the hottest, most latency-sensitive data.
+      - id: b
+        text: S3 Intelligent-Tiering
+        why: Intelligent-Tiering moves objects between tiers by usage, and it is chosen for unknown access patterns.
+      - id: c
+        text: S3 Glacier Instant Retrieval
+        why: Glacier Instant Retrieval is an archive class for rarely read data, chosen for archives rather than for a single zone.
+      - id: d
+        text: S3 One Zone-IA
+        correct: true
+        why: One Zone-IA keeps infrequent-access data in one zone instead of three, which lowers its price.
+    evidence:
+      - "S3 One Zone-IA: one Availability Zone instead of Standard-IA's three, so cheaper, for secondary backups or easily recreated data without high availability needs."
+    takeaway: S3 One Zone-IA trades multi-zone resilience for a lower price on infrequently accessed, easily recreated data.
+    history: []
+    verified:
+      keyHash: 653d6e920459
+      fullHash: 3747ee990307
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7x6e6h
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: s3-glacier-storage-classes
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      A city transit agency must keep fare records for many years to satisfy regulators.
+      The records are read perhaps once a year, and a wait of several hours is acceptable.
+      Which storage class costs the least for this?
+    options:
+      - id: a
+        text: S3 Glacier Instant Retrieval
+        why: Instant Retrieval returns archives in milliseconds, a speed the agency does not need and pays more for.
+      - id: b
+        text: S3 Standard-IA
+        why: Standard-IA serves data used less often but still needed fast, at a higher price than an archive class.
+      - id: c
+        text: S3 Glacier Deep Archive
+        correct: true
+        why: Deep Archive is the cheapest class, built for long retention of data read about once or twice a year.
+      - id: d
+        text: S3 Intelligent-Tiering
+        why: Intelligent-Tiering suits unknown access patterns, but this access pattern is known and very rare.
+    evidence:
+      - 'S3 Glacier Deep Archive: the lowest-cost class, for data touched perhaps once or twice a year, with a default 12-hour retrieval.'
+      - Meant for long-term retention and digital preservation, such as compliance archives that finance, healthcare or government keep 7-10 years or more.
+    takeaway: Records kept for years, read about once a year and able to wait hours, fit S3 Glacier Deep Archive at the lowest price.
+    history: []
+    verified:
+      keyHash: 34227fd92779
+      fullHash: 0f46c3e30023
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-42r7yr
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: s3-lifecycle
+    note: m06/amazon-s3-storage-classes-and-s3-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      A travel agency writes booking logs to S3 Standard.
+      The logs are read often for 30 days and rarely after that, but they must come back quickly whenever someone asks for one.
+      Regulators require the agency to keep each log for a year, and then it should be deleted.
+      Which S3 Lifecycle actions fit this pattern?
+    options:
+      - id: a
+        text: A transition action that moves logs older than 30 days to S3 Standard-IA
+        correct: true
+        why: A transition at that age moves the cooled-off logs to a cheaper class while keeping them quick to read.
+      - id: b
+        text: A transition action that moves logs older than 30 days to S3 Glacier Deep Archive
+        why: Deep Archive takes hours to return data, which breaks the need to get a log back quickly.
+      - id: c
+        text: An expiration action that deletes logs once they are a year old
+        correct: true
+        why: An expiration action deletes objects for good when they are no longer needed, matching the one-year retention rule.
+      - id: d
+        text: An expiration action that deletes logs once they are 30 days old
+        why: Deleting logs at that age throws away records that regulators require the agency to keep for a year.
+      - id: e
+        text: A transition action that moves new logs to S3 Standard-IA right away
+        why: New logs are read often in their first 30 days, and Standard-IA charges for each retrieval, so moving them at once costs more.
+    evidence:
+      - Transition actions move objects to another class at a set age, such as Standard-IA after 30 days or Glacier Deep Archive after a year.
+      - Expiration actions delete objects for good, such as when compliance no longer needs them.
+      - 'S3 Standard-IA: data used less often but needed fast, with S3 Standard''s durability, throughput and latency, cheaper storage and a per-GiB retrieval fee, for backups and disaster recovery files.'
+    takeaway: S3 Lifecycle uses transition actions to move aging objects to cheaper classes and expiration actions to delete them.
+    history: []
+    verified:
+      keyHash: 5b4364fe105f
+      fullHash: b61ce70a2c6b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4fdz1t
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-efs
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 3
+    stem: >-
+      A hotel group runs a booking app on a fleet of Linux EC2 instances that must all read and write the same files at the same time.
+      Storage should grow and shrink by itself as files change.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EBS
+        why: An EBS volume attaches to one instance at a time and keeps a fixed size until someone changes it.
+      - id: b
+        text: Amazon EC2 instance store
+        why: Instance store serves only the instance on its host and loses its data on a stop, so the fleet cannot share it.
+      - id: c
+        text: Amazon S3
+        why: S3 stores objects in buckets, and it is no shared Linux file system that instances mount and edit in place.
+      - id: d
+        text: Amazon EFS
+        correct: true
+        why: EFS is an elastic NFS file system that many Linux instances share at once, growing and shrinking with the files.
+    evidence:
+      - Thousands of concurrent NFS connections let many EC2 instances share files, and every change is visible to all of them at once, with no manual syncing.
+      - It grows to petabytes and shrinks as files change, without disrupting applications.
+    takeaway: Many Linux instances sharing one self-scaling file system points to Amazon EFS.
+    history: []
+    verified:
+      keyHash: 3f24d055d8af
+      fullHash: 91922fa84f49
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-cmspqn
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: fsx-for-windows-file-server
+    note: m06/amazon-fsx
+    task: "3.6"
+    level: 3
+    stem: >-
+      An architecture firm is moving the shared drives from its office servers into AWS.
+      Its users reach those drives over SMB and sign in through Microsoft Active Directory.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EFS
+        why: EFS uses the Linux NFS protocol, so it does not serve SMB shares with Active Directory.
+      - id: b
+        text: Amazon Elastic Block Store (Amazon EBS)
+        why: EBS gives one instance a block volume, with no SMB file sharing or Active Directory support.
+      - id: c
+        text: Amazon FSx for Windows File Server
+        correct: true
+        why: It runs managed Windows Server storage in AWS with SMB and Active Directory, matching the firm's shares.
+      - id: d
+        text: Amazon S3 File Gateway
+        why: S3 File Gateway mainly bridges an on-site file share to S3, while the firm wants its servers running in AWS.
+    evidence:
+      - 'FSx for Windows File Server: Windows Server storage with SMB, Microsoft Active Directory, data deduplication and steady sub-millisecond latency.'
+      - For Windows shares, EFS (NFS, Linux) and EBS (no SMB or Active Directory) fall short, and the SMB-capable gateways mainly bridge sites to the cloud.
+    takeaway: Windows shares that need SMB and Active Directory in AWS point to Amazon FSx for Windows File Server.
+    history: []
+    verified:
+      keyHash: 9cbba9a1a8cf
+      fullHash: 0cf804a070fd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7xqs8c
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: tape-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 3
+    stem: >-
+      A school district's backup software writes each night to an on-site library of magnetic cartridges.
+      The district wants to keep that software and its routine unchanged, but hold the backups in AWS instead of on site.
+      Which option fits?
+    options:
+      - id: a
+        text: Volume Gateway in cached mode
+        why: Cached mode presents iSCSI block volumes to local apps, which this backup software does not write to.
+      - id: b
+        text: Amazon S3 File Gateway
+        why: S3 File Gateway appears as a file share, while the backup software expects cartridge hardware.
+      - id: c
+        text: Tape Gateway
+        correct: true
+        why: Tape Gateway shows the software virtual tapes that it stores in Amazon S3, so the backup routine stays as it is.
+      - id: d
+        text: Volume Gateway in stored mode
+        why: Stored mode keeps block volumes on site and backs them up as EBS snapshots, which the software cannot use as a cartridge library.
+    evidence:
+      - 'Tape Gateway: virtual tapes in Amazon S3 that backup software treats as tape hardware, with rarely used data movable to a cheaper class.'
+      - Tape backup software points to Tape Gateway, which is for backup and archiving with no file-level access for daily work.
+    takeaway: Tape backup software that should keep running against cloud storage points to Tape Gateway.
+    history: []
+    verified:
+      keyHash: a075b80e661b
+      fullHash: 398ca38fd7d8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

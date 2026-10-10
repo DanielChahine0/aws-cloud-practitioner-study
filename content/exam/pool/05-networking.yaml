@@ -1,0 +1,548 @@
+questions:
+  - id: q-dh7zn7
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: security-groups
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "2.1"
+    level: 2
+    stem: >-
+      An online bookstore runs its storefront on Amazon EC2 instances and wants only HTTPS requests to reach them.
+      Under the AWS shared responsibility model, who sets up the security group rules that do this?
+    options:
+      - id: a
+        text: The bookstore, as part of security in the cloud
+        correct: true
+        why: Traffic rules around the bookstore's own instances are customer settings, so writing them is the bookstore's job.
+      - id: b
+        text: AWS, as part of security of the cloud
+        why: Security of the cloud covers the hardware and facilities, not the rules a customer writes for its own instances.
+      - id: c
+        text: AWS, since the filtering runs on its own network
+        why: AWS runs the filtering engine, but which requests the storefront accepts is a choice only the bookstore can make.
+      - id: d
+        text: The bookstore and AWS, each writing half the rules
+        why: The model does not split one security group's rules between the parties; the customer owns all of them.
+    evidence:
+      - Under the AWS Shared Responsibility Model, setting up network ACLs and security groups for your subnets and resources is your job.
+      - That is security IN the cloud, the traffic protection around your own applications.
+    takeaway: Writing security group rules for your own instances is the customer's part of security in the cloud.
+    history: []
+    verified:
+      keyHash: 0bed28e48039
+      fullHash: 62c4c4928b5f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-s9nr6v
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: security-groups
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "2.1"
+    level: 1
+    stem: >-
+      Under the AWS shared responsibility model, which security group task falls to a customer that runs Amazon EC2 instances?
+    options:
+      - id: a
+        text: Choosing which inbound traffic each group allows
+        correct: true
+        why: The customer decides which senders and ports a security group admits, which is security in the cloud.
+      - id: b
+        text: Running the filtering software that enforces group rules
+        why: The software that enforces the rules is part of the service AWS operates, so it is security of the cloud.
+      - id: c
+        text: Patching the operating system inside each instance
+        why: Patching the guest operating system is a customer job, but it is not a security group task as the stem asks.
+      - id: d
+        text: Securing the physical hosts that run the instances
+        why: The hosts behind EC2 are AWS hardware, so protecting them falls under security of the cloud.
+    evidence:
+      - Under the AWS Shared Responsibility Model, setting up network ACLs and security groups for your subnets and resources is your job.
+      - AWS owns security OF the cloud, meaning the software, hardware, data centers and facilities behind its services.
+    takeaway: AWS runs and secures the software and hardware behind security groups, while the customer writes each group's traffic rules.
+    history: []
+    verified:
+      keyHash: c641b391c928
+      fullHash: ddfdea640492
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8mrwfx
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: network-acls
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "2.4"
+    level: 3
+    stem: >-
+      An insurance broker must stop one known hostile range of IP addresses from reaching any instance in a subnet, while other traffic keeps flowing.
+      Which VPC control can block that range with a deny rule?
+    options:
+      - id: a
+        text: A network ACL
+        correct: true
+        why: A network ACL guards the whole subnet edge and accepts deny rules, so it can turn away that one range.
+      - id: b
+        text: A security group
+        why: A security group takes allow rules only, so it cannot name a range to refuse.
+      - id: c
+        text: A route table
+        why: A route table decides where traffic is sent, not which senders are refused at the subnet edge.
+      - id: d
+        text: An internet gateway
+        why: An internet gateway connects the VPC to the internet and has no rules for turning senders away.
+    evidence:
+      - Network ACLs work at the subnet level, are stateless, and support both allow and deny rules.
+      - "Picture the network ACL as the subnet's border guard: a virtual firewall judging everything that enters or leaves the whole subnet."
+    takeaway: To refuse specific senders for a whole subnet, use a network ACL deny rule, since security groups only allow.
+    history: []
+    verified:
+      keyHash: 983e95189bc2
+      fullHash: d9bdfafa80c5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ya8kp0
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: network-acls
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "2.4"
+    level: 2
+    stem: >-
+      A video production studio creates a custom network ACL for a new subnet and associates it before writing any rules.
+      What happens to traffic crossing that subnet's edge?
+    options:
+      - id: a
+        text: All of it is denied until allow rules are added
+        correct: true
+        why: A new custom network ACL refuses everything, so the studio must add allow rules before any traffic passes.
+      - id: b
+        text: All of it is allowed until deny rules are added
+        why: Allowing everything is how the default network ACL behaves, not a newly created custom one.
+      - id: c
+        text: Inbound is denied while outbound is allowed
+        why: That split describes a security group's starting point, while a custom network ACL refuses both directions.
+      - id: d
+        text: Replies to outbound requests pass in automatically
+        why: A network ACL is stateless and keeps no memory of requests, so replies get no automatic pass.
+    evidence:
+      - "A custom network ACL starts the other way round: nothing passes until you add allow rules."
+      - Every AWS account comes with a default network ACL that lets everything through until you edit its rules.
+    takeaway: A custom network ACL blocks all traffic until you add allow rules, unlike the default one that lets everything pass.
+    history: []
+    verified:
+      keyHash: be0ab6a622f0
+      fullHash: c07dc51b338d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1279ew
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-global-accelerator
+    note: m05/global-networking
+    task: "3.2"
+    level: 3
+    stem: >-
+      A ride-hailing company runs its booking API in more than one AWS Region for riders around the world.
+      It wants rider traffic sent to fixed IP addresses and carried on the AWS private backbone, and moved quickly to a healthy Region if one fails.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Global Accelerator
+        correct: true
+        why: Global Accelerator gives static IP addresses and steers traffic over the AWS network to healthy endpoints with fast failover.
+      - id: b
+        text: Amazon CloudFront
+        why: CloudFront caches content at edge locations, but the need here is fast failover of live API traffic between Regions.
+      - id: c
+        text: Amazon Route 53
+        why: Route 53 answers DNS lookups, but it does not give the API fixed IP addresses or carry traffic on the AWS backbone.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway links VPCs and on-premises networks as a hub, not riders on the internet to the closest healthy Region.
+    evidence:
+      - Global Accelerator moves app traffic off crowded public routes onto the AWS private global network for better availability, performance and security.
+      - The assessment adds static IP addresses and a best-endpoint choice based on endpoint health, user location and your policies.
+      - Global Accelerator offers static IPs and health-aware routing over the AWS global network with fast failover.
+    takeaway: Static IPs plus fast, health-aware failover across Regions on the AWS network point to Global Accelerator.
+    history: []
+    verified:
+      keyHash: e671f89001b9
+      fullHash: d9c81ee775bb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-nx831h
+    version: 1
+    status: retired
+    type: multi
+    select: 2
+    pool: exam
+    concept: direct-connect-failover
+    note: m05/global-architectures
+    task: "3.2"
+    level: 2
+    stem: >-
+      A freight-tracking firm reaches its VPC from its own data center over a single dedicated private cable that bypasses the public internet.
+      An architecture review flags that cable as a single point of failure in the firm's hybrid setup.
+      Which options remove that single point of failure?
+    options:
+      - id: a
+        text: An AWS Site-to-Site VPN connection
+        correct: true
+        why: An encrypted VPN tunnel over the internet can carry the data center traffic to the VPC while the dedicated cable is down.
+      - id: b
+        text: A second AWS Direct Connect line
+        correct: true
+        why: The existing cable is itself a Direct Connect line, so another one gives a separate physical path that survives a cut on the first.
+      - id: c
+        text: An AWS Transit Gateway network hub
+        why: Transit Gateway routes between networks already attached to it, but it adds no second physical path out of the data center.
+      - id: d
+        text: A NAT gateway in a public subnet
+        why: A NAT gateway lets private instances reach out to the internet, but it gives the data center no backup way into the VPC.
+      - id: e
+        text: An AWS PrivateLink interface endpoint
+        why: PrivateLink gives the VPC private access to chosen services, but it is not a connection that can stand in for the cut cable.
+    evidence:
+      - Direct Connect is a physical cable that can be cut, so a VPN often stands by as its failover, or a second Direct Connect line does.
+      - A VPN or a second Direct Connect line can provide failover, and multiple connections add bandwidth.
+    takeaway: A lone Direct Connect line is a single point of failure, so a VPN or a second Direct Connect connection should stand by as its failover.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 4 are the only on-premises-to-AWS connection types; the rest are VPC-side components.)"
+  - id: q-b3m0t0
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: amazon-route-53
+    note: m05/global-networking
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which tasks can Amazon Route 53 perform?
+    options:
+      - id: a
+        text: Registering new domain names
+        correct: true
+        why: Route 53 can register domains and take over records from other registrars, keeping them in one place.
+      - id: b
+        text: Checking the health of endpoints
+        correct: true
+        why: Route 53 runs health checks on endpoints so it can route users toward ones that respond.
+      - id: c
+        text: Caching content at edge locations
+        why: Caching copies of content near users is the job of Amazon CloudFront, not the DNS service.
+      - id: d
+        text: Filtering packets at a subnet edge
+        why: Checking packets as they cross a subnet edge is done by network ACLs inside the VPC.
+      - id: e
+        text: Carrying traffic on a private line
+        why: A dedicated private line from a data center is AWS Direct Connect, not a DNS feature.
+    evidence:
+      - It also runs health checks, registers new domains and takes over DNS records from other registrars, so all your domains live in one place.
+      - Route 53 resolves names, routes with policies, runs health checks, and registers or consolidates domains.
+    takeaway: Beyond DNS lookups, Route 53 registers and consolidates domains and runs health checks on endpoints.
+    history: []
+    verified:
+      keyHash: 12cf1d4d5864
+      fullHash: bf52e20bb1b6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-3xrksp
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-cloudfront
+    note: m05/global-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      A recipe website hosts its photos and pages in a single AWS Region, but visitors on other continents complain that pages load slowly.
+      Which service serves cached copies of the content from locations near those visitors?
+    options:
+      - id: a
+        text: Amazon CloudFront
+        correct: true
+        why: CloudFront is a CDN that keeps copies at edge locations near visitors, so pages travel a shorter distance.
+      - id: b
+        text: Amazon Route 53
+        why: Route 53 turns the site's name into an address but stores no copies of photos or pages near visitors.
+      - id: c
+        text: AWS Global Accelerator
+        why: Global Accelerator routes traffic over the AWS network to healthy endpoints, but it does not cache site content.
+      - id: d
+        text: AWS Direct Connect
+        why: Direct Connect is a private line from a data center to AWS and does nothing for public visitors far away.
+    evidence:
+      - CloudFront is a CDN (content delivery network) that securely serves static and dynamic web content from edge locations near customers, for faster loads, lower cost and reliability.
+      - CloudFront caches static and dynamic content at edge locations near users.
+    takeaway: Slow loads for distant visitors call for CloudFront, which caches content at edge locations close to them.
+    history: []
+    verified:
+      keyHash: ce0c94ff224b
+      fullHash: 52da6f5f27c2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-d4mrsw
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-vpc
+    note: m05/introduction-to-networking
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which AWS service gives a company its own private, isolated network inside the AWS Cloud, with address ranges and subnets that the company chooses?
+    options:
+      - id: a
+        text: Amazon VPC
+        correct: true
+        why: Amazon VPC creates an isolated network in the AWS Cloud whose ranges and subnets the customer defines.
+      - id: b
+        text: AWS Direct Connect
+        why: Direct Connect is a private line into AWS, not the isolated network that resources live in.
+      - id: c
+        text: AWS Transit Gateway
+        why: Transit Gateway connects existing networks through a hub rather than creating an isolated network.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink gives private access to services from a network, but it does not create the network itself.
+    evidence:
+      - Amazon VPC gives you a logically isolated part of the AWS Cloud with a virtual network you design.
+      - A VPC is your own logically isolated network in the AWS Cloud.
+    takeaway: Amazon VPC is the service for a private, isolated network in AWS whose address ranges and subnets you define.
+    history: []
+    verified:
+      keyHash: 9b2504535422
+      fullHash: df4f3abbd1e9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0wcmq5
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: internet-gateway
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which component must be attached to a VPC before anyone on the public web can reach the resources inside it?
+    options:
+      - id: a
+        text: An internet gateway
+        correct: true
+        why: An internet gateway is the VPC's connection to the internet, so public requests cannot enter without one.
+      - id: b
+        text: A NAT gateway
+        why: A NAT gateway lets private instances start outbound connections and blocks ones started from the internet.
+      - id: c
+        text: A virtual private gateway
+        why: A virtual private gateway admits protected traffic from approved networks, not open requests from the public web.
+      - id: d
+        text: A security group
+        why: A security group filters traffic for an instance, but it does not join the VPC to the internet.
+    evidence:
+      - An internet gateway joins a VPC to the internet, and you must attach one before public traffic can flow in or out.
+      - An internet gateway is required for any internet traffic to reach the VPC.
+    takeaway: Public internet traffic enters a VPC only through an attached internet gateway.
+    history: []
+    verified:
+      keyHash: 5b29f2d6e6b9
+      fullHash: b87f7ddb36c2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qszhtr
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: nat-gateway
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      A pharmacy chain keeps its database servers in a private subnet.
+      They must download software updates from the internet, but nothing on the internet may open a connection to them.
+      Which component fits?
+    options:
+      - id: a
+        text: A NAT gateway
+        correct: true
+        why: A NAT gateway lets the private servers start outbound connections while refusing connections started from outside.
+      - id: b
+        text: An internet gateway
+        why: Routing the servers through an internet gateway alone would make them reachable, which the chain must avoid.
+      - id: c
+        text: A virtual private gateway
+        why: A virtual private gateway admits traffic from approved networks, not outbound downloads from the internet.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub joining VPCs and on-premises networks, not a one-way path out to the internet.
+    evidence:
+      - Transit Gateway is a hub, a NAT gateway lets private instances call out but not be called, and API Gateway manages APIs.
+    takeaway: Private instances that must reach out to the internet but stay unreachable from it need a NAT gateway.
+    history: []
+    verified:
+      keyHash: 92b331a6c177
+      fullHash: 74e3115711e9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-v10a3n
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-direct-connect
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      A genomics lab moves very large datasets from its data center to AWS every day.
+      It needs steady, high throughput on a path separate from the shared public internet.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Direct Connect
+        correct: true
+        why: Direct Connect gives the lab a dedicated private line with the bandwidth and consistency these transfers need.
+      - id: b
+        text: AWS Site-to-Site VPN
+        why: A Site-to-Site VPN runs over the shared internet, so heavy daily transfers can slow down.
+      - id: c
+        text: AWS Client VPN
+        why: Client VPN connects individual remote users, not a data center moving bulk data.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink gives a VPC private access to services, not a high-bandwidth line from a data center.
+    evidence:
+      - Shared links can jam, so Direct Connect gives a dedicated private line from your network to a VPC (via a Direct Connect location and a virtual private gateway), cutting costs and raising bandwidth.
+      - Direct Connect is the dedicated high-bandwidth link, worth it only when you need that bandwidth.
+    takeaway: Large, steady transfers from a data center that must avoid the shared internet point to Direct Connect.
+    history: []
+    verified:
+      keyHash: f0712b92bab7
+      fullHash: 1da4b0d29bfe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-t2a05f
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-site-to-site-vpn
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      A furniture retailer wants its branch offices joined to its VPC through encrypted tunnels over the internet.
+      The links carry modest traffic, so a shared internet path is good enough.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Site-to-Site VPN
+        correct: true
+        why: Site-to-Site VPN builds encrypted links from offices to a VPC over the internet without a dedicated line.
+      - id: b
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated line, which the retailer does not need for modest office traffic.
+      - id: c
+        text: AWS Client VPN
+        why: Client VPN connects individual remote users rather than whole branch office networks.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub that joins networks, but it is not the encrypted office link itself.
+    evidence:
+      - "For sites: encrypted links from data centers or branch offices to your VPC, with high availability, private sessions and faster apps."
+      - It suits app migration and remote-location links, and wins when no dedicated line or extra bandwidth is needed.
+    takeaway: Encrypted links from offices to a VPC without a dedicated line call for Site-to-Site VPN.
+    history: []
+    verified:
+      keyHash: c6c5e2abea39
+      fullHash: 4b83ba2f4bd1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0ccbnz
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-client-vpn
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which AWS service gives individual remote employees managed VPN access to AWS that scales with demand and needs no hardware to run?
+    options:
+      - id: a
+        text: AWS Client VPN
+        correct: true
+        why: Client VPN is a fully managed, elastic VPN built for remote users, with no hardware to plan or operate.
+      - id: b
+        text: AWS Site-to-Site VPN
+        why: Site-to-Site VPN links whole offices or data centers to a VPC, not individual employees.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated physical line from a data center, not access for remote staff.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink gives a VPC private access to services, not VPN access for people working remotely.
+    evidence:
+      - "For people: a fully managed, elastic VPN linking remote staff (and on-premises networks) to AWS that scales with demand."
+      - It needs no hardware or user-count guessing and adds strong authentication.
+    takeaway: Managed, scalable VPN access for individual remote workers is the job of AWS Client VPN.
+    history: []
+    verified:
+      keyHash: b2a196611f65
+      fullHash: 211c79c98630
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-j2sx73
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-privatelink
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      Which AWS service lets a VPC reach one specific service in another VPC as if that service were local, without a public IP address or an internet gateway?
+    options:
+      - id: a
+        text: AWS PrivateLink
+        correct: true
+        why: PrivateLink exposes only the chosen service to the VPC over a private path, with no public IP or internet gateway.
+      - id: b
+        text: AWS Transit Gateway
+        why: Transit Gateway joins whole networks through a hub rather than exposing one service as if it were local.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect is a dedicated line from a data center to AWS, not private access between VPC services.
+      - id: d
+        text: AWS Client VPN
+        why: Client VPN gives remote people access to AWS, not one VPC private access to a service in another.
+    evidence:
+      - "For resources: highly available, scalable private access from a VPC to services as if they were inside it, including other VPCs, other clouds and on-premises networks."
+      - It needs no public IP, NAT device, internet gateway, VPN or Direct Connect, and you pick exactly what is reachable, so traffic stays protected and rules simple.
+    takeaway: Private access from a VPC to one chosen service, as if it were local, is the job of AWS PrivateLink.
+    history: []
+    verified:
+      keyHash: a5d6083b6e8a
+      fullHash: 6b3c665bd8c8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

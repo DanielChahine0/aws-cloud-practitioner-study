@@ -1,0 +1,1199 @@
+questions:
+  - id: q-v2kmh0
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: authentication
+    note: m09/introduction-to-security-on-aws
+    task: "2.2"
+    level: 2
+    stem: "A bike rental shop's staff app asks each employee for a username and password before it shows anything. Which security idea does that check carry out?"
+    options:
+      - id: a
+        text: "Authentication"
+        correct: true
+        why: "The password check confirms who the employee is, which is the job of authentication before any rights apply."
+      - id: b
+        text: "Authorization"
+        why: "Authorization comes after sign-in and limits what a known employee may do, so it is a later step than this check."
+      - id: c
+        text: "Encryption at rest"
+        why: "Encryption at rest scrambles stored data and plays no part in confirming who is signing in."
+      - id: d
+        text: "Log auditing"
+        why: "Log auditing reviews records of past activity rather than checking a person's credentials at sign-in."
+    evidence:
+      - "Authentication checks credentials, like a username and password, to prove identity."
+    takeaway: "Checking credentials such as a password to confirm who someone is counts as authentication."
+    history: []
+    verified:
+      keyHash: 0bc91517c99f
+      fullHash: d78901a362c5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zgfxd3
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: authorization
+    note: m09/introduction-to-security-on-aws
+    task: "2.2"
+    level: 2
+    stem: "A regional clinic must keep each patient's lab results private to meet its privacy duties. Once a patient has signed in, the portal shows only that patient's own results. Which core security concept does that second step apply?"
+    options:
+      - id: a
+        text: "Authentication"
+        why: "Authentication already happened at sign-in; it proves who the patient is but sets no limit on what they open."
+      - id: b
+        text: "Authorization"
+        correct: true
+        why: "Authorization applies the rights granted to a known identity, so it keeps each patient to their own results."
+      - id: c
+        text: "Encryption in transit"
+        why: "Encryption in transit protects results while they cross the network, but it does not decide who may view them."
+      - id: d
+        text: "Log auditing"
+        why: "Auditing reviews records of past activity afterward, so it does not decide which results a patient may open now."
+    evidence:
+      - "Authorization then uses granted rights to limit that identity's actions."
+      - "Both guard users' personal data, keeping trust and blocking identity theft, fraud and misuse."
+    takeaway: "Once identity is proven, authorization decides which actions and data that identity may reach."
+    history: []
+    verified:
+      keyHash: c428051ce34a
+      fullHash: 06b92f0d4d81
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-52kd7e
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-security-controls
+    note: m09/introduction-to-security-on-aws
+    task: "2.2"
+    level: 1
+    stem: "AWS groups its security controls by the goal each one serves. Which set names those goals?"
+    options:
+      - id: a
+        text: "Prevent, protect, and detect and respond"
+        correct: true
+        why: "The controls stop incidents through access management, shield networks, apps and data, and catch and handle incidents that occur."
+      - id: b
+        text: "Plan, build, and test and deploy"
+        why: "These are stages of shipping software, which describe a delivery process rather than the aims of security controls."
+      - id: c
+        text: "Encrypt, archive, and back up and restore"
+        why: "Encryption and backups are individual protections, so this list mixes tools with tasks instead of naming control goals."
+      - id: d
+        text: "Monitor, alert, and scale and recover"
+        why: "Monitoring and scaling are operational tasks for health and capacity, not the goals AWS sets for its security controls."
+    evidence:
+      - "Controls prevent incidents by access management, protect networks, apps and data, and detect and respond to incidents."
+    takeaway: "AWS security controls serve three goals: prevent incidents, protect resources, and detect and respond to incidents."
+    history: []
+    verified:
+      keyHash: c5d26fd9d983
+      fullHash: 0bfb3f992d53
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-q9hrgk
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-shield-standard
+    note: m09/protecting-networks-and-applications
+    task: "2.2"
+    level: 2
+    stem: "A small travel agency serves its booking site through Amazon CloudFront. It pays for no security subscriptions and has written no firewall rules of its own. Which statements describe the protection the site already has?"
+    options:
+      - id: a
+        text: "AWS Shield Standard comes at no extra charge"
+        correct: true
+        why: "Shield Standard is free, so the agency has it on its CloudFront site without paying for any subscription."
+      - id: b
+        text: "AWS Shield Standard works without any setup"
+        correct: true
+        why: "Shield Standard is automatic and built into CloudFront, so the agency's site is covered although its team configured nothing."
+      - id: c
+        text: "AWS Shield Advanced gives in-depth attack diagnostics"
+        why: "Shield Advanced does offer in-depth diagnostics, but it is a paid tier, and the agency pays for no subscriptions."
+      - id: d
+        text: "AWS Shield Advanced mitigates sophisticated attacks"
+        why: "Shield Advanced does handle sophisticated DDoS attacks, but only for customers who pay for it, which the agency does not."
+      - id: e
+        text: "AWS WAF refuses requests from IPs in a web ACL"
+        why: "AWS WAF does block IP addresses listed in a web ACL, but the agency has written no such rules, so this is not in place."
+    evidence:
+      - "AWS Shield Standard: free, automatic, real-time defense against common DDoS attacks, built into ELB, CloudFront and Route 53."
+      - "AWS Shield Advanced: paid, with in-depth diagnostics and detection and mitigation of sophisticated DDoS attacks, integrating with CloudFront, Route 53 and ELB."
+    takeaway: "Shield Standard gives customers free, automatic DDoS defense on services such as CloudFront."
+    history: []
+    verified:
+      keyHash: 5b755ebbbea6
+      fullHash: 720c12a6fe47
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-xbg1xd
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: data-encryption
+    note: m09/protecting-data
+    task: "2.2"
+    level: 1
+    stem: "What does encrypting a set of data achieve?"
+    options:
+      - id: a
+        text: "It can be read only by holders of the right key"
+        correct: true
+        why: "Encryption locks data so that only someone holding the correct key can unlock and read it."
+      - id: b
+        text: "It can never be turned back into readable form"
+        why: "Data that can never be restored describes one-way hashing, while encrypted data can be decrypted with its key."
+      - id: c
+        text: "It is hidden by swapping values for stand-in tokens"
+        why: "Swapping values for stand-ins is tokenization, which protects data without using encryption keys."
+      - id: d
+        text: "It is reachable only after a second sign-in factor"
+        why: "A second sign-in factor guards access to an account and does nothing to make the data itself unreadable."
+    evidence:
+      - "Encryption is a lock: only holders of the right key can read data such as customers' phone and card details."
+      - "Hashing and salting, used for stored passwords, are one-way and cannot be reversed."
+      - "Tokenization and masking protect data without keys."
+    takeaway: "Encryption makes data unreadable to anyone who lacks the key that unlocks it."
+    history: []
+    verified:
+      keyHash: d2c60d5df68f
+      fullHash: 6b060985617c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4y3z97
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: encryption-at-rest
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: "An insurance broker keeps data in several AWS services and wants to know where AWS already encrypts the stored data at rest without any setup from its team. Which data is protected that way?"
+    options:
+      - id: a
+        text: "Objects uploaded to an Amazon S3 bucket"
+        correct: true
+        why: "S3 sets up encryption on each new bucket, so every object the broker uploads is stored encrypted with no extra work."
+      - id: b
+        text: "Items stored in an Amazon DynamoDB table"
+        correct: true
+        why: "DynamoDB protects every table with KMS-managed keys on its side, so stored items are already encrypted for the broker."
+      - id: c
+        text: "Snapshots taken of an Amazon EBS volume"
+        why: "EBS snapshots support encryption at rest, but the team has to choose it, so it is not already in place for them."
+      - id: d
+        text: "Files on an Amazon EC2 instance's boot volume"
+        why: "An EC2 boot volume is an EBS volume, which the team has to choose to encrypt, so its files are not protected without setup."
+      - id: e
+        text: "Records in a database installed on Amazon EC2"
+        why: "A database the broker installs on EC2 keeps its records on EBS volumes, which stay unencrypted until the team turns encryption on."
+    evidence:
+      - "Amazon S3: new buckets have encryption configured, and uploads are encrypted at rest automatically."
+      - "Amazon DynamoDB: all table data is encrypted at rest server-side with AWS KMS keys."
+      - "Amazon EBS: volumes and snapshots, boot and data volumes alike, can be encrypted at rest."
+    takeaway: "S3 uploads and DynamoDB table data are encrypted at rest by default, while EBS encryption is an option to turn on."
+    history: []
+    verified:
+      keyHash: b217c5845c40
+      fullHash: ca7bed51e85e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-dgj69n
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: encryption-in-transit
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: "A local newspaper's subscription page collects card details in a browser form and sends them to its payment backend. What keeps the card details protected on the way?"
+    options:
+      - id: a
+        text: "An SSL/TLS-encrypted connection"
+        correct: true
+        why: "TLS verifies the server with a certificate and then encrypts the connection, which protects data while it travels."
+      - id: b
+        text: "A strong account password policy"
+        why: "A password policy strengthens how users sign in, but it does not encrypt anything moving across the network."
+      - id: c
+        text: "Multi-factor authentication on sign-in"
+        why: "An extra sign-in factor protects account access and leaves the traffic itself unencrypted."
+      - id: d
+        text: "A hashed and salted copy of the number"
+        why: "Hashing is one-way, so the backend could never recover the card details it needs to charge."
+    evidence:
+      - "SSL and its successor TLS use certificates to verify identity, then encrypt the connection."
+      - "MFA and strong passwords protect access, not data in transit."
+    takeaway: "Data moving between a browser and a server is protected in transit by an SSL/TLS-encrypted connection."
+    history: []
+    verified:
+      keyHash: bf0aa7de0461
+      fullHash: 9430e624cf61
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8a8sr6
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ssl-tls-certificates
+    note: m09/protecting-data
+    task: "2.2"
+    level: 1
+    stem: "A visitor sees a padlock and an HTTPS address in the browser bar. What does that signal about the site?"
+    options:
+      - id: a
+        text: "It presents an SSL/TLS certificate"
+        correct: true
+        why: "The padlock and HTTPS show the site uses a certificate to prove its identity and encrypt the connection."
+      - id: b
+        text: "It stores data encrypted at rest"
+        why: "The browser bar says nothing about how the site stores data; the padlock is about the connection."
+      - id: c
+        text: "It requires MFA for each visitor"
+        why: "A padlock does not mean visitors must sign in with extra factors; it concerns the connection only."
+      - id: d
+        text: "It filters traffic through a web ACL"
+        why: "Web ACL filtering happens out of the visitor's view and is not what the padlock reports."
+    evidence:
+      - "A browser padlock and an HTTPS address signal an SSL/TLS certificate."
+    takeaway: "A padlock and HTTPS in the browser mean the site uses an SSL/TLS certificate for an encrypted connection."
+    history: []
+    verified:
+      keyHash: 0b6cd66a06df
+      fullHash: 7d5247560e81
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-22ytvm
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-kms
+    note: m09/protecting-data
+    task: "2.2"
+    level: 3
+    stem: "A law firm wants to generate the cryptographic material that locks and unlocks its case files, decide which IAM roles may use it, and switch it off for a while during an audit. Which service fits?"
+    options:
+      - id: a
+        text: "AWS Key Management Service"
+        correct: true
+        why: "AWS KMS creates and controls cryptographic keys, lets the firm set who may use them, and can disable a key temporarily."
+      - id: b
+        text: "AWS Certificate Manager"
+        why: "ACM manages SSL/TLS certificates for connections, not general-purpose keys that encrypt stored files."
+      - id: c
+        text: "AWS Secrets Manager"
+        why: "Secrets Manager stores and rotates secrets such as passwords and API keys rather than creating encryption keys."
+      - id: d
+        text: "AWS Identity and Access Management"
+        why: "IAM decides which identities may act in the account, but it does not generate or hold the keys that lock the files."
+    evidence:
+      - "AWS Key Management Service (AWS KMS): creates and controls cryptographic keys, the random digit strings that lock and unlock data."
+      - "You set which IAM users and roles may manage keys and where they are used, keys never leave KMS, and a key can be disabled temporarily."
+      - "ACM is for certificates, and AWS KMS for general-purpose encryption keys."
+    takeaway: "Creating, controlling and temporarily disabling encryption keys is the job of AWS KMS."
+    history: []
+    verified:
+      keyHash: 348cda0f829a
+      fullHash: ed3ea66a218a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rcn3na
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-certificate-manager
+    note: m09/protecting-data
+    task: "2.2"
+    level: 3
+    stem: "An online language school serves its site over HTTPS from several AWS services and wants one place to handle the SSL/TLS credentials that let browsers trust those connections. Which service fits?"
+    options:
+      - id: a
+        text: "AWS Certificate Manager"
+        correct: true
+        why: "ACM centrally manages SSL/TLS certificates for AWS services, which is what these HTTPS connections rely on."
+      - id: b
+        text: "AWS Key Management Service"
+        why: "AWS KMS controls general-purpose encryption keys, not the certificates that secure HTTPS connections."
+      - id: c
+        text: "AWS Secrets Manager"
+        why: "Secrets Manager stores and rotates credentials like database passwords, not SSL/TLS certificates."
+      - id: d
+        text: "AWS IAM Identity Center"
+        why: "IAM Identity Center gives staff one login across accounts and has no role in serving certificates."
+    evidence:
+      - "AWS Certificate Manager (ACM): central management of SSL/TLS certificates for AWS services and connected on-premises resources."
+      - "ACM is for certificates, and AWS KMS for general-purpose encryption keys."
+    takeaway: "Central management of SSL/TLS certificates for HTTPS points to AWS Certificate Manager."
+    history: []
+    verified:
+      keyHash: 978d42a8b1f5
+      fullHash: 1a003b01ac74
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6n3nm2
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-macie
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: "A recruitment agency stores uploaded resumes across many Amazon S3 buckets and needs to find which buckets hold personal data such as home addresses. Which service fits?"
+    options:
+      - id: a
+        text: "Amazon Macie"
+        correct: true
+        why: "Macie uses machine learning to discover and monitor sensitive data stored in S3, such as personal details."
+      - id: b
+        text: "Amazon Inspector"
+        why: "Inspector scans compute resources for software vulnerabilities, not S3 objects for personal data."
+      - id: c
+        text: "Amazon GuardDuty"
+        why: "GuardDuty watches account and network activity for threats and does not classify what data buckets hold."
+      - id: d
+        text: "AWS Security Hub"
+        why: "Security Hub gathers findings from other services into one view; it does not itself scan buckets for personal data."
+    evidence:
+      - "Amazon Macie: uses machine learning (ML) and automation to find and monitor sensitive data at rest in S3, aiding security posture reviews and compliance."
+    takeaway: "Finding sensitive data such as personal details inside S3 buckets points to Amazon Macie."
+    history: []
+    verified:
+      keyHash: 58a1b48baf96
+      fullHash: 58be3e64de4b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ntanm3
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-inspector
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 3
+    stem: "A game studio wants its Amazon EC2 instances and Lambda functions scanned automatically for vulnerable software, with each finding ranked by severity. Which service fits?"
+    options:
+      - id: a
+        text: "Amazon Inspector"
+        correct: true
+        why: "Inspector automatically scans EC2, containers and Lambda for vulnerabilities and ranks each finding by severity with a fix."
+      - id: b
+        text: "Amazon GuardDuty"
+        why: "GuardDuty looks for threats in account and network activity rather than flaws in installed software."
+      - id: c
+        text: "Amazon Detective"
+        why: "Detective investigates the root cause of an issue after detection and does not scan for vulnerable software."
+      - id: d
+        text: "Amazon Macie"
+        why: "Macie finds sensitive data in S3 buckets, so it does not inspect instances or functions for flaws."
+    evidence:
+      - "Automatically scans EC2, containers and Lambda for vulnerabilities and best-practice gaps, like open EC2 access or vulnerable software."
+      - "Ranks findings by severity, each with a fix, in the console or API."
+    takeaway: "Automated vulnerability scans of EC2, containers and Lambda, ranked by severity, come from Amazon Inspector."
+    history: []
+    verified:
+      keyHash: 4747188d1cdf
+      fullHash: e5a004654ed5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-aardfv
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-guardduty
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 1
+    stem: "Which method does Amazon GuardDuty use to flag likely attacks in an AWS account?"
+    options:
+      - id: a
+        text: "It compares events with known bad IP lists and ML models"
+        correct: true
+        why: "GuardDuty watches account and network activity continuously, mixing known malicious IP lists with anomaly detection and ML."
+      - id: b
+        text: "It scans workloads for software with known flaws"
+        why: "Scanning workloads for vulnerable software is how Amazon Inspector works, not how GuardDuty spots threats."
+      - id: c
+        text: "It classifies stored objects that hold personal data"
+        why: "Classifying sensitive data in S3 is the method of Amazon Macie, which does not watch activity for attacks."
+      - id: d
+        text: "It charts past user and resource activity over a time window"
+        why: "Charting activity over a chosen window to trace a root cause is what Amazon Detective does after a threat is found."
+    evidence:
+      - "Continuously analyzes account metadata and network activity for threats."
+      - "Mixes threat intelligence, like known malicious IP addresses, with anomaly detection and ML for accuracy."
+    takeaway: "GuardDuty finds threats by mixing threat intelligence with anomaly detection and ML over account and network activity."
+    history: []
+    verified:
+      keyHash: dfbe4af5a59a
+      fullHash: 12915f0531db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yxrxa9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-security-hub
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 3
+    stem: "A hotel group receives findings from several AWS services and a partner tool, and its team wants them all in one format and one view of its compliance posture. Which service fits?"
+    options:
+      - id: a
+        text: "AWS Security Hub"
+        correct: true
+        why: "Security Hub pulls findings from AWS and partner services into one format and one view of security and compliance."
+      - id: b
+        text: "Amazon Detective"
+        why: "Detective digs into the root cause of one issue over time, not into a combined posture view."
+      - id: c
+        text: "Amazon GuardDuty"
+        why: "GuardDuty is one source of threat findings, so it does not gather other services' findings into one place."
+      - id: d
+        text: "AWS Firewall Manager"
+        why: "Firewall Manager sets firewall rules across accounts and does not combine findings from other tools."
+    evidence:
+      - "Pulls findings from AWS and partner services into one format and one view of security and compliance."
+      - "Security Hub also shows security data, but for posture and compliance, not deep forensics over time."
+    takeaway: "Combining findings from many AWS and partner tools into one view points to AWS Security Hub."
+    history: []
+    verified:
+      keyHash: 0ddaf0731e5a
+      fullHash: 21a306a06baa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-sek56h
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-iam
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: "A pet supply store creates a new IAM user for a stock clerk and attaches no policies to it yet. The clerk then tries to open an Amazon S3 bucket and is refused. Which IAM behavior explains the refusal?"
+    options:
+      - id: a
+        text: "Default deny"
+        correct: true
+        why: "IAM refuses every action until a policy allows it, so a user with no policies cannot open any bucket."
+      - id: b
+        text: "Least privilege"
+        why: "Least privilege guides what an admin chooses to allow; it is a principle, not the mechanism that refused this request."
+      - id: c
+        text: "A permission boundary"
+        why: "A permission boundary caps the most an identity can hold, and none was set here, so it did not cause the refusal."
+      - id: d
+        text: "Role-based access control"
+        why: "Role-based access control ties access to a person's job, which is a design choice and not what blocked the new user."
+    evidence:
+      - "Default deny is the mechanism: a new identity has zero permissions, not even to launch an EC2 instance or create an S3 bucket, until explicitly allowed."
+      - "Not the same thing: a permission boundary caps the most permissions an identity can hold, and role-based access control ties access to a person's job in the organization."
+    takeaway: "IAM denies by default, so a new identity can do nothing until a policy allows it."
+    history: []
+    verified:
+      keyHash: 4d4f31e63440
+      fullHash: 243d4361df86
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-v1at29
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-account-root-user
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: "A furniture maker has just opened a new AWS account and signed in as the root user for the first time. Which steps protect that root user, as AWS advises?"
+    options:
+      - id: a
+        text: "Give it a strong password"
+        correct: true
+        why: "AWS advises a strong password on the root user, since that identity can do anything in the account."
+      - id: b
+        text: "Turn on MFA for its sign-in"
+        correct: true
+        why: "Turning on MFA right after the first sign-in adds a second proof the root user must present."
+      - id: c
+        text: "Apply an account password policy"
+        why: "Password policies set rules for IAM user passwords, but they never apply to the root user's password."
+      - id: d
+        text: "Attach a least-privilege policy"
+        why: "The root user can do anything and cannot be restricted, so an attached policy would not protect or limit it."
+      - id: e
+        text: "Add it to a restricted IAM group"
+        why: "Groups pass their permissions to IAM users, and the root user cannot be restricted that way, so this protects nothing."
+    evidence:
+      - "Give it a strong password and turn on multi-factor authentication (MFA) right after the first root login."
+      - "Password policies set account-wide rules for IAM user passwords, such as minimum length, required character types, expiration and preventing reuse, but they never apply to the root user password."
+      - "Every new AWS account comes with a root user, the owner, who can do anything and cannot be restricted."
+    takeaway: "Protect the root user with a strong password and MFA, since policies, groups and password policies never restrict it."
+    history: []
+    verified:
+      keyHash: 2881b1f77271
+      fullHash: 6113df46afe4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-n3n8dx
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: multi-factor-authentication
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: "Which access control requires a user to present a password plus a one-time code from a phone app at sign-in?"
+    options:
+      - id: a
+        text: "Multi-factor authentication"
+        correct: true
+        why: "MFA asks for two or more kinds of proof, such as a password plus a one-time code from a phone app."
+      - id: b
+        text: "Account password policies"
+        why: "A password policy sets rules such as minimum length for IAM user passwords, yet it still asks for one kind of proof."
+      - id: c
+        text: "Single sign-on through federation"
+        why: "Single sign-on gives one login for many connected accounts, which reduces logins rather than adding a second proof."
+      - id: d
+        text: "Short-term credentials from a role"
+        why: "Assuming a role grants temporary permissions and does not by itself make the user present a one-time code."
+    evidence:
+      - "MFA requires at least two kinds of proof, such as the password plus a one-time code from a phone app."
+    takeaway: "MFA requires at least two kinds of proof, such as a password plus a one-time code."
+    history: []
+    verified:
+      keyHash: 1c7e95115b4f
+      fullHash: b041d81f95aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ra2p81
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: principle-of-least-privilege
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: "An accounting firm's interns need to view reports kept in one Amazon S3 bucket. Following the principle of least privilege, what access should the firm grant them?"
+    options:
+      - id: a
+        text: "Read access to the reports bucket only"
+        correct: true
+        why: "Least privilege grants only what the task needs, which here is reading the one bucket that holds the reports."
+      - id: b
+        text: "Read access to every bucket in the account"
+        why: "Reading every bucket reaches data the interns have no need for, so it grants more than viewing the reports requires."
+      - id: c
+        text: "Read and write access to the reports bucket"
+        why: "Write access lets interns change reports they only need to view, so it grants more than the task requires."
+      - id: d
+        text: "Access to list the account's bucket names"
+        why: "Listing bucket names does not let the interns open any report, so this access falls short of the task."
+    evidence:
+      - "Least privilege is the guiding principle: allow only what a person or system needs."
+    takeaway: "Least privilege means granting only the access a person or system needs for its task."
+    history: []
+    verified:
+      keyHash: a4d1993e4245
+      fullHash: b584003d93d6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kymap4
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: iam-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: "A team writes a new IAM policy in JSON and saves it without linking it to any user, group or role. Which statement explains why nobody has gained access from it yet?"
+    options:
+      - id: a
+        text: "A policy grants nothing until it is attached to an identity"
+        correct: true
+        why: "A policy takes effect only once it is attached to a user, group or role, so on its own it grants nothing."
+      - id: b
+        text: "Each policy statement sets an Effect, an Action and a Resource"
+        why: "This describes how a statement is built, which is true of every policy and says nothing about why this one has no effect."
+      - id: c
+        text: "AWS managed policies are prebuilt by AWS and cannot be edited"
+        why: "This is true of AWS managed policies, but the team wrote its own policy, so it does not explain the missing access."
+      - id: d
+        text: "Users in a group inherit the permissions of the group's policies"
+        why: "Group inheritance is real, yet this policy sits on no group, so inheritance cannot explain why it grants nothing."
+    evidence:
+      - "It only takes effect once attached to a user, group or role."
+    takeaway: "An IAM policy defines access only after it is attached to a user, group or role."
+    history: []
+    verified:
+      keyHash: 840eab2c4074
+      fullHash: 64cda0460a46
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-450309
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-iam-identity-center
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: "A university library wants staff to reach several AWS accounts with the corporate login they already use for email, instead of separate IAM users in each account. Which service fits?"
+    options:
+      - id: a
+        text: "AWS IAM Identity Center"
+        correct: true
+        why: "IAM Identity Center links to the existing identity source and gives staff one login across connected accounts."
+      - id: b
+        text: "AWS Identity and Access Management (IAM)"
+        why: "IAM is set up account by account, so it does not give staff one central login that reaches every connected account."
+      - id: c
+        text: "AWS Secrets Manager"
+        why: "Secrets Manager stores and rotates credentials for applications, not workforce sign-in across accounts."
+      - id: d
+        text: "AWS Organizations"
+        why: "Organizations groups and governs accounts but does not give staff single sign-on."
+    evidence:
+      - "Linked to an existing identity source, it gives staff one login for every connected account and service, which is SSO."
+      - "**AWS IAM Identity Center** centralizes workforce access across AWS accounts and applications."
+    takeaway: "Workforce single sign-on across AWS accounts with an existing corporate login points to IAM Identity Center."
+    history: []
+    verified:
+      keyHash: 7f48988d96ae
+      fullHash: a9ac827566e5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8ccb5z
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-secrets-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: "A ski resort's booking app reads a database password that is hardcoded in its source, and the team wants it stored centrally and rotated on a schedule. Which service fits?"
+    options:
+      - id: a
+        text: "AWS Secrets Manager"
+        correct: true
+        why: "Secrets Manager is the central place to store, fetch and rotate secrets such as database credentials."
+      - id: b
+        text: "AWS Key Management Service"
+        why: "AWS KMS creates and controls encryption keys, but it does not store and rotate an app's database password."
+      - id: c
+        text: "AWS Certificate Manager"
+        why: "ACM manages SSL/TLS certificates for connections, not passwords that an app uses to reach a database."
+      - id: d
+        text: "AWS Systems Manager"
+        why: "Systems Manager oversees and patches nodes, and it is not the service built to rotate a database password on a schedule."
+    evidence:
+      - "AWS Secrets Manager is the central place to store, fetch and rotate secrets such as passwords, database credentials and API keys."
+    takeaway: "Storing and rotating passwords, database credentials and API keys centrally points to AWS Secrets Manager."
+    history: []
+    verified:
+      keyHash: 517d93eb14ac
+      fullHash: 5ac5e2ce51a2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2r1gxc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-systems-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: "To control who can get onto its servers, a logistics firm wants to administer the user accounts on every node it runs, in AWS and in its own data center, from one view. Which service fits?"
+    options:
+      - id: a
+        text: "AWS Systems Manager"
+        correct: true
+        why: "Systems Manager shows nodes across AWS and hybrid setups in one view and automates user management on them."
+      - id: b
+        text: "AWS Secrets Manager"
+        why: "Secrets Manager stores and rotates secrets such as passwords, but it does not administer user accounts across a fleet of nodes."
+      - id: c
+        text: "AWS IAM Identity Center"
+        why: "IAM Identity Center gives staff one login to AWS accounts and applications rather than handling the users on each server."
+      - id: d
+        text: "AWS Identity and Access Management"
+        why: "IAM controls identities and permissions for AWS itself, not the user accounts on servers in the firm's own data center."
+    evidence:
+      - "AWS Systems Manager shows all your nodes, meaning connection points, across accounts, Regions, multi-cloud and hybrid setups in one view."
+      - "It reports details like node ID and operating system and automates registry changes, user management and security patching."
+      - "Together these three ease administration and strengthen security, all in support of least privilege."
+    takeaway: "Managing users on nodes across AWS and on-premises from one view, in support of least privilege, points to AWS Systems Manager."
+    history: []
+    verified:
+      keyHash: 65828de108f2
+      fullHash: ed201d127efb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6hene6
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: access-keys
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: "Which statement describes IAM access keys?"
+    options:
+      - id: a
+        text: "Long-term credentials that sign CLI or API requests"
+        correct: true
+        why: "An access key pairs an ID with a secret key, lasts until removed, and signs programmatic requests to the CLI or API."
+      - id: b
+        text: "Temporary credentials issued when a role is assumed"
+        why: "Assuming a role yields short-lived credentials, which AWS advises in place of long-term access keys."
+      - id: c
+        text: "One-time codes that a phone app shows at sign-in"
+        why: "A one-time code from a phone app is an MFA factor, not a credential for signing API requests."
+      - id: d
+        text: "Keys that AWS KMS uses to encrypt stored data"
+        why: "Encryption keys in AWS KMS lock and unlock data, while access keys authenticate programmatic calls."
+    evidence:
+      - "Access keys are long-term credentials, an access key ID plus a secret access key, that sign programmatic requests to the AWS CLI or API, and AWS advises temporary credentials from roles instead and never creating them for the root user."
+    takeaway: "Access keys are long-term credentials for CLI and API calls, and temporary credentials from roles are preferred."
+    history: []
+    verified:
+      keyHash: 1c4a540dec7e
+      fullHash: fad1e7bc7b83
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zf1y8a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: udp-flood-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 2
+    stem: "A florist's web server is swamped by large replies from a public lookup service it never contacted, because attackers sent that service small requests forging the florist's address. What kind of attack is this?"
+    options:
+      - id: a
+        text: "A UDP flood"
+        correct: true
+        why: "Forging the victim's address so a public service sends it large replies is how a UDP flood overwhelms a server."
+      - id: b
+        text: "A SQL injection"
+        why: "SQL injection sends crafted input to a database query rather than drowning a server in unwanted replies."
+      - id: c
+        text: "A brute-force password attack"
+        why: "Guessing passwords targets sign-in, while this server is swamped by replies it never asked for."
+      - id: d
+        text: "A phishing campaign"
+        why: "Phishing tricks people into giving up details and does not flood a server with traffic."
+    evidence:
+      - "Bots ask a helpful public service, like the National Weather Service, for forecasts, forging your address as the sender."
+      - "Small requests trigger big replies, so your server stalls sorting unwanted data."
+    takeaway: "A UDP flood forges the victim's address so a public service buries it in large replies."
+    history: []
+    verified:
+      keyHash: 65211a104844
+      fullHash: ceaf2b195ba8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zc6fr4
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-waf
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: "An online toy store keeps a list of IP addresses that abused its checkout and wants web requests from them refused before they reach the app. Which service fits?"
+    options:
+      - id: a
+        text: "AWS WAF"
+        correct: true
+        why: "AWS WAF refuses web requests from IP addresses listed as blocked in its web ACL."
+      - id: b
+        text: "AWS Shield Advanced"
+        why: "Shield Advanced counters sophisticated DDoS attacks but does not keep a custom list of blocked web clients."
+      - id: c
+        text: "AWS Firewall Manager"
+        why: "Firewall Manager rolls firewall rules out across many accounts; the request filtering itself is done by another service."
+      - id: d
+        text: "Amazon GuardDuty"
+        why: "GuardDuty detects threats in account and network activity and does not block web requests by itself."
+    evidence:
+      - "AWS WAF: a web application firewall that refuses requests from IP addresses blocked in its web ACL (web access control list)."
+    takeaway: "Blocking web requests from listed IP addresses through a web ACL is the job of AWS WAF."
+    history: []
+    verified:
+      keyHash: a288c410ff93
+      fullHash: 45638c693f0a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-tqpr16
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-security-documentation
+    note: m09/additional-security-resources
+    task: "2.4"
+    level: 1
+    stem: "Which AWS resource gives official guidance on protecting each AWS service, organized product by product?"
+    options:
+      - id: a
+        text: "AWS Security Documentation"
+        correct: true
+        why: "AWS Security Documentation organizes security guidance by product, and each service's security setup differs."
+      - id: b
+        text: "AWS Knowledge Center"
+        why: "Knowledge Center holds question-and-answer and troubleshooting articles, not the full per-product security docs."
+      - id: c
+        text: "AWS Security Blog"
+        why: "The Security Blog publishes expert tips as articles over time rather than official guidance arranged by product."
+      - id: d
+        text: "AWS Trust and Safety Center"
+        why: "Trust and Safety Center is where suspected abuse of AWS gets reported, not where per-service guidance lives."
+    evidence:
+      - "AWS Security Documentation: by product."
+      - "Each service differs, so read its docs."
+    takeaway: "Per-service security guidance, organized by product, lives in AWS Security Documentation."
+    history: []
+    verified:
+      keyHash: c549c6fc7ff9
+      fullHash: 0f444440c283
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8m02cf
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-security-blog
+    note: m09/additional-security-resources
+    task: "2.4"
+    level: 1
+    stem: "Which AWS resource publishes articles in which AWS experts share tips on protecting workloads?"
+    options:
+      - id: a
+        text: "AWS Security Blog"
+        correct: true
+        why: "The AWS Security Blog is where AWS experts share security tips and guidance."
+      - id: b
+        text: "AWS Security Documentation"
+        why: "Security Documentation gives official guidance arranged by product, not a stream of expert tip articles."
+      - id: c
+        text: "AWS Trusted Advisor"
+        why: "Trusted Advisor runs automated checks on an account rather than publishing expert articles."
+      - id: d
+        text: "AWS Health Dashboard"
+        why: "The Health Dashboard reports AWS events that affect an account, not security tips."
+    evidence:
+      - "AWS Security Blog: expert tips."
+    takeaway: "Expert security tips and articles from AWS come through the AWS Security Blog."
+    history: []
+    verified:
+      keyHash: a31628e883c2
+      fullHash: e928db92ce63
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-gexs9v
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-firewall-manager
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: "A car dealership group runs dozens of AWS accounts in one organization and wants the same AWS WAF rules and security group rules applied and enforced in all of them from one place. Which service fits?"
+    options:
+      - id: a
+        text: "AWS Firewall Manager"
+        correct: true
+        why: "Firewall Manager centrally configures and enforces firewall rules, such as WAF and security group rules, across an organization's accounts."
+      - id: b
+        text: "AWS WAF"
+        why: "AWS WAF filters requests with the rules set up where it runs, but it does not roll rules out across accounts."
+      - id: c
+        text: "AWS Shield Advanced"
+        why: "Shield Advanced defends against sophisticated DDoS attacks rather than managing rule sets across accounts."
+      - id: d
+        text: "AWS Network Firewall"
+        why: "Network Firewall is one kind of firewall that can be managed centrally; on its own it does not enforce rules in every account."
+    evidence:
+      - "AWS Firewall Manager centrally configures and enforces firewall rules, such as AWS WAF rules, security group rules and AWS Network Firewall firewalls, across the accounts in your organization."
+    takeaway: "Central, organization-wide enforcement of firewall rules points to AWS Firewall Manager."
+    history: []
+    verified:
+      keyHash: 448b37d8dd10
+      fullHash: d31009499770
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-sh1ftt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-security-center
+    note: m09/additional-security-resources
+    task: "2.4"
+    level: 1
+    stem: "Which name does AWS documentation use for the main site it points readers to for cloud security and compliance, found at aws.amazon.com/security?"
+    options:
+      - id: a
+        text: "AWS Security Center"
+        correct: true
+        why: "AWS Security Center is the name AWS documentation uses for that site, where it sends readers for security and compliance."
+      - id: b
+        text: "Customer Compliance Center"
+        why: "Customer Compliance Center holds customer stories, whitepapers and checklists, not the main AWS security site."
+      - id: c
+        text: "AWS Security Blog"
+        why: "The Security Blog publishes expert tip articles at its own blog address rather than serving as the main security site."
+      - id: d
+        text: "AWS Security Documentation"
+        why: "Security Documentation holds per-product guidance at its own docs address, so it is not the main security site."
+    evidence:
+      - "AWS Security Center is the name AWS documentation gives the cloud security site at aws.amazon.com/security, where it points you for more on AWS security and compliance."
+    takeaway: "AWS Security Center is the name for the cloud security site at aws.amazon.com/security."
+    history: []
+    verified:
+      keyHash: cd9d925bd978
+      fullHash: 0e70b39d32e2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ar5yh2
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: ddos-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 2
+    stem: "A photography studio's booking site stops answering customers while a huge number of unknown home computers send requests straight to it. Which statements describe what is happening?"
+    options:
+      - id: a
+        text: "The traffic uses up the capacity real visitors need"
+        correct: true
+        why: "The flood exhausts the site's capacity, so genuine customers get no answer while the attack lasts."
+      - id: b
+        text: "The sending computers are infected bots"
+        correct: true
+        why: "Many unknown home computers taking part points to infected machines whose owners have no idea they are attacking."
+      - id: c
+        text: "A single attacker's machine sends all the traffic"
+        why: "Traffic from one machine is a plain DoS attack, while here a huge number of computers take part."
+      - id: d
+        text: "Forged requests make a public service reply to the site"
+        why: "Getting a public service to answer forged requests is a UDP flood, yet here the home computers contact the site directly."
+      - id: e
+        text: "Small requests are turned into much larger replies"
+        why: "Turning small requests into big replies happens through a public service in a UDP flood, not in requests sent straight to the site."
+    evidence:
+      - "A denial of service (DoS) attack exhausts an app's capacity so real customers get no answer."
+      - "One machine is not enough, so a distributed (DDoS) attack adds many infected computers, or zombie bots, whose owners have no idea."
+      - "Small requests trigger big replies, so your server stalls sorting unwanted data."
+    takeaway: "A DDoS attack floods an app from many compromised machines until real users get no response."
+    history: []
+    verified:
+      keyHash: a6d6cbe3d4d8
+      fullHash: 69ef0edae0b7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-b9pkdm
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-shield-advanced
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: "A ticketing platform keeps facing sophisticated DDoS attacks and wants paid protection with in-depth diagnostics for its CloudFront and Route 53 setup. Which option fits?"
+    options:
+      - id: a
+        text: "AWS Shield Advanced"
+        correct: true
+        why: "Shield Advanced is the paid tier, adding in-depth diagnostics plus detection and mitigation of sophisticated DDoS attacks."
+      - id: b
+        text: "AWS Shield Standard"
+        why: "Shield Standard is free and covers common DDoS attacks, without the in-depth diagnostics the platform wants."
+      - id: c
+        text: "AWS WAF"
+        why: "AWS WAF filters web requests by rules, but on its own it is not the paid DDoS protection with diagnostics."
+      - id: d
+        text: "Amazon GuardDuty"
+        why: "GuardDuty detects threats in account and network activity and does not mitigate DDoS attacks."
+    evidence:
+      - "AWS Shield Advanced: paid, with in-depth diagnostics and detection and mitigation of sophisticated DDoS attacks, integrating with CloudFront, Route 53 and ELB."
+    takeaway: "Paid DDoS protection with in-depth diagnostics for sophisticated attacks points to AWS Shield Advanced."
+    history: []
+    verified:
+      keyHash: 10519de76726
+      fullHash: 2c057abe8254
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-q82kpt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-detective
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 3
+    stem: "After a threat alert, a nonprofit's security team wants to trace how the issue unfolded across its accounts, with charts of user and resource activity over a time window it picks. Which service fits?"
+    options:
+      - id: a
+        text: "Amazon Detective"
+        correct: true
+        why: "Detective gathers logs and uses graph analytics to chart activity over a chosen window, tracing a threat's root cause."
+      - id: b
+        text: "Amazon GuardDuty"
+        why: "GuardDuty raises threat findings, but it lacks the interactive views for tracing how an issue unfolded."
+      - id: c
+        text: "AWS Security Hub"
+        why: "Security Hub shows posture and compliance in one view rather than deep investigation over time."
+      - id: d
+        text: "Amazon Inspector"
+        why: "Inspector scans for software vulnerabilities and does not investigate how an incident happened."
+    evidence:
+      - "After detection, it traces the root cause across your accounts."
+      - "It gathers logs itself, then uses ML and graph analytics to chart resource and user activity over a time window you set, plus fixes."
+      - "GuardDuty detects threats but lacks Detective's interactive investigation views."
+    takeaway: "Tracing a threat's root cause with visual activity over time points to Amazon Detective."
+    history: []
+    verified:
+      keyHash: 74ca438e2311
+      fullHash: b1f0014d26b4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-25yznz
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: security-incident-response
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 2
+    stem: "A dental practice already limits who can reach its AWS resources with IAM policies and security groups. Why should it also run detection and response services?"
+    options:
+      - id: a
+        text: "Those controls can miss flaws nobody knows about yet"
+        correct: true
+        why: "IAM policies and security groups cannot block a flaw nobody has found, so detecting and reacting fast limits the harm."
+      - id: b
+        text: "Those services stop each attack before it can begin"
+        why: "Detection services find threats once they appear rather than blocking them in advance, which stays the job of the practice's controls."
+      - id: c
+        text: "Those services let it drop the IAM policies it has"
+        why: "Detection adds a layer on top of IAM policies and does not replace the access rules the practice still needs."
+      - id: d
+        text: "Those controls stop working once traffic grows large"
+        why: "AWS enforces security groups at network level with a Region's capacity, so heavy traffic is not why detection is added."
+    evidence:
+      - "Prevention can miss unknown software flaws, so detect and react fast."
+    takeaway: "Detection and response cover what prevention misses, such as flaws that are not yet known."
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only hedged claim ('can'); the other three are absolutes.)"
+  - id: q-01e7qe
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-knowledge-center
+    note: m09/additional-security-resources
+    task: "4.3"
+    level: 2
+    stem: "An admin at a garden center hits an error while setting up an AWS service and wants to search question-and-answer and troubleshooting articles before contacting anyone. Which resource fits?"
+    options:
+      - id: a
+        text: "AWS Knowledge Center"
+        correct: true
+        why: "Knowledge Center offers question-and-answer and troubleshooting articles the admin can search on their own."
+      - id: b
+        text: "AWS Marketplace"
+        why: "Marketplace sells third-party software and services, not troubleshooting articles for AWS errors."
+      - id: c
+        text: "AWS Trust and Safety Center"
+        why: "Trust and Safety Center takes reports of suspected AWS abuse and does not answer setup questions."
+      - id: d
+        text: "AWS Trusted Advisor"
+        why: "Trusted Advisor checks an account against best practices instead of answering a specific setup error."
+    evidence:
+      - "Knowledge Center: Q&A, troubleshooting."
+    takeaway: "Self-service Q&A and troubleshooting articles for AWS questions live in the AWS Knowledge Center."
+    history: []
+    verified:
+      keyHash: f75b9975e01b
+      fullHash: 03e66e4d7feb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-jegchy
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-knowledge-center
+    note: m09/additional-security-resources
+    task: "4.3"
+    level: 1
+    stem: "Which AWS resource is the place to look up answers to common security questions in a question-and-answer format?"
+    options:
+      - id: a
+        text: "AWS Knowledge Center"
+        correct: true
+        why: "Knowledge Center gathers questions and answers plus troubleshooting help, including on security topics."
+      - id: b
+        text: "AWS Security Center"
+        why: "Security Center is the main AWS cloud security site, an overview rather than a question-and-answer collection."
+      - id: c
+        text: "AWS Artifact"
+        why: "AWS Artifact gives access to AWS compliance reports and agreements, not answers to common questions."
+      - id: d
+        text: "Customer Compliance Center"
+        why: "Customer Compliance Center offers customer stories, whitepapers and checklists rather than a Q&A collection."
+    evidence:
+      - "Knowledge Center: Q&A, troubleshooting."
+    takeaway: "Common questions and troubleshooting answers, including on security, are found in the AWS Knowledge Center."
+    history: []
+    verified:
+      keyHash: cbb7e4c1b47b
+      fullHash: faf6a26a51d9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

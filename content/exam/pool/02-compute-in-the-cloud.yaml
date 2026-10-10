@@ -1,0 +1,1693 @@
+questions:
+  - id: q-fpj00r
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: compute-as-a-service
+    note: m02/introduction-to-amazon-ec2
+    task: "1.1"
+    level: 2
+    select: 2
+    stem: >-
+      A small online bookstore is weighing a purchase of its own servers against renting virtual servers on Amazon EC2.
+      Its owner worries about waiting weeks for hardware and about paying for spare machines after the holiday rush ends.
+      Which traits of renting compute as a service address these two worries?
+    options:
+      - id: a
+        text: Instances can be running within minutes of a request
+        correct: true
+        why: AWS keeps capacity running, so the bookstore no longer waits weeks for hardware to arrive and be installed.
+      - id: b
+        text: Unneeded instances can be released when demand drops
+        correct: true
+        why: The bookstore is never locked into machines it no longer needs once the holiday rush is over.
+      - id: c
+        text: Each instance runs an operating system the customer picks
+        why: Choosing the operating system is true of EC2, but it does nothing about hardware waits or spare machines.
+      - id: d
+        text: The hypervisor on each physical host is managed by AWS
+        why: AWS does run the hypervisor, but that neither shortens hardware waits nor removes spare machines.
+      - id: e
+        text: Instance types offer different mixes of CPU and memory
+        why: Instance types do vary, but choosing among them does not address either of the owner's worries.
+    evidence:
+      - AWS keeps huge capacity running, so instances are usable within minutes.
+      - Usage can swing widely, and you are never locked into servers you no longer need.
+    takeaway: Renting servers as a service gives fast provisioning and lets a business drop capacity it no longer needs.
+    history: []
+    verified:
+      keyHash: 249a72096386
+      fullHash: ef4739f63e75
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-m7e3n0
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: on-premises-vs-cloud
+    note: m02/introduction-to-amazon-ec2
+    task: "1.1"
+    level: 2
+    stem: >-
+      A regional clinic plans to open a new patient portal next month.
+      Its IT lead warns that physical servers would take weeks to arrive and be installed.
+      Which benefit of running the portal on Amazon EC2 answers this concern most directly?
+    options:
+      - id: a
+        text: Speed of deployment, since instances can be running within minutes
+        correct: true
+        why: Launching instances in minutes removes the delivery and installation wait the IT lead is worried about.
+      - id: b
+        text: Global reach, since the portal can serve patients in other countries
+        why: Reaching other countries does not shorten the wait for servers before next month's opening.
+      - id: c
+        text: High availability, since instances can run in several Availability Zones
+        why: Spreading instances across zones keeps the portal up, but the concern here is how long servers take to arrive.
+      - id: d
+        text: Elasticity, since the portal's capacity can shrink during quiet nights
+        why: Shrinking capacity at night trims cost later, but it does nothing about the hardware delivery delay.
+    evidence:
+      - Owning means upfront purchases, delivery waits, installation and fixed capacity.
+      - AWS keeps huge capacity running, so instances are usable within minutes.
+    takeaway: Launching EC2 instances in minutes removes the purchase, delivery and installation delays of physical servers.
+    history: []
+    verified:
+      keyHash: f404f55850f2
+      fullHash: 485ae6db2dd6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-aks2ht
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: vertical-scaling
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 1
+    stem: >-
+      What is it called when a running Amazon EC2 instance is changed to a larger size with more CPU and memory?
+    options:
+      - id: a
+        text: Scaling up
+        correct: true
+        why: Giving one existing instance more CPU and memory is vertical scaling, also called scaling up.
+      - id: b
+        text: Scaling out
+        why: Scaling out adds more instances to share the work rather than making one instance bigger.
+      - id: c
+        text: Scaling in
+        why: Scaling in removes surplus instances after demand falls, which is the opposite of adding power.
+      - id: d
+        text: Load balancing
+        why: Load balancing spreads requests across instances and never changes the size of any instance.
+    evidence:
+      - "**Scaling up (vertical)**: give running instances more power."
+      - "**Scaling up (vertical scaling)**: making a running instance more powerful."
+    takeaway: Giving one instance more CPU or memory is vertical scaling, also called scaling up.
+    history: []
+    verified:
+      keyHash: 67c76e54a79d
+      fullHash: 0c5f8a370c51
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7mwqks
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: scalability
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 1
+    stem: >-
+      Which cloud concept is about planning ahead so that a system can grow to handle more users and more work as resources are added over time?
+    options:
+      - id: a
+        text: Scalability
+        correct: true
+        why: Scalability is the long-term ability to take on more load by adding resources, which is what the stem describes.
+      - id: b
+        text: Elasticity
+        why: Elasticity is the automatic, moment-to-moment growing and shrinking of resources, not long-term planning.
+      - id: c
+        text: High availability
+        why: High availability is about staying in service without a single point of failure, not about growth.
+      - id: d
+        text: Fault tolerance
+        why: Fault tolerance is about continuing to work when a part fails, not about planning for more users.
+    evidence:
+      - "Scalability looks ahead: long-term capacity planning so a system can absorb more users or work by adding resources."
+    takeaway: Scalability is planned, long-term growth by adding resources, unlike elasticity's automatic real-time changes.
+    history: []
+    verified:
+      keyHash: 5138663bae1b
+      fullHash: 2e7390d42010
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-gr9qmt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: elasticity
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 3
+    stem: >-
+      A ticketing website sees traffic surge for a short time whenever seats for a popular show go on sale, then fall back.
+      The company wants capacity to grow during each rush and shrink right after it, with no staff stepping in.
+      Which benefit of the AWS Cloud is this?
+    options:
+      - id: a
+        text: Elasticity
+        correct: true
+        why: Elasticity adds resources automatically when a rush starts and removes them when it ends, so each moment costs only what it needs.
+      - id: b
+        text: Scalability
+        why: Scalability is long-term planning for growth, not automatic adjustment during each short sales rush.
+      - id: c
+        text: Global reach
+        why: Global reach is about serving users in many places, not about following short bursts of demand.
+      - id: d
+        text: Economies of scale
+        why: Economies of scale lower prices through AWS's size and do not grow or shrink the site's capacity.
+    evidence:
+      - "Elasticity reacts in the moment: resources scale out automatically when demand spikes and back in when it falls, so each moment costs only what it needs."
+    takeaway: Automatic growth during a spike and shrinkage right after it is elasticity, not long-term scalability.
+    history: []
+    verified:
+      keyHash: 22227fcdeb92
+      fullHash: 2f1789c1e3ff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4wt1y9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: horizontal-scaling
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 3
+    stem: >-
+      A bike rental shop's booking site runs on one Amazon EC2 instance and slows down on sunny weekends, when many riders book at the same moment.
+      A more powerful server would leave each single booking just as slow as before.
+      Which approach lets the site serve more riders at once?
+    options:
+      - id: a
+        text: Scaling out
+        correct: true
+        why: Scaling out adds instances that handle bookings in parallel, so many riders are served at the same time.
+      - id: b
+        text: Scaling up
+        why: Scaling up gives the one instance more power, and a faster server would not finish any booking sooner.
+      - id: c
+        text: Scaling in
+        why: Scaling in removes surplus instances after a rush, which would lower capacity during the busy weekends.
+      - id: d
+        text: Load balancing
+        why: Load balancing only spreads requests over existing instances, and with one instance there is nothing to spread over.
+    evidence:
+      - "**Scaling out (horizontal)**: more instances share the work in parallel."
+      - "More customers arrive, but a bigger server cannot serve any one faster: scale out."
+    takeaway: When many users arrive at once, scaling out adds parallel capacity that a bigger single server cannot.
+    history: []
+    verified:
+      keyHash: b22a51ae0b13
+      fullHash: c82b0a122f25
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-natmhz
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-ec2-auto-scaling
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 2
+    stem: >-
+      A newly opened pet supply retailer cannot predict when traffic to its online store will spike.
+      It turns on Amazon EC2 Auto Scaling for the instances behind the store.
+      Which benefit of the AWS Cloud does this give the retailer?
+    options:
+      - id: a
+        text: Its capacity follows demand, so it pays only for what it needs
+        correct: true
+        why: Auto Scaling adds instances as traffic rises and removes them as it falls, which is elasticity with no forecast needed.
+      - id: b
+        text: Its requests are spread evenly over the instances already running
+        why: Spreading requests over running instances is the job of Elastic Load Balancing, not of Auto Scaling.
+      - id: c
+        text: Its hourly compute rate drops in return for a long-term commitment
+        why: A lower rate for a commitment comes from a pricing option such as Savings Plans, not from Auto Scaling.
+      - id: d
+        text: Its store can reach shoppers abroad from Regions close to them
+        why: Serving shoppers from nearby Regions is global reach, which Auto Scaling does not provide.
+    evidence:
+      - "A new store cannot predict its traffic spikes: let Auto Scaling follow demand."
+      - It adds instances as demand and key metrics rise and decommissions them as demand falls, keeping the desired number running every minute.
+      - It improves availability, and you pay only for the EC2 instances it runs, while they run.
+    takeaway: Amazon EC2 Auto Scaling gives elasticity, so capacity follows unpredictable demand and only running instances are paid for.
+    history: []
+    verified:
+      keyHash: 833fa902eef9
+      fullHash: 8ed606219dc1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1ehpn8
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: loose-coupling
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      An online travel agency's booking component calls its invoicing component directly.
+      Whenever invoicing goes down, bookings start failing as well.
+      Which design change follows the AWS principle that keeps this kind of failure from spreading?
+    options:
+      - id: a
+        text: Have booking leave invoicing requests in a message queue
+        correct: true
+        why: A queue lets booking keep sending while invoicing is down, so the invoicing failure stays contained.
+      - id: b
+        text: Run booking and invoicing together on one larger instance
+        why: Merging both parts onto one instance couples them even more tightly, so one failure still stops both.
+      - id: c
+        text: Put booking and invoicing behind one shared load balancer
+        why: A load balancer only spreads requests over instances, and booking still waits on invoicing and fails with it.
+      - id: d
+        text: Give booking and invoicing each a larger instance size
+        why: Bigger instances can still go down, and booking would still fail with invoicing through the direct call.
+    evidence:
+      - "**Loosely coupled**: a message queue sits between them, so A keeps sending while B is down and messages wait until B handles them."
+      - Loose coupling contains failures instead of letting them cascade, and it is the target for AWS architectures.
+    takeaway: Loose coupling through a queue keeps one component's failure from cascading into the components that call it.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the only one that separates the two components; the other three keep them coupled.)"
+  - id: q-ghtbn0
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: monolithic-vs-microservices
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    select: 2
+    stem: >-
+      An online learning platform is replacing its monolithic application with a microservices design.
+      Which outcomes come from this change itself?
+    options:
+      - id: a
+        text: Each service can fail while the rest of the app keeps working
+        correct: true
+        why: Microservices are loosely coupled, so a failure in one part stays contained instead of stopping the whole platform.
+      - id: b
+        text: Each service can be changed and released on its own schedule
+        correct: true
+        why: Loosely coupled services can be updated on their own, which is the flexibility the change brings.
+      - id: c
+        text: Each service can be resized to more CPU and memory when needed
+        why: Resizing an instance's CPU and memory is vertical scaling, which a monolith on EC2 can use just as well.
+      - id: d
+        text: Each service is billed only for the time its instances are running
+        why: Amazon EC2 bills only running instances with either design, so this does not come from the change.
+      - id: e
+        text: Each service can share a physical host with other customers' instances
+        why: Multi-tenancy on EC2 hosts applies to any instance, so it is not an outcome of splitting the application.
+    evidence:
+      - Microservices loosely couple those parts, so the rest keep working and talking when one fails, adding availability, resilience and flexibility.
+      - A traditional monolith tightly couples its database logic, web servers, user interface and business logic, so one failure can take down the whole application.
+    takeaway: Microservices loosely couple an application's parts, so one failure stays contained and each part stays flexible.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 are the only ones about service independence; 2, 4 and 5 describe instance traits.)"
+  - id: q-0z412e
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ec2-instance-sizing
+    note: m02/amazon-ec2-instance-types
+    task: "1.4"
+    level: 2
+    stem: >-
+      A startup has already picked an Amazon EC2 instance family for a new web app.
+      It now wants to keep compute costs low while the app stays responsive.
+      Which practice fits this goal?
+    options:
+      - id: a
+        text: Pick the smallest size that performs well, then resize if needed
+        correct: true
+        why: Larger sizes cost more, and a size can change later, so the smallest size that performs well wastes the least.
+      - id: b
+        text: Pick general purpose instances when a workload's needs are unknown
+        why: The startup has already chosen its family, so this rule for picking a family does not lower its costs.
+      - id: c
+        text: Launch every instance from one AMI so setups stay identical
+        why: One AMI keeps instances consistent, but it does nothing to lower what the startup pays for compute.
+      - id: d
+        text: Spread instances over several Availability Zones for availability
+        why: Spreading over zones keeps the app up, but it does not trim the size or cost of any instance.
+    evidence:
+      - Bigger sizes cost more, so pick the smallest that performs well and switch later if needed.
+    takeaway: Rightsizing starts at the smallest instance size that performs well, since the size can change later.
+    history: []
+    verified:
+      keyHash: ee85a1c3acd9
+      fullHash: 73fd5dfb8355
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1011s8
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: on-premises-vs-cloud
+    note: m02/introduction-to-amazon-ec2
+    task: "1.4"
+    level: 2
+    stem: >-
+      A logistics firm buys enough on-premises servers for its busiest season, and most of them sit idle the rest of the year.
+      Which trait of Amazon EC2 removes the cost of that off-season capacity?
+    options:
+      - id: a
+        text: Only running instances are billed, so spare ones can be stopped
+        correct: true
+        why: The firm can stop or terminate spare instances after its busy season and pay nothing for their compute time.
+      - id: b
+        text: A term commitment lowers the hourly rate for steady, predictable use
+        why: A term commitment suits steady use, but this load is seasonal, so the firm would keep paying in the quiet months.
+      - id: c
+        text: AWS takes care of the physical hosts that instances run on
+        why: AWS does manage the hosts, but the firm would still pay for any instances it left running all year.
+      - id: d
+        text: Instances can be launched in Regions near the firm's customers
+        why: Launching near customers can cut latency, but it does not stop the firm from paying for off-season capacity.
+    evidence:
+      - Owning means upfront purchases, delivery waits, installation and fixed capacity.
+      - Only running instances are billed.
+    takeaway: On-premises capacity is a fixed cost bought for the peak, while EC2 bills only for instances that are running.
+    history: []
+    verified:
+      keyHash: 428c323693db
+      fullHash: 0fd0b4432545
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4gb228
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: amazon-ec2
+    note: m02/introduction-to-amazon-ec2
+    task: "2.1"
+    level: 2
+    select: 2
+    stem: >-
+      A dental practice runs its scheduling software on Amazon EC2 and uses no other AWS service.
+      Under the AWS shared responsibility model, which tasks does AWS take on in this setup?
+    options:
+      - id: a
+        text: Maintaining the physical hosts that the instances run on
+        correct: true
+        why: The physical hosts belong to AWS, which runs and maintains them for every EC2 customer.
+      - id: b
+        text: Running the hypervisor that keeps instances on a host apart
+        correct: true
+        why: AWS manages the hypervisor and the isolation it gives, so the practice has no duty for it.
+      - id: c
+        text: Choosing the operating system and software for the instances
+        why: On EC2 the practice picks the operating system and fully controls the software, so this duty stays with it.
+      - id: d
+        text: Deciding which requests are allowed to reach the instances
+        why: The practice decides what traffic gets in and whether access is public or private, so AWS does not.
+      - id: e
+        text: Patching the database engine behind an Amazon RDS instance
+        why: AWS does patch Amazon RDS engines, but the practice runs no RDS database, so this is not part of its setup.
+    evidence:
+      - You choose the OS (Windows or Linux, across up to thousands of instances), fully control the software, and decide which requests get in and whether access is public or private.
+      - A hypervisor on the host shares resources among them while isolating them, and AWS manages host, hypervisor and isolation.
+    takeaway: On EC2, AWS manages the physical hosts and the hypervisor, while the customer controls the OS, software and access rules.
+    history: []
+    verified:
+      keyHash: 1fc632f072cb
+      fullHash: e37b616401c2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-wj1tva
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: multi-tenancy
+    note: m02/introduction-to-amazon-ec2
+    task: "2.1"
+    level: 2
+    stem: >-
+      An accounting firm learns that its Amazon EC2 instances share a physical host with other customers' instances.
+      Under the AWS shared responsibility model, how are the tenants on that host kept isolated from one another?
+    options:
+      - id: a
+        text: AWS isolates them through the hypervisor it runs on the host
+        correct: true
+        why: AWS manages the hypervisor that shares the host while isolating each tenant, so isolation is AWS's duty.
+      - id: b
+        text: AWS isolates them by keeping each in its own Availability Zone
+        why: Tenants that share one host sit in the same zone, so zones cannot be what keeps them apart.
+      - id: c
+        text: The firm isolates them through the security groups it configures
+        why: The firm's security groups filter traffic to its own instances, but they do not separate tenants on a host.
+      - id: d
+        text: The firm isolates them through the guest OS that it patches
+        why: The guest OS runs inside one instance, so patching it cannot keep other tenants on the host apart.
+    evidence:
+      - "Many EC2 instances, which are virtual machines (VMs), share one physical host: multi-tenancy."
+      - A hypervisor on the host shares resources among them while isolating them, and AWS manages host, hypervisor and isolation.
+    takeaway: In multi-tenancy, AWS keeps the customers' instances that share a host isolated, so tenant isolation is AWS's responsibility.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only accurate account of how instances on a shared host are isolated.)"
+  - id: q-39t0q6
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: hypervisor
+    note: m02/introduction-to-amazon-ec2
+    task: "2.1"
+    level: 2
+    stem: >-
+      An insurance broker worries that other customers' instances on the same physical host might reach its data.
+      Which component keeps the instances on a host apart, and which party is responsible for it?
+    options:
+      - id: a
+        text: The hypervisor running on the host, which AWS manages
+        correct: true
+        why: The hypervisor shares the host's resources while isolating each instance, and AWS is responsible for it.
+      - id: b
+        text: The guest operating system, which the customer manages
+        why: The customer does manage the guest OS, but it runs inside one instance and cannot keep other tenants out.
+      - id: c
+        text: The Amazon Machine Image, which the customer chooses
+        why: The customer does choose the AMI, but an AMI only sets what an instance starts with, not isolation on a host.
+      - id: d
+        text: The Availability Zone of the host, which AWS operates
+        why: AWS does operate each zone, but a zone holds many hosts and does not keep the instances on one host apart.
+    evidence:
+      - A hypervisor on the host shares resources among them while isolating them, and AWS manages host, hypervisor and isolation.
+    takeaway: AWS runs the hypervisor that isolates instances sharing a host, so that isolation is AWS's responsibility.
+    history: []
+    verified:
+      keyHash: 9dd43016e90b
+      fullHash: 35636330be60
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-d34r9p
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: connecting-to-ec2-instances
+    note: m02/introduction-to-amazon-ec2
+    task: "2.3"
+    level: 2
+    select: 2
+    stem: >-
+      An administrator needs a remote command-line session on a Linux Amazon EC2 instance.
+      Which methods can open one?
+    options:
+      - id: a
+        text: Secure Shell (SSH)
+        correct: true
+        why: SSH is the standard way to open a remote command-line session on a Linux instance.
+      - id: b
+        text: AWS Systems Manager
+        correct: true
+        why: Systems Manager gives secure, simplified access to instances, including a command-line session.
+      - id: c
+        text: Remote Desktop Protocol (RDP)
+        why: RDP is the way to reach a Windows instance's desktop, not a command-line session on Linux.
+      - id: d
+        text: AWS IAM Identity Center
+        why: IAM Identity Center gives people single sign-on to AWS accounts and apps, not a session on an instance.
+      - id: e
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates secrets such as passwords, but it does not open a session itself.
+    evidence:
+      - "**Connect**: by network for applications, or SSH (Linux), Remote Desktop Protocol (RDP) (Windows) or AWS Systems Manager."
+      - "**AWS Systems Manager**: an AWS service for secure, simplified instance access."
+    takeaway: Linux instances are reached over SSH or through AWS Systems Manager, which simplifies secure access.
+    history: []
+    verified:
+      keyHash: 2280fa5209a8
+      fullHash: f005a45fe3a0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ste52f
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ec2-key-pairs
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "2.3"
+    level: 2
+    stem: >-
+      A marine biology institute is launching an Amazon EC2 instance and wants only staff who hold a secret file to be able to sign in to it.
+      Which launch setting provides this?
+    options:
+      - id: a
+        text: "Key pair: a public key on the instance, a private key kept by the user"
+        correct: true
+        why: The instance holds the public key, so only staff with the matching private key file can sign in.
+      - id: b
+        text: "User data: a script that runs when the instance first starts"
+        why: User data configures the instance at launch, but it does not decide who is able to sign in.
+      - id: c
+        text: "Amazon Machine Image: the operating system and software to start from"
+        why: The AMI sets the starting software, but it does not limit sign-in to staff who hold a file.
+      - id: d
+        text: "Instance type: the mix of CPU, memory and network performance"
+        why: The instance type sets hardware performance and has no part in deciding who can sign in.
+    evidence:
+      - "**Key pair**: a public key on the instance and a private key you keep for logging in, created at launch or reused."
+    takeaway: An EC2 key pair puts the public key on the instance and leaves the private key with the user for logging in.
+    history: []
+    verified:
+      keyHash: b622794ea180
+      fullHash: c6e949aa29ac
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1vsm4q
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-apis
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 1
+    stem: >-
+      Whether a user clicks through the AWS Management Console, types an AWS CLI command or runs code built on an AWS SDK, how is a resource launch or change carried out underneath?
+    options:
+      - id: a
+        text: Each tool sends a request to an AWS API
+        correct: true
+        why: Every action on AWS is an API request, and all three tools call the same APIs to carry it out.
+      - id: b
+        text: Each tool can launch and stop Amazon EC2 instances
+        why: All three can launch and stop instances, but that says what they do, not how the change is carried out.
+      - id: c
+        text: Each tool is free, and only the resources it creates are billed
+        why: The tools carry no charge of their own, but that does not explain how a change is carried out.
+      - id: d
+        text: Each tool can work with resources in many AWS Regions
+        why: All three can reach many Regions, but that does not explain the mechanism underneath each change.
+    evidence:
+      - Every AWS task, from launching to stopping or changing an instance, is an API request.
+      - The console, the AWS CLI and the AWS SDK all call the same APIs.
+    takeaway: The console, the AWS CLI and the AWS SDK all work by calling the same AWS APIs.
+    history: []
+    verified:
+      keyHash: 766cc9f8bfb5
+      fullHash: 1c7e8ba8e3ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-g9csxm
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: aws-management-console
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    select: 2
+    stem: >-
+      A museum's small IT team is deciding when to use the AWS Management Console instead of the AWS CLI or an AWS SDK.
+      For which tasks is the console the best fit?
+    options:
+      - id: a
+        text: Checking the monthly bill and the alarms on its resources
+        correct: true
+        why: The console's visual screens suit billing reviews and monitoring, which need no scripting.
+      - id: b
+        text: Exploring a new service's settings while learning how it works
+        correct: true
+        why: Exploring a service through visual screens is how the console supports a team that is still learning.
+      - id: c
+        text: Launching identical web servers for each weekly release
+        why: Clicking through the console for each production launch is slow and invites missed settings, so a script fits better.
+      - id: d
+        text: Letting the ticketing app list its own instances when it starts
+        why: An application calls AWS from its own code through an SDK, not through a browser-based console.
+      - id: e
+        text: Making one identical change across a large fleet of instances
+        why: Repeating one change on many instances suits scripted CLI commands, not clicking through the console for each one.
+    evidence:
+      - Best for learning, test environments, bills, monitoring, non-technical tasks and one-time manual setups.
+      - Repeating its screens for every production launch is slow and invites slips like a missed checkbox.
+    takeaway: The console suits visual work such as learning, bills and monitoring, while repeated launches belong in scripts or code.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 are the only manual, interactive tasks; the rest are automation, and the count matches select 2.)"
+  - id: q-w4rej5
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-cli
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 3
+    stem: >-
+      A news website's operations team launches the same set of servers several times a week.
+      It wants each launch to be predictable and written as text instructions that it can save, rerun and automate, without writing application code.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Command Line Interface (AWS CLI)
+        correct: true
+        why: The AWS CLI issues API calls as typed instructions that can be scripted, which keeps repeated launches predictable.
+      - id: b
+        text: AWS Management Console
+        why: Clicking through the console for every launch is slow and easy to get wrong, and it is not scriptable.
+      - id: c
+        text: AWS Software Development Kit (AWS SDK)
+        why: An SDK calls AWS from application code, which the team wants to avoid writing.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor gives best-practice recommendations and does not launch servers from commands.
+    evidence:
+      - The AWS Command Line Interface (AWS CLI) issues API calls as text commands on Windows, macOS or Linux, so repetitive work can be scripted, and automation keeps deployments predictable.
+    takeaway: Repeated, scripted launches from typed commands point to the AWS CLI rather than the console or an SDK.
+    history: []
+    verified:
+      keyHash: 90d539664ea4
+      fullHash: 0ed51c4d74fb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4kx8jk
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-sdk
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 1
+    stem: >-
+      Which tool lets an application written in a language such as Java, Python or .NET call AWS services from its own code?
+    options:
+      - id: a
+        text: AWS SDK
+        correct: true
+        why: The AWS SDK gives language libraries so application code can call AWS directly.
+      - id: b
+        text: AWS CLI
+        why: The AWS CLI takes typed commands in a terminal rather than calls made from inside application code.
+      - id: c
+        text: AWS Management Console
+        why: The console is a web interface for people, not a library that application code can call.
+      - id: d
+        text: AWS CloudShell
+        why: CloudShell is a browser terminal with the AWS CLI, not a library built into an application.
+    evidence:
+      - The AWS Software Development Kit (AWS SDK) lets code in languages like Python, C++, Java and .NET call AWS, with AWS docs and sample code.
+    takeaway: Application code calls AWS through the AWS SDK for its language.
+    history: []
+    verified:
+      keyHash: 91469834ed78
+      fullHash: 17745cd8e51a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7vrg7m
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: elastic-load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.2"
+    level: 1
+    stem: >-
+      At what scope does Elastic Load Balancing (ELB) operate when it gives front-end instances a single address to send their requests to?
+    options:
+      - id: a
+        text: One AWS Region
+        correct: true
+        why: ELB is a Regional service, so one entry point serves instances across the Region.
+      - id: b
+        text: One Availability Zone
+        why: ELB is not limited to a single zone, which would make that zone a single point of failure.
+      - id: c
+        text: Every edge location
+        why: Edge locations serve content delivery, while ELB runs within a Region in front of its instances.
+      - id: d
+        text: One single subnet
+        why: ELB is not tied to one subnet, since it spreads traffic over instances across the Region.
+    evidence:
+      - ELB is Regional, so front ends need only its single URL, and it passes each request to the back-end instance with the fewest outstanding requests.
+    takeaway: ELB is a Regional service that gives a tier one entry point to the instances behind it.
+    history: []
+    verified:
+      keyHash: 2d524dfa08bf
+      fullHash: 7f34af884b3c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-05r50q
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: elastic-load-balancing-with-auto-scaling
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.2"
+    level: 2
+    stem: >-
+      A hotel chain's booking app runs on a single Amazon EC2 instance, so any failure takes the whole app offline.
+      Which change removes this single point of failure while keeping traffic evenly spread?
+    options:
+      - id: a
+        text: Let Auto Scaling run several instances and ELB spread the traffic
+        correct: true
+        why: Auto Scaling keeps several instances running and ELB spreads requests across them, so no one instance is critical.
+      - id: b
+        text: Buy a Reserved Instance to lower the app's hourly compute cost
+        why: A Reserved Instance lowers the price, but the app still runs on one instance whose failure takes it offline.
+      - id: c
+        text: Move the app to a larger instance type with more CPU and memory
+        why: A bigger instance adds capacity, but it is still one instance, so its failure would still take the app offline.
+      - id: d
+        text: Set a CloudWatch alarm that alerts the team whenever the app fails
+        why: An alarm reports the failure after it happens, but the app still depends on one instance and spreads no traffic.
+    evidence:
+      - "They are separate services with complementary jobs: Auto Scaling sets how many instances run, and ELB spreads traffic across them."
+      - Together they keep performance consistent and availability high.
+    takeaway: Auto Scaling provides several instances and ELB spreads traffic across them, which together remove a single point of failure.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the longest and the only one that names two services working together.)"
+  - id: q-zj8ymz
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: general-purpose-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which Amazon EC2 instance family is the usual starting point for a workload whose main resource needs are still unknown?
+    options:
+      - id: a
+        text: General purpose
+        correct: true
+        why: General purpose instances balance CPU, memory and networking, which suits a workload that is not yet understood.
+      - id: b
+        text: Compute optimized
+        why: Compute optimized instances favor CPU, which only pays off once CPU is known to be the bottleneck.
+      - id: c
+        text: Memory optimized
+        why: Memory optimized instances are for large in-memory datasets, a need that has not been shown here.
+      - id: d
+        text: Storage optimized
+        why: Storage optimized instances are for heavy local disk access, a need that has not been shown here.
+    evidence:
+      - "**General purpose**: balanced, for web services, code repositories and unpredictable workloads."
+    takeaway: A balanced or not-yet-understood workload starts on general purpose instances.
+    history: []
+    verified:
+      keyHash: fefa8d7e4b8d
+      fullHash: fd958497994a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qvsn6m
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: compute-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 3
+    stem: >-
+      A game studio hosts multiplayer matches on servers that are held back by processor speed rather than by memory or disk.
+      Which Amazon EC2 instance family fits best?
+    options:
+      - id: a
+        text: Compute optimized
+        correct: true
+        why: Compute optimized instances are built for CPU-heavy work such as game servers.
+      - id: b
+        text: General purpose
+        why: General purpose instances balance resources, so they give less CPU per dollar than this workload needs.
+      - id: c
+        text: Memory optimized
+        why: Memory optimized instances help with large in-memory datasets, but memory is not the limit here.
+      - id: d
+        text: Accelerated computing
+        why: Accelerated computing adds GPUs and co-processors, which a CPU-bound game server does not need.
+    evidence:
+      - "**Compute optimized**: CPU-heavy work like game servers, HPC, machine learning and scientific modeling."
+    takeaway: A workload limited by processor speed, such as a game server, fits compute optimized instances.
+    history: []
+    verified:
+      keyHash: 27e9e02e07dc
+      fullHash: 608dae7a9c0e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-63nt2g
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: memory-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 3
+    stem: >-
+      An analytics firm runs real-time queries over a very large dataset, and the work is fastest when the whole dataset stays in RAM rather than on disk.
+      Which Amazon EC2 instance family fits best?
+    options:
+      - id: a
+        text: Memory optimized
+        correct: true
+        why: Memory optimized instances are built to process large datasets quickly in memory.
+      - id: b
+        text: Storage optimized
+        why: Storage optimized instances speed up access to local disks, while this work needs the data in memory.
+      - id: c
+        text: Compute optimized
+        why: Compute optimized instances add CPU power, but the bottleneck here is holding the dataset in memory.
+      - id: d
+        text: General purpose
+        why: General purpose instances balance resources and lack the large memory this dataset calls for.
+    evidence:
+      - "**Memory optimized**: fast in-memory processing of large datasets, as in analytics and databases."
+      - In analytics, real-time in-memory work points to memory optimized, while big local datasets needing low-latency access and steady, high disk throughput point to storage optimized.
+    takeaway: Real-time work on a large dataset held in memory points to memory optimized instances.
+    history: []
+    verified:
+      keyHash: bae5f03ac54b
+      fullHash: c7137e394549
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-nrydkt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: accelerated-computing-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      A film studio renders visual effects and wants GPUs to handle the graphics math faster than software on a CPU could.
+      Which Amazon EC2 instance family fits?
+    options:
+      - id: a
+        text: Accelerated computing
+        correct: true
+        why: Accelerated computing instances carry GPUs that do graphics math more efficiently than CPU-run software.
+      - id: b
+        text: Compute optimized
+        why: Compute optimized instances add CPU power, but the studio wants GPUs instead of faster CPUs.
+      - id: c
+        text: Memory optimized
+        why: Memory optimized instances help with large in-memory datasets, not with GPU graphics work.
+      - id: d
+        text: General purpose
+        why: General purpose instances balance resources and do not provide the GPUs rendering needs.
+    evidence:
+      - "**Accelerated computing**: hardware accelerators such as GPUs, co-processors that do floating-point math, graphics, pattern matching and machine learning more efficiently than software running on a CPU."
+    takeaway: Work that wants GPUs or other hardware accelerators, such as rendering, fits accelerated computing instances.
+    history: []
+    verified:
+      keyHash: 60010c1e610f
+      fullHash: 01b7c8391c32
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ghc7jb
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: storage-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 3
+    stem: >-
+      A university library runs a data warehouse whose large datasets sit on the instance's local disks.
+      It needs fast, sustained reads and writes to those local disks.
+      Which Amazon EC2 instance family fits best?
+    options:
+      - id: a
+        text: Storage optimized
+        correct: true
+        why: Storage optimized instances give fast access to local data, which suits a data warehouse on local disks.
+      - id: b
+        text: Memory optimized
+        why: Memory optimized instances keep data in memory, while this workload depends on local disk speed.
+      - id: c
+        text: Accelerated computing
+        why: Accelerated computing adds GPUs and co-processors, which do not speed up local disk access.
+      - id: d
+        text: General purpose
+        why: General purpose instances balance resources and are not tuned for heavy local disk throughput.
+    evidence:
+      - "**Storage optimized**: fast access to local data, as in data warehousing, large databases and I/O-heavy apps."
+      - "A data warehouse on local disks: storage optimized."
+    takeaway: Heavy, fast access to large datasets on local disks, as in a data warehouse, fits storage optimized instances.
+    history: []
+    verified:
+      keyHash: dcc628049eb3
+      fullHash: 0095a21cbcdd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zyx1nh
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: amazon-machine-image
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 1
+    select: 2
+    stem: >-
+      Which items does an Amazon Machine Image (AMI) include?
+    options:
+      - id: a
+        text: The operating system the instance boots from
+        correct: true
+        why: An AMI carries the operating system an instance boots from.
+      - id: b
+        text: Software installed before the instance launches
+        correct: true
+        why: An AMI can carry preinstalled software, so instances start with it already in place.
+      - id: c
+        text: The instance type the instance runs as
+        why: The AMI does not set the size, which is chosen through the instance type at launch.
+      - id: d
+        text: The private key used to log in to the instance
+        why: The private key of a key pair stays with you, and only the public key is placed on the instance at launch.
+      - id: e
+        text: Data the app writes after the instance launches
+        why: An AMI is a template, not a data store, so data written while the instance runs lives on volumes like Amazon EBS.
+    evidence:
+      - An AMI holds the OS, architecture, storage layout, preinstalled software and launch permissions.
+      - It does not set size or networking, and it is no data store or backup, since instance data typically lives on volumes like Amazon EBS.
+      - "**Key pair**: a public key on the instance and a private key you keep for logging in, created at launch or reused."
+    takeaway: An AMI holds the OS and preinstalled software, while size, login keys and the data an instance writes live elsewhere.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 4 are the only pair describing what exists before launch, matching select 2.)"
+  - id: q-y3xrz6
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ec2-user-data
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      A car dealership launches instances from a generic Linux AMI that has no web server installed.
+      It wants each instance to install and start a web server on its own when it first boots.
+      Which launch setting does this?
+    options:
+      - id: a
+        text: User data
+        correct: true
+        why: User data runs a script at launch, so it can install and start the web server on each new instance.
+      - id: b
+        text: Key pair
+        why: A key pair controls who can log in, and it does not run any setup steps at launch.
+      - id: c
+        text: Instance type
+        why: The instance type sets CPU, memory and network performance, not the software installed at boot.
+      - id: d
+        text: Network settings
+        why: Network settings decide which traffic can reach the instance, not what software it installs.
+    evidence:
+      - "**User data**: a launch script, here installing and starting Nginx, which the generic AMI lacks."
+      - "A generic Linux instance must serve web pages: install Nginx with user data."
+    takeaway: User data runs a script at launch to configure an instance, such as installing software its AMI lacks.
+    history: []
+    verified:
+      keyHash: d57255aea099
+      fullHash: 1963c9d21da1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ns3dgc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: dynamic-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 3
+    stem: >-
+      A grocery delivery service gets sudden order surges that follow no schedule, such as when a storm arrives without warning.
+      Which Amazon EC2 Auto Scaling approach handles these surges?
+    options:
+      - id: a
+        text: Dynamic scaling
+        correct: true
+        why: Dynamic scaling reacts to demand as it happens, which suits surges that cannot be forecast.
+      - id: b
+        text: Predictive scaling
+        why: Predictive scaling adds capacity ahead of expected demand, and these surges cannot be expected.
+      - id: c
+        text: Vertical scaling
+        why: Vertical scaling makes one instance bigger and is not how Auto Scaling follows demand.
+      - id: d
+        text: Manual scaling
+        why: Manual changes depend on staff noticing the surge, so they cannot keep up in real time.
+    evidence:
+      - "**Dynamic scaling** responds to demand in real time, and **predictive scaling** schedules capacity ahead of expected demand."
+    takeaway: Unpredictable surges call for dynamic scaling, while known patterns suit predictive scaling.
+    history: []
+    verified:
+      keyHash: 6a81f3ccd42e
+      fullHash: 4bb0299602e9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rh5r4f
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: predictive-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      A city transit office's trip planner gets heavy use every weekday morning at about the same time.
+      It wants Amazon EC2 Auto Scaling to have extra instances running before the morning rush begins.
+      Which approach fits?
+    options:
+      - id: a
+        text: Predictive scaling
+        correct: true
+        why: Predictive scaling schedules capacity ahead of demand that is expected, such as a daily morning rush.
+      - id: b
+        text: Dynamic scaling
+        why: Dynamic scaling reacts once demand rises, so instances would arrive after the rush has started.
+      - id: c
+        text: Vertical scaling
+        why: Vertical scaling enlarges one instance and does not add instances ahead of the rush.
+      - id: d
+        text: Scaling in
+        why: Scaling in removes instances as demand falls, which is the opposite of preparing for a rush.
+    evidence:
+      - "**Dynamic scaling** responds to demand in real time, and **predictive scaling** schedules capacity ahead of expected demand."
+      - "**Predictive scaling**: Auto Scaling that schedules capacity ahead of anticipated demand."
+    takeaway: A rush that comes at a known time suits predictive scaling, which adds capacity before demand arrives.
+    history: []
+    verified:
+      keyHash: 8c2bbd59552b
+      fullHash: de52b1fea29e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zt8vt9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: load-balancing-routing-methods
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which load balancing routing method keeps sending each client to the same server, based on the network address the client connects from?
+    options:
+      - id: a
+        text: IP Hash
+        correct: true
+        why: IP Hash pins each client IP address to one server, so that client always lands on the same one.
+      - id: b
+        text: Round Robin
+        why: Round Robin cycles through servers in order, so one client's requests move between servers.
+      - id: c
+        text: Least Connections
+        why: Least Connections picks the server with the fewest open connections, whoever the client is.
+      - id: d
+        text: Least Response Time
+        why: Least Response Time picks the fastest server at that moment, not a fixed server per client.
+    evidence:
+      - "**IP Hash**: routing that pins each client IP address to one server."
+    takeaway: IP Hash routing keeps each client IP address on one server, unlike Round Robin or Least Connections.
+    history: []
+    verified:
+      keyHash: 6225ae6b18c0
+      fullHash: 051f95c49e23
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1q91nj
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 1
+    stem: >-
+      What does a load balancer do for a group of Amazon EC2 instances?
+    options:
+      - id: a
+        text: It takes incoming requests and picks an instance for each one
+        correct: true
+        why: A load balancer receives each request and decides which instance serves it, so none is overloaded.
+      - id: b
+        text: It adds and removes instances as demand rises and falls
+        why: Changing the instance count is the job of Auto Scaling, not of a load balancer.
+      - id: c
+        text: It holds messages until an instance is ready to process them
+        why: Holding messages for later is what a message queue does, not a load balancer.
+      - id: d
+        text: It gives running instances more CPU and memory when they are busy
+        why: Adding CPU and memory to an instance is vertical scaling, which a load balancer never does.
+    evidence:
+      - A load balancer receives incoming requests and decides which instance serves each one.
+    takeaway: A load balancer spreads incoming requests across instances so none sits idle or overloaded.
+    history: []
+    verified:
+      keyHash: 0fe459f11ea2
+      fullHash: 858e4734dcf4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-04m9p9
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: amazon-sqs
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 1
+    select: 2
+    stem: >-
+      Which statements describe Amazon Simple Queue Service (Amazon SQS)?
+    options:
+      - id: a
+        text: Messages are held until a consumer retrieves and deletes them
+        correct: true
+        why: SQS holds each message until a consumer retrieves it, processes it and deletes it.
+      - id: b
+        text: Senders can keep sending while the receiver is unavailable
+        correct: true
+        why: The receiver does not need to be available at send time, because SQS keeps the messages until it is ready.
+      - id: c
+        text: Each message is pushed at once to every subscriber of a topic
+        why: Pushing each message to topic subscribers at once is publish-subscribe, which is Amazon SNS rather than SQS.
+      - id: d
+        text: Messages can fan out to people by text message and email
+        why: Fanning out to people by text message and email is a feature of Amazon SNS, not of SQS.
+      - id: e
+        text: Events can be filtered and transformed before delivery
+        why: Filtering and transforming events on their way to targets is what Amazon EventBridge does, not SQS.
+    evidence:
+      - "SQS is a message queue: producers drop messages in, and a consumer later picks each one up, processes it and deletes it."
+      - It moves any volume of messages between components without losing them, and the receiver need not be available at send time.
+    takeaway: Amazon SQS holds messages until a consumer is ready, so senders never wait on receivers.
+    history: []
+    verified:
+      keyHash: 409970a3d3fe
+      fullHash: 69a982fadc52
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-thnr4x
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-sns
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 3
+    stem: >-
+      A fitness app wants to tell its users right away, by mobile push and email, when a class they follow opens for booking.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon SNS
+        correct: true
+        why: SNS pushes each message to topic subscribers at once and can fan out to people by mobile push and email.
+      - id: b
+        text: Amazon SQS
+        why: SQS holds messages for a consumer to collect later and does not push them to people.
+      - id: c
+        text: Amazon EventBridge
+        why: EventBridge routes events between applications and services rather than notifying people by push and email.
+      - id: d
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams ingests streaming data for processing and does not send notifications to users.
+    evidence:
+      - "SNS is publish-subscribe: publishers send a message to a topic, and subscribers such as web servers, email addresses and Lambda functions receive it."
+      - It can also reach people directly, fanning out by text message, email or mobile push, for example to say an order is ready.
+    takeaway: Notifying people at once by push, SMS or email points to Amazon SNS, while work processed later points to SQS.
+    history: []
+    verified:
+      keyHash: eeb255b3a7de
+      fullHash: a38b05d26016
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4zg4ay
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-eventbridge
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 3
+    stem: >-
+      When a customer places an order, an online pharmacy must start a payment, an inventory check and a shipping request in separate services.
+      It wants one serverless router that takes in each new order, applies rules to pick and reshape what each service needs, and passes it on.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon EventBridge
+        correct: true
+        why: EventBridge routes each order to every service that needs it and can transform it on the way, with no servers to run.
+      - id: b
+        text: Amazon SQS
+        why: SQS holds messages for a consumer to collect and does not apply rules to route and transform them for many services.
+      - id: c
+        text: Amazon SNS
+        why: SNS can fan a message out to subscribers, but it does not transform the order for each service.
+      - id: d
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams ingests streaming data for processing, not routing single business events to services.
+    evidence:
+      - "It handles the event pipeline end to end: intake, filtering, transformation and delivery."
+      - "EventBridge is serverless: custom apps, AWS services or third-party software feed it events, and it forwards them to the applications that need them."
+    takeaway: Routing one event to many services with filtering and transformation points to Amazon EventBridge.
+    history: []
+    verified:
+      keyHash: b12df89947c0
+      fullHash: 1583f53e2cba
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6wnxqf
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: savings-plans
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 1
+    select: 2
+    stem: >-
+      Which statements describe AWS Savings Plans?
+    options:
+      - id: a
+        text: Lower prices in return for a steady hourly compute commitment
+        correct: true
+        why: A Savings Plan lowers prices below On-Demand rates in exchange for committing to a set hourly usage.
+      - id: b
+        text: Lower prices that still apply when the family or Region changes
+        correct: true
+        why: A Savings Plan applies across Regions, families, sizes and operating systems, unlike a Reserved Instance.
+      - id: c
+        text: On-Demand prices for capacity held in one Availability Zone
+        why: Paying On-Demand rates for capacity held in one zone describes Capacity Reservations, not Savings Plans.
+      - id: d
+        text: Charges that continue while the held capacity sits unused
+        why: Paying for held capacity even when it is unused is how Capacity Reservations bill, not Savings Plans.
+      - id: e
+        text: Deep discounts on spare capacity that AWS can take back
+        why: Deep discounts on capacity that AWS can reclaim describe Spot Instances, not Savings Plans.
+    evidence:
+      - AWS Savings Plans give prices below On-Demand rates in exchange for committing to a set amount of compute usage per hour for one or three years.
+      - A Savings Plan applies whatever the Region, tenancy, OS, family or size, while an RI stays within its family and Region.
+    takeaway: Savings Plans trade an hourly usage commitment for lower prices and keep applying across families and Regions.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 3 and 4 both open with 'Lower prices' while no distractor does, so the repeated phrase marks the two keys."
+  - id: q-v0sex0
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: reserved-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 3
+    stem: >-
+      A toy maker runs a steady, predictable workload on one Amazon EC2 instance family in one Region and has no plans to change either for years.
+      The workload must never be interrupted, and the toy maker needs no control over which physical server it runs on.
+      It wants a discount in exchange for a term commitment tied to that family and Region.
+      Which pricing option fits?
+    options:
+      - id: a
+        text: Reserved Instances
+        correct: true
+        why: Reserved Instances give a discount for a term commitment in one family and Region, which suits steady use that will not change.
+      - id: b
+        text: Dedicated Hosts
+        why: Dedicated Hosts give a whole server and control over placement, which the toy maker does not need, at a higher price than RIs.
+      - id: c
+        text: On-Demand Instances
+        why: On-Demand has no commitment and no discount, so it costs the most for a steady, predictable workload.
+      - id: d
+        text: Spot Instances
+        why: Spot capacity can be reclaimed by AWS, which breaks the need for a workload that must never be interrupted.
+    evidence:
+      - "**Reserved Instances (RIs)**: discounts for a 1- or 3-year term in one family and Region."
+      - Dedicated Hosts cost more than RIs, so use them only when you need server control.
+    takeaway: Steady, uninterrupted use in one instance family and Region, with no need for server control, fits Reserved Instances.
+    history: []
+    verified:
+      keyHash: 789a3cd424c4
+      fullHash: 57e4b41bc7d6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-dhn6a2
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: spot-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      A weather research lab runs batch simulations that save their progress often and can pick up again if stopped.
+      It wants the lowest compute price and accepts that AWS may take the capacity back.
+      Which pricing option fits?
+    options:
+      - id: a
+        text: Spot Instances
+        correct: true
+        why: Spot Instances use spare capacity at a deep discount, and jobs that save progress can resume after a reclaim.
+      - id: b
+        text: On-Demand Instances
+        why: On-Demand cannot be reclaimed, but it gives no discount, so it is not the lowest price.
+      - id: c
+        text: Dedicated Instances
+        why: Dedicated Instances add hardware isolation, which the lab does not need and which does not lower the price.
+      - id: d
+        text: Reserved Instances
+        why: Reserved Instances need a term commitment for steady use, while the lab only needs cheap, interruptible capacity.
+    evidence:
+      - AWS warns two minutes before reclaiming a Spot Instance, so the job can save progress and resume later.
+      - "**Spot Instances**: discounted spare capacity that AWS can reclaim."
+    takeaway: Interruptible batch work that can save and resume fits Spot Instances, the cheapest but reclaimable option.
+    history: []
+    verified:
+      keyHash: 8997c1bc0579
+      fullHash: f8f1b1a5d7f6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-y05gdg
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: dedicated-hosts
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 3
+    select: 2
+    stem: >-
+      Which statements describe Amazon EC2 Dedicated Hosts?
+    options:
+      - id: a
+        text: They give one customer a whole physical server
+        correct: true
+        why: A Dedicated Host is an entire physical server reserved for a single customer.
+      - id: b
+        text: They let the customer control where instances are placed
+        correct: true
+        why: Control over instance placement helps with compliance rules and with server-bound software licenses.
+      - id: c
+        text: They cost less than Reserved Instances for the same use
+        why: Dedicated Hosts cost more than Reserved Instances, so they are used only when server control is needed.
+      - id: d
+        text: They isolate instances while AWS picks the physical server
+        why: Isolation with AWS choosing the server describes Dedicated Instances, not Dedicated Hosts.
+      - id: e
+        text: They run on spare capacity that AWS can reclaim at any time
+        why: Reclaimable spare capacity describes Spot Instances, not a server held for one customer.
+    evidence:
+      - A Dedicated Host gives control over instance placement and resource allocation, which helps with compliance and with licensing such as Windows or SQL Server.
+      - Dedicated Hosts cost more than RIs, so use them only when you need server control.
+      - "**Dedicated Hosts**: whole physical servers reserved for one customer."
+    takeaway: Dedicated Hosts give a whole server and control over placement, at a higher price, for compliance or licensing needs.
+    history: []
+    verified:
+      keyHash: 821ba42ffce6
+      fullHash: 1b500580a579
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4afsdc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: capacity-reservations
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 3
+    stem: >-
+      A wedding planning platform has a critical launch day and must be certain it can start the Amazon EC2 instances it needs in one Availability Zone.
+      It accepts paying the On-Demand rate for those instances even if some of them sit unused.
+      Which option fits?
+    options:
+      - id: a
+        text: Capacity Reservations
+        correct: true
+        why: A Capacity Reservation holds capacity in one zone for critical work and bills at On-Demand rates even when idle.
+      - id: b
+        text: Regional Reserved Instances
+        why: A regional Reserved Instance gives a billing discount but does not hold capacity in a specific zone.
+      - id: c
+        text: Spot Instances
+        why: Spot capacity can be reclaimed by AWS, so it cannot guarantee capacity for a critical launch.
+      - id: d
+        text: Savings Plans
+        why: A Savings Plan lowers the price of usage but does not set aside capacity in any zone.
+    evidence:
+      - Amazon EC2 Capacity Reservations hold capacity in one AZ for critical workloads, billed at the On-Demand rate even when unused.
+      - "A critical launch needing guaranteed capacity in one AZ: a Capacity Reservation."
+    takeaway: Guaranteed capacity in one Availability Zone for critical work comes from a Capacity Reservation, billed at On-Demand rates.
+    history: []
+    verified:
+      keyHash: 526a8780f23f
+      fullHash: c3c7baf452de
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-jpmcj1
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: reserved-instance-flexibility
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      A real estate agency holds a regional Reserved Instance for one size in an instance family.
+      It moves the workload to a different size in the same family and into another Availability Zone of the same Region.
+      What happens to the discount?
+    options:
+      - id: a
+        text: It applies to the new size and to the new zone
+        correct: true
+        why: A regional RI discount applies in any zone of its Region and, for most types, to any size in the family.
+      - id: b
+        text: It applies to the new zone, but not to the new size
+        why: RI flexibility also lets the discount flow to other sizes in the same family, so the size change keeps it.
+      - id: c
+        text: It applies to the new size, but not to the new zone
+        why: A regional RI discount is not tied to one zone, so the move to another zone of the Region keeps it.
+      - id: d
+        text: It applies to neither the new size nor the new zone
+        why: Both changes stay inside the RI's family and Region, so the discount keeps applying to the moved workload.
+    evidence:
+      - Reserved Instance flexibility means a regional Reserved Instance discount applies in any Availability Zone of its Region and, for most instance types, to any size in the same instance family.
+    takeaway: A regional Reserved Instance discount flexes across Availability Zones in its Region and across sizes in its family.
+    history: []
+    verified:
+      keyHash: e01cf7a072d1
+      fullHash: ed1fd89ea4e4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ns52vg
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: loose-coupling
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      An online florist's checkout service hands each order straight to its receipt service, so whenever the receipt service crashes, checkouts fail as well.
+      The team places a message queue between the two services.
+      What does this change give the florist?
+    options:
+      - id: a
+        text: Orders are held until the receipt service is able to take them
+        correct: true
+        why: The queue keeps each order while the receipt service is down, so checkout keeps sending and no longer fails with it.
+      - id: b
+        text: Receipt requests are spread across several healthy receipt instances
+        why: Spreading requests across healthy instances is what Elastic Load Balancing does, and a queue adds no such routing.
+      - id: c
+        text: More receipt instances start up automatically as orders pile up
+        why: Starting instances as demand grows is Amazon EC2 Auto Scaling, which the florist did not add with the queue.
+      - id: d
+        text: Buyers are sent a text message and an email when a receipt is ready
+        why: Texting and emailing buyers is a fan-out by Amazon SNS, while a queue only holds messages for a consumer to read.
+    evidence:
+      - "**Loosely coupled**: a message queue sits between them, so A keeps sending while B is down and messages wait until B handles them."
+      - Loose coupling contains failures instead of letting them cascade, and it is the target for AWS architectures.
+    takeaway: A queue between components loosely couples them, so one component's failure no longer cascades into the component that calls it.
+    history: []
+    verified:
+      keyHash: 732e3750ad0d
+      fullHash: 37f78bf61d9b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ec30bt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: monolithic-vs-microservices
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      A recipe website runs as one monolithic application, and last week a fault in its comment feature took the whole site offline, even though search and recipe pages never use comments.
+      The team is now rebuilding the site as microservices.
+      Which benefit of this move addresses that incident?
+    options:
+      - id: a
+        text: Each part can crash while the other parts keep serving
+        correct: true
+        why: Microservices loosely couple the site's parts, so a comment fault stays contained while search and recipes keep working.
+      - id: b
+        text: Each part can scale on its own as its own load changes
+        why: Scaling parts separately is a real gain of microservices, but it would not have kept the site up during the comment fault.
+      - id: c
+        text: Each part can be updated without redeploying the rest
+        why: Shipping one part's changes alone adds flexibility, but it does nothing to stop a comment fault from spreading to search.
+      - id: d
+        text: Each part can use the language and tools that suit it
+        why: Choosing tools per part is a flexibility gain, but the incident came from one fault taking down the whole site.
+    evidence:
+      - A traditional monolith tightly couples its database logic, web servers, user interface and business logic, so one failure can take down the whole application.
+      - Microservices loosely couple those parts, so the rest keep working and talking when one fails, adding availability, resilience and flexibility.
+    takeaway: Moving from a monolith to microservices contains a fault in one part, so the rest of the application keeps working.
+    history: []
+    verified:
+      keyHash: 96e47bfc27a7
+      fullHash: dec493b30974
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8z0d10
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: publish-subscribe
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    select: 2
+    stem: >-
+      A craft brewery's order system creates a message for every keg order.
+      The team routes these messages through Amazon SNS to its billing app, its warehouse app and a sales email list.
+      Which statements describe how the messages flow?
+    options:
+      - id: a
+        text: The order system sends each message one time only
+        correct: true
+        why: The order system publishes each message a single time to SNS instead of sending it to billing, the warehouse and the list one by one.
+      - id: b
+        text: Every receiver gets its own copy right away
+        correct: true
+        why: SNS pushes each message to all of its subscribers immediately, so billing, the warehouse and the list each get a copy.
+      - id: c
+        text: Each message waits in a queue until a receiver polls for it
+        why: Holding a message until a receiver polls for it is how Amazon SQS works, while SNS pushes messages out instead of parking them.
+      - id: d
+        text: A single receiver processes each message, then deletes it
+        why: One receiver taking and deleting each message describes Amazon SQS, while SNS hands every subscriber the message.
+      - id: e
+        text: Each event is matched to rules that pick its targets
+        why: Matching events to rules that choose targets describes Amazon EventBridge, not the plain fan-out of SNS to its subscribers.
+    evidence:
+      - "SNS is publish-subscribe: publishers send a message to a topic, and subscribers such as web servers, email addresses and Lambda functions receive it."
+      - Amazon SNS pushes each message to topic subscribers immediately, including people by push, SMS and email.
+    takeaway: In publish-subscribe, a sender publishes once to an SNS topic and every subscriber of that topic gets the message immediately.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 4 and 1, the two keys, are the two shortest options while the wrong options 2 and 5 are the longest, a length tell that breaks the parallel options rule. Option 1 is the only option that reuses the stem's phrase 'order system', which points at it."
+  - id: q-8vzx8x
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: ec2-instance-families
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    select: 2
+    stem: >-
+      An engineering consultancy plans two new Amazon EC2 workloads: a physics simulation whose bottleneck is processor speed, and an analytics database whose large working dataset must stay in RAM for fast queries.
+      Which instance families should it pick for these workloads?
+    options:
+      - id: a
+        text: Compute optimized
+        correct: true
+        why: Compute optimized instances suit CPU-heavy work such as a physics simulation held back by processor speed.
+      - id: b
+        text: Storage optimized
+        why: Storage optimized instances target fast access to data on local disks, which neither workload is held back by.
+      - id: c
+        text: Memory optimized
+        correct: true
+        why: Memory optimized instances process large datasets in RAM, so they fit the analytics database and its working set.
+      - id: d
+        text: Accelerated computing
+        why: Accelerated computing adds co-processors such as GPUs, but the simulation is limited by its CPU and the database by RAM.
+      - id: e
+        text: General purpose
+        why: General purpose instances give a balanced mix for unknown needs, while both of these bottlenecks are already known.
+    evidence:
+      - "Pick the family by the bottleneck: CPU, memory, accelerators or local disk."
+      - "**Compute optimized**: CPU-heavy work like game servers, HPC, machine learning and scientific modeling."
+      - "**Memory optimized**: fast in-memory processing of large datasets, as in analytics and databases."
+    takeaway: Choose an EC2 instance family by the workload's bottleneck, such as compute optimized for CPU and memory optimized for memory.
+    history: []
+    verified:
+      keyHash: 6e6aefb51275
+      fullHash: 0852fd507876
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

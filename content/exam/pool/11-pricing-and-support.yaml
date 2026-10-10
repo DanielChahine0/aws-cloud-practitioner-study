@@ -1,0 +1,1220 @@
+questions:
+  - id: q-0hmp41
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cost-optimization
+    note: m11/cost-optimization
+    task: "1.2"
+    level: 2
+    stem: >-
+      A ticket-booking startup runs an application that combines Amazon EC2, Amazon RDS and Amazon S3.
+      It has already trimmed its EC2 instances and asks where else it should search to lower its monthly AWS spend.
+      Which statement answers that question in line with AWS guidance?
+    options:
+      - id: a
+        text: Savings may also sit in the database and storage layers
+        correct: true
+        why: The design combines several services, so the RDS and S3 parts of the bill deserve the same search as the instances.
+      - id: b
+        text: Many teams begin their search for savings with EC2
+        why: It is true that EC2 is a common first stop, but the startup has done that step and asks where to look next.
+      - id: c
+        text: Data coming in from the internet carries no transfer fee
+        why: Inbound transfer is indeed free, but that fact names no part of the design where the startup could still save.
+      - id: d
+        text: Unit prices can drop as overall usage keeps growing
+        why: Volume pricing is a real AWS principle, but it explains a falling rate rather than where to search for savings.
+    evidence:
+      - Solutions usually combine services, so look for savings across the design (here EC2, RDS in a VPC, and S3).
+      - EC2 is where many teams look first.
+    takeaway: Cost optimization searches every service in a solution, not only the compute layer where many teams start.
+    history: []
+    verified:
+      keyHash: 790ed523058a
+      fullHash: 8f252f5d9651
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-vwr7ad
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: rightsizing
+    note: m11/cost-optimization
+    task: "1.2"
+    level: 1
+    stem: >-
+      Which practice measures what a workload really uses and then changes its compute or database resources so their capacity matches that demand?
+    options:
+      - id: a
+        text: Rightsizing
+        correct: true
+        why: Rightsizing starts from measured demand and adjusts instance or database capacity to match it, cutting paid idle capacity.
+      - id: b
+        text: Scaling up
+        why: Scaling up moves to a bigger resource for more power, which is a change in one direction rather than a fit to measured needs.
+      - id: c
+        text: Lift-and-shift
+        why: Lift-and-shift moves a workload to the cloud as it is, without measuring its use and adjusting its resources.
+      - id: d
+        text: Provisioning
+        why: Provisioning just sets up resources, and on its own says nothing about matching their capacity to real use.
+    evidence:
+      - "Rightsizing: measure real workload needs and resize to fit."
+      - Rightsize databases too; storage autoscaling matches storage to demand.
+    takeaway: Rightsizing matches resource capacity to measured workload needs, so you stop paying for capacity that sits idle.
+    history: []
+    verified:
+      keyHash: d991f7384d9a
+      fullHash: 5980503d9a59
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kfxkk6
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: aws-prescriptive-guidance
+    note: m11/aws-support-plans
+    task: "1.3"
+    level: 3
+    stem: >-
+      A regional credit union has chosen to migrate its loan systems to AWS with its own engineers doing all of the work.
+      To lower the risk of the move, its migration strategy is to follow proven approaches that AWS experts have already published, with the steps and code ready to reuse.
+      Which AWS option supports this migration strategy?
+    options:
+      - id: a
+        text: AWS Prescriptive Guidance
+        correct: true
+        why: Prescriptive Guidance publishes expert patterns with steps, architectures, tools and code that the credit union's own engineers can follow for the move.
+      - id: b
+        text: AWS Professional Services
+        why: Professional Services sends AWS consultants to carry out a migration project, while the credit union wants its own engineers to do the work.
+      - id: c
+        text: AWS Migration and Modernization Competency Partners
+        why: These partners are outside firms hired to help with phases of a migration, while the credit union wants published approaches its own team follows.
+      - id: d
+        text: AWS re:Post
+        why: re:Post holds answers from community peers, rather than proven migration approaches published by AWS experts with steps and code.
+    evidence:
+      - AWS Prescriptive Guidance offers guides and patterns from AWS technology experts, with steps, architectures, tools and code for common migration, optimization and modernization work.
+      - "AWS Professional Services: project-based consulting, such as complex migrations, security audits and performance tuning."
+    takeaway: A team that runs its own migration can lower risk by following the expert patterns, steps and code in AWS Prescriptive Guidance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: AWS Prescriptive Guidance is a technical resource named under task 4.3, which fits better than 1.3 migration strategies."
+  - id: q-frt6sr
+    version: 1
+    status: retired
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-prescriptive-guidance
+    note: m11/aws-support-plans
+    task: "1.3"
+    level: 2
+    stem: >-
+      A container leasing company is planning its migration to AWS and wants to reduce the business risk of the move instead of inventing each step itself.
+      How does AWS Prescriptive Guidance support this migration?
+    options:
+      - id: a
+        text: Tested steps for common migration tasks, written by AWS experts
+        correct: true
+        why: Prescriptive Guidance lays out expert-written steps for common migration work, so the company can follow a proven path.
+      - id: b
+        text: Ready patterns that pair migration architectures and tools with code
+        correct: true
+        why: Its patterns pair architectures and tools with code, so the company reuses a known approach instead of designing its own.
+      - id: c
+        text: An AWS consulting team that carries out the migration project
+        why: A consulting team that runs the project is AWS Professional Services, a paid engagement rather than published guidance.
+      - id: d
+        text: Peer answers to migration questions from community members
+        why: Answers from community peers come from AWS re:Post, which is a separate resource from the expert-written patterns.
+      - id: e
+        text: FAQ articles and short videos on common migration issues
+        why: FAQ articles and videos make up the AWS Knowledge Center on re:Post, rather than expert patterns with architectures and code.
+    evidence:
+      - AWS Prescriptive Guidance offers guides and patterns from AWS technology experts, with steps, architectures, tools and code for common migration, optimization and modernization work.
+    takeaway: AWS Prescriptive Guidance lowers migration risk with expert steps and patterns that pair architectures and tools with code.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 4 are the only two that describe the same resource; each other option describes a different one.)"
+  - id: q-yh58fj
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: save-when-you-commit
+    note: m11/aws-pricing-concepts
+    task: "1.4"
+    level: 2
+    stem: >-
+      A payroll software firm runs the same compute load around the clock and expects it to stay steady for years.
+      Which AWS pricing principle can lower its cost the most for this pattern?
+    options:
+      - id: a
+        text: Save when you commit
+        correct: true
+        why: A steady, predictable load is what a long usage commitment rewards with a large discount.
+      - id: b
+        text: Pay as you go
+        why: Paying as you go suits variable or uncertain demand, and gives no discount for a load that never changes.
+      - id: c
+        text: Pay less by using more
+        why: Volume discounts follow how much the firm uses, while its steady load calls for a discount on a time commitment.
+      - id: d
+        text: Bring your own license
+        why: Reusing existing licenses is a licensing choice, rather than one of the AWS pricing principles for steady compute.
+    evidence:
+      - "Save when you commit: a usage commitment, usually 1 or 3 years, earns big discounts on steady workloads."
+      - "Pay as you go: no upfront cost or commitment, so it suits variable or uncertain workloads and shifting needs without over- or underprovisioning."
+    takeaway: A steady, long-running workload earns the biggest discount by committing to its usage for a term.
+    history: []
+    verified:
+      keyHash: 561f34ee4517
+      fullHash: 79c7ce955816
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6ecr7r
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: pay-less-by-using-more
+    note: m11/aws-pricing-concepts
+    task: "1.4"
+    level: 3
+    stem: >-
+      An online video course provider keeps adding data to Amazon S3, and its price per gigabyte drops as the total grows, even though it has signed no commitment.
+      Which pricing principle explains the lower unit price?
+    options:
+      - id: a
+        text: Pay less by using more
+        correct: true
+        why: The unit price falls with volume through tiered pricing, which needs no commitment, only growing usage.
+      - id: b
+        text: Save when you commit
+        why: Commitment discounts need a usage promise over a term, and the provider has signed none.
+      - id: c
+        text: Pay as you go
+        why: Paying as you go explains paying only for use, but by itself it does not lower the price of each extra gigabyte.
+      - id: d
+        text: Bring your own license
+        why: Reusing licenses affects software costs, while the falling storage rate here comes from volume.
+    evidence:
+      - "Pay less by using more: economies of scale lower the unit price as usage grows, and some services use tiered pricing."
+      - Committing and using more sound alike, but one rewards a time commitment, the other sheer volume.
+    takeaway: A unit price that falls as usage grows, with no commitment signed, is the pay less by using more principle.
+    history: []
+    verified:
+      keyHash: 57ac80c10633
+      fullHash: 0d3ab7848766
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8xhk1d
+    version: 1
+    status: retired
+    type: multi
+    select: 2
+    pool: exam
+    concept: cost-drivers
+    note: m11/aws-pricing-concepts
+    task: "1.4"
+    level: 2
+    stem: >-
+      A graphic design studio now stops its idle Amazon EC2 instances every night and deletes the Amazon EBS snapshots it no longer needs.
+      It still sends the same amount of data out to the internet, and it keeps its Region and pricing model.
+      Which fundamental cost drivers do these changes lower?
+    options:
+      - id: a
+        text: Compute time
+        correct: true
+        why: EC2 compute is billed over time from launch until the instance stops, so stopping idle instances at night lowers it.
+      - id: b
+        text: Data storage
+        correct: true
+        why: Storage is billed by the amount kept and for how long, so deleting unneeded EBS snapshots lowers it.
+      - id: c
+        text: Outbound transfer
+        why: Outbound transfer is a main cost driver, but the studio sends the same amount of data out, so this charge does not drop.
+      - id: d
+        text: Region choice
+        why: The Region sets the rates the drivers are billed at, and the studio keeps the same one, so nothing changes there.
+      - id: e
+        text: Pricing model
+        why: The pricing model sets the rate paid for usage, and the studio keeps its model, so its changes act elsewhere.
+    evidence:
+      - The three main drivers are compute, storage and outbound data transfer.
+      - "Compute (EC2, Lambda, ECS): processing power over time, per hour or second, from launch until you stop the instance, unless a reservation fixed the price."
+      - "Storage (S3, EBS): the amount provisioned or used and for how long, typically per gigabyte, across options for keeping, reaching, securing and analyzing data."
+    takeaway: Stopping idle instances cuts the compute driver and deleting unused data cuts the storage driver, two of the three main AWS cost drivers.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The stem says the Region, pricing model and outbound data stay the same, which rules out options 2, 3 and 5 without any knowledge of cost drivers."
+  - id: q-wvjcwf
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-compute-optimizer
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 3
+    stem: >-
+      A property management company suspects that many of its Amazon EC2 instances are larger than their workloads need.
+      Which service reviews how the instances are used and flags the overprovisioned ones so the company can resize them?
+    options:
+      - id: a
+        text: AWS Compute Optimizer
+        correct: true
+        why: Compute Optimizer looks at how instances are used and flags the ones that are bigger than the work requires.
+      - id: b
+        text: AWS Cost and Usage Report
+        why: The Cost and Usage Report delivers detailed cost and usage data as files, without judging whether each instance is oversized.
+      - id: c
+        text: AWS Budgets
+        why: Budgets warns when spend nears a limit, but it says nothing about which instances are oversized.
+      - id: d
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates the cost of a planned design, rather than reviewing instances already running.
+    evidence:
+      - AWS Compute Optimizer, a cost-minded sidekick, flags overprovisioned instances.
+      - "Rightsizing: measure real workload needs and resize to fit."
+    takeaway: AWS Compute Optimizer points out overprovisioned instances, which is the starting point for rightsizing them.
+    history: []
+    verified:
+      keyHash: 8fb3e9d2f651
+      fullHash: 2497ec00081f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-t4vk56
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cost-optimization
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 1
+    stem: >-
+      A team is trimming the monthly bill of an AWS architecture.
+      According to AWS guidance, which things should the team weigh against each other as it makes changes?
+    options:
+      - id: a
+        text: Cost, performance and operational efficiency
+        correct: true
+        why: Cost work aims for the right mix of price, performance and operational efficiency, and good tweaks often help all three.
+      - id: b
+        text: Compute, storage and outbound data transfer
+        why: These are the main cost drivers to examine, rather than goals to trade off against each other while making changes.
+      - id: c
+        text: Pay as you go, commitments and volume tiers
+        why: These are the AWS pricing principles, which describe how services are charged rather than what to balance in a design.
+      - id: d
+        text: Regions, Availability Zones and edge locations
+        why: These are parts of the global infrastructure where resources run, rather than the goals cost work balances.
+    evidence:
+      - Aim for the right balance of cost, performance and operational efficiency.
+      - Small tweaks add up and often improve performance and reliability too.
+    takeaway: Cost optimization seeks the right balance of cost, performance and operational efficiency rather than the lowest price.
+    history: []
+    verified:
+      keyHash: 2e07e6171379
+      fullHash: ebcdb00e3c46
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-xnaqsx
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: consolidated-billing
+    note: m11/aws-pricing-and-billing-services
+    task: "4.1"
+    level: 2
+    stem: >-
+      A media group keeps separate AWS accounts for its news, radio and events teams.
+      It wants the accounts linked so their combined usage can earn discounts, with all spend visible from one primary account.
+      What should it set up?
+    options:
+      - id: a
+        text: Consolidated billing through AWS Organizations
+        correct: true
+        why: Consolidated billing links the team accounts to one primary account that sees all spend, and Organizations adds the discounts.
+      - id: b
+        text: Cost allocation tags on each team's resources
+        why: Tags group costs inside an account by label, but they do not link the accounts or pool their usage.
+      - id: c
+        text: An AWS Budgets budget in each team account
+        why: Budgets warns when spend nears a limit, but each account would stay separate with no pooled usage.
+      - id: d
+        text: AWS Cost Explorer reports in each account
+        why: Cost Explorer charts spend inside each account, but it does not link the accounts or earn any discount.
+    evidence:
+      - With consolidated billing, subaccounts (by team, project, department or any split) link to a primary account that alone receives the bill and sees all spend.
+      - AWS Organizations sets this up, adding central management, discounts and stronger security.
+    takeaway: Consolidated billing in AWS Organizations links many accounts to one primary account and adds discounts.
+    history: []
+    verified:
+      keyHash: 8660a9e3d2cb
+      fullHash: 2826e1be336f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yy8y4w
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: outbound-data-transfer
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 2
+    stem: >-
+      A photo-sharing app keeps its images in Amazon S3.
+      Users upload new photos from the internet and download photos to their phones over the internet.
+      The finance team asks which part of this traffic appears on the bill as data transfer charges.
+      Which statement answers the question?
+    options:
+      - id: a
+        text: Data that leaves AWS for the internet is billed per gigabyte
+        correct: true
+        why: The downloads leave AWS for the internet, which is outbound transfer billed per gigabyte, while the uploads come in free.
+      - id: b
+        text: Most traffic between services in the same Region is free
+        why: Same-Region traffic is mostly free, but the app's uploads and downloads cross the internet, so this does not name the billed part.
+      - id: c
+        text: Storage is billed by how much data is kept and for how long
+        why: Storage is a real charge, but it is a separate driver from transfer and says nothing about which traffic is billed.
+      - id: d
+        text: Requests and retrievals are billed as a separate S3 component
+        why: Requests are a real S3 charge, but they are not data transfer, so this leaves the finance team's question open.
+    evidence:
+      - Incoming data transfer costs are nothing for data coming from the internet into AWS, while outgoing data transfer costs apply to data leaving for the internet or for another Region.
+      - "Example: downloads from a static website hosted in S3 count as outbound transfer."
+      - "Data transfer: inbound and most same-Region traffic is free, with exceptions, while outbound data is pooled across services and billed per gigabyte at falling rates."
+    takeaway: Data sent out of AWS to the internet is billed per gigabyte, while data coming in from the internet is free.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 1 and 3 are not about traffic at all, so the stem's 'data transfer' question leaves only options 2 and 4. Option 4 alone repeats the stem's word 'internet', which points at the key."
+  - id: q-k46my5
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: s3-pricing
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 2
+    stem: >-
+      A video archive company is estimating its monthly AWS charges for Amazon S3 alone.
+      Which charges belong on that estimate?
+    options:
+      - id: a
+        text: Data kept in storage over time
+        correct: true
+        why: Storage is a core S3 cost component, charged for the data kept in buckets over time.
+      - id: b
+        text: Copies replicated to another Region
+        correct: true
+        why: Replication is one of the S3 cost components, charged when objects are copied to another location.
+      - id: c
+        text: Hours that compute instances run
+        why: Instance hours are charged by compute services such as Amazon EC2, and S3 runs no instances for the company.
+      - id: d
+        text: Capacity provisioned for block volumes
+        why: Provisioned block capacity is charged by Amazon EBS, while S3 bills for the objects actually stored.
+      - id: e
+        text: Hours that database instances run
+        why: Database instance hours are charged by Amazon RDS, which is outside an estimate for S3 alone.
+    evidence:
+      - "S3 has six cost components: storage, requests and retrieval, transfer and acceleration, management and analytics, replication, and S3 Object Lambda processing."
+    takeaway: S3 charges across several components, including storage, requests, transfer out, management, replication and Object Lambda processing.
+    history: []
+    verified:
+      keyHash: 8e313f076963
+      fullHash: 041a5f6312be
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0k0amp
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: vpc-endpoints
+    note: m11/cost-optimization
+    task: "4.1"
+    level: 3
+    stem: >-
+      A logistics company's application runs on Amazon EC2 instances in its own private network on AWS and moves large volumes of data to and from Amazon S3.
+      The team wants a private path to S3 that also trims the data transfer charges on that path.
+      What should it add?
+    options:
+      - id: a
+        text: A VPC endpoint
+        correct: true
+        why: A VPC endpoint links the network privately to S3, which keeps the traffic off the internet and trims transfer costs.
+      - id: b
+        text: A NAT gateway
+        why: A NAT gateway sends traffic out toward the internet path, so it gives no private link to S3 and no transfer savings.
+      - id: c
+        text: An internet gateway
+        why: An internet gateway opens the network to the public internet, the opposite of the private path the team wants.
+      - id: d
+        text: An AWS Site-to-Site VPN
+        why: A Site-to-Site VPN links an on-premises network to AWS, rather than linking the company's AWS network to S3.
+    evidence:
+      - VPC endpoints connect a VPC privately to supported services, and one used for S3 trims transfer costs, notably out-of-Region.
+      - Transfer is not always free, so keep cross-AZ and internet traffic low; as with road traffic, less is better.
+    takeaway: A VPC endpoint for S3 gives a private path from the VPC to S3 and trims data transfer costs.
+    history: []
+    verified:
+      keyHash: dc0a3e5e12b8
+      fullHash: 164e23425f01
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-cc0nvh
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: save-when-you-commit
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 3
+    stem: >-
+      Savings Plans price certain AWS services, such as compute, below On-Demand rates.
+      What does the customer give in return for that lower price?
+    options:
+      - id: a
+        text: A promise of steady usage over a set term
+        correct: true
+        why: Savings Plans follow the save when you commit principle, trading a usage commitment over a term for a discount.
+      - id: b
+        text: A larger total volume of monthly usage
+        why: Lower prices for more volume come from tiered pricing, which needs no commitment at all.
+      - id: c
+        text: The right for AWS to reclaim the capacity
+        why: Capacity that AWS can reclaim describes discounted spare capacity, rather than a commitment-based plan.
+      - id: d
+        text: Payment only for the hours a resource runs
+        why: Paying only while resources run is plain pay as you go, the On-Demand model the plan is priced against.
+    evidence:
+      - "Save when you commit: a usage commitment, usually 1 or 3 years, earns big discounts on steady workloads."
+      - "Example: Savings Plans price certain services, such as compute, below On-Demand."
+    takeaway: Savings Plans trade a usage commitment over a term for prices below On-Demand, the save when you commit principle.
+    history: []
+    verified:
+      keyHash: 2e9d4c7a8085
+      fullHash: bfb52b9ad4ff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-evx6th
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-billing-and-cost-management-dashboard
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The treasurer of a community theater opens the AWS Billing and Cost Management dashboard for a first look at the account's spending.
+      Which tasks does the dashboard itself handle, without another AWS tool?
+    options:
+      - id: a
+        text: Viewing the forecast for this month's spend
+        correct: true
+        why: The dashboard shows a monthly forecast alongside current charges, usage and the top services by cost.
+      - id: b
+        text: Downloading invoices and updating payment methods
+        correct: true
+        why: Invoices and payment methods live in the dashboard, which is the treasurer's first stop for paying the bill.
+      - id: c
+        text: Setting a custom budget for one service or tag
+        why: Custom budgets by service or tag are built in AWS Budgets, which the dashboard only links to.
+      - id: d
+        text: Getting an alert when spend passes a set limit
+        why: Threshold alerts come only from AWS Budgets, so the dashboard alone does not warn the treasurer.
+      - id: e
+        text: Estimating the cost of a design before deploying it
+        why: Estimating a planned design is what the AWS Pricing Calculator does, before any resources exist to bill.
+    evidence:
+      - Monthly forecast, top services by cost, charges, usage, reports, invoices, payment methods
+      - Budgets and Cost Explorer both forecast, but only Budgets sends threshold alerts.
+    takeaway: The Billing and Cost Management dashboard is the first stop to see charges and forecasts, get invoices and pay.
+    history: []
+    verified:
+      keyHash: ae1e912fcc6f
+      fullHash: 069aa30ebe88
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-fxxcz8
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-budgets
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      A dental practice group wants to be warned as soon as its monthly AWS spend gets close to a limit it has set.
+      Which tool sends that alert?
+    options:
+      - id: a
+        text: AWS Budgets
+        correct: true
+        why: Budgets lets the group set a custom limit and sends a warning as spend nears or passes it.
+      - id: b
+        text: AWS Cost Explorer
+        why: Cost Explorer charts and forecasts spend, but it sends no alert when a limit is near.
+      - id: c
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates costs before deployment and never watches live spending.
+      - id: d
+        text: AWS Billing and Cost Management dashboard
+        why: The dashboard shows charges and a forecast for the month, but it raises no threshold alerts.
+    evidence:
+      - Budgets and Cost Explorer both forecast, but only Budgets sends threshold alerts.
+      - Warnings near or past a limit
+    takeaway: AWS Budgets is the billing tool that alerts when spend nears or passes a limit you set.
+    history: []
+    verified:
+      keyHash: 9a1f672e9e91
+      fullHash: e65a21a8b430
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-bt6z1c
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-cost-explorer
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      Which AWS tool charts past spending and usage over time, by service or linked account, to show what is driving the bill?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        correct: true
+        why: Cost Explorer charts spend and usage over time by service, linked account or tag, showing trends behind the bill.
+      - id: b
+        text: AWS Budgets
+        why: Budgets tracks spend against limits and sends alerts, rather than charting what drives past spend.
+      - id: c
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates designs that are not yet deployed, so it holds no past usage to chart.
+      - id: d
+        text: AWS Compute Optimizer
+        why: Compute Optimizer flags overprovisioned instances, rather than breaking down the whole bill over time.
+    evidence:
+      - Charts of cost and usage over time by service, linked account or tag, with trends and Reserved Instance advice
+      - Cost Explorer analyzes and forecasts spend, including by tag.
+    takeaway: AWS Cost Explorer charts past spend and usage by service, account or tag to show what drives the bill.
+    history: []
+    verified:
+      keyHash: b964cf5028f6
+      fullHash: 8fd98b5f0143
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-10q83a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cost-allocation-tags
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      A marketing agency labels each resource with a tag that names the client it serves, and it wants AWS Cost Explorer to show spend per client.
+      What must the agency do before the tag shows up in Cost Explorer?
+    options:
+      - id: a
+        text: Activate the tag as a cost allocation tag
+        correct: true
+        why: A user-defined tag appears in Cost Explorer only after it is activated as a cost allocation tag.
+      - id: b
+        text: Create a budget in AWS Budgets filtered by the tag
+        why: A tag-filtered budget can warn about a client's spend, but it does not make the tag appear in Cost Explorer.
+      - id: c
+        text: Link its accounts through consolidated billing
+        why: Consolidated billing merges accounts into one bill, but tags stay hidden from Cost Explorer until activated.
+      - id: d
+        text: Model each client in the AWS Pricing Calculator
+        why: The Pricing Calculator estimates planned designs, so it has no effect on what Cost Explorer reports for running resources.
+    evidence:
+      - AWS cost allocation tags come in two types, AWS-generated and user-defined, and you must activate each before it appears in Cost Explorer or on a cost allocation report.
+      - Cost Explorer can allocate costs by tags such as project, department or environment, showing who drives spend.
+    takeaway: A cost allocation tag must be activated before Cost Explorer can group spend by it.
+    history: []
+    verified:
+      keyHash: 3670f6c760bb
+      fullHash: a86703a15921
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qa61j9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-marketplace
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A small accounting firm needs third-party security software that already meets its compliance needs.
+      It wants to deploy the software quickly and see the charges on its existing AWS bill.
+      Where should it look?
+    options:
+      - id: a
+        text: AWS Marketplace
+        correct: true
+        why: Marketplace sells ready third-party software that deploys quickly, with charges added to the AWS bill.
+      - id: b
+        text: AWS Partner Network
+        why: The Partner Network is a community of firms building solutions with AWS, rather than a catalog to buy software from.
+      - id: c
+        text: AWS Professional Services
+        why: Professional Services offers paid AWS consulting projects, rather than ready-made third-party software.
+      - id: d
+        text: AWS re:Post
+        why: re:Post is a community question-and-answer site, and it sells no software.
+    evidence:
+      - Buying is simpler, deploying and scaling are quick, and charges join your AWS bill.
+      - Compliance-ready software is quicker than an in-house build or working from documentation.
+    takeaway: AWS Marketplace is the place to buy ready third-party software that deploys fast and bills through AWS.
+    history: []
+    verified:
+      keyHash: 44af5a4b511f
+      fullHash: 1249fbd27f74
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2snt67
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: aws-support-plans
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      How are the AWS Support plans arranged in relation to one another?
+    options:
+      - id: a
+        text: Each higher tier adds to everything a lower tier offers
+        correct: true
+        why: The plans are cumulative, so each one keeps the lower plan's help and adds tools, personal help and speed.
+      - id: b
+        text: Basic Support is open to every customer at no charge
+        why: Basic Support is indeed free for all, but that describes the lowest plan alone rather than how the plans relate.
+      - id: c
+        text: Account and billing cases are open to every customer
+        why: Every customer can open account and billing cases, but this is a fact about case types rather than about plan structure.
+      - id: d
+        text: Business Support+ is the minimum AWS advises for production
+        why: AWS does recommend Business Support+ for production, but that names one plan's role rather than how plans build on each other.
+    evidence:
+      - Support exists for every customer, and each plan includes the one below plus more tools, personal help and speed.
+    takeaway: AWS Support plans are cumulative, and each higher plan adds tools, personal help and faster responses.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 is the only option that relates plans to each other, so the stem's 'in relation to one another' points straight at it while the distractors do not answer the question asked."
+  - id: q-gmv57e
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-partner-network
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A travel agency wants to hire an outside consulting firm with AWS experience to build a recommendation feature for its booking site.
+      Where should it look for such a firm?
+    options:
+      - id: a
+        text: AWS Partner Network
+        correct: true
+        why: The Partner Network is a global community of technology and consulting firms that customers can hire to build on AWS.
+      - id: b
+        text: AWS re:Post
+        why: re:Post lets the agency ask the community questions, but it is no directory of firms to hire for a build.
+      - id: c
+        text: AWS Knowledge Center
+        why: The Knowledge Center holds FAQ articles and videos, rather than consulting firms that take on projects.
+      - id: d
+        text: AWS Health Dashboard
+        why: The Health Dashboard reports service health for the agency's resources and lists no outside firms.
+    evidence:
+      - A global community of tech and consulting firms building customer solutions with AWS, solving problems and adding value.
+      - Customers can hire partners, like a retailer adding ML personalization.
+    takeaway: To hire an outside firm that builds solutions on AWS, a customer looks to the AWS Partner Network.
+    history: []
+    verified:
+      keyHash: 9220289b12c6
+      fullHash: b2a3aac2a226
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-sr1e98
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: technical-account-manager
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      A national grocery chain wants one named AWS contact who watches its environment and advises it on services, architecture, cost and AWS programs.
+      Which role fits?
+    options:
+      - id: a
+        text: A technical account manager
+        correct: true
+        why: A TAM is the customer's main AWS contact, monitoring the environment and advising on architecture and cost.
+      - id: b
+        text: An AWS solutions architect
+        why: Solutions architects advise on design, but they are no single named contact who monitors the environment.
+      - id: c
+        text: An AWS Professional Services consultant
+        why: Professional Services consultants work on set projects, rather than serving as an ongoing named contact.
+      - id: d
+        text: An AWS re:Post community expert
+        why: Community experts answer public questions and have no view into the chain's environment.
+    evidence:
+      - A TAM, your main AWS contact, monitors your environment and advises on services, architecture, cost and AWS programs, such as combining services in one app.
+      - Enterprise Support includes a designated technical account manager.
+    takeaway: A technical account manager is a customer's main AWS contact who monitors its environment and gives ongoing advice.
+    history: []
+    verified:
+      keyHash: c94ab67d2782
+      fullHash: d66cf590fbe3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yksteh
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-re-post
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      Which AWS resource is a community question-and-answer site that also hosts the AWS Knowledge Center?
+    options:
+      - id: a
+        text: AWS re:Post
+        correct: true
+        why: re:Post is the AWS community question-and-answer site, and the Knowledge Center's articles and videos live on it.
+      - id: b
+        text: AWS Trust and Safety Center
+        why: The Trust and Safety Center is where suspected abuse is reported, rather than a general question-and-answer site.
+      - id: c
+        text: AWS Prescriptive Guidance
+        why: Prescriptive Guidance publishes expert guides and patterns, rather than community questions and answers.
+      - id: d
+        text: AWS Support Center
+        why: The Support Center is where customers open cases with AWS Support, rather than a community forum.
+    evidence:
+      - "AWS re:Post: community Q&A that hosts the AWS Knowledge Center of FAQ articles and videos."
+    takeaway: AWS re:Post is the community question-and-answer site that hosts the AWS Knowledge Center.
+    history: []
+    verified:
+      keyHash: "9992937210e7"
+      fullHash: 0e8fedba396b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rv9hcy
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-trust-and-safety-center
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      A university's IT team sees unusual network traffic reaching its servers from an AWS IP address and suspects that AWS resources are being misused.
+      Where should the team report it?
+    options:
+      - id: a
+        text: The AWS Trust and Safety team
+        correct: true
+        why: Suspected misuse of AWS resources, such as odd traffic from an AWS IP address, goes to the Trust and Safety team.
+      - id: b
+        text: The AWS re:Post community forums
+        why: re:Post is for community questions, so a public post there is no way to report abuse to AWS.
+      - id: c
+        text: An AWS technical account manager
+        why: A TAM serves a customer on its own plan, and the university is reporting someone else's resources.
+      - id: d
+        text: AWS Professional Services
+        why: Professional Services runs paid consulting projects, rather than taking reports of abuse.
+    evidence:
+      - Suspected misuse of AWS resources, such as odd network traffic coming from an AWS IP address, is reported to the AWS Trust and Safety team.
+      - "AWS Trust and Safety Center: report suspected abuse."
+    takeaway: Suspected abuse coming from AWS resources is reported to the AWS Trust and Safety team.
+    history: []
+    verified:
+      keyHash: e52109b8eca2
+      fullHash: 52a90f8a60c9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zdcfbc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-solutions-architects
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      A fitness app company on AWS Business Support+ wants AWS experts to advise it on the design and best practices for building a scalable, secure new app.
+      Which AWS resource fits?
+    options:
+      - id: a
+        text: AWS solutions architects
+        correct: true
+        why: Solutions architects help paying Support customers design scalable, secure apps with design and best practice advice.
+      - id: b
+        text: A designated technical account manager
+        why: A designated TAM comes with AWS Enterprise Support, a higher plan than the one the company has.
+      - id: c
+        text: AWS Trust and Safety Center
+        why: The Trust and Safety Center takes reports of suspected abuse and gives no design advice.
+      - id: d
+        text: AWS Knowledge Center
+        why: The Knowledge Center offers FAQ articles and videos, rather than experts who advise on one company's design.
+    evidence:
+      - "AWS solutions architects: for Business and Enterprise customers, help designing scalable, secure apps, with architecture and best practice advice."
+      - Enterprise Support includes a designated technical account manager.
+    takeaway: AWS solutions architects give paying Support customers design and best practice advice for scalable, secure apps.
+    history: []
+    verified:
+      keyHash: 91469794bb18
+      fullHash: 33db2a8b8e4b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-mhm645
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-professional-services
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      A regional insurer wants a hands-on, project-based engagement in which AWS experts carry out a security audit of its environment.
+      Which option fits?
+    options:
+      - id: a
+        text: AWS Professional Services
+        correct: true
+        why: Professional Services runs project-based consulting such as security audits, migrations and performance tuning.
+      - id: b
+        text: AWS solutions architects
+        why: Solutions architects advise on design and best practices, rather than running a full audit project.
+      - id: c
+        text: AWS Trust and Safety Center
+        why: The Trust and Safety Center takes reports of suspected abuse, rather than auditing a customer's setup.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs automated checks against best practices, with no hands-on project led by AWS experts.
+    evidence:
+      - "AWS Professional Services: project-based consulting, such as complex migrations, security audits and performance tuning."
+    takeaway: A hands-on consulting project such as a security audit or complex migration calls for AWS Professional Services.
+    history: []
+    verified:
+      keyHash: 533bdfbc2543
+      fullHash: 8d62cae99895
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-nf5exz
+    version: 1
+    status: retired
+    type: multi
+    select: 3
+    pool: exam
+    concept: aws-self-support-resources
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      The two-person IT team of a plant nursery wants to solve its AWS problems without asking anyone at AWS for help.
+      Which AWS self-support resources can it use?
+    options:
+      - id: a
+        text: User guides for each AWS service
+        correct: true
+        why: User guides are published AWS documentation that the nursery's team can read and act on without anyone's help.
+      - id: b
+        text: Guides to the AWS SDKs
+        correct: true
+        why: SDK guides are published for every customer, so the team can work through them alone when it writes code against AWS.
+      - id: c
+        text: Whitepapers from AWS and its community
+        correct: true
+        why: Whitepapers are technical documents from AWS and its community, published as self-support resources.
+      - id: d
+        text: Replies from engineers on a support case
+        why: Case replies are written by AWS Support engineers for one customer, so the team must ask AWS for them.
+      - id: e
+        text: Written reviews from a technical account manager
+        why: A technical account manager is a named AWS contact who advises one customer directly, the opposite of self-support.
+      - id: f
+        text: Audit reports from AWS Professional Services
+        why: Professional Services audits are paid projects that AWS experts run for one customer, rather than material the team finds itself.
+    evidence:
+      - "Self-support: user guides, SDK guides, blog posts and whitepapers."
+      - AWS whitepapers are technical documents written by AWS and the AWS community, published with decision guides and reference architecture diagrams as self-support resources.
+    takeaway: Self-support resources such as user guides, SDK guides, blogs and whitepapers let any customer find answers alone.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1, 2 and 5 are the only published written materials; the other three are person-to-person services.)"
+  - id: q-0gwt1p
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-business-support-plus
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      Which AWS Support plan does AWS recommend as the minimum for production workloads?
+    options:
+      - id: a
+        text: AWS Business Support+
+        correct: true
+        why: AWS names Business Support+ as the minimum plan it recommends once workloads run in production.
+      - id: b
+        text: Basic Support
+        why: Basic Support is free and offers no technical support cases, which falls short for production.
+      - id: c
+        text: AWS Enterprise Support
+        why: Enterprise Support suits business-critical and mission-critical work, which is above the minimum.
+      - id: d
+        text: AWS Unified Operations
+        why: Unified Operations is the top plan with round-the-clock workload monitoring, far above the minimum.
+    evidence:
+      - AWS calls Business Support+ the minimum plan it recommends for production workloads.
+      - In the AWS Support Center every customer can open account and billing cases, while technical support cases need a plan above Basic Support.
+    takeaway: AWS Business Support+ is the minimum Support plan AWS recommends for production workloads.
+    history: []
+    verified:
+      keyHash: 64a2f28e49b5
+      fullHash: eebe2639a025
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-cm11q3
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-enterprise-support
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      A stock trading platform needs a response in under 15 minutes when a mission-critical system is down, along with a designated technical account manager.
+      It has no need for 24/7 workload monitoring by AWS.
+      Which Support plan fits?
+    options:
+      - id: a
+        text: AWS Enterprise Support
+        correct: true
+        why: Enterprise Support answers a down mission-critical system in under 15 minutes and includes a designated TAM.
+      - id: b
+        text: AWS Business Support+
+        why: Business Support+ responds to a down critical system in under 30 minutes and has no designated TAM.
+      - id: c
+        text: AWS Unified Operations
+        why: Unified Operations adds round-the-clock workload monitoring, which the platform said it has no need for.
+      - id: d
+        text: Basic Support
+        why: Basic Support offers no technical support cases at all, let alone a fast response or a TAM.
+    evidence:
+      - With Enterprise Support, a business-critical or mission-critical system that is down gets a response in under 15 minutes.
+      - Enterprise Support includes a designated technical account manager.
+    takeaway: AWS Enterprise Support pairs a response in under 15 minutes for down critical systems with a designated TAM.
+    history: []
+    verified:
+      keyHash: f8ad902f7d55
+      fullHash: 21abc04517f2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rcd8k9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-unified-operations
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      A national airline wants AWS to monitor its workloads 24/7 and to have an Incident Management Engineer respond in under 5 minutes when a mission-critical system is down.
+      Which Support plan provides this?
+    options:
+      - id: a
+        text: AWS Unified Operations
+        correct: true
+        why: Unified Operations is the only plan with 24/7 workload monitoring, and its engineers respond in under 5 minutes.
+      - id: b
+        text: AWS Enterprise Support
+        why: Enterprise Support responds in under 15 minutes and lacks the 24/7 workload monitoring the airline wants.
+      - id: c
+        text: AWS Business Support+
+        why: Business Support+ responds in under 30 minutes and includes no workload monitoring.
+      - id: d
+        text: Basic Support
+        why: Basic Support has no technical support cases, so it offers neither monitoring nor an incident response.
+    evidence:
+      - Unified Operations is the only plan that includes 24/7 workload monitoring.
+      - With Unified Operations, an Incident Management Engineer responds in under 5 minutes when a business-critical or mission-critical system is down.
+    takeaway: AWS Unified Operations is the plan with 24/7 workload monitoring and an incident response in under 5 minutes.
+    history: []
+    verified:
+      keyHash: 8042e9d99446
+      fullHash: 050ad4938281
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-tprqkd
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: independent-software-vendors
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A company that builds a project management app wants to list its product in AWS Marketplace for AWS customers to buy.
+      As a third-party seller of its own product there, what kind of company is it?
+    options:
+      - id: a
+        text: An independent software vendor
+        correct: true
+        why: Independent software vendors are the third-party sellers behind most Marketplace listings, which fits this company.
+      - id: b
+        text: An AWS Professional Services team
+        why: Professional Services is part of AWS and sells consulting projects, while this company is a third party with its own product.
+      - id: c
+        text: An AWS Migration and Modernization Competency Partner
+        why: These partners are firms that help customers through phases of a migration, rather than sellers of their own app.
+      - id: d
+        text: A system integrator
+        why: System integrators deliver professional or managed services for customer workloads, rather than selling their own product.
+    evidence:
+      - A curated catalog of thousands of listings, mostly from independent software vendors (ISVs).
+      - System integrators are AWS services partners that deliver professional or managed services to help customers build and run their workloads on AWS.
+    takeaway: Most AWS Marketplace listings come from independent software vendors, the third-party sellers of software.
+    history: []
+    verified:
+      keyHash: 445d96e305e7
+      fullHash: 7e5df1800a51
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-94yeg9
+    version: 1
+    status: retired
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-prescriptive-guidance
+    note: m11/aws-support-plans
+    task: "1.3"
+    level: 2
+    stem: >-
+      A furniture retailer is planning its move to AWS, and to reduce the business risk of the migration it intends to use AWS Prescriptive Guidance.
+      What does this resource offer the retailer?
+    options:
+      - id: a
+        text: Expert-written steps for carrying out typical migration tasks
+        correct: true
+        why: Prescriptive Guidance publishes steps written by AWS technology experts, so the retailer follows a migration path that already works.
+      - id: b
+        text: Peer-written answers to questions others posted about migrations
+        why: Answers written by community peers come from AWS re:Post, not from the expert guidance the retailer chose to use.
+      - id: c
+        text: Paid consulting that carries out a complex migration project
+        why: Project-based consulting for a complex migration is AWS Professional Services, which the retailer has not chosen here.
+      - id: d
+        text: Ready-made architectures, tools and code to reuse in a migration
+        correct: true
+        why: Its patterns pair architectures and tools with code, so the retailer reuses a tested migration design instead of building its own.
+      - id: e
+        text: FAQ articles and videos that address frequent migration issues
+        why: FAQ articles and videos make up the AWS Knowledge Center on AWS re:Post, a different resource from the retailer's chosen guidance.
+      - id: f
+        text: Contracted specialists who tune workload performance after a move
+        why: Performance tuning delivered as a consulting project is AWS Professional Services, not the published guidance the retailer uses.
+    evidence:
+      - AWS Prescriptive Guidance offers guides and patterns from AWS technology experts, with steps, architectures, tools and code for common migration, optimization and modernization work.
+      - "AWS re:Post: community Q&A that hosts the AWS Knowledge Center of FAQ articles and videos."
+      - "AWS Professional Services: project-based consulting, such as complex migrations, security audits and performance tuning."
+    takeaway: AWS Prescriptive Guidance cuts migration risk with expert step-by-step guides and patterns that pair architectures and tools with code.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Task 1.3 is migration benefits and strategies, but the item tests what a technical resource offers, which fits task 4.3 (AWS technical resources) better. Options 1 and 4 both point to AWS Professional Services, so one distractor adds little; one could name another resource such as AWS Trusted Advisor or AWS Health."
+  - id: q-4ckw9s
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-prescriptive-guidance
+    note: m11/aws-support-plans
+    task: "1.3"
+    level: 3
+    stem: >-
+      A seafood distributor wants its migration to AWS to carry less business risk, and its architects plan to build the migration strategy on AWS Prescriptive Guidance.
+      Which statements about this resource are accurate?
+    options:
+      - id: a
+        text: Its material is written by AWS technology experts
+        correct: true
+        why: The material comes from AWS technology experts, so the distributor builds its strategy on approaches AWS stands behind.
+      - id: b
+        text: Its material also covers optimization and modernization work
+        correct: true
+        why: Beyond the move itself, the guides and patterns cover optimizing and modernizing workloads, which helps after the migration too.
+      - id: c
+        text: Its material is written by community peers who answer posted questions
+        why: Peers answering posted questions describes AWS re:Post, while Prescriptive Guidance is written by AWS technology experts.
+      - id: d
+        text: Its material also covers the FAQ articles and videos of the AWS Knowledge Center
+        why: The Knowledge Center's FAQ articles and videos are hosted on AWS re:Post, not published as part of Prescriptive Guidance.
+      - id: e
+        text: Its material is published as the SDK guides for calling AWS services
+        why: SDK guides are separate self-support documentation for developers, not the migration guides and patterns the architects plan to use.
+    evidence:
+      - AWS Prescriptive Guidance offers guides and patterns from AWS technology experts, with steps, architectures, tools and code for common migration, optimization and modernization work.
+      - "AWS re:Post: community Q&A that hosts the AWS Knowledge Center of FAQ articles and videos."
+      - "Self-support: user guides, SDK guides, blog posts and whitepapers."
+    takeaway: AWS Prescriptive Guidance is expert-written content covering migration, optimization and modernization, unlike peer forums or SDK guides.
+    history: []
+    verified:
+      keyHash: d7bb191a708c
+      fullHash: 9d553bd8b092
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
