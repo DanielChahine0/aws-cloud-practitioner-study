@@ -235,15 +235,16 @@ describe('anti-grind audit (spec 3.11)', () => {
     const r = readiness({ memory, content: CONTENT, attempts: firstAttempts(progress), now, tz: 0 });
     expect(r.mock).toBeNull();
     expect(r.capped).toBe(true);
-    const unified: RankDef = {
-      id: 'unified-operations',
-      name: 'Unified Operations',
-      short: 'Unified Ops',
-      requires: { unseenMocksAt80: 2, latestMockWithinDays: 14, ready: true },
+    // One mock at 80 is enough here, so only skipping the remix can keep this rank unmet.
+    const oneMock: RankDef = {
+      id: 'one-mock',
+      name: 'One Mock',
+      short: 'One Mock',
+      requires: { unseenMocksAt80: 1, latestMockWithinDays: 14, ready: true },
       facts: [],
     };
     expect(
-      meets(unified, rankFacts({ progress, mastery: new Map(), ready: true, today: '2026-10-27' })),
+      meets(oneMock, rankFacts({ progress, mastery: new Map(), ready: true, today: '2026-10-27' })),
     ).toBe(false);
   });
 });
