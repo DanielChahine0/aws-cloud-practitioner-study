@@ -22,6 +22,7 @@
     "content:checks": "node scripts/content/checks.ts",
     "content:stamp": "node scripts/content/stamp.ts",
     "content:quotas": "node scripts/content/quotas.ts",
+    "content:forms": "node scripts/content/forms.ts",
     "content:report": "node scripts/content/report.ts",
     "content:updates": "node scripts/content/updates.ts",
     "check": "pnpm typecheck && pnpm lint && pnpm content:validate && pnpm test",
