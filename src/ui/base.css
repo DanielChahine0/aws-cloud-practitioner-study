@@ -1986,12 +1986,14 @@ dialog.confirm .button {
   border-radius: 8px;
 }
 
+/* One flow for every goal: the icon and word, then the label right after them, then the message on a line of its own. */
 .goal-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 8px;
   margin: 0;
+}
+
+.goal-line svg {
+  margin-right: 6px;
+  vertical-align: -3px;
 }
 
 .goal-word {
@@ -2013,6 +2015,7 @@ dialog.confirm .button {
 }
 
 .goal-message {
+  display: block;
   font-size: 0.875rem;
 }
 
