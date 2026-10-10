@@ -1857,6 +1857,154 @@ dialog.confirm .button {
 /* Missions: flow */
 
 /* Capstone */
+.brief-facts {
+  margin: 0 0 24px;
+  padding-left: 1.5em;
+}
+
+.decision-status:focus {
+  outline: none;
+}
+
+.rubric-criterion h3 {
+  margin: 16px 0 4px;
+}
+
+.rubric-levels {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rubric-level {
+  display: flex;
+  gap: 8px;
+}
+
+.rubric-score {
+  flex: none;
+  min-width: 1.5ch;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.adr {
+  display: grid;
+  gap: 16px;
+  margin: 16px 0 24px;
+}
+
+.adr-field {
+  position: relative;
+  display: grid;
+  gap: 4px;
+}
+
+.adr-field label {
+  font-weight: 600;
+}
+
+.adr-field textarea {
+  width: 100%;
+  min-height: 88px;
+  padding: 8px;
+  font: inherit;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.suggestions {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--pane);
+  border: 1px solid var(--active);
+  border-radius: 6px;
+}
+
+.suggestion {
+  min-height: 44px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.suggestion[aria-selected="true"] {
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--active);
+}
+
+.citation-line {
+  margin: 0;
+  color: var(--muted);
+}
+
+.grade {
+  margin: 24px 0;
+}
+
+.criterion {
+  margin: 16px 0;
+  padding: 0;
+  border: 0;
+}
+
+.criterion legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-weight: 600;
+}
+
+.key-points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.key-point {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.key-point-text {
+  margin: 0 0 4px;
+}
+
+.key-point-quote {
+  margin: 8px 0;
+  padding-left: 12px;
+  color: var(--muted);
+  border-left: 3px solid var(--line);
+}
+
+.key-point-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 24px;
+}
+
+.key-point-tick,
+.key-point-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+
+.key-point-tick input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--active);
+}
+
+.drift-line {
+  margin: 0;
+}
 
 /* Labs: shared and Sort */
 .lab-brief {

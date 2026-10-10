@@ -7,6 +7,7 @@ import type {
   SearchChunk,
   SearchEntry,
 } from '../../schemas/chunks.ts';
+import type { ProjectChunk } from '../../schemas/project-view.ts';
 
 /** The content index named by the build in `<meta name="ccp-content">`. */
 export const index = signal<ContentIndex | null>(null);
@@ -16,6 +17,8 @@ export const loadError = signal<string | null>(null);
 export const modules = signal<ReadonlyMap<number, ModuleChunk>>(new Map());
 /** Mock form chunks loaded so far, by form id (`A` to `D`). */
 export const examForms = signal<ReadonlyMap<string, ExamChunk>>(new Map());
+/** The capstone brief and live key points, once the Project screen or a module page has asked for them. */
+export const project = signal<ProjectChunk | null>(null);
 /** The search entries, once the palette has asked for them. */
 export const searchEntries = signal<readonly SearchEntry[] | null>(null);
 /** Glossary items by id, for the term popovers. */
@@ -98,5 +101,34 @@ export function ensureExamForm(id: string): Promise<ExamChunk | null> {
     .catch(() => null)
     .finally(() => examLoads.delete(id));
   examLoads.set(id, load);
+  return load;
+}
+
+let projectLoad: Promise<ProjectChunk | null> | null = null;
+
+/**
+ * Loads the project chunk at most once (spec 6); only the Project screen and the module page's Capstone row ask for
+ * it, so no other screen holds the key points before a self-grade. It resolves to null when the build has no brief or
+ * the fetch fails, which a later call retries, and it never sets `loadError`.
+ */
+export function ensureProject(): Promise<ProjectChunk | null> {
+  if (project.value !== null) return Promise.resolve(project.value);
+  const name = index.value?.project ?? null;
+  if (name === null) return Promise.resolve(null);
+  if (projectLoad !== null) return projectLoad;
+  const load = fetch(name)
+    .then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json() as Promise<ProjectChunk>;
+    })
+    .then((chunk) => {
+      project.value = chunk;
+      return chunk;
+    })
+    .catch(() => null)
+    .finally(() => {
+      projectLoad = null;
+    });
+  projectLoad = load;
   return load;
 }
