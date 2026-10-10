@@ -13,6 +13,28 @@ export interface PoolQuestion {
   id: string;
   concept: string;
   note: string;
+  type: 'single' | 'multi' | 'match';
+  module: number;
+}
+
+/** An item of the exam pool with the form (`A` to `D`) it sits in. */
+export interface ExamPoolQuestion extends PoolQuestion {
+  form: string;
+}
+
+/**
+ * The pool every learn mode selects from (spec 4.3): the practice items plus the items of each taken form.
+ * Items of a form whose mock never started stay out, so no selector can return them.
+ */
+export function learnPool(
+  practice: readonly PoolQuestion[],
+  exam: readonly ExamPoolQuestion[],
+  taken: ReadonlySet<string>,
+): PoolQuestion[] {
+  const joined = exam
+    .filter((q) => taken.has(q.form))
+    .map(({ id, concept, note, type, module }) => ({ id, concept, note, type, module }));
+  return [...practice, ...joined];
 }
 
 interface Ranked {
@@ -44,6 +66,18 @@ function ranked(
         (a.lastAt < b.lastAt ? -1 : a.lastAt > b.lastAt ? 1 : 0) ||
         a.tie - b.tie,
     );
+}
+
+/** The variant to show: never answered first, then the one answered longest ago, then a seeded tie (spec 4.2). */
+export function pickVariant(
+  candidates: readonly PoolQuestion[],
+  progress: Progress,
+  random: () => number,
+): PoolQuestion {
+  const seed = Math.floor(random() * 2 ** 32);
+  const first = ranked(candidates, progress, seed, (_q, answered) => [answered ? 1 : 0, 0])[0];
+  if (!first) throw new Error('pickVariant needs at least one candidate');
+  return first.q;
 }
 
 /** One question per concept, in the given concept order, never the variant shown last when another exists. */

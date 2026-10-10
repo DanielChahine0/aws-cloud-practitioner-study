@@ -1,12 +1,14 @@
-import { appendFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { ContentIndex, ModuleChunk, SearchChunk } from '../../schemas/chunks.ts';
+import type { ContentIndex, ExamChunk, ModuleChunk, SearchChunk } from '../../schemas/chunks.ts';
 import type { Concept } from '../../schemas/concept.ts';
+import { BADGE_IDS } from '../../schemas/ids.ts';
 import { buildContent, confusableLinks, readingMinutes } from '../../scripts/content/build.ts';
-import { CONCEPTS_FILE, loadContext } from '../../scripts/content/lib/context.ts';
+import { CONCEPTS_FILE, FORMS_FILE, loadContext } from '../../scripts/content/lib/context.ts';
 import { normalize } from '../../src/app/search.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { POOL_FILE } from '../fixtures/questions.ts';
 
 const LESSON_ROUTE = '#/m/01/l/what-a-bakery-cloud-is';
 const QUESTIONS_FILE = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
@@ -229,6 +231,130 @@ describe('buildContent on the fixture tree', () => {
       '\n- See [later](02-gone.md).\n',
     );
     expect(() => build(root)).toThrow('link to 02-gone.md has no page on the site');
+  });
+});
+
+describe('mock forms, ranks, badges and the blueprint in the index', () => {
+  const EXAM_IDS = ['q-exa001', 'q-exa002', 'q-exb001', 'q-exc001', 'q-exd001', 'q-exs001'];
+
+  /** A made-up exam item on the fixture lesson; `multi` makes it a Select TWO item. */
+  const examItem = (id: string, status: 'live' | 'retired' = 'live', multi = false): string =>
+    multi
+      ? MULTI.replace('q-9q4r5s', id)
+          .replace('version: 3', 'version: 1')
+          .replace('pool: practice', 'pool: exam')
+      : `
+  - id: ${id}
+    version: 2
+    status: ${status}
+    pool: exam
+    type: single
+    concept: shared-kitchen
+    note: m01/what-a-bakery-cloud-is
+    task: "1.1"
+    level: 2
+    stem: A seaside branch runs out of loaves at noon on market days. Which choice fits the bakery cloud?
+    options:
+      - { id: a, text: Borrow central ovens on market days, correct: true, why: The central kitchen lends ovens when a queue grows. }
+      - { id: b, text: Buy a second oven for the branch, why: A second oven idles on quiet days. }
+      - { id: c, text: Close the branch at noon, why: Closing turns customers away. }
+      - { id: d, text: Bake every loaf the night before, why: Baking early adds no oven time. }
+    evidence:
+      - Branches use ovens from one central kitchen when their queues grow.
+    takeaway: Borrow ovens for a busy day.
+`;
+
+  /** The fixture tree plus a pool file with six exam items and forms A to D over five of them. */
+  function withExam(root = makeFixtureRoot()): string {
+    mkdirSync(join(root, 'content', 'exam', 'pool'), { recursive: true });
+    writeFileSync(
+      join(root, POOL_FILE),
+      `questions:${examItem('q-exa001')}${examItem('q-exa002', 'retired')}${examItem('q-exb001', 'live', true)}${examItem('q-exc001')}${examItem('q-exd001')}${examItem('q-exs001')}`,
+    );
+    writeFileSync(
+      join(root, FORMS_FILE),
+      [
+        'seed: 20261024',
+        'forms:',
+        '  - { id: A, frozen: true, qids: [q-exa001, q-exa002] }',
+        '  - { id: B, frozen: true, qids: [q-exb001] }',
+        '  - { id: C, frozen: false, qids: [q-exc001] }',
+        '  - { id: D, frozen: false, qids: [q-exd001] }',
+        '',
+      ].join('\n'),
+    );
+    return root;
+  }
+
+  it('ships exam items only in their own form chunk', () => {
+    const { built, index, json } = build(withExam());
+    expect(index.exam.forms.map((f) => [f.id, f.frozen, f.size])).toEqual([
+      ['A', true, 1],
+      ['B', true, 1],
+      ['C', false, 1],
+      ['D', false, 1],
+    ]);
+    const owner: Record<string, string> = { A: 'q-exa001', B: 'q-exb001', C: 'q-exc001', D: 'q-exd001' };
+    for (const form of index.exam.forms) {
+      expect(form.chunk).toMatch(new RegExp(`^content/exam-${form.id.toLowerCase()}\\.[0-9a-f]{8}\\.json$`));
+      const chunk = json<ExamChunk>(form.chunk);
+      expect(chunk.form).toBe(form.id);
+      expect(chunk.questions.map((q) => q.id)).toEqual([owner[form.id]]);
+      const text = built.files.get(form.chunk) ?? '';
+      for (const id of EXAM_IDS)
+        expect(text.includes(id), `${id} in ${form.chunk}`).toBe(id === owner[form.id]);
+    }
+    expect(json<ExamChunk>(index.exam.forms[1]?.chunk ?? '').questions[0]).toMatchObject({
+      type: 'multi',
+      select: 2,
+    });
+    expect(index.exam.items).toEqual({
+      'q-exa001': { version: 2, concept: 'shared-kitchen', task: '1.1', form: 'A', type: 'single' },
+      'q-exb001': { version: 1, concept: 'per-minute-rental', task: '4.1', form: 'B', type: 'multi' },
+      'q-exc001': { version: 2, concept: 'shared-kitchen', task: '1.1', form: 'C', type: 'single' },
+      'q-exd001': { version: 2, concept: 'shared-kitchen', task: '1.1', form: 'D', type: 'single' },
+    });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1 });
+    const { exam: _exam, ...rest } = index;
+    const elsewhere = [...built.files]
+      .filter(([name]) => !/^content\/(exam-[a-d]|index)\./.test(name))
+      .map(([, text]) => text)
+      .concat(JSON.stringify(rest));
+    for (const id of EXAM_IDS)
+      expect(
+        elsewhere.some((text) => text.includes(id)),
+        id,
+      ).toBe(false);
+  });
+
+  it('emits no exam chunk without a forms file', () => {
+    const { built, index } = build();
+    expect(index.exam).toEqual({ forms: [], items: {} });
+    expect([...built.files.keys()].filter((name) => name.includes('exam'))).toEqual([]);
+  });
+
+  it('lists ranks, badges and the blueprint in the index', () => {
+    const { index } = build();
+    expect(index.ranks).toEqual([{ id: 'basic', name: 'Basic', short: 'Basic', requires: {}, facts: [] }]);
+    expect(index.badges.map((b) => b.id)).toEqual([...BADGE_IDS]);
+    for (const badge of index.badges) expect([null, 'labs', 'missions', 'capstone']).toContain(badge.arrives);
+    expect(index.blueprint.domains.map((d) => [d.id, d.weight])).toEqual([
+      ['1', 24],
+      ['2', 30],
+      ['3', 34],
+      ['4', 12],
+    ]);
+    expect(index.blueprint.tasks).toHaveLength(19);
+    expect(index.blueprint.tasks[0]).toEqual({
+      id: '1.1',
+      domain: '1',
+      text: 'Fixture task statement 1.1',
+      short: 'cloud benefits',
+    });
+    expect(index.blueprint.tasks.find((t) => t.id === '2.3')).toMatchObject({
+      domain: '2',
+      short: 'access management',
+    });
   });
 });
 

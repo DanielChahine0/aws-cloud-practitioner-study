@@ -72,6 +72,16 @@ describe('golden journeys', () => {
     for (const card of cards) expect(Date.parse(card.due)).toBeLessThan(examDay);
   });
 
+  it('exam-crunch counts its boss and mock days in examsDone', () => {
+    const { memory, events } = replay('exam-crunch');
+    expect([...memory.examsDone]).toEqual(['2026-11-05', '2026-11-08']);
+    expect(memory.qualifyingDays.has('2026-11-05')).toBe(true);
+    const submits = events.filter(
+      (e) => e.t === 'session' && e.phase === 'submit' && (e.mode === 'boss' || e.mode === 'mock'),
+    );
+    expect(submits.map((e) => memory.xpByEvent.get(e.id))).toEqual([100, 150]);
+  });
+
   it('comeback-10-days opens a catch-up with the streak reset and the longest kept', () => {
     const { queue, streak, memory } = replay('comeback-10-days');
     expect(memory.concepts.size).toBe(120);

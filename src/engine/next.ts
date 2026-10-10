@@ -1,10 +1,12 @@
-import { studyDayAt } from './day.ts';
+import type { BossStatus } from './boss.ts';
+import { daysBetween, studyDayAt } from './day.ts';
+import { mockHistory, nextForm } from './mock.ts';
 import { CHUNK_SIZE, ITEM_SECONDS, type ReviewQueue } from './queue.ts';
 import type { Progress, SessionState } from './replay.ts';
 
 /**
- * The Next action (spec 4.6): the one thing Home suggests, the first that applies.
- * Mission safety and the extras line wait for missions and incidents in later phases.
+ * The Next action (spec 4.6): the one thing Home suggests, the first that applies, and the optional extras line.
+ * Mission safety waits for missions (Phase 6); incident and lab extras wait for Phase 4.
  */
 
 /** A lesson in course order; `first` marks a module's first lesson. */
@@ -35,9 +37,9 @@ export type NextAction =
   | { kind: 'lesson'; lesson: LessonRef }
   | { kind: 'done' };
 
-const RESUMABLE = new Set(['check', 'quiz', 'review']);
+const RESUMABLE = new Set(['check', 'quiz', 'focus', 'review', 'boss', 'mock']);
 
-/** The newest unfinished check, quiz or today's review that still has a question to answer. */
+/** The newest unfinished session that still has a question to answer; a review must be today's. */
 function resumable(input: NextInput): { session: SessionState; left: number } | null {
   let best: { session: SessionState; left: number } | null = null;
   for (const s of input.progress.sessions.values()) {
@@ -92,4 +94,35 @@ export function nextMinutes(action: NextAction): number | null {
     case 'done':
       return null;
   }
+}
+
+/** One entry of the extras line under Done for today. */
+export type Extra = { kind: 'boss'; module: number } | { kind: 'mock'; form: string };
+
+/** The mock extra needs this many passed bosses (spec 4.3). */
+export const MOCK_AFTER_BOSSES = 7;
+/** And at least this many days since the latest submitted mock (spec 10.2). */
+export const MOCK_GAP_DAYS = 3;
+
+/** The extras line (spec 4.6), at most two entries: the lowest ready boss out of its cooldown, then the next mock. */
+export function extras(args: {
+  bosses: ReadonlyMap<number, BossStatus>;
+  progress: Progress;
+  today: string;
+  now: Date;
+}): Extra[] {
+  const out: Extra[] = [];
+  const cooling = (status: BossStatus): boolean =>
+    status.cooldownUntil !== null && Date.parse(status.cooldownUntil) > args.now.getTime();
+  const [module] = [...args.bosses]
+    .filter(([, status]) => status.ready && !cooling(status))
+    .map(([m]) => m)
+    .sort((a, b) => a - b);
+  if (module !== undefined) out.push({ kind: 'boss', module });
+  const passed = [...args.bosses.values()].filter((status) => status.passed).length;
+  const [latest] = mockHistory(args.progress);
+  const form = nextForm(args.progress);
+  const rested = latest === undefined || daysBetween(latest.day, args.today) >= MOCK_GAP_DAYS;
+  if (passed >= MOCK_AFTER_BOSSES && rested && form !== null) out.push({ kind: 'mock', form });
+  return out;
 }

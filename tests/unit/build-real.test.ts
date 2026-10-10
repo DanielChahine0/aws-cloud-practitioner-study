@@ -57,4 +57,16 @@ describe('buildContent on the real notes', () => {
       expect(size, m.chunk).toBeLessThanOrEqual(CHUNK_BUDGET);
     }
   });
+
+  it('ships no form or exactly forms A to D, each within 120 KB gzipped', () => {
+    expect([[], ['A', 'B', 'C', 'D']]).toContainEqual(index.exam.forms.map((f) => f.id));
+    for (const form of index.exam.forms) {
+      const size = gzipSync(built.files.get(form.chunk) ?? '', { level: 9 }).length;
+      expect(size, form.chunk).toBeLessThanOrEqual(CHUNK_BUDGET);
+    }
+  });
+
+  it('keeps questionVersions to practice items, never a form item', () => {
+    for (const qid of Object.keys(index.exam.items)) expect(qid in index.questionVersions, qid).toBe(false);
+  });
 });

@@ -137,6 +137,61 @@ export interface SearchChunk {
   entries: SearchEntry[];
 }
 
+/** A blueprint domain for Progress and readiness (spec 2.10). */
+export interface DomainView {
+  id: string;
+  name: string;
+  weight: number;
+}
+
+/** A blueprint task statement; `short` names it on one Home line, for example `access management`. */
+export interface TaskView {
+  id: string;
+  domain: string;
+  text: string;
+  short: string;
+}
+
+/** A rank of content/game/ranks.yaml; Basic has no requirements and no facts. */
+export interface RankView {
+  id: string;
+  name: string;
+  short: string;
+  requires: Record<string, number | boolean>;
+  facts: string[];
+}
+
+/** A badge of content/game/badges.yaml; `arrives` names the phase content a badge waits for. */
+export interface BadgeView {
+  id: string;
+  name: string;
+  rule: string;
+  arrives: 'labs' | 'missions' | 'capstone' | null;
+}
+
+/** What replay, stale detection and domain scores need of a form item, never its text. */
+export interface ExamItemRef {
+  version: number;
+  concept: string;
+  task: string;
+  form: string;
+  type: 'single' | 'multi';
+}
+
+/** One mock form: `chunk` is content/exam-a.<hash8>.json, and `size` counts the live items it ships. */
+export interface ExamFormMeta {
+  id: string;
+  chunk: string;
+  frozen: boolean;
+  size: number;
+}
+
+/** content/exam-<form>.<hash>.json: one form's live items in form order, loaded only by its mock or once it is taken. */
+export interface ExamChunk {
+  form: string;
+  questions: QuestionView[];
+}
+
 /** content/index.<hash>.json, whose name the build injects into index.html. */
 export interface ContentIndex {
   contentVersion: string;
@@ -148,4 +203,9 @@ export interface ContentIndex {
   questionVersions: Record<string, number>;
   /** Path of the search chunk from the site root. */
   search: string;
+  blueprint: { domains: DomainView[]; tasks: TaskView[] };
+  ranks: RankView[];
+  badges: BadgeView[];
+  /** The mock forms and their item refs; form items never appear in `questionVersions`, a module chunk or search. */
+  exam: { forms: ExamFormMeta[]; items: Record<string, ExamItemRef> };
 }
