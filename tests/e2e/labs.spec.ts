@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 import { ENGINE_VERSION } from '../../src/engine/replay.ts';
 import { KV_KEYS } from '../../src/store/kv.ts';
+import { PLACE_SOLUTION } from '../fixtures/lab-place.ts';
 import { E2E_NOW } from '../fixtures/ready-module.ts';
 import { HOME_TITLE } from './exam-helpers.ts';
 import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1, seedKv } from './helpers.ts';
@@ -10,14 +11,20 @@ import {
   SYNTHETIC_CONFIGURE_LAB_ID,
   SYNTHETIC_INVESTIGATE_LAB_ID,
   SYNTHETIC_INVESTIGATE_TITLE,
+  SYNTHETIC_PLACE_LAB_ID,
+  SYNTHETIC_POLICY_LAB_ID,
   SYNTHETIC_SIMULATE_LAB_ID,
   SYNTHETIC_SORT_LAB_ID,
   SYNTHETIC_SORT_TITLE,
+  SYNTHETIC_TRACE_LAB_ID,
   storedDraftActions,
   syntheticConfigureLab,
   syntheticInvestigateLab,
+  syntheticPlaceLab,
+  syntheticPolicyLab,
   syntheticSimulateLab,
   syntheticSortLab,
+  syntheticTraceLab,
   useSyntheticLab,
 } from './lab-helpers.ts';
 import { shown } from './questions.ts';
@@ -419,6 +426,322 @@ test('Simulate inputs, selects and checkboxes are at least 44 px tall on a phone
   await expect(
     page.getByRole('img', { name: 'Orders and Capacity for each hour from 0:00 to 23:00' }),
   ).toBeVisible();
+  await expectNoSidewaysScroll(page);
+});
+
+const PLACE_URL = `/#/m/01/lab/${SYNTHETIC_PLACE_LAB_ID}`;
+const PLACE_TITLE = 'Keep the ovens baking';
+/** The fixture's solution as (piece, slot) pairs, in the order a tap run places them. */
+const PLACE_TAPS = PLACE_SOLUTION.flatMap((a) => (a.t === 'place' ? [[a.piece, a.slot] as const] : []));
+const piece = (page: Page, id: string): Locator => page.locator(`[data-piece="${id}"]`);
+const slot = (page: Page, id: string): Locator => page.locator(`[data-slot="${id}"]`);
+const pieceIn = (page: Page, slotId: string, pieceId: string): Locator =>
+  page.locator(`section:has(> [data-slot="${slotId}"]) > [data-piece="${pieceId}"]`);
+const failure = (page: Page, label: string): Locator => page.getByRole('button', { name: `${label} fails` });
+const trayStop = (page: Page): Locator => page.locator('.place-tray [data-lab-item][tabindex="0"]');
+
+const usePlaceLab = async (page: Page): Promise<void> => {
+  await useLabAt(page, syntheticPlaceLab, PLACE_URL);
+  await expect(h1(page, PLACE_TITLE)).toBeVisible();
+};
+
+/** Tabs into the Place tray with `key`, steps to a piece with the arrow keys and picks it up with Space. */
+async function holdByKeys(page: Page, id: string, key: string): Promise<void> {
+  await tabTo(page, trayStop(page), key);
+  for (let i = 0; i < 16; i++) {
+    if (await piece(page, id).evaluate((el) => el === document.activeElement)) break;
+    await page.keyboard.press('ArrowDown');
+  }
+  await expect(piece(page, id)).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(piece(page, id)).toHaveAttribute('aria-pressed', 'true');
+}
+
+/** Places a piece by keys: pick it up in the tray, then press the slot's digit. */
+async function placeByKeys(page: Page, id: string, digit: string, key: string): Promise<void> {
+  await holdByKeys(page, id, key);
+  await page.keyboard.press(digit);
+  await expect(piece(page, id)).toHaveAttribute('aria-pressed', 'false');
+  // The screen moves focus to the tray's first piece (or to the slot once the tray is empty) on the next frame, so
+  // wait for it before the next key, or that key lands on the page and the late focus undoes it.
+  await expect(page.locator('.place-tray [data-lab-item]:focus, .slot-target:focus')).toHaveCount(1);
+}
+
+test('a Place lab works by keyboard alone, previews a failure and records its completion', async ({
+  page,
+  browserName,
+}) => {
+  const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+  const back = browserName === 'webkit' ? 'Alt+Shift+Tab' : 'Shift+Tab';
+  await usePlaceLab(page);
+
+  // Space picks a piece up in the tray, a digit places it, and focus goes back to the tray's first piece.
+  await holdByKeys(page, 'front-one', tab);
+  await page.keyboard.press('2');
+  await expect(said(page, 'Placed First shop front in Public subnet A.')).toBeAttached();
+  await expect(pieceIn(page, 'public-a', 'front-one')).toBeVisible();
+  await expect(piece(page, 'front-two')).toBeFocused();
+
+  // In the map, the arrow keys reach a placed piece; Space picks it up and Backspace sends it back to the tray.
+  await page.keyboard.press(tab);
+  await expect(slot(page, 'bakery-edge')).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await expect(piece(page, 'front-one')).toBeFocused();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('Backspace');
+  await expect(said(page, 'First shop front is back in the tray.')).toBeAttached();
+  await expect(piece(page, 'front-one')).toBeFocused();
+
+  // Escape puts a held piece down without leaving the lab.
+  await page.keyboard.press('Space');
+  await expect(piece(page, 'front-one')).toHaveAttribute('aria-pressed', 'true');
+  await page.keyboard.press('Escape');
+  await expect(piece(page, 'front-one')).toHaveAttribute('aria-pressed', 'false');
+  await expect(h1(page, PLACE_TITLE)).toBeVisible();
+
+  // With a piece held, Space on a focused slot places it there.
+  await page.keyboard.press('Space');
+  await page.keyboard.press(tab);
+  await page.keyboard.press('ArrowDown');
+  await expect(slot(page, 'public-a')).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(said(page, 'Placed First shop front in Public subnet A.')).toBeAttached();
+  await expect(pieceIn(page, 'public-a', 'front-one')).toBeVisible();
+
+  // A failure button previews the failure in words, and a second press brings the zone back.
+  await tabTo(page, failure(page, 'Oven Row A'), tab);
+  await page.keyboard.press('Enter');
+  await expect(said(page, 'Oven Row A is down.')).toBeAttached();
+  await expect(failure(page, 'Oven Row A')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.place-box.is-down')).toContainText('Oven Row A Down');
+  await expect(piece(page, 'front-one')).toContainText('Down');
+  await page.keyboard.press('Enter');
+  await expect(said(page, 'Oven Row A is back.')).toBeAttached();
+  await expect(page.locator('.place-box.is-down')).toHaveCount(0);
+
+  // The scripted partial board meets one goal; Enter on a slot checks it.
+  await placeByKeys(page, 'front-two', '4', back);
+  await placeByKeys(page, 'gateway', '1', tab);
+  await placeByKeys(page, 'route-a', '2', tab);
+  await placeByKeys(page, 'route-b', '4', tab);
+  await page.keyboard.press(tab);
+  await expect(page.locator('.slot-target:focus')).toHaveCount(1);
+  await page.keyboard.press('Enter');
+  await expect(said(page, '1 of 3 goals met.')).toBeAttached();
+
+  // The draft survives a reload.
+  await expect.poll(() => storedDraftActions(page, SYNTHETIC_PLACE_LAB_ID)).toBeGreaterThan(0);
+  const stored = await storedDraftActions(page, SYNTHETIC_PLACE_LAB_ID);
+  await page.reload();
+  await expect(h1(page, PLACE_TITLE)).toBeVisible();
+  expect(await storedDraftActions(page, SYNTHETIC_PLACE_LAB_ID)).toBe(stored);
+  await expect(pieceIn(page, 'public-b', 'route-b')).toBeVisible();
+
+  await placeByKeys(page, 'recipes-one', '3', tab);
+  await placeByKeys(page, 'recipes-two', '5', tab);
+  await placeByKeys(page, 'mixer', '6', tab);
+  // With the tray empty, focus stays on the slot that took the last piece, where Enter checks.
+  await expect(page.getByText('Every piece is placed.')).toBeVisible();
+  await expect(slot(page, 'not-used')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(said(page, 'All 3 goals met. Plus 40 XP.')).toBeAttached();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+  await answerDebriefByKeys(page, SYNTHETIC_PLACE_LAB_ID);
+  await expect(page.getByRole('link', { name: 'Back to Module 1' })).toBeVisible();
+  await expect.poll(() => labDoneCount(page, SYNTHETIC_PLACE_LAB_ID)).toBe(1);
+});
+
+test('a Place lab has no axe violations and no sideways scroll', async ({ page }) => {
+  await usePlaceLab(page);
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+
+  await piece(page, 'gateway').click();
+  await expect(piece(page, 'gateway')).toHaveAttribute('aria-pressed', 'true');
+  await failure(page, 'Oven Row A').click();
+  await expect(said(page, 'Oven Row A is down.')).toBeAttached();
+  // An opened hint adds the Place engine's sentence about the board now, and the held piece stays held.
+  await page.getByRole('button', { name: 'Hint' }).first().click();
+  await expect(page.locator('.lab-goals .hint')).toContainText('First shop front is still in the tray.');
+  await expect(piece(page, 'gateway')).toHaveAttribute('aria-pressed', 'true');
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+
+  for (const [id, target] of PLACE_TAPS) {
+    if (id !== 'gateway') await piece(page, id).click();
+    await slot(page, target).click();
+    await expect(pieceIn(page, target, id)).toBeVisible();
+  }
+  await expect(piece(page, 'front-one')).toContainText('Down');
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+
+  await checkButton(page).click();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+  await expect(page.locator('section.runner')).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+});
+
+test('a Place lab works by taps on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the tap run is checked on the phone project only');
+  await usePlaceLab(page);
+  await piece(page, 'front-one').tap();
+  await slot(page, 'public-a').tap();
+  await expect(said(page, 'Placed First shop front in Public subnet A.')).toBeAttached();
+  await failure(page, 'Oven Row A').tap();
+  await expect(said(page, 'Oven Row A is down.')).toBeAttached();
+  await expect(piece(page, 'front-one')).toContainText('Down');
+  for (const [id, target] of PLACE_TAPS.filter(([id]) => id !== 'front-one')) {
+    await piece(page, id).tap();
+    await slot(page, target).tap();
+    await expect(pieceIn(page, target, id)).toBeVisible();
+  }
+  await checkButton(page).tap();
+  await expect(said(page, 'All 3 goals met. Plus 40 XP.')).toBeAttached();
+});
+
+test('Place pieces, slots and failure buttons are at least 44 px tall on a phone', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await usePlaceLab(page);
+  const targets = await page.locator('.place-tray .piece, .slot-target, .place-failures button').all();
+  expect(targets.length).toBe(16);
+  for (const target of targets) {
+    expect((await target.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
+  }
+  const board = await page.locator('.lab-board').boundingBox();
+  const goals = await page.locator('.lab-goals').boundingBox();
+  if (!board || !goals) throw new Error('the board or the goals have no box');
+  expect(goals.y).toBeGreaterThanOrEqual(board.y + board.height);
+  await expectNoSidewaysScroll(page);
+});
+
+const TRACE_URL = `/#/m/01/lab/${SYNTHETIC_TRACE_LAB_ID}`;
+const POLICY_URL = `/#/m/01/lab/${SYNTHETIC_POLICY_LAB_ID}`;
+const HTTPS_IN = 'Inbound TCP 443 from 0.0.0.0/0';
+const SSH_OFFICE = 'Inbound TCP 22 from 192.0.2.0/24';
+const REPLIES_OUT = 'Rule 100: allow outbound TCP 1024-65535 to 0.0.0.0/0';
+const CUSTOMER = 'A customer opens the order page';
+const rule = (page: Page, text: string): Locator => page.getByRole('checkbox', { name: text, exact: true });
+const caseSummary = (page: Page, label: string): Locator => page.locator('summary', { hasText: label });
+const hopsOf = (page: Page, label: string): Locator =>
+  page.locator('li.trace-case', { has: caseSummary(page, label) }).locator('.trace-hops li');
+
+/**
+ * Scans the lab from the top of the page: opening a case scrolls it into view, and axe counts a checkbox that sits
+ * under the sticky top bar as a target with no room around it, which says where the page is scrolled, not how the
+ * board is built.
+ */
+async function scanFromTop(page: Page): Promise<void> {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+}
+
+test('a Trace lab works by keyboard alone and steps a case through its hops', async ({
+  page,
+  browserName,
+}) => {
+  // WebKit tabs to checkboxes and summaries only with Option held, as on a Mac without full keyboard access.
+  const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+  const back = browserName === 'webkit' ? 'Alt+Shift+Tab' : 'Shift+Tab';
+  await useLabAt(page, syntheticTraceLab, TRACE_URL);
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  await expect(page.getByText('Trace lab, about 6 minutes')).toBeVisible();
+  await tabTo(page, rule(page, HTTPS_IN), tab);
+  await page.keyboard.press('Space');
+  await expect(rule(page, HTTPS_IN)).toBeChecked();
+  await expect(said(page, `${HTTPS_IN} is on.`)).toBeAttached();
+  await tabTo(page, caseSummary(page, CUSTOMER), tab);
+  await expect(caseSummary(page, CUSTOMER)).toContainText('Result: Denied. Expected: Allowed.');
+  await page.keyboard.press('Enter');
+  await expect(hopsOf(page, CUSTOMER)).toHaveText([
+    'Network ACL, inbound: Allowed by rule 100',
+    'Security group, inbound: Allowed',
+    'Security group, outbound (reply): Allowed as a reply',
+    'Network ACL, outbound (reply): Denied by the final * rule',
+  ]);
+  await tabTo(page, rule(page, REPLIES_OUT), back);
+  await page.keyboard.press('Space');
+  await expect(said(page, `${REPLIES_OUT} is on.`)).toBeAttached();
+  await expect(caseSummary(page, CUSTOMER)).toContainText('Result: Allowed. Expected: Allowed.');
+  await expect(hopsOf(page, CUSTOMER).last()).toHaveText(
+    'Network ACL, outbound (reply): Allowed by rule 100',
+  );
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await expect(goal(page, 'Only the office logs in')).toContainText('Not met');
+  // The draft keeps both switched rules across a reload.
+  await expect.poll(() => storedDraftActions(page, SYNTHETIC_TRACE_LAB_ID)).toBe(2);
+  await page.reload();
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  await expect(rule(page, HTTPS_IN)).toBeChecked();
+  await expect(rule(page, REPLIES_OUT)).toBeChecked();
+  await tabTo(page, rule(page, SSH_OFFICE), tab);
+  await page.keyboard.press('Space');
+  await expect(rule(page, SSH_OFFICE)).toBeChecked();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('All 2 goals met. Plus 40 XP.', { exact: true })).toBeAttached();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+  await answerDebriefByKeys(page, SYNTHETIC_TRACE_LAB_ID);
+  expect(await labDoneCount(page, SYNTHETIC_TRACE_LAB_ID)).toBe(1);
+});
+
+test('Trace labs of both kinds have no axe violations and no sideways scroll', async ({ page }) => {
+  await useLabAt(page, syntheticTraceLab, TRACE_URL);
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  await caseSummary(page, CUSTOMER).click();
+  await expect(hopsOf(page, CUSTOMER)).toHaveCount(4);
+  await scanFromTop(page);
+  await checkButton(page).click();
+  await expect(page.getByText('0 of 2 goals met.', { exact: true })).toBeAttached();
+  await scanFromTop(page);
+
+  await useLabAt(page, syntheticPolicyLab, POLICY_URL);
+  await expect(h1(page, 'Keys for the bakers')).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Bakers policy, attached to Bakers' })).toBeVisible();
+  await caseSummary(page, 'Mo reads the rye recipe').click();
+  await expect(hopsOf(page, 'Mo reads the rye recipe')).toHaveText([
+    'SCP at Bakery group: Allowed',
+    'SCP at Shops: Allowed',
+    'SCP at East shop: Allowed',
+    'IAM policies: No match',
+  ]);
+  await scanFromTop(page);
+  await checkButton(page).click();
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await scanFromTop(page);
+});
+
+test('a Trace lab works by taps on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useLabAt(page, syntheticPolicyLab, POLICY_URL);
+  await expect(h1(page, 'Keys for the bakers')).toBeVisible();
+  const recipes = 'Allow recipes:Get* on recipes/*';
+  await rule(page, recipes).tap();
+  await expect(said(page, `${recipes} is on.`)).toBeAttached();
+  await caseSummary(page, 'Mo starts a bake in the deck oven').tap();
+  await expect(hopsOf(page, 'Mo starts a bake in the deck oven').last()).toHaveText('IAM policies: No match');
+  await rule(page, 'Allow oven:StartBake, oven:StopBake on oven/*').tap();
+  await expect(hopsOf(page, 'Mo starts a bake in the deck oven').last()).toHaveText('IAM policies: Allowed');
+  await checkButton(page).tap();
+  await expect(page.getByText('All 2 goals met. Plus 40 XP.', { exact: true })).toBeAttached();
+  expect(await labDoneCount(page, SYNTHETIC_POLICY_LAB_ID)).toBe(1);
+});
+
+test('Trace checkboxes and case summaries are at least 44 px tall on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useLabAt(page, syntheticTraceLab, TRACE_URL);
+  await expect(h1(page, 'Open the order window')).toBeVisible();
+  const targets = [
+    ...(await page.locator('label.trace-rule').all()),
+    ...(await page.locator('.trace-case summary').all()),
+  ];
+  expect(targets).toHaveLength(16);
+  for (const target of targets) expect((await target.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
   await expectNoSidewaysScroll(page);
 });
 

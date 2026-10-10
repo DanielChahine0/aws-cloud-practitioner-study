@@ -1,0 +1,48 @@
+# Reference key points for decision 5: Network layout and shop connections.
+module: 5
+keyPoints:
+  - id: kp-05-public-ordering-private-data
+    status: live
+    text: The cafe's VPC holds the ordering servers in public subnets whose route table points at an internet gateway, and the databases in private subnets with no such route, so customers reach the ordering site but never the databases.
+    concepts: [public-subnets, private-subnets, route-tables]
+    evidence: A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+    verified:
+      fullHash: 32184a05b1d2
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-05-security-groups-allow-only
+    status: live
+    text: Security groups let only HTTPS into the ordering servers and only ordering server traffic into the databases, and because they are stateful the replies flow back without extra rules.
+    concepts: [security-groups, stateful-packet-filtering]
+    evidence: You open it with allow rules, such as accepting only HTTPS on a web server, with separate inbound and outbound rules, and anything not allowed stays blocked.
+    verified:
+      fullHash: e6e9c056cd51
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-05-custom-acl-private-subnets
+    status: live
+    text: A custom network ACL guards the private subnets as a second, subnet-wide layer that blocks everything the cafe has not allowed, with rules for both directions since it remembers nothing, and the cafe owns writing these rules.
+    concepts: [network-acls, stateless-packet-filtering]
+    evidence: "A custom network ACL starts the other way round: nothing passes until you add allow rules."
+    verified:
+      fullHash: ea9d54fb304d
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-05-site-vpn-for-pos
+    status: live
+    text: The back office point-of-sale server reaches the VPC through an encrypted Site-to-Site VPN into a virtual private gateway, since a few sales records need no dedicated Direct Connect line and its extra bandwidth.
+    concepts: [aws-site-to-site-vpn, aws-direct-connect, virtual-private-gateway]
+    evidence: Choose it only when you need the bandwidth, since plain site links suit Site-to-Site VPN.
+    verified:
+      fullHash: 4f09bb69ae94
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-05-transit-gateway-hub
+    status: live
+    text: As the cafe opens more shops, a transit gateway acts as one hub that each shop link and VPC joins, instead of a tangle of separate connections, and it can peer with the shop abroad's Region.
+    concepts: [aws-transit-gateway]
+    evidence: "**AWS Transit Gateway**: a central hub for VPCs and on-premises networks, with inter-Region peering between transit gateways."
+    verified:
+      fullHash: d9cc4eeed286
+      checks: [ critic@1 ]
+      on: 2026-10-10

@@ -1,0 +1,48 @@
+# Reference key points for decision 2: Compute for online ordering.
+module: 2
+keyPoints:
+  - id: kp-02-general-purpose-small-size
+    status: live
+    text: The ordering web servers run on a small general purpose instance, since a balanced mix suits a web front end with unpredictable load, and a modest size keeps each server cheap under the monthly cap.
+    concepts: [general-purpose-instances, ec2-instance-sizing]
+    evidence: "Unknown workload: start with general purpose."
+    verified:
+      fullHash: 4d9b363ca52d
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-02-commit-base-flex-peak
+    status: live
+    text: A Savings Plan covers the few servers that run all day, the extra servers for the morning rush run On-Demand, and Spot is ruled out because AWS could reclaim a server while it holds orders.
+    concepts: [savings-plans, on-demand-instances, spot-instances]
+    evidence: "Match the model to the usage: unknown means On-Demand, steady means Savings Plans or RIs, and interruptible but never critical means Spot."
+    verified:
+      fullHash: 46bab08e1aa3
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-02-auto-scale-morning-rush
+    status: live
+    text: An Auto Scaling group adds ordering servers as the breakfast surge builds, can schedule them ahead of that daily peak, and removes them afterwards, so the cafe pays for rush capacity only while the rush lasts.
+    concepts: [amazon-ec2-auto-scaling, predictive-scaling]
+    evidence: Auto Scaling uses CloudWatch metrics to add and remove instances, dynamically or predictively.
+    verified:
+      fullHash: fe5223fce7c0
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-02-load-balancer-entry-point
+    status: live
+    text: A managed load balancer gives customers one address for ordering and spreads their requests over however many servers Auto Scaling is running, so no single server gets swamped at breakfast.
+    concepts: [elastic-load-balancing, elastic-load-balancing-with-auto-scaling]
+    evidence: In front of an Auto Scaling group it is the single entry point, spreading requests evenly over whatever instances exist.
+    verified:
+      fullHash: 736611602df9
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-02-queue-orders-sqs
+    status: live
+    text: Each order goes into an Amazon SQS queue between the order website and the order processing servers, so a burst waits safely in line and no order is lost when the processors are busy or down.
+    concepts: [amazon-sqs, loose-coupling]
+    evidence: It moves any volume of messages between components without losing them, and the receiver need not be available at send time.
+    verified:
+      fullHash: b9c437ffab84
+      checks: [ critic@1 ]
+      on: 2026-10-10

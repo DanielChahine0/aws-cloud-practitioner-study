@@ -2275,8 +2275,223 @@ dialog.confirm .button {
 }
 
 /* Labs: Place */
+.place-tray {
+  display: grid;
+  gap: 8px;
+  min-height: 44px;
+  margin: 0;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+}
+
+.piece {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.piece:hover,
+.piece[aria-pressed="true"] {
+  border-color: var(--active);
+}
+
+.piece[aria-pressed="true"] {
+  box-shadow: inset 3px 0 0 var(--active);
+}
+
+.piece-detail {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.place-map {
+  display: grid;
+  gap: 12px;
+}
+
+.place-box {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  padding: 12px;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.place-box .place-box {
+  background: var(--surface);
+}
+
+.place-box .place-box .place-box {
+  background: var(--pane);
+}
+
+.place-box[data-kind="bench"] {
+  border-style: dashed;
+}
+
+.place-box.is-down {
+  border: 2px dashed var(--bad);
+}
+
+.place-name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.place-detail {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.slot-target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.slot-target:hover {
+  border-color: var(--active);
+}
+
+.slot-n {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.slot-count {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.down-mark {
+  font-weight: 600;
+  color: var(--bad);
+}
+
+.place-failures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.place-failures legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.place-failures button[aria-pressed="true"] {
+  border: 2px dashed var(--bad);
+}
 
 /* Labs: Trace */
+.trace {
+  display: grid;
+  gap: 16px;
+}
+
+.trace-rules {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.trace-rules legend {
+  margin-bottom: 4px;
+  padding: 0;
+  font-weight: 600;
+}
+
+.trace-rule .option-text {
+  overflow-wrap: anywhere;
+}
+
+.trace-cases-title {
+  margin: 8px 0 0;
+}
+
+.trace-cases {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trace-case details {
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* A case off its expected result gets a dashed border beside its words, never colour alone. */
+.trace-case.is-off details {
+  border-style: dashed;
+  border-color: var(--active);
+}
+
+.trace-case summary {
+  min-height: 44px;
+  padding: 10px 16px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.trace-case summary:focus-visible {
+  outline: 2px solid var(--active);
+  outline-offset: 2px;
+}
+
+.trace-case-label {
+  font-weight: 600;
+}
+
+.trace-case-result {
+  color: var(--muted);
+}
+
+.trace-hops {
+  margin: 0;
+  padding: 0 16px 12px 40px;
+  overflow-wrap: anywhere;
+}
 
 /* Labs: Investigate */
 

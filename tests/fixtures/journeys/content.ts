@@ -92,19 +92,25 @@ function build(): MemoryContent {
       [2, ['lab-m02-a', 'lab-m02-b']],
       [3, ['lab-m03-a', 'lab-m03-b']],
     ]),
-    keptMissions: new Set(),
+    keptMissions: new Set(['mission-01']),
   };
 }
 
 export const JOURNEY_CONTENT: MemoryContent = build();
 
-export type JourneyName = 'first-week' | 'exam-crunch' | 'comeback-10-days' | 'hands-on-week';
+export type JourneyName =
+  | 'first-week'
+  | 'exam-crunch'
+  | 'comeback-10-days'
+  | 'hands-on-week'
+  | 'missions-and-capstone';
 
 const NOW: Record<JourneyName, string> = {
   'first-week': '2026-10-18T20:00:00.000Z',
   'exam-crunch': '2026-11-12T20:00:00.000Z',
   'comeback-10-days': '2026-10-27T12:00:00.000Z',
   'hands-on-week': '2026-10-23T20:00:00.000Z',
+  'missions-and-capstone': '2026-11-16T20:00:00.000Z',
 };
 
 /** The moment each journey is read at, in offset 0. */

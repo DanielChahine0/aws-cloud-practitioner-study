@@ -225,6 +225,35 @@ class Journey {
     return this;
   }
 
+  /** One mission step, with the credits left when it is a usage check that names them. */
+  mission(
+    at: string,
+    mission: string,
+    step: 'start' | 'verified' | 'cleaned' | 'usage-ok',
+    credits?: number,
+  ): this {
+    this.push(new Date(at), { t: 'mission', mission, step, ...(credits === undefined ? {} : { credits }) });
+    return this;
+  }
+
+  /** One capstone grade of `module`, with the ticked key point ids on a final. */
+  decision(
+    at: string,
+    module: number,
+    stage: 'self' | 'final',
+    scores: [number, number, number, number],
+    keyPoints?: string[],
+  ): this {
+    this.push(new Date(at), {
+      t: 'decision',
+      module,
+      stage,
+      scores,
+      ...(keyPoints === undefined ? {} : { keyPoints }),
+    });
+    return this;
+  }
+
   events(): StudyEvent[] {
     const sorted = [...this.items].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
     return timelineOf(sorted);
@@ -379,5 +408,33 @@ export function handsOnWeek(): StudyEvent[] {
     [conceptId(1, 2), false],
     [conceptId(1, 3), true],
   ]);
+  return j.events();
+}
+
+/**
+ * Missions and the capstone from Saturday, October 10: Module 1's first lesson and Mission 0 verified the same day,
+ * the kept Mission 1 verified and checked the next day, Mission 3 cleaned up without Verify, checked, then retried
+ * and closed, and two decisions graded on November 15 and 16, the second re-graded, which pays nothing.
+ */
+export function missionsAndCapstone(): StudyEvent[] {
+  const j = new Journey();
+  j.read('2026-10-10T08:00:00.000Z', lessonNote(1, 1));
+  j.mission('2026-10-10T09:00:00.000Z', 'mission-00', 'start');
+  j.mission('2026-10-10T10:00:00.000Z', 'mission-00', 'verified');
+  j.mission('2026-10-11T09:00:00.000Z', 'mission-01', 'start');
+  j.mission('2026-10-11T10:00:00.000Z', 'mission-01', 'verified');
+  j.mission('2026-10-12T09:00:00.000Z', 'mission-01', 'usage-ok', 140);
+  j.mission('2026-10-13T09:00:00.000Z', 'mission-03', 'start');
+  j.mission('2026-10-13T09:40:00.000Z', 'mission-03', 'cleaned');
+  j.mission('2026-10-14T09:00:00.000Z', 'mission-03', 'usage-ok', 139);
+  j.mission('2026-10-15T09:00:00.000Z', 'mission-03', 'start');
+  j.mission('2026-10-15T09:30:00.000Z', 'mission-03', 'verified');
+  j.mission('2026-10-15T10:00:00.000Z', 'mission-03', 'cleaned');
+  j.mission('2026-10-16T09:00:00.000Z', 'mission-03', 'usage-ok', 138);
+  j.decision('2026-11-15T09:00:00.000Z', 1, 'self', [2, 2, 1, 2]);
+  j.decision('2026-11-15T09:30:00.000Z', 1, 'final', [3, 2, 2, 1], ['kp-01-a', 'kp-01-gone']);
+  j.decision('2026-11-16T09:00:00.000Z', 2, 'self', [2, 2, 2, 2]);
+  j.decision('2026-11-16T09:30:00.000Z', 2, 'final', [2, 2, 2, 0]);
+  j.decision('2026-11-16T10:00:00.000Z', 2, 'final', [3, 3, 3, 3]);
   return j.events();
 }

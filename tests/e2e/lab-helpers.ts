@@ -5,7 +5,9 @@ import { SCHEMA_VERSION } from '../../schemas/version.ts';
 import { DB_NAME, STORES } from '../../src/store/idb.ts';
 import { KV_KEYS } from '../../src/store/kv.ts';
 import { bakeryInvestigateLab } from '../fixtures/lab-investigate.ts';
+import { bakeryPlaceLab } from '../fixtures/lab-place.ts';
 import { bakerySimulateLab } from '../fixtures/lab-specs.ts';
+import { bakeryPolicyLab, bakeryTraceLab, type TraceLabFile } from '../fixtures/lab-trace.ts';
 
 export const SYNTHETIC_SORT_LAB_ID = 'lab-m01-bakery-sort';
 export const SYNTHETIC_SORT_TITLE = 'Sort the bakery jobs';
@@ -241,6 +243,62 @@ export function syntheticSimulateLab(questions: QuestionView[]): LabView {
     debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
     credits: true,
   };
+}
+
+export const SYNTHETIC_PLACE_LAB_ID = 'lab-m01-bakery-ovens';
+
+/** The bakery Place lab of `tests/fixtures/lab-place.ts` as the build ships it, with `questions` as its debrief. */
+export function syntheticPlaceLab(questions: QuestionView[]): LabView {
+  const lab = bakeryPlaceLab();
+  return {
+    id: SYNTHETIC_PLACE_LAB_ID,
+    module: 1,
+    engine: 'place',
+    tier: 'core',
+    rev: 1,
+    title: lab.title,
+    minutes: lab.minutes,
+    concepts: lab.concepts,
+    brief: lab.brief,
+    spec: lab.spec,
+    goals: lab.goals,
+    notes: notesOf(questions),
+    debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
+    credits: false,
+  };
+}
+
+export const SYNTHETIC_TRACE_LAB_ID = 'lab-m01-bakery-door';
+export const SYNTHETIC_POLICY_LAB_ID = 'lab-m01-bakery-keys';
+
+/** A Trace fixture lab as the build ships it, with `questions` as its debrief. */
+function traceView(lab: TraceLabFile, questions: QuestionView[]): LabView {
+  return {
+    id: lab.id,
+    module: 1,
+    engine: 'trace',
+    tier: 'core',
+    rev: 1,
+    title: lab.title,
+    minutes: lab.minutes,
+    concepts: lab.concepts,
+    brief: lab.brief,
+    spec: lab.spec,
+    goals: lab.goals,
+    notes: notesOf(questions),
+    debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
+    credits: false,
+  };
+}
+
+/** The bakery order window of `tests/fixtures/lab-trace.ts`: a security group and a network ACL. */
+export function syntheticTraceLab(questions: QuestionView[]): LabView {
+  return traceView(bakeryTraceLab(), questions);
+}
+
+/** The bakery keys of `tests/fixtures/lab-trace.ts`: identity policies and SCPs on an org. */
+export function syntheticPolicyLab(questions: QuestionView[]): LabView {
+  return traceView(bakeryPolicyLab(), questions);
 }
 
 export const SYNTHETIC_INVESTIGATE_LAB_ID = 'lab-m01-bakery-ledger';

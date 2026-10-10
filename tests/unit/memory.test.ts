@@ -905,3 +905,134 @@ describe('deriveMemory: review.now (spec 3.6)', () => {
     expect(isDue(card as SrsCard, new Date(at('2026-10-10', 14)), 0)).toBe(false);
   });
 });
+
+describe('mission and decision XP (spec 3.2)', () => {
+  const PAID = contentOf([{ id: 'shared-kitchen', module: 1 }], new Map(), {
+    keptMissions: new Set(['mission-01']),
+  });
+  type Log = readonly (readonly [string, NewEvent])[];
+  const memoryOf = (log: Log) => deriveMemory(timelineOf(log), PAID);
+  const step = (mission: string, s: 'start' | 'verified' | 'cleaned' | 'usage-ok'): NewEvent => ({
+    t: 'mission',
+    mission,
+    step: s,
+  });
+  const grade = (
+    module: number,
+    stage: 'self' | 'final',
+    scores: [number, number, number, number],
+  ): NewEvent => ({
+    t: 'decision',
+    module,
+    stage,
+    scores,
+  });
+
+  it('pays Mission 0 its 50 once, on its first verified', () => {
+    const events = timelineOf([
+      ['2026-10-10T08:00:00Z', step('mission-00', 'start')],
+      ['2026-10-10T08:30:00Z', step('mission-00', 'verified')],
+      ['2026-10-10T09:00:00Z', step('mission-00', 'verified')],
+      ['2026-10-11T09:00:00Z', step('mission-00', 'start')],
+    ]);
+    const m = deriveMemory(events, PAID);
+    expect(m.xp).toBe(50);
+    expect(m.xpByEvent.get(events[1]?.id ?? '')).toBe(50);
+  });
+
+  it('pays a cleaned-up mission 75 once, on a later-day usage check of a verified attempt', () => {
+    const flow: Log = [
+      ['2026-10-12T09:00:00Z', step('mission-03', 'start')],
+      ['2026-10-12T09:30:00Z', step('mission-03', 'verified')],
+      ['2026-10-12T10:00:00Z', step('mission-03', 'cleaned')],
+      ['2026-10-12T20:00:00Z', step('mission-03', 'usage-ok')],
+    ];
+    expect(memoryOf(flow).xp).toBe(0);
+    const closed: Log = [...flow, ['2026-10-13T09:00:00Z', step('mission-03', 'usage-ok')]];
+    expect(memoryOf(closed).xp).toBe(75);
+    expect(memoryOf(closed).xpByDay.get('2026-10-13')).toBe(75);
+    const again: Log = [
+      ...closed,
+      ['2026-10-14T09:00:00Z', step('mission-03', 'start')],
+      ['2026-10-14T09:30:00Z', step('mission-03', 'verified')],
+      ['2026-10-14T10:00:00Z', step('mission-03', 'cleaned')],
+      ['2026-10-15T09:00:00Z', step('mission-03', 'usage-ok')],
+    ];
+    expect(memoryOf(again).xp).toBe(75);
+  });
+
+  it('pays an unverified attempt nothing and its verified retry 75 once', () => {
+    const first: Log = [
+      ['2026-10-12T09:00:00Z', step('mission-07', 'start')],
+      ['2026-10-12T09:40:00Z', step('mission-07', 'cleaned')],
+      ['2026-10-13T09:00:00Z', step('mission-07', 'usage-ok')],
+    ];
+    expect(memoryOf(first).xp).toBe(0);
+    const retry: Log = [
+      ...first,
+      ['2026-10-14T09:00:00Z', step('mission-07', 'start')],
+      ['2026-10-14T09:20:00Z', step('mission-07', 'verified')],
+      ['2026-10-14T09:30:00Z', step('mission-07', 'cleaned')],
+      ['2026-10-15T09:00:00Z', step('mission-07', 'usage-ok')],
+      ['2026-10-16T09:00:00Z', step('mission-07', 'usage-ok')],
+    ];
+    expect(memoryOf(retry).xp).toBe(75);
+  });
+
+  it('pays the kept Mission 1 its 75 after a later-day usage check', () => {
+    const kept: Log = [
+      ['2026-10-10T09:00:00Z', step('mission-01', 'start')],
+      ['2026-10-10T10:00:00Z', step('mission-01', 'verified')],
+      ['2026-10-10T20:00:00Z', step('mission-01', 'usage-ok')],
+    ];
+    expect(memoryOf(kept).xp).toBe(0);
+    expect(memoryOf([...kept, ['2026-10-11T09:00:00Z', step('mission-01', 'usage-ok')]]).xp).toBe(75);
+  });
+
+  it('keeps Leave No Trace for cleanups checked the next day, verified or not', () => {
+    const cleaned = (mission: string, day: string): Log => [
+      [`${day}T09:00:00Z`, step(mission, 'start')],
+      [`${day}T09:30:00Z`, step(mission, 'cleaned')],
+      [`${addDays(day, 1)}T09:00:00Z`, step(mission, 'usage-ok')],
+    ];
+    const m = memoryOf([
+      ...cleaned('mission-02', '2026-10-12'),
+      ...cleaned('mission-03', '2026-10-14'),
+      ...cleaned('mission-04', '2026-10-16'),
+    ]);
+    expect(m.xp).toBe(0);
+    expect(m.badges.has('leave-no-trace')).toBe(true);
+  });
+
+  it('pays a decision 20, plus 10 when the first final totals 8 or more, a zero criterion included', () => {
+    const m = memoryOf([
+      ['2026-11-15T09:00:00Z', grade(1, 'self', [2, 2, 1, 1])],
+      ['2026-11-15T09:30:00Z', grade(1, 'final', [3, 3, 2, 0])],
+      ['2026-11-15T10:00:00Z', grade(2, 'self', [2, 2, 2, 2])],
+      ['2026-11-15T10:30:00Z', grade(2, 'final', [2, 2, 2, 1])],
+    ]);
+    expect(m.xp).toBe(30 + 20);
+  });
+
+  it('pays nothing for a final with no self before it or for a second final', () => {
+    const m = memoryOf([
+      ['2026-11-15T09:00:00Z', grade(3, 'final', [3, 3, 3, 3])],
+      ['2026-11-15T09:10:00Z', grade(3, 'self', [1, 1, 1, 1])],
+      ['2026-11-15T09:20:00Z', grade(3, 'final', [1, 1, 1, 1])],
+      ['2026-11-15T09:30:00Z', grade(3, 'final', [3, 3, 3, 3])],
+      ['2026-11-15T09:40:00Z', grade(3, 'self', [3, 3, 3, 3])],
+    ]);
+    expect(m.xp).toBe(20);
+  });
+
+  it('never qualifies a day with mission and decision events alone', () => {
+    const m = memoryOf([
+      ['2026-10-10T08:00:00Z', step('mission-00', 'start')],
+      ['2026-10-10T08:30:00Z', step('mission-00', 'verified')],
+      ['2026-11-15T09:00:00Z', grade(1, 'self', [2, 2, 2, 2])],
+      ['2026-11-15T09:30:00Z', grade(1, 'final', [2, 2, 2, 2])],
+    ]);
+    expect(m.xp).toBe(80);
+    expect(m.qualifyingDays.size).toBe(0);
+  });
+});
