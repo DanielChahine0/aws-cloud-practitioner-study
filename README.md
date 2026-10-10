@@ -31,7 +31,8 @@ Three checks then run on keyless batches: a closed-book solve, a solve from the 
 `pnpm content:stamp` is the only way to `live`: it writes the `verified` block with the hashes the checks passed at, and rule R9 fails a live question whose text changed since.
 When a note edit breaks a question's evidence line, `pnpm content:validate --demote` sets that question back to `draft` so it goes through the checks again.
 Only live questions ship in the module chunks; drafts and retired questions never reach the site.
-Rule R10 keeps every tested concept at 2 or more live practice questions and every blueprint term in `resources/` or mapped by `coveredBy`.
+Rule R10 will keep every tested concept at 2 or more live practice questions and every blueprint term in `resources/` or mapped by `coveredBy`.
+It is still off in `content/validate.yaml`, because 6 concepts have fewer than 2 live practice questions and their remaining drafts still have check rounds to pass.
 A draft that failed its checks three times waits for Dani, so `--targets` asks the writers for fresh drafts in its place.
 
 ## Daily reviews
