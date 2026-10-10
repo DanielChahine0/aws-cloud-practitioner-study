@@ -1,0 +1,429 @@
+questions:
+  - id: q-akpxfz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-elastic-disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe runs its ordering servers in a back office.
+      It wants them copied to AWS nonstop so they can come back up in AWS within minutes if the office hardware fails.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Storage Gateway
+        why: Storage Gateway links local apps to AWS storage, but it does not keep whole servers ready to recover in AWS.
+      - id: b
+        text: AWS Application Migration Service
+        why: This service moves applications to AWS for good, rather than keeping standby replicas for a failure.
+      - id: c
+        text: AWS Elastic Disaster Recovery
+        correct: true
+        why: Its agents replicate the servers to AWS continuously, so they can be recovered in AWS within minutes.
+      - id: d
+        text: AWS Backup
+        why: AWS Backup centralizes scheduled backups, not nonstop server replication for recovery in minutes.
+    evidence:
+      - Lightweight agents on source servers replicate block-level data to AWS nonstop, without Storage Gateway.
+      - Exact, current replicas let servers recover in the target AWS Region within minutes, with point-in-time recovery.
+    takeaway: Nonstop server replication to AWS with recovery in minutes points to AWS Elastic Disaster Recovery, not Storage Gateway.
+    history: []
+    verified:
+      keyHash: 68ce7e2b7b8a
+      fullHash: 9eb6ea35338a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bvas64
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-elastic-disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which statements describe how AWS Elastic Disaster Recovery works?
+    options:
+      - id: a
+        text: Storage Gateway caches hot data for local apps.
+        why: This is true of Storage Gateway, but Elastic Disaster Recovery replicates without Storage Gateway.
+      - id: b
+        text: Source-server agents send block changes to AWS.
+        correct: true
+        why: Small agents on each source server keep replicating its block-level data to AWS.
+      - id: c
+        text: EBS snapshots back volumes up as increments.
+        why: This is true of EBS snapshots, but it describes volume backups, not how this service protects servers.
+      - id: d
+        text: Recovery tests leave the production servers alone.
+        correct: true
+        why: Tests launch separate recovery instances and leave the live servers running.
+      - id: e
+        text: S3 Lifecycle moves cold objects to cheaper classes.
+        why: This is true of S3 Lifecycle, but it manages object storage costs rather than server recovery.
+    evidence:
+      - Lightweight agents on source servers replicate block-level data to AWS nonstop, without Storage Gateway.
+      - Recovery tests leave production alone, and recovery instances start fast.
+    takeaway: Elastic Disaster Recovery uses source-server agents and lets you test recovery without touching production.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 1, 2 and 4 each name another service (S3 Lifecycle, EBS snapshots, Storage Gateway), so the two keys are the only options that can describe Elastic Disaster Recovery."
+  - id: q-d41d6d
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe owner wants to limit downtime and lost orders if the back office is ever flooded.
+      She would rather avoid paying for a second building full of idle servers.
+      Which disaster recovery approach fits?
+    options:
+      - id: a
+        text: Keep a copy of the servers in a leased standby site
+        why: A second data center full of waiting servers is the very cost she wants to avoid.
+      - id: b
+        text: Keep a copy of the servers in an AWS Region
+        correct: true
+        why: Replicating to AWS uses low-cost storage and minimal compute, so no standby site is needed.
+      - id: c
+        text: Keep a copy of the servers on drives in the office
+        why: Drives kept in the office share its fate in a flood and leave the latest orders at risk.
+      - id: d
+        text: Keep a copy of the servers on tapes in a storage unit
+        why: Tapes survive the flood, but restoring from them is slow and loses every order since the last tape.
+    evidence:
+      - "No secondary data center: low-cost storage, minimal compute and pay-per-use pricing."
+      - Less downtime and data loss, vital where uptime matters, as in healthcare.
+    takeaway: Recovering to AWS cuts downtime and data loss without the cost of a standby data center.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the only one that names AWS, in a set of otherwise on-premises copies.)"
+  - id: q-mk1nmy
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      A hospital runs a recovery drill each quarter to show regulators that its patient-record servers can be recovered.
+      The servers must stay online for patients during every drill.
+      Which feature of AWS Elastic Disaster Recovery makes this possible?
+    options:
+      - id: a
+        text: Agents replicate the server disks to AWS nonstop
+        why: Nonstop replication keeps the copy current, but it does not say whether a drill disturbs the live servers.
+      - id: b
+        text: Servers can be restored to a chosen earlier moment
+        why: Point-in-time recovery picks which state to restore, not whether a drill takes the live servers offline.
+      - id: c
+        text: Replication uses low-cost storage and minimal compute
+        why: Low-cost replication cuts the bill, but it says nothing about keeping servers online during a drill.
+      - id: d
+        text: Test launches run apart from the production servers
+        correct: true
+        why: Recovery tests leave production alone, so the hospital can drill without an outage.
+    evidence:
+      - Recovery tests leave production alone, and recovery instances start fast.
+      - "Hospital: patient-record servers stay recoverable and tested for regulators."
+    takeaway: Elastic Disaster Recovery lets you drill recovery as often as needed while production keeps running.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The scenario is set in a hospital instead of the cafe."
+  - id: q-tfxmrw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: block-level-replication
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 1
+    stem: >-
+      When does block-level replication copy a server's data to the other location?
+    options:
+      - id: a
+        text: Once each night at a set time
+        why: A nightly run misses every change made since the last one, so it is a scheduled backup instead.
+      - id: b
+        text: Only when an admin starts a copy
+        why: A manual copy waits on a person, while this replication follows each change on its own.
+      - id: c
+        text: Each time data on the disk changes
+        correct: true
+        why: It copies the changed pieces of the disk elsewhere as each change happens.
+      - id: d
+        text: Whenever a weekly schedule fires
+        why: A weekly schedule leaves days of changes uncopied, which this replication avoids.
+    evidence:
+      - "**Block-level replication**: copying disk blocks elsewhere as they change."
+    takeaway: Block-level replication copies disk changes to another location as they happen, not on a schedule.
+    history: []
+    verified:
+      keyHash: 2ad5eb105624
+      fullHash: 8a2bad6104aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-40h1ey
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: block-level-replication
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's point-of-sale server records new orders all day.
+      The cafe wants a copy of the whole server in AWS that stays current, so a failure loses almost no orders.
+      Which kind of copying fits?
+    options:
+      - id: a
+        text: Nightly incremental EBS snapshots
+        why: A nightly snapshot loses every order taken since the previous one.
+      - id: b
+        text: Ongoing copying of the sales folder
+        why: Copying only the sales folder leaves the rest of the server out of the copy in AWS.
+      - id: c
+        text: Weekly full images of the server disk
+        why: A weekly image leaves days of orders unprotected.
+      - id: d
+        text: Ongoing copying of changed disk blocks
+        correct: true
+
+        why: Changed disk blocks of the whole server reach AWS as they happen, so the copy stays current.
+    evidence:
+      - Continuous block-level replication enables recovery in minutes.
+      - Exact, current replicas let servers recover in the target AWS Region within minutes, with point-in-time recovery.
+    takeaway: Continuous block-level replication keeps an up-to-date copy, so a failure loses very little data.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 4 share 'Ongoing copying', and option 2 is the more technical of the pair.)"
+  - id: q-j3gga4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: point-in-time-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 1
+    stem: >-
+      What does point-in-time recovery let a team do?
+    options:
+      - id: a
+        text: Restore a system as it was at a chosen earlier moment
+        correct: true
+        why: It brings the system back to the state it held at the moment the team picks.
+      - id: b
+        text: Copy each changed disk block to another location
+        why: Copying changed blocks is replication, which keeps a copy current rather than going back.
+      - id: c
+        text: Move a server to AWS for good and retire the original
+        why: A permanent move is a migration, not a return to an earlier state.
+      - id: d
+        text: Run a recovery drill while production keeps running
+        why: A drill tests recovery but does not choose an earlier state to restore.
+    evidence:
+      - "**Point-in-time recovery**: restoring a system as it stood at a chosen earlier moment."
+    takeaway: Point-in-time recovery restores a system to how it stood at a moment you choose in the past.
+    history: []
+    verified:
+      keyHash: 42669c84f150
+      fullHash: 10ae46907539
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-eq8937
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: point-in-time-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      A faulty update corrupted the cafe's order server, and the replica in AWS copied the damage within moments.
+      Which capability lets the cafe bring the server back as it stood just before the update?
+    options:
+      - id: a
+        text: Block-level replication
+        why: Replication copied the corruption too, so the current replica is just as damaged.
+      - id: b
+        text: Failover to the replica
+        why: Failing over launches the current replica, which already holds the corruption.
+      - id: c
+        text: Point-in-time recovery
+        correct: true
+        why: It restores the server as it was at a chosen earlier moment, before the bad update.
+      - id: d
+        text: A new recovery drill
+        why: A drill only tests recovery from the current replica and does not undo the damage.
+    evidence:
+      - Exact, current replicas let servers recover in the target AWS Region within minutes, with point-in-time recovery.
+      - "**Point-in-time recovery**: restoring a system as it stood at a chosen earlier moment."
+    takeaway: When a replica copies damage, point-in-time recovery restores the server to a moment before it happened.
+    history: []
+    verified:
+      keyHash: 330b2e05b9ef
+      fullHash: 88355d21078d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ht8zmy
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-elastic-disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe wants AWS Elastic Disaster Recovery to protect parts of its setup.
+      Which parts can the service protect?
+    options:
+      - id: a
+        text: The till app on a physical server in the shop
+        correct: true
+        why: The service protects physical servers, so an agent on the till server can replicate it to AWS.
+      - id: b
+        text: The order code in AWS Lambda functions
+        why: Lambda runs code with no server to hold a replication agent, so this service does not protect it.
+      - id: c
+        text: The menu site on a virtual machine at another cloud
+        correct: true
+        why: The service protects virtual and cloud servers, including one hosted outside AWS.
+      - id: d
+        text: The receipts kept in an Amazon S3 bucket
+        why: S3 objects are not a server's disks, so the service has nothing to replicate block by block.
+      - id: e
+        text: The loyalty points in an Amazon DynamoDB table
+        why: DynamoDB is a managed database with no server of the cafe's own for the service to copy.
+    evidence:
+      - It protects general workloads on physical, virtual and cloud servers.
+    takeaway: Elastic Disaster Recovery protects servers of any kind, physical, virtual or cloud, rather than managed data stores.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 5 are the only ones not on an AWS service, so they stand out as the pair.)"
+  - id: q-phcjrv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.2"
+    level: 1
+    stem: >-
+      What is the main aim of a disaster recovery plan for a business's servers?
+    options:
+      - id: a
+        text: To cut downtime and data loss after a failure
+        correct: true
+        why: Disaster recovery exists to get systems back quickly and lose as little data as possible.
+      - id: b
+        text: To lower the latency of everyday requests
+        why: Latency is a day-to-day performance concern, not the purpose of planning for a failure.
+      - id: c
+        text: To spread daily traffic across more servers
+        why: Spreading traffic is load balancing for normal operation, not recovery from a disaster.
+      - id: d
+        text: To shrink the storage that old data uses
+        why: Reducing stored data is cost tuning and does nothing to bring servers back after a failure.
+    evidence:
+      - Less downtime and data loss, vital where uptime matters, as in healthcare.
+    takeaway: Disaster recovery aims to keep downtime and data loss as low as possible when a failure strikes.
+    history: []
+    verified:
+      keyHash: 7e4a79c42692
+      fullHash: 80da0c7bcd07
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zxrqr5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe replicates its back-office servers to AWS for disaster recovery.
+      A burst pipe takes out the back office entirely.
+      Where do the cafe's servers come back up?
+    options:
+      - id: a
+        text: In the back office once it is repaired
+        why: Waiting for repairs means long downtime, which disaster recovery to AWS is meant to avoid.
+      - id: b
+        text: In the target AWS Region it chose
+        correct: true
+        why: The current replicas let the servers recover in the chosen target AWS Region within minutes.
+      - id: c
+        text: At the edge location nearest the cafe
+        why: Edge locations cache content for delivery and do not host recovered servers.
+      - id: d
+        text: On spare drives kept in the back office
+        why: Drives in the flooded office are lost along with the servers they were meant to protect.
+    evidence:
+      - Exact, current replicas let servers recover in the target AWS Region within minutes, with point-in-time recovery.
+    takeaway: With replication to AWS, servers recover in the chosen target AWS Region within minutes after a site disaster.
+    history: []
+    verified:
+      keyHash: 8b41227639a9
+      fullHash: 7e5eb3d00573
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m549r1
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: block-level-replication
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      A cashier records one new order on the cafe's point-of-sale server, which is protected by block-level replication to AWS.
+      What gets sent to AWS as a result?
+    options:
+      - id: a
+        text: The agent software running on the server
+        why: The agent is installed once to do the copying, and it is not what one new order sends.
+      - id: b
+        text: The disk blocks that the order changed
+        correct: true
+        why: Block-level replication copies disk blocks as they change, so only the blocks this order touched travel.
+      - id: c
+        text: A recovery instance in the target Region
+        why: A recovery instance launches only during a drill or a failover, not each time an order is saved.
+      - id: d
+        text: A recovery test of the protected server
+        why: Recovery tests run when the cafe chooses to start one, and a new order does not trigger them.
+    evidence:
+      - "**Block-level replication**: copying disk blocks elsewhere as they change."
+      - Lightweight agents on source servers replicate block-level data to AWS nonstop, without Storage Gateway.
+      - Recovery tests leave production alone, and recovery instances start fast.
+    takeaway: Block-level replication continuously sends only the disk blocks that change, keeping the copy current.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: 'critic: the cue round found the key from the options alone (tell: Option 2 is the only one tied to the scenario ("the order changed"), matching block-level replication.)'

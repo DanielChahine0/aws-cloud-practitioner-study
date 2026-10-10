@@ -1,0 +1,222 @@
+questions:
+  - id: q-03fdrg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: block-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe runs its order database on one EC2 instance, and a few small records change every second.
+      The data must survive a restart and sit on a drive attached to that instance.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon S3
+        why: S3 rewrites a whole object on every change, which is slow for records that change each second.
+      - id: b
+        text: Amazon EBS
+        correct: true
+        why: EBS gives a persistent block volume that attaches like a drive and rewrites only the changed blocks.
+      - id: c
+        text: Amazon EFS
+        why: EFS is a shared network file system for many clients, not a drive dedicated to one database host.
+      - id: d
+        text: AWS Storage Gateway
+        why: Storage Gateway links on-premises systems to cloud storage and is not a volume for an EC2 instance.
+    evidence:
+      - Data is split into blocks for fast access, and an edit rewrites only changed blocks, which suits frequently updated apps and databases.
+      - "Services: Amazon EC2 instance store (unmanaged, temporary, high performance) and Amazon EBS (managed, persistent)."
+    takeaway: A busy database on one EC2 instance that needs a lasting attached drive points to block storage on Amazon EBS.
+    history: []
+    verified:
+      keyHash: 9db2e79bfc17
+      fullHash: c56381dee3b4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rzt6cy
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: block-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which AWS offerings store data as blocks, so that an edit rewrites only the blocks that changed?
+    options:
+      - id: a
+        text: Amazon S3 buckets
+        why: S3 keeps whole objects in flat buckets and rewrites the whole object on a change, which is object storage.
+      - id: b
+        text: Amazon EC2 instance store
+        correct: true
+        why: Instance store is temporary, high-performance block storage that comes with the instance's host.
+      - id: c
+        text: Amazon EFS file systems
+        why: EFS shares a hierarchical file system over the network, which makes it file storage rather than block storage.
+      - id: d
+        text: Amazon EBS volumes
+        correct: true
+        why: EBS supplies persistent block volumes that update only the blocks an edit touches.
+      - id: e
+        text: Amazon S3 File Gateway
+        why: S3 File Gateway offers a local file share whose files land in S3, so it is not block storage.
+    evidence:
+      - "Services: Amazon EC2 instance store (unmanaged, temporary, high performance) and Amazon EBS (managed, persistent)."
+    takeaway: EC2 gets block storage from two places, the temporary instance store and persistent Amazon EBS volumes.
+    history: []
+    verified:
+      keyHash: f791b8b5b099
+      fullHash: 017c30f3110a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bj7kg9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: object-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe wants one place for years of promo videos and nightly backups, which are written once and almost never edited.
+      The amount keeps growing, and the team wants to tag each file with searchable details.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EBS
+        why: An EBS volume is a drive tied to an instance, with a fixed size that does not suit an ever-growing archive.
+      - id: b
+        text: Amazon EFS
+        why: EFS shares a file system for active, shared access, which this write-once archive does not need.
+      - id: c
+        text: Amazon S3
+        correct: true
+        why: S3 stores whole objects with their own metadata in buckets that hold practically unlimited data.
+      - id: d
+        text: Amazon EC2 instance store
+        why: Instance store loses its data with the instance, so it cannot keep backups for years.
+    evidence:
+      - Objects sit in flat buckets with practically unlimited room for unstructured data, and rich metadata helps search and analytics.
+      - Best for rarely changing files such as videos, backups or logs.
+      - "Service: Amazon S3, fully managed, for any amount of data from anywhere."
+    takeaway: Growing piles of rarely edited files that need searchable metadata point to object storage in Amazon S3.
+    history: []
+    verified:
+      keyHash: 9f00bc1cdf72
+      fullHash: f5487fb6a9d9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-43evd9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: object-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 1
+    stem: >-
+      In object storage, what happens when one small part of a stored object changes?
+    options:
+      - id: a
+        text: Only the changed blocks are rewritten
+        why: Rewriting only changed blocks is how block storage works, not object storage.
+      - id: b
+        text: The entire item is rewritten
+        correct: true
+        why: An object is a single unit of data, ID and metadata, so any change replaces all of it.
+      - id: c
+        text: The edit is saved to a shared folder
+        why: Shared folders in a hierarchy belong to file storage, while objects sit in flat buckets.
+      - id: d
+        text: The edit stays on the local host
+        why: Keeping data on the host describes instance store, which is temporary block storage.
+    evidence:
+      - An object holds data, a unique ID and metadata, and any change rewrites the whole object.
+    takeaway: Object storage treats each object as one unit, so a change rewrites the whole object.
+    history: []
+    verified:
+      keyHash: 0415c8686a5b
+      fullHash: e5383e8dd189
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2xa0xb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: file-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 3
+    stem: >-
+      Staff at every cafe location open the same training manuals from several Linux servers at once.
+      The cafe wants a shared folder tree reached over the network, with no change to its apps.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EBS
+        why: An EBS volume serves as one instance's drive, not a folder tree that many servers share.
+      - id: b
+        text: Amazon S3
+        why: S3 keeps objects in flat buckets, not a hierarchical file system that apps mount unchanged.
+      - id: c
+        text: AWS Elastic Disaster Recovery
+        why: Elastic Disaster Recovery restores servers into AWS after an outage and does not share files.
+      - id: d
+        text: Amazon EFS
+        correct: true
+        why: EFS is a fully managed NFS file system that many servers can reach over the network at once.
+    evidence:
+      - A hierarchical file system shared over a network, needing little or no code change and growing without hardware to manage.
+      - "Services: Amazon EFS (fully managed NFS) and Amazon FSx (fully managed Windows, Lustre and NetApp ONTAP file systems)."
+    takeaway: Many servers opening the same folder tree over the network points to file storage such as Amazon EFS.
+    history: []
+    verified:
+      keyHash: b55264b4f41c
+      fullHash: 3397fc1c007b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b0rc0s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: file-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's back office runs Windows apps that need a shared Windows file system, and nobody wants to manage file servers.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon FSx
+        correct: true
+        why: FSx provides fully managed Windows file systems that the office apps can share over the network.
+      - id: b
+        text: Amazon EBS
+        why: EBS gives one instance a block volume and does not offer a shared Windows file system.
+      - id: c
+        text: Amazon S3
+        why: S3 holds objects in flat buckets, so Windows apps cannot use it as a shared file system.
+      - id: d
+        text: AWS Storage Gateway
+        why: Storage Gateway connects on-premises systems to cloud storage rather than hosting a managed Windows file system.
+    evidence:
+      - "Services: Amazon EFS (fully managed NFS) and Amazon FSx (fully managed Windows, Lustre and NetApp ONTAP file systems)."
+      - Fits shared-access apps such as content management systems.
+    takeaway: A shared Windows file system without servers to manage points to Amazon FSx.
+    history: []
+    verified:
+      keyHash: 4a816b52c141
+      fullHash: 1d605b5a8989
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

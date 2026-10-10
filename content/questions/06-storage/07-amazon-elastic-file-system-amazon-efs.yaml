@@ -1,0 +1,404 @@
+questions:
+  - id: q-s6gncn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-efs
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe runs a fleet of Linux EC2 instances that crunch one shared sales dataset, and every instance must see new files the moment they land.
+      The dataset keeps growing, and nobody wants to resize storage by hand.
+      Which storage service fits?
+    options:
+      - id: a
+        text: Amazon EFS
+        correct: true
+        why: EFS is a shared file system that many instances use at once, and it grows on its own as files are written.
+      - id: b
+        text: Amazon EBS
+        why: An EBS volume serves one instance like a drive and keeps a fixed size, so the fleet cannot share it as it grows.
+      - id: c
+        text: Amazon EC2 instance store
+        why: Instance store is local to a single host, so the other instances in the fleet never see its files.
+      - id: d
+        text: AWS Storage Gateway
+        why: Storage Gateway links on-premises sites to cloud storage, which this all-cloud fleet does not need.
+    evidence:
+      - Thousands of concurrent NFS connections let many EC2 instances share files, and every change is visible to all of them at once, with no manual syncing.
+      - It grows to petabytes and shrinks as files change, without disrupting applications.
+    takeaway: Many cloud instances sharing one growing set of files, with no capacity planning, points to Amazon EFS.
+    history: []
+    verified:
+      keyHash: 8b92ff5caf67
+      fullHash: 98383bd572df
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8979x3
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-efs
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe worries that a shared file system will run out of space, and also that it will pay for room it never fills.
+      Which Amazon EFS traits answer these two worries?
+    options:
+      - id: a
+        text: Capacity expands and contracts automatically as files come and go
+        correct: true
+        why: EFS grows and shrinks with the files stored, so it never fills up and needs no resize step.
+      - id: b
+        text: The bill covers only the storage in use, with no setup charge
+        correct: true
+        why: EFS has no minimum fee or setup cost, so the cafe pays only for the data it keeps.
+      - id: c
+        text: Standard classes copy data across zones within one Region
+        why: Multi-zone copies protect against a zone failure, which is about resilience rather than space or cost.
+      - id: d
+        text: Many EC2 instances can open the same files at the same time
+        why: Shared access lets a fleet work on one dataset, but it does nothing about space or paying for unused room.
+      - id: e
+        text: Clients reach the files over the Linux NFS file-sharing protocol
+        why: The protocol decides how apps talk to EFS, not how much space there is or what the cafe pays.
+    evidence:
+      - It grows to petabytes and shrinks as files change, without disrupting applications.
+      - No minimum fee or setup cost, and you pay only for storage used.
+    takeaway: EFS scales itself up and down with your files and bills only for the storage you actually use.
+    history: []
+    verified:
+      keyHash: 4ae545cc7774
+      fullHash: 0b4b9b7b0b5d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7511c1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: network-file-system
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 1
+    stem: >-
+      Amazon EFS serves its data to clients using NFS.
+      What is NFS?
+    options:
+      - id: a
+        text: The Linux protocol for shared access to files
+        correct: true
+        why: NFS is the Linux file-sharing protocol, which is how EFS serves files to many instances.
+      - id: b
+        text: The Windows protocol for shared access to files
+        why: That describes SMB, the Windows file-sharing protocol, not the one EFS uses.
+      - id: c
+        text: The web interface for keeping objects in buckets
+        why: Buckets and objects belong to object storage such as Amazon S3, not to the NFS file protocol.
+      - id: d
+        text: The disk interface for attaching block volumes
+        why: Attaching a block volume to one host describes Amazon EBS, not the file protocol EFS uses.
+    evidence:
+      - "**Network File System (NFS)**: the Linux file-sharing protocol EFS uses."
+    takeaway: NFS is the Linux network file-sharing protocol that Amazon EFS speaks to its clients.
+    history: []
+    verified:
+      keyHash: 1ac259ab336e
+      fullHash: 347711b00775
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hx4yk6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: network-file-system
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's inventory program runs on a Linux server and saves its data with ordinary file reads and writes.
+      Why can it switch to Amazon EFS without code changes?
+    options:
+      - id: a
+        text: EFS offers a POSIX file system over the NFS protocol
+        correct: true
+        why: EFS uses the Linux NFS protocol and supports POSIX-compliant apps, so the program keeps its normal file calls.
+      - id: b
+        text: EFS grows and shrinks automatically as files change
+        why: Elastic capacity removes resizing work, but it is not what lets the program keep its file calls.
+      - id: c
+        text: EFS Standard copies data across zones in a Region
+        why: Multi-zone copies keep files available in a zone failure, which has nothing to do with code changes.
+      - id: d
+        text: EFS charges no minimum fee and no setup cost
+        why: Pay-for-use pricing affects the bill, not whether the program can use EFS without rewriting.
+    evidence:
+      - EFS is a fully managed, elastic file service on the Linux NFS protocol, supporting POSIX-compliant Linux apps.
+    takeaway: Because EFS speaks NFS and supports POSIX, existing Linux apps can use it as a normal file system.
+    history: []
+    verified:
+      keyHash: 2d597410eb13
+      fullHash: 6a3732e9a1f4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ewsktv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-vs-efs
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe runs web servers in two Availability Zones, and all of them must read the same folder of menu images.
+      Why does Amazon EFS suit this better than Amazon EBS?
+    options:
+      - id: a
+        text: EFS is Regional and shared, while EBS serves one instance
+        correct: true
+        why: EFS is Regional and shared by many instances, while an EBS volume stays in one zone with one instance.
+      - id: b
+        text: EFS bills for storage used, while EBS bills for size set
+        why: The billing models do differ, but pricing does not let servers in two zones share one folder.
+      - id: c
+        text: EFS shrinks as files are deleted, while EBS stays fixed
+        why: Shrinking with deletes saves money, but it does not give servers in both zones the same folder.
+      - id: d
+        text: EFS is a Linux file system, while EBS holds files or databases
+        why: Both can store image files, so the kind of storage alone is not why EBS fails servers in two zones.
+    evidence:
+      - EBS is a single-zone drive for one instance, while EFS is a shared, Regional, self-scaling file system.
+    takeaway: Servers spread across zones that share files need Regional, shared EFS rather than a single-zone EBS volume.
+    history: []
+    verified:
+      keyHash: 77c97ec7872e
+      fullHash: 796f2122fb5a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8yk0c2
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: ebs-vs-efs
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which traits belong to Amazon EBS rather than Amazon EFS?
+    options:
+      - id: a
+        text: Serves a single instance, much like a hard drive
+        correct: true
+        why: An EBS volume attaches to one instance as a drive, while EFS is shared by many at once.
+      - id: b
+        text: Keeps a set size until someone changes it
+        correct: true
+        why: EBS capacity is fixed, so a full volume stays full, while EFS grows as data is written.
+      - id: c
+        text: Expands on its own as more data is written
+        why: Growing with writes is an EFS trait, since an EBS volume keeps the size it was given.
+      - id: d
+        text: Serves many instances at the very same time
+        why: Concurrent access from many instances is what EFS offers, not EBS.
+      - id: e
+        text: Keeps data as objects inside storage buckets
+        why: Objects in buckets describe Amazon S3, which is neither an EBS nor an EFS trait.
+    evidence:
+      - EBS is a single-zone drive for one instance, while EFS is a shared, Regional, self-scaling file system.
+    takeaway: EBS is a fixed-size drive for one instance, while EFS is a shared file system that grows by itself.
+    history: []
+    verified:
+      keyHash: 4d75f1865db5
+      fullHash: a57bebf8f940
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-e5svh8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: efs-storage-classes
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe keeps old supplier contracts on Amazon EFS and opens them once a year at most.
+      Slower access is fine, and the cafe wants the lowest storage price.
+      Which EFS storage class fits?
+    options:
+      - id: a
+        text: EFS Archive
+        correct: true
+        why: Archive is built for data read a few times a year or less and costs less than Infrequent Access.
+      - id: b
+        text: EFS Standard
+        why: Standard gives sub-millisecond access at a higher price, which these rarely opened files do not need.
+      - id: c
+        text: EFS Standard-IA
+        why: Infrequent Access suits files read a few times a quarter and costs more than Archive for yearly reads.
+      - id: d
+        text: EFS One Zone
+        why: One Zone lowers cost by using a single zone but is still priced for files in regular use.
+    evidence:
+      - "EFS Archive: cold data read a few times a year or less that can skip Standard's sub-millisecond latency, up to 50% cheaper than Infrequent Access."
+    takeaway: Cold EFS data read a few times a year or less belongs in EFS Archive, the cheapest class.
+    history: []
+    verified:
+      keyHash: 906490edeb7b
+      fullHash: dc6ef02e2ed4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tqtfyg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: efs-storage-classes
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's test team edits scratch files on Amazon EFS every day, and the files can be rebuilt if lost.
+      The team is happy to give up some resilience if that lowers the storage price.
+      Which EFS storage class fits?
+    options:
+      - id: a
+        text: EFS One Zone
+        correct: true
+        why: One Zone keeps data in a single zone for a lower price, which suits rebuildable files in daily use.
+      - id: b
+        text: EFS Standard
+        why: Standard spreads data across zones for top availability, which costs more than this team wants to pay.
+      - id: c
+        text: EFS Archive
+        why: Archive is for data read a few times a year or less, not files edited every day.
+      - id: d
+        text: EFS Standard-IA
+        why: Standard-IA is Multi-AZ and priced for rare reads, so it neither saves on resilience nor suits daily edits.
+    evidence:
+      - "EFS One Zone and One Zone-IA: one Availability Zone, for lower cost."
+      - "EFS Standard and Standard-IA: Multi-AZ, with top durability and availability, at a higher price."
+    takeaway: EFS One Zone classes trade multi-zone resilience for a lower price on data you can afford to lose access to.
+    history: []
+    verified:
+      keyHash: 87a14e25cb8e
+      fullHash: 66491be7070f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qtr1qt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: efs-lifecycle-management
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe stores last season's recipe photos in EFS Standard and leaves the default lifecycle policy in place.
+      Nobody opens the photos for 30 days.
+      Where does EFS move them next?
+    options:
+      - id: a
+        text: EFS Infrequent Access
+        correct: true
+        why: By default, files idle in Standard for 30 days move to Infrequent Access.
+      - id: b
+        text: EFS Archive
+        why: Archive is the default stop only after 90 days without access, not after 30.
+      - id: c
+        text: EFS One Zone-IA
+        why: One Zone-IA is a single-zone class chosen up front, not where the default policy sends idle Standard files.
+      - id: d
+        text: EFS One Zone
+        why: The default policy moves files by access between tiers, not into a single-zone class.
+    evidence:
+      - By default, files idle in Standard for 30 days move to IA (priced for a few reads a quarter), and after 90 days to Archive.
+    takeaway: The default EFS lifecycle policy moves files idle for 30 days from Standard to Infrequent Access.
+    history: []
+    verified:
+      keyHash: 6ec1ebb253ab
+      fullHash: 37115a3ffaa4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fz2s5z
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: efs-lifecycle-management
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      EFS lifecycle management moves the cafe's idle staff schedules to Infrequent Access, and a schedule that a cashier opens again stays there.
+      The cafe wants a reopened schedule to move back to the class it started in, with no manual step.
+      Which change does that?
+    options:
+      - id: a
+        text: Enable the optional rule that acts when a file is read
+        correct: true
+
+        why: An optional lifecycle rule sends files read in IA or Archive back to Standard, which is off by default.
+      - id: b
+        text: Lengthen the idle time before files move to IA
+        why: A longer idle period only delays the move to IA and never brings a reopened file back.
+      - id: c
+        text: Move the file system to the One Zone classes
+        why: One Zone classes change resilience and price, not where a file goes after it is read.
+      - id: d
+        text: Send idle files straight to EFS Archive instead
+        why: Archive is a colder class, so this moves files further from Standard rather than back to it.
+    evidence:
+      - An optional rule returns files to Standard when read in IA or Archive, but by default they stay put.
+      - New file systems come with preset, customizable policies that move files between classes by access.
+    takeaway: To bring files read in EFS IA or Archive back to Standard, turn on the optional return rule, since the default leaves them put.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the longest and the only one phrased as an action on read, standing apart from the idle-time options.)"
+  - id: q-wgb8nx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: efs-lifecycle-management
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe keeps old supplier contracts on Amazon EFS with the default lifecycle policy.
+      Nobody opens a contract for 90 days.
+      In which class does that contract end up?
+    options:
+      - id: a
+        text: EFS Standard
+        why: Files leave Standard once idle, so a contract untouched this long has already moved on.
+      - id: b
+        text: EFS One Zone-IA
+        why: The default policy moves files between the classes of their own family, not into One Zone classes.
+      - id: c
+        text: EFS Infrequent Access
+        why: Infrequent Access is the stop after 30 idle days, and the file keeps moving after that.
+      - id: d
+        text: EFS Archive
+        correct: true
+        why: By default a file idle for 90 days moves on from Infrequent Access to Archive.
+    evidence:
+      - By default, files idle in Standard for 30 days move to IA (priced for a few reads a quarter), and after 90 days to Archive.
+    takeaway: EFS lifecycle management moves idle files to Infrequent Access after 30 days and to Archive after 90 days by default.
+    history: []
+    verified:
+      keyHash: 93cef9597fe8
+      fullHash: a4a6dc7fa382
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,363 @@
+questions:
+  - id: q-f73nps
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: ebs-data-lifecycle
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe keeps its order history on EBS volumes attached to its EC2 instances.
+      Under the shared responsibility model, which tasks for those volumes fall to the cafe?
+    options:
+      - id: a
+        text: Replicating each volume inside its zone
+        why: EBS copies every volume inside its Availability Zone on its own, so the cafe never sets this up.
+      - id: b
+        text: Taking regular snapshots of each volume
+        correct: true
+        why: The data on a volume belongs to the cafe, so backing it up with snapshots is the cafe's own duty.
+      - id: c
+        text: Keeping snapshot data redundant in S3
+        why: AWS places snapshot data in S3 across several Availability Zones, so the cafe does not manage that copy.
+      - id: d
+        text: Deleting each volume that is not used
+        correct: true
+        why: Deprovisioning unused volumes is part of managing its own data, which the cafe owns.
+      - id: e
+        text: Replacing failed disks under each volume
+        why: AWS looks after the hardware behind each volume, so a failed disk is not the cafe's task.
+    evidence:
+      - Your data is your job under shared responsibility, so you provision, move, deprovision and back up volumes.
+    takeaway: The customer owns the EBS data lifecycle, including backing up volumes and removing ones it no longer needs.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 are the only two customer actions; the other three are AWS duties, so the count matches select 2.)"
+  - id: q-xvfy1s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-data-lifecycle
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      Besides taking scheduled snapshots, the cafe regularly deletes the EBS volumes and old snapshots it no longer needs.
+      What does the deleting achieve for the cafe?
+    options:
+      - id: a
+        text: It keeps data through instance stops
+        why: A volume keeps its data through a stop on its own, so deleting unused items adds nothing there.
+      - id: b
+        text: It makes later snapshots incremental
+        why: Every snapshot after the first stores only changes anyway, so deleting does not cause that.
+      - id: c
+        text: It keeps the storage bill under control
+        correct: true
+        why: Volumes and snapshots cost money while they exist, so removing unused ones keeps the bill down.
+      - id: d
+        text: It spreads snapshots over several zones
+        why: Snapshots already sit in S3 across several Availability Zones, whether or not old ones are deleted.
+    evidence:
+      - Lifecycle management means creating, backing up and deleting volumes and snapshots to control cost and protect data.
+      - "Your part: schedule snapshots, prune them to control cost, encrypt sensitive data, verify integrity and test restores."
+    takeaway: EBS lifecycle management creates, backs up and deletes volumes and snapshots to save cost and protect data.
+    history: []
+    verified:
+      keyHash: 8c469f4bbd15
+      fullHash: 471bc2bbe802
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-emk0mg
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: ebs-snapshots
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      A bad update corrupts the EBS volume that holds the cafe's order database.
+      The team took regular snapshots of that volume.
+      Which step brings the order data back?
+    options:
+      - id: a
+        text: Create a new volume from the latest snapshot
+        correct: true
+        why: A snapshot holds the volume as it stood at one moment, so a new volume from it brings that data back.
+      - id: b
+        text: Enlarge the corrupted volume to add capacity
+        why: Adding capacity gives the volume more room, but the corrupted data stays corrupted.
+      - id: c
+        text: Change the corrupted volume to a faster type
+        why: A faster volume type changes performance and price, not the damaged data on the volume.
+      - id: d
+        text: Attach the corrupted volume to a new instance
+        why: Moving the volume to another instance carries the corrupted data along with it.
+    evidence:
+      - Restoring a volume after corruption starts from its latest snapshot.
+    takeaway: To recover a corrupted EBS volume, create a new volume from its most recent snapshot.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only action that recovers data; enlarging, retyping or reattaching a corrupted volume does not fix it.)"
+  - id: q-2ajvtj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-snapshots
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The EBS volume holding the cafe's orders lives in one Availability Zone.
+      Why do its snapshots stay usable if that location goes down?
+    options:
+      - id: a
+        text: They record the volume as of one moment
+        why: Being point-in-time explains what a snapshot holds, not why it outlasts a failed Availability Zone.
+      - id: b
+        text: They are kept redundantly in Amazon S3
+        correct: true
+        why: Snapshot data is spread over several Availability Zones in S3, so losing one zone leaves it intact.
+      - id: c
+        text: They store only the changed blocks
+        why: Storing changes keeps snapshots cheap, but it says nothing about where they survive a failure.
+      - id: d
+        text: They can be shared with other accounts
+        why: Sharing grants access to a snapshot and does not decide which Availability Zones hold its data.
+    evidence:
+      - Snapshots sit in Amazon S3, redundantly across several Availability Zones.
+    takeaway: EBS snapshots live in Amazon S3, spread across several Availability Zones, so they outlast a single-AZ volume.
+    history: []
+    verified:
+      keyHash: d043157d560a
+      fullHash: 3a8df09f569c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bqhwe9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: incremental-backups
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe takes its first snapshot of the menu database volume on Monday and another on Tuesday.
+      Why is Tuesday's snapshot faster and cheaper than Monday's?
+    options:
+      - id: a
+        text: It is kept in Amazon S3 across zones
+        why: Monday's snapshot is stored the same way, so where it sits cannot make Tuesday's cheaper.
+      - id: b
+        text: It stores only the blocks that changed
+        correct: true
+        why: Later snapshots save just the changed blocks and point back to earlier ones for the rest.
+      - id: c
+        text: It can restore the whole volume alone
+        why: Acting as a full copy is true of every snapshot, so it does not explain the lower cost.
+      - id: d
+        text: It can be copied to another Region
+        why: A cross-Region copy is an extra option for any snapshot and adds cost rather than saving it.
+    evidence:
+      - The first snapshot is a full baseline of all blocks in use.
+      - Later ones store only changed blocks and reference earlier ones, forming a chain for point-in-time recovery.
+    takeaway: After the first full snapshot, each EBS snapshot stores only the blocks changed since the one before.
+    history: []
+    verified:
+      keyHash: d37ce6478d07
+      fullHash: 1819e42f5f7a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m98nxd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: incremental-backups
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe has a chain of daily snapshots of one volume and deletes the oldest one to save money.
+      Why can the newest snapshot still restore the whole volume?
+    options:
+      - id: a
+        text: Each snapshot is stored redundantly in Amazon S3
+        why: Redundant storage guards against hardware loss, not against a snapshot the cafe chose to delete.
+      - id: b
+        text: The first snapshot copied every block in use
+        why: That full baseline is the one the cafe deleted, so it cannot be what the restore relies on.
+      - id: c
+        text: AWS keeps the blocks a remaining snapshot uses
+        correct: true
+        why: Deleting a snapshot frees only data no other snapshot needs, so the newest one stays complete.
+      - id: d
+        text: Later snapshots store only the blocks that changed
+        why: Storing only changes is what makes the newest snapshot depend on older blocks, not what saves it.
+    evidence:
+      - Each still acts as a full copy, AWS manages the links, and deleting one frees only data no other snapshot uses.
+    takeaway: Deleting an older incremental snapshot never breaks newer ones, which still restore the full volume.
+    history: []
+    verified:
+      keyHash: badf67313143
+      fullHash: 70c4ad297d78
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-f02qh4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-data-lifecycle-manager
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe chain now runs thousands of EBS volumes, and staff snapshot them by hand every week.
+      Which service can create, keep and delete those snapshots on a schedule through policies?
+    options:
+      - id: a
+        text: S3 Lifecycle
+        why: S3 Lifecycle rules move or expire objects in S3 buckets and do not take EBS snapshots.
+      - id: b
+        text: EFS lifecycle management
+        why: EFS lifecycle policies move files between EFS storage classes and do not touch EBS volumes.
+      - id: c
+        text: Amazon Data Lifecycle Manager
+        correct: true
+        why: Its policies take, retain and remove EBS snapshots on a schedule, ending the manual weekly work.
+      - id: d
+        text: AWS DataSync
+        why: DataSync automates moving data into AWS storage and does not schedule EBS snapshots.
+    evidence:
+      - Snapshotting thousands of volumes by hand each week is slow and error-prone.
+      - This fully managed service uses policies to create, keep and delete snapshots and EBS-backed AMIs on a schedule.
+    takeaway: Policy-driven creation, retention and deletion of EBS snapshots at scale points to Amazon Data Lifecycle Manager.
+    history: []
+    verified:
+      keyHash: 49e57c52e992
+      fullHash: b619c7d2a0db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q27fqm
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-data-lifecycle-manager
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which actions are set up through an Amazon Data Lifecycle Manager policy?
+    options:
+      - id: a
+        text: Copy snapshots to another AWS Region
+        correct: true
+        why: Cross-Region copies are one of the extra actions a policy can add to its schedule.
+      - id: b
+        text: Store snapshot data across several zones
+        why: AWS keeps every snapshot in S3 across several Availability Zones by default, with no policy needed.
+      - id: c
+        text: Run snapshots during off-peak hours
+        correct: true
+        why: A policy schedule can place snapshots in quiet hours to limit the hit on performance.
+      - id: d
+        text: Keep only changed blocks in later snapshots
+        why: Every EBS snapshot after the first is incremental by design, so no policy has to set this up.
+      - id: e
+        text: Replicate each volume inside its zone
+        why: EBS replicates every volume within its Availability Zone automatically, outside any policy.
+    evidence:
+      - It can run snapshots off-peak to limit performance impact, purge old backups and apply one policy organization-wide, which aids compliance.
+      - Extras include cross-Region copies, cross-account sharing, tags, snapshot archiving and Amazon EBS fast snapshot restore.
+
+    takeaway: Data Lifecycle Manager policies schedule, copy and prune snapshots of resources already in AWS.
+    history: []
+    verified:
+      keyHash: 5518240f6cb0
+      fullHash: 6e139690ddf0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kmn4v4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-data-lifecycle
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe backs up the EBS volumes behind its ordering system with snapshots.
+      Under the shared responsibility model, which task is the cafe's own job?
+    options:
+      - id: a
+        text: Linking each new snapshot to the earlier ones
+        why: AWS manages the links between incremental snapshots, so the cafe never maintains the chain.
+      - id: b
+        text: Copying each volume within its Availability Zone
+        why: EBS replicates every volume inside its zone automatically as part of the service AWS runs.
+      - id: c
+        text: Testing that its snapshots restore correctly
+        correct: true
+        why: The data is the cafe's, so checking that its backups really restore falls to the cafe.
+      - id: d
+        text: Storing snapshot copies across several zones
+        why: Snapshots sit in Amazon S3, which AWS keeps redundant across Availability Zones.
+    evidence:
+      - "Your part: schedule snapshots, prune them to control cost, encrypt sensitive data, verify integrity and test restores."
+      - Each still acts as a full copy, AWS manages the links, and deleting one frees only data no other snapshot uses.
+    takeaway: AWS runs the snapshot machinery, but the customer must schedule, encrypt, prune and test restores of its own backups.
+    history: []
+    verified:
+      keyHash: 555f88ca7cd2
+      fullHash: 5246aa865cd4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-znfw3d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-snapshots
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe wants three separate test setups, each starting with the exact data its production order volume held this morning.
+      Which approach gives all three?
+    options:
+      - id: a
+        text: Copy the morning snapshot to a second Region
+        why: A cross-Region copy moves the backup elsewhere but creates no test volumes on its own.
+      - id: b
+        text: Create three volumes from the morning snapshot
+        correct: true
+        why: One snapshot can seed many new volumes, each an exact copy of the source at that moment.
+      - id: c
+        text: Take three fresh snapshots of the production volume
+        why: New snapshots capture the volume as it stands now, not as it stood this morning.
+      - id: d
+        text: Share the morning snapshot with a second account
+        why: Sharing grants another account use of the snapshot but sets up none of the three tests.
+    evidence:
+      - A snapshot can create many new volumes, each an exact copy of the source at that moment.
+    takeaway: A single EBS snapshot can create many new volumes, each an exact point-in-time copy for testing or cloning.
+    history: []
+    verified:
+      keyHash: 244b68838df8
+      fullHash: 6268bced7bca
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

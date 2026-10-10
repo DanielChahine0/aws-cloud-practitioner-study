@@ -1,0 +1,399 @@
+questions:
+  - id: q-5gkcbf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-storage-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe still runs its office servers on site, and their local disks keep filling up.
+      It wants those servers to gain almost limitless cloud capacity while their apps keep running unchanged.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Transfer Family
+        why: Transfer Family moves files over transfer protocols, but it does not extend the servers' own local storage into AWS.
+      - id: b
+        text: AWS Storage Gateway
+        correct: true
+        why: Storage Gateway links the on-site servers to AWS storage, so local apps gain cloud capacity with little rework.
+      - id: c
+        text: AWS Snow Family
+        why: Snow devices carry data offline in bulk, which does not give the servers ongoing access to cloud capacity.
+      - id: d
+        text: Amazon EBS
+        why: EBS volumes attach to EC2 instances in AWS, not to the servers sitting in the cafe's office.
+    evidence:
+      - A hybrid storage service bridging on-premises systems and AWS, giving local apps virtually unlimited cloud capacity with little or no rework.
+    takeaway: Storage Gateway lets on-premises apps keep working while their storage stretches into AWS.
+    history: []
+    verified:
+      keyHash: 4c0ebbd52549
+      fullHash: bd712e70fb2a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rvkvw5
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: aws-storage-gateway
+    note: m06/aws-storage-gateway
+    task: "3.1"
+    level: 1
+    stem: >-
+      The cafe is planning how to install AWS Storage Gateway itself.
+      In which forms can the gateway be deployed?
+    options:
+      - id: a
+        text: As a virtual machine on a host
+        correct: true
+        why: Storage Gateway can run as a virtual machine on the cafe's existing on-site hosts.
+      - id: b
+        text: As an AWS Lambda function
+        why: Lambda runs short event-driven code, and the gateway is not offered as a function, so this is not a deployment form.
+      - id: c
+        text: As a hardware appliance on site
+        correct: true
+        why: A physical appliance is one of the deployment forms, useful when the cafe has no spare virtualization host.
+      - id: d
+        text: As a container on AWS Fargate
+        why: Fargate runs containers without servers to manage, but the gateway is not deployed as a Fargate container.
+      - id: e
+        text: As an instance on Amazon EC2
+        correct: true
+        why: Storage Gateway can also run on an EC2 instance inside AWS.
+    evidence:
+      - It deploys as a virtual machine, a hardware appliance or an Amazon EC2 instance.
+    takeaway: Storage Gateway deploys as a virtual machine, a hardware appliance or an EC2 instance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1, 3 and 5 are the known Storage Gateway forms; Fargate and Lambda are not ways to deploy an appliance.)"
+  - id: q-enpnf4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: hybrid-cloud-storage
+    note: m06/aws-storage-gateway
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's nightly backup job works well, and staff want to keep it exactly as it is.
+      The owner still wants a copy of the critical sales data in AWS in case the office floods.
+      Which hybrid storage use case is this?
+    options:
+      - id: a
+        text: Archiving
+        why: Archiving moves rarely used data to the cloud for long-term keeping, not a recovery copy of critical data.
+      - id: b
+        text: Local caching
+        why: Caching keeps hot data fast on site, which does not protect the data if the office is lost.
+      - id: c
+        text: Disaster recovery
+        correct: true
+        why: A cloud copy of critical data, made without changing the backup routine, is the disaster recovery use case.
+      - id: d
+        text: Hybrid file access
+        why: Hybrid access serves local file shares backed by AWS, which is about daily use rather than recovery.
+    evidence:
+      - "Disaster recovery: critical data gets a cloud copy without changing backup routines."
+    takeaway: Hybrid storage adds a cloud copy for disaster recovery while existing backup routines stay the same.
+    history: []
+    verified:
+      keyHash: d67c496812ca
+      fullHash: bdb90669066f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-9wfxxz
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: hybrid-cloud-storage
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 1
+    stem: >-
+      Match each hybrid storage use case or benefit to what it gives an on-premises business.
+    pairs:
+      - left: Disaster recovery
+        right: A cloud copy of critical data with the same backup routine
+        why: Disaster recovery adds a copy in AWS without changing how backups run.
+      - left: Archiving
+        right: Long-term keeping of rarely used data in the cloud
+        why: Archiving moves data that is seldom read out of local storage and into AWS.
+      - left: Local caching
+        right: Fast on-site access to frequently used data
+        why: Caching keeps hot data close to local apps while the rest lives in AWS.
+      - left: Lower on-premises costs
+        right: Less local storage hardware to buy and run
+        why: Shifting capacity into AWS reduces how much storage must be kept on site.
+    evidence:
+      - "Disaster recovery: critical data gets a cloud copy without changing backup routines."
+      - "Archiving: rarely used data moves to the cloud for long-term keeping."
+      - "Benefits: intact workflows, central management for access, security and compliance, local caching of hot data, and lower on-premises storage costs."
+    takeaway: Hybrid storage serves disaster recovery and archiving, and it caches hot data locally while cutting on-site storage costs.
+    history: []
+    verified:
+      keyHash: 3ddcc0edc20a
+      fullHash: 9f3271e710af
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fbqbb5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-file-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 3
+    stem: >-
+      Cafe staff save recipe documents to a shared drive in the office over SMB and want to keep that habit.
+      The owner wants the documents stored in AWS, where its analytics services can reach them.
+
+      Which gateway option fits?
+    options:
+      - id: a
+        text: Volume Gateway in cached volume mode
+        why: Cached mode presents iSCSI block volumes, not an SMB file share whose files land in AWS as objects.
+      - id: b
+        text: Tape Gateway
+        why: Tape Gateway serves backup software with virtual tapes and gives no file-level access for daily work.
+      - id: c
+        text: Volume Gateway in stored volume mode
+        why: Stored mode keeps block volumes on site and backs them up as EBS snapshots, which is no SMB file share.
+      - id: d
+        text: Amazon S3 File Gateway
+        correct: true
+        why: S3 File Gateway looks like a normal SMB file server locally and stores each file in S3 as an object.
+    evidence:
+      - "Amazon S3 File Gateway: appears locally as a normal file server using NFS or SMB."
+      - Files land in Amazon S3 as objects, recent data stays cached, and AWS services can reach the files.
+    takeaway: A local NFS or SMB file share whose files must live in S3 points to S3 File Gateway.
+    history: []
+    verified:
+      keyHash: 9055bc3c17e8
+      fullHash: 5dae2381eec5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-j9zb5p
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-file-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 1
+    stem: >-
+      Staff write files to a gateway share that appears on site as a normal NFS or SMB file server.
+      In what form does AWS keep those files?
+    options:
+      - id: a
+        text: As objects in Amazon S3
+        correct: true
+        why: Each file written to the share lands in Amazon S3 as an object that AWS services can reach.
+      - id: b
+        text: As snapshots of Amazon EBS volumes
+        why: EBS snapshots back up Volume Gateway stored volumes, not the files written to a file share.
+      - id: c
+        text: As virtual tapes in a tape library
+        why: Virtual tapes are how Tape Gateway stores backups, not how the file share keeps files.
+      - id: d
+        text: As files in Amazon FSx
+        why: FSx is a separate managed file system in AWS, and the file share does not write into it.
+    evidence:
+      - Files land in Amazon S3 as objects, recent data stays cached, and AWS services can reach the files.
+    takeaway: S3 File Gateway turns each file on its local share into an object in Amazon S3.
+    history: []
+    verified:
+      keyHash: 5d2f0994e9ba
+      fullHash: 88a1ed94c078
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r1d87m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: volume-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's inventory server mounts its storage as iSCSI volumes.
+      The owner wants most of the data held in AWS, with only the frequently used part kept on site.
+      Which option fits?
+    options:
+      - id: a
+        text: Volume Gateway in stored volume mode
+        why: Stored mode keeps the whole dataset on site, which is the opposite of holding most of it in AWS.
+      - id: b
+        text: Volume Gateway in cached volume mode
+        correct: true
+        why: Cached mode keeps the main dataset in AWS and caches only the hot data locally.
+      - id: c
+        text: Amazon S3 File Gateway with an SMB share
+        why: A file share over SMB does not give the server the iSCSI block volumes it mounts.
+      - id: d
+        text: Tape Gateway with a virtual tape library
+        why: Virtual tapes serve backup software, not a server that mounts live block volumes.
+    evidence:
+      - "Cached volume mode keeps the main dataset in the cloud and hot data cached locally."
+    takeaway: iSCSI volumes with only hot data on site point to Volume Gateway in cached volume mode.
+    history: []
+    verified:
+      keyHash: c8ade03f4f67
+      fullHash: "146819e39143"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-p0x8wt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: volume-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 1
+    stem: >-
+      Volume Gateway in stored volume mode keeps all of the data on site.
+      How does it protect that data in AWS?
+    options:
+      - id: a
+        text: It copies files to Amazon EFS
+        why: EFS is a separate file system in AWS, and stored mode does not copy data into it.
+      - id: b
+        text: It writes virtual tapes to S3
+        why: Virtual tapes are the Tape Gateway approach for backup software, not the stored mode backup.
+      - id: c
+        text: It takes async EBS snapshots
+        correct: true
+        why: Stored mode backs up the local volumes to AWS asynchronously as EBS snapshots.
+      - id: d
+        text: It syncs objects with DataSync
+        why: DataSync is a separate transfer service, not how stored mode backs up its volumes.
+    evidence:
+      - Stored volume mode keeps everything local and backs it up asynchronously as EBS snapshots.
+    takeaway: Stored volume mode keeps data local and backs it up to AWS as asynchronous EBS snapshots.
+    history: []
+    verified:
+      keyHash: 2b4cde8a4f70
+      fullHash: 0a7cddd7d67a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5ddsda
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: tape-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe chain's backup software writes each week's records to physical cartridges that staff carry offsite.
+      The owner wants to stop handling the cartridges but keep the same backup software.
+      Which gateway option fits?
+    options:
+      - id: a
+        text: Volume Gateway in cached volume mode
+        why: Cached mode serves apps that mount iSCSI volumes, not backup software expecting cartridge hardware.
+      - id: b
+        text: Amazon S3 File Gateway
+        why: S3 File Gateway serves a file share over NFS or SMB, which cartridge backup software does not write to.
+      - id: c
+        text: Tape Gateway
+        correct: true
+        why: Tape Gateway looks like tape hardware to the backup software and stores virtual tapes in Amazon S3.
+      - id: d
+        text: Volume Gateway in stored volume mode
+        why: Stored mode keeps block volumes on site with EBS snapshot backups, and it does not pose as tape hardware.
+    evidence:
+      - "Tape Gateway: virtual tapes in Amazon S3 that backup software treats as tape hardware, with rarely used data movable to a cheaper class."
+      - Tape backup software points to Tape Gateway, which is for backup and archiving with no file-level access for daily work.
+    takeaway: Tape backup software that must keep running unchanged points to Tape Gateway and its virtual tapes.
+    history: []
+    verified:
+      keyHash: 12f28941ae98
+      fullHash: 38982b9b550d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-w9nd2q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: tape-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which job is Tape Gateway designed for?
+    options:
+      - id: a
+        text: Daily file sharing for staff
+        why: Tape Gateway gives no file-level access for daily work, so it does not serve shared files.
+      - id: b
+        text: Backup and long-term archiving
+        correct: true
+        why: Tape Gateway is built for backup and archiving, with rarely used tapes movable to a cheaper class.
+      - id: c
+        text: Block volumes for local apps
+        why: Block volumes over iSCSI come from Volume Gateway, not from virtual tapes.
+      - id: d
+        text: Low-latency access to hot files
+        why: Fast local access to hot files comes from a cached file share, not from tape archives.
+    evidence:
+      - Tape backup software points to Tape Gateway, which is for backup and archiving with no file-level access for daily work.
+    takeaway: Tape Gateway serves backup and archiving, not daily file access.
+    history: []
+    verified:
+      keyHash: 8a40738cb210
+      fullHash: eb14abceab9a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-j2vgqe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-storage-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's office apps open the same recipe files all day.
+      The cafe wants those files kept in AWS while the busiest ones stay quick to open from the office.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Elastic File System (Amazon EFS)
+        why: EFS runs in AWS and keeps no cache on site, so office reads would not be local.
+      - id: b
+        text: AWS Storage Gateway
+        correct: true
+        why: Storage Gateway extends office storage into AWS while caching frequently used data on site.
+      - id: c
+        text: Amazon FSx for Windows File Server
+        why: FSx runs in the AWS Cloud without local caching, so the busy files would not stay fast on site.
+      - id: d
+        text: Amazon Elastic Block Store (Amazon EBS)
+        why: EBS volumes attach to EC2 instances in AWS and are not reachable as office storage.
+    evidence:
+      - Local storage extends into AWS while frequently used data stays fast on site.
+      - EFS and FSx run in AWS without an on-site cache, so neither replaces a gateway for low-latency on-premises access to hot files.
+    takeaway: Storage Gateway keeps hot data cached on premises while extending storage into AWS, which EFS and FSx cannot do.
+    history: []
+    verified:
+      keyHash: 0bb7d4cb47da
+      fullHash: b6a0362ae34b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

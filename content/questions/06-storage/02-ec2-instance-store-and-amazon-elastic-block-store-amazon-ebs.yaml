@@ -1,0 +1,403 @@
+questions:
+  - id: q-11n76v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-store
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      Each night a virtual server crunches the cafe's sales figures and needs fast scratch disk space for intermediate results.
+      The results are thrown away once the report is built.
+      Which storage fits this scratch space at no extra cost?
+    options:
+      - id: a
+        text: Amazon Elastic Block Store
+        why: An EBS volume is billed on its own and keeps data the cafe is about to discard anyway.
+      - id: b
+        text: Amazon EC2 instance store
+        correct: true
+        why: Instance store comes with many instance types and gives very fast I/O for data that can be lost.
+      - id: c
+        text: Amazon Elastic File System
+        why: EFS is a shared network file system billed separately, which this single throwaway workload does not need.
+      - id: d
+        text: Amazon Simple Storage Service
+        why: S3 is separately billed object storage, not fast local disk for intermediate processing results.
+    evidence:
+      - Being ephemeral, it suits data you can lose, such as buffers, caches and scratch space for heavy processing.
+      - "Benefits: included with many instance types at no extra cost, with very low latency and high I/O because it sits on the host."
+    takeaway: Temporary scratch data that needs very fast I/O fits instance store, which many instance types include at no extra cost.
+    history: []
+    verified:
+      keyHash: 0c47adceb2b7
+      fullHash: 26d3f0d4d1a0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bz0asb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-store
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 1
+    stem: >-
+      Where does the data in an Amazon EC2 instance store physically live?
+    options:
+      - id: a
+        text: On a separate volume replicated within one Availability Zone
+        why: That describes an EBS volume, which lives apart from the host rather than on it.
+      - id: b
+        text: In a shared file system that many instances mount at once
+        why: A shared file system describes Amazon EFS, while instance store serves one instance only.
+      - id: c
+        text: On disks attached to the host computer running the instance
+        correct: true
+        why: Instance store is disk physically attached to the host, which is why it is so fast and so temporary.
+      - id: d
+        text: In objects stored in a bucket outside the instance's host
+        why: Objects in a bucket describe Amazon S3, not the local disk of the instance's host.
+    evidence:
+      - Instance store is disk physically attached to the instance's host, not a stand-alone service, and is the default storage on some instance types.
+    takeaway: Instance store is disk on the instance's own host, so it is fast but tied to that host.
+    history: []
+    verified:
+      keyHash: e9d73866e830
+      fullHash: f5b1ec01736e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-n4kd9s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ebs
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe runs its order database on one EC2 instance.
+      It needs low-latency block storage for that instance whose data stays intact when the instance is stopped for maintenance.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EC2 instance store
+        why: Instance store is erased when the instance stops, so the order data would be lost.
+      - id: b
+        text: Amazon EFS
+        why: EFS is a shared file system for many instances, not a block volume for one database server.
+      - id: c
+        text: Amazon S3
+        why: S3 stores objects, not block storage that a database writes to like a disk.
+      - id: d
+        text: Amazon EBS
+        correct: true
+        why: An EBS volume gives one instance persistent, low-latency block storage that survives stops.
+    evidence:
+      - They live apart from the host on durable SSD or HDD media, so data survives stops, starts and terminations.
+      - A volume gives consistent low latency, attaches to one instance at a time, and can be backed up, resized and moved to another instance.
+    takeaway: A database on one instance that must survive stops needs persistent, low-latency block storage from Amazon EBS.
+    history: []
+    verified:
+      keyHash: 3ac5d46a36e2
+      fullHash: cec32142282c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q4ba57
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-ebs
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 1
+    stem: >-
+      Which statements describe how Amazon EBS guards a volume's data against loss?
+    options:
+      - id: a
+        text: A volume is replicated inside its zone.
+        correct: true
+        why: EBS replicates each volume inside its Availability Zone, so one failed copy does not lose the data.
+      - id: b
+        text: A volume attaches to one instance.
+        why: This is true of EBS, but it limits how a volume is shared rather than protecting its data.
+      - id: c
+        text: A volume is backed up by snapshots.
+        correct: true
+        why: Incremental EBS snapshots keep backup copies that can be restored if a volume's data is lost.
+      - id: d
+        text: A volume type sets price and IOPS.
+        why: This is true of EBS, but it describes cost and speed rather than any protection of the data.
+      - id: e
+        text: A volume can be resized while in use.
+        why: This is true of EBS, but resizing changes capacity and does nothing to guard the data.
+    evidence:
+      - EBS replicates each volume automatically within its Availability Zone for availability and durability.
+      - Back volumes up with incremental Amazon EBS snapshots.
+      - A volume gives consistent low latency, attaches to one instance at a time, and can be backed up, resized and moved to another instance.
+    takeaway: EBS replicates each volume inside its Availability Zone and backs volumes up with incremental snapshots.
+    history: []
+    verified:
+      keyHash: 81dedd08a4d3
+      fullHash: feb4bc64b2aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tqfhs2
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: ebs-volumes
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's inventory app has outgrown its small EC2 instance and must move to a bigger instance type.
+      Its data sits on an EBS volume.
+      How can the cafe keep that data through the move?
+    options:
+      - id: a
+        text: Attach the existing volume to the new instance
+        correct: true
+        why: An EBS volume can be moved to another instance, so the data follows the app to the bigger type.
+      - id: b
+        text: Copy the data to the new instance's instance store
+        why: Instance store is erased when the instance stops, so the inventory data would not be kept safely.
+      - id: c
+        text: Let the volume's zone replicas attach to the new instance
+        why: EBS does replicate each volume in its zone, but those hidden copies are not volumes the cafe can attach.
+      - id: d
+        text: Enlarge the volume so it fits the new instance
+        why: Adding capacity to a volume does not connect it to the new instance, so the app still cannot reach the data.
+    evidence:
+      - A volume gives consistent low latency, attaches to one instance at a time, and can be backed up, resized and moved to another instance.
+      - "Instance type changes: reattach a volume to a bigger or smaller instance and keep the data."
+      - "Cost and performance tuning: change type, size or IOPS on the fly without downtime."
+    takeaway: Reattaching an EBS volume to a different instance type keeps the data when the cafe resizes its instance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only workable action; volumes need no resizing, replicas never attach, instance store is not the fix.)"
+  - id: q-gj7912
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-volumes
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 1
+    stem: >-
+      Where does a single EBS volume live?
+    options:
+      - id: a
+        text: Across the Availability Zones of one Region
+        why: A volume is not spread across a Region, so data reaches other zones only through snapshots.
+      - id: b
+        text: In one Availability Zone
+        correct: true
+        why: Each EBS volume lives in one Availability Zone, where EBS replicates it.
+      - id: c
+        text: Across two or more Regions
+        why: A volume sits in one zone of one Region, and snapshots are the way to carry its data elsewhere.
+      - id: d
+        text: At an edge location near its users
+        why: Edge locations serve cached content, while a volume sits in one Availability Zone beside its instance.
+    evidence:
+      - A volume lives in one Availability Zone, and so in one Region, and snapshots carry its data elsewhere.
+    takeaway: An EBS volume sits in one Availability Zone, and snapshots carry its data to other zones or Regions.
+    history: []
+    verified:
+      keyHash: 3948a876d5e7
+      fullHash: f0cf547f46e9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tjqfvd
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: ebs-volume-types
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 1
+    stem: >-
+      The cafe compares two EBS volumes of different volume types.
+      Which properties differ because of the volume type itself?
+    options:
+      - id: a
+        text: Price of the volume
+        correct: true
+        why: Each volume type carries a different price, so the choice of type changes the cost.
+      - id: b
+        text: Availability Zone of the volume
+        why: Volumes do sit in different zones, but the zone is picked at creation and not set by the type.
+      - id: c
+        text: Performance in IOPS
+        correct: true
+        why: Volume types differ in performance, which is measured in IOPS.
+      - id: d
+        text: Instance the volume attaches to
+        why: Volumes do attach to different instances, but that is the cafe's choice and not set by the type.
+      - id: e
+        text: Snapshots kept for backup
+        why: Volumes can have different snapshots, but backups come from the cafe's schedule, not from the type.
+    evidence:
+      - Volume types differ in price and in performance, measured in IOPS (input/output operations per second) and tied to type and often size.
+      - A volume lives in one Availability Zone, and so in one Region, and snapshots carry its data elsewhere.
+    takeaway: EBS volume types trade off price against performance, which is measured in IOPS.
+    history: []
+    verified:
+      keyHash: 37bd2f6c652f
+      fullHash: 2b846a4bfdd9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nzm8sc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-volume-types
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      During the lunch rush the cafe's order database is slowed down by its EBS volume.
+      The cafe cannot take the database offline.
+      What should it do?
+    options:
+      - id: a
+        text: Take an incremental snapshot of the volume
+        why: EBS does back volumes up with snapshots, but a backup does not change how fast the volume performs.
+      - id: b
+        text: Raise the volume's IOPS by changing its type
+        correct: true
+        why: EBS lets you change a volume's type, size or IOPS on the fly without downtime, so the database stays up.
+      - id: c
+        text: Attach the volume to a bigger instance type
+        why: Reattaching does keep the data, but detaching first takes the database offline, which the cafe must avoid.
+      - id: d
+        text: Copy the volume's data into another Region
+        why: Snapshots can carry the data to another Region, but that copy does not speed up the volume in use.
+    evidence:
+      - "Cost and performance tuning: change type, size or IOPS on the fly without downtime."
+      - "Instance type changes: reattach a volume to a bigger or smaller instance and keep the data."
+    takeaway: Changing an EBS volume's type or IOPS on the fly raises performance without taking the database down.
+    history: []
+    verified:
+      keyHash: a607f4ba6e74
+      fullHash: d6e873beec8a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-43af7c
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: data-persistence
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 1
+    stem: >-
+      Match each kind of storage to what happens to its data.
+    pairs:
+      - left: Amazon EC2 instance store
+        right: Erased when the instance stops or terminates
+        why: Instance store is ephemeral, so a stop or termination wipes its data.
+      - left: EBS volume
+        right: Kept when the instance stops and starts again
+        why: An EBS volume lives apart from the host, so its data is still there after a stop and a later start.
+      - left: Incremental EBS snapshot
+        right: Copies data to another Availability Zone or Region
+        why: Snapshots carry a volume's data to other zones or Regions for recovery or migration.
+    evidence:
+      - Instance store does not persist, so a stop or termination erases it.
+      - They live apart from the host on durable SSD or HDD media, so data survives stops, starts and terminations.
+      - "Migration and disaster recovery: snapshots copy data to other Availability Zones or Regions and restore it there."
+    takeaway: Instance store data is lost on stop, EBS volume data persists, and snapshots carry it elsewhere.
+    history: []
+    verified:
+      keyHash: 572021e866d2
+      fullHash: 86c95d5ad5c5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x8b8tj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-persistence
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe keeps a menu image cache on an EC2 instance's instance store.
+      To save money it stops the instance every night and starts it again each morning.
+      Every morning the cache is empty and must be rebuilt.
+      Which fact explains this?
+    options:
+      - id: a
+        text: EBS volumes keep their data through a stop and start.
+        why: This is true of EBS, but the cache sits on instance store, so it says nothing about the empty cache.
+      - id: b
+        text: Snapshots can copy a volume's data to another Region.
+        why: This is true of EBS snapshots, but it describes backup and migration, not why the cache is gone.
+      - id: c
+        text: Instance store gives very low latency and high I/O.
+        why: This is true of instance store, but speed does not explain why the cached images disappear overnight.
+      - id: d
+        text: Instance store is erased when its instance is stopped.
+        correct: true
+        why: Stopping the instance erases instance store, so the cache starts empty each morning.
+    evidence:
+      - Stopping or terminating the instance erases it, since a restarted instance usually lands on another host without that disk.
+    takeaway: Instance store data does not survive a stop, so anything kept there must be safe to lose and rebuild.
+    history: []
+    verified:
+      keyHash: fe39bba15209
+      fullHash: 886dc307260a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-faakbx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-volumes
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The EBS volume behind the cafe's order database is almost full, and orders keep coming in.
+      What should the cafe do so that volume can hold more orders?
+    options:
+      - id: a
+        text: Modify the volume to raise its IOPS
+        why: Raising IOPS speeds up reads and writes but leaves the volume's capacity exactly where it was.
+      - id: b
+        text: Modify the volume to raise its size
+        correct: true
+        why: A volume never grows on its own, so the cafe modifies it to a larger size, with no downtime.
+      - id: c
+        text: Modify the volume to change its type
+        why: A new volume type changes price and performance, not how much data the volume can hold.
+      - id: d
+        text: Take an incremental snapshot of the volume
+        why: A snapshot backs the data up to Amazon S3 but leaves the volume just as full as before.
+    evidence:
+      - A volume never grows by itself, so you modify it to add capacity.
+      - "Cost and performance tuning: change type, size or IOPS on the fly without downtime."
+    takeaway: An EBS volume has a fixed size until you modify it, and you can enlarge it without downtime.
+    history: []
+    verified:
+      keyHash: b0047c85796a
+      fullHash: 4856becfd7a9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

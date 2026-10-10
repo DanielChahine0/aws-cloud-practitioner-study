@@ -1,0 +1,186 @@
+questions:
+  - id: q-6649e7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-object-metadata
+    note: m06/amazon-s3-demonstration
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe scans each day's receipts into its S3 bucket and wants every receipt object to carry the name of the manager who scanned it.
+      Which object property lets staff record that detail?
+    options:
+      - id: a
+        text: System-defined metadata
+        why: S3 fills in system-defined metadata itself, such as size, so staff cannot use it for a manager's name.
+      - id: b
+        text: Object Lock
+        why: Object Lock stops an object from being changed or deleted, and it holds no custom details.
+      - id: c
+        text: User-defined metadata
+        correct: true
+        why: User-defined metadata holds custom details the cafe attaches, such as the scanning manager's name.
+      - id: d
+        text: Server-side encryption
+        why: Server-side encryption protects the stored receipt and has no field for the manager's name.
+    evidence:
+      - User-defined metadata holds your own details, such as tags.
+      - Object properties also include Object Lock, checksums, server-side encryption, the storage class, tags and metadata.
+    takeaway: Custom details the cafe attaches to an S3 object, such as who scanned it, belong in user-defined metadata.
+    history: []
+    verified:
+      keyHash: 19cf5162af8b
+      fullHash: 53eda82db83c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nhakj3
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: s3-object-metadata
+    note: m06/amazon-s3-demonstration
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe uploads a photo of its new pastry to an S3 bucket.
+      Which of the photo's metadata are system-defined?
+    options:
+      - id: a
+        text: Tags that staff attach to the object
+        why: S3 does keep tags on an object, but staff add them, so they are user-defined metadata.
+      - id: b
+        text: The date the object was created
+        correct: true
+        why: S3 records when it created the object, so this date is system-defined metadata.
+      - id: c
+        text: Notes that staff add at upload time
+        why: S3 does keep custom details on an object, but staff supply them, so they are user-defined metadata.
+      - id: d
+        text: The size of the stored object
+        correct: true
+        why: S3 records the object's size on its own, so it is system-defined metadata.
+      - id: e
+        text: The class the object is stored in
+        correct: true
+        why: S3 tracks which storage class holds the object, so it is system-defined metadata.
+
+    evidence:
+      - System-defined metadata records basics such as creation date, size and storage class.
+      - User-defined metadata holds your own details, such as tags.
+    takeaway: Details S3 tracks itself are system-defined metadata, while tags and notes you add are user-defined metadata.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 are both added by staff, leaving 3, 4 and 5 as the system-set group.)"
+  - id: q-49atgb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-bucket-policies
+    note: m06/amazon-s3-demonstration
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe's flour supplier runs its own AWS account and needs to upload delivery invoices into the cafe's S3 bucket.
+      The cafe must keep full control of every uploaded file.
+      What should the cafe set up on the bucket?
+    options:
+      - id: a
+        text: S3 Versioning
+        why: Versioning keeps earlier copies of objects but grants no other account the right to upload.
+      - id: b
+        text: An S3 Lifecycle rule
+        why: A lifecycle rule moves or deletes objects over time and does not grant upload access.
+      - id: c
+        text: A bucket policy
+        correct: true
+        why: A bucket policy can allow the supplier's account to upload, with a condition that keeps owner control.
+      - id: d
+        text: A network ACL
+        why: A network ACL filters subnet traffic and cannot grant another account access to S3 objects.
+    evidence:
+      - Bucket policies are JSON documents controlling who may reach the objects inside.
+      - The demo's policy lets another AWS account upload while the bucket owner keeps full control.
+    takeaway: Cross-account uploads to an S3 bucket are granted with a bucket policy, whose condition can protect owner control.
+    history: []
+    verified:
+      keyHash: 5aa32a6f76fb
+      fullHash: 747abce65d3f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-0gqd6y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-bucket-policies
+    note: m06/amazon-s3-demonstration
+    task: "2.3"
+    level: 1
+    stem: >-
+      In the JSON of an S3 bucket policy statement, which element names the AWS account that the statement applies to?
+    options:
+      - id: a
+        text: Action
+        why: Action lists the API calls covered, such as PutObject, not who may make them.
+      - id: b
+        text: Resource
+        why: Resource names the parts of the bucket covered, not the account allowed in.
+      - id: c
+        text: Condition
+        why: Condition adds rules a request must meet, not the account the statement is for.
+      - id: d
+        text: Principal
+        correct: true
+        why: Principal names the account or identity that the policy statement applies to.
+    evidence:
+      - "Principal: the AWS account number allowed to upload."
+    takeaway: In a bucket policy, the Principal says who the statement covers, while Action, Resource and Condition say what and when.
+    history: []
+    verified:
+      keyHash: c07a8a3fdfc9
+      fullHash: a6aef80d59b8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vh42fg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-object-metadata
+    note: m06/amazon-s3-demonstration
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe wants to check the size and storage class of every menu image in its bucket.
+      Staff never typed those details in when they uploaded the images.
+      Where do those details come from?
+    options:
+      - id: a
+        text: User-defined metadata
+        why: User-defined metadata holds only details that staff add themselves, such as tags.
+      - id: b
+        text: System-defined metadata
+        correct: true
+        why: S3 records basics such as size, creation date and storage class on its own for every object.
+      - id: c
+        text: The bucket policy
+        why: A bucket policy controls who may reach the objects and does not describe each object.
+      - id: d
+        text: The object key
+        why: The key only names the object within its bucket and carries no size or class details.
+    evidence:
+      - System-defined metadata records basics such as creation date, size and storage class.
+      - User-defined metadata holds your own details, such as tags.
+    takeaway: S3 records system-defined metadata like size and storage class itself, while user-defined metadata holds your own details.
+    history: []
+    verified:
+      keyHash: b2e4459ca886
+      fullHash: 08838a704aa1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
