@@ -11,7 +11,8 @@
 export const MASK = '§';
 const EM_DASH = '\u2014';
 const WORD = /[a-z0-9]+(?:['’][a-z]+)?/g;
-const ABBREVIATIONS = [
+/** Exported with `SENTENCE_BREAK` so `tests/unit/plan.test.ts` pins the copies in `src/engine/plan.ts` to them. */
+export const ABBREVIATIONS = [
   'e.g.',
   'i.e.',
   'etc.',
@@ -26,7 +27,7 @@ const ABBREVIATIONS = [
   'a.m.',
   'p.m.',
 ];
-const SENTENCE_BREAK = /(\S+)[.!?]["')\]]*\s+(?=[A-Z0-9"'([])/g;
+export const SENTENCE_BREAK = /(\S+)[.!?]["')\]]*\s+(?=[A-Z0-9"'([])/g;
 const LIST_MARKER = /^\s*(?:[-*+]|\d+[.)])\s+/;
 const FENCE = /^\s*(`{3,}|~{3,})(.*)$/;
 const FRONTMATTER = /^---\n[\s\S]*?\n---\n/;
