@@ -243,3 +243,45 @@ test.describe('accessibility and layout', () => {
     await expectNoSidewaysScroll(page);
   });
 });
+
+test.describe('Next (spec 9 e2e 7)', () => {
+  const nextLink = (page: Page) => page.locator('a.next[data-next]');
+
+  test('a live mission past its 2 hours turns Next into Clean up, and Enter opens it', async ({ page }) => {
+    await seed(page, [...GATE, ['2026-10-20T08:55:00.000Z', step('mission-03', 'start')]], {
+      [KV_KEYS.plan]: plan(),
+    });
+    await expect(nextLink(page)).not.toContainText('Clean up');
+    await page.clock.fastForward('02:06:00');
+    await expect(nextLink(page).locator('.next-label')).toHaveText('Clean up M3');
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/#\/missions\/mission-03$/);
+    await expect(page.getByRole('button', { name: 'Cleaned up' })).toBeVisible();
+  });
+
+  test('the day after cleanup Next asks for the usage check', async ({ page }) => {
+    await seed(
+      page,
+      [
+        ...GATE,
+        ['2026-10-20T07:00:00.000Z', step('mission-03', 'start')],
+        ['2026-10-20T08:00:00.000Z', step('mission-03', 'cleaned')],
+      ],
+      { [KV_KEYS.plan]: plan() },
+    );
+    await expect(nextLink(page)).toBeVisible();
+    await expect(nextLink(page)).not.toContainText('Check usage');
+    await page.clock.setSystemTime(new Date(TOMORROW));
+    await page.reload();
+    await expect(nextLink(page).locator('.next-label')).toHaveText('Check usage for M3');
+  });
+
+  test('the kept Mission 1 never turns Next into Clean up', async ({ page }) => {
+    await seed(page, [...GATE, ['2026-10-20T06:00:00.000Z', step('mission-01', 'start')]], {
+      [KV_KEYS.plan]: plan(),
+    });
+    await page.clock.fastForward('04:00:00');
+    await expect(nextLink(page)).toBeVisible();
+    await expect(nextLink(page)).not.toContainText('Clean up');
+  });
+});

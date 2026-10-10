@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { NewEvent } from '../../schemas/events.ts';
 import type { BossStatus } from '../../src/engine/boss.ts';
+import {
+  type MissionRef,
+  type MissionSafety,
+  missionLogOf,
+  missionSafety,
+  missionStatuses,
+} from '../../src/engine/missions.ts';
 import { mockDeadline } from '../../src/engine/mock.ts';
 import {
   extras,
@@ -74,6 +81,7 @@ const inputOf = (
   currentLesson: null,
   today: '2026-10-10',
   tz: 0,
+  safety: null,
   ...overrides,
 });
 
@@ -486,5 +494,90 @@ describe('weakestLab (spec 4.6)', () => {
         [1, 2, 3],
       ),
     ).toEqual({ lab: 'lab-m03-a', module: 3 });
+  });
+});
+
+describe('mission safety in Next (spec 4.6 item 2, 5.3 rules 10 to 12)', () => {
+  const MISSIONS: MissionRef[] = [
+    { id: 'mission-00', n: 0, keep: false, gate: true, maxLiveHours: null, services: ['AWS Budgets'] },
+    { id: 'mission-01', n: 1, keep: true, gate: false, maxLiveHours: null, services: ['Amazon S3'] },
+    { id: 'mission-03', n: 3, keep: false, gate: false, maxLiveHours: 2, services: ['Amazon S3'] },
+  ];
+  const PLAN = {
+    plan: 'free' as const,
+    credits: 120,
+    endsOn: '2027-04-10',
+    services: { 'Amazon S3': true },
+    recordedAt: '2026-10-09T09:00:00.000Z',
+  };
+  const step = (mission: string, s: 'start' | 'verified' | 'cleaned' | 'usage-ok'): NewEvent => ({
+    t: 'mission',
+    mission,
+    step: s,
+  });
+  const GATE = [
+    [at('2026-10-09', 8), step('mission-00', 'start')],
+    [at('2026-10-09', 9), step('mission-00', 'verified')],
+  ] as const;
+  /** The safety action of a mission log read at `now` (UTC, offset 0). */
+  const safetyAt = (log: readonly (readonly [string, NewEvent])[], now: string): MissionSafety | null => {
+    const statuses = missionStatuses({
+      missions: MISSIONS,
+      log: missionLogOf(timelineOf([...GATE, ...log]), MISSIONS),
+      plan: PLAN,
+      now: new Date(now),
+      tz: 0,
+    });
+    return missionSafety(statuses, now.slice(0, 10));
+  };
+  const CLEANUP: MissionSafety = { kind: 'cleanup', mission: 'mission-03', n: 3 };
+
+  it('turns a live mission past its 2 hours into Clean up, ahead of reviews and behind Resume', () => {
+    const live = [[at('2026-10-10', 9), step('mission-03', 'start')]] as const;
+    expect(safetyAt(live, at('2026-10-10', 11))).toBeNull();
+    expect(safetyAt(live, at('2026-10-10', 11, 1))).toEqual(CLEANUP);
+    const queue = queueOf(['a', 'b']);
+    expect(nextAction(inputOf([], { queue, safety: CLEANUP }))).toEqual({
+      kind: 'cleanup',
+      mission: 'mission-03',
+      n: 3,
+    });
+    const open = [
+      [at('2026-10-10', 9), done(KITCHEN.note)],
+      [at('2026-10-10', 9, 1), startOf(SID, 'check', ['q-a', 'q-b'], KITCHEN.note)],
+    ] as const;
+    expect(nextAction(inputOf(open, { queue, safety: CLEANUP })).kind).toBe('resume');
+  });
+
+  it('asks for the usage check from the day after cleanup until it is done', () => {
+    const cleaned = [
+      [at('2026-10-10', 9), step('mission-03', 'start')],
+      [at('2026-10-10', 9, 30), step('mission-03', 'verified')],
+      [at('2026-10-10', 10), step('mission-03', 'cleaned')],
+    ] as const;
+    expect(safetyAt(cleaned, at('2026-10-10', 20))).toBeNull();
+    const usage = safetyAt(cleaned, at('2026-10-11', 9));
+    expect(usage).toEqual({ kind: 'usage', mission: 'mission-03', n: 3 });
+    expect(nextAction(inputOf([], { queue: queueOf(['a']), safety: usage }))).toEqual({
+      kind: 'usage',
+      mission: 'mission-03',
+      n: 3,
+    });
+    expect(
+      safetyAt([...cleaned, [at('2026-10-11', 9), step('mission-03', 'usage-ok')]], at('2026-10-11', 10)),
+    ).toBeNull();
+  });
+
+  it('never asks the kept Mission 1 to clean up, and asks for its usage check the day after Verify', () => {
+    const started = [[at('2026-10-10', 9), step('mission-01', 'start')]] as const;
+    expect(safetyAt(started, at('2026-10-10', 23))).toBeNull();
+    const verified = [...started, [at('2026-10-10', 10), step('mission-01', 'verified')]] as const;
+    expect(safetyAt(verified, at('2026-10-10', 23))).toBeNull();
+    expect(safetyAt(verified, at('2026-10-11', 9))).toEqual({ kind: 'usage', mission: 'mission-01', n: 1 });
+  });
+
+  it('gives Clean up about 10 minutes and the usage check about 5', () => {
+    expect(nextMinutes({ kind: 'cleanup', mission: 'mission-03', n: 3 })).toBe(10);
+    expect(nextMinutes({ kind: 'usage', mission: 'mission-03', n: 3 })).toBe(5);
   });
 });

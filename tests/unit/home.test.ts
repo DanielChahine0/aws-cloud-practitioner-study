@@ -362,6 +362,19 @@ describe('nextLabel', () => {
     );
   });
 
+  it('sends mission cleanup and the usage check to the mission page', () => {
+    expect(nextLabel({ kind: 'cleanup', mission: 'mission-03', n: 3 }, IDX, NOW)).toEqual({
+      label: 'Clean up M3',
+      href: '#/missions/mission-03',
+      minutes: 10,
+    });
+    expect(nextLabel({ kind: 'usage', mission: 'mission-01', n: 1 }, IDX, NOW)).toEqual({
+      label: 'Check usage for M1',
+      href: '#/missions/mission-01',
+      minutes: 5,
+    });
+  });
+
   it('has no link and no time when done for today', () => {
     expect(nextLabel({ kind: 'done' }, IDX, NOW)).toEqual({
       label: 'Done for today',
