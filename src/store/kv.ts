@@ -1,8 +1,21 @@
 import type { KvRecord, KvValue } from '../../schemas/backup.ts';
 import { done, request, STORES } from './idb.ts';
 
-/** Keyed records with `updatedAt` (spec 8.1), merged per key by the newer `updatedAt` on import. */
-export const KV_KEYS = { lastExportAt: 'lastExportAt' } as const;
+/**
+ * Keyed records with `updatedAt` (spec 8.1), merged per key by the newer `updatedAt` on import.
+ * `examAsk` is `'dismissed'` after Not now (spec 7.5); `engineVersion` is the `ENGINE_VERSION` whose
+ * `Rules updated, progress recalculated.` line was dismissed (spec 8.2); `currentLesson` is the note id of the
+ * lesson last opened, because reading writes no event (spec 4.6); `schemaVersion` is the storage version of the
+ * local log, and `preMigration` holds `{ events, kv }` as they were before the last local migration (spec 8.2).
+ */
+export const KV_KEYS = {
+  lastExportAt: 'lastExportAt',
+  examAsk: 'examAsk',
+  engineVersion: 'engineVersion',
+  currentLesson: 'currentLesson',
+  schemaVersion: 'schemaVersion',
+  preMigration: 'preMigration',
+} as const;
 
 export type KvRecords = Record<string, KvValue>;
 
