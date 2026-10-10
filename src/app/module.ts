@@ -1,9 +1,11 @@
 /** Pure helpers for the module page and the lesson recall dots (spec 7.3), so the tests run without a browser. */
+import type { ContentIndex } from '../../schemas/chunks.ts';
 import { BOSS_MINUTES, BOSS_SIZE, type BossStatus } from '../engine/boss.ts';
 import { studyDayAt } from '../engine/day.ts';
 import { BAND_LABEL, conceptMastery, type HexBand } from '../engine/mastery.ts';
 import { bossPassMark, type MemoryState } from '../engine/memory.ts';
 import { shortDate } from './dates.ts';
+import { pad2 } from './router.ts';
 
 const HOUR_MS = 3_600_000;
 
@@ -64,6 +66,37 @@ export function bossLineOf(s: BossStatus, now: Date, tz: number): string {
 /** `Mastery 64 · solid`, with ` · boss passed` once the boss is passed (spec 7.3). */
 export function masteryLine(mastery: number, band: HexBand, bossPassed: boolean): string {
   return `Mastery ${mastery} · ${BAND_LABEL[band]}${bossPassed ? ' · boss passed' : ''}`;
+}
+
+/** One row of the module page's Labs section (spec 7.2): engine word (`Sort`), title, minutes and done mark. */
+export interface LabRow {
+  id: string;
+  title: string;
+  href: string;
+  minutes: number;
+  engine: string;
+  done: boolean;
+}
+
+/** What the Labs section says when the module has no lab yet. */
+export const NO_LABS = 'No labs for this module yet.';
+
+/** The module's labs in index order (core before stretch, then id), each marked done once a `lab.done` exists. */
+export function labRows(
+  idx: Pick<ContentIndex, 'labs'>,
+  module: number,
+  done: ReadonlySet<string>,
+): LabRow[] {
+  return idx.labs
+    .filter((lab) => lab.module === module)
+    .map((lab) => ({
+      id: lab.id,
+      title: lab.title,
+      href: `#/m/${pad2(module)}/lab/${lab.id}`,
+      minutes: lab.minutes,
+      engine: `${lab.engine[0]?.toUpperCase()}${lab.engine.slice(1)}`,
+      done: done.has(lab.id),
+    }));
 }
 
 /** Recall bands for the lesson dots (spec 3.6): weak below 0.70, fading below 0.90, else strong. */

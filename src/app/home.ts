@@ -19,7 +19,8 @@ const moduleOf = (noteId: string): number => Number(noteId.slice(1, 3));
 
 /**
  * What the memory replay needs from the index: concepts with their module and tasks, aliases, question versions
- * (practice and exam, so a stale exam answer is caught too), and each exam item's task.
+ * (practice and exam, so a stale exam answer is caught too), each exam item's task, and each module's shipped core
+ * labs in index order, which Hands On and Lab Complete count (spec 3.4).
  */
 export function memoryContentOf(idx: ContentIndex): MemoryContent {
   const concepts = new Map<string, ConceptInfo>();
@@ -40,12 +41,17 @@ export function memoryContentOf(idx: ContentIndex): MemoryContent {
     questionVersions.set(qid, item.version);
     examTasks.set(qid, item.task);
   }
+  const coreLabs = new Map<number, string[]>();
+  for (const lab of idx.labs) {
+    if (lab.tier !== 'core') continue;
+    coreLabs.set(lab.module, [...(coreLabs.get(lab.module) ?? []), lab.id]);
+  }
   return {
     concepts,
     aliases,
     questionVersions,
     examTasks,
-    coreLabs: new Map(),
+    coreLabs,
     keptMissions: new Set(idx.missions.filter((m) => m.keep).map((m) => m.id)),
   };
 }
@@ -230,22 +236,27 @@ export function extrasLine(items: readonly { label: string }[]): string {
   return `${EXTRAS_LEAD}${items.map((item) => item.label).join(EXTRAS_JOIN)}`;
 }
 
-/** The label and link of one extra: a ready boss, the next unseen mock form or a core lab. */
-export function extraLink(
-  extra: Extra,
-  modules: readonly { n: number; short: string }[],
-  labs: readonly { id: string; title: string }[] = [],
-): { label: string; href: string } {
+/** What an extra's label needs from the index: module short names and lab titles. */
+export interface ExtraContent {
+  modules: readonly { n: number; short: string }[];
+  labs: readonly { id: string; title: string }[];
+}
+
+/** The label and link of one extra: a ready boss, the next unseen mock form, or a core lab (spec 4.6 and 7.2). */
+export function extraLink(extra: Extra, idx: ExtraContent): { label: string; href: string } {
   if (extra.kind === 'incident') return { label: 'Incident', href: '#/s/incident' };
-  if (extra.kind === 'boss') {
-    const short = modules.find((m) => m.n === extra.module)?.short ?? '';
-    return { label: `Boss: ${short}`, href: `#/s/boss/m${pad2(extra.module)}` };
+  switch (extra.kind) {
+    case 'boss': {
+      const short = idx.modules.find((m) => m.n === extra.module)?.short ?? '';
+      return { label: `Boss: ${short}`, href: `#/s/boss/m${pad2(extra.module)}` };
+    }
+    case 'mock':
+      return { label: `Mock ${extra.form}`, href: `#/s/mock/${extra.form.toLowerCase()}` };
+    case 'lab': {
+      const title = idx.labs.find((l) => l.id === extra.lab)?.title ?? '';
+      return { label: `Lab: ${title}`, href: `#/m/${pad2(extra.module)}/lab/${extra.lab}` };
+    }
   }
-  if (extra.kind === 'lab') {
-    const title = labs.find((lab) => lab.id === extra.lab)?.title ?? `Module ${extra.module} lab`;
-    return { label: `Lab: ${title}`, href: `#/m/${pad2(extra.module)}/lab/${extra.lab}` };
-  }
-  return { label: `Mock ${extra.form}`, href: `#/s/mock/${extra.form.toLowerCase()}` };
 }
 
 /** The reminders Home may show, highest priority first; at most one shows (spec 4.6). */

@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import type { LabMeta } from '../../schemas/chunks.ts';
 import {
   bossLineOf,
   conceptMarks,
+  labRows,
   masteryLine,
+  NO_LABS,
   RECALL_LABEL,
   recallBand,
   weakestConcepts,
@@ -154,5 +157,55 @@ describe('recallBand', () => {
     expect(recallBand(0.899)).toBe('fading');
     expect(recallBand(0.9)).toBe('strong');
     expect(RECALL_LABEL).toEqual({ none: 'not studied', weak: 'weak', fading: 'fading', strong: 'strong' });
+  });
+});
+
+describe('labRows', () => {
+  const lab = (
+    id: string,
+    module: number,
+    engine: LabMeta['engine'],
+    title: string,
+    minutes: number,
+  ): LabMeta => ({
+    id,
+    module,
+    engine,
+    tier: 'core',
+    rev: 1,
+    title,
+    minutes,
+  });
+  const LABS = [
+    lab('lab-m01-sort-the-bakes', 1, 'sort', 'Sort the bakes', 4),
+    lab('lab-m02-name-the-loaf', 2, 'configure', 'Name the loaf', 5),
+    lab('lab-m02-proof-time', 2, 'simulate', 'Proof time', 8),
+  ];
+
+  it('lists the module labs in index order with their engine, minutes, link and done mark', () => {
+    expect(labRows({ labs: LABS }, 2, new Set(['lab-m02-proof-time', 'lab-m01-sort-the-bakes']))).toEqual([
+      {
+        id: 'lab-m02-name-the-loaf',
+        title: 'Name the loaf',
+        href: '#/m/02/lab/lab-m02-name-the-loaf',
+        minutes: 5,
+        engine: 'Configure',
+        done: false,
+      },
+      {
+        id: 'lab-m02-proof-time',
+        title: 'Proof time',
+        href: '#/m/02/lab/lab-m02-proof-time',
+        minutes: 8,
+        engine: 'Simulate',
+        done: true,
+      },
+    ]);
+    expect(labRows({ labs: LABS }, 1, new Set()).map((r) => [r.engine, r.done])).toEqual([['Sort', false]]);
+  });
+
+  it('gives a module without labs no rows and says so', () => {
+    expect(labRows({ labs: LABS }, 5, new Set())).toEqual([]);
+    expect(NO_LABS).toBe('No labs for this module yet.');
   });
 });

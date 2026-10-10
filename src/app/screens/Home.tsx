@@ -147,12 +147,12 @@ function NextRank() {
   return line === null ? null : <p class="muted rank-line">{line}</p>;
 }
 
-/** Optional extras once Next is done for today (spec 4.6): a ready boss, then the next mock. */
+/** Optional extras once Next is done for today (spec 4.6): a ready boss, the next mock, then a core lab. */
 function Extras({ idx }: { idx: ContentIndex }) {
   const action = nextUp.value;
   const items = extraItems.value;
   if (action === null || action.kind !== 'done' || items.length === 0) return null;
-  const links = items.map((e) => extraLink(e, idx.modules));
+  const links = items.map((e) => extraLink(e, idx));
   // The visible text equals `extrasLine(links)`, so its tested copy is the copy on screen.
   return (
     <p class="extras-line">
