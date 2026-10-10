@@ -1,15 +1,20 @@
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Plugin } from 'vite';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { type Context, loadContext } from '../../scripts/content/lib/context.ts';
+import { parse, stringify } from 'yaml';
+import { grade, prepare, RESULTS_DIR, stampQuestions } from '../../scripts/content/lib/checks.ts';
+import { type Context, FORMS_FILE, loadContext } from '../../scripts/content/lib/context.ts';
 import { draftCheck } from '../../scripts/content/lib/draft.ts';
+import { runForms } from '../../scripts/content/lib/forms-command.ts';
 import { examTargets, report } from '../../scripts/content/lib/report.ts';
 import { formatFinding, RULES, runRules } from '../../scripts/content/rules/index.ts';
 import { contentPlugin } from '../../scripts/content/vite-plugin.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { writeExamPool } from '../fixtures/exam-pool.ts';
 import {
   fixtureQuotas,
+  multiQuestion,
   POOL_FILE,
   QUESTION_FILE,
   singleQuestion,
@@ -156,5 +161,75 @@ describe('ids-only output for exam-pool files (spec 2.6)', () => {
     expect(output).toContain(
       `R3 ${QUESTION_FILE}:2  q-zz0001: two options share the text "${TOKEN.toLowerCase()} borrow central ovens"`,
     );
+  });
+});
+
+describe('content:checks grade, content:stamp and content:forms print exam items by id only', () => {
+  const load = (root: string) => loadContext(root, { today: FIXTURE_TODAY });
+
+  it('keeps exam item text and checker reasons out of grade and stamp output', () => {
+    const root = makeFixtureRoot();
+    mkdirSync(join(root, 'agents'), { recursive: true });
+    for (const name of ['solve-closed', 'solve-notes', 'critic']) {
+      writeFileSync(join(root, 'agents', `${name}.md`), `---\nname: ${name}\nversion: 1\n---\n\n# ${name}\n`);
+    }
+    const single = singleQuestion({ id: 'q-e1a2b3', pool: 'exam' });
+    const multi = multiQuestion({ id: 'q-e7f8g9', pool: 'exam', concept: 'per-minute-rental' });
+    writePool(root, [
+      { ...single, stem: `${single.stem} ${TOKEN}`, takeaway: `${single.takeaway} ${TOKEN}` },
+      { ...multi, stem: `${multi.stem} ${TOKEN}`, takeaway: `${multi.takeaway} ${TOKEN}` },
+    ]);
+    const { paths } = prepare(load(root), [1], 1, 'exam');
+    for (const path of paths) {
+      const batch = JSON.parse(readFileSync(join(root, path), 'utf8')) as {
+        batch: string;
+        kind: string;
+        questions: { id: string }[];
+      };
+      const answers = batch.questions.map(({ id }) =>
+        batch.kind === 'solve-closed'
+          ? { id, picked: [1], secondDefensible: true, reason: `Two options fit ${TOKEN}.` }
+          : batch.kind === 'solve-notes'
+            ? { id, picked: [1], quote: `- ${TOKEN}` }
+            : batch.kind === 'critic-cue'
+              ? { id, guess: [1], basis: 'tell', reason: `The longest option says ${TOKEN}.` }
+              : {
+                  id,
+                  distractorsWrong: false,
+                  noTell: false,
+                  taskFits: true,
+                  styleHolds: true,
+                  problems: [TOKEN],
+                },
+      );
+      writeFileSync(
+        join(root, RESULTS_DIR, 'answers', `${batch.batch}.json`),
+        JSON.stringify({ batch: batch.batch, answers }),
+      );
+    }
+    const graded = grade(root, FIXTURE_TODAY);
+    const stamp = stampQuestions(load(root), FIXTURE_TODAY);
+    expect(graded.failures.length).toBeGreaterThan(0);
+    expect(graded.lines.length).toBe(graded.failures.length);
+    expect(stamp.log).toEqual([
+      'review q-e1a2b3 attempts 1 solve-closed',
+      'review q-e7f8g9 attempts 1 solve-closed',
+    ]);
+    expect(leaks([...graded.lines, ...stamp.log, ...stamp.revise, stamp.summary])).toBe(false);
+  });
+
+  it('keeps exam item text out of content:forms output and forms.yaml', () => {
+    const root = makeFixtureRoot();
+    writeExamPool(root, { text: TOKEN });
+    const built = runForms(root, []);
+    const forms = parse(readFileSync(join(root, FORMS_FILE), 'utf8')) as { forms: { qids: string[] }[] };
+    forms.forms[0]?.qids.pop();
+    writeFileSync(join(root, FORMS_FILE), stringify(forms));
+    const refused = runForms(root, ['--freeze']);
+    const rebuilt = runForms(root, []);
+    const frozen = runForms(root, ['--freeze']);
+    expect([built.code, refused.code, rebuilt.code, frozen.code]).toEqual([0, 1, 0, 0]);
+    expect(leaks([...built.out, ...refused.out, ...rebuilt.out, ...frozen.out])).toBe(false);
+    expect(leaks([readFileSync(join(root, FORMS_FILE), 'utf8')])).toBe(false);
   });
 });
