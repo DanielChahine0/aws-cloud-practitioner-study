@@ -435,7 +435,7 @@ questions:
       on: 2026-10-09
   - id: q-2977zm
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fsx-for-openzfs
@@ -463,6 +463,8 @@ questions:
       - "FSx for OpenZFS: ZFS storage over NFS v3 to v4.2, for migrations, analytics, content management and dev and test."
     takeaway: Amazon FSx for OpenZFS shares its ZFS file system with clients over NFS.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: Option 4's 'shared network file system' echoes the stem's 'files', the only option that names files, which points at the key."
+    verified:
+      keyHash: 28e99b49dc69
+      fullHash: 3e97c0df07aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

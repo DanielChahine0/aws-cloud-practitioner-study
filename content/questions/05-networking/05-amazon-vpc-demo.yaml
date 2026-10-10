@@ -390,7 +390,7 @@ questions:
       lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is what makes a subnet private; the others hold for any subnet.)"
   - id: q-9waax7
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: public-subnets
@@ -418,9 +418,11 @@ questions:
       - Its Routes tab starts with a single local route that keeps traffic inside the VPC.
     takeaway: A subnet is public because its route table sends 0.0.0.0/0 traffic to an attached internet gateway.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: Option 4 states the number 10.0.0.0/16, which no cited evidence line contains; confirm the note states it or swap it for a plain 'the VPC range'."
+    verified:
+      keyHash: e202af695d6d
+      fullHash: 68589433cff4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-2jd63p
     version: 1
     status: draft
@@ -455,5 +457,77 @@ questions:
     takeaway: A subnet's name and public addresses do not make it public; associating it with a route to the internet gateway does.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: The question tests spreading subnets across Availability Zones for high availability, which fits task 3.2 (global infrastructure) better than 3.5, and the concept 'Public subnets' is not what the key turns on."
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only action that can make a subnet public; a VPC takes one internet gateway, and AZ or CIDR size never changes routing.)"
+  - id: q-wqephw
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: public-subnets
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      During a cleanup, a cafe admin detaches the internet gateway from the VPC that hosts the menu site.
+      The menu subnets keep auto-assign public IPv4 on, stay associated with their route table, and that table still sends 0.0.0.0/0 to the gateway.
+      Which step makes the menu subnets public again?
+    options:
+      - id: a
+        text: Turn on auto-assign public IPv4 for the subnets
+        why: The setting is still on, so the servers already get public addresses; what they lack is a gateway joined to the VPC.
+      - id: b
+        text: Associate the subnets with the route table
+        why: The subnets are still associated with the table, so redoing this changes nothing while the gateway stays detached.
+      - id: c
+        text: Attach the internet gateway to the VPC
+        correct: true
+        why: A public subnet needs its 0.0.0.0/0 route to point at an attached gateway, and attaching is the only piece the cleanup removed.
+      - id: d
+        text: Add a 0.0.0.0/0 route to the internet gateway
+        why: The table already holds this route, but it leads nowhere until the gateway is attached to the VPC again.
+    evidence:
+      - Naming a subnet "public" does not make it public, because it still needs an attached internet gateway and a route to it.
+      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+    takeaway: A public subnet needs its route to point at an internet gateway that is attached to the VPC, not just one that exists.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 mirrors the stem's 'detaches the internet gateway from the VPC' with the opposite verb and the same nouns, so the key can be read off the stem without knowing public subnets. The stem states outright that the other three pieces are still in place, which turns options 1 to 3 into giveaways by elimination; consider describing the setup less explicitly."
+  - id: q-vtez84
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: public-subnets
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      A customer at home opens the cafe's menu site on a phone.
+      The site runs on servers launched in a public subnet of the cafe's VPC.
+      Through which component does the customer's request come in to reach those servers?
+    options:
+      - id: a
+        text: A NAT gateway
+        why: A NAT gateway lets private instances start outside connections and blocks connections started from outside, so it cannot carry this request in.
+      - id: b
+        text: A virtual private gateway
+        why: A virtual private gateway admits protected traffic from approved networks, not requests from any customer's phone.
+      - id: c
+        text: An internet gateway
+        correct: true
+        why: Public subnet resources are reached from the web through the internet gateway attached to the VPC, which their route points at.
+      - id: d
+        text: AWS Transit Gateway
+        why: Transit Gateway is a hub joining VPCs and on-premises networks, not the entry point for a customer browsing the menu site.
+    evidence:
+      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+      - The public subnets now reach the internet through the gateway, while the private subnets lack that route and stay private.
+    takeaway: Customers reach servers in a public subnet through the internet gateway attached to the VPC.
+    history: []
+    verified:
+      keyHash: f78e31458fa2
+      fullHash: "812e88161233"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

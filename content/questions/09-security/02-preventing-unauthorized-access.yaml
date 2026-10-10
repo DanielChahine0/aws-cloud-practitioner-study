@@ -1056,5 +1056,42 @@ questions:
     takeaway: Systems Manager secures a hybrid fleet by showing every node in one view and automating its security patching.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: Task 2.3 (access management) does not fit: overseeing and patching nodes is operations work, not access management, so Systems Manager sits poorly under it. The stem names three jobs and asks for the last, adding reading load without adding a scenario the reader must reason about."
+      attempts: 3
+      lastFailure: "critic: Key 'AWS Systems Manager' shares the word 'system' with the stem's 'operating system', which points at it. Distractors IAM Identity Center, IAM and Secrets Manager are identity and secrets services, not management services like the key, so they are easy to rule out. Task 2.3 (access management) fits poorly; inventorying and patching servers is security operations, not access management."
+  - id: q-0k0gw2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-systems-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      A barista has left the cafe but still has a local login on the Windows servers it runs across several AWS accounts and with another cloud provider.
+      The IT lead wants to remove that login from every server in one automated step.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Identity and Access Management (IAM)
+        why: IAM controls who can call AWS resources, but it does not remove local logins inside servers, least of all at another cloud provider.
+      - id: b
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates passwords and keys, but it does not delete user logins on the cafe's servers.
+      - id: c
+        text: AWS IAM Identity Center
+        why: Identity Center gives staff one sign-in to AWS accounts and apps, but it does not manage the local logins on servers.
+      - id: d
+        text: AWS Systems Manager
+        correct: true
+        why: Systems Manager sees servers across accounts and other clouds in one view and automates user management on them.
+    evidence:
+      - AWS Systems Manager shows all your nodes, meaning connection points, across accounts, Regions, multi-cloud and hybrid setups in one view.
+      - It reports details like node ID and operating system and automates registry changes, user management and security patching.
+    takeaway: Automating user management, such as removing a login, on servers across accounts and clouds points to AWS Systems Manager.
+    history: []
+    verified:
+      keyHash: 1b14f8dd9588
+      fullHash: cd37a98fcc52
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

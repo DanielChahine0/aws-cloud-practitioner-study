@@ -520,5 +520,41 @@ questions:
     takeaway: What marks generative AI out within deep learning is that it creates new content rather than only analyzing data.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one that names a concrete outcome with an example ('such as stories'), while the rest are generic traits shared by all deep learning.)"
+      attempts: 3
+      lastFailure: "critic: Option 3 'produces new content' paraphrases the stem's word 'Generative', so the key can be picked from the name alone."
+  - id: q-2gzsea
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: generative-ai
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe wants software that composes a brand-new jingle for its radio adverts and paints a matching poster for the window.
+      Which approach fits this work?
+    options:
+      - id: a
+        text: Predictive machine learning
+        why: Predictive ML estimates outcomes from past data, such as next week's sales, but does not compose music or paint posters.
+      - id: b
+        text: Generative AI
+        correct: true
+        why: Generative AI creates original content, and that covers music and images as well as text, so it fits the jingle and the poster.
+      - id: c
+        text: Text classification
+        why: Classification sorts existing text into set groups, such as praise and complaints, and creates no jingle or poster.
+      - id: d
+        text: Computer vision
+        why: Computer vision recognizes what is in existing images, such as empty trays, rather than painting a new poster.
+    evidence:
+      - Deep learning producing original content and ideas (conversations, stories, images, music), powered by foundation models (FMs), huge models pre-trained on massive data.
+      - LLMs are popular text-trained FMs for human language; FMs also make video, images, music.
+    takeaway: Generative AI is not limited to text; it also creates new music and images, which recognition and prediction models do not.
+    history: []
+    verified:
+      keyHash: 8454374501d2
+      fullHash: f53eb5d20ada
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

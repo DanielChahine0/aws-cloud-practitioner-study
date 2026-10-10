@@ -394,5 +394,42 @@ questions:
     takeaway: A DynamoDB query matches a partition key value and returns only those items, unlike a scan of the whole table.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: Options 3 and 4 describe table traits (encryption at rest, flexible attributes) rather than ways to find items, so only option 2 competes with the key and the item is easy to narrow."
+      attempts: 3
+      lastFailure: "critic: Option 4 why claims DynamoDB uses its own query language, but DynamoDB also accepts SQL-compatible PartiQL; ground it in the query matching a partition key instead."
+  - id: q-8gfed6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-query
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe keeps its orders in DynamoDB, with the order number as each order's identifying attribute.
+      Only some orders carry a notes attribute, and the manager wants all of those.
+      Why can't a query alone return them?
+    options:
+      - id: a
+        text: It only reads items whose partition key matches
+        correct: true
+        why: A query looks items up by a partition key value, and the notes attribute is not the order number, so a query cannot select on it.
+      - id: b
+        text: It cannot follow foreign keys between tables
+        why: DynamoDB has no foreign keys, but the notes sit in the same orders table, so links between tables are not the issue.
+      - id: c
+        text: It is sent from app code via the AWS SDK
+        why: Apps do call DynamoDB through the SDK, yet that only says how the request travels, not which orders it can match.
+      - id: d
+        text: It runs only once the table status is active
+        why: A new table must be active before use, but the cafe's table already holds orders, so its status is not the obstacle.
+    evidence:
+      - A scan returns the whole table, while a query fetches items by partition key.
+      - A scan (Explore table items, then Run) read back everything, and a notes attribute appeared on only some items.
+    takeaway: A DynamoDB query finds items only by their partition key value, so it cannot pick out items by another attribute.
+    history: []
+    verified:
+      keyHash: 9cc335abe44c
+      fullHash: 5345753e07e6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

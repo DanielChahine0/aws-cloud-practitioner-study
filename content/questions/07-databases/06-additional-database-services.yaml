@@ -634,7 +634,7 @@ questions:
       on: 2026-10-09
   - id: q-csngez
     version: 1
-    status: draft
+    status: live
     type: match
     pool: practice
     concept: purpose-built-databases
@@ -660,6 +660,8 @@ questions:
       - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
     takeaway: The purpose-built approach sends each workload to the database designed for its kind of data.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: Pair 4 right 'DynamoDB Accelerator (DAX)' is a cache, not a database, though the stem frames every pair as a best-fit database; also it drops the 'Amazon' prefix of its full name. No evidence line supports the Managed Blockchain or DAX pairs."
+    verified:
+      keyHash: f73cd430cc6c
+      fullHash: c27117c63021
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
