@@ -1,0 +1,121 @@
+id: lab-m09-which-service-raised-it
+module: 9
+title: Which service raised this finding?
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts: [amazon-inspector, amazon-guardduty, amazon-macie]
+notes: [m09/detecting-and-responding-to-security-incidents, m09/protecting-data]
+minutes: 5
+brief: >-
+  The cafe's morning security report lists nine new findings, but the line saying where each one came from got cut off.
+  Sort each finding under the service that raised it.
+spec:
+  buckets:
+    - id: inspector
+      label: Amazon Inspector
+    - id: guardduty
+      label: Amazon GuardDuty
+    - id: macie
+      label: Amazon Macie
+  cards:
+    - id: till-library
+      text: The till server runs a software package with a security flaw attackers could use
+      bucket: inspector
+      goal: g1
+    - id: open-tracker
+      text: The order tracker's EC2 instance is left open to connections from anyone on the internet
+      bucket: inspector
+      goal: g1
+    - id: loyalty-container
+      text: The loyalty app's container image carries an outdated package that attackers can exploit
+      bucket: inspector
+      goal: g1
+    - id: bad-address
+      text: Calls to the cafe account come from an IP address on a list of known attackers
+      bucket: guardduty
+      goal: g2
+    - id: odd-traffic
+      text: The menu server suddenly sends network traffic unlike anything it sent before
+      bucket: guardduty
+      goal: g2
+    - id: activity-burst
+      text: The cafe account shows a burst of activity far outside its normal pattern
+      bucket: guardduty
+      goal: g2
+    - id: phone-list
+      text: An S3 bucket of menu photos also holds a file of customer phone numbers
+      bucket: macie
+      goal: g3
+    - id: card-export
+      text: Customer card details sit in an S3 bucket meant only for sales reports
+      bucket: macie
+      goal: g3
+    - id: loyalty-names
+      text: An S3 export nobody tracked holds loyalty members' names and home addresses
+      bucket: macie
+      goal: g3
+goals:
+  - id: g1
+    label: Software flaws and weak settings sit under Amazon Inspector
+    hint: Ask whether the finding is a weakness found by scanning a server, container or function, before anyone attacks it.
+  - id: g2
+    label: Suspicious activity sits under Amazon GuardDuty
+    hint: Ask whether the finding comes from watching account and network activity for known bad actors or unusual behavior.
+  - id: g3
+    label: Sensitive stored data sits under Amazon Macie
+    hint: Ask whether the finding is about personal or payment data resting in S3, rather than about software or traffic.
+solution:
+  - { t: place, card: till-library, bucket: inspector }
+  - { t: place, card: open-tracker, bucket: inspector }
+  - { t: place, card: loyalty-container, bucket: inspector }
+  - { t: place, card: bad-address, bucket: guardduty }
+  - { t: place, card: odd-traffic, bucket: guardduty }
+  - { t: place, card: activity-burst, bucket: guardduty }
+  - { t: place, card: phone-list, bucket: macie }
+  - { t: place, card: card-export, bucket: macie }
+  - { t: place, card: loyalty-names, bucket: macie }
+wrongPaths:
+  - mistake: Thinks GuardDuty flags an EC2 instance left open to the internet
+    failsGoal: g1
+    actions:
+      - { t: place, card: till-library, bucket: inspector }
+      - { t: place, card: open-tracker, bucket: guardduty }
+      - { t: place, card: loyalty-container, bucket: inspector }
+      - { t: place, card: bad-address, bucket: guardduty }
+      - { t: place, card: odd-traffic, bucket: guardduty }
+      - { t: place, card: activity-burst, bucket: guardduty }
+      - { t: place, card: phone-list, bucket: macie }
+      - { t: place, card: card-export, bucket: macie }
+      - { t: place, card: loyalty-names, bucket: macie }
+  - mistake: Thinks Inspector's scans catch calls from a known malicious IP address
+    failsGoal: g2
+    actions:
+      - { t: place, card: till-library, bucket: inspector }
+      - { t: place, card: open-tracker, bucket: inspector }
+      - { t: place, card: loyalty-container, bucket: inspector }
+      - { t: place, card: bad-address, bucket: inspector }
+      - { t: place, card: odd-traffic, bucket: guardduty }
+      - { t: place, card: activity-burst, bucket: guardduty }
+      - { t: place, card: phone-list, bucket: macie }
+      - { t: place, card: card-export, bucket: macie }
+      - { t: place, card: loyalty-names, bucket: macie }
+  - mistake: Thinks GuardDuty is the service that finds card details stored in S3
+    failsGoal: g3
+    actions:
+      - { t: place, card: till-library, bucket: inspector }
+      - { t: place, card: open-tracker, bucket: inspector }
+      - { t: place, card: loyalty-container, bucket: inspector }
+      - { t: place, card: bad-address, bucket: guardduty }
+      - { t: place, card: odd-traffic, bucket: guardduty }
+      - { t: place, card: activity-burst, bucket: guardduty }
+      - { t: place, card: phone-list, bucket: macie }
+      - { t: place, card: card-export, bucket: guardduty }
+      - { t: place, card: loyalty-names, bucket: macie }
+debrief:
+  lines:
+    - Amazon Inspector automatically scans EC2, containers and Lambda for vulnerable software and weak settings, and ranks each finding by severity.
+    - Amazon GuardDuty keeps watching account and network activity, using threat intelligence and anomaly detection to spot attacks.
+    - Amazon Macie uses machine learning to find sensitive data, such as phone numbers or card details, stored in S3.
+  questions: [q-zjaktz, q-rnmh2h, q-jr4y6g]
