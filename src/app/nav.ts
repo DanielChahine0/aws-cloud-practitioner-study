@@ -27,6 +27,7 @@ export function up(route: Route): Route | null {
     case 'module':
     case 'missions':
     case 'review':
+    case 'lightning':
     case 'not-found':
       return { kind: 'home' };
     case 'mission':

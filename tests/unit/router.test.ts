@@ -23,6 +23,7 @@ describe('parseHash', () => {
     expect(parseHash('#/s/check/m03/aws-lambda')).toEqual({ kind: 'check', module: 3, slug: 'aws-lambda' });
     expect(parseHash('#/s/quiz/m13')).toEqual({ kind: 'quiz', module: 13 });
     expect(parseHash('#/s/review')).toEqual({ kind: 'review' });
+    expect(parseHash('#/s/lightning')).toEqual({ kind: 'lightning' });
   });
 
   it('reads the daily incident route, and nothing under it', () => {
@@ -111,6 +112,7 @@ describe('toHash', () => {
     { kind: 'check', module: 3, slug: 'aws-lambda' },
     { kind: 'quiz', module: 3 },
     { kind: 'review' },
+    { kind: 'lightning' },
     { kind: 'boss', module: 5 },
     { kind: 'mocks' },
     { kind: 'mock', form: 'b' },
@@ -130,6 +132,7 @@ describe('toHash', () => {
     expect(toHash({ kind: 'check', module: 3, slug: 'aws-lambda' })).toBe('#/s/check/m03/aws-lambda');
     expect(toHash({ kind: 'quiz', module: 3 })).toBe('#/s/quiz/m03');
     expect(toHash({ kind: 'review' })).toBe('#/s/review');
+    expect(toHash({ kind: 'lightning' })).toBe('#/s/lightning');
     expect(toHash({ kind: 'boss', module: 5 })).toBe('#/s/boss/m05');
     expect(toHash({ kind: 'mocks' })).toBe('#/s/mock');
     expect(toHash({ kind: 'mock', form: 'a' })).toBe('#/s/mock/a');

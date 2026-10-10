@@ -8,6 +8,7 @@ export type Route =
   | { kind: 'check'; module: number; slug: string }
   | { kind: 'quiz'; module: number }
   | { kind: 'review' }
+  | { kind: 'lightning' }
   | { kind: 'boss'; module: number }
   | { kind: 'mocks' }
   | { kind: 'mock'; form: MockRoute }
@@ -45,6 +46,7 @@ export function parseHash(hash: string): Route {
   if (path === '' || path === '/') return { kind: 'home' };
   if (path === '/missions') return { kind: 'missions' };
   if (path === '/s/review') return { kind: 'review' };
+  if (path === '/s/lightning') return { kind: 'lightning' };
   if (path === '/s/mock') return { kind: 'mocks' };
   if (path === '/s/incident') return { kind: 'incident' };
   const module = MODULE_PATH.exec(path);
@@ -90,6 +92,8 @@ export function toHash(route: Route): string {
       return `#/s/quiz/m${pad2(route.module)}`;
     case 'review':
       return '#/s/review';
+    case 'lightning':
+      return '#/s/lightning';
     case 'boss':
       return `#/s/boss/m${pad2(route.module)}`;
     case 'mocks':

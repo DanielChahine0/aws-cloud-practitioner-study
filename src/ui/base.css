@@ -2276,3 +2276,26 @@ dialog.confirm .button {
 }
 
 /* Lightning */
+.lightning-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lightning-clock {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.lightning-summary {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lightning-summary .verdict {
+  margin: 0 0 4px;
+}
