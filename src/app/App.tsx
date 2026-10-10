@@ -53,12 +53,13 @@ export function App() {
 /**
  * The exam clock: while any boss or mock is open, wherever the route is, ticks `examTick` every second and settles the
  * exam once its deadline has passed, also for an exam already past it when the log loads (spec 4.3).
+ * It waits for the content index too, which loads on its own fetch, since a settle needs it to find the questions.
  */
 function useExamTicker(): void {
   useEffect(
     () =>
       effect(() => {
-        if (!storeReady.value) return;
+        if (!storeReady.value || index.value === null) return;
         const open = openExam(progress.value);
         if (open === null || open.deadline === null) return;
         const { sid } = open;

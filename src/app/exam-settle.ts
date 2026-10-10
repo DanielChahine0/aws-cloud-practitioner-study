@@ -51,10 +51,13 @@ export function loadModules(ns: readonly number[]): Promise<ModuleChunk[] | null
 
 /**
  * The question text of a session's items: the form chunks of its exam items and, for a boss, the module chunks of
- * its module and every earlier one; null when a chunk cannot load.
+ * its module and every earlier one; null when a chunk cannot load, or while the content index has not loaded, since
+ * without it no chunk can be found and a settle would score every answer as missing.
  */
 export async function examQuestions(session: SessionState): Promise<Map<string, QuestionView> | null> {
-  const items = index.peek()?.exam.items ?? {};
+  const idx = index.peek();
+  if (idx === null) return null;
+  const items = idx.exam.items;
   const forms = new Set<string>();
   for (const qid of session.qids) {
     const item = items[qid];
