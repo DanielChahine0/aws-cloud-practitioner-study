@@ -14,6 +14,7 @@ import {
   cellSpare,
   examTargets,
   homed,
+  labTargets,
   needsDani,
   report,
   targets,
@@ -111,7 +112,9 @@ describe('report', () => {
     expect(report(load(root))).toEqual([
       'modules 1, lessons 1, glossary terms 1, concepts 2 (2 tested)',
       'questions: 2 draft, 1 live, 0 retired; live single 1, multi 0, match 0',
+      'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0',
       'm01: 3 practice (single 1, multi 1, match 1); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
+      'm01 labs: 1',
       'concepts.md drift: 0',
     ]);
   });
@@ -229,8 +232,10 @@ describe('exam-pool counts in the report (spec 2.6)', () => {
     expect(report(load(root))).toEqual([
       'modules 1, lessons 1, glossary terms 1, concepts 2 (2 tested)',
       'questions: 2 draft, 1 live, 0 retired; live single 1, multi 0, match 0',
+      'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0',
       'm01: 3 practice (single 1, multi 1, match 1); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
       'm01 exam: 3 (single 3, multi 0); correct option longest in 0 of 3 singles (0%); negative stems 0 (0%)',
+      'm01 labs: 1',
       'concepts.md drift: 0',
     ]);
   });
@@ -277,5 +282,41 @@ describe('exam-pool counts in the report (spec 2.6)', () => {
     expect(targets(load(root))).toEqual([
       { note: 'm01/what-a-bakery-cloud-is', file: QUESTION_FILE, need: 1 },
     ]);
+  });
+});
+
+describe('lab targets (spec 5.1)', () => {
+  const FIXTURE_TARGETS = [
+    {
+      module: 1,
+      dir: '01-baking-basics',
+      labs: ['lab-m01-sort-the-bakes'],
+      concepts: [
+        {
+          id: 'shared-kitchen',
+          name: 'Shared kitchen',
+          note: 'm01/what-a-bakery-cloud-is',
+          tasks: ['1.1'],
+          practice: [{ id: 'q-b4k7m2', type: 'single' }],
+        },
+        {
+          id: 'per-minute-rental',
+          name: 'Per-minute rental',
+          note: 'm01/what-a-bakery-cloud-is',
+          tasks: ['4.1'],
+          practice: [{ id: 'q-d9p4r6', type: 'single' }],
+        },
+      ],
+    },
+  ];
+
+  it('lists each module with its labs and the live practice ids and types of its concepts', () => {
+    expect(labTargets(load(makeFixtureRoot()))).toEqual(FIXTURE_TARGETS);
+  });
+
+  it('never lists an exam item or a draft as a debrief candidate', () => {
+    const root = makeFixtureRoot();
+    writePool(root, [singleQuestion({ id: 'q-e00001', pool: 'exam', status: 'live' })]);
+    expect(labTargets(load(root))).toEqual(FIXTURE_TARGETS);
   });
 });

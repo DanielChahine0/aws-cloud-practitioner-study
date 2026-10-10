@@ -15,6 +15,8 @@ const VERSIONS: Record<string, number> = {
   'solve-notes': 1,
   critic: 1,
   'update-writer': 1,
+  'lab-writer': 1,
+  'lab-critic': 1,
 };
 const PROMPTS = Object.keys(VERSIONS);
 
@@ -23,6 +25,7 @@ describe('agent prompts', () => {
     const { yaml, body } = splitFrontmatter(readFileSync(join(ROOT, 'agents', `${name}.md`), 'utf8'));
     expect(parse(yaml ?? '')).toEqual({ name, version: VERSIONS[name] });
     expect(body).toMatch(/^\n?# /);
+    expect(body).not.toContain('\u2014');
   });
 
   it('gives every check a version that content:checks can read', () => {
@@ -35,6 +38,12 @@ describe('agent prompts', () => {
     expect(read('question-writer')).toContain('`need`');
     for (const name of ['solve-closed', 'solve-notes', 'critic']) expect(read(name)).toContain('keys.json');
     expect(readFileSync(join(ROOT, 'content', 'STYLE.md'), 'utf8')).toContain('**NOT**');
+    for (const name of ['lab-writer', 'lab-critic']) {
+      expect(read(name)).toContain('content/STYLE.md');
+      expect(read(name)).toContain('content:validate --draft');
+      expect(read(name)).toContain('Never read');
+    }
+    expect(readFileSync(join(ROOT, 'content', 'STYLE.md'), 'utf8')).toContain('## Labs');
   });
 });
 
