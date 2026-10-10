@@ -76,6 +76,20 @@ describe('mergeKv', () => {
     expect(mergeKv(here, there)).toEqual(merged);
     expect(mergeKv(there, here)).toEqual(merged);
   });
+
+  it('merges labDrafts by newer updatedAt', () => {
+    const older = {
+      value: { 'lab-m01-sort-the-bakes': { rev: 1, actions: [{ t: 'reset' }], hints: [] } },
+      updatedAt: '2026-10-19T08:00:00.000Z',
+    };
+    const newer = {
+      value: { 'lab-m01-sort-the-bakes': { rev: 1, actions: [], hints: ['g1'] } },
+      updatedAt: '2026-10-19T09:00:00.000Z',
+    };
+    const merged = { [KV_KEYS.labDrafts]: newer };
+    expect(mergeKv({ [KV_KEYS.labDrafts]: older }, { [KV_KEYS.labDrafts]: newer })).toEqual(merged);
+    expect(mergeKv({ [KV_KEYS.labDrafts]: newer }, { [KV_KEYS.labDrafts]: older })).toEqual(merged);
+  });
 });
 
 describe('previewOf and previewLine', () => {

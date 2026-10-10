@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ConceptMeta, ContentIndex, LessonMeta, MissionMeta } from '../../schemas/chunks.ts';
+import type { ConceptMeta, ContentIndex, LabMeta, LessonMeta, MissionMeta } from '../../schemas/chunks.ts';
 import {
   EXTRAS_JOIN,
   EXTRAS_LEAD,
@@ -37,6 +37,17 @@ const lesson = (
   concepts: [],
   minutes,
   checkConcepts,
+});
+
+const labMeta = (id: string, module: number, more: Partial<LabMeta> = {}): LabMeta => ({
+  id,
+  module,
+  engine: 'sort',
+  tier: 'core',
+  rev: 1,
+  title: `Title of ${id}`,
+  minutes: 5,
+  ...more,
 });
 
 const concept = (id: string, home: string, more: Partial<ConceptMeta> = {}): ConceptMeta => ({
@@ -166,7 +177,7 @@ describe('memoryContentOf', () => {
     expect(content.questionVersions.get('q-bbbbbb')).toBe(2);
   });
 
-  it('keeps the missions marked keep and leaves exam tasks and core labs empty', () => {
+  it('keeps the missions marked keep and fills core labs from the index', () => {
     const mission = (id: string, keep: boolean): MissionMeta => ({
       id,
       title: `Title of ${id}`,
@@ -184,10 +195,23 @@ describe('memoryContentOf', () => {
     const content = memoryContentOf({
       ...IDX,
       missions: [mission('mission-01-kept', true), mission('mission-02-cleaned', false)],
+      labs: [
+        labMeta('lab-m01-sort-the-bakes', 1),
+        labMeta('lab-m01-name-the-loaf', 1, { engine: 'configure' }),
+        labMeta('lab-m01-extra-crust', 1, { tier: 'stretch' }),
+        labMeta('lab-m02-proof-time', 2, { engine: 'simulate' }),
+      ],
     });
     expect([...content.keptMissions]).toEqual(['mission-01-kept']);
     expect(content.examTasks.size).toBe(0);
-    expect(content.coreLabs.size).toBe(0);
+    expect([...content.coreLabs]).toEqual([
+      [1, ['lab-m01-sort-the-bakes', 'lab-m01-name-the-loaf']],
+      [2, ['lab-m02-proof-time']],
+    ]);
+  });
+
+  it('lists no core labs for an index without labs', () => {
+    expect(memoryContentOf(IDX).coreLabs.size).toBe(0);
   });
 });
 
@@ -488,19 +512,36 @@ describe('Home lines', () => {
 
   it('links a boss extra to its boss and a mock extra to its form', () => {
     const modules = [{ n: 5, short: 'Networking' }];
-    expect(extraLink({ kind: 'boss', module: 5 }, modules)).toEqual({
+    expect(extraLink({ kind: 'boss', module: 5 }, { modules, labs: [] })).toEqual({
       label: 'Boss: Networking',
       href: '#/s/boss/m05',
     });
-    expect(extraLink({ kind: 'mock', form: 'B' }, modules)).toEqual({ label: 'Mock B', href: '#/s/mock/b' });
+    expect(extraLink({ kind: 'mock', form: 'B' }, { modules, labs: [] })).toEqual({
+      label: 'Mock B',
+      href: '#/s/mock/b',
+    });
   });
 
-  it('links a lab extra to its lab, titled from the index', () => {
-    const labs = [{ id: 'lab-m05-two-tiers', title: 'Two tiers, two zones' }];
-    expect(extraLink({ kind: 'lab', lab: 'lab-m05-two-tiers', module: 5 }, [], labs)).toEqual({
-      label: 'Lab: Two tiers, two zones',
-      href: '#/m/05/lab/lab-m05-two-tiers',
+  it('links a lab extra to its lab with its title', () => {
+    const labs = [labMeta('lab-m03-pick-the-compute', 3, { title: 'Pick the compute' })];
+    expect(
+      extraLink({ kind: 'lab', lab: 'lab-m03-pick-the-compute', module: 3 }, { modules: [], labs }),
+    ).toEqual({
+      label: 'Lab: Pick the compute',
+      href: '#/m/03/lab/lab-m03-pick-the-compute',
     });
+  });
+
+  it('joins a boss and a lab into one extras line', () => {
+    const idx = {
+      modules: [{ n: 5, short: 'Networking' }],
+      labs: [labMeta('lab-m01-who-patches-what', 1, { title: 'Who patches what?' })],
+    };
+    const links = [
+      extraLink({ kind: 'boss', module: 5 }, idx),
+      extraLink({ kind: 'lab', lab: 'lab-m01-who-patches-what', module: 1 }, idx),
+    ];
+    expect(extrasLine(links)).toBe('Optional today: Boss: Networking  |  Lab: Who patches what?');
   });
 });
 

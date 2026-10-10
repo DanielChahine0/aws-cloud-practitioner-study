@@ -6,7 +6,7 @@ import { studyDay, tzOffset } from '../engine/day.ts';
 import { moduleMastery } from '../engine/mastery.ts';
 import { deriveMemory } from '../engine/memory.ts';
 import { firstAttempts } from '../engine/mock.ts';
-import { extras, nextAction } from '../engine/next.ts';
+import { extras, nextAction, weakestLab } from '../engine/next.ts';
 import { reviewQueue } from '../engine/queue.ts';
 import {
   rankFacts as factsOf,
@@ -16,7 +16,7 @@ import {
   shownRank,
 } from '../engine/ranks.ts';
 import { readiness } from '../engine/readiness.ts';
-import { practiceForms, takenForms } from '../engine/replay.ts';
+import { type Progress, practiceForms, takenForms } from '../engine/replay.ts';
 import { streakOf } from '../engine/streak.ts';
 import { KV_KEYS } from '../store/kv.ts';
 import { now } from './clock.ts';
@@ -95,6 +95,11 @@ export const taken = computed(() => takenForms(progress.value));
 /** The forms A to D whose mock is submitted or abandoned, so their items may join practice (spec 4.3). */
 export const learnForms = computed(() => practiceForms(progress.value));
 
+/** True when every lesson of the module is marked read. */
+function lessonsRead(m: { n: number; lessons: readonly { slug: string }[] }, p: Progress): boolean {
+  return m.lessons.every((l) => p.lessonsDone.has(`m${pad2(m.n)}/${l.slug}`));
+}
+
 /** Each module's boss: unlocked, ready, passed, cooling down or open (spec 4.2). */
 export const bosses = computed<ReadonlyMap<number, BossStatus>>(() => {
   const idx = index.value;
@@ -108,7 +113,7 @@ export const bosses = computed<ReadonlyMap<number, BossStatus>>(() => {
       bossStatus({
         module: m.n,
         progress: p,
-        lessonsRead: m.lessons.every((l) => p.lessonsDone.has(`m${pad2(m.n)}/${l.slug}`)),
+        lessonsRead: lessonsRead(m, p),
         mastery: masteries.get(m.n) ?? 0,
         now: now.value,
       }),
@@ -171,7 +176,23 @@ export const rankUp = computed<RankDef | null>(() => {
   return list.findIndex((r) => r.id === shown.id) > seen ? shown : null;
 });
 
-/** The extras line's entries (spec 4.6): a ready boss and a due mock, at most two. */
+/** The core lab the extras line offers: the first undone one of the weakest module whose lessons are all read. */
+const labExtra = computed(() => {
+  const idx = index.value;
+  if (idx === null) return null;
+  const p = progress.value;
+  return weakestLab({
+    labs: idx.labs.filter((l) => l.tier === 'core'),
+    done: new Set(p.labsDone.keys()),
+    mastery: mastery.value ?? new Map(),
+    lessonsRead: (n) => {
+      const m = idx.modules.find((x) => x.n === n);
+      return m !== undefined && lessonsRead(m, p);
+    },
+  });
+});
+
+/** The extras line's entries (spec 4.6): a ready boss, a due mock and a core lab, at most two. */
 export const extraItems = computed(() => {
   const at = now.value;
   return extras({
@@ -179,7 +200,7 @@ export const extraItems = computed(() => {
     progress: progress.value,
     today: studyDay(at),
     now: at,
-    lab: null,
+    lab: labExtra.value,
     incident: null,
   });
 });

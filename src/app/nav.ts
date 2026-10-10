@@ -35,6 +35,7 @@ export function up(route: Route): Route | null {
       return { kind: 'lesson', module: route.module, slug: route.slug, anchor: null };
     case 'quiz':
     case 'boss':
+    case 'lab':
       return { kind: 'module', module: route.module };
     case 'focus':
       return route.scope.startsWith('m')

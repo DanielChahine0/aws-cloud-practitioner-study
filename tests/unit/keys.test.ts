@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ModuleMeta } from '../../schemas/chunks.ts';
 import { type KeyCommand, type KeyContext, type KeyInput, keyCommand, keyStep } from '../../src/app/keys.ts';
+import { SHORTCUTS } from '../../src/app/shortcuts.ts';
 
 const lesson = (n: number, slug: string) => ({
   n,
@@ -47,6 +48,7 @@ const ctx = (more: Partial<KeyContext> = {}): KeyContext => ({
   termOpen: false,
   gAt: null,
   exam: false,
+  labHolding: false,
   ...more,
 });
 
@@ -92,6 +94,23 @@ describe('keyCommand', () => {
       null,
       null,
     ]);
+  });
+
+  it('Escape puts a held lab card down instead of going up', () => {
+    const LAB: KeyContext['route'] = { kind: 'lab', module: 1, id: 'lab-m01-sort-the-bakes' };
+    expect(keyCommand(key('Escape'), ctx({ route: LAB, labHolding: true }))).toBeNull();
+    expect(keyCommand(key('Escape'), ctx({ route: LAB }))).toEqual({ kind: 'navigate', hash: '#/m/01' });
+  });
+
+  it('leaves Enter, h and r on a lab to the lab, and keeps g h and g r', () => {
+    const LAB: KeyContext['route'] = { kind: 'lab', module: 1, id: 'lab-m01-sort-the-bakes' };
+    expect(keyCommand(key('Enter'), ctx({ route: LAB }))).toBeNull();
+    expect(keyCommand(key('h'), ctx({ route: LAB }))).toBeNull();
+    expect(keyCommand(key('r'), ctx({ route: LAB }))).toBeNull();
+    expect(keyCommand(key('h', { at: 10_500 }), ctx({ route: LAB, gAt: 10_000 }))).toEqual({
+      kind: 'navigate',
+      hash: '#/',
+    });
   });
 
   it('closes an open term popover before Escape goes up a level', () => {
@@ -189,5 +208,26 @@ describe('keyCommand during an exam', () => {
     expect(keyCommand(key('Escape'), exam({ overlayOpen: true }))).toEqual({ kind: 'close-sheet' });
     expect(keyCommand(key('Escape'), exam())).toBeNull();
     expect(keyCommand(key('Escape'), ctx({ route: MOCK }))).toEqual({ kind: 'navigate', hash: '#/s/mock' });
+  });
+});
+
+describe('the Help sheet', () => {
+  it('lists the lab keys after the exam keys, in order and word for word', () => {
+    const rows = SHORTCUTS.map((s) => `${s.keys.join(` ${s.joiner} `)}: ${s.action}`);
+    expect(rows.slice(-8)).toEqual([
+      'Tab: Lab: next region',
+      '↑ and ↓: Lab: move within a region',
+      'Space: Lab: pick up a card',
+      '1 to 0: Lab: place it in that bucket (0 is the tenth)',
+      'Backspace: Lab: send it back to the tray',
+      'Enter: Lab: check the goals',
+      'h: Lab: show a hint',
+      'r: Lab: reset',
+    ]);
+    expect(rows[rows.length - 9]).toBe('Ctrl+Enter: Exam: submit');
+  });
+
+  it('has one row per action, so each action keys its row', () => {
+    expect(new Set(SHORTCUTS.map((s) => s.action)).size).toBe(SHORTCUTS.length);
   });
 });
