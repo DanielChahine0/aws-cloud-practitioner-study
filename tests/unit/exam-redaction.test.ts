@@ -4,10 +4,12 @@ import type { Plugin } from 'vite';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type Context, loadContext } from '../../scripts/content/lib/context.ts';
 import { draftCheck } from '../../scripts/content/lib/draft.ts';
+import { examTargets, report } from '../../scripts/content/lib/report.ts';
 import { formatFinding, RULES, runRules } from '../../scripts/content/rules/index.ts';
 import { contentPlugin } from '../../scripts/content/vite-plugin.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
 import {
+  fixtureQuotas,
   POOL_FILE,
   QUESTION_FILE,
   singleQuestion,
@@ -135,6 +137,16 @@ describe('ids-only output for exam-pool files (spec 2.6)', () => {
     const message = overlayMessage(root);
     expect(message).toContain(`R1 ${POOL_FILE}:33  questions[1] (q-zz0002): Unrecognized key: "..."`);
     expect(leaks([message])).toBe(false);
+  });
+
+  it('keeps content:report and --exam-targets to counts and ids', () => {
+    const ctx = { ...loadContext(examRoot(), { today: FIXTURE_TODAY }), quotas: fixtureQuotas() };
+    const lines = report(ctx);
+    expect(lines).toContain(
+      'm01 exam: 1 (single 1, multi 0); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
+    );
+    expect(leaks(lines)).toBe(false);
+    expect(leaks([JSON.stringify(examTargets(ctx))])).toBe(false);
   });
 
   it('keeps the text of the same findings on a practice file', () => {

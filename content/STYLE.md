@@ -95,3 +95,17 @@ The takeaway is one sentence under 160 characters that states the idea the quest
 
 - Good: `Spiky, event-driven work with idle gaps points to Lambda's pay-per-use billing.`
 - Bad: `Lambda is good.` says nothing a reader can reuse.
+
+## Exam pool
+
+For an item with pool: exam, the cafe rules above do not apply, and this section replaces them.
+Exam-pool items live in `content/exam/pool/NN-<module-slug>.yaml` and fill the mock forms, so they read like the real exam rather than like the course.
+
+- Use `single` or `multi` only; `match` stays in the practice pool.
+- Set scenario stems in neutral made-up businesses, such as a bike rental shop, a regional clinic or an online bookstore, and never in the cafe.
+- Vary the business from item to item, so no two items of a file share one.
+- Make about 60% of stems scenarios, and ask about the concept directly in the rest.
+- Every other rule in this guide applies unchanged: shapes, levels, one concept per item, distractors, parallel options, banned phrasings, negative stems, numbers, current names, whys, evidence and the takeaway.
+
+- Good: `A regional clinic stores scanned patient forms that staff open often in the first month and rarely after that.`
+- Bad: `The cafe's loyalty app stores receipts.` sets an exam item in the cafe.
