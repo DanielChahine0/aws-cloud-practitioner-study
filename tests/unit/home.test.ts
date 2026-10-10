@@ -1,17 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import type { ConceptMeta, ContentIndex, LessonMeta, MissionMeta } from '../../schemas/chunks.ts';
 import {
+  EXTRAS_JOIN,
+  EXTRAS_LEAD,
   examAskDue,
   examDateLabel,
+  extraLink,
+  extrasLine,
+  goNoGoLine,
   hexLabel,
   lessonRefs,
   memoryContentOf,
   nextLabel,
   nothingDueLine,
+  readinessLine,
+  reminderOf,
   streakLine,
+  weakestLine,
 } from '../../src/app/home.ts';
 import type { LessonRef } from '../../src/engine/next.ts';
 import type { ReviewQueue } from '../../src/engine/queue.ts';
+import type { Readiness } from '../../src/engine/readiness.ts';
 import type { SessionState } from '../../src/engine/replay.ts';
 import { emptyIndexFields } from '../fixtures/index.ts';
 
@@ -102,6 +111,13 @@ const session = (mode: SessionState['mode'], scope: string): SessionState => ({
   submitId: null,
 });
 
+const examSession = (
+  mode: 'boss' | 'mock',
+  scope: string,
+  form: string | null,
+  deadline: string,
+): SessionState => ({ ...session(mode, scope), form, deadline });
+
 const QUEUE: ReviewQueue = {
   items: [],
   due: 0,
@@ -114,6 +130,20 @@ const QUEUE: ReviewQueue = {
 const NOW = new Date('2026-10-10T18:00:00.000Z');
 
 describe('memoryContentOf', () => {
+  it('maps each exam item to its task and adds its version, so stale exam answers are caught', () => {
+    const content = memoryContentOf({
+      ...IDX,
+      exam: {
+        forms: [{ id: 'A', chunk: 'content/exam-a.0000aaaa.json', frozen: true, size: 1 }],
+        items: { 'x-aaaaaa': { version: 3, concept: 'shared-oven', task: '1.2', form: 'A', type: 'single' } },
+      },
+    });
+    expect(content.examTasks).toEqual(new Map([['x-aaaaaa', '1.2']]));
+    expect(content.questionVersions.get('x-aaaaaa')).toBe(3);
+    expect(content.questionVersions.get('q-bbbbbb')).toBe(2);
+    expect(memoryContentOf(IDX).examTasks.size).toBe(0);
+  });
+
   it('reads each concept module from its home note and inverts the aliases', () => {
     const content = memoryContentOf(IDX);
     expect(content.concepts.get('shared-oven')).toEqual({
@@ -198,18 +228,18 @@ describe('lessonRefs', () => {
 describe('nextLabel', () => {
   it('resumes a lesson check, a module quiz or a review with the questions left', () => {
     expect(
-      nextLabel({ kind: 'resume', session: session('check', 'm01/shared-ovens'), left: 3 }, IDX),
+      nextLabel({ kind: 'resume', session: session('check', 'm01/shared-ovens'), left: 3 }, IDX, NOW),
     ).toEqual({
       label: 'Resume: Lesson check: Shared Ovens (3 left)',
       href: '#/s/check/m01/shared-ovens',
       minutes: 2,
     });
-    expect(nextLabel({ kind: 'resume', session: session('quiz', 'm02'), left: 3 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'resume', session: session('quiz', 'm02'), left: 3 }, IDX, NOW)).toEqual({
       label: 'Resume: Module quiz: Proofing (3 left)',
       href: '#/s/quiz/m02',
       minutes: 2,
     });
-    expect(nextLabel({ kind: 'resume', session: session('review', 'review'), left: 3 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'resume', session: session('review', 'review'), left: 3 }, IDX, NOW)).toEqual({
       label: 'Resume: Review (3 left)',
       href: '#/s/review',
       minutes: 2,
@@ -217,12 +247,12 @@ describe('nextLabel', () => {
   });
 
   it('counts the concepts of a review, in the singular for one', () => {
-    expect(nextLabel({ kind: 'review', count: 18 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'review', count: 18 }, IDX, NOW)).toEqual({
       label: 'Review 18 concepts',
       href: '#/s/review',
       minutes: 9,
     });
-    expect(nextLabel({ kind: 'review', count: 1 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'review', count: 1 }, IDX, NOW)).toEqual({
       label: 'Review 1 concept',
       href: '#/s/review',
       minutes: 1,
@@ -230,7 +260,7 @@ describe('nextLabel', () => {
   });
 
   it('continues the current lesson with its reading time', () => {
-    expect(nextLabel({ kind: 'continue', lesson: ref('m01/shared-ovens') }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'continue', lesson: ref('m01/shared-ovens') }, IDX, NOW)).toEqual({
       label: 'Continue: Shared Ovens',
       href: '#/m/01/l/shared-ovens',
       minutes: 6,
@@ -239,32 +269,80 @@ describe('nextLabel', () => {
 
   it('offers Check yourself for a module, opening its first unchecked lesson', () => {
     expect(
-      nextLabel({ kind: 'check', module: 2, concepts: 6, lesson: ref('m02/proofing-cabinets') }, IDX),
+      nextLabel({ kind: 'check', module: 2, concepts: 6, lesson: ref('m02/proofing-cabinets') }, IDX, NOW),
     ).toEqual({
       label: 'Check yourself: Module 2 (6 concepts)',
       href: '#/s/check/m02/proofing-cabinets',
       minutes: 3,
     });
     expect(
-      nextLabel({ kind: 'check', module: 2, concepts: 1, lesson: ref('m02/proofing-cabinets') }, IDX).label,
+      nextLabel({ kind: 'check', module: 2, concepts: 1, lesson: ref('m02/proofing-cabinets') }, IDX, NOW)
+        .label,
     ).toBe('Check yourself: Module 2 (1 concept)');
   });
 
   it('starts a module at its first lesson and otherwise names the next lesson', () => {
-    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/welcome') }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/welcome') }, IDX, NOW)).toEqual({
       label: 'Start Module 1: Welcome to the Bakery',
       href: '#/m/01/l/welcome',
       minutes: 3,
     });
-    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/shared-ovens') }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/shared-ovens') }, IDX, NOW)).toEqual({
       label: 'Next lesson: Shared Ovens',
       href: '#/m/01/l/shared-ovens',
       minutes: 6,
     });
   });
 
+  it('resumes a boss or a mock with the whole minutes left, rounded up', () => {
+    const deadline = '2026-10-10T19:01:00.000Z';
+    expect(
+      nextLabel({ kind: 'resume', session: examSession('mock', '', 'A', deadline), left: 65 }, IDX, NOW),
+    ).toEqual({
+      label: 'Resume: Mock exam A (61 min left)',
+      href: '#/s/mock/a',
+      minutes: 61,
+    });
+    expect(
+      nextLabel({ kind: 'resume', session: examSession('mock', '', 'remix', deadline), left: 65 }, IDX, NOW),
+    ).toEqual({
+      label: 'Resume: Remix mock (61 min left)',
+      href: '#/s/mock/remix',
+      minutes: 61,
+    });
+    expect(
+      nextLabel(
+        { kind: 'resume', session: examSession('boss', 'm01', null, '2026-10-10T18:00:30.000Z'), left: 15 },
+        IDX,
+        NOW,
+      ),
+    ).toEqual({ label: 'Resume: Boss: Baking Basics (1 min left)', href: '#/s/boss/m01', minutes: 1 });
+    expect(
+      nextLabel(
+        { kind: 'resume', session: examSession('boss', 'm02', null, '2026-10-10T17:59:00.000Z'), left: 15 },
+        IDX,
+        NOW,
+      ).label,
+    ).toBe('Resume: Boss: Proofing (0 min left)');
+  });
+
+  it('resumes a focus quiz with the questions left', () => {
+    expect(nextLabel({ kind: 'resume', session: session('focus', '2.3'), left: 4 }, IDX, NOW)).toEqual({
+      label: 'Resume: Focus quiz (4 left)',
+      href: '#/s/focus/2.3',
+      minutes: 2,
+    });
+    expect(nextLabel({ kind: 'resume', session: session('focus', 'm02'), left: 4 }, IDX, NOW).href).toBe(
+      '#/s/focus/m02',
+    );
+  });
+
   it('has no link and no time when done for today', () => {
-    expect(nextLabel({ kind: 'done' }, IDX)).toEqual({ label: 'Done for today', href: null, minutes: null });
+    expect(nextLabel({ kind: 'done' }, IDX, NOW)).toEqual({
+      label: 'Done for today',
+      href: null,
+      minutes: null,
+    });
   });
 });
 
@@ -311,9 +389,17 @@ describe('labels', () => {
   });
 
   it('labels a hex with its module, mastery and band', () => {
-    expect(hexLabel(5, 'Networking', 64, 'solid')).toBe('Module 5 Networking, mastery 64, solid');
-    expect(hexLabel(1, 'Baking Basics', 0, 'outline')).toBe('Module 1 Baking Basics, mastery 0, not started');
-    expect(hexLabel(2, 'Proofing', 25, 'faint')).toBe('Module 2 Proofing, mastery 25, started');
+    expect(hexLabel(5, 'Networking', 64, 'solid', null)).toBe('Module 5 Networking, mastery 64, solid');
+    expect(hexLabel(1, 'Baking Basics', 0, 'outline', null)).toBe(
+      'Module 1 Baking Basics, mastery 0, not started',
+    );
+    expect(hexLabel(2, 'Proofing', 25, 'faint', null)).toBe('Module 2 Proofing, mastery 25, started');
+    expect(hexLabel(5, 'Networking', 64, 'solid', 'passed')).toBe(
+      'Module 5 Networking, mastery 64, solid, boss passed',
+    );
+    expect(hexLabel(3, 'Compute', 61, 'solid', 'ready')).toBe(
+      'Module 3 Compute, mastery 61, solid, boss ready',
+    );
   });
 });
 
@@ -337,5 +423,92 @@ describe('examAskDue', () => {
   it('stays away once a date is set or the question was dismissed', () => {
     expect(examAskDue({ idx: IDX, lessonsDone: allRead, examDate: '2026-11-14', examAsk: null })).toBe(false);
     expect(examAskDue({ idx: IDX, lessonsDone: allRead, examDate: null, examAsk: 'dismissed' })).toBe(false);
+  });
+});
+
+const readinessOf = (over: Partial<Readiness>): Readiness => ({
+  value: 0.62,
+  label: 'Close',
+  capped: false,
+  memory: 0.6,
+  mock: 0.64,
+  domains: { '1': 0.6, '2': 0.6, '3': 0.6, '4': 0.6 },
+  weakest: null,
+  at: '2026-11-14T04:00:00.000Z',
+  ...over,
+});
+
+describe('readinessLine', () => {
+  it('shows the floored number and the label', () => {
+    expect(readinessLine(readinessOf({}))).toBe('Readiness 62  Close');
+    expect(readinessLine(readinessOf({ value: 0.85, label: 'Ready' }))).toBe('Readiness 85  Ready');
+  });
+
+  it('shows 79 for 0.799 and 80 for 0.80', () => {
+    expect(readinessLine(readinessOf({ value: 0.799 }))).toBe('Readiness 79  Close');
+    expect(readinessLine(readinessOf({ value: 0.8 }))).toBe('Readiness 80  Close');
+  });
+
+  it('names the cap before the first unseen mock', () => {
+    expect(readinessLine(readinessOf({ value: 0.7, capped: true, mock: null }))).toBe(
+      'Readiness 70  capped until your first unseen mock',
+    );
+  });
+
+  it('shows a dash before 40 concepts have evidence', () => {
+    expect(readinessLine(readinessOf({ value: null, label: 'Building' }))).toBe('Readiness -');
+  });
+});
+
+describe('Home lines', () => {
+  it('names the weakest task with its short name', () => {
+    expect(weakestLine({ id: '2.3', short: 'access management' })).toBe(
+      'Weakest: 2.3 access management (focus quiz)',
+    );
+  });
+
+  it('writes the go/no-go line with the exam date', () => {
+    expect(goNoGoLine('2026-11-14', 'Close')).toBe(
+      'Exam Sat 14 Nov, readiness Close. Rescheduling closes 24 h before the appointment.',
+    );
+    expect(goNoGoLine('2026-11-14', 'Building')).toBe(
+      'Exam Sat 14 Nov, readiness Building. Rescheduling closes 24 h before the appointment.',
+    );
+  });
+
+  it('joins the extras with a bar', () => {
+    expect(extrasLine([{ label: 'Boss: Networking' }, { label: 'Mock B' }])).toBe(
+      'Optional today: Boss: Networking  |  Mock B',
+    );
+    expect(extrasLine([{ label: 'Mock A' }])).toBe('Optional today: Mock A');
+    expect(`${EXTRAS_LEAD}Boss: Networking${EXTRAS_JOIN}Mock B`).toBe(
+      'Optional today: Boss: Networking  |  Mock B',
+    );
+  });
+
+  it('links a boss extra to its boss and a mock extra to its form', () => {
+    const modules = [{ n: 5, short: 'Networking' }];
+    expect(extraLink({ kind: 'boss', module: 5 }, modules)).toEqual({
+      label: 'Boss: Networking',
+      href: '#/s/boss/m05',
+    });
+    expect(extraLink({ kind: 'mock', form: 'B' }, modules)).toEqual({ label: 'Mock B', href: '#/s/mock/b' });
+  });
+});
+
+describe('reminderOf', () => {
+  const none = { 'go-no-go': false, 'exam-ask': false, backup: false, 'first-run': false };
+
+  it('puts go/no-go first, then the exam date question, the backup reminder and the first-run line', () => {
+    expect(reminderOf({ 'go-no-go': true, 'exam-ask': true, backup: true, 'first-run': true })).toBe(
+      'go-no-go',
+    );
+    expect(reminderOf({ ...none, 'exam-ask': true, backup: true, 'first-run': true })).toBe('exam-ask');
+    expect(reminderOf({ ...none, backup: true, 'first-run': true })).toBe('backup');
+    expect(reminderOf({ ...none, 'first-run': true })).toBe('first-run');
+  });
+
+  it('shows nothing when no line is due', () => {
+    expect(reminderOf(none)).toBeNull();
   });
 });

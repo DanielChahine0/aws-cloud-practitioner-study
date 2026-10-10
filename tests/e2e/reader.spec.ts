@@ -229,6 +229,7 @@ const SCREENS: { name: string; path: string; ready: (page: Page) => Locator }[] 
   { name: 'Mission 0', path: '/#/missions/mission-00', ready: (page) => page.locator('dl.facts') },
   { name: 'Mission 1', path: '/#/missions/mission-01', ready: (page) => page.locator('main pre').first() },
   { name: 'the not-found screen', path: '/#/nowhere', ready: (page) => h1(page, 'Page not found') },
+  { name: 'the mock list', path: '/#/s/mock', ready: (page) => h1(page, 'Mock exams') },
 ];
 
 test.describe('accessibility and layout', () => {
@@ -262,6 +263,15 @@ test.describe('accessibility and layout', () => {
     await expect(h1(page, HOME_TITLE)).toBeVisible();
     await page.keyboard.press('?');
     await expect(page.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
+    for (const action of [
+      'Exam: choose an option',
+      'Exam: previous or next question',
+      'Exam: flag for review',
+      'Exam: open the question grid',
+      'Exam: submit',
+    ]) {
+      await expect(page.getByRole('cell', { name: action, exact: true })).toBeVisible();
+    }
     await expectNoAxeViolations(page);
   });
 });

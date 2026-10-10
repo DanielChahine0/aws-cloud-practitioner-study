@@ -1,12 +1,18 @@
 import type { ContentIndex } from '../../../schemas/chunks.ts';
 import { pad2, type Route } from '../router.ts';
 import { Home } from './Home.tsx';
+import { lazyScreen } from './Lazy.tsx';
 import { LessonPage } from './LessonPage.tsx';
 import { MissionPage } from './MissionPage.tsx';
 import { MissionsPage } from './MissionsPage.tsx';
 import { ModulePage } from './ModulePage.tsx';
 import { NotFound } from './NotFound.tsx';
 import { Runner } from './Runner.tsx';
+
+// Exam screens load on first use through import(), so their code stays out of the initial bundle.
+const ExamScreen = lazyScreen(() => import('./Exam.tsx').then((m) => m.Exam));
+const MocksScreen = lazyScreen(() => import('./Mocks.tsx').then((m) => m.Mocks));
+const ResultsScreen = lazyScreen(() => import('./Results.tsx').then((m) => m.Results));
 
 /** The screen for a route; the content index is always loaded by the time this renders. */
 export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
@@ -28,6 +34,16 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
       return <Runner key={route} idx={idx} mode="quiz" scope={`m${pad2(route.module)}`} />;
     case 'review':
       return <Runner key={route} idx={idx} mode="review" scope="review" />;
+    case 'boss':
+      return <ExamScreen key={route} idx={idx} route={route} />;
+    case 'mocks':
+      return <MocksScreen idx={idx} />;
+    case 'mock':
+      return <ExamScreen key={route} idx={idx} route={route} />;
+    case 'focus':
+      return <Runner key={route} idx={idx} mode="focus" scope={route.scope} />;
+    case 'results':
+      return <ResultsScreen key={route} idx={idx} sid={route.sid} />;
     case 'not-found':
       return <NotFound hash={route.hash} />;
   }

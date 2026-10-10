@@ -25,6 +25,21 @@ describe('parseHash', () => {
     expect(parseHash('#/s/review')).toEqual({ kind: 'review' });
   });
 
+  it('reads the boss, mock, focus and results routes', () => {
+    expect(parseHash('#/s/boss/m05')).toEqual({ kind: 'boss', module: 5 });
+    expect(parseHash('#/s/mock')).toEqual({ kind: 'mocks' });
+    expect(parseHash('#/s/mock/a')).toEqual({ kind: 'mock', form: 'a' });
+    expect(parseHash('#/s/mock/d')).toEqual({ kind: 'mock', form: 'd' });
+    expect(parseHash('#/s/mock/remix')).toEqual({ kind: 'mock', form: 'remix' });
+    expect(parseHash('#/s/focus/2.3')).toEqual({ kind: 'focus', scope: '2.3' });
+    expect(parseHash('#/s/focus/3.8')).toEqual({ kind: 'focus', scope: '3.8' });
+    expect(parseHash('#/s/focus/m05')).toEqual({ kind: 'focus', scope: 'm05' });
+    expect(parseHash('#/r/01JA0000000000000000000000')).toEqual({
+      kind: 'results',
+      sid: '01JA0000000000000000000000',
+    });
+  });
+
   it('sends anything else to not-found with the hash it got', () => {
     for (const hash of [
       '#/m/00',
@@ -42,6 +57,16 @@ describe('parseHash', () => {
       '#/s/lightning/m03',
       '#/s/review/m03',
       '#/s/reviews',
+      '#/s/mock/e',
+      '#/s/mock/A',
+      '#/s/mock/',
+      '#/s/boss/m14',
+      '#/s/boss/05',
+      '#/s/focus/4.4',
+      '#/s/focus/m14',
+      '#/s/focus/',
+      '#/r/not-a-ulid',
+      '#/r/01JA000000000000000000000U',
     ]) {
       expect(parseHash(hash)).toEqual({ kind: 'not-found', hash });
     }
@@ -59,6 +84,13 @@ describe('toHash', () => {
     { kind: 'check', module: 3, slug: 'aws-lambda' },
     { kind: 'quiz', module: 3 },
     { kind: 'review' },
+    { kind: 'boss', module: 5 },
+    { kind: 'mocks' },
+    { kind: 'mock', form: 'b' },
+    { kind: 'mock', form: 'remix' },
+    { kind: 'focus', scope: '2.3' },
+    { kind: 'focus', scope: 'm05' },
+    { kind: 'results', sid: '01JA0000000000000000000000' },
     { kind: 'not-found', hash: '#/nowhere' },
   ];
 
@@ -70,6 +102,13 @@ describe('toHash', () => {
     expect(toHash({ kind: 'check', module: 3, slug: 'aws-lambda' })).toBe('#/s/check/m03/aws-lambda');
     expect(toHash({ kind: 'quiz', module: 3 })).toBe('#/s/quiz/m03');
     expect(toHash({ kind: 'review' })).toBe('#/s/review');
+    expect(toHash({ kind: 'boss', module: 5 })).toBe('#/s/boss/m05');
+    expect(toHash({ kind: 'mocks' })).toBe('#/s/mock');
+    expect(toHash({ kind: 'mock', form: 'a' })).toBe('#/s/mock/a');
+    expect(toHash({ kind: 'focus', scope: '2.3' })).toBe('#/s/focus/2.3');
+    expect(toHash({ kind: 'results', sid: '01JA0000000000000000000000' })).toBe(
+      '#/r/01JA0000000000000000000000',
+    );
   });
 
   it('pads module numbers to two digits', () => {

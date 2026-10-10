@@ -76,4 +76,13 @@ describe('up', () => {
   it('goes from a review to Home', () => {
     expect(up({ kind: 'review' })).toEqual({ kind: 'home' });
   });
+
+  it('goes from a boss or a module focus quiz to its module, from a mock to the mock list, else Home', () => {
+    expect(up({ kind: 'boss', module: 5 })).toEqual({ kind: 'module', module: 5 });
+    expect(up({ kind: 'focus', scope: 'm05' })).toEqual({ kind: 'module', module: 5 });
+    expect(up({ kind: 'focus', scope: '2.3' })).toEqual({ kind: 'home' });
+    expect(up({ kind: 'mock', form: 'a' })).toEqual({ kind: 'mocks' });
+    expect(up({ kind: 'mocks' })).toEqual({ kind: 'home' });
+    expect(up({ kind: 'results', sid: '01JA0000000000000000000000' })).toEqual({ kind: 'home' });
+  });
 });

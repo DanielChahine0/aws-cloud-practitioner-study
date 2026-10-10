@@ -5,7 +5,9 @@ const BASE_URL = 'http://localhost:4317';
 
 /** End-to-end and accessibility tests against the production build, which `vite preview` serves with the site's CSP. */
 export default defineConfig({
-  testDir: 'tests/e2e',
+  testDir: 'tests',
+  // Browser-only regression tests sit beside the Vitest ones as `.spec.ts` (tests/regressions/README.md).
+  testMatch: ['e2e/**/*.spec.ts', 'regressions/**/*.spec.ts'],
   forbidOnly: true,
   retries: 0,
   reporter: 'list',

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { dueLabel, FLASH_MAX, rulesLine, streakLabel, xpGain } from '../../src/app/topbar.ts';
+import {
+  dueLabel,
+  FLASH_MAX,
+  RANK_ACTION,
+  rankUpLine,
+  rulesLine,
+  streakLabel,
+  xpGain,
+} from '../../src/app/topbar.ts';
 import { ENGINE_VERSION } from '../../src/engine/replay.ts';
 
 describe('top bar labels', () => {
@@ -33,5 +41,20 @@ describe('rulesLine', () => {
     expect(rulesLine({ ready: true, stored: undefined, events: 0 })).toBe('stamp');
     expect(rulesLine({ ready: true, stored: ENGINE_VERSION, events: 40 })).toBe('none');
     expect(rulesLine({ ready: false, stored: undefined, events: 0 })).toBe('none');
+  });
+});
+
+describe('the rank in the top bar', () => {
+  it('reads what the button does after the visible plan name', () => {
+    expect(RANK_ACTION).toBe('rank, open Progress');
+  });
+
+  it('writes the promotion line with the plan name and its two facts', () => {
+    expect(
+      rankUpLine({
+        name: 'Business Support+',
+        facts: ['Made-up fact one.', 'Made-up fact two.'],
+      }),
+    ).toBe('Business Support+: Made-up fact one. Made-up fact two.');
   });
 });

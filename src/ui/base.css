@@ -748,6 +748,14 @@ dialog.sheet {
   box-shadow: inset 3px 0 0 var(--active);
 }
 
+.option:has(input:disabled) {
+  cursor: default;
+}
+
+.option:has(input:disabled):hover {
+  border-color: var(--line);
+}
+
 .option:has(input:focus-visible) {
   outline: 2px solid var(--active);
   outline-offset: 2px;
@@ -1427,4 +1435,363 @@ tr.evidence > :first-child {
 /* Progress: the level and streak lines under the summary. */
 .progress-line {
   margin: 0 0 4px;
+}
+
+/* The exam shell (spec 7.2 and 7.6): the focus bar, the question, the grid, the review page and the confirmation */
+.focus-bar {
+  gap: 12px 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+.exam-label {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exam-clock {
+  margin-left: auto;
+  font-weight: 600;
+}
+
+.exam-start .button-link,
+.exam-start .button {
+  min-height: 44px;
+}
+
+.exam .options {
+  margin-bottom: 24px;
+}
+
+.exam-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.exam-nav .button {
+  min-height: 44px;
+}
+
+.exam-nav .button:last-child {
+  margin-left: auto;
+}
+
+.button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--active);
+}
+
+.exam-grid-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+/* Answered cells are solid and unanswered ones dashed; a flagged cell also carries an F, so no state needs color. */
+.grid-cell {
+  position: relative;
+  width: 100%;
+  min-height: 44px;
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+  background: var(--pane);
+  border: 1px dashed var(--muted);
+  border-radius: 6px;
+}
+
+.grid-cell.is-answered {
+  color: var(--pane);
+  background: var(--active);
+  border-style: solid;
+  border-color: var(--active);
+}
+
+.grid-cell[aria-current="true"] {
+  outline: 2px solid var(--active);
+  outline-offset: 2px;
+}
+
+.grid-flag {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.exam-counts {
+  margin: 0 0 16px;
+}
+
+.exam-review h2 {
+  margin: 0 0 12px;
+}
+
+.exam-review .button {
+  min-height: 44px;
+}
+
+/* The focus bar's Flag and Grid show their state by an underline as well as by aria-pressed and aria-expanded. */
+.focus-bar .topbar-button[aria-pressed="true"],
+.focus-bar .topbar-button[aria-expanded="true"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+dialog.confirm {
+  width: min(400px, calc(100vw - 32px));
+  max-width: none;
+}
+
+dialog.confirm .button {
+  min-height: 44px;
+}
+
+/* Results and error review (spec 4.3 and 4.4), and the mock list */
+.score-line {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.badge-line {
+  margin: 0 0 16px;
+  font-weight: 600;
+}
+
+.domain-bars {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 24px;
+}
+
+.domain-bar {
+  display: grid;
+  gap: 4px;
+}
+
+.domain-track {
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  background: var(--line);
+  border-radius: 4px;
+}
+
+.domain-fill {
+  display: block;
+  height: 100%;
+}
+
+.wrong-list {
+  display: grid;
+  gap: 24px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.wrong-item {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.why {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.tag.auto {
+  color: var(--text);
+  border: 1px dashed var(--muted);
+}
+
+.causes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.cause {
+  min-height: 44px;
+}
+
+/* Phase 3 Home (spec 7.2): readiness, the next rank, the extras, the go/no-go line, boss rings and dots. */
+.readiness-line {
+  margin: 16px 0 4px;
+  font-weight: 600;
+  white-space: pre-wrap;
+}
+
+.weakest-line,
+.rank-line,
+.extras-line {
+  margin: 4px 0;
+}
+
+.extras-line {
+  white-space: pre-wrap;
+}
+
+.go-no-go {
+  font-weight: 600;
+}
+
+/* The ring sits in the gap around a passed hex, so the SVG may draw past its box. */
+.hex svg {
+  overflow: visible;
+}
+
+.hex polygon.hex-ring {
+  fill: none;
+  stroke: var(--active);
+  stroke-width: 2;
+}
+
+.hex-dot {
+  position: absolute;
+  top: 12%;
+  right: 16%;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--pane);
+  border-radius: 50%;
+  background: var(--active);
+}
+
+.rank-short {
+  display: none;
+}
+
+/* On a phone the bar reads `18 · 9d · Business+` (spec 7.2): Missions waits on Home, and the rank opens Progress. */
+@media (max-width: 480px) {
+  .rank-name,
+  .topbar .topbar-missions,
+  .topbar-stats:has(.topbar-rank) ~ .topbar-progress {
+    display: none;
+  }
+
+  .rank-short {
+    display: inline;
+  }
+}
+
+/* Phase 3 module page and lessons (spec 7.3): the mastery line, practice links and the recall dots. */
+.mastery-line {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.practice-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.boss-line {
+  margin: 0 0 8px;
+}
+
+.recall-dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: -4px 0 12px;
+  border: 1.5px solid var(--active);
+  border-radius: 50%;
+  background: var(--pane);
+}
+
+.recall-weak {
+  background: conic-gradient(var(--active) 0 25%, var(--pane) 0);
+}
+
+.recall-fading {
+  background: conic-gradient(var(--active) 0 50%, var(--pane) 0);
+}
+
+.recall-strong {
+  background: var(--active);
+}
+
+/* Phase 3 Progress sections (spec 7.3): readiness bars, the 14-day strip, badges, mock history and the reset. */
+.readiness-bars {
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+}
+
+.day-strip {
+  display: block;
+  width: 100%;
+  max-width: 276px;
+  height: auto;
+  margin: 8px 0;
+}
+
+.day-strip rect {
+  fill: var(--active);
+}
+
+.badges,
+.mock-history {
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.badge {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: 4px 0;
+  color: var(--muted);
+}
+
+.badge-earned {
+  color: var(--text);
+}
+
+.mock-row {
+  margin: 4px 0;
+}
+
+.reset input {
+  width: 10em;
+  min-height: 44px;
+}
+
+#progress-title:focus {
+  outline: none;
 }

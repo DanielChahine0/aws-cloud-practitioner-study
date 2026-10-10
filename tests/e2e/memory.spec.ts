@@ -288,3 +288,8 @@ test('Enter follows Next, j and k move between hexes, and g r opens Review', asy
   await expect(page.getByText('Nothing due.', { exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Back to Home' })).toBeVisible();
 });
+
+test('the first lesson check announces First Brew', async ({ page }) => {
+  await lambdaCheckWithOneWrong(page, false);
+  await expect(page.locator('p.badge-line')).toHaveText('Badge: First Brew');
+});
