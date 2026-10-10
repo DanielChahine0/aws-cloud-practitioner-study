@@ -29,12 +29,18 @@ export function failOnPageProblems(): void {
 export const h1 = (page: Page, name: string): Locator =>
   page.getByRole('heading', { level: 1, name, exact: true });
 
-export async function expectNoAxeViolations(page: Page): Promise<void> {
+/**
+ * Scans the settled page with axe. With `redact`, each finding names only the rule, its help text and the node
+ * targets, never node HTML, so an exam item's text can never reach test output.
+ */
+export async function expectNoAxeViolations(page: Page, options: { redact?: boolean } = {}): Promise<void> {
   // Scan the settled page: mid fade-in, a dialog's text is still partly transparent and fails color-contrast.
   await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished)));
   const results = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
-  const violations = results.violations.map(
-    (v) => `${v.id} (${v.nodes.length} nodes): ${v.help}; first: ${v.nodes[0]?.html ?? ''}`,
+  const violations = results.violations.map((v) =>
+    options.redact === true
+      ? `${v.id} (${v.nodes.length} nodes): ${v.help}; targets: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`
+      : `${v.id} (${v.nodes.length} nodes): ${v.help}; first: ${v.nodes[0]?.html ?? ''}`,
   );
   expect(violations).toEqual([]);
 }
@@ -81,4 +87,30 @@ export async function seedEvents(page: Page, events: readonly StudyEvent[]): Pro
     { name: DB_NAME, version: SCHEMA_VERSION, stores: STORES, list: [...events] },
   );
   await page.reload();
+}
+
+/**
+ * Writes kv records into the page's IndexedDB the way `writeKv` stores them; they take effect at the next reload.
+ * Call it once the app has opened its database, for example after Home's h1 shows.
+ */
+export async function seedKv(page: Page, records: Readonly<Record<string, unknown>>): Promise<void> {
+  await page.evaluate(
+    async ({ name, version, store, list }) => {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const open = indexedDB.open(name, version);
+        open.onsuccess = () => resolve(open.result);
+        open.onerror = () => reject(open.error);
+      });
+      await new Promise<void>((resolve, reject) => {
+        const tx = db.transaction(store, 'readwrite');
+        for (const [key, value] of list)
+          tx.objectStore(store).put({ key, value, updatedAt: new Date().toISOString() });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+      });
+      db.close();
+    },
+    { name: DB_NAME, version: SCHEMA_VERSION, store: STORES.kv, list: Object.entries(records) },
+  );
 }

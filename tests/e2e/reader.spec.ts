@@ -229,6 +229,7 @@ const SCREENS: { name: string; path: string; ready: (page: Page) => Locator }[] 
   { name: 'Mission 0', path: '/#/missions/mission-00', ready: (page) => page.locator('dl.facts') },
   { name: 'Mission 1', path: '/#/missions/mission-01', ready: (page) => page.locator('main pre').first() },
   { name: 'the not-found screen', path: '/#/nowhere', ready: (page) => h1(page, 'Page not found') },
+  { name: 'the mock list', path: '/#/s/mock', ready: (page) => h1(page, 'Mock exams') },
 ];
 
 test.describe('accessibility and layout', () => {
