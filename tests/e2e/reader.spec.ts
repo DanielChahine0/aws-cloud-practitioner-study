@@ -262,6 +262,15 @@ test.describe('accessibility and layout', () => {
     await expect(h1(page, HOME_TITLE)).toBeVisible();
     await page.keyboard.press('?');
     await expect(page.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
+    for (const action of [
+      'Exam: choose an option',
+      'Exam: previous or next question',
+      'Exam: flag for review',
+      'Exam: open the question grid',
+      'Exam: submit',
+    ]) {
+      await expect(page.getByRole('cell', { name: action, exact: true })).toBeVisible();
+    }
     await expectNoAxeViolations(page);
   });
 });

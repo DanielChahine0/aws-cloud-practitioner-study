@@ -7,6 +7,9 @@ import { commit, request, STORES } from './idb.ts';
  * `Rules updated, progress recalculated.` line was dismissed (spec 8.2); `currentLesson` is the note id of the
  * lesson last opened, because reading writes no event (spec 4.6); `schemaVersion` is the storage version of the
  * local log, and `preMigration` holds `{ events, kv }` as they were before the last local migration (spec 8.2).
+ * `rankSeen` is the id of the rank whose promotion line was dismissed (spec 3.4); `examSession` is the draft of the
+ * open boss or mock, `{ sid, picks, flagged, changes, ms, current }`, which the exam shell writes on every change
+ * and turns into answer events at submit (spec 8.1).
  */
 export const KV_KEYS = {
   lastExportAt: 'lastExportAt',
@@ -15,6 +18,8 @@ export const KV_KEYS = {
   currentLesson: 'currentLesson',
   schemaVersion: 'schemaVersion',
   preMigration: 'preMigration',
+  rankSeen: 'rankSeen',
+  examSession: 'examSession',
 } as const;
 
 export type KvRecords = Record<string, KvValue>;

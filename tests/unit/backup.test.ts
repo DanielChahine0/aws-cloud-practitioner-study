@@ -11,7 +11,8 @@ import {
   previewOf,
   reminderDue,
 } from '../../src/store/backup.ts';
-import { eventsOf } from '../fixtures/events.ts';
+import { KV_KEYS } from '../../src/store/kv.ts';
+import { eventsOf, SID } from '../fixtures/events.ts';
 
 const lesson = (note: string): NewEvent => ({ t: 'lesson.done', note });
 const META = { appVersion: '0.2.0', contentVersion: 'c-3f9a1e', now: new Date(Date.UTC(2026, 9, 9, 8)) };
@@ -62,6 +63,18 @@ describe('mergeKv', () => {
     expect(mergeKv({ k: old, a: old }, { k: fresh, b: fresh })).toEqual({ k: fresh, a: old, b: fresh });
     expect(mergeKv({ k: fresh }, { k: old })).toEqual({ k: fresh });
     expect(mergeKv({ k: fresh }, { k: tie })).toEqual({ k: fresh });
+  });
+
+  it('merges rankSeen and examSession by newer updatedAt', () => {
+    const rankOld = { value: 'basic', updatedAt: '2026-10-20T08:00:00.000Z' };
+    const rankNew = { value: 'developer', updatedAt: '2026-10-27T08:00:00.000Z' };
+    const draftOld = { value: { sid: SID, current: 3 }, updatedAt: '2026-10-27T09:00:00.000Z' };
+    const draftNew = { value: { sid: SID, current: 40 }, updatedAt: '2026-10-27T09:30:00.000Z' };
+    const here = { [KV_KEYS.rankSeen]: rankOld, [KV_KEYS.examSession]: draftNew };
+    const there = { [KV_KEYS.rankSeen]: rankNew, [KV_KEYS.examSession]: draftOld };
+    const merged = { [KV_KEYS.rankSeen]: rankNew, [KV_KEYS.examSession]: draftNew };
+    expect(mergeKv(here, there)).toEqual(merged);
+    expect(mergeKv(there, here)).toEqual(merged);
   });
 });
 

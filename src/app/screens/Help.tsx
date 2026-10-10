@@ -22,6 +22,11 @@ const SHORTCUTS: readonly { keys: readonly string[]; joiner: string; action: str
   { keys: ['1', '5'], joiner: 'to', action: 'Match: pick a left item' },
   { keys: ['a', 'e'], joiner: 'to', action: 'Match: pair it' },
   { keys: ['Backspace'], joiner: '', action: 'Match: unpair' },
+  { keys: ['1', '6'], joiner: 'to', action: 'Exam: choose an option' },
+  { keys: ['←', '→'], joiner: 'and', action: 'Exam: previous or next question' },
+  { keys: ['f'], joiner: '', action: 'Exam: flag for review' },
+  { keys: ['g'], joiner: '', action: 'Exam: open the question grid' },
+  { keys: ['Ctrl+Enter'], joiner: '', action: 'Exam: submit' },
 ];
 
 /** The keyboard help sheet (`?`). */

@@ -60,6 +60,7 @@ export function useKeyboard(): void {
           overlayOpen: overlay.value !== null,
           termOpen: openTerm.value !== null,
           gAt,
+          exam: route.value.kind === 'boss' || route.value.kind === 'mock',
         },
       );
       gAt = step.gAt;
@@ -78,6 +79,9 @@ export function useKeyboard(): void {
           break;
         case 'close-term':
           closeTerm();
+          break;
+        case 'close-sheet':
+          overlay.value = null;
           break;
         case 'navigate':
           navigate(command.hash);

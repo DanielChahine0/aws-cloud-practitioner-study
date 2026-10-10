@@ -97,6 +97,8 @@ describe('KV_KEYS', () => {
       currentLesson: 'currentLesson',
       schemaVersion: 'schemaVersion',
       preMigration: 'preMigration',
+      rankSeen: 'rankSeen',
+      examSession: 'examSession',
     });
   });
 });

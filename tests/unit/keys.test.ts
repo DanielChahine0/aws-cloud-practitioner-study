@@ -46,6 +46,7 @@ const ctx = (more: Partial<KeyContext> = {}): KeyContext => ({
   overlayOpen: false,
   termOpen: false,
   gAt: null,
+  exam: false,
   ...more,
 });
 
@@ -156,5 +157,37 @@ describe('keyCommand', () => {
     expect(keyCommand(key('j'), ctx({ route: { kind: 'review' } }))).toBeNull();
     expect(keyCommand(key('j', { typing: true }), ctx())).toBeNull();
     expect(keyCommand(key('j'), ctx({ overlayOpen: true }))).toBeNull();
+  });
+});
+
+describe('keyCommand during an exam', () => {
+  const MOCK: KeyContext['route'] = { kind: 'mock', form: 'a' };
+  const exam = (more: Partial<KeyContext> = {}): KeyContext => ctx({ route: MOCK, exam: true, ...more });
+
+  it('turns off search, the g sequences and j and k', () => {
+    expect(keyCommand(key('/'), exam())).toBeNull();
+    expect(keyCommand(key('k', { meta: true }), exam())).toBeNull();
+    expect(keyCommand(key('K', { ctrl: true }), exam())).toBeNull();
+    expect(keyCommand(key('g'), exam())).toBeNull();
+    expect(keyCommand(key('h'), exam({ gAt: 9_500 }))).toBeNull();
+    expect(keyCommand(key('j'), exam({ route: { kind: 'home' } }))).toBeNull();
+    expect(keyCommand(key('k'), exam({ route: { kind: 'module', module: 2 } }))).toBeNull();
+  });
+
+  it('never arms g, so g then h stays on the exam', () => {
+    const g = keyStep(key('g', { at: 10_000 }), exam());
+    expect(g).toEqual({ command: null, gAt: null });
+    expect(keyStep(key('h', { at: 10_200 }), exam({ gAt: g.gAt })).command).toBeNull();
+  });
+
+  it('still opens Help on ?, but not while typing', () => {
+    expect(keyCommand(key('?'), exam())).toEqual({ kind: 'help' });
+    expect(keyCommand(key('?', { typing: true }), exam())).toBeNull();
+  });
+
+  it('closes an open Help sheet on Escape and never goes up a level', () => {
+    expect(keyCommand(key('Escape'), exam({ overlayOpen: true }))).toEqual({ kind: 'close-sheet' });
+    expect(keyCommand(key('Escape'), exam())).toBeNull();
+    expect(keyCommand(key('Escape'), ctx({ route: MOCK }))).toEqual({ kind: 'navigate', hash: '#/s/mock' });
   });
 });

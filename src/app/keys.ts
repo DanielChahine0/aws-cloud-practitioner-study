@@ -23,6 +23,8 @@ export interface KeyContext {
   termOpen: boolean;
   /** When `g` was pressed, if it was the previous key. */
   gAt: number | null;
+  /** True while a boss or mock is open: search, the `g` sequences, `j` and `k` are off, and Escape never leaves. */
+  exam: boolean;
 }
 
 export type KeyCommand =
@@ -30,6 +32,8 @@ export type KeyCommand =
   | { kind: 'help' }
   | { kind: 'progress' }
   | { kind: 'close-term' }
+  /** Close the open sheet; only an exam asks for this, because Escape there never goes up a level. */
+  | { kind: 'close-sheet' }
   | { kind: 'g'; at: number }
   | { kind: 'navigate'; hash: string }
   /** Follow the Next button (`Enter` on Home). */
@@ -56,9 +60,21 @@ export function keyStep(
 const gPending = (input: KeyInput, ctx: KeyContext): boolean =>
   ctx.gAt !== null && input.at - ctx.gAt <= G_WINDOW_MS;
 
+/**
+ * The global keys during an exam: only `?` opens Help, and Escape only closes an open sheet, because the note
+ * search would let a mock peek at the notes and Escape must never leave a timed exam (spec 7.4, deliberate deviation).
+ */
+function examCommand(input: KeyInput, ctx: KeyContext, key: string): KeyCommand | null {
+  if (input.meta || input.ctrl || input.alt) return null;
+  if (key === 'Escape') return ctx.overlayOpen ? { kind: 'close-sheet' } : null;
+  if (ctx.overlayOpen || input.typing) return null;
+  return key === '?' ? { kind: 'help' } : null;
+}
+
 /** The global shortcuts of spec 7.4 built so far; null means the key is not ours. */
 export function keyCommand(input: KeyInput, ctx: KeyContext): KeyCommand | null {
   const key = input.key.length === 1 ? input.key.toLowerCase() : input.key;
+  if (ctx.exam) return examCommand(input, ctx, key);
   if ((input.meta || input.ctrl) && !input.alt && key === 'k') return { kind: 'palette' };
   if (input.meta || input.ctrl || input.alt || ctx.overlayOpen) return null;
   if (key === 'Escape' && ctx.termOpen) return { kind: 'close-term' };
