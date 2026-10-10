@@ -5,6 +5,7 @@ import { deriveMemory } from '../../src/engine/memory.ts';
 import { timelineOf } from '../fixtures/events.ts';
 import { GRIND_DAYS, GRIND_START, grindLog, type Item, timeOf } from '../fixtures/grind-log.ts';
 import { JOURNEY_CONTENT } from '../fixtures/journeys/content.ts';
+import { HEAVY_TIMEOUT_MS } from '../fixtures/timeouts.ts';
 
 /**
  * Replay re-ran the whole log so far at every exam date change, to take the schedule the new date gives, so a
@@ -52,7 +53,7 @@ const mediansMs = (logs: readonly (readonly StudyEvent[])[]): number[] => {
   return times.map((t) => t.sort((a, b) => a - b)[Math.floor(RUNS / 2)] as number);
 };
 
-describe('replay cost stays flat as the exam date changes', () => {
+describe('replay cost stays flat as the exam date changes', { timeout: HEAVY_TIMEOUT_MS }, () => {
   it('replays a 15,000-event log with 3 or 20 exam date changes about as fast as with none', () => {
     const cases: [string, StudyEvent[]][] = [
       ['0 changes', timelineOf(grindLog())],

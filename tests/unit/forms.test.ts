@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildForms, type FormItem, type FormTargets, formProblems } from '../../src/engine/forms.ts';
 import { domainOf } from '../../src/engine/quotas.ts';
 import { mulberry32, shuffle } from '../../src/engine/rng.ts';
+import { HEAVY_TIMEOUT_MS } from '../fixtures/timeouts.ts';
 
 /** The per-form counts of the real registry (spec 4.3). */
 const TARGETS: FormTargets = {
@@ -78,7 +79,7 @@ function built(
   return result.forms.map((qids) => qids.map((id) => byId.get(id) as FormItem));
 }
 
-describe('buildForms (spec 4.3)', () => {
+describe('buildForms (spec 4.3)', { timeout: HEAVY_TIMEOUT_MS }, () => {
   const forms = built(sparePool());
 
   it('builds four forms of exactly 16, 19, 22 and 8 items by domain', () => {

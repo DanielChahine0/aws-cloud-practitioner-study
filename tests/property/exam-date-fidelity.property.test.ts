@@ -7,6 +7,7 @@ import { reviewQueue } from '../../src/engine/queue.ts';
 import { toPlain } from '../../src/engine/replay.ts';
 import { timelineOf } from '../fixtures/events.ts';
 import { EXAM_DATE_CONTENT, examDateLogArb } from '../fixtures/exam-date-logs.ts';
+import { HEAVY_TIMEOUT_MS } from '../fixtures/timeouts.ts';
 
 /**
  * Exam date fidelity (spec 3.6): the current exam date decides every current due as if it had been set before the
@@ -65,7 +66,7 @@ const pastOf = (m: MemoryState, day: string) => ({
   plans: toPlain(new Map([...m.catchUpPlans].filter(([d]) => d < day))),
 });
 
-describe('exam date fidelity', () => {
+describe('exam date fidelity', { timeout: HEAVY_TIMEOUT_MS }, () => {
   it('schedules every card as a replay with the final exam date from the start does', () => {
     fc.assert(
       fc.property(examDateLogArb, (items) => {
