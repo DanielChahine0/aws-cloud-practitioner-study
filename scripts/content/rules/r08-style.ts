@@ -1,4 +1,5 @@
 import type { Finding, Note } from '../lib/context.ts';
+import { projectOf } from '../lib/project.ts';
 import { emDashLines, multiSentenceLines } from '../lib/text.ts';
 import { finding, type Rule } from './rule.ts';
 
@@ -16,7 +17,10 @@ const MODULE_ORDER = [
 ];
 const BINARY = /\.(?:png|jpe?g|gif|ico|webp|woff2?|pdf|zip)$/i;
 
-/** R8 Markdown style: no em dash anywhere, one sentence per line in Markdown, and the note structure of lint_notes.py. */
+/**
+ * R8 Markdown style: no em dash anywhere, one sentence per line in Markdown, one sentence per brief string and key point
+ * text, and the note structure of lint_notes.py.
+ */
 export const r08: Rule = {
   id: 'R8',
   title: 'Markdown style',
@@ -31,6 +35,10 @@ export const r08: Rule = {
       if (!file.endsWith('.md')) continue;
       for (const line of multiSentenceLines(text))
         out.push(finding('R8', file, 'more than one sentence on this line', line));
+    }
+    for (const s of projectOf(ctx).strings) {
+      if (multiSentenceLines(s.text.replaceAll('\n', ' ')).length > 0)
+        out.push(finding('R8', s.path, `${s.field}: one sentence per string`, s.line));
     }
     for (const note of ctx.notes) out.push(...structure(note));
     return out;

@@ -74,13 +74,22 @@ describe('Sort checker (spec 5.1, 9)', () => {
   it('checks through the registry with no settle actions, exactly as check does', () => {
     const entry = engineOf('sort');
     expect(entry).toBe(ENGINES.sort);
-    expect(engineOf('place')).toBeNull();
+    expect(engineOf('deploy')).toBeNull();
     expect(engineOf('toString')).toBeNull();
     if (entry === null) throw new Error('Sort ships in Phase 4');
     expect(entry.settle).toEqual([]);
     const state = play(place('saturday-ovens', 'shared-kitchen'));
     expect(checkLab(entry, SPEC, state)).toEqual(SORT.check(SPEC, state));
     expect(entry.complete(SPEC, play(...SOLUTION))).toBe(true);
+  });
+
+  it('registers Place, Trace and Investigate', () => {
+    expect(engineOf('place')).toBe(ENGINES.place);
+    expect(engineOf('trace')).toBe(ENGINES.trace);
+    expect(engineOf('investigate')).toBe(ENGINES.investigate);
+    expect(ENGINES.place?.settle).toEqual([]);
+    expect(ENGINES.trace?.settle).toEqual([]);
+    expect(ENGINES.investigate?.settle).toEqual([]);
   });
 
   it('says what is left for a goal in one sentence', () => {

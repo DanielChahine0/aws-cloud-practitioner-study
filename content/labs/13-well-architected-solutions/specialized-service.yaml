@@ -1,0 +1,232 @@
+id: lab-m13-specialized-service
+module: 13
+title: Specialized service per use case
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts: [aws-codepipeline, aws-x-ray, aws-amplify, amazon-connect, amazon-ses, amazon-appstream-2-0, amazon-workspaces, aws-iot-core]
+notes: [m13/aws-specialized-services, m13/specialized-use-cases]
+minutes: 8
+brief: >-
+  The cafe has grown into a small chain, and its wish list now spans the app team, the support desk, the back office and the kitchen equipment.
+  Sort each need under the purpose-built AWS service made for that job.
+spec:
+  buckets:
+    - id: pipeline
+      label: AWS CodePipeline
+    - id: xray
+      label: AWS X-Ray
+    - id: amplify
+      label: AWS Amplify
+    - id: connect
+      label: Amazon Connect
+    - id: ses
+      label: Amazon SES
+    - id: appstream
+      label: Amazon AppStream 2.0
+    - id: workspaces
+      label: Amazon WorkSpaces
+    - id: iot
+      label: AWS IoT Core
+  cards:
+    - id: repo-release
+      text: Every change pushed to the ordering app's repository built, tested and deployed with no manual step
+      bucket: pipeline
+      goal: g1
+    - id: menu-fix-stages
+      text: A menu-page fix that moves through build, test and deploy stages on its own once it is committed
+      bucket: pipeline
+      goal: g1
+    - id: slow-checkout
+      text: Finding which hop of the order service slows checkout during the lunch rush
+      bucket: xray
+      goal: g1
+    - id: loyalty-trace
+      text: A picture of how one loyalty request travels across the app's services, to see where it broke
+      bucket: xray
+      goal: g1
+    - id: preorder-app
+      text: A new mobile preorder app with sign-in, storage and hosting, built with little infrastructure work
+      bucket: amplify
+      goal: g2
+    - id: catering-site
+      text: A full-stack catering web app, frontend and backend, built and deployed quickly by a small team
+      bucket: amplify
+      goal: g2
+    - id: support-line
+      text: A support phone line that routes callers to the right staff member and records the calls
+      bucket: connect
+      goal: g3
+    - id: long-hold
+      text: Callers stuck in a long queue offered a callback instead of waiting on hold
+      bucket: connect
+      goal: g3
+    - id: newsletter
+      text: The weekly newsletter and seasonal promotions emailed to every loyalty member
+      bucket: ses
+      goal: g3
+    - id: receipt-mail
+      text: A receipt email the ordering app sends automatically after each purchase
+      bucket: ses
+      goal: g3
+    - id: stock-app
+      text: The stock-count desktop app opened in a browser on the old back-room laptops, with nothing installed
+      bucket: appstream
+      goal: g4
+    - id: rota-app
+      text: Part-time staff reaching the shift-planning app from a browser on whatever device they have
+      bucket: appstream
+      goal: g4
+    - id: manager-desktop
+      text: A complete, persistent office desktop the manager reaches securely from home
+      bucket: workspaces
+      goal: g4
+    - id: office-pcs
+      text: A full cloud desktop for each office worker, used just like the PC on their desk
+      bucket: workspaces
+      goal: g4
+    - id: fridge-sensors
+      text: Fridge temperature sensors that send readings online so staff can watch them remotely
+      bucket: iot
+      goal: g5
+    - id: grinder-sensors
+      text: Coffee grinders fitted with sensors that report use and can be switched from the back office
+      bucket: iot
+      goal: g5
+goals:
+  - id: g1
+    label: Release and tracing needs sit under CodePipeline and X-Ray
+    hint: Ask whether the need is shipping each committed change through its stages, or seeing how a request behaves once it runs.
+  - id: g2
+    label: Both new-app builds sit under AWS Amplify
+    hint: Ask whether the team is building a whole web or mobile app, frontend and backend, and wants sign-in and hosting handled for it.
+  - id: g3
+    label: Calls sit under Amazon Connect and mailings under Amazon SES
+    hint: Ask whether a customer is talking to the cafe live by phone or chat, or the app is simply sending email out.
+  - id: g4
+    label: Streamed apps and full desktops sit under their own services
+    hint: Ask whether the worker needs one app in a browser with nothing installed, or a complete desktop that keeps their files.
+  - id: g5
+    label: Both sensor jobs sit under AWS IoT Core
+    hint: Ask whether a physical device with sensors gathers data and sends it online to be watched or controlled.
+solution:
+  - { t: place, card: repo-release, bucket: pipeline }
+  - { t: place, card: menu-fix-stages, bucket: pipeline }
+  - { t: place, card: slow-checkout, bucket: xray }
+  - { t: place, card: loyalty-trace, bucket: xray }
+  - { t: place, card: preorder-app, bucket: amplify }
+  - { t: place, card: catering-site, bucket: amplify }
+  - { t: place, card: support-line, bucket: connect }
+  - { t: place, card: long-hold, bucket: connect }
+  - { t: place, card: newsletter, bucket: ses }
+  - { t: place, card: receipt-mail, bucket: ses }
+  - { t: place, card: stock-app, bucket: appstream }
+  - { t: place, card: rota-app, bucket: appstream }
+  - { t: place, card: manager-desktop, bucket: workspaces }
+  - { t: place, card: office-pcs, bucket: workspaces }
+  - { t: place, card: fridge-sensors, bucket: iot }
+  - { t: place, card: grinder-sensors, bucket: iot }
+wrongPaths:
+  - mistake: Thinks CodePipeline, which runs the release, also traces where a slow request stalls
+    failsGoal: g1
+    actions:
+      - { t: place, card: repo-release, bucket: pipeline }
+      - { t: place, card: menu-fix-stages, bucket: pipeline }
+      - { t: place, card: slow-checkout, bucket: pipeline }
+      - { t: place, card: loyalty-trace, bucket: xray }
+      - { t: place, card: preorder-app, bucket: amplify }
+      - { t: place, card: catering-site, bucket: amplify }
+      - { t: place, card: support-line, bucket: connect }
+      - { t: place, card: long-hold, bucket: connect }
+      - { t: place, card: newsletter, bucket: ses }
+      - { t: place, card: receipt-mail, bucket: ses }
+      - { t: place, card: stock-app, bucket: appstream }
+      - { t: place, card: rota-app, bucket: appstream }
+      - { t: place, card: manager-desktop, bucket: workspaces }
+      - { t: place, card: office-pcs, bucket: workspaces }
+      - { t: place, card: fridge-sensors, bucket: iot }
+      - { t: place, card: grinder-sensors, bucket: iot }
+  - mistake: Treats building a full-stack app as a release job, so sends it to CodePipeline
+    failsGoal: g2
+    actions:
+      - { t: place, card: repo-release, bucket: pipeline }
+      - { t: place, card: menu-fix-stages, bucket: pipeline }
+      - { t: place, card: slow-checkout, bucket: xray }
+      - { t: place, card: loyalty-trace, bucket: xray }
+      - { t: place, card: preorder-app, bucket: amplify }
+      - { t: place, card: catering-site, bucket: pipeline }
+      - { t: place, card: support-line, bucket: connect }
+      - { t: place, card: long-hold, bucket: connect }
+      - { t: place, card: newsletter, bucket: ses }
+      - { t: place, card: receipt-mail, bucket: ses }
+      - { t: place, card: stock-app, bucket: appstream }
+      - { t: place, card: rota-app, bucket: appstream }
+      - { t: place, card: manager-desktop, bucket: workspaces }
+      - { t: place, card: office-pcs, bucket: workspaces }
+      - { t: place, card: fridge-sensors, bucket: iot }
+      - { t: place, card: grinder-sensors, bucket: iot }
+  - mistake: Sends the promotion mailing through the contact center because it also reaches customers
+    failsGoal: g3
+    actions:
+      - { t: place, card: repo-release, bucket: pipeline }
+      - { t: place, card: menu-fix-stages, bucket: pipeline }
+      - { t: place, card: slow-checkout, bucket: xray }
+      - { t: place, card: loyalty-trace, bucket: xray }
+      - { t: place, card: preorder-app, bucket: amplify }
+      - { t: place, card: catering-site, bucket: amplify }
+      - { t: place, card: support-line, bucket: connect }
+      - { t: place, card: long-hold, bucket: connect }
+      - { t: place, card: newsletter, bucket: connect }
+      - { t: place, card: receipt-mail, bucket: ses }
+      - { t: place, card: stock-app, bucket: appstream }
+      - { t: place, card: rota-app, bucket: appstream }
+      - { t: place, card: manager-desktop, bucket: workspaces }
+      - { t: place, card: office-pcs, bucket: workspaces }
+      - { t: place, card: fridge-sensors, bucket: iot }
+      - { t: place, card: grinder-sensors, bucket: iot }
+  - mistake: Gives staff a whole WorkSpaces desktop when they only need one app streamed to a browser
+    failsGoal: g4
+    actions:
+      - { t: place, card: repo-release, bucket: pipeline }
+      - { t: place, card: menu-fix-stages, bucket: pipeline }
+      - { t: place, card: slow-checkout, bucket: xray }
+      - { t: place, card: loyalty-trace, bucket: xray }
+      - { t: place, card: preorder-app, bucket: amplify }
+      - { t: place, card: catering-site, bucket: amplify }
+      - { t: place, card: support-line, bucket: connect }
+      - { t: place, card: long-hold, bucket: connect }
+      - { t: place, card: newsletter, bucket: ses }
+      - { t: place, card: receipt-mail, bucket: ses }
+      - { t: place, card: stock-app, bucket: workspaces }
+      - { t: place, card: rota-app, bucket: appstream }
+      - { t: place, card: manager-desktop, bucket: workspaces }
+      - { t: place, card: office-pcs, bucket: workspaces }
+      - { t: place, card: fridge-sensors, bucket: iot }
+      - { t: place, card: grinder-sensors, bucket: iot }
+  - mistake: Treats connected fridge sensors as a mobile app feature built with Amplify
+    failsGoal: g5
+    actions:
+      - { t: place, card: repo-release, bucket: pipeline }
+      - { t: place, card: menu-fix-stages, bucket: pipeline }
+      - { t: place, card: slow-checkout, bucket: xray }
+      - { t: place, card: loyalty-trace, bucket: xray }
+      - { t: place, card: preorder-app, bucket: amplify }
+      - { t: place, card: catering-site, bucket: amplify }
+      - { t: place, card: support-line, bucket: connect }
+      - { t: place, card: long-hold, bucket: connect }
+      - { t: place, card: newsletter, bucket: ses }
+      - { t: place, card: receipt-mail, bucket: ses }
+      - { t: place, card: stock-app, bucket: appstream }
+      - { t: place, card: rota-app, bucket: appstream }
+      - { t: place, card: manager-desktop, bucket: workspaces }
+      - { t: place, card: office-pcs, bucket: workspaces }
+      - { t: place, card: fridge-sensors, bucket: amplify }
+      - { t: place, card: grinder-sensors, bucket: iot }
+debrief:
+  lines:
+    - CodePipeline carries each committed change through build, test and deploy, while X-Ray traces requests to show where an app slows or fails.
+    - Amplify builds whole web and mobile apps, while AWS IoT Core links physical devices that carry sensors to the cloud, even when staff read their data in an app.
+    - Amazon Connect is the contact center for calls, routing and callbacks, and Amazon SES only sends email from an app.
+    - AppStream 2.0 streams a single app to a browser, while WorkSpaces gives each worker a full persistent desktop.
+  questions: [q-r1a2ty, q-gzktfq, q-w40pct]
