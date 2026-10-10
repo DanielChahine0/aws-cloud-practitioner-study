@@ -1,0 +1,423 @@
+questions:
+  - id: q-rctwga
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cost-optimization
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe's ordering system runs on Amazon EC2, keeps orders in Amazon RDS inside a VPC, and stores receipts in Amazon S3.
+      The team has already rightsized the EC2 instances, yet the bill is still higher than planned.
+      What should the team review next?
+    options:
+      - id: a
+        text: The EC2 instances and their instance types
+        why: The instances already fit their load, so a second pass over them leaves the rest of the design unchecked.
+      - id: b
+        text: The IAM users and their permission policies
+        why: IAM carries no charge of its own, so reviewing users and policies cannot shrink the bill.
+      - id: c
+        text: The RDS database and the S3 receipt store
+        correct: true
+        why: The design also spans a database and storage, and each of them can hold savings the EC2 work never touched.
+      - id: d
+        text: The VPC route tables and security groups
+        why: Route tables and security groups carry no charge of their own, so they hold no savings to find.
+    evidence:
+      - Solutions usually combine services, so look for savings across the design (here EC2, RDS in a VPC, and S3).
+    takeaway: Cost optimization reviews every service in a design, not only the compute layer.
+    history: []
+    verified:
+      keyHash: 87915e8be2cd
+      fullHash: e68b7327ff9c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x48rw3
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: cost-optimization
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      Over the year, the cafe made many small cost tweaks across its AWS design.
+      Besides the savings, what do such tweaks often bring?
+    options:
+      - id: a
+        text: A designated technical account manager
+        why: A designated technical account manager comes with Enterprise Support, not from trimming costs.
+      - id: b
+        text: Better performance and reliability
+        correct: true
+        why: Small tweaks add up, and trimming waste often leaves a workload faster and sturdier as well as cheaper.
+      - id: c
+        text: Free data transfer from the internet
+        why: Data arriving from the internet is free whether or not the cafe tunes anything, so the tweaks do not bring it.
+      - id: d
+        text: Round-the-clock customer service
+        why: Customer service around the clock comes with every Support plan, not from cost tweaks.
+    evidence:
+      - Small tweaks add up and often improve performance and reliability too.
+    takeaway: Small cost tweaks add up and often lift performance and reliability along with savings.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 2, 3 and 4 are Support plan and data transfer facts, not cost or design outcomes, so they are off-category and easy to rule out."
+  - id: q-zm6nd9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: rightsizing
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      Monitoring shows that the cafe's inventory server on Amazon EC2 sits mostly idle on CPU and memory all day.
+      Which step stops the cafe paying for computing power the server never uses?
+    options:
+      - id: a
+        text: Switch it to a smaller instance type
+        correct: true
+        why: Measured use shows the server is oversized, so a type that fits the real load drops the unused power from the bill.
+      - id: b
+        text: Buy a Reserved Instance at its current size
+        why: A reservation lowers the rate but still pays for the same oversized instance and its idle power.
+      - id: c
+        text: Move it onto a Dedicated Host
+        why: A Dedicated Host adds physical isolation at a higher price and does nothing about the idle power.
+      - id: d
+        text: Add a second instance behind a load balancer
+        why: A second instance doubles computing power that is already mostly idle, which raises the bill.
+    evidence:
+      - "Rightsizing: measure real workload needs and resize to fit."
+    takeaway: Rightsizing uses measured usage to shrink an oversized instance to one that fits the real load.
+    history: []
+    verified:
+      keyHash: f6c5a25dd423
+      fullHash: 62a1eac4510a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-v166dn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: rightsizing
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe's Amazon RDS database holds a recipe archive that grows in fits and starts.
+      The team wants the database's allocated space to grow along with the archive instead of buying a large amount up front.
+      Which feature fits?
+    options:
+      - id: a
+        text: Amazon RDS storage autoscaling
+        correct: true
+        why: Storage autoscaling grows the database's storage as the archive does, so the cafe skips a big up-front allocation.
+      - id: b
+        text: Amazon RDS Multi-AZ deployment
+        why: A Multi-AZ standby protects against failure and adds a second copy to pay for, not a storage fit.
+      - id: c
+        text: Amazon RDS read replicas
+        why: Read replicas take read traffic off the primary and do not size its storage to the archive.
+      - id: d
+        text: Amazon RDS DB snapshots
+        why: Snapshots back up the database at a point in time and leave its storage allocation unchanged.
+    evidence:
+      - Rightsize databases too; storage autoscaling matches storage to demand.
+    takeaway: Rightsizing applies to databases too, and RDS storage autoscaling keeps storage in step with demand.
+    history: []
+    verified:
+      keyHash: 5e6029fe551a
+      fullHash: f242b9c1eb79
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3m5qtk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-compute-optimizer
+    note: m11/cost-optimization
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe suspects that several of its EC2 instances are bigger than their workloads need.
+      It wants a service that points out exactly which instances are overprovisioned.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Compute Optimizer
+        correct: true
+        why: Compute Optimizer compares each instance with its real use and flags the ones that are oversized.
+      - id: b
+        text: AWS Cost Explorer
+        why: Cost Explorer charts and forecasts spend, but it does not judge each instance's size against its load.
+      - id: c
+        text: AWS Budgets
+        why: Budgets alerts the cafe when spend nears a limit and does not name which instances are too large.
+      - id: d
+        text: AWS Pricing Calculator
+        why: The calculator estimates costs for a planned design and never looks at the cafe's running instances.
+    evidence:
+      - AWS Compute Optimizer, a cost-minded sidekick, flags overprovisioned instances.
+      - "Overprovisioned instances: AWS Compute Optimizer."
+    takeaway: To find oversized EC2 instances by name, use AWS Compute Optimizer rather than a spend chart or budget.
+    history: []
+    verified:
+      keyHash: b2ae8e985de8
+      fullHash: ffa6f157ada4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-k0ga4t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-compute-optimizer
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 1
+    stem: >-
+      What does AWS Compute Optimizer do?
+    options:
+      - id: a
+        text: It flags resources that are larger than the workloads they run need
+        correct: true
+        why: Compute Optimizer spots overprovisioned compute so it can be rightsized to cut waste.
+      - id: b
+        text: It charts past spend over time and forecasts what future spend will be
+        why: That describes AWS Cost Explorer, which reports on spend rather than sizing compute.
+      - id: c
+        text: It sends an alert when spend nears or passes a budget you set
+        why: That describes AWS Budgets, which watches spend thresholds rather than instance sizes.
+      - id: d
+        text: It estimates the monthly cost of an architecture before it is built
+        why: That describes AWS Pricing Calculator, which plans costs rather than reviewing running compute.
+    evidence:
+      - AWS Compute Optimizer, a cost-minded sidekick, flags overprovisioned instances.
+      - Rightsize EC2 with AWS Compute Optimizer, and RDS with storage autoscaling.
+    takeaway: AWS Compute Optimizer flags overprovisioned compute, which feeds rightsizing.
+    history: []
+    verified:
+      keyHash: e12da8c93161
+      fullHash: ffce27754b01
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ccabvz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-rds-read-replicas
+    note: m11/cost-optimization
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's Amazon RDS database slows each morning as many loyalty app users browse the menu, and almost none of them change any data.
+      The team wants to avoid moving the primary to a larger, pricier instance class.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon RDS read replicas
+        correct: true
+        why: Read replicas take the menu reads across extra copies, so the primary can stay at its current size.
+      - id: b
+        text: Amazon RDS Multi-AZ deployment
+        why: A Multi-AZ standby waits to take over on failure and does not serve the morning reads.
+      - id: c
+        text: Amazon RDS storage autoscaling
+        why: Storage autoscaling resizes storage and does nothing for a primary overloaded by reads.
+      - id: d
+        text: Amazon RDS DB snapshots
+        why: Snapshots are point-in-time backups and take no read traffic off the primary.
+    evidence:
+      - Read replicas scale reads horizontally, sparing the primary a bigger, costlier instance.
+    takeaway: A read-heavy RDS load scales out with read replicas instead of a costlier, larger primary.
+    history: []
+    verified:
+      keyHash: 487db8ce05ff
+      fullHash: 02929eb1b7b5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-g2gr98
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-rds-read-replicas
+    note: m11/cost-optimization
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's Amazon RDS database slows each evening as staff run many reports that only query data and never change it.
+      Which RDS option takes on that load without the cost of a bigger primary instance?
+    options:
+      - id: a
+        text: Adding RDS read replicas
+        correct: true
+        why: Replicas serve the report queries, so the primary can stay at a smaller, cheaper size.
+      - id: b
+        text: Adding a Multi-AZ standby
+        why: A Multi-AZ standby waits to take over on failure and adds resilience rather than serving the reports.
+      - id: c
+        text: Turning on storage autoscaling
+        why: Storage autoscaling resizes storage with demand, which does nothing for the evening query load.
+      - id: d
+        text: Moving to a larger primary
+        why: A bigger primary would handle the load, but it is the costlier step the cafe wants to avoid.
+    evidence:
+      - Read replicas scale reads horizontally, sparing the primary a bigger, costlier instance.
+      - Read replicas and ElastiCache spare the primary database from scaling up.
+    takeaway: Read replicas scale reads out so the RDS primary does not need a costlier, larger instance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 2 (key) is the only option that repeats the stem's word 'RDS'."
+  - id: q-qzq1yp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vpc-endpoints
+    note: m11/cost-optimization
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's EC2 instances copy receipt files to Amazon S3 every night.
+      The team wants that traffic to stay off the public internet and to trim its transfer charges.
+      Which component fits?
+    options:
+      - id: a
+        text: A VPC endpoint
+        correct: true
+        why: A VPC endpoint links the VPC privately to S3, keeping traffic off the internet and trimming transfer costs.
+      - id: b
+        text: An internet gateway
+        why: An internet gateway sends the copies over the public internet, which the team wants to avoid.
+      - id: c
+        text: A NAT gateway
+        why: A NAT gateway lets private instances reach out toward the internet rather than giving a private path to S3.
+      - id: d
+        text: A virtual private gateway
+        why: A virtual private gateway carries traffic from approved outside networks, not from the VPC to S3.
+    evidence:
+      - VPC endpoints connect a VPC privately to supported services, and one used for S3 trims transfer costs, notably out-of-Region.
+    takeaway: A VPC endpoint gives a VPC a private path to S3 that also trims data transfer costs.
+    history: []
+    verified:
+      keyHash: f1255fa9e3d1
+      fullHash: d5dedfdabe83
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pdvabf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vpc-endpoints
+    note: m11/cost-optimization
+    task: "4.1"
+    level: 1
+    stem: >-
+      Why can a VPC endpoint for Amazon S3 lower an AWS bill?
+    options:
+      - id: a
+        text: It keeps traffic on a private path that trims transfer charges
+        correct: true
+        why: The endpoint keeps S3 traffic private and off the internet, which cuts data transfer costs.
+      - id: b
+        text: It moves stored objects into a cheaper storage class as their access drops
+        why: That is S3 Intelligent-Tiering, a storage class choice rather than a network path.
+      - id: c
+        text: It compresses objects when they are uploaded to the bucket
+        why: Compression on upload is a separate step, such as a Lambda function, not an endpoint feature.
+      - id: d
+        text: It deletes old object versions after a set period
+        why: That is an S3 lifecycle policy, which expires data rather than routing traffic.
+    evidence:
+      - VPC endpoints connect a VPC privately to supported services, and one used for S3 trims transfer costs, notably out-of-Region.
+      - Keep cross-AZ and internet traffic low, and use VPC endpoints for S3.
+    takeaway: A VPC endpoint for S3 saves money on data transfer, not on storage.
+    history: []
+    verified:
+      keyHash: 5ae3bee2eea5
+      fullHash: 96872787eef7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x2r88h
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: cost-optimization
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      A cafe developer proposes shrinking every resource to its smallest size, even if orders slow down at the morning peak.
+      Cost optimization on AWS instead aims for the right balance of which three things?
+    options:
+      - id: a
+        text: Compute, storage and data transfer
+        why: These are the three main cost drivers on the bill, not the three goals that cost optimization balances.
+      - id: b
+        text: Security, compliance and governance
+        why: These are real concerns for a design, but cost optimization weighs the bill against speed and running effort.
+      - id: c
+        text: Cost, performance and efficiency
+        correct: true
+        why: The goal is the right mix of cost, performance and operational efficiency, so the morning peak cannot be sacrificed.
+      - id: d
+        text: Reliability, scale and sustainability
+        why: These matter in a well-run design, but the balance cost optimization seeks is cost against performance and efficiency.
+    evidence:
+      - Aim for the right balance of cost, performance and operational efficiency.
+    takeaway: Cost optimization balances cost against performance and operational efficiency rather than chasing the lowest bill.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: Option 2 starts with 'Cost', repeating the stem's 'Cost optimization', which points at the key."
+  - id: q-jmg705
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-rds-read-replicas
+    note: m11/cost-optimization
+    task: "3.4"
+    level: 3
+    stem: >-
+      The cafe's Amazon RDS menu database gets far more lookups than updates.
+      The team wants to spread those lookups across extra database copies instead of moving the primary to a larger instance class.
+      Which option fits?
+    options:
+      - id: a
+        text: Multi-AZ deployment
+        why: A Multi-AZ standby waits to take over on failure and does not serve the menu lookups.
+      - id: b
+        text: Read replicas
+        correct: true
+        why: Replicas serve the lookups side by side, so the primary avoids a bigger, costlier instance.
+      - id: c
+        text: Storage autoscaling
+        why: Storage autoscaling grows disk space with demand but adds no copies to share the lookups.
+      - id: d
+        text: DB snapshots
+        why: A snapshot is a backup copy kept for restores, not a running copy that answers lookups.
+    evidence:
+      - Read replicas scale reads horizontally, sparing the primary a bigger, costlier instance.
+    takeaway: Read replicas spread read traffic across copies so the primary database need not scale up to a pricier class.
+    history: []
+    verified:
+      keyHash: 7c721824102c
+      fullHash: fb6ee3510449
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
