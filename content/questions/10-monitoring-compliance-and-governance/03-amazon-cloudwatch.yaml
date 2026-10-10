@@ -1,0 +1,401 @@
+questions:
+  - id: q-fccp9e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-cloudwatch
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe runs its ordering app on Amazon EC2 and keeps its till server in the back office.
+      The owner wants to see CPU use and app performance for both, live, in one place.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        why: CloudTrail records who made which API call, not live CPU or app performance numbers.
+      - id: b
+        text: AWS Config
+        why: Config tracks how resource settings change over time, not live performance figures.
+      - id: c
+        text: Amazon CloudWatch
+        correct: true
+        why: CloudWatch watches AWS resources, their apps and on-premises servers in real time from one hub.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor gives best-practice checks, not a live feed of server performance.
+    evidence:
+      - Amazon CloudWatch is a single real-time hub for watching AWS resources, the apps on them, and on-premises servers.
+      - Choose it for performance numbers and thresholds, not for who called an API.
+    takeaway: Live performance numbers for AWS and on-premises servers in one place point to CloudWatch, not CloudTrail or Config.
+    history: []
+    verified:
+      keyHash: 0cb2e95423b3
+      fullHash: de3610444855
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-z9amra
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-cloudwatch
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which job is the main use of Amazon CloudWatch?
+    options:
+      - id: a
+        text: Recording which user made each API call
+        why: Recording who called which API is the auditing job of AWS CloudTrail, not CloudWatch.
+      - id: b
+        text: Troubleshooting running infrastructure
+        correct: true
+        why: CloudWatch gathers metrics, alarms and logs so teams can find and fix infrastructure faults.
+      - id: c
+        text: Checking accounts against best practices
+        why: Best-practice checks across an account are what AWS Trusted Advisor provides, not CloudWatch.
+      - id: d
+        text: Tracking how resource settings change
+        why: A history of resource setting changes is kept by AWS Config, not by CloudWatch.
+    evidence:
+      - It also aids visualizing, automating and proactive monitoring; the core use is infrastructure troubleshooting.
+      - Choose it for performance numbers and thresholds, not for who called an API.
+    takeaway: CloudWatch's core job is helping teams troubleshoot running infrastructure, not auditing API calls or settings.
+    history: []
+    verified:
+      keyHash: 7955ad4c7774
+      fullHash: bc7c25745315
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ngy0ky
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-metrics
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe wants Amazon CloudWatch to hold a running count of the shots each espresso machine pulls, so it can see the number climb day by day.
+      Which CloudWatch feature holds that count?
+    options:
+      - id: a
+        text: A metric
+        correct: true
+        why: A metric is a value tracked over time, and it can be the cafe's own count of shots per machine.
+      - id: b
+        text: A dashboard
+        why: A dashboard only displays metrics that already exist; it does not hold a new tracked value itself.
+      - id: c
+        text: A log group
+        why: Logs hold text records for searching, not a single value tracked over time for charting.
+      - id: d
+        text: An alarm
+        why: An alarm watches a value and acts at a threshold; it needs the count to exist first rather than holding it.
+    evidence:
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+    takeaway: A CloudWatch metric is a value tracked over time, and it can be the business's own count, such as shots per machine.
+    history: []
+    verified:
+      keyHash: 9ee1cca2fc6d
+      fullHash: 8d588d5fafe3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-v17rke
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-metrics
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      What is a metric in Amazon CloudWatch?
+    options:
+      - id: a
+        text: A threshold that starts an action when crossed
+        why: That describes an alarm, which watches a metric rather than being one.
+      - id: b
+        text: A console page that refreshes on its own
+        why: That describes a dashboard, which displays metrics rather than being one.
+      - id: c
+        text: A store of log files that can be searched
+        why: That describes CloudWatch Logs, which keeps text records rather than tracked values.
+      - id: d
+        text: A value tracked over time for a resource
+        correct: true
+        why: A metric is a measured value over time, such as an instance's CPU use.
+    evidence:
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+      - Metrics measure, alarms react, dashboards display, Logs keeps searchable detail.
+    takeaway: A CloudWatch metric is a value measured over time, the raw input that alarms and dashboards build on.
+    history: []
+    verified:
+      keyHash: 6048146cde0f
+      fullHash: 06cd0bdf95d9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-d4z2zh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-alarms
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      Each espresso machine needs cleaning after a set number of shots, and the cafe already tracks the shot count in Amazon CloudWatch.
+      The manager wants a text message the moment a machine reaches that number.
+      Which CloudWatch feature should the cafe set up?
+    options:
+      - id: a
+        text: A CloudWatch dashboard
+        why: A dashboard shows the count on screen, but someone has to look at it; it sends nothing.
+      - id: b
+        text: A CloudWatch Logs search
+        why: A log search finds past records on request, so it cannot react the moment a count is hit.
+      - id: c
+        text: A CloudWatch alarm
+        correct: true
+        why: An alarm acts when a metric crosses a threshold and can send the text through Amazon SNS.
+      - id: d
+        text: A CloudWatch metric
+        why: The metric already counts the shots; on its own it measures and never notifies anyone.
+    evidence:
+      - An alarm can notify through SNS or scale EC2 automatically.
+      - "Machines due for cleaning: a custom metric plus an alarm."
+    takeaway: To react when a metric crosses a threshold, such as texting a manager, set a CloudWatch alarm.
+    history: []
+    verified:
+      keyHash: c2d149e0aad9
+      fullHash: 039327b8c30d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q09wnt
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: cloudwatch-alarms
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which responses can an Amazon CloudWatch alarm set off on its own when its metric crosses a threshold?
+    options:
+      - id: a
+        text: Send a text to the manager through Amazon SNS
+        correct: true
+        why: Alarms can notify people, for example by sending a text message through SNS.
+      - id: b
+        text: Show several metrics together on one dashboard
+        why: CloudWatch can do this, but it is the job of a dashboard, not a response an alarm sets off.
+      - id: c
+        text: Add Amazon EC2 instances to handle the load
+        correct: true
+        why: Alarms can change resources as well as notify, such as scaling out EC2 capacity.
+      - id: d
+        text: Keep log files in one place for later search
+        why: CloudWatch Logs stores and searches log files; that is not an action an alarm triggers.
+      - id: e
+        text: Record a value over time as a custom metric
+        why: Recording a value is what a metric does; the alarm watches that metric rather than creating it.
+    evidence:
+      - An alarm can notify through SNS or scale EC2 automatically.
+    takeaway: A CloudWatch alarm can either notify people, such as through SNS, or change resources, such as scaling EC2.
+    history: []
+    verified:
+      keyHash: c08148cd5eb1
+      fullHash: 6777b6855c07
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5hey0f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-dashboards
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's shift lead opens a separate console page for each espresso machine to check its shot count.
+      She wants all the counts on one screen that keeps itself up to date.
+      Which Amazon CloudWatch feature fits?
+    options:
+      - id: a
+        text: CloudWatch alarms
+        why: An alarm reacts to a single threshold; it does not lay out every machine's count on one screen.
+      - id: b
+        text: CloudWatch dashboards
+        correct: true
+        why: A dashboard is a custom console page that shows many metrics in one view and refreshes itself.
+      - id: c
+        text: CloudWatch Logs
+        why: Logs store and search text records, which does not give a live view of counts side by side.
+      - id: d
+        text: CloudWatch metrics
+        why: The shot counts already are metrics; on their own they do not gather every machine onto one screen.
+    evidence:
+      - "**CloudWatch dashboard**: a self-refreshing console page of metrics."
+    takeaway: When many metrics should sit on one self-refreshing screen, build a CloudWatch dashboard.
+    history: []
+    verified:
+      keyHash: 0aa683b08b6b
+      fullHash: 2167e813cc8f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4b5xng
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-dashboards
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement describes an Amazon CloudWatch dashboard?
+    options:
+      - id: a
+        text: It records each change to a resource's settings.
+        why: Tracking setting changes is a configuration history job, not what a dashboard shows.
+      - id: b
+        text: It sends a message when a value passes a limit.
+        why: Reacting to a limit is an alarm's job; a dashboard only displays data.
+      - id: c
+        text: It collects log files from servers for searching.
+        why: Collecting and searching log files is the role of CloudWatch Logs, not of a dashboard.
+      - id: d
+        text: It shows chosen metrics on one page in near real time.
+        correct: true
+        why: A dashboard is a custom page that displays selected metrics together and keeps them current.
+    evidence:
+      - Metrics measure, alarms react, dashboards display, Logs keeps searchable detail.
+      - "**CloudWatch dashboard**: a self-refreshing console page of metrics."
+    takeaway: A CloudWatch dashboard displays chosen metrics together on one self-updating page; it does not act or store logs.
+    history: []
+    verified:
+      keyHash: 07acb92f956e
+      fullHash: 97eca957af82
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ysx6r8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-logs
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      Last week one of the cafe's smart espresso machines brewed decaf when a customer ordered regular.
+      The machines send their event records to AWS.
+      Where should the team search to find out what happened?
+    options:
+      - id: a
+        text: CloudWatch dashboards
+        why: A dashboard displays metric graphs, not the searchable event records needed to trace one brew.
+      - id: b
+        text: CloudWatch Logs
+        correct: true
+        why: CloudWatch Logs stores log files centrally so the team can search and filter last week's entries.
+      - id: c
+        text: CloudWatch alarms
+        why: An alarm reacts to a metric threshold going forward; it holds no record of past events.
+      - id: d
+        text: CloudWatch metrics
+        why: A metric holds numeric values over time, not the detailed record of what each brew did.
+    evidence:
+      - "A machine brewed decaf: search CloudWatch Logs."
+      - "**CloudWatch Logs**: central log storage and search."
+    takeaway: To dig into what a system did in the past, search the detailed records kept in CloudWatch Logs.
+    history: []
+    verified:
+      keyHash: a603103d2934
+      fullHash: 1ad72e3f44cc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-h8cm29
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: cloudwatch-logs
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which tasks does Amazon CloudWatch Logs handle?
+    options:
+      - id: a
+        text: Keeping records from many sources in one place
+        correct: true
+        why: CloudWatch Logs collects and keeps log files in one central place.
+      - id: b
+        text: Recording which user called each API in the account
+        why: A record of who called each API is an audit trail kept by AWS CloudTrail, not CloudWatch Logs.
+      - id: c
+        text: Searching and filtering past entries for an event
+        correct: true
+        why: CloudWatch Logs lets teams view, search and filter entries to find specific events.
+      - id: d
+        text: Recording each change made to a resource's settings
+        why: Tracking how resource settings change over time is the job of AWS Config, not CloudWatch Logs.
+      - id: e
+        text: Storing a numeric value over time for each resource
+        why: A number tracked over time is a CloudWatch metric, not a log file kept for searching.
+    evidence:
+      - "**CloudWatch Logs**: central log storage and search."
+    takeaway: CloudWatch Logs is where log files are kept centrally and searched or filtered later.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 4 are CloudWatch Logs traits; 2 is Config, 3 is metrics and 5 is CloudTrail.)"
+  - id: q-vmjcan
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-logs
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe runs its ordering app on several EC2 instances plus one server in the back office.
+      Each machine writes its own error records, so developers sign in to every machine to hunt for a failed order.
+      Which CloudWatch feature gathers those records in one place they can search?
+    options:
+      - id: a
+        text: CloudWatch alarms
+        why: An alarm acts when a metric crosses a threshold; it does not gather and store the machines' records.
+      - id: b
+        text: CloudWatch dashboards
+        why: A dashboard shows metric graphs on one page, but it is not where detailed records are kept and searched.
+      - id: c
+        text: CloudWatch Logs
+        correct: true
+        why: CloudWatch Logs collects records from many sources, on AWS or on premises, and lets the team search and filter them.
+      - id: d
+        text: CloudWatch metrics
+        why: Metrics track numeric values over time, such as CPU use, not the written detail of each failed order.
+    evidence:
+      - "**CloudWatch Logs**: central log storage and search."
+      - Amazon CloudWatch is a single real-time hub for watching AWS resources, the apps on them, and on-premises servers.
+    takeaway: CloudWatch Logs pulls records from many machines, including on-premises ones, into one searchable place.
+    history: []
+    verified:
+      keyHash: 3ac011cd3c6e
+      fullHash: 4d82b51f675e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,250 @@
+questions:
+  - id: q-dkdqs4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-monitoring
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement best describes monitoring in the AWS Cloud?
+    options:
+      - id: a
+        text: Recording which user made each API call in an account
+        why: A log of who called which API is an audit trail, not a watch on how healthy and fast resources run.
+      - id: b
+        text: Tracking resource health and performance to catch problems early
+        correct: true
+        why: Monitoring keeps gathering and judging how healthy and fast resources run so problems surface early.
+      - id: c
+        text: Granting users and roles permission to use specific AWS resources
+        why: Granting permissions controls who may act on resources; it does not track their health or speed.
+      - id: d
+        text: Checking resource settings against a set of compliance rules
+        why: Comparing settings to rules judges configuration, not the live health and performance of resources.
+    evidence:
+      - "**Monitoring**: ongoing tracking of resource health and performance."
+      - Its goal is peak performance and early warning of problems.
+    takeaway: Monitoring is continuous tracking of resource health and performance, aimed at peak performance and early warning.
+    history: []
+    verified:
+      keyHash: ee74341cb040
+      fullHash: a2950edd4e80
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-v5cxwv
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: cloud-monitoring
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's ordering app runs on AWS services that add and remove capacity on their own as orders rise and fall.
+      Why does the owner still need to monitor the app?
+    options:
+      - id: a
+        text: The physical servers under the app need the owner's upkeep
+        why: AWS cares for the physical hardware, so there is no server upkeep for the owner to watch.
+      - id: b
+        text: The scaling rules expire unless the owner renews them monthly
+        why: Scaling rules do not lapse each month; the reason to watch is that capacity changes by itself.
+      - id: c
+        text: Capacity that changes on its own still needs regular checking
+        correct: true
+        why: Because capacity shifts by itself, the owner must keep confirming the app stays healthy and fast.
+      - id: d
+        text: The Availability Zones need the owner to patch them each week
+        why: AWS runs the Availability Zones, so patching them is not a duty that calls for the owner to monitor.
+    evidence:
+      - AWS services scale on their own, so you must keep checking they behave.
+      - Dynamic scaling makes it essential on AWS.
+    takeaway: Because AWS resources scale dynamically, you must keep monitoring them to confirm they still behave.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only true statement; 2, 3 and 4 put AWS-managed or nonexistent chores on the owner.)"
+  - id: q-rfv5qd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: monitoring-metrics
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 1
+    stem: >-
+      In cloud monitoring, what is a metric?
+    options:
+      - id: a
+        text: A rule that grants a user access to a resource
+        why: Granting access is a permissions matter; a metric measures a value rather than allowing actions.
+      - id: b
+        text: A value tracked over time for a resource or process
+        correct: true
+        why: A metric records how a value, such as CPU use, changes over time so it can be judged.
+      - id: c
+        text: A template that launches a set of identical servers
+        why: A launch template builds servers; it does not record any measured value over time.
+      - id: d
+        text: A list of resources that belong to one account
+        why: An inventory names resources but does not track how any value of theirs changes over time.
+    evidence:
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+    takeaway: A metric is a value tracked over time, such as EC2 CPU use, that monitoring gathers and judges.
+    history: []
+    verified:
+      keyHash: c880cdb98f12
+      fullHash: 403ad2ca3dfc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hdngg8
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: monitoring-metrics
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe owner cannot stand at the counter all day and wants a report built from metrics.
+      Which items in the report are metrics?
+    options:
+      - id: a
+        text: Coffees sold each hour
+        correct: true
+        why: The number of coffees sold is a value the report tracks hour by hour, so it is a metric.
+      - id: b
+        text: Wait limit that sets off an alert
+        why: A limit is a threshold the owner chooses to judge a metric against; it is not itself a tracked value.
+      - id: c
+        text: Average wait per customer
+        correct: true
+        why: Wait time is a measured value that rises and falls, so tracking it over time makes it a metric.
+      - id: d
+        text: Text sent when the limit is passed
+        why: A text message is an alert that monitoring sends after judging a metric, not the metric itself.
+      - id: e
+        text: Rule that calls in an extra barista
+        why: A rule that brings in staff is an action taken in response to a metric, not a value being tracked.
+    evidence:
+      - The owner cannot watch all day, so wants a report (coffees sold, average wait, stock-outs) and an alert when waits run long.
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+    takeaway: Metrics are the measured values tracked over time; thresholds, alerts and actions are built on top of them.
+    history: []
+    verified:
+      keyHash: 3f9d123fe50a
+      fullHash: 687f0601a608
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3xj4rm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: monitoring-alerts
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's loyalty app suddenly starts returning many more errors than usual during the lunch rush.
+      Which monitoring response makes sure a person learns of the problem without first having to go and look?
+    options:
+      - id: a
+        text: Writes each error to the app's log files
+        why: Log files help with debugging, but nobody is told about the errors unless they open the logs.
+      - id: b
+        text: Plots the error count on a shared dashboard
+        why: A dashboard shows the rise only to someone who chooses to look at it, so no one is warned.
+      - id: c
+        text: Sends a notification to the staff on duty
+        correct: true
+        why: An alert pushes the problem to people, so staff hear about the spike without checking anything.
+      - id: d
+        text: Saves the error rate as a tracked metric
+        why: Tracking the error rate gathers the data, but a metric alone does not tell anyone it has jumped.
+    evidence:
+      - "An error spike in an app: staff get notified."
+      - AWS tools measure performance, warn when something is off, and help debug and troubleshoot.
+    takeaway: When monitoring spots a problem such as an error spike, it alerts people so they can respond early.
+    history: []
+    verified:
+      keyHash: 8c24b62e9ffe
+      fullHash: d12f8dc2d1b1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-e8g17f
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: monitoring-alerts
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      Match each cafe situation to the monitoring response that fits it.
+    pairs:
+      - left: The EC2 instance behind the ordering site is overloaded
+        right: An automatic action adds more capacity
+        why: An overloaded instance can be relieved without people by having EC2 Auto Scaling add capacity.
+      - left: Customer wait times run long at the counter
+        right: The owner receives an alert
+        why: The owner wants to be warned when waits grow too long so someone can step in.
+      - left: The owner wants to review the week's sales totals
+        right: A report of tracked metrics is produced
+        why: Totals over a week call for a summary of gathered metrics, not an urgent warning.
+    evidence:
+      - "An overloaded EC2 instance: EC2 Auto Scaling launches another."
+      - It can trigger automatic actions or alert people.
+      - The owner cannot watch all day, so wants a report (coffees sold, average wait, stock-outs) and an alert when waits run long.
+    takeaway: Monitoring can respond to a problem with an automatic action or by alerting people, and reports cover routine review.
+    history: []
+    verified:
+      keyHash: 29bf30c3ae5a
+      fullHash: ee13ec448a3d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tnm6rq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-monitoring
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's owner is too busy serving customers to keep an eye on the ordering app.
+      She wants a daily summary of order totals and wait times, and a warning on her phone when waits grow too long.
+      Which practice is she setting up?
+    options:
+      - id: a
+        text: Governance
+        why: Governance sets rules for how accounts and resources are built, not summaries and warnings about how the app runs.
+      - id: b
+        text: Monitoring
+        correct: true
+        why: Monitoring gathers values such as wait times, judges them over time and alerts someone when they go wrong.
+      - id: c
+        text: Compliance
+        why: Compliance is about meeting policies, standards and laws, not tracking how fast orders move.
+      - id: d
+        text: Auditing
+        why: Auditing checks records against requirements after the fact, not live wait times with a warning.
+    evidence:
+      - "The loop: watch, gather metrics, judge them over time, then act."
+      - It can trigger automatic actions or alert people.
+    takeaway: Collecting values such as wait times, reviewing them and alerting when they go wrong is monitoring.
+    history: []
+    verified:
+      keyHash: 3d74ca291911
+      fullHash: a7826ced328c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

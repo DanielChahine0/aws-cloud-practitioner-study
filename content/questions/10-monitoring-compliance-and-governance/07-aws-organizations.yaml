@@ -1,0 +1,457 @@
+questions:
+  - id: q-ksfv1r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-organizations
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe now runs separate AWS accounts for its ordering app, its test work and its payroll tools.
+      Which service gives it one place to handle billing, access and compliance across all of them?
+    options:
+      - id: a
+        text: AWS Config
+        why: Config tracks resource settings against rules, but it does not run billing or access for a set of accounts.
+      - id: b
+        text: AWS Organizations
+        correct: true
+        why: Organizations is built to manage many accounts centrally, covering their billing, access and compliance.
+      - id: c
+        text: AWS CloudTrail
+        why: CloudTrail logs API calls for auditing, but it cannot govern or bill the cafe's accounts as a group.
+      - id: d
+        text: AWS Artifact
+        why: Artifact hands out AWS's own compliance reports and agreements, not controls over the cafe's accounts.
+    evidence:
+      - One place to run billing, access, security and compliance for all accounts, and to share resources between them.
+    takeaway: When many AWS accounts need central billing, access and compliance, the answer is AWS Organizations.
+    history: []
+    verified:
+      keyHash: e7cead800dbc
+      fullHash: f1ab1bc7c63e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pfv93e
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-organizations
+    note: m10/aws-organizations
+    task: "4.2"
+    level: 2
+    stem: >-
+      Match each AWS Organizations feature to the cafe need it serves.
+    pairs:
+      - left: Consolidated billing
+        right: One monthly bill for every cafe account, with discounts applied at the parent
+        why: Child account charges roll up to the parent account, so the cafe pays once and gets the discounts there.
+      - left: Grouping
+        right: A developer OU that collects the cafe's test accounts
+        why: OUs gather accounts that share security, compliance or budget needs, such as the developer accounts.
+      - left: Limits
+        right: The payroll account may use only a short list of approved services
+        why: The parent account's admin chooses which services and API actions each account is allowed.
+      - left: Automation
+        right: New accounts for each new branch are created from a script
+        why: Organizations supports creating accounts programmatically instead of setting each one up by hand.
+    evidence:
+      - "**Consolidated billing**: child bills roll up to the parent account, where discounts apply."
+      - "**Grouping**: OUs gather accounts by security, compliance or budget needs, such as a developer OU."
+      - "**Automation**: programmatic account creation, cost control across accounts, tooling for security teams."
+    takeaway: Organizations combines bills, groups accounts, limits their services and automates account creation.
+    history: []
+    verified:
+      keyHash: 595a19fa5df2
+      fullHash: ce66dff44bb6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-62xvmx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: organizational-units
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      Three of the cafe's accounts handle card payments and must stick to services a regulator has approved.
+      What should the cafe do in AWS Organizations so that a single policy attachment caps all three, plus any payment account it adds later?
+    options:
+      - id: a
+        text: Attach one SCP to the organization root
+        why: A policy on the root would reach every account in the organization, not just the payment accounts.
+      - id: b
+        text: Attach one SCP to each of the three accounts
+        why: Separate SCPs on each account work, but that is three attachments and a new payment account would need its own.
+      - id: c
+        text: Place the three accounts in one shared OU
+        correct: true
+        why: An OU groups accounts with the same regulatory needs, so one policy on it covers all three and any account moved in later.
+      - id: d
+        text: Link the three accounts by consolidated billing
+        why: Consolidated billing combines charges into one bill, but it places no cap on which services an account may use.
+    evidence:
+      - "Accounts limited to regulation-approved services: one shared OU."
+      - Base OUs on each department's business, security and regulatory needs.
+    takeaway: Accounts with the same regulatory limits belong together in one shared OU.
+    history: []
+    verified:
+      keyHash: f1c96b3b715e
+      fullHash: aaf9eb02739d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-z7c98y
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: organizational-units
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe wants the interns' test accounts in a group of their own while keeping them within its developer OU.
+      What should it do?
+    options:
+      - id: a
+        text: Move the interns' accounts directly under the root
+        why: An account can sit under the root, but there it is outside the developer OU the cafe wants to keep it in.
+      - id: b
+        text: Nest an interns OU inside the developer OU
+        correct: true
+        why: OUs can nest, so an interns OU inside the developer OU groups those accounts and keeps them within it.
+      - id: c
+        text: Attach an SCP to each of the interns' accounts
+        why: An SCP can cap each account, but capping permissions does not put the accounts in a group of their own.
+      - id: d
+        text: Create an interns IAM group in each test account
+        why: An IAM group holds users inside one account, so it groups people rather than the interns' accounts.
+    evidence:
+      - OUs group accounts and can nest.
+    takeaway: To group some accounts apart while keeping them inside an existing OU, nest a new OU within it.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 3 (key) is the only option that repeats the stem's 'developer OU'."
+  - id: q-jd3nh3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: service-control-policies
+    note: m10/aws-organizations
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe wants every account in its developer OU kept away from all but a handful of services, even for admins inside those accounts.
+      What should it attach to the OU?
+    options:
+      - id: a
+        text: An IAM policy
+        why: IAM policies attach to identities within one account, not to an OU of accounts.
+      - id: b
+        text: An AWS Config rule
+        why: A Config rule checks resource settings after the fact; it does not cap which services an account may call.
+      - id: c
+        text: An AWS Budgets alert
+        why: A budget alert warns about spending and blocks no service or API action.
+      - id: d
+        text: A service control policy
+        correct: true
+        why: An SCP on the OU caps the services and API actions for every user and role in its accounts, admins included.
+    evidence:
+      - "**Service control policy (SCP)**: a permission cap for an OU or member account."
+      - "**Limits**: the parent account's admin picks the services and API actions each account gets."
+    takeaway: To cap what whole accounts in an OU can use, attach a service control policy to that OU.
+    history: []
+    verified:
+      keyHash: b3fac9a89ee5
+      fullHash: e10b8c8a395d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fd0j3f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: service-control-policies
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's cloud admin wants an SCP to restrict the IAM role its kiosk app uses.
+      Where can she attach the SCP?
+    options:
+      - id: a
+        text: To the role itself
+        why: SCPs never attach to IAM roles, even though they limit what roles can do.
+      - id: b
+        text: To the member account
+        correct: true
+        why: An SCP attaches to a member account or an OU, and from there it caps the role inside that account.
+      - id: c
+        text: To the admins' IAM group
+        why: SCPs never attach to IAM groups, so this target is not available.
+      - id: d
+        text: To the IAM user who made it
+        why: SCPs never attach to IAM users, whoever created the role.
+    evidence:
+      - SCPs never attach to IAM users, groups or roles, even though they limit them.
+      - SCPs cap permissions and attach only to OUs or member accounts.
+    takeaway: SCPs limit users and roles but attach only to OUs or member accounts.
+    history: []
+    verified:
+      keyHash: b8a78ab1087f
+      fullHash: 38ddb2925246
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rx08ny
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: management-account
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's owner set up its organization from the account she already had, and that account keeps final say over every other account.
+      What is that account called?
+    options:
+      - id: a
+        text: The organization root
+        why: The root is the top container made with the organization, not the account that owns it.
+      - id: b
+        text: An organizational unit
+        why: An OU is a group of accounts, not an account with control over the organization.
+      - id: c
+        text: The management account
+        correct: true
+        why: The account that creates the organization and governs it is the management account.
+      - id: d
+        text: A member account
+        why: Member accounts are the other accounts in the organization, governed rather than governing.
+    evidence:
+      - "**Management account**: the owner account that sets up the organization and has final control."
+    takeaway: The account that creates the organization and holds final control is the management account, not the root.
+    history: []
+    verified:
+      keyHash: 7e9b3f37f6cb
+      fullHash: 387f3671795b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-atecd4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: management-account
+    note: m10/aws-organizations
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe's bookkeeper wants the combined bill covering every account in its organization.
+      Which account receives it?
+    options:
+      - id: a
+        text: Each member account
+        why: Member accounts are billed through the management account, so none of them gets the combined bill.
+      - id: b
+        text: The management account
+        correct: true
+        why: Child bills roll up to the management account, which pays the single combined bill.
+      - id: c
+        text: The developer OU
+        why: An OU is a grouping of accounts, not an account that receives bills.
+      - id: d
+        text: The organization root
+        why: The root is a container for OUs and accounts, not an account that pays charges.
+    evidence:
+      - "**Member account**: a child account billed through the management account."
+      - "**Consolidated billing**: child bills roll up to the parent account, where discounts apply."
+    takeaway: In an organization, the management account receives and pays the consolidated bill.
+    history: []
+    verified:
+      keyHash: 2af18649ab8a
+      fullHash: bccf1e04fbd4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-d0k0av
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: organization-root
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 1
+    stem: >-
+      In AWS Organizations, what is the root?
+    options:
+      - id: a
+        text: The account that creates and governs the organization
+        why: That describes the management account, which owns the organization but is not its container.
+      - id: b
+        text: A logical group of accounts for one department
+        why: That describes an OU, which sits below the root.
+      - id: c
+        text: The top container holding all OUs and accounts
+        correct: true
+        why: The root is made with the organization and holds every OU and account in it.
+      - id: d
+        text: A cap on the services each account may use
+        why: That describes a service control policy, which is a policy rather than a container.
+    evidence:
+      - "**Root**: the organization's top container."
+    takeaway: The root is the organization's top container, separate from the management account that owns it.
+    history: []
+    verified:
+      keyHash: 3b80014cde23
+      fullHash: 8373784335ef
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kd7ja2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: organization-root
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe opens an account for a summer food truck.
+      The cafe's only OUs are a payments OU and a developer OU, and the truck shares neither group's security or regulatory needs.
+      Where should the account sit so it stays in the cafe's organization?
+    options:
+      - id: a
+        text: Under the developer OU
+        why: OUs are based on shared needs, and the truck does not share the developer group's needs, so that OU does not fit.
+      - id: b
+        text: Under the organization root
+        correct: true
+        why: An account that fits no OU can sit straight under the root and still be part of the organization.
+      - id: c
+        text: Under the management account
+        why: Accounts are held only by the root and OUs, so no account can sit under the management account.
+      - id: d
+        text: Under a second organization
+        why: A second organization would take the account out of the cafe's organization instead of keeping it in.
+    evidence:
+      - "An account that fits no OU: directly under the root."
+    takeaway: An account that fits no OU can be placed directly under the organization root.
+    history: []
+    verified:
+      keyHash: 613423224f3c
+      fullHash: 30545e7e4f13
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-reh8gn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: member-accounts
+    note: m10/aws-organizations
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe's catering account sits directly under the root instead of inside an OU, yet its charges still land on the cafe's combined bill.
+      Why?
+    options:
+      - id: a
+        text: It is still eligible for an SCP of its own
+        why: An SCP can attach to the account, but a permission cap has nothing to do with where its charges go.
+      - id: b
+        text: It is still able to join an OU at some later date
+        why: The account could join an OU later, but that does not explain why it is billed jointly today.
+      - id: c
+        text: It is still a member account in the organization
+        correct: true
+        why: A member account is billed through the management account wherever it sits, including directly under the root.
+      - id: d
+        text: It is still reached by SCPs set on the root
+        why: A policy on the root does reach the account, but a permission cap does not decide who pays its charges.
+    evidence:
+      - "**Member account**: a child account billed through the management account."
+      - "An account that fits no OU: directly under the root."
+    takeaway: A member account is billed jointly whether it sits in an OU or directly under the root.
+    history: []
+    verified:
+      keyHash: ec3e8519d5e4
+      fullHash: c865dad79d83
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qd7qax
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: member-accounts
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which description fits a member account in AWS Organizations?
+    options:
+      - id: a
+        text: The account that creates and governs the organization
+        why: That describes the management account, the owner, which is the one account that is not a member account.
+      - id: b
+        text: Any account in it besides the owning account
+        correct: true
+        why: Any account in the organization other than the management account is a member account.
+      - id: c
+        text: The top container that holds all OUs and accounts
+        why: That describes the root, which is a container rather than an account of any kind.
+      - id: d
+        text: A logical group that holds accounts or nested OUs
+        why: That describes an OU, which groups member accounts rather than being one.
+    evidence:
+      - "**Member account**: a child account billed through the management account."
+    takeaway: Every account in an organization other than the management account is a member account.
+    history: []
+    verified:
+      keyHash: d6476f4e4c5e
+      fullHash: 271f6f47d437
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2474xp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: organizational-units
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 1
+    stem: >-
+      In AWS Organizations, what is an OU?
+    options:
+      - id: a
+        text: The container at the very top
+        why: That describes the root, which is made with the organization and holds every OU and account.
+      - id: b
+        text: A logical group of accounts
+        correct: true
+        why: An OU gathers accounts, and can hold nested OUs, so they can be managed together.
+      - id: c
+        text: The account that owns the whole setup
+        why: That describes the management account, which creates and governs the organization.
+      - id: d
+        text: A cap on what accounts can do
+        why: That describes an SCP, which is attached to an OU or a member account to limit permissions.
+    evidence:
+      - "**Organizational unit (OU)**: a logical group of accounts."
+    takeaway: An OU is a logical group of accounts, distinct from the root, the management account and SCPs.
+    history: []
+    verified:
+      keyHash: fc18e18e15ca
+      fullHash: 73b878c5ba07
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,504 @@
+questions:
+  - id: q-jsjgpe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: regulatory-compliance
+    note: m10/compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      In the cloud, what does it mean for a business to be compliant?
+    options:
+      - id: a
+        text: Its apps meet the uptime targets it has promised.
+        why: Meeting uptime targets is about availability, and it is not what being compliant means.
+      - id: b
+        text: Its resources and data meet the rules that bind it.
+        correct: true
+        why: Compliance is the bar of meeting each internal policy, standard and regulation that applies to the business.
+      - id: c
+        text: Its spending meets the budget its owners have set.
+        why: Staying within a budget is cost control, which says nothing about meeting policies or regulations.
+      - id: d
+        text: Its setup meets the provider's best-practice advice.
+        why: Best-practice advice covers cost, performance and security, and following it does not prove the rules are met.
+    evidence:
+      - "It is a security and data-protection bar: your resources and data must satisfy each internal policy, industry standard and regulation that binds you."
+    takeaway: Compliance means your resources and data satisfy every policy, standard and regulation that applies to you.
+    history: []
+    verified:
+      keyHash: 5419c192ca5e
+      fullHash: e2c7654afc44
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7pa6cg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: regulatory-compliance
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      An auditor will visit the cafe next month to confirm it meets the rules for card payments.
+      What will the auditor check the cafe against?
+    options:
+      - id: a
+        text: Reviews, ratings and complaints
+        why: Customer feedback measures satisfaction and gives an auditor no proof that the payment rules are met.
+      - id: b
+        text: Costs, budgets and forecasts
+        why: Spending figures are business plans, not proof that the cafe follows a regulation.
+      - id: c
+        text: Documents, records and inspections
+        correct: true
+        why: An audit checks compliance by reviewing documents and records and by inspecting the setup.
+      - id: d
+        text: Uptime, latency and error rates
+        why: Performance figures show how well the apps run, not whether the cafe's data and systems meet the payment rules.
+    evidence:
+      - Audits check this against documents, records and inspections.
+    takeaway: A compliance audit checks a business against its documents, records and inspections.
+    history: []
+    verified:
+      keyHash: 0446e059b5bd
+      fullHash: 2777d1fadb59
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-pqa5sg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: hipaa
+    note: m10/compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement describes HIPAA?
+    options:
+      - id: a
+        text: An EU regulation that protects consumer data
+        why: That describes GDPR, the rule set for EU consumer data, not HIPAA.
+      - id: b
+        text: A US law that applies to healthcare apps
+        correct: true
+        why: HIPAA is the US Health Insurance Portability and Accountability Act, which binds healthcare workloads.
+      - id: c
+        text: An AWS portal that stores audit reports
+        why: That describes AWS Artifact, a service, while HIPAA is a law that a workload must follow.
+      - id: d
+        text: A security checklist that AWS publishes
+        why: AWS publishes whitepapers such as an auditing checklist, but HIPAA is a US law, not an AWS document.
+    evidence:
+      - "**HIPAA**: US Health Insurance Portability and Accountability Act of 1996."
+    takeaway: HIPAA is the US healthcare law, while GDPR covers EU consumer data.
+    history: []
+    verified:
+      keyHash: a2bcfbeb88db
+      fullHash: b31a11fc0e37
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fm07pe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: hipaa
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's owner opens a second business in the US that runs an app for booking
+      appointments at medical clinics and storing patient notes.
+      Which regulation does that app most clearly fall under?
+    options:
+      - id: a
+        text: GDPR
+        why: GDPR covers EU consumer data, and this app serves US clinics and their patients.
+      - id: b
+        text: HIPAA
+        correct: true
+        why: A US healthcare app that holds patient data falls under HIPAA.
+      - id: c
+        text: PCI
+        why: The PCI rules cover payment card data, and this app books appointments and stores patient notes.
+      - id: d
+        text: Data sovereignty laws
+        why: Those laws require data to stay in its country, and the stem names a healthcare app, not a location rule.
+    evidence:
+      - "Rules follow the workload: GDPR for EU consumer data, HIPAA for US healthcare apps."
+    takeaway: Which rules apply depends on the workload, and US healthcare apps answer to HIPAA.
+    history: []
+    verified:
+      keyHash: 36addcd9543d
+      fullHash: 9610553343f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-wrbkwg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-artifact
+    note: m10/compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's bank asks for proof that the AWS data centers hosting the cafe's apps
+      passed independent security audits.
+      Which service gives the cafe those documents at no cost?
+    options:
+      - id: a
+        text: AWS Config
+        why: Config records how the cafe's own resources are set up, not audits of AWS's data centers.
+      - id: b
+        text: AWS Audit Manager
+        why: Audit Manager helps the cafe collect evidence about its own usage, not AWS's own audit reports.
+      - id: c
+        text: AWS Artifact
+        correct: true
+        why: Artifact is a free portal that hands over AWS's own audit reports whenever they are needed.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the cafe's account against best practices and does not supply AWS audit reports.
+    evidence:
+      - A free portal that hands you AWS's own audit reports whenever needed and lets you handle certain online agreements.
+    takeaway: For AWS's own audit reports on demand and at no cost, go to AWS Artifact.
+    history: []
+    verified:
+      keyHash: 6469bdcbc9ee
+      fullHash: 28fee31cf2ce
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-9bx6yz
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-artifact
+    note: m10/compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which tasks can a team handle in AWS Artifact?
+    options:
+      - id: a
+        text: Download third-party audit reports
+        correct: true
+        why: Artifact hands out AWS's own audit reports whenever a team needs them.
+      - id: b
+        text: Sign and track online agreements
+        correct: true
+        why: Artifact lets a team read, sign and track certain agreements with AWS.
+      - id: c
+        text: Group accounts into units
+        why: Grouping accounts is the job of AWS Organizations, not Artifact.
+      - id: d
+        text: Apply SCPs across accounts
+        why: Service control policies are set in AWS Organizations, which Artifact does not replace.
+      - id: e
+        text: Create users for the account
+        why: Users are created in IAM, and Artifact has no part in that.
+    evidence:
+      - A free portal that hands you AWS's own audit reports whenever needed and lets you handle certain online agreements.
+      - It does not group accounts or set SCPs (AWS Organizations) or create users (IAM).
+    takeaway: AWS Artifact does two things, reports and agreements, and leaves accounts and users to Organizations and IAM.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Key option 5 says 'third-party audit reports' but its why says 'AWS's own audit reports', so text and why disagree."
+  - id: q-j0qmrk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-artifact-agreements
+    note: m10/compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe runs several accounts under AWS Organizations and must accept legal terms
+      from AWS that cover all of them, then keep track of what it accepted.
+      Where does it do this?
+    options:
+      - id: a
+        text: AWS Artifact Reports
+        why: Reports holds outside audits of AWS, not the agreements a customer signs with AWS.
+      - id: b
+        text: AWS Artifact Agreements
+        correct: true
+        why: Agreements is where a customer reads, signs and tracks agreements, for one account or across an organization.
+      - id: c
+        text: AWS Organizations
+        why: Organizations groups the accounts but is not where agreements with AWS are signed.
+      - id: d
+        text: AWS Customer Compliance Center
+        why: The compliance portal offers stories and whitepapers, and no agreement is signed there.
+    evidence:
+      - "**Agreements**: where you read, sign and track your agreements with AWS, for a single account or across AWS Organizations, including HIPAA ones."
+    takeaway: Signing and tracking agreements with AWS, even across an organization, happens in AWS Artifact Agreements.
+    history: []
+    verified:
+      keyHash: bb90050b641a
+      fullHash: 7bfca82864aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-yn4s67
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-artifact-agreements
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A team building a US healthcare app on AWS must accept a HIPAA addendum from AWS
+      before it stores patient data.
+      Which tool does the team use?
+    options:
+      - id: a
+        text: AWS Artifact Agreements
+        correct: true
+        why: Agreements handles agreements with AWS, and HIPAA ones are among them.
+      - id: b
+        text: AWS Artifact Reports
+        why: Reports gives audit reports about AWS, and no agreement is accepted there.
+      - id: c
+        text: AWS Security Hub
+        why: Security Hub gathers security findings across an account and does not handle agreements.
+      - id: d
+        text: AWS IAM Identity Center
+        why: Identity Center manages workforce sign-in, not legal agreements with AWS.
+    evidence:
+      - "**Agreements**: where you read, sign and track your agreements with AWS, for a single account or across AWS Organizations, including HIPAA ones."
+    takeaway: A HIPAA agreement with AWS is reviewed and accepted in AWS Artifact Agreements.
+    history: []
+    verified:
+      keyHash: 05d6495b699c
+      fullHash: 72c4f1c144f5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-k5pq5n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-artifact-reports
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A regulator asks the cafe to show that the cloud provider under its ordering app meets
+      industry security standards.
+      Where does the cafe get documents it can hand over as proof?
+    options:
+      - id: a
+        text: AWS Audit Manager
+        why: Audit Manager builds evidence about the cafe's own usage, not outside audits of AWS itself.
+      - id: b
+        text: AWS Config
+        why: Config tracks the cafe's own resource settings and has no third-party audits of AWS.
+      - id: c
+        text: AWS Health Dashboard
+        why: The Health Dashboard shows service events that affect the account, not audit reports.
+      - id: d
+        text: AWS Artifact
+        correct: true
+        why: The Reports part of Artifact holds current outside audits of AWS that customers can show their auditors or regulators.
+    evidence:
+      - "**Reports**: up-to-date outside audits of AWS against worldwide, regional and industry security rules, which you can show your auditors or regulators as proof."
+    takeaway: Proof that AWS meets security standards comes from the third-party audits in AWS Artifact Reports.
+    history: []
+    verified:
+      keyHash: 5e7220774b7b
+      fullHash: dd2fae701e0a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2avh7y
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-artifact-reports
+    note: m10/compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which statement describes what AWS Artifact Reports contains?
+    options:
+      - id: a
+        text: Agreements between AWS and its customers
+        why: Agreements live in AWS Artifact Agreements, the other part of Artifact, not in Reports.
+      - id: b
+        text: Audits of AWS done by independent firms
+        correct: true
+        why: Reports holds third-party audits of AWS, which is exactly what this option describes.
+      - id: c
+        text: Evidence collected from a customer's account
+        why: Evidence from a customer's own usage is gathered by AWS Audit Manager, not held in Reports.
+      - id: d
+        text: Notices of AWS events that affect an account
+        why: Notices of events that touch an account come from AWS Health, and Reports holds no such notices.
+    evidence:
+      - "**AWS Artifact Reports**: third-party audit reports on AWS."
+    takeaway: AWS Artifact Reports contain independent third-party audits of AWS, not customer self-checks.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1's why only says it is 'exactly what this option describes' instead of saying why Reports holds those audits."
+  - id: q-09h2mh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-compliance-resources
+    note: m10/compliance
+    task: "2.4"
+    level: 3
+    stem: >-
+      Before moving its payment records to AWS, the cafe's manager wants to read how other
+      regulated firms solved their audit problems.
+      Where should the manager look?
+    options:
+      - id: a
+        text: AWS Artifact
+        why: Artifact holds audit reports and agreements, while customer stories live elsewhere.
+      - id: b
+        text: AWS Audit Manager
+        why: Audit Manager gathers evidence from the cafe's own account and has no customer stories.
+      - id: c
+        text: AWS Customer Compliance Center
+        correct: true
+        why: The compliance portal holds stories of regulated firms solving compliance and audit problems.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices and offers no case studies.
+    evidence:
+      - It holds stories of regulated firms solving compliance, governance and audit problems.
+      - Stories, key answers and the audit checklist live in the Customer Compliance Center, not Artifact.
+    takeaway: Stories from regulated firms are in the Customer Compliance Center, while AWS Artifact holds reports and agreements.
+    history: []
+    verified:
+      keyHash: c85670a2f14d
+      fullHash: bdfe44c6a452
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b5h685
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-compliance-resources
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe has just named a staff member to lead its compliance work.
+      Which items will the lead find in the Customer Compliance Center?
+    options:
+      - id: a
+        text: A security checklist used when auditing
+        correct: true
+        why: The portal's whitepapers include an auditing security checklist to prepare for audits.
+      - id: b
+        text: An overview of risk for workloads running on AWS
+        correct: true
+        why: The portal's whitepapers include a risk and compliance overview.
+      - id: c
+        text: Agreements the cafe has accepted from AWS
+        why: Agreements with AWS are signed and tracked in AWS Artifact, not in the portal.
+      - id: d
+        text: Outside audit reports to hand to a regulator
+        why: Audit reports to hand to a regulator come from AWS Artifact Reports.
+      - id: e
+        text: Evidence gathered from the cafe's own account
+        why: Evidence from the cafe's own usage is collected by AWS Audit Manager, not the portal.
+    evidence:
+      - Its whitepapers cover key compliance questions, a risk and compliance overview, and an auditing security checklist.
+    takeaway: The Customer Compliance Center offers whitepapers and checklists, while Artifact supplies reports and agreements.
+    history: []
+    verified:
+      keyHash: abc362980129
+      fullHash: e92444b17031
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-scn7g3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-artifact
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's auditor asks for two things at once: AWS's latest independent audit report, and a copy of the cafe's signed agreement with AWS.
+      Which single service gives the cafe both, free of charge?
+    options:
+      - id: a
+        text: AWS Audit Manager
+        why: Audit Manager gathers evidence about the cafe's own controls; it does not hold AWS's reports or agreements.
+      - id: b
+        text: AWS Organizations
+        why: Organizations groups accounts and sets SCPs; it does not serve audit reports or agreements with AWS.
+      - id: c
+        text: AWS Config
+        why: Config checks the cafe's resource settings against rules, not AWS's reports or signed agreements.
+      - id: d
+        text: AWS Artifact
+        correct: true
+        why: Artifact is a no-cost portal that serves AWS's own audit reports and lets customers manage their agreements with AWS.
+    evidence:
+      - A free portal that hands you AWS's own audit reports whenever needed and lets you handle certain online agreements.
+      - AWS Artifact gives no-cost, on-demand reports and agreements.
+    takeaway: AWS Artifact is one free portal for both AWS's audit reports and a customer's agreements with AWS.
+    history: []
+    verified:
+      keyHash: 6f2d91936f63
+      fullHash: 377f2d2bb15b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-nxcm4g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-artifact-reports
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A cafe developer building a card-payment feature wants to read what outside firms found when they checked AWS against security rules.
+      That tells her which duties remain with the cafe.
+      Where should she look?
+    options:
+      - id: a
+        text: AWS Artifact Agreements
+        why: Agreements is where customers read, sign and track agreements with AWS, not third-party audit findings.
+      - id: b
+        text: AWS Artifact Reports
+        correct: true
+        why: Reports holds current third-party audits of AWS, which show what AWS covers and what is left to the customer.
+      - id: c
+        text: AWS Audit Manager
+        why: Audit Manager collects evidence about the cafe's own controls, not outside audits of AWS itself.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the cafe's account against best practices; it holds no audit findings about AWS.
+    evidence:
+      - "A developer needs their regulatory duties: Artifact Reports."
+      - "**AWS Artifact Reports**: third-party audit reports on AWS."
+    takeaway: To read independent audits of AWS and learn what is still on you, open AWS Artifact Reports.
+    history: []
+    verified:
+      keyHash: 3e79d2d111df
+      fullHash: 4c3e11c53cd9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -1,0 +1,253 @@
+questions:
+  - id: q-nq09qh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health
+    note: m10/aws-health
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe's operations lead wants one place that lists AWS events touching the cafe's own instances, such as upcoming maintenance or a service issue in its Region.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        why: CloudTrail records the API calls people make in the account, not AWS events that affect its instances.
+      - id: b
+        text: AWS Health
+        correct: true
+        why: AWS Health is the feed of service events and planned changes that reach the cafe's own resources.
+      - id: c
+        text: AWS Config
+        why: Config tracks how the cafe's resource settings change over time, not AWS-side events or maintenance.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices rather than reporting AWS events hitting its instances.
+    evidence:
+      - AWS Health is the main feed of events affecting your resources.
+    takeaway: When the question is which AWS events are reaching your own resources, the answer is AWS Health.
+    history: []
+    verified:
+      keyHash: c46f94cc679e
+      fullHash: c43560b906b5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-qed59y
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: aws-health
+    note: m10/aws-health
+    task: "4.3"
+    level: 2
+    stem: >-
+      Which of these events would the cafe's admin find in AWS Health?
+    options:
+      - id: a
+        text: AWS schedules maintenance on the cafe's instance
+        correct: true
+        why: AWS Health tells you ahead of time about planned changes to your resources so you can prepare.
+      - id: b
+        text: AWS opens a new Region in a nearby country
+        why: A new Region is general AWS news, not an event that affects the cafe's own resources.
+      - id: c
+        text: An AWS service outage slows the cafe's app
+        correct: true
+        why: AWS Health reports service events, such as an outage that touches resources the cafe runs.
+      - id: d
+        text: AWS releases a new instance type the cafe could try
+        why: A new instance type is a product launch, not a health event affecting resources the cafe already runs.
+      - id: e
+        text: AWS sends a notice about the cafe's account
+        correct: true
+        why: Account notices are one of the event types that AWS Health delivers alongside service events.
+      - id: f
+        text: AWS announces a new service in public preview
+        why: A service preview is a general announcement, not an event that touches the cafe's resources.
+    evidence:
+      - It covers service events, planned changes and account notices.
+    takeaway: AWS Health reports service events, planned changes and account notices that affect your resources, not general AWS news.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1, 2 and 4 are the only ones tied to the cafe's own instance, app or account; 3, 5 and 6 are general announcements.)"
+  - id: q-8x6k11
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health-dashboard
+    note: m10/aws-health
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe's checkout app slowed down this morning, and the team wants to see whether an AWS issue is affecting its account, with advice on what to do about it.
+      Where should the team look?
+    options:
+      - id: a
+        text: AWS Trusted Advisor
+        why: Trusted Advisor flags best-practice gaps in cost or security, not live AWS issues reaching the account.
+      - id: b
+        text: Amazon CloudWatch dashboards
+        why: CloudWatch dashboards graph the cafe's own metrics but do not report issues on the AWS side.
+      - id: c
+        text: AWS Billing and Cost Management dashboard
+        why: The billing dashboard shows spending, which says nothing about an AWS issue slowing the app.
+      - id: d
+        text: AWS Health Dashboard
+        correct: true
+        why: The Health Dashboard shows events for this account with updates and fix advice to help troubleshoot.
+    evidence:
+      - The dashboard adds updates and timely fix advice to manage service health at scale.
+      - "Uses: plan lifecycle events, troubleshoot incidents."
+    takeaway: To check whether an AWS issue is hitting your account and how to respond, open the AWS Health Dashboard.
+    history: []
+    verified:
+      keyHash: 779e22068f7b
+      fullHash: 9b530953f715
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-tme7as
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health-dashboard
+    note: m10/aws-health
+    task: "4.3"
+    level: 1
+    stem: >-
+      What does the AWS Health Dashboard give an account?
+    options:
+      - id: a
+        text: Best-practice checks on cost, security and limits
+        why: Best-practice checks across cost and security are what AWS Trusted Advisor provides.
+      - id: b
+        text: AWS issues reaching its resources, with fix advice
+        correct: true
+        why: The dashboard is an account-specific view of AWS events reaching it, with updates and fix advice.
+      - id: c
+        text: Graphs of metrics picked from its resources
+        why: Graphs of chosen resource metrics are what Amazon CloudWatch dashboards show.
+      - id: d
+        text: A list of the resources it runs, by Region
+        why: AWS Health reports events about resources but does not catalog the resources themselves.
+    evidence:
+      - The dashboard adds updates and timely fix advice to manage service health at scale.
+      - It is no resource catalog.
+    takeaway: The AWS Health Dashboard is an account-specific view of health events with timely fix advice.
+    history: []
+    verified:
+      keyHash: fe4b06d40ab7
+      fullHash: 7796b9157d45
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5qhfh9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health-api
+    note: m10/aws-health
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe's in-house operations tool must read AWS Health events through code, but the cafe pays AWS only for the services it uses and nothing more.
+      What must the cafe do before the tool can use the AWS Health API?
+    options:
+      - id: a
+        text: Turn on AWS CloudTrail in each Region
+        why: CloudTrail logs API activity in the account, and turning it on does not unlock the AWS Health API.
+      - id: b
+        text: Start recording changes with AWS Config
+        why: Config records resource settings over time, which has no bearing on access to the AWS Health API.
+      - id: c
+        text: Sign up for a premium AWS Support plan
+        correct: true
+        why: Programmatic access to AWS Health requires a premium Support plan, which the cafe does not pay for yet.
+      - id: d
+        text: Join the account to AWS Organizations
+        why: Organizations groups accounts for central management but does not grant use of the AWS Health API.
+    evidence:
+      - Its API needs AWS Premium Support.
+    takeaway: The AWS Health API is available only with a paid AWS Support plan, not with Basic Support.
+    history: []
+    verified:
+      keyHash: cdac258eac06
+      fullHash: 636d61899e50
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-p2n273
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health-api
+    note: m10/aws-health
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe's developer is writing a script that checks every hour for AWS service issues and planned maintenance reaching the cafe's resources, then posts them to the team chat.
+      Which should the script use?
+    options:
+      - id: a
+        text: AWS Health API
+        correct: true
+        why: The AWS Health API gives code programmatic access to the same events, so a script can fetch them.
+      - id: b
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices; it does not report AWS service issues or maintenance.
+      - id: c
+        text: AWS CloudTrail
+        why: CloudTrail logs the API calls people make in the account, not AWS service issues or maintenance.
+      - id: d
+        text: Amazon CloudWatch
+        why: CloudWatch tracks the cafe's own metrics and logs, not AWS-side service issues or planned maintenance.
+    evidence:
+      - "**AWS Health API**: programmatic access."
+    takeaway: When code, not a person, needs AWS Health events, it uses the AWS Health API.
+    history: []
+    verified:
+      keyHash: 264365713dc3
+      fullHash: e876513ac571
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ftj5hf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health
+    note: m10/aws-health
+    task: "4.3"
+    level: 1
+    stem: >-
+      Which job does AWS Health do?
+    options:
+      - id: a
+        text: Lists an account's resources with their settings
+        why: Keeping a record of resources and their settings is AWS Config's job; AWS Health is no resource catalog.
+      - id: b
+        text: Checks an account against best practices
+        why: Best-practice checks across cost, security and more come from AWS Trusted Advisor, not AWS Health.
+      - id: c
+        text: Records the API calls made in an account
+        why: AWS CloudTrail records who called which API; AWS Health does not track user actions.
+      - id: d
+        text: Reports AWS events affecting an account
+        correct: true
+        why: AWS Health is the main source of service events, planned changes and account notices touching your resources.
+    evidence:
+      - AWS Health is the main feed of events affecting your resources.
+      - It is no resource catalog.
+    takeaway: AWS Health reports AWS-side events, such as service issues and planned changes, that affect your resources.
+    history: []
+    verified:
+      keyHash: fee338ff4604
+      fullHash: 1c00dde14ebf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
