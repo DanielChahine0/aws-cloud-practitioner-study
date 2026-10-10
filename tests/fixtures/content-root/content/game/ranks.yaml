@@ -1,0 +1,2 @@
+# Fixture ranks: basic only, so R13's rank-fact check has nothing to compare in the made-up tree.
+- { id: basic, name: Basic, short: Basic, requires: {} }

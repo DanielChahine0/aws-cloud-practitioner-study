@@ -29,6 +29,7 @@ domains:
 tasks:
   - id: "1.1"
     text: Define the benefits of the AWS Cloud.
+    short: cloud benefits
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
     verified_on: "2026-10-09"
     terms:
@@ -40,6 +41,7 @@ tasks:
       - agility
   - id: "1.2"
     text: Identify design principles of the AWS Cloud.
+    short: design principles
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
     verified_on: "2026-10-09"
     terms:
@@ -52,6 +54,7 @@ tasks:
       - sustainability
   - id: "1.3"
     text: Understand the benefits of and strategies for migration to the AWS Cloud.
+    short: migration
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
     verified_on: "2026-10-09"
     terms:
@@ -63,6 +66,7 @@ tasks:
       - database replication
   - id: "1.4"
     text: Understand concepts of cloud economics.
+    short: cloud economics
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html"
     verified_on: "2026-10-09"
     terms:
@@ -74,6 +78,7 @@ tasks:
       - economies of scale
   - id: "2.1"
     text: Understand the AWS shared responsibility model.
+    short: shared responsibility
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
     verified_on: "2026-10-09"
     terms:
@@ -83,6 +88,7 @@ tasks:
       - Amazon EC2
   - id: "2.2"
     text: Understand AWS Cloud security, governance, and compliance concepts.
+    short: security and compliance
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
     verified_on: "2026-10-09"
     terms:
@@ -101,6 +107,7 @@ tasks:
       - access reports
   - id: "2.3"
     text: Identify AWS access management capabilities.
+    short: access management
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
     verified_on: "2026-10-09"
     terms:
@@ -119,6 +126,7 @@ tasks:
       - federated
   - id: "2.4"
     text: Identify components and resources for security.
+    short: security resources
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html"
     verified_on: "2026-10-09"
     terms:
@@ -133,6 +141,7 @@ tasks:
       - AWS Trusted Advisor
   - id: "3.1"
     text: Define methods of deploying and operating in the AWS Cloud.
+    short: deploying and operating
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -147,6 +156,7 @@ tasks:
       - on-premises
   - id: "3.2"
     text: Define the AWS global infrastructure.
+    short: global infrastructure
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -161,6 +171,7 @@ tasks:
       - data sovereignty
   - id: "3.3"
     text: Identify AWS compute services.
+    short: compute
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -176,6 +187,7 @@ tasks:
       - load balancers
   - id: "3.4"
     text: Identify AWS database services.
+    short: databases
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -192,6 +204,7 @@ tasks:
       - AWS Schema Conversion Tool (AWS SCT)
   - id: "3.5"
     text: Identify AWS network services.
+    short: networking
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -206,6 +219,7 @@ tasks:
       - AWS Direct Connect
   - id: "3.6"
     text: Identify AWS storage services.
+    short: storage
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -221,6 +235,7 @@ tasks:
       - AWS Backup
   - id: "3.7"
     text: Identify AWS artificial intelligence and machine learning (AI/ML) services and analytics services.
+    short: AI/ML and analytics
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -232,6 +247,7 @@ tasks:
       - Amazon Quick Sight
   - id: "3.8"
     text: Identify services from other in-scope AWS service categories.
+    short: other services
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html"
     verified_on: "2026-10-09"
     terms:
@@ -251,6 +267,7 @@ tasks:
       - AWS IoT Core
   - id: "4.1"
     text: Compare AWS pricing models.
+    short: pricing models
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html"
     verified_on: "2026-10-09"
     terms:
@@ -267,6 +284,7 @@ tasks:
       - outgoing data transfer costs
   - id: "4.2"
     text: Understand resources for billing, budget, and cost management.
+    short: billing and budgets
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html"
     verified_on: "2026-10-09"
     terms:
@@ -279,6 +297,7 @@ tasks:
       - AWS Cost and Usage Report
   - id: "4.3"
     text: Identify AWS technical resources and AWS Support options.
+    short: support and resources
     url: "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html"
     verified_on: "2026-10-09"
     terms:

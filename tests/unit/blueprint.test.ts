@@ -65,4 +65,28 @@ describe('the CLF-C02 blueprint', () => {
       ).toBe(true);
     }
   });
+
+  it('gives every task a short name for one-line copy', () => {
+    expect(Object.fromEntries(blueprint.tasks.map((t) => [t.id, t.short]))).toEqual({
+      '1.1': 'cloud benefits',
+      '1.2': 'design principles',
+      '1.3': 'migration',
+      '1.4': 'cloud economics',
+      '2.1': 'shared responsibility',
+      '2.2': 'security and compliance',
+      '2.3': 'access management',
+      '2.4': 'security resources',
+      '3.1': 'deploying and operating',
+      '3.2': 'global infrastructure',
+      '3.3': 'compute',
+      '3.4': 'databases',
+      '3.5': 'networking',
+      '3.6': 'storage',
+      '3.7': 'AI/ML and analytics',
+      '3.8': 'other services',
+      '4.1': 'pricing models',
+      '4.2': 'billing and budgets',
+      '4.3': 'support and resources',
+    });
+  });
 });
