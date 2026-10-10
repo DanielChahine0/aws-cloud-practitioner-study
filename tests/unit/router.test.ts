@@ -40,6 +40,27 @@ describe('parseHash', () => {
     });
   });
 
+  it('reads a lab route only when its module matches the module in the lab id', () => {
+    expect(parseHash('#/m/03/lab/lab-m03-pick-the-compute')).toEqual({
+      kind: 'lab',
+      module: 3,
+      id: 'lab-m03-pick-the-compute',
+    });
+    expect(toHash({ kind: 'lab', module: 3, id: 'lab-m03-pick-the-compute' })).toBe(
+      '#/m/03/lab/lab-m03-pick-the-compute',
+    );
+    for (const hash of [
+      '#/m/04/lab/lab-m03-pick-the-compute',
+      '#/m/03/lab/lab-m3-pick-the-compute',
+      '#/m/03/lab/pick-the-compute',
+      '#/m/03/lab/lab-m03-',
+      '#/m/14/lab/lab-m14-x',
+      '#/m/03/lab/',
+    ]) {
+      expect(parseHash(hash)).toEqual({ kind: 'not-found', hash });
+    }
+  });
+
   it('sends anything else to not-found with the hash it got', () => {
     for (const hash of [
       '#/m/00',

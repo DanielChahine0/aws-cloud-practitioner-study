@@ -25,6 +25,8 @@ export interface KeyContext {
   gAt: number | null;
   /** True while a boss or mock is open: search, the `g` sequences, `j` and `k` are off, and Escape never leaves. */
   exam: boolean;
+  /** True while a lab card is held: Escape is the lab's, which puts the card down. */
+  labHolding: boolean;
 }
 
 export type KeyCommand =
@@ -107,6 +109,7 @@ export function keyCommand(input: KeyInput, ctx: KeyContext): KeyCommand | null 
           }
         : null;
     case 'Escape': {
+      if (ctx.labHolding) return null;
       const parent = up(ctx.route);
       return parent === null ? null : { kind: 'navigate', hash: toHash(parent) };
     }

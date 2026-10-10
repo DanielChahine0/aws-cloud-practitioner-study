@@ -73,6 +73,13 @@ describe('up', () => {
     expect(up({ kind: 'quiz', module: 3 })).toEqual({ kind: 'module', module: 3 });
   });
 
+  it('goes from a lab to its module', () => {
+    expect(up({ kind: 'lab', module: 3, id: 'lab-m03-pick-the-compute' })).toEqual({
+      kind: 'module',
+      module: 3,
+    });
+  });
+
   it('goes from a review to Home', () => {
     expect(up({ kind: 'review' })).toEqual({ kind: 'home' });
   });
