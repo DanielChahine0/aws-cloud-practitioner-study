@@ -1,0 +1,526 @@
+questions:
+  - id: q-tqgmp3
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: amazon-sagemaker-ai
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which statements describe Amazon SageMaker AI?
+    select: 2
+    options:
+      - id: a
+        text: It reports the sentiment expressed in large volumes of written customer comments.
+        why: Judging sentiment in customer text is a ready-made job of Amazon Comprehend, with no model for the team to build.
+      - id: b
+        text: It lets a team build, train and deploy its own models on infrastructure that AWS runs.
+        correct: true
+        why: SageMaker AI is the tier for a team's own models, and AWS manages the servers that training and hosting run on.
+      - id: c
+        text: It identifies people, objects and scenes in images and video stored in Amazon S3.
+        why: Finding people, objects and scenes in S3 media is the pre-trained Amazon Rekognition service, not SageMaker AI.
+      - id: d
+        text: It gives data scientists an IDE for experiments, debugging and monitoring of their models.
+        correct: true
+        why: SageMaker AI includes a development environment where teams run experiments, debug and monitor their own models.
+      - id: e
+        text: It picks out the key phrases and the language used across a set of documents.
+        why: Pulling key phrases and the language out of documents is Amazon Comprehend, a pre-trained language service.
+      - id: f
+        text: It flags unsafe content in uploaded media and supports identity checks on photos.
+        why: Moderating media and checking identities in photos are uses of Amazon Rekognition rather than SageMaker AI.
+    evidence:
+      - You build, train and deploy your own models while AWS runs the infrastructure.
+      - "IDE: access control, visibility, experiments, data visualization, debugging, monitoring; plus hundreds of fast-deploy pre-trained models."
+    takeaway: SageMaker AI is where teams build, train and deploy their own models on managed infrastructure, with an IDE to experiment and debug.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 4 and 5, the two keys, are clearly the two longest options, a length tell."
+  - id: q-dgjk92
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-comprehend
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      An online furniture retailer receives a large volume of written product reviews every week.
+      It wants to flag the reviews that express negative feelings without training a model of its own.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon Comprehend
+        correct: true
+        why: Comprehend applies pre-trained language analysis to text and reports its sentiment, so negative reviews stand out.
+      - id: b
+        text: Amazon Polly
+        why: Polly reads text aloud as speech, which does nothing to judge whether a review is negative.
+      - id: c
+        text: Amazon Textract
+        why: Textract pulls text out of scanned forms and documents, but the reviews are already text and need sentiment.
+      - id: d
+        text: Amazon Rekognition
+        why: Rekognition analyzes images and video, while the retailer's reviews are written text.
+    evidence:
+      - Classifying, compliance, sentiment in lots of customer comments
+      - "Amazon Comprehend: Text insights, such as sentiment."
+    takeaway: Finding the sentiment in large amounts of customer text with a ready-made model points to Amazon Comprehend.
+    history: []
+    verified:
+      keyHash: 14f8c1c2a24e
+      fullHash: 3297ca40bfc0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-nfnjm2
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-polly
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      A publisher of workplace training manuals wants its readers to be able to listen to each guide read aloud in a natural voice.
+      It wants to avoid hiring narrators for every new edition.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon Polly
+        correct: true
+        why: Polly converts written text into lifelike speech, so each new edition can be voiced without a narrator.
+      - id: b
+        text: Amazon Transcribe
+        why: Transcribe works the other way round, turning recorded speech into text, while the publisher starts from text.
+      - id: c
+        text: Amazon Translate
+        why: Translate changes text from one language to another but produces no spoken audio for listeners.
+      - id: d
+        text: Amazon Lex
+        why: Lex builds two-way chat and voice bots, which is more than reading a fixed guide aloud.
+    evidence:
+      - Assistants, e-learning, visually impaired users, studio-free narration
+      - "Amazon Polly: Text to speech."
+    takeaway: Text that must be heard as lifelike speech points to Amazon Polly, while speech that must become text points to Transcribe.
+    history: []
+    verified:
+      keyHash: 54e0696dc39d
+      fullHash: 82cf3d2257b8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-nn9h1a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-translate
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which AWS service converts written content from one human language into another, so an application can serve users around the world?
+    options:
+      - id: a
+        text: Amazon Translate
+        correct: true
+        why: Translate is the pre-trained service that renders text in another language for multilingual apps and documents.
+      - id: b
+        text: Amazon Transcribe
+        why: Transcribe turns spoken audio into text in the same language, and it does not convert between languages.
+      - id: c
+        text: Amazon Comprehend
+        why: Comprehend can detect which language a text is in and its sentiment, but it does not rewrite it in another one.
+      - id: d
+        text: Amazon Polly
+        why: Polly speaks text aloud in many voices, yet the words stay in the language they were written in.
+    evidence:
+      - "Amazon Translate: Text translation."
+      - Documents, multilingual apps
+    takeaway: Converting text between human languages for global users is the job of Amazon Translate.
+    history: []
+    verified:
+      keyHash: 6b20cfdd7237
+      fullHash: ab0f15f3d4be
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-hj62bf
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-lex
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      A regional bank wants a support assistant on its website that customers can type or speak to.
+      The assistant must understand each request and reply in a back-and-forth conversation.
+      Which AWS service should the bank use to build it?
+    options:
+      - id: a
+        text: Amazon Lex
+        correct: true
+        why: Lex combines language understanding and speech recognition to build bots that hold a conversation by voice or text.
+      - id: b
+        text: Amazon Polly
+        why: Polly can give a bot a speaking voice, but it does not understand what the customer asks or manage the dialog.
+      - id: c
+        text: Amazon Transcribe
+        why: Transcribe writes down what was said, yet it cannot work out the request or answer the customer.
+      - id: d
+        text: Amazon Comprehend
+        why: Comprehend finds sentiment and key phrases in text, but it does not run a conversation with the customer.
+    evidence:
+      - Lifelike voice or text chat via NLU and ASR (language understanding, speech recognition)
+      - "Amazon Lex: Conversational app interfaces."
+    takeaway: A chat or voice bot that understands requests and talks back is built with Amazon Lex.
+    history: []
+    verified:
+      keyHash: cf7f59f1b42d
+      fullHash: 6ce966725a61
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-f2dcv6
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-personalize
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      An online grocery store wants each shopper's home page to suggest products based on that shopper's past orders.
+      The team has no machine learning specialists and wants to avoid building or training a model itself.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon Personalize
+        correct: true
+        why: Personalize is a ready-made service that turns each customer's history into tailored product picks.
+      - id: b
+        text: Amazon SageMaker AI
+        why: SageMaker AI could host a custom recommender, but the team would have to build and train that model itself.
+      - id: c
+        text: Amazon Comprehend
+        why: Comprehend analyzes the meaning and sentiment of text, which does not produce per-shopper product picks.
+      - id: d
+        text: Amazon Kendra
+        why: Kendra answers search queries over company content, but it does not recommend products from order history.
+    evidence:
+      - Per-customer picks from historical data
+      - "Amazon Personalize: Personalized recommendations."
+    takeaway: Ready-made recommendations drawn from each customer's history point to Amazon Personalize rather than a custom model.
+    history: []
+    verified:
+      keyHash: 3485c2e4015f
+      fullHash: 175003a4de7f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-aqaqfy
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-bedrock
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      A legal services firm is building a production application that generates both text and images.
+      Developers want to try foundation models from several providers through a single API, with no infrastructure to manage.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon Bedrock
+        correct: true
+        why: Bedrock offers managed foundation models from Amazon and other providers behind one API, ready for production apps.
+      - id: b
+        text: Amazon SageMaker JumpStart
+        why: JumpStart is a model hub inside SageMaker AI for fast starts, not the managed one-API service for multimodal apps.
+      - id: c
+        text: Amazon Q Business
+        why: Q Business is a finished assistant that answers staff questions from company data, not a platform for building apps.
+      - id: d
+        text: Amazon Q Developer
+        why: Q Developer suggests code to programmers, but it does not give an application access to many foundation models.
+    evidence:
+      - Managed FMs from Amazon and startups (Claude, Stable Diffusion) via one API; test, tune, integrate
+      - Managed, enterprise-grade multimodal generation points to Bedrock, not JumpStart or Q Business.
+    takeaway: A managed choice of foundation models behind one API for generative apps points to Amazon Bedrock.
+    history: []
+    verified:
+      keyHash: 2302f5da8ca7
+      fullHash: 170f8cdb93d7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2ktd1g
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-q-developer
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which AWS service acts as a generative AI coding assistant that proposes code, up to complete functions, inside the editors programmers already use?
+    options:
+      - id: a
+        text: Amazon Q Developer
+        correct: true
+        why: Q Developer is the coding assistant that suggests code blocks and functions in many popular IDEs.
+      - id: b
+        text: Amazon Q Business
+        why: Q Business helps employees with questions and tasks drawn from company data, not with writing code.
+      - id: c
+        text: Amazon Bedrock
+        why: Bedrock gives developers access to foundation models to build their own apps, not a ready coding assistant.
+      - id: d
+        text: Amazon SageMaker JumpStart
+        why: JumpStart is a hub of models to fine-tune and deploy, not an assistant that writes code in an editor.
+    evidence:
+      - Suggests code, even whole functions and logical blocks, in multiple IDEs; languages include C#, Java, JavaScript, Python, TypeScript
+      - "Amazon Q Developer: Coding assistant."
+    takeaway: Amazon Q Developer serves programmers with code suggestions, while Q Business serves other staff.
+    history: []
+    verified:
+      keyHash: c4aac2d9ad25
+      fullHash: d70d3f217180
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-66h4h9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-kinesis-data-streams
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      A ride-sharing company sends location updates from its drivers' phones without a break, day and night.
+      Several separate applications, including pricing and dispatch, must each read the same incoming updates the moment they arrive.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon Kinesis Data Streams
+        correct: true
+        why: Kinesis Data Streams ingests data in real time and lets several applications read one stream at the same time.
+      - id: b
+        text: Amazon Data Firehose
+        why: Firehose delivers data in near real time to a destination, which suits loading storage rather than live readers.
+      - id: c
+        text: Amazon Simple Queue Service (Amazon SQS)
+        why: SQS holds messages until one consumer handles each, so several apps cannot each read the full stream.
+      - id: d
+        text: Amazon EMR
+        why: EMR processes big data on Apache frameworks after it lands, and it does not ingest a live stream for many readers.
+    evidence:
+      - Serverless, real time, terabytes from apps, streams and sensors; several apps can read one stream at once; on-demand mode provisions and scales itself
+      - Kinesis Data Streams is real time with many readers, while Firehose is near real time with managed delivery.
+    takeaway: Real-time ingestion that several applications read at once points to Kinesis Data Streams.
+    history: []
+    verified:
+      keyHash: 80e4fa75f5d8
+      fullHash: a68604139b20
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ym8n1x
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-data-firehose
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which AWS service is a fully managed way to capture streaming data and deliver it in near real time to data lakes, warehouses or analytics tools, scaling on its own?
+    options:
+      - id: a
+        text: Amazon Data Firehose
+        correct: true
+        why: Firehose is the managed streaming delivery service that lands data at its destination within seconds and scales itself.
+      - id: b
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams captures data in real time for applications to read, but delivery to storage is not its role.
+      - id: c
+        text: AWS Glue
+        why: Glue runs managed ETL jobs on stored data and catalogs it, rather than capturing and delivering a stream.
+      - id: d
+        text: Amazon Redshift
+        why: Redshift is a data warehouse that can receive delivered data, not the service that carries the stream to it.
+    evidence:
+      - Fully managed streaming ETL in near real time; provisions and scales itself; lands data in seconds in lakes, warehouses or analytics tools
+      - Kinesis Data Streams is real time with many readers, while Firehose is near real time with managed delivery.
+    takeaway: Managed near-real-time delivery of streaming data into storage or analytics tools points to Amazon Data Firehose.
+    history: []
+    verified:
+      keyHash: d9023f268874
+      fullHash: 512a644df562
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-f0adkk
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: amazon-redshift
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which statements describe Amazon Redshift?
+    select: 2
+    options:
+      - id: a
+        text: It keeps nearly unlimited raw data of any shape as elastic object storage.
+        why: Elastic object storage for raw data of any shape describes Amazon S3 as the data lake, not the warehouse.
+      - id: b
+        text: It holds structured or semistructured data at petabyte scale in a managed warehouse.
+        correct: true
+        why: Redshift is the managed, pay-as-you-go warehouse built for structured or semistructured data up to petabyte scale.
+      - id: c
+        text: It runs large-scale processing jobs on Apache Spark, Hadoop or Hive.
+        why: Large-scale processing on Apache frameworks is Amazon EMR, a processing service rather than a warehouse.
+      - id: d
+        text: It suits complex big data jobs that need custom cluster settings and framework skills.
+        why: Custom configurations and big data expertise point to Amazon EMR, while Redshift is a warehouse queried with SQL.
+      - id: e
+        text: It runs complex SQL on big datasets using columnar storage and parallel processing.
+        correct: true
+        why: Columnar storage and massively parallel processing are how Redshift handles frequent, heavy SQL queries.
+      - id: f
+        text: It serves as the usual data lake for unstructured files such as images and logs.
+        why: The usual data lake for unstructured files is Amazon S3, while Redshift holds structured or semistructured data.
+    evidence:
+      - Managed warehouse for structured or semistructured data at petabyte scale; scales, pay-as-you-go
+      - Columnar storage plus massively parallel processing for complex SQL on big datasets
+    takeaway: Amazon Redshift is the managed data warehouse that runs heavy SQL over large structured datasets.
+    history: []
+    verified:
+      keyHash: 099f099ff673
+      fullHash: d737ff0c7d70
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2hvd58
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: aws-glue
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      A regional clinic network plans to use AWS Glue to prepare patient visit records from several systems for analysis.
+      Which capabilities will AWS Glue give the network?
+    select: 2
+    options:
+      - id: a
+        text: A visual builder for data preparation, with scheduling built in
+        correct: true
+        why: Glue offers a visual job builder and built-in scheduling, so the network can set up and repeat its prep jobs.
+      - id: b
+        text: Managed extract, transform and load across many sources and formats
+        correct: true
+        why: Glue is a managed ETL service that reads many sources and formats, which fits records spread over several systems.
+      - id: c
+        text: Custom-configured Apache Spark, Hadoop or Hive clusters for complex jobs
+        why: Custom big data clusters on Apache frameworks are Amazon EMR, while Glue keeps preparation simple and managed.
+      - id: d
+        text: Serverless SQL over the prepared records in Amazon S3, billed per query
+        why: Ad hoc pay-per-query SQL on S3 data is the job of Amazon Athena rather than the ETL service.
+      - id: e
+        text: Interactive dashboards and reports over the prepared records
+        why: Self-service dashboards for business users come from Amazon Quick Sight, after the data is prepared.
+    evidence:
+      - Managed ETL that makes prep simpler, faster and cheaper; visual job builder, built-in scheduling, many sources and formats, code-free scripts; jobs read Catalog metadata to shape transforms
+      - "AWS Glue: Managed ETL service."
+    takeaway: AWS Glue is the managed ETL service for preparing data from many sources, with a visual builder and scheduling.
+    history: []
+    verified:
+      keyHash: 7a9a9f3e0578
+      fullHash: 97c981207012
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-te3c02
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-athena
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 3
+    stem: >-
+      A marketing agency keeps its campaign logs in an Amazon S3 data lake.
+      Its analysts want to run standard SQL queries on the logs where they already sit, without loading them into a warehouse first.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon Athena
+        correct: true
+        why: Athena runs standard SQL directly against data in S3, using catalog metadata to understand its structure.
+      - id: b
+        text: Amazon Redshift
+        why: Redshift is a data warehouse, so it suits heavy, frequent SQL on data loaded into it rather than querying S3 in place.
+      - id: c
+        text: Amazon EMR
+        why: EMR runs big data frameworks on managed clusters, which is more than the analysts need for SQL on S3 data.
+      - id: d
+        text: Amazon Quick Sight
+        why: Quick Sight builds dashboards and reports for business users, and it is not a SQL query engine over S3.
+    evidence:
+      - "7 Perform data analytics: data scientists query S3 in place with standard SQL in Amazon Athena, which reads the catalog table to recognize the structure."
+    takeaway: Standard SQL on data that stays in Amazon S3, with no warehouse to load, points to Amazon Athena.
+    history: []
+    verified:
+      keyHash: baf46eadf560
+      fullHash: 616c9f87cd40
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kdwt9r
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-quicksight
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      A chain of fitness studios wants its studio managers, who have no technical background, to create interactive dashboards and reports from membership and sales data.
+      It wants no servers to run and no coding help.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: Amazon Quick Sight
+        correct: true
+        why: Quick Sight is the business intelligence service where non-experts build interactive dashboards with nothing to host.
+      - id: b
+        text: Amazon OpenSearch Service
+        why: OpenSearch Service focuses on live search and monitoring of logs and operational data, not business reports.
+      - id: c
+        text: Amazon Athena
+        why: Athena answers SQL queries over data in S3, which needs query skills and does not produce dashboards itself.
+      - id: d
+        text: Amazon Redshift
+        why: Redshift stores and queries warehouse data, but it is not the tool managers use to build their own dashboards.
+    evidence:
+      - "BI at scale: experts and non-experts build interactive dashboards and reports without infrastructure or developers; Amazon Q in QuickSight adds natural language"
+      - AWS now spells the business intelligence service the course calls QuickSight as Amazon Quick Sight, which delivers AI-powered business intelligence.
+    takeaway: Self-service business intelligence dashboards for non-technical users point to Amazon Quick Sight.
+    history: []
+    verified:
+      keyHash: 14ae1c30a21e
+      fullHash: 0292b06c4b98
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
