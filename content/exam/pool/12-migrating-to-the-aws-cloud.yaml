@@ -1,0 +1,1446 @@
+questions:
+  - id: q-q606bg
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-migration-and-modernization-competency-partners
+    note: m12/migration-services-and-tools
+    task: "4.3"
+    level: 2
+    stem: >-
+      A regional credit union wants to move its branch systems to AWS, but its IT staff have never moved systems to the cloud.
+      It wants an outside firm with proven skill in the phase it is about to start.
+      What should it do?
+    options:
+      - id: a
+        text: Engage one of the AWS Migration and Modernization Competency Partners
+        correct: true
+        why: These AWS partners specialize in particular migration phases or needs, so one of them fills the credit union's missing expertise.
+      - id: b
+        text: Post its open questions about the move on the AWS re:Post community site
+        why: re:Post is a community question and answer site, so it offers advice threads rather than a firm to run the move.
+      - id: c
+        text: Read the articles and videos on common topics in the AWS Knowledge Center
+        why: The Knowledge Center holds articles and videos on common questions, which leaves the credit union without hands-on migration help.
+      - id: d
+        text: Run the AWS Trusted Advisor best practice checks against its AWS account
+        why: Trusted Advisor checks an account against best practices and supplies no outside firm to lead a migration.
+    evidence:
+      - Competency partners fill expertise gaps.
+    takeaway: When a company lacks migration skills, AWS Migration and Modernization Competency Partners supply experts for each phase.
+    history: []
+    verified:
+      keyHash: a824cf97af6d
+      fullHash: 3f859042f8ef
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qnbaej
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-migration-and-modernization-competency-partners
+    note: m12/migration-services-and-tools
+    task: "4.3"
+    level: 1
+    stem: >-
+      Who are the AWS Migration and Modernization Competency Partners?
+    options:
+      - id: a
+        text: Outside firms recognized by AWS for skill in given phases or needs of a move
+        correct: true
+        why: These are AWS partners that specialize in particular migration phases or needs, listed by phase or by the kind of help.
+      - id: b
+        text: Consultants employed by AWS itself who take on project work such as complex moves
+        why: Consultants employed by AWS describe AWS Professional Services, while these competency partners are outside firms.
+      - id: c
+        text: Architects on the AWS staff who help customers design scalable and secure apps
+        why: That describes AWS solutions architects, who work for AWS rather than being outside firms recognized for migration skill.
+      - id: d
+        text: Community members who answer questions on a public AWS question and answer site
+        why: That describes contributors on AWS re:Post, an open community rather than firms recognized for migration skill.
+    evidence:
+      - "The AWS Competency Partner Program lists migration partners by phase or kind of help: see AWS Migration and Modernization Competency Partners."
+      - "AWS Migration and Modernization Competency Partners: AWS partners specializing in migration phases or needs."
+    takeaway: AWS lists migration specialists by phase or kind of help as AWS Migration and Modernization Competency Partners.
+    history: []
+    verified:
+      keyHash: f245384a7f19
+      fullHash: 816f8fdb9366
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zhnmmn
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: database-schema
+    note: m12/database-migrations
+    task: "3.4"
+    level: 1
+    stem: >-
+      In a relational database, what is the blueprint that defines the tables, the type of each field and the relationships between tables?
+    options:
+      - id: a
+        text: The schema
+        correct: true
+        why: The schema is the database's blueprint of tables, field types and relationships, which is what the stem describes.
+      - id: b
+        text: A stored procedure
+        why: A stored procedure is a code object that runs logic inside the database, rather than the layout of its tables.
+      - id: c
+        text: A read replica
+        why: A read replica is a copy of a database that serves reads, so it holds data rather than defining the structure.
+      - id: d
+        text: A partition key
+        why: A partition key decides where a NoSQL item is stored and describes no tables or relationships.
+    evidence:
+      - "Schema: The blueprint of a database's tables, field types and relationships."
+    takeaway: A schema is a database's blueprint of tables, field types and relationships, and a new engine means recreating it.
+    history: []
+    verified:
+      keyHash: f0e5f93adc21
+      fullHash: 93ad666da8c6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4222vt
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-database-migration-service
+    note: m12/database-migrations
+    task: "3.4"
+    level: 2
+    stem: >-
+      A concert ticketing platform will move its production database to AWS with AWS Database Migration Service (AWS DMS).
+      Ticket sales must go on while the migration runs, and the target must pick up every sale made until the cutover.
+      Which AWS DMS capabilities meet these two needs?
+    options:
+      - id: a
+        text: It moves the data while the source database stays live
+        correct: true
+        why: AWS DMS moves data with a scheduled task while the source stays live, so ticket sales go on during the migration.
+      - id: b
+        text: It keeps applying ongoing source changes to the target
+        correct: true
+        why: With replication, AWS DMS goes past a one-time copy and keeps the target in sync with each new sale until cutover.
+      - id: c
+        text: It also moves NoSQL databases and data warehouses
+        why: This is true of AWS DMS, but the range of database types it supports does nothing to keep sales running or the copy current.
+      - id: d
+        text: It handles moves to the same engine or to a new one
+        why: This is true of AWS DMS, but support for both migration types is about engines rather than the platform's uptime or new sales.
+      - id: e
+        text: It can carry terabytes of data at a low cost
+        why: This is true of AWS DMS, but a low price for large moves meets neither the need for live sales nor the need to capture new ones.
+    evidence:
+      - You name the source and target, and a scheduled task on a replication VM copies the data while the source stays live.
+      - With database replication, AWS DMS goes beyond a one-time copy and keeps replicating ongoing changes from the source database to the target so the two stay in sync.
+    takeaway: AWS DMS migrates databases while the source stays live and can keep replicating changes so source and target stay in sync.
+    history: []
+    verified:
+      keyHash: 31149ef3c3c5
+      fullHash: 679cc0f918da
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-stx5m2
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: aws-schema-conversion-tool
+    note: m12/database-migrations
+    task: "3.4"
+    level: 2
+    stem: >-
+      An insurance broker is moving from a commercial database engine to Amazon Aurora PostgreSQL.
+      Before any data is copied, its stored procedures, views and functions must be rewritten to run on the new engine.
+      Which AWS tool is built to automate that rewriting step?
+    options:
+      - id: a
+        text: AWS Schema Conversion Tool
+        correct: true
+        why: AWS SCT converts schemas and code objects such as stored procedures, views and functions to a new engine.
+      - id: b
+        text: AWS Application Discovery Service
+        why: Application Discovery Service inventories on-premises servers and their links, and leaves stored procedures and views unconverted.
+      - id: c
+        text: AWS Application Migration Service
+        why: Application Migration Service replicates whole applications to AWS and leaves database code for a new engine unconverted.
+      - id: d
+        text: AWS DataSync
+        why: DataSync moves files and objects into AWS storage, so it leaves stored procedures and views untouched.
+    evidence:
+      - Converts schemas and code objects (stored procedures, views, functions) to a new engine
+      - "Rule: schema or code conversion points to SCT; moving data or one end-to-end tool points to DMS."
+    takeaway: Converting schemas and code objects for a different database engine is the job of AWS SCT.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The stem asks for an AWS 'tool' and option 4 is the only option with 'Tool' in its name."
+  - id: q-38n7ed
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: transfer-protocols
+    note: m12/transferring-data-online
+    task: "3.8"
+    level: 1
+    stem: >-
+      Before two systems can exchange files, they must agree on a shared set of rules for how the data travels from one to the other.
+      What is that set of rules called?
+    options:
+      - id: a
+        text: A transfer protocol
+        correct: true
+        why: A transfer protocol is a rule set for how data moves between places, which is what the two systems must agree on.
+      - id: b
+        text: A security group
+        why: A security group is a set of rules that filters which traffic reaches a resource, not a rule set for how file data travels.
+      - id: c
+        text: A network access control list
+        why: A network ACL holds rules that filter traffic in and out of a subnet, rather than rules for how two systems exchange files.
+      - id: d
+        text: An IAM policy
+        why: An IAM policy holds allow and deny rules for what identities may do in AWS, not rules for how data travels between systems.
+    evidence:
+      - "Transfer protocol: A rule set for how data moves between places."
+    takeaway: A transfer protocol, such as SFTP or FTPS, is the rule set that governs how data moves between places.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The item tests a general networking term rather than an AWS service, so task 3.8 other service categories does not fit it."
+  - id: q-705wh0
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: edge-computing
+    note: m12/transferring-data-offline
+    task: "3.8"
+    level: 2
+    stem: >-
+      A mining company runs a remote site in harsh conditions with no reliable network link.
+      It needs secure, rugged hardware on site that processes sensor data where it is collected.
+      Which type of workload is this?
+    options:
+      - id: a
+        text: Edge computing
+        correct: true
+        why: Processing data on a secure, rugged device at a remote site is edge computing, a use case that Snowball Edge devices serve.
+      - id: b
+        text: Serverless computing
+        why: Serverless computing runs code in AWS Regions without managing servers, which needs the network link this site lacks.
+      - id: c
+        text: Multi-cloud deployment
+        why: A multi-cloud deployment spreads workloads across several cloud providers, rather than processing data on site.
+      - id: d
+        text: Cloud-based deployment
+        why: A cloud-based deployment runs everything in the cloud, which a site without a reliable link has no way to reach.
+    evidence:
+      - They bring strong compute, large capacity and gigabytes per second, and also serve rugged, secure edge computing.
+      - "Edge computing: A Snowball Edge use case that calls for a secure, rugged device."
+    takeaway: Processing data on secure, rugged hardware at a remote site is edge computing, which Snowball Edge devices also serve.
+    history: []
+    verified:
+      keyHash: e66b00da7e9e
+      fullHash: 0a7c7add520a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-944c2m
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-migration-hub
+    note: m12/migration-services-and-tools
+    task: "3.8"
+    level: 2
+    stem: >-
+      Leaders at a regional grocery chain want to watch the live status of every workstream of their move to AWS together.
+      They also have no budget left for another paid tool.
+      Which traits of AWS Migration Hub meet these two needs?
+    options:
+      - id: a
+        text: It adds no charge of its own to the AWS bill
+        correct: true
+        why: Migration Hub is free, so the chain can track its move there without spending budget on the hub itself.
+      - id: b
+        text: It shows all tasks and their progress in one central view
+        correct: true
+        why: Migration Hub is one place to discover, assess, plan, execute and track, so leaders see all progress at once.
+      - id: c
+        text: It gives guidance and automated recommendations
+        why: This is true of Migration Hub, but advice and recommendations do not show leaders the live status of each workstream.
+      - id: d
+        text: It spans the mobilize phase through migrate and modernize
+        why: This is true of Migration Hub, but the phases it covers meet neither the need for a shared status view nor the budget limit.
+      - id: e
+        text: It covers discovering, assessing and planning the move
+        why: This is true of Migration Hub, but early discovery and planning work does not give leaders live status or keep costs down.
+    evidence:
+      - Migration Hub is free and spans mobilize through migrate and modernize.
+      - One free place to discover, assess, plan, execute and track, with guidance and automated recommendations
+    takeaway: AWS Migration Hub is a free central view for planning and tracking every migration task and its progress.
+    history: []
+    verified:
+      keyHash: 536864d51e79
+      fullHash: 682d3f108afb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7d8fak
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-datasync
+    note: m12/transferring-data-online
+    task: "3.8"
+    level: 3
+    stem: >-
+      A film archive must copy a very large set of files from its on-premises storage into Amazon S3 over its network.
+      It wants the transfer throttled during work hours, scheduled at night and reported on after each task.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS DataSync
+        correct: true
+        why: DataSync automates large online moves into AWS storage and lets the archive throttle, schedule and report on each task.
+      - id: b
+        text: AWS Direct Connect
+        why: Direct Connect only supplies a dedicated network path, so a service like DataSync must still manage and report on the move.
+      - id: c
+        text: AWS Transfer Family
+        why: Transfer Family runs managed file exchanges over protocols such as SFTP, rather than throttled, scheduled bulk copies from storage.
+      - id: d
+        text: AWS Snow Family
+        why: The Snow Family ships data offline on devices, which misses the archive's plan to send data over its network.
+    evidence:
+      - It handles instances, encryption and network tuning, and lets you throttle, schedule, filter and report on tasks.
+      - Direct Connect is a link, not a migration manager.
+    takeaway: For a large online move into AWS storage with throttling, scheduling and task reports, choose AWS DataSync.
+    history: []
+    verified:
+      keyHash: f26b42370a7e
+      fullHash: 5a0560b319ce
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-adv0kk
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-strategy-rehost
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      A car parts distributor must move a large legacy estate to AWS quickly.
+      Its physical servers will become virtual machines on AWS, and the applications will run unchanged at first.
+      Which migration strategy is this?
+    options:
+      - id: a
+        text: Rehost
+        correct: true
+        why: Rehosting, or lift and shift, moves apps as they are, often turning servers into VMs, which suits a large estate that must move fast.
+      - id: b
+        text: Replatform
+        why: Replatforming adds a few cloud optimizations during the move, while this plan keeps every application unchanged.
+      - id: c
+        text: Refactor
+        why: Refactoring rewrites applications with new code, the slowest path for an estate that must move quickly.
+      - id: d
+        text: Repurchase
+        why: Repurchasing swaps licensed software for a SaaS product, but the distributor keeps its own applications.
+    evidence:
+      - Apps move as they are, often servers turned into VMs, with no changes at first
+      - "Legacy estate that must scale fast: rehost."
+    takeaway: Moving a large legacy estate fast with no application changes, servers becoming VMs, is the rehost strategy.
+    history: []
+    verified:
+      keyHash: caf8e8d75208
+      fullHash: 16ba22db4d13
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ne8mfe
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloud-migration
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which term describes relocating applications, databases and other IT assets from a company's own data center, or from another cloud provider, into AWS?
+    options:
+      - id: a
+        text: Cloud migration
+        correct: true
+        why: Cloud migration is the move of IT resources from on premises or another cloud into AWS, which is what the stem describes.
+      - id: b
+        text: Hybrid deployment
+        why: A hybrid deployment keeps some resources on premises and links them to the cloud, rather than moving them across.
+      - id: c
+        text: Multi-cloud deployment
+        why: A multi-cloud deployment runs workloads across several cloud providers at once, rather than moving them into AWS.
+      - id: d
+        text: Failover
+        why: Failover switches traffic to a standby resource when the primary fails, which is a recovery step rather than a move.
+    evidence:
+      - Moving apps, databases and other IT resources from on premises or another cloud to AWS.
+    takeaway: Cloud migration means moving apps, databases and other IT resources into AWS from on premises or another cloud.
+    history: []
+    verified:
+      keyHash: 467fe4578529
+      fullHash: a59a74efd8c2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ak6fyd
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: exam
+    concept: three-phase-migration-process
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      A pet supply retailer follows the three-phase AWS process for a large migration to the cloud.
+      Which activities belong to the first of the three phases?
+    options:
+      - id: a
+        text: Gauging how ready the organization is for the cloud
+        correct: true
+        why: Gauging readiness is part of assess, the first phase, which checks how prepared the retailer is before anything else.
+      - id: b
+        text: Writing the plan around the dependencies of each app
+        why: Writing the plan around app dependencies is the mobilize phase, the second of the three, so it comes after assess.
+      - id: c
+        text: Setting the outcomes and goals the move has to reach
+        correct: true
+        why: Setting outcomes and goals for the move is part of assess, the first phase, before any planning or moving starts.
+      - id: d
+        text: Closing the readiness gaps across the organization
+        why: Closing readiness gaps is work for the mobilize phase, which follows assess and readies the organization for the move.
+      - id: e
+        text: Weighing the findings into a business case for the move
+        correct: true
+        why: Weighing findings into a business case, often with Migration Evaluator, is the output of assess, the first phase.
+      - id: f
+        text: Picking one of the seven strategies for each app
+        why: Picking a strategy for each app is part of the mobilize phase, the second of the three, so it is not first-phase work.
+    evidence:
+      - "Order: assess, mobilize, migrate and modernize."
+      - "Assess: gauge readiness, set outcomes, goals and the need to move, then weigh findings into a business case (Migration Evaluator)."
+      - "Mobilize: ready the organization and resources, write the plan around app dependencies, close readiness gaps and pick strategies (Application Discovery Service, Migration Hub)."
+    takeaway: A large migration runs through three phases in order, assess, mobilize, then migrate and modernize, and assess yields the business case.
+    history: []
+    verified:
+      keyHash: 6dca8ac9f6c9
+      fullHash: e9b918409704
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-cf8vvq
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-assess-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      A dental group is starting its move to AWS and is in the assess phase.
+      Which activity belongs to this phase?
+    options:
+      - id: a
+        text: Building a business case from its readiness findings
+        correct: true
+        why: The assess phase gauges readiness and goals, then weighs the findings into a business case for the move.
+      - id: b
+        text: Writing a migration plan around application dependencies
+        why: Planning around application dependencies happens in the mobilize phase, after the business case exists.
+      - id: c
+        text: Moving and validating each application on AWS
+        why: Moving and validating applications is the work of the migrate and modernize phase, the last of the three.
+      - id: d
+        text: Recreating database schemas on the new engine
+        why: Recreating schemas is part of moving a database to a new engine, which happens during migrate and modernize.
+    evidence:
+      - "Assess: gauge readiness, set outcomes, goals and the need to move, then weigh findings into a business case (Migration Evaluator)."
+      - "Assess yields the business case; mobilize, the plan."
+    takeaway: The assess phase checks readiness and ends with a business case, before any planning or moving starts.
+    history: []
+    verified:
+      keyHash: 631b00f4d32f
+      fullHash: ad9eb476b65b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-hzfn32
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-mobilize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      A regional hospital has an approved business case for moving to AWS.
+      In the mobilize phase, its team now readies staff and resources and closes readiness gaps.
+      What should this phase produce?
+    options:
+      - id: a
+        text: A migration plan based on app dependencies
+        correct: true
+        why: The mobilize phase writes the migration plan around application dependencies, after assess has produced the business case.
+      - id: b
+        text: A business case from readiness findings
+        why: The business case comes out of the assess phase, which the hospital has already finished.
+      - id: c
+        text: Applications moved and validated on AWS
+        why: Moving and validating applications happens in migrate and modernize, the phase after mobilize.
+      - id: d
+        text: Replicated copies of every production database
+        why: Replicating production databases is part of the move itself, which belongs to migrate and modernize.
+    evidence:
+      - "Mobilize: ready the organization and resources, write the plan around app dependencies, close readiness gaps and pick strategies (Application Discovery Service, Migration Hub)."
+      - "Assess yields the business case; mobilize, the plan."
+    takeaway: The mobilize phase readies the organization and produces the migration plan, built around application dependencies.
+    history: []
+    verified:
+      keyHash: 3435e761998b
+      fullHash: 0b762c0b95ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-bc5bxa
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migrate-and-modernize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      A bike rental chain has an approved migration plan and now begins moving each application to AWS and checking that it works there.
+      Which service is built for this phase?
+    options:
+      - id: a
+        text: AWS Application Migration Service
+        correct: true
+        why: Application Migration Service is a last-phase tool that replicates applications to AWS, which fits migrate and modernize.
+      - id: b
+        text: Migration Evaluator
+        why: Migration Evaluator builds the business case in the assess phase, which the chain has already passed.
+      - id: c
+        text: AWS Application Discovery Service
+        why: Application Discovery Service inventories servers to inform the plan in the mobilize phase, before applications move.
+      - id: d
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates AWS costs during planning and moves no applications.
+    evidence:
+      - "Migrate and modernize: architect, migrate and validate each app, alone or with specialists and competency partners."
+      - "Last-phase tools: Application Migration Service, AWS Database Migration Service (AWS DMS), Migration Hub, and DataSync, Transfer Family or the Snow Family for data."
+    takeaway: In the migrate and modernize phase each app is moved and validated, with tools such as AWS Application Migration Service.
+    history: []
+    verified:
+      keyHash: 34d8d6bb1607
+      fullHash: 988849ccfed3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qztq7t
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: exam
+    concept: aws-cloud-adoption-framework
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      The AWS Cloud Adoption Framework (AWS CAF) names four outcomes that cloud adoption should deliver to an organization.
+      Which are among those four?
+    options:
+      - id: a
+        text: Reduced business risk
+        correct: true
+        why: Reduced business risk is one of the four business outcomes that AWS CAF ties cloud adoption to.
+      - id: b
+        text: Increased revenue
+        correct: true
+        why: Increased revenue is one of the four business outcomes that AWS CAF names for cloud adoption.
+      - id: c
+        text: Increased operational efficiency
+        correct: true
+        why: Increased operational efficiency is one of the four business outcomes that AWS CAF names.
+      - id: d
+        text: Increased speed and agility
+        why: Speed and agility is a general advantage of cloud computing, but it is not one of the four outcomes AWS CAF names.
+      - id: e
+        text: Reduced capacity guessing
+        why: No longer guessing capacity is a general advantage of cloud computing, rather than one of the four AWS CAF outcomes.
+      - id: f
+        text: Improved global reach
+        why: Going global in minutes is a general advantage of cloud computing, rather than one of the four AWS CAF outcomes.
+    evidence:
+      - "AWS CAF ties cloud adoption to four business outcomes: reduced business risk, improved ESG performance, increased revenue and increased operational efficiency."
+    takeaway: AWS CAF links adoption to reduced business risk, improved ESG performance, increased revenue and increased operational efficiency.
+    history: []
+    verified:
+      keyHash: ae91d2d8e843
+      fullHash: 7efbd7e0ba1a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-a8msw2
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-caf-business-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 3
+    stem: >-
+      At a national bookstore chain, the finance director wants each dollar of IT spending tied to key company results.
+      She also needs a cost-justified case for funding that ranks which cloud projects go first.
+      Which AWS CAF perspective covers this work?
+    options:
+      - id: a
+        text: Business
+        correct: true
+        why: The Business perspective ties IT spending to business results, builds the business case and ranks cloud initiatives.
+      - id: b
+        text: Governance
+        why: Governance aligns IT and business strategy and measures cloud investments, but the business case and ranking sit with Business.
+      - id: c
+        text: Platform
+        why: The Platform perspective covers architecture and target-state design, a technical concern rather than a business case.
+      - id: d
+        text: People
+        why: The People perspective handles change management, skills and staffing, rather than ranking cloud projects.
+    evidence:
+      - IT serves business needs and IT spending ties to key business results; build the business case, rank cloud initiatives, align goals
+    takeaway: Building the business case and tying IT spending to business results is the AWS CAF Business perspective.
+    history: []
+    verified:
+      keyHash: 289bf7aad143
+      fullHash: ed9a78de3bd6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-a139b1
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-caf-people-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 2
+    stem: >-
+      The HR lead at a hotel group must drive change management across the whole company, review roles and skill gaps, and set training and staffing priorities for the move to AWS.
+      Which AWS CAF perspective guides this work?
+    options:
+      - id: a
+        text: People
+        correct: true
+        why: The People perspective owns organization-wide change management and sets training, staffing and organizational priorities.
+      - id: b
+        text: Governance
+        why: Governance aligns IT with business strategy and measures cloud investments, rather than leading change management.
+      - id: c
+        text: Operations
+        why: Operations covers running and recovering workloads at agreed levels, rather than staffing and training across the company.
+      - id: d
+        text: Business
+        why: The Business perspective builds the business case and ranks cloud initiatives, rather than guiding people through the change.
+    evidence:
+      - People owns change management; Platform owns architecture and moving workloads.
+      - Organization-wide change management; review structures, roles, skills and gaps to set training, staffing and org priorities
+    takeaway: Organization-wide change management, skills and staffing belong to the AWS CAF People perspective.
+    history: []
+    verified:
+      keyHash: 0b6e04b3da09
+      fullHash: 405ea7cee46a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-vgyzrr
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-caf-governance-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 3
+    stem: >-
+      The CIO of a water utility and its portfolio managers want IT and business strategy aligned to get more value with less risk.
+      They also want to measure the results of each cloud investment.
+      Which AWS CAF perspective fits?
+    options:
+      - id: a
+        text: Governance
+        correct: true
+        why: Governance aligns IT and business strategy for more value and less risk and measures cloud investments, with the CIO as a typical role.
+      - id: b
+        text: Business
+        why: The Business perspective builds the business case for budget owners, while strategy alignment and portfolio oversight sit with Governance.
+      - id: c
+        text: Operations
+        why: Operations runs and recovers workloads at agreed service levels, which is daily work rather than strategy alignment.
+      - id: d
+        text: Platform
+        why: The Platform perspective designs architecture and the target state, a technical task rather than aligning strategy.
+    evidence:
+      - Align IT and business strategy for more value and less risk; update skills and processes, measure cloud investments
+      - CIO, program and portfolio managers, enterprise architects, business analysts
+    takeaway: Aligning IT with business strategy and measuring cloud investments, led by roles such as the CIO, is the AWS CAF Governance perspective.
+    history: []
+    verified:
+      keyHash: 65a20c2c2a29
+      fullHash: 8635919f043d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qv9vkz
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-caf-platform-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 2
+    stem: >-
+      A cloud architect at a furniture maker designs the architectural models and a detailed target state for moving its on-premises workloads to AWS.
+      Which AWS CAF perspective does this work fall under?
+    options:
+      - id: a
+        text: Platform
+        correct: true
+        why: The Platform perspective provides patterns and architectural models for moving workloads, and cloud architects are its typical role.
+      - id: b
+        text: Operations
+        why: Operations sets routines for running and recovering workloads once they live in the cloud, rather than designing the target state.
+      - id: c
+        text: Security
+        why: The Security perspective chooses and implements security controls, rather than designing the overall architecture.
+      - id: d
+        text: People
+        why: People handles change management, skills and staffing, which differs from designing architectural models.
+    evidence:
+      - Patterns for new cloud solutions and moving on-premises workloads; architectural models, detailed target state
+      - "Course mapping: a business or finance analyst to Business (Governance also lists business analysts), HR to People, a cloud architect to Platform."
+    takeaway: Designing architecture and the target state for moving workloads, led by roles such as cloud architects, is the AWS CAF Platform perspective.
+    history: []
+    verified:
+      keyHash: 999ebcc49ea1
+      fullHash: 70c1fd0bd49c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rxaprf
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-caf-security-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which AWS CAF perspective aims for visibility, auditability, control and agility in the cloud?
+    options:
+      - id: a
+        text: Security
+        correct: true
+        why: The Security perspective seeks visibility, auditability, control and agility and selects the controls to put in place.
+      - id: b
+        text: Governance
+        why: Governance aligns IT with business strategy and measures cloud investments, rather than seeking auditability and control.
+      - id: c
+        text: Operations
+        why: Operations defines the routines for running and recovering workloads, rather than auditability and control.
+      - id: d
+        text: Platform
+        why: The Platform perspective designs architecture and the target state, which differs from choosing protective controls.
+    evidence:
+      - Visibility, auditability, control and agility; choose and implement security controls
+      - CISO, IT security managers and analysts
+    takeaway: Visibility, auditability and the choice of security controls, led by roles such as the CISO, belong to the AWS CAF Security perspective.
+    history: []
+    verified:
+      keyHash: 1f513283880a
+      fullHash: dd9ff7a3c541
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6922qr
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-caf-operations-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 2
+    stem: >-
+      An IT support manager at a regional airline must make sure cloud workloads run and recover at the service levels agreed with the business.
+      The manager must also set routines that range from daily checks to yearly reviews.
+      Which AWS CAF perspective guides this work?
+    options:
+      - id: a
+        text: Operations
+        correct: true
+        why: Operations enables, runs and recovers workloads at the level agreed with the business and sets daily to yearly routines.
+      - id: b
+        text: Platform
+        why: The Platform perspective designs architecture and the target state, before workloads are running day to day.
+      - id: c
+        text: Governance
+        why: Governance aligns IT with business strategy and measures investments, rather than running workloads at agreed levels.
+      - id: d
+        text: People
+        why: People leads change management and staffing, rather than setting the routines that keep workloads running.
+    evidence:
+      - Enable, run, use, operate and recover workloads at the level agreed with business stakeholders; set daily to yearly routines, support business operations, define current procedures plus needed process changes and training
+      - IT operations and support managers
+    takeaway: Running and recovering workloads at agreed service levels, with daily to yearly routines, is the AWS CAF Operations perspective.
+    history: []
+    verified:
+      keyHash: e1b501bf1c95
+      fullHash: 9f106702654c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-mh9fwt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-caf-action-plan
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      A home goods importer reviews its cloud readiness one perspective at a time, from Business and People through Security and Operations, and finds gaps in skills and processes.
+      What do those gaps feed into to guide its change management?
+    options:
+      - id: a
+        text: The AWS CAF Action Plan
+        correct: true
+        why: Gaps found per perspective feed the AWS CAF Action Plan, which steers change management for the move.
+      - id: b
+        text: The AWS Well-Architected Tool
+        why: The Well-Architected Tool reviews workloads against best practices, rather than collecting AWS CAF skill gaps.
+      - id: c
+        text: An AWS Trusted Advisor report
+        why: Trusted Advisor checks an account for cost, security and performance issues, rather than planning organizational change.
+      - id: d
+        text: The AWS Pricing Calculator
+        why: The Pricing Calculator estimates service costs and plays no part in tracking skill and process gaps.
+    evidence:
+      - Skill and process gaps found per perspective feed the AWS CAF Action Plan, which guides change management.
+    takeaway: Skill and process gaps found across the AWS CAF perspectives feed the AWS CAF Action Plan, which guides change management.
+    history: []
+    verified:
+      keyHash: 198117ec6f23
+      fullHash: 6db3a10b2168
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7s1pgt
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: seven-migration-strategies
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      A company sorts every application in its portfolio into one of the seven migration strategies.
+      Which strategies involve no migration of the application?
+    options:
+      - id: a
+        text: Retain
+        correct: true
+        why: Retain keeps a business-critical application in its current environment for now, so it stays where it is.
+      - id: b
+        text: Retire
+        correct: true
+        why: Retire switches off an application that is no longer needed, so nothing moves.
+      - id: c
+        text: Rehost
+        why: Rehost moves an application to AWS as it is, so it is a migration with no changes rather than no migration.
+      - id: d
+        text: Relocate
+        why: Relocate moves virtual machines or containers that already run on premises onto a cloud host.
+      - id: e
+        text: Replatform
+        why: Replatform migrates an application with a few cloud optimizations, so the application does move.
+      - id: f
+        text: Refactor
+        why: Refactor rebuilds an application with new code and cloud-built features, the most involved migration path.
+    evidence:
+      - Retain and retire involve no migration.
+      - Each app gets one of seven paths, chosen by complexity, goals, time, resources, starting point and future plans.
+    takeaway: Of the seven migration strategies, retain and retire leave an application where it is, while the other five move it.
+    history: []
+    verified:
+      keyHash: 0d1a2eadc5f9
+      fullHash: 4c494d90c70d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-70p5x5
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-strategy-relocate
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      A software testing firm already runs all its workloads as virtual machines and containers on an on-premises virtualization platform.
+      It wants those same virtual machines and containers to run on a cloud host instead, with no servers converted along the way.
+      Which migration strategy fits?
+    options:
+      - id: a
+        text: Relocate
+        correct: true
+        why: Relocate takes VMs or containers that already run on premises onto a cloud host, which matches the firm's existing workloads.
+      - id: b
+        text: Rehost
+        why: Rehost lifts applications as they are, often turning servers into VMs, while this firm's workloads are already VMs and containers.
+      - id: c
+        text: Replatform
+        why: Replatform adds a few cloud optimizations to an application, while the firm only wants its existing VMs and containers on a cloud host.
+      - id: d
+        text: Refactor
+        why: Refactor rebuilds applications with new code and cloud-built features, while the firm keeps its existing VMs and containers.
+    evidence:
+      - VMs or containers already running on premises move to a cloud host
+      - "Relocate: Moving existing VMs or containers to the cloud."
+    takeaway: Moving VMs or containers that already run on premises to a cloud host is the relocate strategy.
+    history: []
+    verified:
+      keyHash: 103cfe91b2d4
+      fullHash: 0701ad4d13e7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1q6qfv
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-strategy-replatform
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      An online florist moves its self-managed MySQL database to Amazon RDS for MySQL so that AWS handles more of the upkeep.
+      It writes no new code and keeps the same architecture.
+      Which migration strategy is this?
+    options:
+      - id: a
+        text: Replatform
+        correct: true
+        why: Replatforming makes a few cloud optimizations, such as moving MySQL to Amazon RDS, without new code or architecture changes.
+      - id: b
+        text: Rehost
+        why: Rehost moves an application exactly as it is, while the florist gains a managed database service along the way.
+      - id: c
+        text: Refactor
+        why: Refactor writes new code and cloud-built features, which the florist avoids here.
+      - id: d
+        text: Repurchase
+        why: Repurchase swaps licensed software for a SaaS product, while the florist keeps MySQL.
+    evidence:
+      - "MySQL to Amazon RDS with no code changes: replatform."
+      - A few cloud optimizations for a tangible gain, without new code or architecture changes
+    takeaway: Moving to a managed service such as Amazon RDS with no new code is replatforming, a lift, tinker and shift.
+    history: []
+    verified:
+      keyHash: 094ed4524a65
+      fullHash: b0172bf7563e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rwvv0r
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-strategy-refactor
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      A music streaming startup has a monolithic application that lacks the features, scale and performance it now needs.
+      It accepts the highest upfront planning and staff effort to rebuild with new code and cloud-built features.
+      Which migration strategy is this?
+    options:
+      - id: a
+        text: Refactor
+        correct: true
+        why: Refactoring rebuilds an application with new code and cloud-built features, paying the highest upfront effort for features, scale or performance.
+      - id: b
+        text: Replatform
+        why: Replatform adds only a few cloud optimizations without new code, which is too little for the startup's needs.
+      - id: c
+        text: Rehost
+        why: Rehost moves the application unchanged, so the monolith would keep its current limits.
+      - id: d
+        text: Relocate
+        why: Relocate moves existing VMs or containers to a cloud host as they are, with no rebuild of the application.
+    evidence:
+      - New code and cloud-built features, driven by a strong need for features, scale or performance
+      - Big payoff, but the highest upfront planning and staff effort
+    takeaway: Rebuilding an app with new code and cloud-built features is refactoring, which pays off big but costs the most upfront effort.
+    history: []
+    verified:
+      keyHash: f333e3bc4b57
+      fullHash: 05b08c790ea6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-sg0q7x
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-strategy-repurchase
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      A property management company drops the licensed customer relationship management software it runs itself.
+      It moves its sales team to a SaaS product from a different vendor.
+      Which migration strategy is this?
+    options:
+      - id: a
+        text: Repurchase
+        correct: true
+        why: Repurchase, or drop and shop, swaps a traditional license for SaaS, often from a new vendor, as the company does here.
+      - id: b
+        text: Replatform
+        why: Replatform keeps the same application and adds a few cloud optimizations, while this company changes products entirely.
+      - id: c
+        text: Rehost
+        why: Rehost moves the same application to AWS unchanged, while the company replaces it with another vendor's product.
+      - id: d
+        text: Retire
+        why: Retire switches an application off with nothing in its place, while the sales team still needs its software.
+    evidence:
+      - Repurchase trades licensed software for SaaS, often from a new vendor.
+    takeaway: Replacing licensed software with a SaaS product, often from a new vendor, is the repurchase strategy.
+    history: []
+    verified:
+      keyHash: 9ea1bf9b0a08
+      fullHash: 48a614892b0f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-28fkn5
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-strategy-retain
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      A freight broker has a business-critical billing application that would need major refactoring before it could run on AWS.
+      The broker decides to keep it in its current data center for now and revisit it later.
+      Which migration strategy is this?
+    options:
+      - id: a
+        text: Retain
+        correct: true
+        why: Retain keeps business-critical applications that need major refactoring in the source environment for now.
+      - id: b
+        text: Retire
+        why: Retire switches an application off, while this billing application stays in use.
+      - id: c
+        text: Rehost
+        why: Rehost would move the application to AWS unchanged, while the broker keeps it on premises for now.
+      - id: d
+        text: Relocate
+        why: Relocate moves existing VMs or containers to a cloud host, while the broker moves nothing yet.
+    evidence:
+      - "Business-critical apps stay in the source environment for now: those needing major refactoring, work that can wait, or apps months from deprecation"
+    takeaway: Keeping a business-critical app where it is for now, such as one that needs major refactoring, is the retain strategy.
+    history: []
+    verified:
+      keyHash: c5fb7484a50d
+      fullHash: 4a9300abc1ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-jekxts
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-strategy-retire
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which migration strategy switches off applications that an organization no longer needs, saving cost and effort?
+    options:
+      - id: a
+        text: Retire
+        correct: true
+        why: Retire shuts down applications that are no longer needed, which saves cost and effort.
+      - id: b
+        text: Retain
+        why: Retain keeps applications running in their current environment for now, rather than shutting them down.
+      - id: c
+        text: Repurchase
+        why: Repurchase replaces an application with a SaaS product, so the work it does continues.
+      - id: d
+        text: Relocate
+        why: Relocate moves existing VMs or containers to a cloud host, so the applications keep running.
+    evidence:
+      - Unneeded apps are switched off
+      - Often over 10 percent of a portfolio is unused; ending it saves cost and effort
+    takeaway: Switching off applications that are no longer needed is the retire strategy, which saves cost and effort.
+    history: []
+    verified:
+      keyHash: 2fc7e14864a0
+      fullHash: 8719a5664f8b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-aqzf1h
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: migration-evaluator
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      Before it approves a move to AWS, the finance team at a home goods retailer wants a data-driven business case.
+      The case must compare the current and target states and project the cloud costs.
+      Which service fits?
+    options:
+      - id: a
+        text: Migration Evaluator
+        correct: true
+        why: Migration Evaluator builds a data-driven business case with current versus target state and projected cloud costs.
+      - id: b
+        text: AWS Migration Hub
+        why: Migration Hub is the central place to track migration tasks, rather than the source of a cost-backed business case.
+      - id: c
+        text: AWS Application Discovery Service
+        why: Application Discovery Service inventories servers and their links for the plan, rather than projecting costs for finance.
+      - id: d
+        text: AWS Application Migration Service
+        why: Application Migration Service moves applications once the move is approved, which comes after the business case.
+    evidence:
+      - "A data-driven business case: current versus target state, a readiness plan, projected cloud costs"
+      - "Finance wants projected AWS costs before approving: Migration Evaluator."
+    takeaway: When finance needs a cost-backed business case before approving a migration, use Migration Evaluator.
+    history: []
+    verified:
+      keyHash: 1fdf04454d9b
+      fullHash: d48857439057
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1ztce4
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-application-discovery-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      The IT team at an engineering firm is unsure which servers and databases its order system relies on.
+      Before planning the move, it wants an automatic inventory of its on-premises servers and the connections between them.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Application Discovery Service
+        correct: true
+        why: Application Discovery Service automatically inventories on-premises servers, databases and links, which feeds the migration plan.
+      - id: b
+        text: AWS Migration Hub
+        why: Migration Hub is the central view for tracking migration tasks, while the inventory itself comes from Application Discovery Service.
+      - id: c
+        text: Migration Evaluator
+        why: Migration Evaluator builds the cost-backed business case, rather than an inventory of server dependencies.
+      - id: d
+        text: AWS Application Migration Service
+        why: Application Migration Service moves the applications once the plan exists, so it comes after the inventory.
+    evidence:
+      - "Nobody knows which servers an app relies on: AWS Application Discovery Service."
+      - An automatic inventory of on-premises servers, databases and links, feeding a detailed migration plan
+    takeaway: When nobody knows which servers an app depends on, AWS Application Discovery Service builds the inventory for the plan.
+    history: []
+    verified:
+      keyHash: 3664935d9d2e
+      fullHash: 8406fdb51e44
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-d5axxy
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-application-migration-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 2
+    stem: >-
+      A gaming studio has finished its migration plan and is ready to move its applications.
+      It wants them replicated to AWS quickly, at lower cost and with minimal downtime.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Application Migration Service
+        correct: true
+        why: Application Migration Service replicates applications to AWS faster, for less and with minimal downtime.
+      - id: b
+        text: AWS Application Discovery Service
+        why: Application Discovery Service inventories servers before planning, and the studio's plan is already done.
+      - id: c
+        text: Migration Evaluator
+        why: Migration Evaluator builds the business case in the assess phase, rather than moving applications.
+      - id: d
+        text: AWS DataSync
+        why: DataSync moves files and objects into AWS storage, rather than replicating whole running applications.
+    evidence:
+      - Apps replicated to AWS faster, for less and with minimal downtime, optionally modernized
+      - Application Migration Service moves and modernizes apps faster and cheaper.
+    takeaway: Once planning is done, AWS Application Migration Service moves apps to AWS quickly, cheaply and with minimal downtime.
+    history: []
+    verified:
+      keyHash: ff0ca2d0845b
+      fullHash: 2051b4625aba
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-h2a9gx
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: homogeneous-database-migration
+    note: m12/database-migrations
+    task: "1.3"
+    level: 1
+    stem: >-
+      Why is a homogeneous database migration usually fairly simple?
+    options:
+      - id: a
+        text: The source and target run the same engine
+        correct: true
+        why: A homogeneous migration keeps the same engine on both ends, so no schema or code conversion is needed.
+      - id: b
+        text: AWS SCT rewrites the schema for a new engine
+        why: Schema rewriting with AWS SCT serves heterogeneous moves to a different engine, the opposite case.
+      - id: c
+        text: The data travels to AWS on a physical device
+        why: Shipping data on a device is offline transfer, which says nothing about whether the engines match.
+      - id: d
+        text: The application is rebuilt with new code first
+        why: Rebuilding the application with new code is the refactor strategy, which adds work rather than making the move simpler.
+    evidence:
+      - "Homogeneous: the same engine on both ends, so fairly simple."
+    takeaway: A homogeneous migration keeps the same database engine on both ends, which makes it fairly simple.
+    history: []
+    verified:
+      keyHash: 33d7a97b8982
+      fullHash: 3d7caed4b333
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-d4sys9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: heterogeneous-database-migration
+    note: m12/database-migrations
+    task: "1.3"
+    level: 2
+    stem: >-
+      A travel agency moves its database from a legacy commercial engine to Amazon Aurora.
+      Which challenge comes with this type of move?
+    options:
+      - id: a
+        text: The schema must be recreated for the new engine
+        correct: true
+        why: Moving to a different engine means rebuilding the schema of tables, field types and relationships, which is slow by hand.
+      - id: b
+        text: The source must stay offline for the whole move
+        why: AWS DMS copies the data while the source stays live, so the database can keep serving the agency.
+      - id: c
+        text: All data must ship to AWS on a physical device
+        why: A physical device suits sites with poor connectivity or huge volumes, and a change of engine has no bearing on that.
+      - id: d
+        text: The target must run the same engine as the source
+        why: Aurora is a different engine from the commercial one, which is exactly what makes this move heterogeneous.
+    evidence:
+      - "Heterogeneous: a new engine, such as legacy commercial to Amazon Aurora, which is harder and may need app changes."
+      - A heterogeneous move must recreate the schema, the database's blueprint (tables, field types, relationships), which is slow by hand.
+    takeaway: A heterogeneous migration changes the database engine, so the schema must be recreated and apps may need changes.
+    history: []
+    verified:
+      keyHash: cd9c354c3b01
+      fullHash: 7e4d41e2f2ad
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-wgst0b
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: online-data-transfer
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 2
+    stem: >-
+      A food manufacturer has four plants, and each one must move its data to AWS.
+      Which plant can still use an online transfer rather than shipping its data on a device?
+    options:
+      - id: a
+        text: The plant whose data must not cross the public internet
+        correct: true
+        why: Direct Connect gives the plant a dedicated private line to AWS, so its data can move online without the public internet.
+      - id: b
+        text: The plant whose petabytes would ship sooner than they upload
+        why: Petabytes that arrive sooner by shipping than by upload are a trigger for offline transfer, so this plant ships a device.
+      - id: c
+        text: The plant with no internet access and no Direct Connect link
+        why: A site without internet or Direct Connect has no network path for an online move, so it needs an offline device.
+      - id: d
+        text: The plant whose bandwidth is too thin for the data it holds
+        why: Thin bandwidth is a trigger for offline transfer, since pushing the plant's data over that line would be too slow.
+    evidence:
+      - Match online transfer needs to DataSync, Transfer Family or Direct Connect, with offline (lesson 7) as the fallback.
+      - A dedicated private line to a VPC (networking module) that adds bandwidth and can cut network costs.
+    takeaway: Data that must avoid the public internet can still move online over a Direct Connect line, while offline devices stay the fallback.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the odd one out; options 2 to 4 all describe offline-shipping cases.)"
+  - id: q-s1bcmc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-transfer-family
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 3
+    stem: >-
+      A payroll processor is migrating to AWS, including the on-premises SFTP and FTPS servers its partners use to send it files.
+      After the migration, the files must land in Amazon S3 and no file servers may be left for the processor to manage.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Transfer Family
+        correct: true
+        why: Transfer Family runs fully managed SFTP and FTPS transfers into Amazon S3, so the processor runs no servers itself.
+      - id: b
+        text: AWS DataSync
+        why: DataSync automates bulk moves from on-premises storage, rather than receiving partner files over SFTP or FTPS.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect only supplies a private network line, with no managed SFTP or FTPS endpoint for partners.
+      - id: d
+        text: AWS Snow Family
+        why: The Snow Family ships data offline on devices, so it gives partners no SFTP or FTPS endpoint to send files to.
+    evidence:
+      - Fully managed file transfer in and out of Amazon S3 and Amazon EFS over FTP, SFTP, FTPS and other transfer protocols.
+      - Transfer Family does managed, protocol-based file transfer.
+    takeaway: For managed SFTP, FTPS or FTP transfers into Amazon S3 or Amazon EFS, choose AWS Transfer Family.
+    history: []
+    verified:
+      keyHash: 897151c9e73b
+      fullHash: efdbde626d6c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ztjbna
+    version: 1
+    status: retired
+    type: multi
+    select: 3
+    pool: exam
+    concept: offline-data-transfer
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 2
+    stem: >-
+      A marine research institute must move its data to AWS and is choosing between an online transfer and shipping a device.
+      Which conditions point to an offline transfer?
+    options:
+      - id: a
+        text: Bandwidth at its sites is thin for the data
+        correct: true
+        why: Thin bandwidth is a trigger for offline transfer, since pushing the data over the network would be too slow.
+      - id: b
+        text: The moves must run on a schedule with task reports
+        why: Scheduling and task reports are what DataSync adds to an online move, so this need does not point to a device.
+      - id: c
+        text: One site is remote with no internet or Direct Connect
+        correct: true
+        why: A remote site with no internet or Direct Connect has no network path, so a shipped device is the way out.
+      - id: d
+        text: Partners send some of the files over SFTP and FTPS
+        why: Files sent over SFTP and FTPS suit Transfer Family, an online service, so this need does not point to a device.
+      - id: e
+        text: Petabytes of data would ship faster than they upload
+        correct: true
+        why: When petabytes would arrive sooner by shipping than by upload, an offline device is the faster route.
+      - id: f
+        text: A database must stay live while it is being moved
+        why: A live database moves online with AWS DMS while the source keeps running, so this need does not point to a device.
+    evidence:
+      - "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
+      - Being offline, they do not fit online transfer needs.
+    takeaway: Thin bandwidth, no connectivity or petabyte volumes point to offline transfer, while ample links or small data stay online.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2, 4 and 5 all describe offline-shipping conditions, while each other option points to a different service.)"
+  - id: q-r4vfxq
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-snowball-edge-storage-optimized
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 3
+    stem: >-
+      An oil exploration company must move multiple petabytes from a remote field site with no internet access into AWS.
+      What should it do?
+    options:
+      - id: a
+        text: Ship the data to AWS on Snowball Edge Storage Optimized devices
+        correct: true
+        why: Snowball Edge Storage Optimized devices carry multi-petabyte moves offline from sites where internet may be unavailable.
+      - id: b
+        text: Install an AWS Outposts rack on premises to hold the data
+        why: Outposts runs AWS infrastructure on premises and needs a network link back to its Region, which this field site lacks.
+      - id: c
+        text: Run AWS DataSync tasks that copy the data into Amazon S3 each night
+        why: DataSync moves data over the network, which this field site lacks.
+      - id: d
+        text: Mount an Amazon S3 File Gateway on premises and write the data to it
+        why: An S3 File Gateway stores files in Amazon S3 over the network, so it needs the internet access this site lacks.
+    evidence:
+      - AWS Snow Family devices with NVMe storage for multi-petabyte moves from on-premises sites where internet may be unavailable.
+    takeaway: Multi-petabyte moves from sites without internet point to Snowball Edge Storage Optimized devices, which ship data offline.
+    history: []
+    verified:
+      keyHash: 302a6d836420
+      fullHash: dc91fcd2617f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
