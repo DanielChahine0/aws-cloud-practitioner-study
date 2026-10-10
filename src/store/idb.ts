@@ -36,10 +36,18 @@ export function request<T>(r: IDBRequest<T>): Promise<T> {
   });
 }
 
-export function done(tx: IDBTransaction): Promise<void> {
-  return new Promise((resolve, reject) => {
+/**
+ * Commits a write transaction now and resolves once it is on disk; call it right after queuing the writes,
+ * while the transaction is still active.
+ * Waiting for the automatic commit is not enough: Chromium aborts a transaction that has not committed yet when
+ * the page unloads, so a reload just after Save or Not now on Home would lose the write.
+ */
+export function commit(tx: IDBTransaction): Promise<void> {
+  const stored = new Promise<void>((resolve, reject) => {
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
     tx.onabort = () => reject(tx.error ?? new Error('The transaction was aborted'));
   });
+  tx.commit();
+  return stored;
 }
