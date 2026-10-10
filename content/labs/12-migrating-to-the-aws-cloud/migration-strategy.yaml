@@ -1,0 +1,218 @@
+id: lab-m12-migration-strategy
+module: 12
+title: A migration strategy for each cafe system
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts:
+  - seven-migration-strategies
+  - migration-strategy-relocate
+  - migration-strategy-rehost
+  - migration-strategy-replatform
+  - migration-strategy-refactor
+  - migration-strategy-repurchase
+  - migration-strategy-retain
+  - migration-strategy-retire
+notes:
+  - m12/seven-migration-strategies
+minutes: 6
+brief: >-
+  The cafe is planning its move to AWS, and every system in the back room needs its own path rather than one plan for all.
+  Sort each cafe system under the migration strategy that fits it.
+spec:
+  buckets:
+    - id: relocate
+      label: Relocate
+    - id: rehost
+      label: Rehost
+      detail: Lift and shift
+    - id: replatform
+      label: Replatform
+      detail: Lift, tinker and shift
+    - id: refactor
+      label: Refactor
+      detail: Re-architect
+    - id: repurchase
+      label: Repurchase
+      detail: Drop and shop
+    - id: retain
+      label: Retain
+    - id: retire
+      label: Retire
+  cards:
+    - id: loyalty-containers
+      text: The loyalty app's containers, already running on the cafe's own virtualization host, moved to a cloud host
+      bucket: relocate
+      goal: g1
+    - id: till-servers
+      text: A rack of aging till servers that must reach the cloud fast and then scale, moved over with no changes at first
+      bucket: rehost
+      goal: g1
+    - id: rota-server
+      text: The staff rota app's physical server turned into a virtual machine and moved over with no changes
+      bucket: rehost
+      goal: g1
+    - id: orders-mysql
+      text: The self-run MySQL order database moved to Amazon RDS with no code changes
+      bucket: replatform
+      goal: g2
+    - id: recipes-aurora
+      text: The recipe database shifted onto Amazon Aurora for better performance, with no new code or architecture change
+      bucket: replatform
+      goal: g2
+    - id: delivery-app
+      text: The ordering app rebuilt with new code and cloud-built features, since the old design cannot scale for delivery
+      bucket: refactor
+      goal: g3
+    - id: guest-crm
+      text: The licensed guest-records software replaced by a sales tool sold as a service by a new vendor
+      bucket: repurchase
+      goal: g3
+    - id: supplier-license
+      text: The licensed database behind supplier invoices dropped in favor of cloud databases paid as a service
+      bucket: repurchase
+      goal: g3
+    - id: payroll-rework
+      text: Business-critical payroll software needing a major rework to move, which the cafe cannot spare staff for this year
+      bucket: retain
+      goal: g4
+    - id: gift-cards
+      text: The business-critical gift card system, due to be phased out in a few months
+      bucket: retain
+      goal: g4
+    - id: old-promos
+      text: A promotions app from an old campaign that nobody uses any more
+      bucket: retire
+      goal: g5
+    - id: duplicate-menus
+      text: A second menu-printing tool that does the same job as another one and is no longer needed
+      bucket: retire
+      goal: g5
+goals:
+  - id: g1
+    label: Existing VMs and containers sit under Relocate, other as-is moves under Rehost
+    hint: Ask whether the system moves as it is, and whether it already runs as VMs or containers or starts on physical servers.
+  - id: g2
+    label: Moves with small cloud optimizations sit under Replatform
+    hint: Ask whether the move adds a few cloud optimizations for a real gain while the code and architecture stay the same.
+  - id: g3
+    label: New code sits under Refactor, and SaaS swaps sit under Repurchase
+    hint: Ask whether the cafe writes new code for features or scale, or drops a traditional license for software sold as a service.
+  - id: g4
+    label: Business-critical systems kept in place sit under Retain
+    hint: Ask whether the system still matters to the business but needs major rework first or is only months from being phased out.
+  - id: g5
+    label: Systems nobody needs sit under Retire
+    hint: Ask whether anyone still uses the system, since switching off unused software saves both cost and effort.
+solution:
+      - { t: place, card: loyalty-containers, bucket: relocate }
+      - { t: place, card: till-servers, bucket: rehost }
+      - { t: place, card: rota-server, bucket: rehost }
+      - { t: place, card: orders-mysql, bucket: replatform }
+      - { t: place, card: recipes-aurora, bucket: replatform }
+      - { t: place, card: delivery-app, bucket: refactor }
+      - { t: place, card: guest-crm, bucket: repurchase }
+      - { t: place, card: supplier-license, bucket: repurchase }
+      - { t: place, card: payroll-rework, bucket: retain }
+      - { t: place, card: gift-cards, bucket: retain }
+      - { t: place, card: old-promos, bucket: retire }
+      - { t: place, card: duplicate-menus, bucket: retire }
+wrongPaths:
+  - mistake: Calls turning physical servers into virtual machines a relocate, though only existing VMs or containers relocate
+    failsGoal: g1
+    actions:
+      - { t: place, card: loyalty-containers, bucket: relocate }
+      - { t: place, card: till-servers, bucket: rehost }
+      - { t: place, card: rota-server, bucket: relocate }
+      - { t: place, card: orders-mysql, bucket: replatform }
+      - { t: place, card: recipes-aurora, bucket: replatform }
+      - { t: place, card: delivery-app, bucket: refactor }
+      - { t: place, card: guest-crm, bucket: repurchase }
+      - { t: place, card: supplier-license, bucket: repurchase }
+      - { t: place, card: payroll-rework, bucket: retain }
+      - { t: place, card: gift-cards, bucket: retain }
+      - { t: place, card: old-promos, bucket: retire }
+      - { t: place, card: duplicate-menus, bucket: retire }
+  - mistake: Thinks moving MySQL onto Amazon RDS is a plain lift and shift with nothing optimized
+    failsGoal: g2
+    actions:
+      - { t: place, card: loyalty-containers, bucket: relocate }
+      - { t: place, card: till-servers, bucket: rehost }
+      - { t: place, card: rota-server, bucket: rehost }
+      - { t: place, card: orders-mysql, bucket: rehost }
+      - { t: place, card: recipes-aurora, bucket: replatform }
+      - { t: place, card: delivery-app, bucket: refactor }
+      - { t: place, card: guest-crm, bucket: repurchase }
+      - { t: place, card: supplier-license, bucket: repurchase }
+      - { t: place, card: payroll-rework, bucket: retain }
+      - { t: place, card: gift-cards, bucket: retain }
+      - { t: place, card: old-promos, bucket: retire }
+      - { t: place, card: duplicate-menus, bucket: retire }
+  - mistake: Treats a rebuild with new code and cloud-built features as a light replatform tweak
+    failsGoal: g3
+    actions:
+      - { t: place, card: loyalty-containers, bucket: relocate }
+      - { t: place, card: till-servers, bucket: rehost }
+      - { t: place, card: rota-server, bucket: rehost }
+      - { t: place, card: orders-mysql, bucket: replatform }
+      - { t: place, card: recipes-aurora, bucket: replatform }
+      - { t: place, card: delivery-app, bucket: replatform }
+      - { t: place, card: guest-crm, bucket: repurchase }
+      - { t: place, card: supplier-license, bucket: repurchase }
+      - { t: place, card: payroll-rework, bucket: retain }
+      - { t: place, card: gift-cards, bucket: retain }
+      - { t: place, card: old-promos, bucket: retire }
+      - { t: place, card: duplicate-menus, bucket: retire }
+  - mistake: Thinks dropping a licensed database for cloud databases is a replatform, as the data lands on a managed AWS database
+    failsGoal: g3
+    actions:
+      - { t: place, card: loyalty-containers, bucket: relocate }
+      - { t: place, card: till-servers, bucket: rehost }
+      - { t: place, card: rota-server, bucket: rehost }
+      - { t: place, card: orders-mysql, bucket: replatform }
+      - { t: place, card: recipes-aurora, bucket: replatform }
+      - { t: place, card: delivery-app, bucket: refactor }
+      - { t: place, card: guest-crm, bucket: repurchase }
+      - { t: place, card: supplier-license, bucket: replatform }
+      - { t: place, card: payroll-rework, bucket: retain }
+      - { t: place, card: gift-cards, bucket: retain }
+      - { t: place, card: old-promos, bucket: retire }
+      - { t: place, card: duplicate-menus, bucket: retire }
+  - mistake: Switches off a business-critical app that still has months of use left before it is phased out
+    failsGoal: g4
+    actions:
+      - { t: place, card: loyalty-containers, bucket: relocate }
+      - { t: place, card: till-servers, bucket: rehost }
+      - { t: place, card: rota-server, bucket: rehost }
+      - { t: place, card: orders-mysql, bucket: replatform }
+      - { t: place, card: recipes-aurora, bucket: replatform }
+      - { t: place, card: delivery-app, bucket: refactor }
+      - { t: place, card: guest-crm, bucket: repurchase }
+      - { t: place, card: supplier-license, bucket: repurchase }
+      - { t: place, card: payroll-rework, bucket: retain }
+      - { t: place, card: gift-cards, bucket: retire }
+      - { t: place, card: old-promos, bucket: retire }
+      - { t: place, card: duplicate-menus, bucket: retire }
+  - mistake: Keeps an unused app running where it is instead of switching it off
+    failsGoal: g5
+    actions:
+      - { t: place, card: loyalty-containers, bucket: relocate }
+      - { t: place, card: till-servers, bucket: rehost }
+      - { t: place, card: rota-server, bucket: rehost }
+      - { t: place, card: orders-mysql, bucket: replatform }
+      - { t: place, card: recipes-aurora, bucket: replatform }
+      - { t: place, card: delivery-app, bucket: refactor }
+      - { t: place, card: guest-crm, bucket: repurchase }
+      - { t: place, card: supplier-license, bucket: repurchase }
+      - { t: place, card: payroll-rework, bucket: retain }
+      - { t: place, card: gift-cards, bucket: retain }
+      - { t: place, card: old-promos, bucket: retain }
+      - { t: place, card: duplicate-menus, bucket: retire }
+debrief:
+  lines:
+    - Relocate moves VMs or containers that already run on premises, while rehost lifts and shifts apps unchanged, often turning servers into VMs.
+    - Replatform adds a few cloud optimizations, such as moving MySQL to Amazon RDS, without new code or architecture changes.
+    - Refactor rebuilds an app with new code and cloud-built features at the highest upfront effort, while repurchase swaps a licensed app for software sold as a service.
+    - Retain keeps business-critical apps in place for now, and retire switches off apps nobody needs, so neither one migrates.
+  questions: [q-y70695, q-6gkne0, q-28swmy]
