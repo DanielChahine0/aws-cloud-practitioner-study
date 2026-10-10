@@ -75,6 +75,8 @@ export interface LabRow {
   href: string;
   minutes: number;
   engine: string;
+  /** A stretch lab (spec 5.2): it pays XP but counts toward neither Lab Complete nor Hands On. */
+  stretch: boolean;
   done: boolean;
 }
 
@@ -95,6 +97,7 @@ export function labRows(
       href: `#/m/${pad2(module)}/lab/${lab.id}`,
       minutes: lab.minutes,
       engine: `${lab.engine[0]?.toUpperCase()}${lab.engine.slice(1)}`,
+      stretch: lab.tier === 'stretch',
       done: done.has(lab.id),
     }));
 }
