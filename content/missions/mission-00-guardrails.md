@@ -102,9 +102,9 @@ Every other mission stays locked until this one is done and its Verify holds.
 ### Plan status
 
 - Write down your plan, your credit balance and the date the free plan ends or its days remaining, which the console home page and the Billing and Cost Management console home show.
-- For each service a later mission uses, write down whether the free plan offers it: Amazon S3, Amazon CloudFront, AWS CloudFormation, Amazon EC2, AWS Lambda, Amazon CloudWatch Logs, Amazon DynamoDB, AWS IAM, AWS CloudTrail, Amazon SNS, Amazon VPC, AWS Pricing Calculator and AWS Well-Architected Tool.
+- For each service a later mission uses, mark on the Plan status form below the steps whether the free plan offers it.
 - The AWS Free Tier page marks some services, such as Amazon EC2, Amazon S3 and Amazon DynamoDB, as available on both plans, but it does not list every service.
-- Mark a service you cannot confirm as unknown, and treat unknown as not offered until you confirm it.
+- Leave a service you cannot confirm unticked, because the form counts an unticked service as not offered until you confirm it.
 - A mission that needs a service the plan lacks stays locked.
 
 ## Verify
@@ -114,7 +114,7 @@ Every other mission stays locked until this one is done and its Verify holds.
 - The root user's security credentials and the `ccp-admin` user's both show an assigned MFA device.
 - Signed in as `ccp-admin`, you can open the Budgets page and the Billing preferences page.
 - `aws sts get-caller-identity --profile ccp-admin` prints the `ccp-admin` user's ARN, not the root user's.
-- Your plan status record holds the plan, the credit balance, the end date and a yes, no or unknown for every service above.
+- The Plan status form below the steps shows the day you saved your plan, credit balance and end date, with a tick for every service the free plan offers.
 
 ## Never do
 
