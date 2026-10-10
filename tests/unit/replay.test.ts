@@ -27,8 +27,8 @@ const answer = (qid: string, correct: boolean, sid = SID, concept = 'shared-kitc
 });
 
 describe('derive', () => {
-  it('has engine version 3', () => {
-    expect(ENGINE_VERSION).toBe(3);
+  it('has engine version 4', () => {
+    expect(ENGINE_VERSION).toBe(4);
   });
 
   it('records the event id, the concept and the relearn flag of each answer', () => {

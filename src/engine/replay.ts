@@ -6,8 +6,10 @@ import { FORM_IDS } from '../../schemas/ids.ts';
  * Changing what `derive` or `deriveMemory` computes from the same events bumps `ENGINE_VERSION`.
  * Version 2 adds XP and FSRS (`src/engine/memory.ts`) and the answer's id, concept and relearn flag.
  * Version 3 applies boss and mock answers on submit, pays exam XP and qualifies exam days.
+ * Version 4 judges past days with the exam date in force when they happened, keeps the schedule of the current
+ * exam date, and counts the inherited card of a split concept not yet answered as due.
  */
-export const ENGINE_VERSION = 3;
+export const ENGINE_VERSION = 4;
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;

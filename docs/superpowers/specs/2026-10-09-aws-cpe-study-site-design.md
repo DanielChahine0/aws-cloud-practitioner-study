@@ -608,7 +608,9 @@ export const recall = (card: Card, at: Date) => f.get_retrievability(card, at, f
 - **One update per day:** each concept gets one FSRS update per study day, plus at most one extra Again if it is answered wrong later the same day.
 - **Relearn step:** after a wrong answer in a review, the concept comes back at least 5 items later in the same session with a different variant, logged as `relearn`, with 0 XP and no FSRS update.
 - **Exam cap:** if an exam date is set and FSRS would schedule a concept after `examDay - 1`, the due date becomes `max(tomorrow, examDay - 1 - (fnv1a(conceptId) mod 7))`, which spreads the final reviews across the last week.
-  - Replay always uses the current `examDate`, so setting or moving the date recomputes every capped due date.
+  - The current `examDate` decides every current due date: replay schedules each card as if that date had been set before the first answer, including which answers were due and so made an FSRS update (3.1).
+  - Past answers and days are judged with the date in force when they happened, so their XP, qualifying days, catch-up plans and badges stay as they were, and setting or moving the date never rewrites history.
+  - A date set or moved during a study day also rebuilds that day's catch-up plan from the new due dates.
 - **Lightning:** lightning answers never update FSRS, and a miss writes `review.now`, which makes the concept due today.
 - **Untested concepts** (`tested: false`) never enter FSRS.
 
@@ -1148,7 +1150,7 @@ Content quality is enforced by rules R1 to R13, each with a failing fixture, and
 Playwright with `page.clock` covers multi-day journeys, axe runs on every screen, and screenshots are taken at 375 and 1280 px.
 
 - **Unit tests (Vitest):**
-  - `srs`: golden vectors against the pinned `ts-fsrs`, intervals ordered Again < Hard < Good, and the exam cap spread over 7 days and recomputed from the current `examDate` on replay.
+  - `srs`: golden vectors against the pinned `ts-fsrs`, intervals ordered Again < Hard < Good, and the exam cap spread over 7 days, every current due recomputed from the current `examDate`, and past days left as the date in force judged them.
   - Whole-day intervals make R at due vary for short intervals, so the vectors lock 0.881 after a first Good (3 days), 0.867 after a first Hard (2 days) and 0.766 after Again (1 day), and R at due is asserted at 0.90 plus or minus 0.01 only for intervals of 7 days or more below the 180-day cap.
   - `fingerprint`: every committed set has `0.004 <= f <= 0.01`, and masking matches `overlap_check.py` on fixture text.
   - `bets`: the payoff table and the 5/7 crossover.
