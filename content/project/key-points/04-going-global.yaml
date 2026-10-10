@@ -1,0 +1,48 @@
+# Reference key points for decision 4: Regions, edge and repeatable infrastructure.
+module: 4
+keyPoints:
+  - id: kp-04-law-settles-the-region
+    status: live
+    text: The shop abroad runs in a Region inside its own country, because the local rule that its customer data stays at home decides the choice before nearness, features or price are weighed.
+    concepts: [region-selection]
+    evidence: Check compliance first, since a legal rule can settle the Region alone, but most businesses have none and move on to the rest.
+    verified:
+      fullHash: c5fd9b561ece
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-04-check-services-and-rates
+    status: live
+    text: Before committing to the in-country Region for the shop abroad, the cafe confirms that the services its ordering and loyalty systems need are offered there and budgets for that Region's own prices, so the monthly cap still holds.
+    concepts: [region-selection, regional-pricing]
+    evidence: Regions are isolated, follow local law, and differ in services and prices.
+    verified:
+      fullHash: 38c571aebf02
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-04-cloudfront-at-the-edge
+    status: live
+    text: Menu images and app content go out through CloudFront from edge locations near each customer, so the loyalty app stays quick wherever it is opened without extra servers in every country.
+    concepts: [edge-locations, amazon-cloudfront]
+    evidence: Amazon CloudFront, a content delivery network (CDN) and cache, uses them to serve images, video, apps and APIs near users.
+    verified:
+      fullHash: 91e600d2832f
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-04-one-template-per-shop
+    status: live
+    text: Each new shop's setup is launched from one shared CloudFormation template, so every shop gets identical resources from a single command and the IT person avoids slips from repeated manual steps.
+    concepts: [aws-cloudformation, cloudformation-templates]
+    evidence: One template across accounts or Regions gives identical environments from one command, with fewer errors and more resilience.
+    verified:
+      fullHash: c54e37f73b73
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-04-code-beats-console-clicks
+    status: live
+    text: Keeping the infrastructure as code under version control beats clicking through the console or growing ad hoc scripts, which drift apart and grow hard to maintain as the shop count rises.
+    concepts: [infrastructure-as-code]
+    evidence: For consistent multi-Region rollouts, the console fits only small one-off jobs, scripts automate partly but get hard to maintain, and mixing methods causes drift.
+    verified:
+      fullHash: 10a31fdd8f20
+      checks: [ critic@1 ]
+      on: 2026-10-10
