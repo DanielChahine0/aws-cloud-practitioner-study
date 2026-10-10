@@ -191,7 +191,8 @@ describe('memoryContentOf', () => {
       canUseCredits: [],
       leftovers: [],
       sources: [],
-      html: '',
+      sections: [],
+      steps: [],
     });
     const content = memoryContentOf({
       ...IDX,
@@ -360,6 +361,19 @@ describe('nextLabel', () => {
     expect(nextLabel({ kind: 'resume', session: session('focus', 'm02'), left: 4 }, IDX, NOW).href).toBe(
       '#/s/focus/m02',
     );
+  });
+
+  it('sends mission cleanup and the usage check to the mission page', () => {
+    expect(nextLabel({ kind: 'cleanup', mission: 'mission-03', n: 3 }, IDX, NOW)).toEqual({
+      label: 'Clean up M3',
+      href: '#/missions/mission-03',
+      minutes: 10,
+    });
+    expect(nextLabel({ kind: 'usage', mission: 'mission-01', n: 1 }, IDX, NOW)).toEqual({
+      label: 'Check usage for M1',
+      href: '#/missions/mission-01',
+      minutes: 5,
+    });
   });
 
   it('has no link and no time when done for today', () => {

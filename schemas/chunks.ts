@@ -61,7 +61,10 @@ export interface MissionMeta {
   canUseCredits: string[];
   leftovers: string[];
   sources: { url: string; verified_on: string }[];
-  html: string;
+  /** One section per H2, each with its own heading, so the page can put the mission flow after named sections. */
+  sections: Section[];
+  /** The H3 steps under `## Steps`, which the mission page ticks off (spec 5.3 rule 1). */
+  steps: { id: string; title: string }[];
 }
 
 /** One H2 section of a rendered note; the part before the first H2 has the id and title ''. */

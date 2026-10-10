@@ -1,12 +1,13 @@
 import type { BossStatus } from './boss.ts';
 import { daysBetween, studyDayAt } from './day.ts';
+import type { MissionSafety } from './missions.ts';
 import { mockHistory, nextForm } from './mock.ts';
 import { CHUNK_SIZE, ITEM_SECONDS, type ReviewQueue } from './queue.ts';
 import type { Progress, SessionState } from './replay.ts';
 
 /**
  * The Next action (spec 4.6): the one thing Home suggests, the first that applies, and the optional extras line.
- * Mission safety waits for missions (Phase 6).
+ * Mission safety (a live mission past its time limit, then the next-day usage check) comes right after Resume.
  */
 
 /** A lesson in course order; `first` marks a module's first lesson. */
@@ -27,10 +28,14 @@ export interface NextInput {
   currentLesson: string | null;
   today: string;
   tz: number;
+  /** The mission cleanup or usage check that is due, from `missionSafety` (spec 5.3 rules 10 and 11). */
+  safety: MissionSafety | null;
 }
 
 export type NextAction =
   | { kind: 'resume'; session: SessionState; left: number }
+  | { kind: 'cleanup'; mission: string; n: number }
+  | { kind: 'usage'; mission: string; n: number }
   | { kind: 'review'; count: number }
   | { kind: 'continue'; lesson: LessonRef }
   | { kind: 'check'; module: number; concepts: number; lesson: LessonRef }
@@ -60,6 +65,7 @@ export function nextAction(input: NextInput): NextAction {
   const { lessons, progress, queue, currentLesson } = input;
   const resume = resumable(input);
   if (resume) return { kind: 'resume', ...resume };
+  if (input.safety) return { ...input.safety };
   if (queue.items.length > 0) return { kind: 'review', count: Math.min(queue.items.length, CHUNK_SIZE) };
   const current = lessons.find((l) => l.note === currentLesson);
   if (current && !progress.lessonsDone.has(current.note)) return { kind: 'continue', lesson: current };
@@ -78,12 +84,20 @@ export function nextAction(input: NextInput): NextAction {
   return { kind: 'done' };
 }
 
+/** About 10 minutes to delete a mission's resources by name and sweep Tag Editor, 5 to read Cost Explorer. */
+export const CLEANUP_MINUTES = 10;
+export const USAGE_MINUTES = 5;
+
 /** The time estimate in whole minutes: 30 seconds per review or check item, a lesson's own minutes. */
 export function nextMinutes(action: NextAction): number | null {
   const items = (count: number) => Math.ceil((count * ITEM_SECONDS) / 60);
   switch (action.kind) {
     case 'resume':
       return items(action.left);
+    case 'cleanup':
+      return CLEANUP_MINUTES;
+    case 'usage':
+      return USAGE_MINUTES;
     case 'review':
       return items(action.count);
     case 'check':

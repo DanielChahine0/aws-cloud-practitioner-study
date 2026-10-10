@@ -15,3 +15,13 @@ sources:
 ## Goal
 
 Set up a budget before anything else.
+
+## Steps
+
+### Budget first
+
+Create one budget for the bakery account.
+
+### Alert email
+
+Add your email address to the budget.

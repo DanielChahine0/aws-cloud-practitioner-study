@@ -128,6 +128,13 @@ export function nextLabel(
       }
       return { label: `Resume: ${what} (${action.left} left)`, href, minutes };
     }
+    case 'cleanup':
+    case 'usage':
+      return {
+        label: action.kind === 'cleanup' ? `Clean up M${action.n}` : `Check usage for M${action.n}`,
+        href: toHash({ kind: 'mission', id: action.mission }),
+        minutes,
+      };
     case 'review':
       return {
         label: `Review ${plural(action.count, 'concept', 'concepts')}`,

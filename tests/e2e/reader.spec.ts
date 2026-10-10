@@ -191,12 +191,15 @@ test('] and [ move to the next lesson and back', async ({ page }) => {
   await expect(h1(page, 'AWS Support Plans')).toBeVisible();
 });
 
-test('the missions list shows Missions 0 and 1', async ({ page }) => {
+test('the missions list shows Missions 0 to 8 in order', async ({ page }) => {
   await page.goto('/#/missions');
-  const rows = page.locator('main a[href^="#/missions/"]');
-  await expect(rows).toHaveCount(2);
+  const rows = page.locator('main a.row[href^="#/missions/"]');
+  await expect(rows).toHaveCount(9);
   await expect(rows.nth(0)).toContainText('Guardrails before anything else');
   await expect(rows.nth(1)).toContainText('Host this site on S3 and CloudFront');
+  for (let n = 0; n <= 8; n++) {
+    await expect(rows.nth(n)).toHaveAttribute('href', `#/missions/mission-${String(n).padStart(2, '0')}`);
+  }
 });
 
 test('a mission page shows its facts and its sources', async ({ page }) => {

@@ -22,6 +22,7 @@ import { KV_KEYS } from '../store/kv.ts';
 import { now } from './clock.ts';
 import { index } from './content.ts';
 import { lessonRefs, memoryContentOf } from './home.ts';
+import { missionState } from './mission-state.ts';
 import { events, kvRecords, progress, record, storeReady } from './progress.ts';
 import { pad2 } from './router.ts';
 
@@ -68,11 +69,15 @@ export const currentLesson = computed(() => {
 /** `dismissed` once Not now was pressed on the exam date question. */
 export const examAsk = computed(() => kvRecords.value[KV_KEYS.examAsk]?.value ?? null);
 
-/** Null until the stored log has loaded, so neither the Next button nor Enter acts on an empty log. */
+/**
+ * Null until the stored log and the mission state have loaded, so neither the Next button nor Enter acts on an empty
+ * log or skips a due cleanup.
+ */
 export const nextUp = computed(() => {
   const list = lessons.value;
   const q = queue.value;
-  if (!storeReady.value || list === null || q === null) return null;
+  const missions = missionState.value;
+  if (!storeReady.value || list === null || q === null || missions === undefined) return null;
   const at = now.value;
   return nextAction({
     lessons: list,
@@ -81,6 +86,7 @@ export const nextUp = computed(() => {
     currentLesson: currentLesson.value,
     today: studyDay(at),
     tz: tzOffset(at),
+    safety: missions?.safety.value ?? null,
   });
 });
 

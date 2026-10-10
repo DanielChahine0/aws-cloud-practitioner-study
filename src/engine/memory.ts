@@ -23,7 +23,7 @@ import {
 import { betXp } from './bets.ts';
 import { scoreTotal } from './capstone.ts';
 import { addDays, dayStartAt, nextDayStart, studyDayAt } from './day.ts';
-import { GATE_MISSION, type MissionRef, type OpenMissionLog, stepMission } from './missions.ts';
+import { GATE_MISSION, type MissionRef, type OpenMissionLog, stepMission } from './mission-log.ts';
 import type { SessionState } from './replay.ts';
 import { capDue, capDueOn, rate, recall, review, type SrsCard, type SrsRating } from './srs.ts';
 import { effortBonus, XP } from './xp.ts';
@@ -438,7 +438,7 @@ function replay(
   const incidentPaidDays = new Set<string>();
   const missionCleaned = new Map<string, string>();
   const missionsClosed = new Set<string>();
-  /** Each mission's attempts, read by the same rules as `src/engine/missions.ts`, so XP pays when the page closes. */
+  /** Each mission's attempts, read by the same rules as `src/engine/mission-log.ts`, so XP pays when the page closes. */
   const missionLogs = new Map<string, OpenMissionLog>();
   /** Modules with a counted self-grade; only a final after it counts (spec 6). */
   const selfDecisions = new Set<number>();

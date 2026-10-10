@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { ContentIndex, ExamChunk, ModuleChunk, SearchChunk } from '../../schemas/chunks.ts';
 import type { Concept } from '../../schemas/concept.ts';
 import { BADGE_IDS } from '../../schemas/ids.ts';
-import { buildContent, confusableLinks, readingMinutes } from '../../scripts/content/build.ts';
+import { buildContent, confusableLinks, missionSteps, readingMinutes } from '../../scripts/content/build.ts';
 import { CONCEPTS_FILE, FORMS_FILE, loadContext } from '../../scripts/content/lib/context.ts';
 import { normalize } from '../../src/app/search.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
@@ -121,7 +121,30 @@ describe('buildContent on the fixture tree', () => {
       },
     ]);
     expect(index.missions.map((m) => [m.id, m.gate, m.maxLiveHours])).toEqual([['mission-00', true, null]]);
-    expect(index.missions[0]?.html).toContain('<h2 id="goal">Goal</h2>');
+    expect(index.missions[0]?.sections.map((s) => s.id)).toEqual(['goal', 'steps']);
+    expect(index.missions[0]?.sections[0]?.html).toContain('<h2 id="goal">Goal</h2>');
+    expect(index.missions[0]?.sections[1]?.html).toContain('<h3 id="budget-first">Budget first</h3>');
+    expect(index.missions[0]?.steps).toEqual([
+      { id: 'budget-first', title: 'Budget first' },
+      { id: 'alert-email', title: 'Alert email' },
+    ]);
+  });
+
+  it("takes a mission's steps from the H3s under its Steps section only", () => {
+    expect(
+      missionSteps([
+        { depth: 2, id: 'goal', text: 'Goal' },
+        { depth: 3, id: 'not-a-step', text: 'Not a step' },
+        { depth: 2, id: 'steps', text: 'Steps' },
+        { depth: 3, id: 'make-the-bucket', text: 'Make the bucket' },
+        { depth: 3, id: 'add-the-trigger', text: 'Add the trigger' },
+        { depth: 2, id: 'verify', text: 'Verify' },
+        { depth: 3, id: 'after', text: 'After' },
+      ]),
+    ).toEqual([
+      { id: 'make-the-bucket', title: 'Make the bucket' },
+      { id: 'add-the-trigger', title: 'Add the trigger' },
+    ]);
   });
 
   it('writes a search chunk with a normalized entry per module, lesson, concept, term, mission and lab', () => {
