@@ -1,5 +1,6 @@
 /** Blueprint-term search and coverage by exam task (spec 2.3); Phase 2's R10 reuses missingTerms. */
 import type { TaskId } from '../../../schemas/common.ts';
+import type { Question } from '../../../schemas/question.ts';
 import type { Context } from './context.ts';
 import { stripMarkdown } from './text.ts';
 
@@ -45,6 +46,21 @@ export function blueprintTerms(ctx: Context): TermStatus[] {
 /** The blueprint terms that resources/ lacks and no coveredBy maps. */
 export function missingTerms(ctx: Context): TermStatus[] {
   return blueprintTerms(ctx).filter((t) => !t.found && t.coveredBy === null);
+}
+
+/** Practice questions per concept id that pass `keep`, with a question tagged by an alias counted for the concept that lists it. */
+export function practiceCounts(ctx: Context, keep: (q: Question) => boolean): Map<string, number> {
+  const target = new Map<string, string>();
+  for (const c of ctx.concepts) {
+    for (const alias of c.aliases ?? []) target.set(alias, c.id);
+  }
+  const counts = new Map<string, number>();
+  for (const { q } of ctx.questions) {
+    if (q.pool !== 'practice' || !keep(q)) continue;
+    const id = target.get(q.concept) ?? q.concept;
+    counts.set(id, (counts.get(id) ?? 0) + 1);
+  }
+  return counts;
 }
 
 export interface TaskCoverage {
