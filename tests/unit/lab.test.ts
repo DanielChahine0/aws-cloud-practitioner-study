@@ -1,18 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import {
+  ALL_VALUES,
+  CHOOSE_ANSWER,
   CREDITS_NOTE,
   checkLabel,
   ENGINE_LABEL,
+  FILTERS_LEGEND,
   goalWord,
   hintLine,
   labCheckLine,
   labDoneLine,
   labLede,
+  NO_RECORDS,
   placedLine,
+  QUESTIONS_LEGEND,
   RESET_ASK,
   returnedLine,
   SIM_IDLE,
   SIM_RESULTS,
+  shownLine,
   simChartLabel,
   TRAY_EMPTY,
 } from '../../src/app/lab.ts';
@@ -91,5 +97,20 @@ describe('Simulate copy', () => {
     expect(simChartLabel('s3-lifecycle', ['Cost so far'])).toBe(
       'Cost so far at the end of each 30-day month',
     );
+  });
+});
+
+describe('Investigate copy', () => {
+  it('labels the filters, the questions and the records shown', () => {
+    expect([FILTERS_LEGEND, ALL_VALUES, QUESTIONS_LEGEND, CHOOSE_ANSWER]).toEqual([
+      'Filters',
+      'All',
+      'Questions',
+      'Choose an answer',
+    ]);
+    expect(NO_RECORDS).toBe('No record matches these filters.');
+    expect(shownLine(3, 8)).toBe('3 of 8 records shown.');
+    expect(shownLine(0, 8)).toBe('0 of 8 records shown.');
+    expect(checkLabel('investigate')).toBe('Check');
   });
 });

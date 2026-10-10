@@ -4,6 +4,7 @@ import type { ContentIndex, LabMeta, LabView, ModuleChunk, QuestionView } from '
 import { SCHEMA_VERSION } from '../../schemas/version.ts';
 import { DB_NAME, STORES } from '../../src/store/idb.ts';
 import { KV_KEYS } from '../../src/store/kv.ts';
+import { bakeryInvestigateLab } from '../fixtures/lab-investigate.ts';
 import { bakerySimulateLab } from '../fixtures/lab-specs.ts';
 
 export const SYNTHETIC_SORT_LAB_ID = 'lab-m01-bakery-sort';
@@ -239,5 +240,29 @@ export function syntheticSimulateLab(questions: QuestionView[]): LabView {
     notes: notesOf(questions),
     debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
     credits: true,
+  };
+}
+
+export const SYNTHETIC_INVESTIGATE_LAB_ID = 'lab-m01-bakery-ledger';
+export const SYNTHETIC_INVESTIGATE_TITLE = 'Who threw away the starter?';
+
+/** The bakery pantry ledger lab of `tests/fixtures/lab-investigate.ts` as the build ships it. */
+export function syntheticInvestigateLab(questions: QuestionView[]): LabView {
+  const lab = bakeryInvestigateLab();
+  return {
+    id: SYNTHETIC_INVESTIGATE_LAB_ID,
+    module: 1,
+    engine: 'investigate',
+    tier: 'core',
+    rev: 1,
+    title: SYNTHETIC_INVESTIGATE_TITLE,
+    minutes: lab.minutes,
+    concepts: lab.concepts,
+    brief: lab.brief,
+    spec: lab.spec,
+    goals: lab.goals,
+    notes: notesOf(questions),
+    debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
+    credits: false,
   };
 }

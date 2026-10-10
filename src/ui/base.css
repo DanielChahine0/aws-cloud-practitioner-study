@@ -2280,6 +2280,121 @@ dialog.confirm .button {
 
 /* Labs: Investigate */
 
+.inv {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.inv-filters,
+.inv-questions {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inv-filters legend,
+.inv-questions legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-weight: 600;
+}
+
+@media (min-width: 640px) {
+  .inv-filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.inv-field label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.inv-field select {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 44px;
+  padding: 0 36px 0 12px;
+  font: inherit;
+  color: var(--text);
+  background-color: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* As with the Simulate selects, WebKit keeps a native select at its own height, so this one drops its native look. */
+.inv-field select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.inv-field select:hover {
+  border-color: var(--active);
+}
+
+.inv-shown {
+  margin: 0;
+}
+
+/* The listing and the records scroll sideways inside their focusable regions, never the page. */
+.inv-listing,
+.inv-records {
+  overflow-x: auto;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.inv-listing pre {
+  margin: 0;
+  padding: 12px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.inv-records table {
+  width: 100%;
+  min-width: 32rem;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.inv-records caption {
+  padding: 8px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.inv-records th,
+.inv-records td {
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid var(--line);
+}
+
+.inv-records th {
+  font-weight: 600;
+}
+
+.inv-none {
+  margin: 0;
+  padding: 12px;
+}
+
 /* Incident */
 .incident-paid {
   font-weight: 600;

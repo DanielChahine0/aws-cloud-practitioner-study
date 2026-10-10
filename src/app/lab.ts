@@ -71,3 +71,21 @@ export function simChartLabel(model: 'scaling' | 's3-lifecycle', series: readonl
     ? `${series.join(' and ')} for each hour from 0:00 to 23:00`
     : `${series.join(' and ')} at the end of each 30-day month`;
 }
+
+/** The legend over an Investigate lab's filter selects. */
+export const FILTERS_LEGEND = 'Filters';
+
+/** A filter select's first option, which shows every value of its column. */
+export const ALL_VALUES = 'All';
+
+/** The legend over an Investigate lab's answer selects. */
+export const QUESTIONS_LEGEND = 'Questions';
+
+/** An answer select's first option until the question has an answer. */
+export const CHOOSE_ANSWER = 'Choose an answer';
+
+/** Shown in place of the records when the filters let none through. */
+export const NO_RECORDS = 'No record matches these filters.';
+
+/** Under the filters, and announced when they change: `3 of 8 records shown.`. */
+export const shownLine = (shown: number, total: number): string => `${shown} of ${total} records shown.`;
