@@ -48,6 +48,48 @@ describe('reviewQueue', () => {
     expect(queue.due).toBe(1);
   });
 
+  it('keeps every misconception ahead of due concepts when interleaving', () => {
+    const content = contentOf([
+      { id: 'm1', module: 1 },
+      { id: 'm2', module: 1 },
+      { id: 'd', module: 2 },
+    ]);
+    const queue = queueAt(
+      content,
+      [
+        [at('2026-10-10'), answerOf({ concept: 'm1', correct: false, sure: true })],
+        [at('2026-10-10', 11), answerOf({ concept: 'm2', correct: false, sure: true })],
+        [at('2026-10-10', 12), answerOf({ concept: 'd', correct: false, sure: false })],
+      ],
+      at('2026-10-12', 12),
+    );
+    expect(queue.misconceptions).toBe(2);
+    expect(queue.items).toEqual(['m1', 'm2', 'd']);
+  });
+
+  it('never pulls a due confusable partner into the misconception block', () => {
+    const content = contentOf([
+      { id: 'm1', module: 1, confusableWith: ['z'] },
+      { id: 'm2', module: 2 },
+      { id: 'm3', module: 1 },
+      { id: 'm4', module: 2 },
+      { id: 'z', module: 3, confusableWith: ['m1'] },
+    ]);
+    const queue = queueAt(
+      content,
+      [
+        [at('2026-10-10'), answerOf({ concept: 'm1', correct: false, sure: true })],
+        [at('2026-10-10'), answerOf({ concept: 'm2', correct: false, sure: true })],
+        [at('2026-10-10'), answerOf({ concept: 'm3', correct: false, sure: true })],
+        [at('2026-10-10'), answerOf({ concept: 'm4', correct: false, sure: true })],
+        [at('2026-10-10'), answerOf({ concept: 'z', correct: false, sure: false })],
+      ],
+      at('2026-10-12', 12),
+    );
+    expect(queue.misconceptions).toBe(4);
+    expect(queue.items).toEqual(['m1', 'm2', 'm3', 'm4', 'z']);
+  });
+
   it('drops a misconception from the queue once it was answered today', () => {
     const content = contentOf([{ id: 'm-miss', module: 1 }]);
     const queue = queueAt(

@@ -108,17 +108,16 @@ export function reviewQueue(memory: MemoryState, content: MemoryContent, now: Da
   const base = plan ? dueSet.filter((s) => plan.includes(s.id)) : dueSet;
 
   const markedIds = new Set(marked.map((s) => s.id));
-  const ordered = [...marked.map((s) => s.id), ...base.filter((s) => !markedIds.has(s.id)).map((s) => s.id)];
+  const rest = base.filter((s) => !markedIds.has(s.id)).map((s) => s.id);
   const moduleOf = (id: string) => content.concepts.get(id)?.module ?? 0;
+  const partnersOf = (id: string) => content.concepts.get(id)?.confusableWith ?? [];
   const dueDayOf = (id: string) => {
     const card = cards.get(id);
     return card ? studyDayAt(new Date(card.due), tz) : null;
   };
-  const items = pairUp(
-    interleave(ordered, moduleOf),
-    (id) => content.concepts.get(id)?.confusableWith ?? [],
-    dueDayOf,
-  );
+  // Interleave and pair within each block, so no due concept ever moves ahead of a misconception.
+  const arrange = (ids: readonly string[]) => pairUp(interleave(ids, moduleOf), partnersOf, dueDayOf);
+  const items = [...arrange(marked.map((s) => s.id)), ...arrange(rest)];
 
   const due = dueIds.size;
   const newToday = memory.newByDay.get(today) ?? 0;
