@@ -87,7 +87,10 @@ function markedMisconception(concept: string): boolean {
   return (memory.peek()?.concepts.get(memoryConcept(concept))?.misconception ?? null) !== null;
 }
 
-/** The learn pool of some chunks plus the items of forms whose mock is over (spec 4.3), concepts as memory keys them. */
+/**
+ * The learn pool of some chunks plus the items of forms whose mock is over (spec 4.3), with each concept as memory
+ * keys it.
+ */
 function poolOf(chunks: readonly ModuleChunk[]): PoolQuestion[] {
   return learnPoolNow(practicePoolOf(chunks, memoryConcept));
 }
