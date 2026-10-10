@@ -267,6 +267,8 @@ test('Enter follows Next, j and k move between hexes, and g r opens Review', asy
   await page.locator('h1').click();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#\/m\/01\/l\/welcome-to-aws-cloud-practitioner-essentials$/);
+  // The pager shows once the module chunk has loaded; leaving before that cancels its fetch, which WebKit reports.
+  await expect(page.getByRole('navigation', { name: 'Lessons' })).toBeVisible();
 
   await page.goto('/');
   await expect(nextLink(page)).toBeVisible();
