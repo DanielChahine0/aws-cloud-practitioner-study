@@ -69,6 +69,19 @@ Then `pnpm verify` should pass on a clean checkout.
 The site runs on a private S3 bucket behind CloudFront, created from `infra/site.yaml` in Mission 1 (`content/missions/mission-01-host-this-site.md`).
 `pnpm site:deploy` refuses to run with uncommitted changes, and it reads the stack `ccp-study-site` with the AWS profile `ccp-admin` unless `CCP_STACK` or `AWS_PROFILE` say otherwise.
 
+## Exams
+
+The exam pool lives in `content/exam/pool/`, one file per module, written by `agents/exam-writer.md`, which never reads the practice questions.
+`pnpm content:quotas` writes `content/exam/quotas.yaml` from the registry and the blueprint, and `pnpm content:forms` splits the live pool into forms A to D in `content/exam/forms.yaml`.
+`pnpm content:forms --freeze` freezes the forms once the pool meets its quotas, and rule R12 then keeps them as they are.
+The check rounds run over the pool with `--pool exam`, and every tool prints exam items by id and count only.
+Honor system: never open `content/exam/` or an `exam-?.<hash>.json` chunk before you have taken that form.
+Each module has a boss of 15 questions in 21 minutes, which opens once every lesson of the module is read; 12 right passes, and a new try waits 20 hours.
+A mock is 65 questions in 90 minutes on a wall-clock timer that cannot pause, scored over its live items with raw percentages only.
+Readiness blends memory and the latest unseen mocks, caps at 70 without a mock, and names the weakest task statement; from 7 to 2 days before the exam date, Home shows the go/no-go line while readiness is below Ready.
+Ranks follow the Support plans in `content/game/ranks.yaml` and never drop, and the 12 badges in `content/game/badges.yaml` are derived from the log.
+Rule R10 also checks the exam quotas (`examQuotas: true`), and rule R12 guards the frozen forms.
+
 ## Course text stays out
 
 The course text lives only in `~/Library/Application Support/ccp-study/`, outside this repository.

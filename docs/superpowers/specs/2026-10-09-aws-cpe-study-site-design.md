@@ -400,7 +400,8 @@ export const Question = z.discriminatedUnion('type', [
 - A failed check leaves the question `draft` with `review: { attempts, lastFailure }`, and a writer agent revises it.
 - After 2 failed revisions, a practice item is listed by `pnpm content:report --needs-dani`.
 - After 2 failed revisions, an exam-pool item is retired in place (`status: retired`, so rule 2 holds and the id is never reused) and a new one is generated, because Dani must never see holdout items before a mock.
-- Agents check batches of at most 10 questions from different lessons, at most 1 per concept, in shuffled order, answering each question independently in JSON.
+- Agents check batches of at most 10 questions, at most 1 per concept, in shuffled order, answering each question independently in JSON.
+  NOTE: "different lessons" is a soft rule that `makeBatches` follows when it can; a hard lesson rule can make a 26-batch deal impossible (Phase 3).
 - A full pass costs about `3 x (2C + 260 + incident steps) / 10` agent runs, plus about 20% for revisions.
 
 ### 2.8 How notes and questions reference each other
@@ -444,7 +445,9 @@ export const Question = z.discriminatedUnion('type', [
 - `dist/content/index.<hash>.json` holds the modules, lesson metadata, the concept map, the blueprint, ranks, badges, the glossary, `contentVersion` and the hashed names of the other chunks.
 - The build injects the index's hashed name into `index.html`, so `index.html` and `sw.js` are the only unhashed files (1.4).
 - `dist/content/mNN.<hash>.json` holds lesson HTML, live practice questions, labs and the incidents whose first required module is NN.
-- `dist/content/exam.<hash>.json` holds the exam pool and the forms, and only the mock screen loads it.
+- `dist/content/exam-a.<hash>.json` to `exam-d.<hash>.json` hold one frozen form each, as live items in form order; pool items that sit in no form never ship.
+- A form's chunk loads only for its own mock until that form is taken, and from then on also for the learn screens and results, so taken items can join practice (section 4.3).
+- The index lists form item ids, concepts, tasks and versions (`exam.items`), never their text.
 - `dist/content/search.<hash>.json` is a prebuilt token index over notes, concepts and the glossary.
 - A Vite plugin runs the content build and validation at start and on every file change, and shows errors in the Vite overlay.
 
@@ -1014,7 +1017,7 @@ Single-letter keys work only inside their context, ignore case, and are off whil
 
 | Context | Keys |
 |---|---|
-| Global | `/` or `Cmd+K` palette, `?` help, `g h` Home, `g r` Review, `g m` current module, `g p` Progress, `g c` capstone, `Esc` close or back; the `g` sequences are off during an exam |
+| Global | `/` or `Cmd+K` palette, `?` help, `g h` Home, `g r` Review, `g m` current module, `g p` Progress, `g c` capstone, `Esc` close or back; during a boss or mock the `g` sequences, `/`, `Cmd+K` and `j`/`k` are off, `?` still opens Help, and `Esc` only closes an open sheet |
 | Home and Module | `Enter` Next or open, `j`/`k` move |
 | Lesson | `[` `]` previous or next lesson, `c` jump to the check |
 | Runner | `1` to `6` choose (toggle in multi), `Enter` Check (Not sure), `Shift+Enter` Sure, `Enter` Next after feedback, `e` expand all whys (after feedback only), `o` open the note at the evidence, `!` report |
@@ -1064,7 +1067,7 @@ IndexedDB database `ccp-study`:
 | Store | Content | Source of truth |
 |---|---|---|
 | `events` | append-only facts keyed by ULID | yes |
-| `kv` | ADR drafts, lab working state, active exam session (seed, item order, `deadline`), mission ticks, `plan` (`{ plan, credits, endsOn, services: Record<string, boolean>, recordedAt }`, from Mission 0), `examAsk`, `rankSeen`, `lastExportAt`, `currentLesson` (the lesson last opened, for Next), `engineVersion` (the engine whose "Rules updated" line was dismissed), `schemaVersion` (the storage version of the local log) and `preMigration` (the log and `kv` as they were before the last local migration); each value has `updatedAt` | yes |
+| `kv` | ADR drafts, lab working state, `examSession` (the open boss or mock draft: picks, flags, changes, time per item and the current position; the seed, item order and `deadline` live on the `session` start event), `rankSeen` (the id of the rank whose promotion line was last dismissed), mission ticks, `plan` (`{ plan, credits, endsOn, services: Record<string, boolean>, recordedAt }`, from Mission 0), `examAsk`, `lastExportAt`, `currentLesson` (the lesson last opened, for Next), `engineVersion` (the engine whose "Rules updated" line was dismissed), `schemaVersion` (the storage version of the local log) and `preMigration` (the log and `kv` as they were before the last local migration); each value has `updatedAt` | yes |
 | `cache` | derived snapshot keyed by `lastEventId:ENGINE_VERSION:contentVersion` | no |
 
 ```ts
@@ -1154,6 +1157,7 @@ Playwright with `page.clock` covers multi-day journeys, axe runs on every screen
   - `queue`: misconceptions first, no adjacent same-module items when avoidable, confusable pairs within 3 positions, catch-up at more than 100 overdue.
   - `select`: a variant never repeats the previous one, bosses never draw from the exam pool, and a boss draw still succeeds when every variant was seen within 7 days.
   - `mastery` and `readiness`: values stay within 0 to 1, values never rise without an event, unseen concepts count 0, the 0.70 cap applies without a mock, the 7-day projection applies without an exam date, and the Ready conditions hold.
+  - NOTE: readiness may rise without a new event when a mock attempt leaves the 21-day window or every attempt does; the never-rise property holds for Memory and every `Q_d`, and for readiness on logs with no mock submit (Phase 3).
   - `ranks`: one fixture per rank that crosses its threshold by exactly one event, plus tests that a rank survives later decay, a key-fix rescore and an `ENGINE_VERSION` replay.
   - `badges`: one fixture per badge that crosses its threshold by exactly one event.
   - `mock`: exact 16/19/22/8 counts, the per-task counts, 8 multi-response items split 2/2/3/1, no repeated concept, `content:forms` either splits a pool that meets `quotas.yaml` into forms A-D or names the task or concept that blocks it, and the same seed always gives the same form.
@@ -1241,7 +1245,7 @@ Each risk has a mechanism already in this design, and the questions still open f
 | K11 | The free-plan account closes at 6 months or when credits run out, taking the CloudFront site with it | Missions spend few credits; the app keeps working offline from the service worker, progress lives in local backups, AWS keeps the account's data for 90 days during which upgrading to the Paid plan restores it, and `infra/site.yaml` redeploys anywhere |
 | K12 | S3 or CloudFront might not be on the free plan's service list | Mission 0 checks plan fit first; until Mission 1 can run, Dani uses `pnpm preview` locally |
 | K13 | Lab scope | 26 core labs on 6 engines; stretch labs can be cut |
-| K14 | The exam pool ships in the bundle and relies on the honor system | A separate lazy chunk that only the mock screen loads |
+| K14 | The exam pool ships in the bundle and relies on the honor system | One lazy chunk per form, loaded only by its own mock until the form is taken, then by learn screens; exam end-to-end tests run on synthetic forms |
 
 **Open questions for Dani:**
 1. **Booking:** the exam is booked for Saturday, November 14, 2026; is it at a testing center or online proctored?
