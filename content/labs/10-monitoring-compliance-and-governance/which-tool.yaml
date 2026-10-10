@@ -1,0 +1,221 @@
+id: lab-m10-which-tool
+module: 10
+title: Pick the tool, from CloudWatch to Artifact
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts:
+  - amazon-cloudwatch
+  - cloudwatch-alarms
+  - cloudwatch-logs
+  - aws-cloudtrail
+  - cloudtrail-logs
+  - aws-config
+  - automated-remediation
+  - aws-trusted-advisor
+  - aws-health
+  - aws-artifact
+  - aws-artifact-agreements
+  - aws-artifact-reports
+notes:
+  - m10/amazon-cloudwatch
+  - m10/aws-cloudtrail
+  - m10/auditing-aws-resources-for-compliance
+  - m10/aws-trusted-advisor
+  - m10/aws-health
+  - m10/compliance
+minutes: 6
+brief: >-
+  The cafe's new operations lead keeps a sticky note of twelve jobs for the cafe's AWS account, and each one belongs to one of six tools.
+  Sort each job under the service that handles it.
+spec:
+  buckets:
+    - id: cloudwatch
+      label: Amazon CloudWatch
+    - id: cloudtrail
+      label: AWS CloudTrail
+    - id: config
+      label: AWS Config
+    - id: trusted-advisor
+      label: AWS Trusted Advisor
+    - id: health
+      label: AWS Health
+    - id: artifact
+      label: AWS Artifact
+  cards:
+    - id: cpu-text
+      text: A text to the manager whenever the order server's CPU use climbs past a set threshold
+      bucket: cloudwatch
+      goal: g1
+    - id: reward-log
+      text: Searching the loyalty app's own log files to learn why a reward failed to apply yesterday
+      bucket: cloudwatch
+      goal: g1
+    - id: who-changed
+      text: Which staff login edited the account's permissions last night, and from which IP address
+      bucket: cloudtrail
+      goal: g2
+    - id: long-api-record
+      text: API activity records kept in S3 well past 90 days, as proof for a card-payment audit
+      bucket: cloudtrail
+      goal: g2
+    - id: approved-types
+      text: Flagging any order server launched with an instance type outside the cafe's approved list
+      bucket: config
+      goal: g3
+    - id: drift-fix
+      text: Putting a resource setting back automatically whenever it drifts from the cafe's own rule
+      bucket: config
+      goal: g3
+    - id: idle-database
+      text: A prioritized list of idle database instances the cafe could scale down to save money
+      bucket: trusted-advisor
+      goal: g4
+    - id: one-zone
+      text: A warning that every order server sits in one Availability Zone, so one failure could halt orders
+      bucket: trusted-advisor
+      goal: g4
+    - id: planned-change
+      text: Notice of a planned AWS change that will touch the cafe's order server
+      bucket: health
+      goal: g5
+    - id: service-issue
+      text: Word that an AWS service event is hitting the cafe's resources now, with advice on the fix
+      bucket: health
+      goal: g5
+    - id: outside-report
+      text: An outside auditor's report on AWS's own security, to show the cafe's payment regulator
+      bucket: artifact
+      goal: g5
+    - id: sign-agreement
+      text: Reading, signing and tracking an online agreement with AWS for every account in the organization
+      bucket: artifact
+      goal: g5
+goals:
+  - id: g1
+    label: Metric alerts and app logs sit under Amazon CloudWatch
+    hint: Ask whether the job is about numbers and log lines from inside the cafe's own servers and apps, or about who called the AWS API.
+  - id: g2
+    label: Jobs about who called the API sit under AWS CloudTrail
+    hint: Ask whether the job wants who made a request, when, from where, and how long that record must be kept.
+  - id: g3
+    label: Checks against the cafe's own rules sit under AWS Config
+    hint: Ask whether the job compares a resource's configuration with a rule the cafe wrote, and fixes drift.
+  - id: g4
+    label: Best-practice advice on cost and resilience sits under AWS Trusted Advisor
+    hint: Ask whether the job wants AWS best-practice checks across the account, such as waste or a single point of failure.
+  - id: g5
+    label: AWS event notices and AWS's own paperwork sit under AWS Health or AWS Artifact
+    hint: Ask whether the cafe needs news of events touching its resources, or AWS's own audit reports and agreements.
+solution:
+  - { t: place, card: cpu-text, bucket: cloudwatch }
+  - { t: place, card: reward-log, bucket: cloudwatch }
+  - { t: place, card: who-changed, bucket: cloudtrail }
+  - { t: place, card: long-api-record, bucket: cloudtrail }
+  - { t: place, card: approved-types, bucket: config }
+  - { t: place, card: drift-fix, bucket: config }
+  - { t: place, card: idle-database, bucket: trusted-advisor }
+  - { t: place, card: one-zone, bucket: trusted-advisor }
+  - { t: place, card: planned-change, bucket: health }
+  - { t: place, card: service-issue, bucket: health }
+  - { t: place, card: outside-report, bucket: artifact }
+  - { t: place, card: sign-agreement, bucket: artifact }
+wrongPaths:
+  - mistake: Thinks CloudTrail is where an app's own log files are searched
+    failsGoal: g1
+    actions:
+      - { t: place, card: cpu-text, bucket: cloudwatch }
+      - { t: place, card: reward-log, bucket: cloudtrail }
+      - { t: place, card: who-changed, bucket: cloudtrail }
+      - { t: place, card: long-api-record, bucket: cloudtrail }
+      - { t: place, card: approved-types, bucket: config }
+      - { t: place, card: drift-fix, bucket: config }
+      - { t: place, card: idle-database, bucket: trusted-advisor }
+      - { t: place, card: one-zone, bucket: trusted-advisor }
+      - { t: place, card: planned-change, bucket: health }
+      - { t: place, card: service-issue, bucket: health }
+      - { t: place, card: outside-report, bucket: artifact }
+      - { t: place, card: sign-agreement, bucket: artifact }
+  - mistake: Thinks CloudWatch tells you which user changed the account's permissions
+    failsGoal: g2
+    actions:
+      - { t: place, card: cpu-text, bucket: cloudwatch }
+      - { t: place, card: reward-log, bucket: cloudwatch }
+      - { t: place, card: who-changed, bucket: cloudwatch }
+      - { t: place, card: long-api-record, bucket: cloudtrail }
+      - { t: place, card: approved-types, bucket: config }
+      - { t: place, card: drift-fix, bucket: config }
+      - { t: place, card: idle-database, bucket: trusted-advisor }
+      - { t: place, card: one-zone, bucket: trusted-advisor }
+      - { t: place, card: planned-change, bucket: health }
+      - { t: place, card: service-issue, bucket: health }
+      - { t: place, card: outside-report, bucket: artifact }
+      - { t: place, card: sign-agreement, bucket: artifact }
+  - mistake: Thinks Trusted Advisor checks resources against the cafe's own approved list
+    failsGoal: g3
+    actions:
+      - { t: place, card: cpu-text, bucket: cloudwatch }
+      - { t: place, card: reward-log, bucket: cloudwatch }
+      - { t: place, card: who-changed, bucket: cloudtrail }
+      - { t: place, card: long-api-record, bucket: cloudtrail }
+      - { t: place, card: approved-types, bucket: trusted-advisor }
+      - { t: place, card: drift-fix, bucket: config }
+      - { t: place, card: idle-database, bucket: trusted-advisor }
+      - { t: place, card: one-zone, bucket: trusted-advisor }
+      - { t: place, card: planned-change, bucket: health }
+      - { t: place, card: service-issue, bucket: health }
+      - { t: place, card: outside-report, bucket: artifact }
+      - { t: place, card: sign-agreement, bucket: artifact }
+  - mistake: Thinks AWS Config gives best-practice advice on idle resources worth cutting
+    failsGoal: g4
+    actions:
+      - { t: place, card: cpu-text, bucket: cloudwatch }
+      - { t: place, card: reward-log, bucket: cloudwatch }
+      - { t: place, card: who-changed, bucket: cloudtrail }
+      - { t: place, card: long-api-record, bucket: cloudtrail }
+      - { t: place, card: approved-types, bucket: config }
+      - { t: place, card: drift-fix, bucket: config }
+      - { t: place, card: idle-database, bucket: config }
+      - { t: place, card: one-zone, bucket: trusted-advisor }
+      - { t: place, card: planned-change, bucket: health }
+      - { t: place, card: service-issue, bucket: health }
+      - { t: place, card: outside-report, bucket: artifact }
+      - { t: place, card: sign-agreement, bucket: artifact }
+  - mistake: Thinks CloudTrail hands out the outside audit reports on AWS itself
+    failsGoal: g5
+    actions:
+      - { t: place, card: cpu-text, bucket: cloudwatch }
+      - { t: place, card: reward-log, bucket: cloudwatch }
+      - { t: place, card: who-changed, bucket: cloudtrail }
+      - { t: place, card: long-api-record, bucket: cloudtrail }
+      - { t: place, card: approved-types, bucket: config }
+      - { t: place, card: drift-fix, bucket: config }
+      - { t: place, card: idle-database, bucket: trusted-advisor }
+      - { t: place, card: one-zone, bucket: trusted-advisor }
+      - { t: place, card: planned-change, bucket: health }
+      - { t: place, card: service-issue, bucket: health }
+      - { t: place, card: outside-report, bucket: cloudtrail }
+      - { t: place, card: sign-agreement, bucket: artifact }
+  - mistake: Thinks Trusted Advisor posts notices of AWS service events hitting the cafe
+    failsGoal: g5
+    actions:
+      - { t: place, card: cpu-text, bucket: cloudwatch }
+      - { t: place, card: reward-log, bucket: cloudwatch }
+      - { t: place, card: who-changed, bucket: cloudtrail }
+      - { t: place, card: long-api-record, bucket: cloudtrail }
+      - { t: place, card: approved-types, bucket: config }
+      - { t: place, card: drift-fix, bucket: config }
+      - { t: place, card: idle-database, bucket: trusted-advisor }
+      - { t: place, card: one-zone, bucket: trusted-advisor }
+      - { t: place, card: planned-change, bucket: health }
+      - { t: place, card: service-issue, bucket: trusted-advisor }
+      - { t: place, card: outside-report, bucket: artifact }
+      - { t: place, card: sign-agreement, bucket: artifact }
+debrief:
+  lines:
+    - CloudWatch measures and reacts, with alarms on metric thresholds and Logs for searching what happened inside an app.
+    - CloudTrail records who called the AWS API, when and from where, and its logs in S3 outlast the 90-day event history.
+    - AWS Config checks configurations against the cafe's own rules and can fix drift, while Trusted Advisor checks AWS best practices.
+    - "AWS Health and AWS Artifact both bring the cafe word from AWS itself: Health on events touching its resources, Artifact as audit reports and agreements."
+  questions: [q-5dadmr, q-7w1h2h, q-vfayk9]
