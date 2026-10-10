@@ -71,7 +71,8 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
     highlight.value = null;
   }, [lesson, wanted]);
 
-  // Recall dots (spec 7.3): one right after each H3 that anchors a tested concept homed in this note, by band.
+  // Recall dots (spec 7.3): at the end of each H3 that anchors a tested concept homed in this note, one per concept,
+  // so two concepts on one heading share its line; each dot names its concept and band.
   const noteId = `m${pad2(module)}/${slug}`;
   const memoryNow = storeReady.value ? memory.value : null;
   const at = now.value;
@@ -79,22 +80,30 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
   useLayoutEffect(() => {
     const root = body.current;
     if (root === null || lesson === undefined || memoryNow === null) return;
-    const dots: HTMLElement[] = [];
+    const rows = new Map<Element, HTMLElement>();
     for (const c of idx.concepts) {
       if (!c.tested || c.home !== noteId) continue;
       const heading = root.querySelector(`h3[id="${c.anchor}"]`);
       if (heading === null) continue;
+      let row = rows.get(heading);
+      if (row === undefined) {
+        row = document.createElement('span');
+        row.className = 'recall-dots';
+        heading.append(row);
+        rows.set(heading, row);
+      }
       const card = memoryNow.concepts.get(c.id)?.card ?? null;
       const band = recallBand(card === null ? null : recall(card, at));
+      const name = `Recall of ${c.name}: ${RECALL_LABEL[band]}`;
       const dot = document.createElement('span');
       dot.className = `recall-dot recall-${band}`;
       dot.setAttribute('role', 'img');
-      dot.setAttribute('aria-label', `Recall: ${RECALL_LABEL[band]}`);
-      heading.after(dot);
-      dots.push(dot);
+      dot.setAttribute('aria-label', name);
+      dot.title = name;
+      row.append(dot);
     }
     return () => {
-      for (const dot of dots) dot.remove();
+      for (const row of rows.values()) row.remove();
     };
   }, [lesson, memoryNow, at, idx, noteId]);
 
