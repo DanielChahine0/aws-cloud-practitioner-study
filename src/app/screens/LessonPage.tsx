@@ -1,12 +1,16 @@
 import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 import type { ContentIndex, ModuleChunk } from '../../../schemas/chunks.ts';
+import { recall } from '../../engine/srs.ts';
 import { KV_KEYS } from '../../store/kv.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { Html } from '../../ui/Html.tsx';
 import { showTermPopover } from '../../ui/TermPopover.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
+import { now } from '../clock.ts';
 import { ensureModule, glossary, modules } from '../content.ts';
 import { findEvidence } from '../evidence.ts';
+import { memory } from '../memory.ts';
+import { RECALL_LABEL, recallBand } from '../module.ts';
 import { neighbors } from '../nav.ts';
 import { progress, record, storeReady, writeKv } from '../progress.ts';
 import { pad2 } from '../router.ts';
@@ -66,6 +70,33 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
     }
     highlight.value = null;
   }, [lesson, wanted]);
+
+  // Recall dots (spec 7.3): one right after each H3 that anchors a tested concept homed in this note, by band.
+  const noteId = `m${pad2(module)}/${slug}`;
+  const memoryNow = storeReady.value ? memory.value : null;
+  const at = now.value;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useLayoutEffect(() => {
+    const root = body.current;
+    if (root === null || lesson === undefined || memoryNow === null) return;
+    const dots: HTMLElement[] = [];
+    for (const c of idx.concepts) {
+      if (!c.tested || c.home !== noteId) continue;
+      const heading = root.querySelector(`h3[id="${c.anchor}"]`);
+      if (heading === null) continue;
+      const card = memoryNow.concepts.get(c.id)?.card ?? null;
+      const band = recallBand(card === null ? null : recall(card, at));
+      const dot = document.createElement('span');
+      dot.className = `recall-dot recall-${band}`;
+      dot.setAttribute('role', 'img');
+      dot.setAttribute('aria-label', `Recall: ${RECALL_LABEL[band]}`);
+      heading.after(dot);
+      dots.push(dot);
+    }
+    return () => {
+      for (const dot of dots) dot.remove();
+    };
+  }, [lesson, memoryNow, at, idx, noteId]);
 
   const term = openTerm.value;
   const item = term === null ? undefined : glossary.value.get(term.id);

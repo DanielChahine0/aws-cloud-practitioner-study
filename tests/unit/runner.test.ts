@@ -5,6 +5,7 @@ import {
   collapseSpace,
   displayOrder,
   endSummaryLine,
+  focusTitle,
   isCorrect,
   modeLabel,
   quizAvailability,
@@ -177,5 +178,18 @@ describe('quizAvailability', () => {
 describe('collapseSpace', () => {
   it('trims and collapses runs of whitespace, as the highlight compares text', () => {
     expect(collapseSpace('  You pay\n  for   compute time. ')).toBe('You pay for compute time.');
+  });
+});
+
+describe('focusTitle', () => {
+  const tasks = [{ id: '2.3', domain: '2', text: 'Made-up task text.', short: 'access management' }];
+
+  it('names the task with its short name, or the module', () => {
+    expect(focusTitle('2.3', tasks)).toBe('Focus quiz: 2.3 access management');
+    expect(focusTitle('m05', tasks)).toBe('Focus quiz: Module 5');
+  });
+
+  it('keeps the label of the focus mode', () => {
+    expect(modeLabel('focus')).toBe('Focus quiz');
   });
 });

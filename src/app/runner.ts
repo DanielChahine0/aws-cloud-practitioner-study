@@ -1,5 +1,5 @@
 /** The runner's pure answer logic, so the tests run without a browser. */
-import type { ContentIndex, ModuleChunk, QuestionView } from '../../schemas/chunks.ts';
+import type { ContentIndex, ModuleChunk, QuestionView, TaskView } from '../../schemas/chunks.ts';
 import type { Mode } from '../../schemas/events.ts';
 import type { SessionSummary } from '../engine/memory.ts';
 import { mulberry32, seedFor, shuffle } from '../engine/rng.ts';
@@ -98,4 +98,11 @@ const MODE_LABELS: Record<Mode, string> = {
 
 export function modeLabel(mode: Mode): string {
   return MODE_LABELS[mode];
+}
+
+/** `Focus quiz: 2.3 access management` for a task scope, `Focus quiz: Module 5` for a module scope (spec 4.1). */
+export function focusTitle(scope: string, tasks: readonly TaskView[]): string {
+  if (scope.startsWith('m')) return `${modeLabel('focus')}: Module ${Number(scope.slice(1))}`;
+  const task = tasks.find((t) => t.id === scope);
+  return `${modeLabel('focus')}: ${scope}${task === undefined ? '' : ` ${task.short}`}`;
 }

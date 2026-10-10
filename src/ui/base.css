@@ -1686,3 +1686,41 @@ dialog.confirm .button {
     display: inline;
   }
 }
+
+/* Phase 3 module page and lessons (spec 7.3): the mastery line, practice links and the recall dots. */
+.mastery-line {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.practice-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.boss-line {
+  margin: 0 0 8px;
+}
+
+.recall-dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: -4px 0 12px;
+  border: 1.5px solid var(--active);
+  border-radius: 50%;
+  background: var(--pane);
+}
+
+.recall-weak {
+  background: conic-gradient(var(--active) 0 25%, var(--pane) 0);
+}
+
+.recall-fading {
+  background: conic-gradient(var(--active) 0 50%, var(--pane) 0);
+}
+
+.recall-strong {
+  background: var(--active);
+}

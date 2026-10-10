@@ -1,0 +1,83 @@
+/** Pure helpers for the module page and the lesson recall dots (spec 7.3), so the tests run without a browser. */
+import { BOSS_MINUTES, BOSS_SIZE, type BossStatus } from '../engine/boss.ts';
+import { studyDayAt, tzOffset } from '../engine/day.ts';
+import { BAND_LABEL, conceptMastery, type HexBand } from '../engine/mastery.ts';
+import { bossPassMark, type MemoryState } from '../engine/memory.ts';
+import { shortDate } from './dates.ts';
+
+const HOUR_MS = 3_600_000;
+
+export interface ConceptRow {
+  id: string;
+  name: string;
+  /** Concept mastery now, 0 to 100. */
+  mastery: number;
+  /** The study day the concept is next due, or null without a card. */
+  due: string | null;
+}
+
+/** Tested concepts weakest first, then by id, each with its next-due study day in the reader's zone. */
+export function weakestConcepts(
+  ids: readonly string[],
+  names: ReadonlyMap<string, string>,
+  memory: MemoryState,
+  now: Date,
+): ConceptRow[] {
+  const tz = tzOffset(now);
+  return ids
+    .map((id) => {
+      const cm = memory.concepts.get(id);
+      const card = cm?.card ?? null;
+      return {
+        id,
+        name: names.get(id) ?? id,
+        mastery: Math.round(100 * conceptMastery(cm, now)),
+        due: card === null ? null : studyDayAt(new Date(card.due), tz),
+      };
+    })
+    .sort((a, b) => a.mastery - b.mastery || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+}
+
+/** `not studied`, `mastery 32 · due today` or `mastery 32 · due Oct 14` (date by `shortDate`). */
+export function conceptMeta(row: ConceptRow, today: string): string {
+  if (row.due === null) return 'not studied';
+  return `mastery ${row.mastery} · due ${row.due <= today ? 'today' : shortDate(row.due)}`;
+}
+
+/** The Boss section's line (spec 3.11 and 4.2): locked, passed, cooling down, or open. */
+export function bossLineOf(s: BossStatus, now: Date): string {
+  if (!s.unlocked) return 'Opens after you read every lesson of this module.';
+  const passed =
+    s.passed && s.passedAt !== null
+      ? `Passed on ${shortDate(studyDayAt(new Date(s.passedAt), tzOffset(now)))}.`
+      : null;
+  const cooling =
+    s.cooldownUntil === null
+      ? null
+      : `Next try in ${Math.max(1, Math.ceil((Date.parse(s.cooldownUntil) - now.getTime()) / HOUR_MS))} h.`;
+  // A passed boss that is cooling down says both, so the missing Start button always has its reason.
+  if (passed !== null || cooling !== null) return [passed, cooling].filter((x) => x !== null).join(' ');
+  return `${BOSS_SIZE} questions in ${BOSS_MINUTES} minutes; ${bossPassMark(BOSS_SIZE)} right to pass.`;
+}
+
+/** `Mastery 64 · solid`, with ` · boss passed` once the boss is passed (spec 7.3). */
+export function masteryLine(mastery: number, band: HexBand, bossPassed: boolean): string {
+  return `Mastery ${mastery} · ${BAND_LABEL[band]}${bossPassed ? ' · boss passed' : ''}`;
+}
+
+/** Recall bands for the lesson dots (spec 3.6): weak below 0.70, fading below 0.90, else strong. */
+export type RecallBand = 'none' | 'weak' | 'fading' | 'strong';
+
+export function recallBand(r: number | null): RecallBand {
+  if (r === null) return 'none';
+  if (r < 0.7) return 'weak';
+  if (r < 0.9) return 'fading';
+  return 'strong';
+}
+
+export const RECALL_LABEL: Record<RecallBand, string> = {
+  none: 'not studied',
+  weak: 'weak',
+  fading: 'fading',
+  strong: 'strong',
+};

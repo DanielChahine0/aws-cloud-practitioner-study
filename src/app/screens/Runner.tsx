@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { ContentIndex, ModuleChunk, QuestionView } from '../../../schemas/chunks.ts';
 import type { StudyEvent } from '../../../schemas/events.ts';
 import { SURE_HINT } from '../../engine/bets.ts';
@@ -18,17 +18,21 @@ import { ulid } from '../../store/ulid.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { now } from '../clock.ts';
-import { ensureModule, modules } from '../content.ts';
+import { ensureModule, examForms, modules } from '../content.ts';
 import { nothingDueLine } from '../home.ts';
 import { isControl, isTyping } from '../keyboard.ts';
-import { memory, memoryContent, queue } from '../memory.ts';
+import { learnPoolNow, practicePoolOf } from '../learn-pool.ts';
+import { memory, memoryContent, queue, taken } from '../memory.ts';
+import { weakestConcepts } from '../module.ts';
 import { neighbors } from '../nav.ts';
-import { newSessionSeed, progress, record, storeReady } from '../progress.ts';
+import { events, newSessionSeed, progress, record, storeReady } from '../progress.ts';
+import { badgeEarnedLine, badgesIn } from '../results.ts';
 import { pad2, toHash } from '../router.ts';
 import {
   canSubmit,
   displayOrder,
   endSummaryLine,
+  focusTitle,
   homedConcepts,
   isCorrect,
   leftId,
@@ -41,13 +45,13 @@ import { type RunnerCommand, runnerKey } from '../runner-keys.ts';
 import { highlight, navigate, overlay } from '../state.ts';
 import { NotFound } from './NotFound.tsx';
 
-type RunnerMode = 'check' | 'quiz' | 'review';
+type RunnerMode = 'check' | 'quiz' | 'focus' | 'review';
 type FlagReason = Extract<StudyEvent, { t: 'flag' }>['reason'];
 
 interface Props {
   idx: ContentIndex;
   mode: RunnerMode;
-  /** `m03/aws-lambda` for a lesson check, `m03` for a module quiz, `review` for a review. */
+  /** `m03/aws-lambda` for a lesson check, `m03` for a module quiz, `2.3` or `m03` for a focus quiz, `review` for a review. */
   scope: string;
 }
 
@@ -83,17 +87,19 @@ function markedMisconception(concept: string): boolean {
   return (memory.peek()?.concepts.get(memoryConcept(concept))?.misconception ?? null) !== null;
 }
 
-/** The selection pool of some chunks, with each concept as memory keys it. */
+/** The learn pool of some chunks plus the items of taken forms (spec 4.3), with each concept as memory keys it. */
 function poolOf(chunks: readonly ModuleChunk[]): PoolQuestion[] {
-  return chunks.flatMap((c) =>
-    c.questions.map((q) => ({
-      id: q.id,
-      concept: memoryConcept(q.concept),
-      note: q.note,
-      type: q.type,
-      module: c.module,
-    })),
-  );
+  return learnPoolNow(practicePoolOf(chunks, memoryConcept));
+}
+
+/** Every question a session may show: the loaded chunks' and the loaded chunks of taken forms. */
+function shippedOf(chunks: readonly ModuleChunk[]): Map<string, QuestionView> {
+  const out = new Map<string, QuestionView>();
+  for (const c of chunks) for (const q of c.questions) out.set(q.id, q);
+  for (const form of taken.value) {
+    for (const q of examForms.value.get(form)?.questions ?? []) out.set(q.id, q);
+  }
+  return out;
 }
 
 /** Starts the session of this mode and scope, or finds the one in progress; null when nothing can be asked. */
@@ -106,13 +112,8 @@ function startOrResume(
   const open = openSession(progress.peek(), mode, scope);
   if (open !== null) return open.sid;
   const seed = newSessionSeed();
-  const pool: PoolQuestion[] = chunk.questions.map((q) => ({
-    id: q.id,
-    concept: q.concept,
-    note: q.note,
-    type: q.type,
-    module: chunk.module,
-  }));
+  const module = Number(scope.slice(1, 3));
+  const pool = poolOf([chunk]).filter((q) => q.module === module);
   const slug = scope.split('/')[1] ?? '';
   const qids =
     mode === 'check'
@@ -129,12 +130,110 @@ function startOrResume(
   return sid;
 }
 
-/** The runner `#/s/check/mNN/<slug>`, `#/s/quiz/mNN` and `#/s/review`: one question at a time, then the end line. */
+/** The size of a focus quiz (spec 4.1). */
+const FOCUS_SIZE = 10;
+
+/** The concepts a focus quiz covers: a task statement's tested concepts, or a module's 10 weakest. */
+function focusConcepts(idx: ContentIndex, scope: string): string[] {
+  if (scope.startsWith('m')) {
+    const ids = idx.concepts.filter((c) => c.tested && c.home.startsWith(`${scope}/`)).map((c) => c.id);
+    const m = memory.peek();
+    if (m === null) return ids.slice(0, FOCUS_SIZE);
+    return weakestConcepts(ids, new Map(), m, now.peek())
+      .slice(0, FOCUS_SIZE)
+      .map((row) => row.id);
+  }
+  return idx.concepts.filter((c) => c.tested && c.tasks.includes(scope)).map((c) => c.id);
+}
+
+/** The runner `#/s/check/mNN/<slug>`, `#/s/quiz/mNN`, `#/s/focus/<scope>` and `#/s/review`. */
 export function Runner({ idx, mode, scope }: Props) {
-  return mode === 'review' ? (
-    <ReviewRunner idx={idx} />
-  ) : (
-    <ModuleRunner idx={idx} mode={mode} scope={scope} />
+  if (mode === 'review') return <ReviewRunner idx={idx} />;
+  if (mode === 'focus') return <FocusRunner idx={idx} scope={scope} />;
+  return <ModuleRunner idx={idx} mode={mode} scope={scope} />;
+}
+
+/** A focus quiz (spec 4.1): 10 items over a task's concepts or a module's weakest, loading every module it needs. */
+function FocusRunner({ idx, scope }: { idx: ContentIndex; scope: string }) {
+  const title = focusTitle(scope, idx.blueprint.tasks);
+  useTitle(title);
+  const module = scope.startsWith('m') ? Number(scope.slice(1)) : null;
+  const known =
+    module === null
+      ? idx.blueprint.tasks.some((t) => t.id === scope)
+      : idx.modules.some((m) => m.n === module);
+  const ready = storeReady.value;
+  const [concepts, setConcepts] = useState<readonly string[] | null>(null);
+  const [sid, setSid] = useState<string | null>(null);
+  const [empty, setEmpty] = useState(false);
+  const loaded = modules.value;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    if (known && ready && concepts === null) setConcepts(focusConcepts(idx, scope));
+  }, [known, ready, concepts, idx, scope]);
+  const wanted = useMemo(() => (concepts === null ? [] : modulesOf(concepts)), [concepts]);
+  useEffect(() => {
+    for (const n of wanted) ensureModule(n);
+  }, [wanted]);
+  const chunks = wanted.map((n) => loaded.get(n)).filter((c): c is ModuleChunk => c !== undefined);
+  const allLoaded = concepts !== null && chunks.length === wanted.length;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    if (!allLoaded || concepts === null || sid !== null || empty) return;
+    const open = openSession(progress.peek(), 'focus', scope);
+    if (open !== null) {
+      setSid(open.sid);
+      return;
+    }
+    const want = new Set(concepts);
+    const pool = poolOf(chunks).filter((q) => want.has(q.concept));
+    const seed = newSessionSeed();
+    const qids = selectQuiz({
+      pool,
+      progress: progress.peek(),
+      seed,
+      size: FOCUS_SIZE,
+      recall: conceptRecall,
+    });
+    if (qids.length === 0) {
+      setEmpty(true);
+      return;
+    }
+    const started = ulid();
+    void record({ t: 'session', sid: started, mode: 'focus', phase: 'start', scope, seed, qids });
+    setSid(started);
+  }, [allLoaded, concepts, sid, empty, scope, loaded]);
+
+  if (!known) return <NotFound hash={location.hash} />;
+  const short = module === null ? undefined : idx.modules.find((m) => m.n === module)?.short;
+  const crumbs = [
+    { label: 'Home', href: '#/' },
+    ...(module === null ? [] : [{ label: `Module ${module}: ${short ?? ''}`, href: `#/m/${pad2(module)}` }]),
+    { label: modeLabel('focus'), href: location.hash },
+  ];
+  const session = sid === null ? undefined : progress.value.sessions.get(sid);
+  return (
+    <>
+      <Breadcrumbs items={crumbs} />
+      <h1>{title}</h1>
+      {empty ? (
+        <p class="muted">No practice questions for this focus quiz yet.</p>
+      ) : !allLoaded || session === undefined ? (
+        <p class="muted">Loading</p>
+      ) : (
+        <Session
+          idx={idx}
+          shipped={shippedOf(chunks)}
+          pool={[]}
+          session={session}
+          mode="focus"
+          module={module}
+          slug={null}
+        />
+      )}
+    </>
   );
 }
 
@@ -189,7 +288,7 @@ function ModuleRunner({ idx, mode, scope }: { idx: ContentIndex; mode: 'check' |
       ) : (
         <Session
           idx={idx}
-          shipped={new Map(chunk.questions.map((q) => [q.id, q] as const))}
+          shipped={shippedOf([chunk])}
           pool={[]}
           session={session}
           mode={mode}
@@ -269,7 +368,7 @@ function ReviewRunner({ idx }: { idx: ContentIndex }) {
   }, [wanted, sid, loaded]);
 
   const session = sid === null ? undefined : progress.value.sessions.get(sid);
-  const shipped = new Map([...loaded.values()].flatMap((c) => c.questions.map((x) => [x.id, x] as const)));
+  const shipped = shippedOf([...loaded.values()]);
   // A resumed review can hold questions of modules not loaded yet; the index says which ids still ship.
   const missing = session?.qids.some((id) => id in idx.questionVersions && !shipped.has(id)) === true;
   useEffect(() => {
@@ -396,6 +495,7 @@ function EndLine({
         <p class="end-line" aria-live="polite">
           {line}
         </p>
+        <BadgeLine idx={idx} session={session} />
         <p class="review-done">Done for now.</p>
         <ul class="end-links">
           <li>
@@ -416,6 +516,7 @@ function EndLine({
       <p class="end-line" aria-live="polite">
         {line}
       </p>
+      <BadgeLine idx={idx} session={session} />
       <ul class="end-links">
         {mode === 'check' && slug !== null && module !== null ? (
           <>
@@ -427,6 +528,17 @@ function EndLine({
                 <a href={`#/m/${pad2(next.module)}/l/${next.slug}`}>Next lesson</a>
               </li>
             )}
+          </>
+        ) : mode === 'focus' ? (
+          <>
+            <li>
+              <a href={module === null ? '#/' : `#/m/${pad2(module)}`}>
+                {module === null ? 'Back to Home' : `Back to Module ${module}`}
+              </a>
+            </li>
+            <li>
+              <a href={toHash({ kind: 'focus', scope: session.scope })}>Another focus quiz</a>
+            </li>
           </>
         ) : module !== null ? (
           <>
@@ -441,6 +553,15 @@ function EndLine({
       </ul>
     </>
   );
+}
+
+/** `Badge: First Brew` under the end line when an event of this session earned a badge (spec 3.10). */
+function BadgeLine({ idx, session }: { idx: ContentIndex; session: SessionState }) {
+  const earned = memory.value?.badges;
+  if (earned === undefined) return null;
+  const ids = new Set(events.value.filter((e) => 'sid' in e && e.sid === session.sid).map((e) => e.id));
+  const names = badgesIn(earned, ids).map((id) => idx.badges.find((b) => b.id === id)?.name ?? id);
+  return names.length === 0 ? null : <p class="badge-line">{badgeEarnedLine(names)}</p>;
 }
 
 interface QuestionProps {

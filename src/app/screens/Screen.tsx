@@ -9,11 +9,10 @@ import { ModulePage } from './ModulePage.tsx';
 import { NotFound } from './NotFound.tsx';
 import { Runner } from './Runner.tsx';
 
-// Exam screens load on first use; Task 21 replaces the focus quiz placeholder with the runner.
+// Exam screens load on first use through import(), so their code stays out of the initial bundle.
 const ExamScreen = lazyScreen(() => import('./Exam.tsx').then((m) => m.Exam));
 const MocksScreen = lazyScreen(() => import('./Mocks.tsx').then((m) => m.Mocks));
 const ResultsScreen = lazyScreen(() => import('./Results.tsx').then((m) => m.Results));
-const FocusScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
 
 /** The screen for a route; the content index is always loaded by the time this renders. */
 export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
@@ -42,7 +41,7 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
     case 'mock':
       return <ExamScreen key={route} idx={idx} route={route} />;
     case 'focus':
-      return <FocusScreen key={route} title="Focus quiz" />;
+      return <Runner key={route} idx={idx} mode="focus" scope={route.scope} />;
     case 'results':
       return <ResultsScreen key={route} idx={idx} sid={route.sid} />;
     case 'not-found':
