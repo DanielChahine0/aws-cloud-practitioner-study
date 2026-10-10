@@ -45,7 +45,6 @@ import {
   EXPORT_PLAN,
   GRADE_GATE,
   gradeAnnouncement,
-  insertCitation,
   liveTicks,
   NO_PROJECT,
   type OpenCitation,
@@ -53,6 +52,7 @@ import {
   PROJECT_HEADINGS,
   PROJECT_LEDE,
   passLine,
+  pickCitation,
   READ_IN_NOTES,
   REVEAL_HEADING,
   revealRows,
@@ -396,6 +396,9 @@ function Editor({
   );
 }
 
+/** The keys the open `[[` list handles itself; every other key re-reads the citation at the caret on release. */
+const LIST_KEYS: ReadonlySet<string> = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
+
 /** The Why heading: citations by display name, a `[[` list of concept names, and the live citation lines. */
 function WhyField({
   label,
@@ -416,14 +419,22 @@ function WhyField({
   const options = open === null ? [] : suggestions(open.query, concepts);
   const listed = options.length > 0;
 
+  /** Reads the open citation at the caret; the highlighted row stays put while the citation is unchanged. */
   const track = (el: HTMLTextAreaElement): void => {
-    setOpen(openCitation(el.value, el.selectionStart));
+    const now = openCitation(el.value, el.selectionStart);
+    if (now !== null && open !== null && now.start === open.start && now.query === open.query) return;
+    setOpen(now);
     setActive(0);
   };
   const pick = (c: ConceptName): void => {
     const el = area.current;
     if (el === null || open === null) return;
-    const next = insertCitation(el.value, el.selectionStart, open, c.name);
+    const next = pickCitation(el.value, el.selectionStart, open, c.name);
+    if (next === null) {
+      // The caret moved where the list did not see it: close the list and leave the text alone.
+      setOpen(null);
+      return;
+    }
     // Set the text and the caret now, not in a later frame: keys typed right after a pick must land after the name.
     el.value = next.text;
     el.setSelectionRange(next.caret, next.caret);
@@ -464,6 +475,10 @@ function WhyField({
         }}
         onClick={(event) => track(event.currentTarget)}
         onKeyDown={onKeyDown}
+        onKeyUp={(event) => {
+          // End, Home, the arrows and the like move the caret without an input event: re-read the citation there.
+          if (!LIST_KEYS.has(event.key)) track(event.currentTarget);
+        }}
         onBlur={() => setOpen(null)}
       />
       {listed && (

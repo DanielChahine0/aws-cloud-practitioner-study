@@ -142,6 +142,22 @@ export function insertCitation(
   };
 }
 
+/**
+ * The pick the `[[` list makes: the name goes in only while the caret still ends the open citation the list shows.
+ * A caret the list did not see move (End, ArrowLeft, a click) gets null, so a stale pick never rewrites the text
+ * between the `[[` and the new caret.
+ */
+export function pickCitation(
+  text: string,
+  caret: number,
+  open: OpenCitation,
+  name: string,
+): { text: string; caret: number } | null {
+  const live = openCitation(text, caret);
+  if (live === null || live.start !== open.start || live.query !== open.query) return null;
+  return insertCitation(text, caret, open, name);
+}
+
 /** One key point as the reveal shows it: display names only, the evidence line as a quote, and the tick. */
 export interface RevealRow {
   id: string;
