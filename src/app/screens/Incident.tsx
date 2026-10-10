@@ -1,6 +1,7 @@
 /** The daily incident (spec 4.1, 4.5): today's offered incident, run step by step in the Runner's Session. */
 import { useEffect, useState } from 'preact/hooks';
 import type { ContentIndex, IncidentView, QuestionView } from '../../../schemas/chunks.ts';
+import { studyDay } from '../../engine/day.ts';
 import { INCIDENT_UNLOCK_MODULE } from '../../engine/incident.ts';
 import { openSession } from '../../engine/replay.ts';
 import { ulid } from '../../store/ulid.ts';
@@ -39,20 +40,24 @@ function startOrResume(incident: IncidentView): string {
 export function Incident({ idx }: { idx: ContentIndex }) {
   const ready = storeReady.value;
   const p = progress.value;
+  const day = studyDay(now.value);
   const today = ready ? incidentNow.value : null;
-  const meta = today === null ? undefined : idx.incidents.find((i) => i.id === today.incident);
+  const [sid, setSid] = useState<string | null>(null);
+  const session = sid === null ? undefined : p.sessions.get(sid);
+  // A run keeps its own incident, so a study day that rolls over at 04:00 never swaps or drops it while it is open.
+  const id = session?.scope ?? today?.incident;
+  const meta = id === undefined ? undefined : idx.incidents.find((i) => i.id === id);
   const home = meta?.modules[0];
   useTitle(meta?.title ?? 'Incident');
-  // A direct visit on a new day offers today's incident as Home would.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  // A direct visit, or a screen left open into a new study day, offers that day's incident as Home would.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes values read from signals for constants; the store's readiness and the study day change, and each change offers again
   useEffect(() => {
-    if (ready) void offerIncident(now.value);
-  }, [ready]);
+    if (ready) void offerIncident(now.peek());
+  }, [ready, day]);
   useEffect(() => {
     if (home !== undefined) ensureModule(home);
   }, [home]);
 
-  const [sid, setSid] = useState<string | null>(null);
   const view =
     home === undefined ? undefined : modules.value.get(home)?.incidents.find((i) => i.id === meta?.id);
   // A solve keeps its end line on screen until Dani leaves; a later visit shows the solved line instead.
@@ -61,7 +66,6 @@ export function Incident({ idx }: { idx: ContentIndex }) {
     if (startable !== undefined) setSid(startOrResume(startable));
   }, [startable]);
 
-  const session = sid === null ? undefined : p.sessions.get(sid);
   if (meta !== undefined && view !== undefined && session !== undefined) {
     const shipped = new Map<string, QuestionView>(view.steps.map((s) => [s.id, s]));
     return (
