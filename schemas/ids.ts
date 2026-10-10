@@ -27,3 +27,13 @@ export const BADGE_IDS = [
   'architect',
 ] as const;
 export type BadgeIdValue = (typeof BADGE_IDS)[number];
+
+/** The lab engines Phase 4 ships (spec 5.1); Place, Trace and Investigate arrive in Phase 5. */
+export const LAB_ENGINES = ['sort', 'configure', 'simulate'] as const;
+export type LabEngineId = (typeof LAB_ENGINES)[number];
+
+/** A lab id: `lab-mNN-<slug>`, where NN is the lab's module (spec 1.2). */
+export const LAB_ID = /^lab-m(0[1-9]|1[0-3])-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** An incident id: `inc-NNN` (spec 1.2). */
+export const INCIDENT_ID = /^inc-\d{3}$/;

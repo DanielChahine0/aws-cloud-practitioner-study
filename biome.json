@@ -65,6 +65,51 @@
           }
         }
       }
+    },
+    {
+      "includes": ["src/labs/**/*.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "preact": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "preact/hooks": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "@preact/signals": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "zod": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "zod/mini": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)"
+                },
+                "patterns": [
+                  {
+                    "group": ["**/app/**", "**/ui/**", "**/store/**"],
+                    "message": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)"
+                  }
+                ]
+              }
+            },
+            "noRestrictedGlobals": {
+              "level": "error",
+              "options": {
+                "deniedGlobals": {
+                  "window": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "document": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "navigator": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "location": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "indexedDB": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "localStorage": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "sessionStorage": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "fetch": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "globalThis": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "self": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)",
+                  "crypto": "src/labs models are pure: no UI, store, DOM or zod (spec 1.1)"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   ]
 }
