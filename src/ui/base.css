@@ -1407,6 +1407,16 @@ tr.evidence > :first-child {
   border-radius: 6px;
 }
 
+/*
+ * WebKit never matches :focus-visible on a date field's parts, and on Chromium's calendar button the field matches
+ * only :focus-within, so the field rings on both; a typed field shows its focus on click too, like any text box.
+ */
+.date-field input:focus,
+.date-field input:focus-within {
+  outline: 2px solid var(--active);
+  outline-offset: 2px;
+}
+
 @media (min-width: 600px) {
   .hexes {
     --hex: 72px;
