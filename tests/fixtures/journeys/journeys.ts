@@ -35,6 +35,36 @@ class Journey {
     return this;
   }
 
+  /** A lab completion with the hints opened during the run, at `rev` 1. */
+  lab(at: string, id: string, hints: number): this {
+    this.push(new Date(at), { t: 'lab.done', lab: id, rev: 1, hints });
+    return this;
+  }
+
+  /** A lab's debrief: a `debrief` session scoped to the lab, one answer per concept, then the submit. */
+  debrief(at: string, labId: string, concepts: readonly string[], script: Script = {}): this {
+    return this.session(at, 'debrief', labId, concepts, script);
+  }
+
+  /**
+   * Today's incident: the offer at `at`, a minute later the incident session with one step per concept (all right
+   * when `firstTry`, else the last step wrong and not Sure), and the `incident.done` right after its submit.
+   */
+  incident(at: string, id: string, steps: readonly string[], firstTry: boolean): this {
+    const start = this.push(new Date(at), { t: 'incident.offered', incident: id });
+    const last = steps[steps.length - 1] ?? '';
+    this.session(
+      start.toISOString(),
+      'incident',
+      id,
+      steps,
+      firstTry ? {} : { wrong: [last], notSure: [last] },
+    );
+    const done = new Date(start.getTime() + (steps.length + 2) * 60_000);
+    this.push(done, { t: 'incident.done', incident: id, firstTry });
+    return this;
+  }
+
   examDate(at: string, examDate: string | null): this {
     this.push(new Date(at), { t: 'settings', patch: { examDate } });
     return this;
@@ -258,5 +288,39 @@ export function comebackTenDays(): StudyEvent[] {
     });
   }
   j.session('2026-10-27T09:00:00.000Z', 'review', 'review', all.slice(0, 10), { variant: 'b' }, true);
+  return j.events();
+}
+
+/**
+ * Five days from Monday, October 19: Modules 1 to 3 read and checked, then each module's two core labs, each
+ * followed by its debrief over two concepts; one lab with a hint, a rerun of a done lab on day two, a solved
+ * incident on October 21, a day whose only completion is a lab (October 22) and a day of a rerun alone
+ * (October 23), which does not qualify.
+ */
+export function handsOnWeek(): StudyEvent[] {
+  const j = new Journey();
+  for (let module = 1; module <= 3; module++) {
+    const day = addDays('2026-10-19', module - 1);
+    j.read(`${day}T08:00:00.000Z`, lessonNote(module, 1));
+    j.read(`${day}T08:20:00.000Z`, lessonNote(module, 2));
+    j.session(`${day}T08:40:00.000Z`, 'check', lessonNote(module, 1), lessonConcepts(module, 1));
+  }
+  j.lab('2026-10-19T10:00:00.000Z', 'lab-m01-a', 0);
+  j.debrief('2026-10-19T10:01:00.000Z', 'lab-m01-a', [conceptId(1, 1), conceptId(1, 6)], {
+    wrong: [conceptId(1, 6)],
+  });
+  j.lab('2026-10-20T10:00:00.000Z', 'lab-m01-b', 1);
+  j.debrief('2026-10-20T10:01:00.000Z', 'lab-m01-b', [conceptId(1, 2), conceptId(1, 7)], {
+    notSure: [conceptId(1, 7)],
+  });
+  j.lab('2026-10-20T11:00:00.000Z', 'lab-m01-a', 0);
+  j.debrief('2026-10-20T11:01:00.000Z', 'lab-m01-a', [conceptId(1, 1), conceptId(1, 6)]);
+  j.lab('2026-10-21T10:00:00.000Z', 'lab-m02-a', 0);
+  j.debrief('2026-10-21T10:01:00.000Z', 'lab-m02-a', [conceptId(2, 1), conceptId(2, 6)]);
+  j.lab('2026-10-21T11:00:00.000Z', 'lab-m02-b', 0);
+  j.debrief('2026-10-21T11:01:00.000Z', 'lab-m02-b', [conceptId(2, 2), conceptId(2, 7)]);
+  j.lab('2026-10-22T10:00:00.000Z', 'lab-m03-a', 2);
+  j.lab('2026-10-23T10:00:00.000Z', 'lab-m02-a', 0);
+  j.incident('2026-10-21T12:00:00.000Z', 'inc-001', [conceptId(2, 3), conceptId(2, 8)], true);
   return j.events();
 }

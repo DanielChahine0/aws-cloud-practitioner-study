@@ -7,6 +7,7 @@ import { Concept } from '../../../schemas/concept.ts';
 import { Forms, Quotas } from '../../../schemas/exam.ts';
 import { FingerprintFile } from '../../../schemas/fingerprint.ts';
 import { type Badge, Badges, type Rank, Ranks } from '../../../schemas/game.ts';
+import { LabFile } from '../../../schemas/lab.ts';
 import { MissionFrontmatter } from '../../../schemas/mission.ts';
 import { LessonFrontmatter, ModuleFrontmatter } from '../../../schemas/note.ts';
 import { Question, QuestionFile } from '../../../schemas/question.ts';
@@ -69,6 +70,14 @@ export interface QuestionEntry {
   q: Question;
 }
 
+/** One lab file that passed the schema, its folder module and its file slug (spec 5.1). */
+export interface LabEntry {
+  path: string;
+  module: number;
+  slug: string;
+  lab: LabFile;
+}
+
 /** One module's committed fingerprints: its two shingle sets, which hold each course shingle once between all modules (spec 2.5). */
 export interface ModulePrints {
   text: HashSet;
@@ -92,6 +101,8 @@ export interface Context {
   missions: readonly Mission[];
   /** Questions that passed the schema, practice files and exam-pool files alike, in file then item order. */
   questions: readonly QuestionEntry[];
+  /** Labs that passed the schema and sit in their module folder under their own id, in file order. */
+  labs: readonly LabEntry[];
   /** content/exam/quotas.yaml, or null when it is absent or invalid. */
   quotas: Quotas | null;
   /** content/exam/forms.yaml, or null when it is absent or invalid. */
@@ -117,6 +128,7 @@ export const QUOTAS_FILE = 'content/exam/quotas.yaml';
 export const FORMS_FILE = 'content/exam/forms.yaml';
 export const RANKS_FILE = 'content/game/ranks.yaml';
 export const BADGES_FILE = 'content/game/badges.yaml';
+export const LABS_DIR = 'content/labs';
 
 /** The question file of a lesson note: resources/NN-module/LL-lesson.md keeps its questions in content/questions/NN-module/LL-lesson.yaml. */
 export function questionFileOf(lessonPath: string): string {
@@ -128,6 +140,7 @@ const SHARED = /^resources\/[^/]+\.md$/;
 const MISSION = /^content\/missions\/(mission-\d{2})-[a-z0-9-]+\.md$/;
 const PRINTS = /^content\/fingerprints\/m(\d{2})\.json$/;
 const POOL = /^content\/exam\/pool\/(\d{2})-[a-z0-9-]+\.yaml$/;
+const LAB = /^content\/labs\/(\d{2})-[a-z0-9-]+\/([a-z0-9-]+)\.yaml$/;
 const SKIP_DIRS = new Set([
   '.git',
   'node_modules',
@@ -361,6 +374,34 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     }
   };
 
+  const labs: LabEntry[] = [];
+  /** Loads one lab file; the lab joins `labs` only when it passes the schema and matches its folder and file name. */
+  const loadLab = (path: string, folder: number, slug: string): void => {
+    const data = yamlFile(path);
+    if (data === undefined) return;
+    const parsed = LabFile.safeParse(data);
+    if (!parsed.success) {
+      schemaErrors(path, parsed.error.issues);
+      return;
+    }
+    const lab = parsed.data;
+    const nn = String(folder).padStart(2, '0');
+    if (lab.module !== folder) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message: `lab module ${lab.module} does not match its folder ${nn}`,
+      });
+      return;
+    }
+    const id = `lab-m${nn}-${slug}`;
+    if (lab.id !== id) {
+      errors.push({ rule: 'R1', file: path, message: `lab id must be ${id}` });
+      return;
+    }
+    labs.push({ path, module: folder, slug, lab });
+  };
+
   let config: ValidateConfig | null = null;
   const configData = yamlFile(CONFIG_FILE);
   if (configData !== undefined) {
@@ -449,6 +490,19 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       loadQuestions(path, Number(poolFile[1]), 'exam');
       continue;
     }
+    const labFile = LAB.exec(path);
+    if (labFile) {
+      loadLab(path, Number(labFile[1]), labFile[2] ?? '');
+      continue;
+    }
+    if (path.startsWith(`${LABS_DIR}/`)) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message: 'content/labs holds lab YAML files in NN-module folders only',
+      });
+      continue;
+    }
     if (path.startsWith(`${POOL_DIR}/`)) {
       errors.push({
         rule: 'R1',
@@ -502,6 +556,7 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     blueprint,
     missions,
     questions,
+    labs,
     quotas,
     forms,
     ranks,

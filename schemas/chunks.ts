@@ -36,6 +36,8 @@ export interface ConceptMeta {
   aliases: string[];
   /** The old concept this one was split from; replay copies its card (spec 2.4). */
   splitFrom: string | null;
+  /** Live lab ids that name this concept (spec 2.4 reverse links); present only when there is one, to keep the index small. */
+  labs?: string[];
 }
 
 export interface GlossaryItem {
@@ -114,6 +116,33 @@ export interface QuestionView {
   read: { route: string; text: string };
 }
 
+/** A live lab as Home, the module page and badges need it without its chunk (spec 5). */
+export interface LabMeta {
+  id: string;
+  module: number;
+  engine: 'sort' | 'configure' | 'simulate';
+  tier: 'core' | 'stretch';
+  rev: number;
+  title: string;
+  minutes: number;
+}
+
+/**
+ * A live lab as the lab screen runs it: the engine spec with its defaults applied, never the solution or the wrong
+ * paths (spec 5.1). Text is plain, and `credits` asks the screen to label prices as lab credits.
+ */
+export interface LabView extends LabMeta {
+  concepts: string[];
+  brief: string;
+  spec: unknown;
+  goals: { id: string; label: string; hint: string }[];
+  /** "Read in notes" links: each cited note's route and lesson title. */
+  notes: { route: string; title: string }[];
+  /** The debrief lines and its 2 to 3 live practice questions, in file order. */
+  debrief: { lines: string[]; questions: QuestionView[] };
+  credits: boolean;
+}
+
 /** content/mNN.<hash>.json */
 export interface ModuleChunk {
   module: number;
@@ -121,10 +150,12 @@ export interface ModuleChunk {
   lessons: Record<string, LessonChunk>;
   /** Live practice questions of the module's lessons, in note order then id. */
   questions: QuestionView[];
+  /** The module's live labs, core before stretch, then by id. */
+  labs: LabView[];
 }
 
 export interface SearchEntry {
-  kind: 'module' | 'lesson' | 'concept' | 'term' | 'mission';
+  kind: 'module' | 'lesson' | 'concept' | 'term' | 'mission' | 'lab';
   title: string;
   detail: string;
   route: string;
@@ -211,4 +242,6 @@ export interface ContentIndex {
   badges: BadgeView[];
   /** The mock forms and their item refs; form items never appear in `questionVersions`, a module chunk or search. */
   exam: { forms: ExamFormMeta[]; items: Record<string, ExamItemRef> };
+  /** Every live lab, in module order, core before stretch, then by id. */
+  labs: LabMeta[];
 }

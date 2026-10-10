@@ -173,6 +173,9 @@
     ]
   ],
   "flags": 0,
+  "incidentsDone": [],
+  "incidentsOffered": [],
+  "labsDone": [],
   "lastShown": [
     [
       "per-minute-rental",

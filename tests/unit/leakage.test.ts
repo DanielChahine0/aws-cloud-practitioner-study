@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import type { ModuleChunk } from '../../schemas/chunks.ts';
+import { buildContent } from '../../scripts/content/build.ts';
+import { loadContext } from '../../scripts/content/lib/context.ts';
 import { bossDraw } from '../../src/engine/boss.ts';
 import { derive, type Progress, practiceForms, takenForms } from '../../src/engine/replay.ts';
 import {
@@ -9,8 +12,11 @@ import {
   selectCheck,
   selectQuiz,
 } from '../../src/engine/select.ts';
+import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
 import { eventsOf, SID } from '../fixtures/events.ts';
+import { bakeryLab, writeLab } from '../fixtures/labs.ts';
 import { abandonOf, examStartOf, submitOf } from '../fixtures/memory.ts';
+import { singleQuestion, writePool } from '../fixtures/questions.ts';
 
 /**
  * The leakage test (spec 4.3 and 9, an exit criterion of Phase 3): no learn-mode selector ever returns an item
@@ -111,5 +117,23 @@ describe('leakage (spec 4.3)', () => {
       examStartOf(SID, 'mock', ['xb-bake-01-01'], { form: 'remix', deadline: '2026-10-27T11:30:00.000Z' }),
     );
     expect([...takenForms(derive(remix, null))]).toEqual([]);
+  });
+});
+
+describe('lab debriefs never carry an exam item (spec 5.1)', () => {
+  it('ships only live practice questions in a debrief, and refuses an exam id without its text', () => {
+    const root = makeFixtureRoot();
+    const exam = singleQuestion({ id: 'q-9d4r6t', pool: 'exam', status: 'live' });
+    writePool(root, [exam]);
+    const built = buildContent(loadContext(root, { today: FIXTURE_TODAY }));
+    const index = JSON.parse(built.files.get(built.indexFile) ?? 'null') as { modules: { chunk: string }[] };
+    const chunk = JSON.parse(built.files.get(index.modules[0]?.chunk ?? '') ?? 'null') as ModuleChunk;
+    expect(chunk.labs.flatMap((l) => l.debrief.questions.map((q) => q.id))).toEqual(['q-b4k7m2', 'q-d9p4r6']);
+    expect([...built.files.values()].join('\n')).not.toContain(exam.stem);
+
+    writeLab(root, bakeryLab({ debrief: { ...bakeryLab().debrief, questions: ['q-b4k7m2', 'q-9d4r6t'] } }));
+    expect(() => buildContent(loadContext(root, { today: FIXTURE_TODAY }))).toThrow(
+      /^lab-m01-sort-the-bakes: debrief question q-9d4r6t is not a live practice question; run pnpm content:validate$/,
+    );
   });
 });

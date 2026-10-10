@@ -142,6 +142,7 @@ describe('labels', () => {
     expect(modeLabel('check')).toBe('Lesson check');
     expect(modeLabel('quiz')).toBe('Module quiz');
     expect(modeLabel('review')).toBe('Review');
+    expect(modeLabel('debrief')).toBe('Lab debrief');
   });
 
   it('announces the verdict with the XP of the answer, and the verdict alone at 0 XP', () => {

@@ -4,17 +4,28 @@ import type { BossStatus } from '../../src/engine/boss.ts';
 import { mockDeadline } from '../../src/engine/mock.ts';
 import {
   extras,
+  incidentToday,
   type LessonRef,
+  MAX_EXTRAS,
   MOCK_AFTER_BOSSES,
   MOCK_GAP_DAYS,
   type NextInput,
   nextAction,
   nextMinutes,
+  weakestLab,
 } from '../../src/engine/next.ts';
 import type { ReviewQueue } from '../../src/engine/queue.ts';
 import { derive } from '../../src/engine/replay.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, examStartOf, startOf, submitOf } from '../fixtures/memory.ts';
+import {
+  answerOf,
+  at,
+  examStartOf,
+  incidentDoneOf,
+  incidentOfferedOf,
+  startOf,
+  submitOf,
+} from '../fixtures/memory.ts';
 
 const lesson = (module: number, slug: string, first: boolean, checkConcepts: number): LessonRef => ({
   note: `m${String(module).padStart(2, '0')}/${slug}`,
@@ -242,7 +253,17 @@ describe('extras (spec 4.6)', () => {
     bosses: [number, BossStatus][],
     log: readonly (readonly [string, NewEvent])[] = [],
     today = '2026-10-10',
-  ) => extras({ bosses: new Map(bosses), progress: derive(timelineOf(log), null), today, now: NOW });
+    lab: { lab: string; module: number } | null = null,
+    incident: string | null = null,
+  ) =>
+    extras({
+      bosses: new Map(bosses),
+      progress: derive(timelineOf(log), null),
+      today,
+      now: NOW,
+      lab,
+      incident,
+    });
   const mockOn = (sid: string, form: string, day: string) => {
     const start = at(day, 9);
     return [
@@ -259,6 +280,21 @@ describe('extras (spec 4.6)', () => {
       BossStatus,
     ][];
     expect(extrasOf(bosses)).toEqual([
+      { kind: 'boss', module: 8 },
+      { kind: 'mock', form: 'A' },
+    ]);
+  });
+
+  it('orders a boss, a mock and then a lab, and stops at two', () => {
+    expect(MAX_EXTRAS).toBe(2);
+    const lab = { lab: 'lab-m02-a', module: 2 };
+    expect(extrasOf([], [], '2026-10-10', lab)).toEqual([{ kind: 'lab', lab: 'lab-m02-a', module: 2 }]);
+    expect(extrasOf([[8, status({ ready: true })]], [], '2026-10-10', lab)).toEqual([
+      { kind: 'boss', module: 8 },
+      { kind: 'lab', lab: 'lab-m02-a', module: 2 },
+    ]);
+    const bosses = [...passedUpTo(7), [8, status({ ready: true })]] as [number, BossStatus][];
+    expect(extrasOf(bosses, [], '2026-10-10', lab)).toEqual([
       { kind: 'boss', module: 8 },
       { kind: 'mock', form: 'A' },
     ]);
@@ -299,6 +335,42 @@ describe('extras (spec 4.6)', () => {
     ];
     expect(extrasOf(passedUpTo(13), all)).toEqual([]);
   });
+
+  it("puts today's incident first, then a ready boss or the lab, and stops at two", () => {
+    expect(MAX_EXTRAS).toBe(2);
+    const bosses = [...passedUpTo(7), [8, status({ ready: true })]] as [number, BossStatus][];
+    expect(extrasOf(bosses, [], '2026-10-10', null, 'inc-003')).toEqual([
+      { kind: 'incident', incident: 'inc-003' },
+      { kind: 'boss', module: 8 },
+    ]);
+    expect(extrasOf([], [], '2026-10-10', null, 'inc-003')).toEqual([
+      { kind: 'incident', incident: 'inc-003' },
+    ]);
+    const lab = { lab: 'lab-m02-a', module: 2 };
+    expect(extrasOf([], [], '2026-10-10', lab, 'inc-003')).toEqual([
+      { kind: 'incident', incident: 'inc-003' },
+      { kind: 'lab', lab: 'lab-m02-a', module: 2 },
+    ]);
+  });
+});
+
+describe('incidentToday', () => {
+  const progressOf = (log: readonly (readonly [string, NewEvent])[]) => derive(timelineOf(log), null);
+
+  it('reads the first offer of the study day and whether it is solved', () => {
+    const offered = [
+      [at('2026-10-10', 9), incidentOfferedOf('inc-002')],
+      [at('2026-10-10', 9, 5), incidentOfferedOf('inc-007')],
+    ] as const;
+    expect(incidentToday(progressOf(offered), '2026-10-10')).toEqual({ incident: 'inc-002', done: false });
+    const solved = [...offered, [at('2026-10-10', 11), incidentDoneOf('inc-002', true)]] as const;
+    expect(incidentToday(progressOf(solved), '2026-10-10')).toEqual({ incident: 'inc-002', done: true });
+  });
+
+  it('is null on a day with no offer, whatever came before', () => {
+    const log = [[at('2026-10-09', 9), incidentOfferedOf('inc-002')]] as const;
+    expect(incidentToday(progressOf(log), '2026-10-10')).toBeNull();
+  });
 });
 
 describe('nextMinutes', () => {
@@ -319,5 +391,100 @@ describe('nextMinutes', () => {
     const s = progress.sessions.get(SID);
     if (!s) throw new Error('no session');
     expect(nextMinutes({ kind: 'resume', session: s, left: 3 })).toBe(2);
+  });
+});
+
+describe('weakestLab (spec 4.6)', () => {
+  const LABS = [
+    { id: 'lab-m01-a', module: 1 },
+    { id: 'lab-m01-b', module: 1 },
+    { id: 'lab-m02-a', module: 2 },
+    { id: 'lab-m02-b', module: 2 },
+    { id: 'lab-m03-a', module: 3 },
+  ];
+  const pick = (done: readonly string[], mastery: [number, number][], read: readonly number[]) =>
+    weakestLab({
+      labs: LABS,
+      done: new Set(done),
+      mastery: new Map(mastery),
+      lessonsRead: (module) => read.includes(module),
+    });
+
+  it('picks the first undone lab of the read module with the lowest mastery', () => {
+    expect(
+      pick(
+        [],
+        [
+          [1, 70],
+          [2, 40],
+          [3, 90],
+        ],
+        [1, 2, 3],
+      ),
+    ).toEqual({ lab: 'lab-m02-a', module: 2 });
+    expect(
+      pick(
+        ['lab-m02-a'],
+        [
+          [1, 70],
+          [2, 40],
+          [3, 90],
+        ],
+        [1, 2, 3],
+      ),
+    ).toEqual({ lab: 'lab-m02-b', module: 2 });
+  });
+
+  it('skips unread modules and modules whose labs are all done', () => {
+    expect(
+      pick(
+        [],
+        [
+          [1, 70],
+          [2, 40],
+          [3, 90],
+        ],
+        [1, 3],
+      ),
+    ).toEqual({ lab: 'lab-m01-a', module: 1 });
+    expect(
+      pick(
+        ['lab-m02-a', 'lab-m02-b'],
+        [
+          [1, 70],
+          [2, 40],
+          [3, 90],
+        ],
+        [1, 2, 3],
+      ),
+    ).toEqual({
+      lab: 'lab-m01-a',
+      module: 1,
+    });
+    expect(pick([], [], [])).toBeNull();
+  });
+
+  it('breaks a mastery tie toward the lower module, and reads a missing mastery as 0', () => {
+    expect(
+      pick(
+        [],
+        [
+          [1, 50],
+          [2, 50],
+          [3, 50],
+        ],
+        [1, 2, 3],
+      ),
+    ).toEqual({ lab: 'lab-m01-a', module: 1 });
+    expect(
+      pick(
+        [],
+        [
+          [1, 50],
+          [2, 50],
+        ],
+        [1, 2, 3],
+      ),
+    ).toEqual({ lab: 'lab-m03-a', module: 3 });
   });
 });

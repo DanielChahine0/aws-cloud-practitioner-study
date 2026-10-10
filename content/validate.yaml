@@ -1,7 +1,8 @@
 # Active validator rules and R10 switches, raised phase by phase (spec 2.9).
 # Phase 0: R1, R2, R6, R7, R8 and R13; Phase 1 adds R3, R4, R5 and R9; Phase 2 adds R10.
 # Phase 3 adds R12 and examQuotas, once forms A to D are frozen; a rule once on stays on.
-rules: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R12, R13]
+# Phase 4 adds R11.
+rules: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13]
 practicePerConcept: 2
 examQuotas: true
 blueprintTerms: true

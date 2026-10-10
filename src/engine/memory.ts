@@ -9,6 +9,7 @@ import {
   CHANGED_MIND,
   CLEAN_QUEUE,
   CORE_LABS,
+  CORE_LABS_PER_MODULE,
   calibrationOf,
   decisionPasses,
   domainScores,
@@ -31,13 +32,14 @@ import { effortBonus, XP } from './xp.ts';
  * It sits beside `derive` because it needs the content, while `derive` must work without it.
  */
 
-/** The modes whose answers count toward memory (spec 3.1); lightning, bosses and mocks do not. */
+/** The modes whose answers count toward memory (spec 3.1), lab debriefs among them; lightning, bosses and mocks do not. */
 export const COUNTING_MODES: ReadonlySet<Mode> = new Set<Mode>([
   'check',
   'quiz',
   'focus',
   'review',
   'incident',
+  'debrief',
 ]);
 
 /**
@@ -101,7 +103,7 @@ export interface ConceptMemory {
 export interface MemoryState {
   concepts: ReadonlyMap<string, ConceptMemory>;
   xp: number;
-  /** Answer and lesson events that earned XP, by event id; events that earned 0 are absent. */
+  /** Answer, lesson, lab, incident and exam events that earned XP, by event id; events that earned 0 are absent. */
   xpByEvent: ReadonlyMap<string, number>;
   xpByDay: ReadonlyMap<string, number>;
   /** Every question id answered in any mode. */
@@ -401,6 +403,8 @@ function replay(
   const clearedMarks = new Set<string>();
   const longCards = new Set<string>();
   const labsDone = new Set<string>();
+  /** Study days whose incident XP is paid; one incident pays per day (spec 3.2). */
+  const incidentPaidDays = new Set<string>();
   const missionCleaned = new Map<string, string>();
   const missionsClosed = new Set<string>();
   const finalDecisions = new Map<number, readonly number[]>();
@@ -697,11 +701,21 @@ function replay(
     if (domains.every((d) => d.total > 0 && d.correct / d.total >= EVEN_KEEL)) grant('even-keel', e);
   };
 
+  /**
+   * A lab's first completion pays 30, plus 10 without hints, and qualifies the day, whatever its `rev`;
+   * later completions pay nothing and qualify nothing (spec 3.2, 8.4).
+   * Hands On counts a module only once it lists its two core labs and both are done.
+   */
   const applyLab = (e: Extract<StudyEvent, { t: 'lab.done' }>) => {
+    if (labsDone.has(e.lab)) return;
+    earn(e, XP.lab + (e.hints === 0 ? XP.labNoHints : 0));
+    completion = true;
     labsDone.add(e.lab);
     const modules = [...content.coreLabs.values()];
     const done = (labs: readonly string[]) => labs.every((lab) => labsDone.has(lab));
-    if (modules.filter((labs) => labs.length > 0 && done(labs)).length >= HANDS_ON_MODULES)
+    if (
+      modules.filter((labs) => labs.length >= CORE_LABS_PER_MODULE && done(labs)).length >= HANDS_ON_MODULES
+    )
       grant('hands-on', e);
     const all = modules.flat();
     if (all.length >= CORE_LABS && done(all)) grant('lab-complete', e);
@@ -782,6 +796,13 @@ function replay(
         break;
       case 'lab.done':
         applyLab(e);
+        break;
+      case 'incident.done':
+        if (!incidentPaidDays.has(e.day)) {
+          incidentPaidDays.add(e.day);
+          earn(e, e.firstTry === true ? XP.incidentPerfect : XP.incident);
+        }
+        completion = true;
         break;
       case 'mission':
         applyMission(e);

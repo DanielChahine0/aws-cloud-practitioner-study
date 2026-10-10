@@ -142,6 +142,9 @@
   "eventCount": 11,
   "exams": [],
   "flags": 0,
+  "incidentsDone": [],
+  "incidentsOffered": [],
+  "labsDone": [],
   "lastShown": [
     [
       "per-minute-rental",

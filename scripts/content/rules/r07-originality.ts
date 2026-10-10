@@ -8,6 +8,7 @@ import {
   shareAgainst,
   shingleWindows,
 } from '../lib/fingerprint.ts';
+import { labTexts } from '../lib/labs.ts';
 import { mask, stripMarkdown, words } from '../lib/text.ts';
 import { finding, type Rule } from './rule.ts';
 
@@ -44,8 +45,9 @@ function maximalRuns(runs: Iterable<string>): string[] {
 /**
  * R7 Originality: against the committed fingerprints, notes have no copied 9-word run and at most 8% shared 6-word
  * sequences, and live questions have no 9-word run anywhere in the course and pass the stem check against each
- * module's knowledge checks and assessment items. The one-set rule stores some of a module's item shingles in other
- * modules' `items` sets, so the stem check reads a module's items set together with those (spec 2.5).
+ * module's knowledge checks and assessment items; live lab text has no 9-word run anywhere in the course. The
+ * one-set rule stores some of a module's item shingles in other modules' `items` sets, so the stem check reads a
+ * module's items set together with those (spec 2.5).
  */
 export const r07: Rule = {
   id: 'R7',
@@ -142,6 +144,14 @@ export const r07: Rule = {
         );
       }
       for (const message of shares) report(message);
+    }
+
+    // Lab text gets the same no-run check as question text (a deliberate extension of spec R7: lab text is original).
+    for (const { path, lab } of ctx.labs) {
+      if (lab.status !== 'live') continue;
+      for (const run of new Set(labTexts(lab).map(tokensOf).flatMap(courseRuns))) {
+        out.push(finding('R7', path, `${lab.id} copies a 9-word run from the course: "${run}"`));
+      }
     }
     return out;
   },

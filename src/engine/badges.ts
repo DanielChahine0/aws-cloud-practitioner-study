@@ -20,6 +20,8 @@ export const CHANGED_MIND = 5;
 export const LONG_MEMORY = { concepts: 50, stabilityDays: 21 } as const;
 export const CALIBRATION = { window: 150, minEach: 40, sure: 0.85, notSure: 0.75 } as const;
 export const HANDS_ON_MODULES = 5;
+/** Core labs per module (spec 5): Hands On counts a module only when it lists this many and all are done. */
+export const CORE_LABS_PER_MODULE = 2;
 export const CORE_LABS = 26;
 export const LEAVE_NO_TRACE = 3;
 export const PASS_MARK = 0.8;

@@ -143,7 +143,6 @@ describe('coverageProblems', () => {
     const ctx = loadContext(root, { today: FIXTURE_TODAY });
     expect(coverageProblems(FILE, ctx)).toEqual([
       'concept shared-kitchen has 1 question that can still go live; it needs 2',
-      'concept per-minute-rental has 1 question that can still go live; it needs 2',
     ]);
     writeFileSync(join(root, FILE), 'questions: []\n');
     expect(coverageProblems(FILE, loadContext(root, { today: FIXTURE_TODAY }))).toEqual([

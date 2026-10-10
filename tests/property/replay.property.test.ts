@@ -4,7 +4,12 @@ import type { StudyEvent } from '../../schemas/events.ts';
 import { type ContentRefs, derive, snapshotOf } from '../../src/engine/replay.ts';
 import { eventLogArb } from './arbitraries.ts';
 
-const REFS: ContentRefs = { questions: new Map([['q-aaaaaa', 1]]), notes: new Set(['m01/a']) };
+const REFS: ContentRefs = {
+  questions: new Map([['q-aaaaaa', 1]]),
+  notes: new Set(['m01/a']),
+  labs: new Set(['lab-m01-a']),
+  incidents: new Set(),
+};
 
 describe('derive', () => {
   it('is the same for any order of the same events', () => {
