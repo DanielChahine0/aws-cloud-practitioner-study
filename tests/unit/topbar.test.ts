@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   dueLabel,
   FLASH_MAX,
-  rankLabel,
+  RANK_ACTION,
   rankUpLine,
   rulesLine,
   streakLabel,
@@ -45,8 +45,8 @@ describe('rulesLine', () => {
 });
 
 describe('the rank in the top bar', () => {
-  it('starts the button name with the rank name', () => {
-    expect(rankLabel('Business Support+')).toBe('Business Support+: rank, open Progress');
+  it('reads what the button does after the visible plan name', () => {
+    expect(RANK_ACTION).toBe('rank, open Progress');
   });
 
   it('writes the promotion line with the plan name and its two facts', () => {

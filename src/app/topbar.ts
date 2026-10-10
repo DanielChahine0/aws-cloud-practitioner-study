@@ -37,10 +37,11 @@ export function rulesLine(args: {
   return args.events === 0 ? 'stamp' : 'show';
 }
 
-/** The rank button's name: the visible plan name first (WCAG 2.5.3), then what it does. */
-export function rankLabel(name: string): string {
-  return `${name}: rank, open Progress`;
-}
+/**
+ * What the rank button does, read after the plan name its own text shows (`Business+ rank, open Progress`); with no
+ * `aria-label`, the name a width hides drops out, so the name starts with the visible name at every width (WCAG 2.5.3).
+ */
+export const RANK_ACTION = 'rank, open Progress';
 
 /** The one dismissible promotion line under the top bar (spec 3.4): the plan name and its two facts. */
 export function rankUpLine(rank: { name: string; facts: readonly string[] }): string {

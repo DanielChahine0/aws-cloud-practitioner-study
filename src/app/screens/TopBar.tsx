@@ -6,7 +6,7 @@ import { memory, queue, rank, ranks, streak } from '../memory.ts';
 import { storeReady } from '../progress.ts';
 import { toHash } from '../router.ts';
 import { exam, examPosition, navigate, overlay } from '../state.ts';
-import { dueLabel, FLASH_MS, rankLabel, streakLabel, xpGain } from '../topbar.ts';
+import { dueLabel, FLASH_MS, RANK_ACTION, streakLabel, xpGain } from '../topbar.ts';
 
 const openProgress = (): void => {
   overlay.value = 'progress';
@@ -129,14 +129,10 @@ function SiteBar() {
               </span>
             )}
             {shown !== null && (
-              <button
-                class="topbar-button topbar-rank"
-                type="button"
-                aria-label={rankLabel(shown.name)}
-                onClick={openProgress}
-              >
+              <button class="topbar-button topbar-rank" type="button" onClick={openProgress}>
                 <span class="rank-name">{shown.name}</span>
                 <span class="rank-short">{shown.short}</span>
+                <span class="visually-hidden">{RANK_ACTION}</span>
               </button>
             )}
           </span>
