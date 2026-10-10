@@ -1,10 +1,10 @@
 /** The text of pnpm content:report: counts, style lines, coverage, needs-Dani and homed concepts (spec 2.9). */
 import { NEEDS_DANI_ATTEMPTS } from './checks.ts';
-import type { Context, LessonNote } from './context.ts';
-import { conceptsMdDrift, coverage } from './coverage.ts';
+import { type Context, type LessonNote, questionFileOf } from './context.ts';
+import { conceptsMdDrift, coverage, practiceCounts } from './coverage.ts';
 import { parseGlossary } from './glossary.ts';
 import { notesAnchors } from './markdown.ts';
-import { moduleStyle } from './style.ts';
+import { isOpen, moduleStyle, PER_CONCEPT_TARGET } from './style.ts';
 
 const DRIFT_LINES = 10;
 const pct = (n: number, of: number): string => `${of === 0 ? 0 : Math.round((n / of) * 100)}%`;
@@ -76,6 +76,12 @@ export interface HomedConcepts {
     anchor: string;
     tasks: { id: string; text: string }[];
     confusableWith: string[];
+    /** Live practice questions on the concept, aliases included. */
+    live: number;
+    /** Live questions plus drafts that can still go live (fewer than 3 failed check rounds). */
+    open: number;
+    /** New drafts to write: PER_CONCEPT_TARGET minus open, never below 0. */
+    need: number;
   }[];
   existing: number;
 }
@@ -86,17 +92,44 @@ export function homed(ctx: Context, noteId: string): HomedConcepts {
   if (note === undefined) throw new Error(`${noteId} is not a lesson note`);
   const anchors = notesAnchors(note.headings);
   const taskText = new Map((ctx.blueprint?.tasks ?? []).map((t) => [t.id, t.text] as const));
+  const live = practiceCounts(ctx, (q) => q.status === 'live');
+  const opened = practiceCounts(ctx, isOpen);
   const concepts = ctx.concepts
     .filter((c) => c.home === noteId && c.tested !== false)
     .map((c, i) => ({ c, at: anchors.indexOf(c.anchor), i }))
     .sort((a, b) => a.at - b.at || a.i - b.i)
-    .map(({ c }) => ({
-      id: c.id,
-      name: c.name,
-      anchor: c.anchor,
-      tasks: c.tasks.map((id) => ({ id, text: taskText.get(id) ?? '' })),
-      confusableWith: c.confusableWith ?? [],
-    }));
+    .map(({ c }) => {
+      const open = opened.get(c.id) ?? 0;
+      return {
+        id: c.id,
+        name: c.name,
+        anchor: c.anchor,
+        tasks: c.tasks.map((id) => ({ id, text: taskText.get(id) ?? '' })),
+        confusableWith: c.confusableWith ?? [],
+        live: live.get(c.id) ?? 0,
+        open,
+        need: Math.max(0, PER_CONCEPT_TARGET - open),
+      };
+    });
   const existing = ctx.questions.filter((e) => e.noteId === noteId && e.q.status !== 'retired').length;
   return { note: noteId, title: note.fm?.title ?? note.slugFromPath, concepts, existing };
+}
+
+export interface Target {
+  note: string;
+  file: string;
+  need: number;
+}
+
+/** `--targets`: the lesson notes whose homed concepts need new drafts, in course order, with the file to write and how many. */
+export function targets(ctx: Context): Target[] {
+  const out: Target[] = [];
+  for (const note of ctx.notes) {
+    if (note.kind !== 'lesson') continue;
+    const need = homed(ctx, note.id).concepts.reduce((sum, c) => sum + c.need, 0);
+    if (need === 0) continue;
+    const file = ctx.questions.find((e) => e.noteId === note.id)?.path ?? questionFileOf(note.path);
+    out.push({ note: note.id, file, need });
+  }
+  return out;
 }

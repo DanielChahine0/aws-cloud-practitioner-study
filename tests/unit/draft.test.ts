@@ -40,8 +40,8 @@ describe('draftCheck', () => {
     expect(questions).toBe(2);
     expect(problems.filter((p) => p.includes('q-3h8r2t'))).toEqual([]);
     expect(problems).toEqual([
-      `${QUESTION_FILE}  concept shared-kitchen has 1 question; it needs 2`,
-      `${QUESTION_FILE}  concept per-minute-rental has 1 question; it needs 2`,
+      `${QUESTION_FILE}  concept shared-kitchen has 1 question that can still go live; it needs 2`,
+      `${QUESTION_FILE}  concept per-minute-rental has 1 question that can still go live; it needs 2`,
     ]);
   });
 

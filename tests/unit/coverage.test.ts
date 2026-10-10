@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
@@ -10,9 +10,15 @@ import {
   phraseIn,
   resourcesText,
 } from '../../scripts/content/lib/coverage.ts';
-import { homed, needsDani, report } from '../../scripts/content/lib/report.ts';
+import { homed, needsDani, report, targets } from '../../scripts/content/lib/report.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
-import { matchQuestion, multiQuestion, singleQuestion, writeQuestions } from '../fixtures/questions.ts';
+import {
+  matchQuestion,
+  multiQuestion,
+  QUESTION_FILE,
+  singleQuestion,
+  writeQuestions,
+} from '../fixtures/questions.ts';
 
 const BLUEPRINT = 'content/exam/blueprint.yaml';
 const load = (root: string) => loadContext(root, { today: FIXTURE_TODAY });
@@ -122,6 +128,9 @@ describe('report', () => {
           anchor: 'shared-kitchen',
           tasks: [{ id: '1.1', text: 'Fixture task statement 1.1' }],
           confusableWith: [],
+          live: 1,
+          open: 1,
+          need: 1,
         },
         {
           id: 'per-minute-rental',
@@ -129,11 +138,63 @@ describe('report', () => {
           anchor: 'paying-by-the-minute',
           tasks: [{ id: '4.1', text: 'Fixture task statement 4.1' }],
           confusableWith: ['shared-kitchen'],
+          live: 0,
+          open: 1,
+          need: 1,
         },
       ],
       existing: 2,
     });
     writeFileSync(join(root, 'content/concepts.yaml'), '[]\n');
     expect(() => homed(load(root), 'm01/nowhere')).toThrow('m01/nowhere is not a lesson note');
+  });
+});
+
+describe('open questions per concept', () => {
+  it('leaves a draft that needs Dani out of open, so the writer adds a fresh one', () => {
+    const root = makeFixtureRoot();
+    writeQuestions(root, [
+      singleQuestion({ status: 'live' }),
+      singleQuestion({ id: 'q-4j6k8m', review: { attempts: 3, lastFailure: 'critic: a tell' } }),
+      matchQuestion({ concept: 'minute-rental' }),
+      matchQuestion({ id: 'q-5m7n9p', review: { attempts: 2, lastFailure: 'critic: a tell' } }),
+    ]);
+    replaceIn(
+      root,
+      'content/concepts.yaml',
+      'confusableWith: [shared-kitchen]',
+      'confusableWith: [shared-kitchen]\n  aliases: [minute-rental]',
+    );
+    const { concepts } = homed(load(root), 'm01/what-a-bakery-cloud-is');
+    expect(concepts.map(({ id, live, open, need }) => ({ id, live, open, need }))).toEqual([
+      { id: 'shared-kitchen', live: 1, open: 1, need: 1 },
+      { id: 'per-minute-rental', live: 0, open: 2, need: 0 },
+    ]);
+  });
+
+  it('lists the notes whose concepts need questions, with the file to write and how many', () => {
+    const root = makeFixtureRoot();
+    expect(targets(load(root))).toEqual([
+      { note: 'm01/what-a-bakery-cloud-is', file: QUESTION_FILE, need: 2 },
+    ]);
+    writeQuestions(root, [
+      singleQuestion({ status: 'live' }),
+      multiQuestion(),
+      matchQuestion(),
+      matchQuestion({ id: 'q-5m7n9p' }),
+    ]);
+    expect(targets(load(root))).toEqual([]);
+  });
+
+  it('points a note without questions at the file its path maps to', () => {
+    const root = makeFixtureRoot();
+    rmSync(join(root, QUESTION_FILE));
+    expect(targets(load(root))).toEqual([
+      {
+        note: 'm01/what-a-bakery-cloud-is',
+        file: 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml',
+        need: 4,
+      },
+    ]);
   });
 });

@@ -3,6 +3,7 @@
  * The critic agent judges the rest, such as parallel options and clue words.
  */
 import type { Question } from '../../../schemas/question.ts';
+import { NEEDS_DANI_ATTEMPTS } from './checks.ts';
 import type { Context, LessonNote } from './context.ts';
 
 /** Live practice questions per tested concept that the pilot and Phase 2's R10 aim for. */
@@ -86,14 +87,19 @@ export function moduleStyle(questions: readonly Question[]): ModuleStyle {
   return { singles: byType.single, correctLongest, negatives, total: counted.length, byType };
 }
 
-/** The tested concepts homed in a question file's note that still lack PER_CONCEPT_TARGET non-retired questions there. */
+/** A question that is live or can still go live: a draft with fewer than NEEDS_DANI_ATTEMPTS failed check rounds. */
+export function isOpen(q: Question): boolean {
+  return q.status === 'live' || (q.status === 'draft' && (q.review?.attempts ?? 0) < NEEDS_DANI_ATTEMPTS);
+}
+
+/** The tested concepts homed in a question file's note that still lack PER_CONCEPT_TARGET open questions there. */
 export function coverageProblems(file: string, ctx: Context): string[] {
   const match = /^content\/questions\/(\d{2})-[a-z0-9-]+\/\d{2}-([a-z0-9-]+)\.yaml$/.exec(file);
   if (match === null) return [`${file} is not a question file path`];
   const noteId = `m${match[1]}/${match[2]}`;
   const counts = new Map<string, number>();
   for (const entry of ctx.questions) {
-    if (entry.path === file && entry.q.status !== 'retired') {
+    if (entry.path === file && isOpen(entry.q)) {
       counts.set(entry.q.concept, (counts.get(entry.q.concept) ?? 0) + 1);
     }
   }
@@ -102,7 +108,10 @@ export function coverageProblems(file: string, ctx: Context): string[] {
     if (c.home !== noteId || c.tested === false) continue;
     const n = [c.id, ...(c.aliases ?? [])].reduce((sum, id) => sum + (counts.get(id) ?? 0), 0);
     if (n < PER_CONCEPT_TARGET) {
-      problems.push(`concept ${c.id} has ${n} question${n === 1 ? '' : 's'}; it needs ${PER_CONCEPT_TARGET}`);
+      const noun = n === 1 ? 'question' : 'questions';
+      problems.push(
+        `concept ${c.id} has ${n} ${noun} that can still go live; it needs ${PER_CONCEPT_TARGET}`,
+      );
     }
   }
   return problems;
