@@ -12,6 +12,7 @@ import type {
   SearchChunk,
   SearchEntry,
 } from '../../schemas/chunks.ts';
+import type { Concept } from '../../schemas/concept.ts';
 import { normalize } from '../../src/app/search.ts';
 import {
   CONCEPTS_FILE,
@@ -24,6 +25,7 @@ import {
 import { evidenceForm, noteLines, sectionAt } from './lib/evidence.ts';
 import { parseGlossary, termMatcher } from './lib/glossary.ts';
 import { renderDoc, renderInline, routeOf } from './lib/render.ts';
+import { stripMarkdown, words } from './lib/text.ts';
 
 const GLOSSARY_FILE = 'resources/glossary.md';
 
@@ -72,6 +74,28 @@ function questionView({ q }: QuestionEntry, note: Note): QuestionView {
   return { ...common, type: 'single', stem: q.stem, select: null, options, pairs: [] };
 }
 
+const WORDS_PER_MINUTE = 200;
+const MAX_CONFUSABLE = 3;
+
+/** A lesson's reading time in whole minutes, at least 1 (spec 4.6). */
+export function readingMinutes(body: string): number {
+  return Math.max(1, Math.ceil(words(stripMarkdown(body)).length / WORDS_PER_MINUTE));
+}
+
+/**
+ * `confusableWith` made symmetric (spec 2.4): each concept's own list in order, then every concept that lists it,
+ * in registry order, without itself or duplicates, the first 3 kept.
+ */
+export function confusableLinks(concepts: readonly Concept[]): Map<string, string[]> {
+  const links = new Map<string, string[]>();
+  for (const c of concepts) {
+    const others = concepts.filter((o) => o.confusableWith?.includes(c.id)).map((o) => o.id);
+    const unique = [...new Set([...(c.confusableWith ?? []), ...others])].filter((id) => id !== c.id);
+    links.set(c.id, unique.slice(0, MAX_CONFUSABLE));
+  }
+  return links;
+}
+
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 const pad2 = (n: number): string => String(n).padStart(2, '0');
 
@@ -104,6 +128,10 @@ export function buildContent(ctx: Context): BuiltContent {
         (a.q.id < b.q.id ? -1 : a.q.id > b.q.id ? 1 : 0),
     );
   const questionVersions: Record<string, number> = {};
+  const aliasOf = new Map(ctx.concepts.flatMap((c) => (c.aliases ?? []).map((a) => [a, c.id] as const)));
+  const practised = new Set(live.map(({ q }) => aliasOf.get(q.concept) ?? q.concept));
+  const checkConceptsOf = (noteId: string): number =>
+    ctx.concepts.filter((c) => c.home === noteId && c.tested !== false && practised.has(c.id)).length;
 
   const modules: ModuleMeta[] = [];
   for (const n of [...new Set(ctx.notes.map((note) => note.module))].sort((a, b) => a - b)) {
@@ -137,6 +165,8 @@ export function buildContent(ctx: Context): BuiltContent {
         slug: note.slugFromPath,
         title: note.fm.title,
         concepts: [...note.fm.concepts],
+        minutes: readingMinutes(note.body),
+        checkConcepts: checkConceptsOf(note.id),
       });
       search.push({
         kind: 'lesson',
@@ -168,6 +198,7 @@ export function buildContent(ctx: Context): BuiltContent {
     });
   }
 
+  const links = confusableLinks(ctx.concepts);
   const concepts: ConceptMeta[] = ctx.concepts.map((c) => {
     const home = notesById.get(c.home);
     if (home === undefined) throw new Error(`${CONCEPTS_FILE}: [${c.id}] home ${c.home} is not a note`);
@@ -178,7 +209,17 @@ export function buildContent(ctx: Context): BuiltContent {
       route: `${routeOf(home)}/${c.anchor}`,
       text: normalize([c.name, ...(c.aliases ?? [])].join(' ')),
     });
-    return { id: c.id, name: c.name, home: c.home, anchor: c.anchor, tested: c.tested !== false };
+    return {
+      id: c.id,
+      name: c.name,
+      home: c.home,
+      anchor: c.anchor,
+      tested: c.tested !== false,
+      tasks: [...c.tasks],
+      confusableWith: links.get(c.id) ?? [],
+      aliases: [...(c.aliases ?? [])],
+      splitFrom: c.splitFrom ?? null,
+    };
   });
 
   const glossary: GlossaryItem[] = glossaryEntries.map((entry) => {

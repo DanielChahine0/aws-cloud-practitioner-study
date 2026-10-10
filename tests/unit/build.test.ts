@@ -2,13 +2,15 @@ import { appendFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { ContentIndex, ModuleChunk, SearchChunk } from '../../schemas/chunks.ts';
-import { buildContent } from '../../scripts/content/build.ts';
-import { loadContext } from '../../scripts/content/lib/context.ts';
+import type { Concept } from '../../schemas/concept.ts';
+import { buildContent, confusableLinks, readingMinutes } from '../../scripts/content/build.ts';
+import { CONCEPTS_FILE, loadContext } from '../../scripts/content/lib/context.ts';
 import { normalize } from '../../src/app/search.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 
 const LESSON_ROUTE = '#/m/01/l/what-a-bakery-cloud-is';
 const QUESTIONS_FILE = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
+const LESSON_SLUG = 'what-a-bakery-cloud-is';
 
 const MULTI = `
   - id: q-9q4r5s
@@ -85,6 +87,10 @@ describe('buildContent on the fixture tree', () => {
         home: 'm01/what-a-bakery-cloud-is',
         anchor: 'shared-kitchen',
         tested: true,
+        tasks: ['1.1'],
+        confusableWith: ['per-minute-rental'],
+        aliases: [],
+        splitFrom: null,
       },
       {
         id: 'per-minute-rental',
@@ -92,6 +98,10 @@ describe('buildContent on the fixture tree', () => {
         home: 'm01/what-a-bakery-cloud-is',
         anchor: 'paying-by-the-minute',
         tested: true,
+        tasks: ['4.1'],
+        confusableWith: ['shared-kitchen'],
+        aliases: [],
+        splitFrom: null,
       },
     ]);
     expect(index.glossary).toEqual([
@@ -219,5 +229,89 @@ describe('buildContent on the fixture tree', () => {
       '\n- See [later](02-gone.md).\n',
     );
     expect(() => build(root)).toThrow('link to 02-gone.md has no page on the site');
+  });
+});
+
+describe('concept links and lesson sizes in the index', () => {
+  const lessonOf = (index: ContentIndex) => index.modules[0]?.lessons.find((l) => l.slug === LESSON_SLUG);
+
+  it('counts the reading minutes of each lesson and the concepts its check can ask about', () => {
+    const lesson = lessonOf(build().index);
+    expect(lesson?.minutes).toBe(1);
+    expect(lesson?.checkConcepts).toBe(1);
+    const root = makeFixtureRoot();
+    replaceIn(root, QUESTIONS_FILE, 'status: draft', 'status: live');
+    expect(lessonOf(build(root).index)?.checkConcepts).toBe(2);
+  });
+
+  it('counts a live question filed under an alias for the surviving concept', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, CONCEPTS_FILE, 'tasks: ["1.1"]', 'tasks: ["1.1"]\n  aliases: [central-oven]');
+    replaceIn(root, QUESTIONS_FILE, 'concept: shared-kitchen', 'concept: central-oven');
+    const { index } = build(root);
+    expect(index.concepts[0]?.aliases).toEqual(['central-oven']);
+    expect(lessonOf(index)?.checkConcepts).toBe(1);
+  });
+
+  it('never counts an untested concept, and copies splitFrom', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, CONCEPTS_FILE, 'tasks: ["1.1"]', 'tasks: ["1.1"]\n  tested: false');
+    replaceIn(root, CONCEPTS_FILE, 'tasks: ["4.1"]', 'tasks: ["4.1"]\n  splitFrom: kitchen-rental');
+    const { index } = build(root);
+    expect(lessonOf(index)?.checkConcepts).toBe(0);
+    expect(index.concepts.map((c) => [c.id, c.tested, c.splitFrom])).toEqual([
+      ['shared-kitchen', false, null],
+      ['per-minute-rental', true, 'kitchen-rental'],
+    ]);
+  });
+});
+
+describe('readingMinutes', () => {
+  it('gives one minute per 200 words, rounded up, and at least one', () => {
+    expect(readingMinutes('')).toBe(1);
+    expect(readingMinutes('dough '.repeat(200))).toBe(1);
+    expect(readingMinutes('dough '.repeat(201))).toBe(2);
+    expect(readingMinutes('dough '.repeat(1000))).toBe(5);
+  });
+
+  it('counts the text of a link and not its target', () => {
+    const link = '[proof](https://example.com/a/b/c/d/e/f/g) ';
+    expect(readingMinutes(link.repeat(200))).toBe(1);
+    expect(readingMinutes(`${link.repeat(200)}rise`)).toBe(2);
+  });
+});
+
+describe('confusableLinks', () => {
+  const concept = (id: string, confusableWith?: string[]): Concept => ({
+    id,
+    name: id,
+    home: 'm01/what-a-bakery-cloud-is',
+    anchor: id,
+    tasks: ['1.1'],
+    ...(confusableWith === undefined ? {} : { confusableWith }),
+  });
+
+  it('makes one-sided links symmetric, own list first, then registry order', () => {
+    const links = confusableLinks([concept('rye', ['spelt']), concept('spelt'), concept('oat', ['rye'])]);
+    expect(links.get('rye')).toEqual(['spelt', 'oat']);
+    expect(links.get('spelt')).toEqual(['rye']);
+    expect(links.get('oat')).toEqual(['rye']);
+  });
+
+  it('drops duplicates and self links and keeps at most 3', () => {
+    const links = confusableLinks([
+      concept('rye', ['spelt', 'rye']),
+      concept('spelt', ['rye']),
+      concept('oat', ['rye']),
+      concept('barley', ['rye']),
+      concept('millet', ['rye']),
+    ]);
+    expect(links.get('rye')).toEqual(['spelt', 'oat', 'barley']);
+    expect(links.get('spelt')).toEqual(['rye']);
+    expect(links.get('millet')).toEqual(['rye']);
+  });
+
+  it('gives an empty list to a concept nothing links', () => {
+    expect(confusableLinks([concept('rye')]).get('rye')).toEqual([]);
   });
 });

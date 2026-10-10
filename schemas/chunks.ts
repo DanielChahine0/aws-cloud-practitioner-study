@@ -5,6 +5,10 @@ export interface LessonMeta {
   slug: string;
   title: string;
   concepts: string[];
+  /** Reading time: the note's words over 200, rounded up, at least 1 (spec 4.6). */
+  minutes: number;
+  /** Tested concepts homed in the lesson that have a live practice question, so its check asks this many. */
+  checkConcepts: number;
 }
 
 export interface ModuleMeta {
@@ -24,6 +28,14 @@ export interface ConceptMeta {
   home: string;
   anchor: string;
   tested: boolean;
+  /** Blueprint task ids, copied from the registry. */
+  tasks: string[];
+  /** Symmetric and capped at 3 by the build (spec 2.4); the queue uses it for placement only (spec 3.7). */
+  confusableWith: string[];
+  /** Old ids that now mean this concept; replay resolves answers filed under them (spec 8.4). */
+  aliases: string[];
+  /** The old concept this one was split from; replay copies its card (spec 2.4). */
+  splitFrom: string | null;
 }
 
 export interface GlossaryItem {

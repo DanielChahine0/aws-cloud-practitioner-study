@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest';
 import type { ModuleMeta } from '../../schemas/chunks.ts';
 import { type KeyCommand, type KeyContext, type KeyInput, keyCommand, keyStep } from '../../src/app/keys.ts';
 
-const lesson = (n: number, slug: string) => ({ n, slug, title: slug, concepts: [] });
+const lesson = (n: number, slug: string) => ({
+  n,
+  slug,
+  title: slug,
+  concepts: [],
+  minutes: 1,
+  checkConcepts: 0,
+});
 const MODULES: ModuleMeta[] = [
   {
     n: 1,
