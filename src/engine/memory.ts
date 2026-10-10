@@ -291,7 +291,14 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     if (longCards.size >= LONG_MEMORY.concepts) grant('long-memory', e);
   };
 
-  const firstOfDay = (cm: MutableConcept, key: string, e: AnswerEvent, stale: boolean, isNew: boolean) => {
+  /** The day's first answer to a concept; returns whether it is a counted answer (spec 3.1): due at start, or new. */
+  const firstOfDay = (
+    cm: MutableConcept,
+    key: string,
+    e: AnswerEvent,
+    stale: boolean,
+    isNew: boolean,
+  ): boolean => {
     const card = cm.card;
     const start = starts.get(e.sid) ?? { at: e.at, tz: e.tz };
     const dueAtStart = card === null || isDue(card, new Date(start.at), start.tz);
@@ -313,6 +320,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
       earn(e, betXp(e.correct, e.sure));
     }
     if (e.correct && !cm.successDays.includes(e.day)) cm.successDays.push(e.day);
+    return dueAtStart || isNew;
   };
 
   const laterAnswer = (cm: MutableConcept, key: string, e: AnswerEvent, stale: boolean) => {
@@ -361,14 +369,18 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     if (e.relearn !== true) {
       countedAnswer = true;
       if (e.mode === 'review') reviewsToday++;
-      window.push({ correct: e.correct, sure: e.sure });
-      if (window.length > CALIBRATION.window) window.shift();
-      if (!badges.has('well-calibrated') && wellCalibrated(calibrationOf(window))) {
-        grant('well-calibrated', e);
-      }
-      if (cm.lastAnswerDay !== e.day) firstOfDay(cm, key, e, stale, isNew);
+      let counted = false;
+      if (cm.lastAnswerDay !== e.day) counted = firstOfDay(cm, key, e, stale, isNew);
       else laterAnswer(cm, key, e, stale);
       cm.lastAnswerDay = e.day;
+      // Well Calibrated reads counted answers only, so re-answering an easy question cannot fill its window.
+      if (counted) {
+        window.push({ correct: e.correct, sure: e.sure });
+        if (window.length > CALIBRATION.window) window.shift();
+        if (!badges.has('well-calibrated') && wellCalibrated(calibrationOf(window))) {
+          grant('well-calibrated', e);
+        }
+      }
     }
     const mark = cm.misconception;
     if (!e.correct && e.sure) cm.misconception = { qid: e.qid, day: e.day };

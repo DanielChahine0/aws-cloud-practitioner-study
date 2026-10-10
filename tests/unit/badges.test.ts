@@ -32,6 +32,9 @@ function crossing(log: Log, content: MemoryContent, badge: BadgeId) {
 
 const TEN = ids('c', 10);
 const BASIC = contentOf(TEN.map((id) => ({ id, module: 1 })));
+/** Enough concepts that every answer in a calibration test is a new concept's counted answer. */
+const MANY_IDS = ids('k', 200);
+const MANY = contentOf(MANY_IDS.map((id) => ({ id, module: 1 })));
 
 describe('badge helpers (spec 3.10)', () => {
   it('lists the 12 badges in spec order', () => {
@@ -278,18 +281,24 @@ describe('badges in the memory replay (spec 3.10)', () => {
       ...Array.from(
         { length: 50 },
         (_, i) =>
-          [at('2026-10-10', 8, i), answerOf({ concept: 'c-01', correct: i < 43, sure: true })] as const,
+          [
+            at('2026-10-10', 8, i),
+            answerOf({ concept: MANY_IDS[i] as string, correct: i < 43, sure: true }),
+          ] as const,
       ),
       ...Array.from(
         { length: 40 },
         (_, i) =>
-          [at('2026-10-10', 9, i), answerOf({ concept: 'c-02', correct: i < 30, sure: false })] as const,
+          [
+            at('2026-10-10', 9, i),
+            answerOf({ concept: MANY_IDS[50 + i] as string, correct: i < 30, sure: false }),
+          ] as const,
       ),
     ];
-    const { before, after, last } = crossing(log, BASIC, 'well-calibrated');
+    const { before, after, last } = crossing(log, MANY, 'well-calibrated');
     expect(before).toBeUndefined();
     expect(after?.eventId).toBe(last.id);
-    expect(deriveMemory(timelineOf(log), BASIC).calibration).toEqual({
+    expect(deriveMemory(timelineOf(log), MANY).calibration).toEqual({
       sure: { right: 43, total: 50 },
       notSure: { right: 30, total: 40 },
     });
@@ -301,10 +310,10 @@ describe('badges in the memory replay (spec 3.10)', () => {
       (_, i) =>
         [
           new Date(Date.parse(at('2026-10-10', 8)) + i * 1000).toISOString(),
-          answerOf({ concept: 'c-01', correct: i >= 10, sure: i < 10 }),
+          answerOf({ concept: MANY_IDS[i] as string, correct: i >= 10, sure: i < 10 }),
         ] as const,
     );
-    const m = deriveMemory(timelineOf(log), BASIC);
+    const m = deriveMemory(timelineOf(log), MANY);
     expect(m.calibration).toEqual({ sure: { right: 0, total: 0 }, notSure: { right: 150, total: 150 } });
   });
 
