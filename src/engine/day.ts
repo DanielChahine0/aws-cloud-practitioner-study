@@ -55,7 +55,11 @@ export function daysBetween(from: string, to: string): number {
   return Math.round((utcMidnight(to) - utcMidnight(from)) / DAY_MS);
 }
 
-/** The 04:00 that ends the study day holding `at`, in a given offset. */
+/**
+ * The 04:00 that ends the study day holding `at`, in a given offset: `dayStartAt` of the day after `studyDayAt`,
+ * worked out in whole UTC days without day strings, since replay asks it for every due check.
+ */
 export function nextDayStart(at: Date, tz: number): Date {
-  return dayStartAt(addDays(studyDayAt(at, tz), 1), tz);
+  const shift = tz * MINUTE_MS - DAY_START_HOUR * HOUR_MS;
+  return new Date((Math.floor((at.getTime() + shift) / DAY_MS) + 1) * DAY_MS - shift);
 }

@@ -22,7 +22,7 @@ import {
 import { betXp } from './bets.ts';
 import { addDays, dayStartAt, nextDayStart, studyDayAt } from './day.ts';
 import type { SessionState } from './replay.ts';
-import { capDue, rate, recall, review, type SrsCard, type SrsRating } from './srs.ts';
+import { capDue, capDueOn, rate, recall, review, type SrsCard, type SrsRating } from './srs.ts';
 import { effortBonus, XP } from './xp.ts';
 
 /**
@@ -164,9 +164,197 @@ function lowestRecall(cards: readonly (readonly [string, SrsCard])[], at: Date, 
     .map((x) => x.id);
 }
 
+/**
+ * The part of a concept's memory an exam date can change (spec 3.6): its card and its day's FSRS update.
+ * A state is never changed in place, so each step keeps the state it started from.
+ */
+interface CardState {
+  readonly card: SrsCard | null;
+  readonly enteredOn: string | null;
+  readonly fsrsDay: string | null;
+  readonly fsrsRating: SrsRating | null;
+  readonly extraAgainDay: string | null;
+  /** Whether its latest FSRS update left a stability of `LONG_MEMORY.stabilityDays` or more. */
+  readonly long: boolean;
+}
+
+const NO_CARD: CardState = {
+  card: null,
+  enteredOn: null,
+  fsrsDay: null,
+  fsrsRating: null,
+  extraAgainDay: null,
+  long: false,
+};
+
+interface SessionStart {
+  at: string;
+  tz: number;
+}
+
+/** An FSRS update a step made: the due FSRS gave, and the due the exam cap left of it. */
+interface Made {
+  readonly due: number;
+  readonly capped: number;
+  /** The study day of `due` in the answer's offset, worked out the first time an exam date needs it. */
+  dueDay: string | null;
+}
+
+/**
+ * One answer that reaches a card, with all it needs but the exam date, so a new date can run it again: a counted
+ * answer that is the concept's first of the day or a later one, or a boss or mock answer applied on submit.
+ */
+interface Step {
+  /** When it ran, on the replay's clock of steps, day openings and new keys. */
+  readonly tick: number;
+  readonly kind: 'first' | 'later' | 'exam';
+  readonly e: AnswerEvent;
+  readonly start: SessionStart;
+  readonly stale: boolean;
+  before: CardState;
+  made: Made | null;
+}
+
+/** The card history of one memory key, so a new exam date runs again only the steps whose outcome it changes. */
+interface Track {
+  readonly key: string;
+  readonly tested: boolean;
+  readonly created: number;
+  /** The key whose card it took when it was created: the old id of a split. */
+  readonly from: string | null;
+  initial: CardState;
+  readonly steps: Step[];
+  state: CardState;
+}
+
+interface Outcome {
+  state: CardState;
+  made: Made | null;
+  /** Whether the card was due when the answer's session started, or had none (spec 3.1). */
+  due: boolean;
+}
+
+/**
+ * One FSRS update at the answer's time, or at the card's last review when that is later: a boss or mock answer is
+ * held until its submit, so the card may have been reviewed after it, and FSRS never steps back.
+ */
+function updated(
+  s: CardState,
+  key: string,
+  tested: boolean,
+  rating: SrsRating,
+  e: AnswerEvent,
+  examDate: string | null,
+): { card: SrsCard; long: boolean; made: Made } {
+  const last = s.card?.lastReview ?? null;
+  const moment = last !== null && last > e.at ? last : e.at;
+  const next = review(s.card, rating, new Date(moment));
+  const due = Date.parse(next.due);
+  const capped = capDue(new Date(due), { concept: key, reviewDay: e.day, examDate, tz: e.tz }).getTime();
+  return {
+    card: { ...next, due: new Date(capped).toISOString() },
+    long: tested ? next.stability >= LONG_MEMORY.stabilityDays : s.long,
+    made: { due, capped, dueDay: null },
+  };
+}
+
+/** The extra Again of a wrong answer after the day's FSRS update, at most one a day. */
+function extraAgain(
+  s: CardState,
+  key: string,
+  tested: boolean,
+  e: AnswerEvent,
+  stale: boolean,
+  examDate: string | null,
+): Outcome {
+  const applies =
+    !e.correct &&
+    !stale &&
+    s.card !== null &&
+    s.fsrsDay === e.day &&
+    s.extraAgainDay !== e.day &&
+    (s.fsrsRating === 'hard' || s.fsrsRating === 'good');
+  if (!applies) return { state: s, made: null, due: false };
+  const { card, long, made } = updated(s, key, tested, 'again', e, examDate);
+  return { state: { ...s, card, long, extraAgainDay: e.day }, made, due: false };
+}
+
+/**
+ * Runs a step on `s` under `examDate`. The day's first counted answer updates when due at start or new; a boss or
+ * mock answer applies Again when wrong whatever the due state, and Hard (flagged) or Good when right only when due
+ * at start or new; a concept already updated that day gets only the one extra Again of a later wrong answer.
+ */
+function runStep(s: CardState, key: string, tested: boolean, step: Step, examDate: string | null): Outcome {
+  const { e, start, kind } = step;
+  if (kind === 'later') return extraAgain(s, key, tested, e, step.stale, examDate);
+  if (kind === 'exam' && s.fsrsDay === e.day) return extraAgain(s, key, tested, e, false, examDate);
+  const card = s.card;
+  const due = card === null || isDue(card, new Date(start.at), start.tz);
+  let rating: SrsRating | null = null;
+  if (kind === 'first') rating = due && !step.stale ? rate(e.correct, e.sure) : null;
+  else if (!e.correct || due) rating = e.correct ? rate(true, e.flagged !== true) : 'again';
+  if (rating === null) return { state: s, made: null, due };
+  const u = updated(s, key, tested, rating, e, examDate);
+  const enteredOn = card === null ? e.day : s.enteredOn;
+  const state = { ...s, card: u.card, long: u.long, enteredOn, fsrsDay: e.day, fsrsRating: rating };
+  return { state, made: u.made, due };
+}
+
+/** The due a step's update would have under `examDate`, from the due FSRS gave it. */
+function cappedUnder(made: Made, key: string, e: AnswerEvent, examDate: string | null): number {
+  if (examDate === null || e.day >= examDate) return made.due;
+  made.dueDay ??= studyDayAt(new Date(made.due), e.tz);
+  return capDueOn(new Date(made.due), made.dueDay, {
+    concept: key,
+    reviewDay: e.day,
+    examDate,
+    tz: e.tz,
+  }).getTime();
+}
+
+/** The state of a track just before `tick`. */
+function stateAt(track: Track, tick: number): CardState {
+  const { steps } = track;
+  let lo = 0;
+  let hi = steps.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if ((steps[mid] as Step).tick < tick) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo < steps.length ? (steps[lo] as Step).before : track.state;
+}
+
+/**
+ * Runs a track again under a new exam date. Its steps keep their outcome up to the first update whose capped due
+ * the new date changes, since until then every state is the same, so only the steps from there run again.
+ */
+function rebase(track: Track, initial: CardState, examDate: string | null): void {
+  const { key, tested, steps } = track;
+  let from = 0;
+  if (initial === track.initial) {
+    while (from < steps.length) {
+      const step = steps[from] as Step;
+      if (step.made !== null && cappedUnder(step.made, key, step.e, examDate) !== step.made.capped) break;
+      from++;
+    }
+    if (from === steps.length) return;
+  }
+  track.initial = initial;
+  let s = from === 0 ? initial : (steps[from] as Step).before;
+  for (let i = from; i < steps.length; i++) {
+    const step = steps[i] as Step;
+    step.before = s;
+    const out = runStep(s, key, tested, step, examDate);
+    step.made = out.made;
+    s = out.state;
+  }
+  track.state = s;
+}
+
 /** Replays the log in id order into memory state; unknown ids are skipped, never thrown on (spec 8.4). */
 export function deriveMemory(events: readonly StudyEvent[], content: MemoryContent): MemoryState {
-  const { state } = replay([...events].sort(byId), content, null);
+  const state = replay([...events].sort(byId), content);
   for (const [id, info] of content.concepts) {
     if (info.splitFrom === null || state.concepts.has(id)) continue;
     const old = state.concepts.get(info.splitFrom);
@@ -175,22 +363,15 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
   return state;
 }
 
-interface Replayed {
-  state: MemoryState & { concepts: Map<string, MutableConcept> };
-  /** The tested concepts whose latest FSRS update left a stability of `LONG_MEMORY.stabilityDays` or more. */
-  longCards: ReadonlySet<string>;
-}
-
 /**
- * The replay of `sorted`. With `fixed`, one exam date holds throughout and settings events are skipped: that
- * replay gives the schedule a date decides (spec 3.6). Without it, each settings event that changes the date
- * takes the schedule of the new date over the log so far, while the XP, days and badges already judged stay.
+ * The replay of `sorted`, in one pass. Each memory key keeps a track of the answers that reached its card, so a
+ * settings event that changes the exam date gives every card the schedule of the new date over the log so far by
+ * running again only what the new date changes, while the XP, days and badges already judged stay (spec 3.6).
  */
 function replay(
   sorted: readonly StudyEvent[],
   content: MemoryContent,
-  fixed: { examDate: string | null } | null,
-): Replayed {
+): MemoryState & { concepts: Map<string, MutableConcept> } {
   const splitSources = new Set<string>();
   /** Each tested split concept with the id it was split from, whose card it inherits until answered. */
   const splitTargets: [string, string][] = [];
@@ -226,8 +407,13 @@ function replay(
   const cleanDays = new Set<string>();
   /** Non-relearn review answers per study day, kept per day so a day left and entered again keeps its count. */
   const reviewsByDay = new Map<string, number>();
+  const tracks = new Map<string, Track>();
+  /** Each opening of a study day, as its first event after another day, at which its catch-up plan is made. */
+  const opens = new Map<string, { tick: number; at: Date; tz: number }[]>();
+  /** The replay's clock, which orders steps, day openings and new keys. */
+  let tick = 0;
   /** The exam date in force at the current event. */
-  let examDate: string | null = fixed?.examDate ?? null;
+  let examDate: string | null = null;
   let xp = 0;
   let staleAnswers = 0;
 
@@ -256,28 +442,65 @@ function replay(
     return out;
   };
 
+  const setCard = (cm: MutableConcept, s: CardState) => {
+    cm.card = s.card;
+    cm.enteredOn = s.enteredOn;
+    cm.fsrsDay = s.fsrsDay;
+    cm.fsrsRating = s.fsrsRating;
+    cm.extraAgainDay = s.extraAgainDay;
+  };
+
+  /** Every tested card just before `at` on the clock, as `testedCards` saw it then. */
+  const testedCardsAt = (at: number): [string, SrsCard][] => {
+    const out: [string, SrsCard][] = [];
+    for (const track of tracks.values()) {
+      if (!track.tested || track.created > at) continue;
+      const card = stateAt(track, at).card;
+      if (card !== null) out.push([track.key, card]);
+    }
+    for (const [id, from] of splitTargets) {
+      if ((tracks.get(id)?.created ?? Number.POSITIVE_INFINITY) < at) continue;
+      const source = tracks.get(from);
+      const card = source === undefined || source.created > at ? null : stateAt(source, at).card;
+      if (card !== null) out.push([id, card]);
+    }
+    return out;
+  };
+
+  /** The catch-up plan the current cards give `day`: the plan of its first opening with too many due. */
+  const planOf = (day: string): readonly string[] | undefined => {
+    for (const open of opens.get(day) ?? []) {
+      const due = testedCardsAt(open.tick).filter(([, card]) => isDue(card, open.at, open.tz));
+      if (due.length > CATCH_UP_OVER) return lowestRecall(due, open.at, CATCH_UP_PLAN);
+    }
+    return undefined;
+  };
+
   /**
-   * A new exam date at `sorted[index]` (spec 3.6): every card, its day's FSRS update and today's catch-up plan
-   * become what the new date gives over the log so far, as if it had been set before the first answer, since
-   * whether an answer updates its card depends on the capped due it met (spec 3.1). The XP, success days,
-   * qualifying days and badges judged before this event stay as they were.
+   * A new exam date at `e` (spec 3.6): every card, its day's FSRS update and today's catch-up plan become what the
+   * new date gives over the log so far, as if it had been set before the first answer, since whether an answer
+   * updates its card depends on the capped due it met (spec 3.1). The XP, success days, qualifying days and
+   * badges judged before this event stay as they were.
    */
-  const setExamDate = (next: string | null, index: number, e: StudyEvent) => {
+  const setExamDate = (next: string | null, e: StudyEvent) => {
     if (next === examDate) return;
     examDate = next;
-    const schedule = replay(sorted.slice(0, index + 1), content, { examDate: next });
-    for (const [key, cm] of concepts) {
-      const s = schedule.state.concepts.get(key);
-      cm.card = s?.card ?? null;
-      cm.enteredOn = s?.enteredOn ?? null;
-      cm.fsrsDay = s?.fsrsDay ?? null;
-      cm.fsrsRating = s?.fsrsRating ?? null;
-      cm.extraAgainDay = s?.extraAgainDay ?? null;
-    }
     longCards.clear();
-    for (const key of schedule.longCards) longCards.add(key);
+    for (const track of tracks.values()) {
+      let initial = track.initial;
+      if (track.from !== null) {
+        const source = stateAt(tracks.get(track.from) as Track, track.created);
+        const same = source.card === initial.card && source.enteredOn === initial.enteredOn;
+        if (!same)
+          initial =
+            source.card === null ? NO_CARD : { ...NO_CARD, card: source.card, enteredOn: source.enteredOn };
+      }
+      rebase(track, initial, next);
+      setCard(concepts.get(track.key) as MutableConcept, track.state);
+      if (track.tested && track.state.long) longCards.add(track.key);
+    }
     if (longCards.size >= LONG_MEMORY.concepts) grant('long-memory', e);
-    const plan = schedule.state.catchUpPlans.get(e.day);
+    const plan = planOf(e.day);
     if (plan === undefined) catchUpPlans.delete(e.day);
     else catchUpPlans.set(e.day, plan);
   };
@@ -294,8 +517,12 @@ function replay(
   };
 
   const openDay = (e: StudyEvent) => {
-    if (catchUpPlans.has(e.day)) return;
     const at = new Date(e.at);
+    const dayOpens = opens.get(e.day);
+    const open = { tick: tick++, at, tz: e.tz };
+    if (dayOpens === undefined) opens.set(e.day, [open]);
+    else dayOpens.push(open);
+    if (catchUpPlans.has(e.day)) return;
     const due = testedCards().filter(([, card]) => isDue(card, at, e.tz));
     if (due.length > CATCH_UP_OVER) catchUpPlans.set(e.day, lowestRecall(due, at, CATCH_UP_PLAN));
   };
@@ -330,20 +557,28 @@ function replay(
     if (cleanDays.size >= CLEAN_QUEUE.days) grant('clean-queue', e);
   };
 
-  /**
-   * One FSRS update for `e`, at its own time or at the card's last review when that is later: a boss or mock
-   * answer is held until its submit, so the card may have been reviewed after it, and FSRS never steps back.
-   */
-  const update = (cm: MutableConcept, key: string, rating: SrsRating, e: AnswerEvent) => {
-    const last = cm.card?.lastReview ?? null;
-    const moment = last !== null && last > e.at ? last : e.at;
-    const next = review(cm.card, rating, new Date(moment));
-    const due = capDue(new Date(next.due), { concept: key, reviewDay: e.day, examDate, tz: e.tz });
-    cm.card = { ...next, due: due.toISOString() };
-    if (content.concepts.get(key)?.tested !== true) return;
-    if (next.stability >= LONG_MEMORY.stabilityDays) longCards.add(key);
+  /** Runs a step of `e` on the card of `key` under the exam date in force, and keeps it on the key's track. */
+  const step = (
+    cm: MutableConcept,
+    key: string,
+    kind: Step['kind'],
+    e: AnswerEvent,
+    stale: boolean,
+  ): Outcome => {
+    const track = tracks.get(key) as Track;
+    const start = starts.get(e.sid) ?? { at: e.at, tz: e.tz };
+    const run: Step = { tick: tick++, kind, e, start, stale, before: track.state, made: null };
+    const out = runStep(track.state, key, track.tested, run, examDate);
+    run.made = out.made;
+    track.steps.push(run);
+    track.state = out.state;
+    if (out.made === null) return out;
+    setCard(cm, out.state);
+    if (!track.tested) return out;
+    if (out.state.long) longCards.add(key);
     else longCards.delete(key);
     if (longCards.size >= LONG_MEMORY.concepts) grant('long-memory', e);
+    return out;
   };
 
   /** The day's first answer to a concept; returns whether it is a counted answer (spec 3.1): due at start, or new. */
@@ -355,41 +590,18 @@ function replay(
     isNew: boolean,
   ): boolean => {
     const card = cm.card;
-    const start = starts.get(e.sid) ?? { at: e.at, tz: e.tz };
-    const dueAtStart = card === null || isDue(card, new Date(start.at), start.tz);
-    if (dueAtStart) {
+    const { due } = step(cm, key, 'first', e, stale);
+    if (due) {
       const shown = new Date(Date.parse(e.at) - e.ms);
       const bonus = card !== null && e.correct ? effortBonus(recall(card, shown)) : 0;
       earn(e, betXp(e.correct, e.sure) + bonus);
-      if (!stale) {
-        const rating = rate(e.correct, e.sure);
-        update(cm, key, rating, e);
-        cm.fsrsDay = e.day;
-        cm.fsrsRating = rating;
-        if (card === null) {
-          cm.enteredOn = e.day;
-          newByDay.set(e.day, (newByDay.get(e.day) ?? 0) + 1);
-        }
-      }
+      if (!stale && card === null) newByDay.set(e.day, (newByDay.get(e.day) ?? 0) + 1);
     } else if (isNew) {
       earn(e, betXp(e.correct, e.sure));
     }
-    const counted = dueAtStart || isNew;
+    const counted = due || isNew;
     if (counted && e.correct && !cm.successDays.includes(e.day)) cm.successDays.push(e.day);
     return counted;
-  };
-
-  const laterAnswer = (cm: MutableConcept, key: string, e: AnswerEvent, stale: boolean) => {
-    const extraAgain =
-      !e.correct &&
-      !stale &&
-      cm.card !== null &&
-      cm.fsrsDay === e.day &&
-      cm.extraAgainDay !== e.day &&
-      (cm.fsrsRating === 'hard' || cm.fsrsRating === 'good');
-    if (!extraAgain) return;
-    update(cm, key, 'again', e);
-    cm.extraAgainDay = e.day;
   };
 
   /** The memory of a key, created on first use from the card of the concept it was split from. */
@@ -399,11 +611,16 @@ function replay(
     const cm = freshConcept();
     const from = content.concepts.get(key)?.splitFrom ?? null;
     const old = from === null ? undefined : concepts.get(from);
+    let initial = NO_CARD;
     if (old?.card) {
       cm.card = old.card;
       cm.enteredOn = old.enteredOn;
+      initial = { ...NO_CARD, card: old.card, enteredOn: old.enteredOn };
     }
     concepts.set(key, cm);
+    const tested = content.concepts.get(key)?.tested === true;
+    const source = old === undefined ? null : from;
+    tracks.set(key, { key, tested, created: tick++, from: source, initial, steps: [], state: initial });
     return cm;
   };
 
@@ -427,7 +644,7 @@ function replay(
       if (e.mode === 'review') reviewsByDay.set(e.day, (reviewsByDay.get(e.day) ?? 0) + 1);
       let counted = false;
       if (cm.lastAnswerDay !== e.day) counted = firstOfDay(cm, key, e, stale, isNew);
-      else laterAnswer(cm, key, e, stale);
+      else step(cm, key, 'later', e, stale);
       cm.lastAnswerDay = e.day;
       // Well Calibrated reads counted answers only, so re-answering an easy question cannot fill its window.
       if (counted) {
@@ -455,31 +672,12 @@ function replay(
     if (held && !held.has(e.qid)) held.set(e.qid, e);
   };
 
-  /**
-   * One boss or mock answer on submit: wrong applies Again whatever the due state, right applies Hard
-   * (flagged) or Good only when the concept has no card or was due when the session started; a concept
-   * already updated today gets only the one extra Again of a later wrong answer.
-   */
+  /** One boss or mock answer on submit, which updates FSRS but is not a counted answer (spec 3.1). */
   const applyExamAnswer = (e: AnswerEvent) => {
     const key = keyOf(e.concept);
     if (key === null) return;
     const cm = conceptOf(key);
-    if (!isStale(e)) {
-      if (cm.fsrsDay !== e.day) {
-        const card = cm.card;
-        const start = starts.get(e.sid) ?? { at: e.at, tz: e.tz };
-        const dueAtStart = card === null || isDue(card, new Date(start.at), start.tz);
-        if (!e.correct || dueAtStart) {
-          const rating = e.correct ? rate(true, e.flagged !== true) : 'again';
-          update(cm, key, rating, e);
-          cm.fsrsDay = e.day;
-          cm.fsrsRating = rating;
-          if (card === null) cm.enteredOn = e.day;
-        }
-      } else {
-        laterAnswer(cm, key, e, false);
-      }
-    }
+    if (!isStale(e)) step(cm, key, 'exam', e, false);
     // No `lastAnswerDay`: an exam answer is not a counted answer (spec 3.1), so a practice answer later the same day
     // is still that day's first, with its bet XP and success day.
   };
@@ -556,7 +754,7 @@ function replay(
     examsDone.add(e.day);
   };
 
-  for (const [index, e] of sorted.entries()) {
+  for (const e of sorted) {
     if (e.day !== day) {
       closeDay();
       day = e.day;
@@ -592,7 +790,7 @@ function replay(
         applyDecision(e);
         break;
       case 'settings':
-        if (fixed === null && 'examDate' in e.patch) setExamDate(e.patch.examDate ?? null, index, e);
+        if ('examDate' in e.patch) setExamDate(e.patch.examDate ?? null, e);
         break;
       default:
         break;
@@ -601,7 +799,7 @@ function replay(
   }
   closeDay();
 
-  const state = {
+  return {
     concepts,
     xp,
     xpByEvent,
@@ -616,7 +814,6 @@ function replay(
     badges,
     calibration: calibrationOf(window),
   };
-  return { state, longCards };
 }
 
 export interface SessionSummary {

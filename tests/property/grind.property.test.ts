@@ -1,12 +1,13 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import type { Mode, NewEvent, StudyEvent } from '../../schemas/events.ts';
-import { addDays, DAY_MS } from '../../src/engine/day.ts';
+import type { Mode, StudyEvent } from '../../schemas/events.ts';
+import { DAY_MS } from '../../src/engine/day.ts';
 import { moduleMastery } from '../../src/engine/mastery.ts';
 import { deriveMemory } from '../../src/engine/memory.ts';
 import { toPlain } from '../../src/engine/replay.ts';
 import { SID, timelineOf } from '../fixtures/events.ts';
-import { JOURNEY_CONTENT, variantId } from '../fixtures/journeys/content.ts';
+import { grindLog, type Item, timeOf } from '../fixtures/grind-log.ts';
+import { JOURNEY_CONTENT } from '../fixtures/journeys/content.ts';
 import { answerOf, contentOf } from '../fixtures/memory.ts';
 
 /** Grind invariance (spec 3.1 and 3.11): extra answers never pay or schedule twice, whatever the log. */
@@ -18,14 +19,6 @@ const CONTENT = contentOf([
 ]);
 const CONCEPTS = ['oven', 'proofing', 'crust', 'menu', 'old-oven', 'ghost'];
 const MODES: Mode[] = ['check', 'quiz', 'focus', 'review', 'lightning', 'boss', 'mock'];
-const START = '2026-10-01';
-
-type Item = readonly [string, NewEvent];
-
-/** An ISO time `minute` minutes after 04:00 UTC on day `n` from the start, so it stays in that study day. */
-const timeOf = (n: number, minute: number): string =>
-  new Date(Date.parse(`${addDays(START, n)}T04:00:00.000Z`) + minute * 60_000).toISOString();
-
 const itemArb = (days: { min: number; max: number }): fc.Arbitrary<Item> =>
   fc.oneof(
     {
@@ -222,49 +215,7 @@ describe('grind invariance', () => {
 
 describe('replay cost', () => {
   it('replays a 15,000-event log in under a second, a third of it in bosses and mocks', () => {
-    const concepts = [...JOURNEY_CONTENT.concepts.keys()];
-    const items: Item[] = [];
-    for (let day = 0; day < 100; day++) {
-      const sid = `01JC${String(day).padStart(22, '0')}`;
-      const mode = day % 2 === 0 ? 'boss' : 'mock';
-      const examQids: string[] = [];
-      const answers: Item[] = [];
-      for (let n = 0; n < 148; n++) {
-        const concept = concepts[(day * 37 + n) % concepts.length] as string;
-        const qid = variantId(concept, n % 2 === 0 ? 'a' : 'b');
-        const exam = n % 3 === 0;
-        if (exam) examQids.push(qid);
-        answers.push([
-          timeOf(day, 5 + n * 5),
-          answerOf({
-            concept,
-            qid,
-            correct: (day + n) % 5 !== 0,
-            sure: exam ? false : n % 3 !== 0,
-            mode: exam ? mode : n % 4 === 1 ? 'quiz' : 'review',
-            sid: exam ? sid : SID,
-            ...(exam ? { flagged: n % 7 === 0 } : {}),
-          }),
-        ]);
-      }
-      const form = day % 8 === 1 ? 'A' : 'remix';
-      items.push([
-        timeOf(day, 0),
-        {
-          t: 'session',
-          sid,
-          mode,
-          phase: 'start',
-          seed: day,
-          scope: mode === 'boss' ? `m${String((day % 13) + 1).padStart(2, '0')}` : 'a',
-          qids: examQids,
-          deadline: timeOf(day, 90),
-          ...(mode === 'mock' ? { form } : {}),
-        },
-      ]);
-      items.push(...answers, [timeOf(day, 745), { t: 'session', sid, mode, phase: 'submit', seed: day }]);
-    }
-    const events: StudyEvent[] = timelineOf(items);
+    const events: StudyEvent[] = timelineOf(grindLog());
     expect(events).toHaveLength(15_000);
     const started = performance.now();
     const memory = deriveMemory(events, JOURNEY_CONTENT);

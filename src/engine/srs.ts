@@ -105,10 +105,16 @@ export interface ExamCap {
  * `max(tomorrow, examDay - 1 - (fnv1a(concept) mod 7))`, which spreads the final reviews.
  */
 export function capDue(due: Date, cap: ExamCap): Date {
+  if (cap.examDate === null || cap.reviewDay >= cap.examDate) return due;
+  return capDueOn(due, studyDayAt(due, cap.tz), cap);
+}
+
+/** `capDue` given the study day of `due` in the review's offset, so a replay can try many exam dates on one due. */
+export function capDueOn(due: Date, dueDay: string, cap: ExamCap): Date {
   const { concept, reviewDay, examDate, tz } = cap;
-  if (examDate === null || reviewDay >= examDate) return due;
+  // A due before the exam day is on or before its eve, so it stays.
+  if (examDate === null || reviewDay >= examDate || dueDay < examDate) return due;
   const eve = addDays(examDate, -1);
-  if (studyDayAt(due, tz) <= eve) return due;
   const spread = addDays(eve, -(fnv1a(concept) % 7));
   const tomorrow = addDays(reviewDay, 1);
   return dayStartAt(spread > tomorrow ? spread : tomorrow, tz);
