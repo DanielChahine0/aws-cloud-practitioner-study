@@ -86,7 +86,13 @@ function markedMisconception(concept: string): boolean {
 /** The selection pool of some chunks, with each concept as memory keys it. */
 function poolOf(chunks: readonly ModuleChunk[]): PoolQuestion[] {
   return chunks.flatMap((c) =>
-    c.questions.map((q) => ({ id: q.id, concept: memoryConcept(q.concept), note: q.note })),
+    c.questions.map((q) => ({
+      id: q.id,
+      concept: memoryConcept(q.concept),
+      note: q.note,
+      type: q.type,
+      module: c.module,
+    })),
   );
 }
 
@@ -100,7 +106,13 @@ function startOrResume(
   const open = openSession(progress.peek(), mode, scope);
   if (open !== null) return open.sid;
   const seed = newSessionSeed();
-  const pool = chunk.questions.map((q) => ({ id: q.id, concept: q.concept, note: q.note }));
+  const pool: PoolQuestion[] = chunk.questions.map((q) => ({
+    id: q.id,
+    concept: q.concept,
+    note: q.note,
+    type: q.type,
+    module: chunk.module,
+  }));
   const slug = scope.split('/')[1] ?? '';
   const qids =
     mode === 'check'

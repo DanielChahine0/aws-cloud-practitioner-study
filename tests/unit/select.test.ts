@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 import type { NewEvent } from '../../schemas/events.ts';
 import { derive, type SessionState } from '../../src/engine/replay.ts';
 import {
+  type ExamPoolQuestion,
+  learnPool,
   type PoolQuestion,
+  pickVariant,
   QUIZ_SIZE,
   RELEARN_GAP,
   relearnVariant,
@@ -12,7 +15,18 @@ import {
 } from '../../src/engine/select.ts';
 import { eventsOf, SID, SID2 } from '../fixtures/events.ts';
 
-const q = (id: string, concept: string, note = 'm01/a'): PoolQuestion => ({ id, concept, note });
+const q = (
+  id: string,
+  concept: string,
+  note = 'm01/a',
+  type: PoolQuestion['type'] = 'single',
+): PoolQuestion => ({
+  id,
+  concept,
+  note,
+  type,
+  module: Number(note.slice(1, 3)),
+});
 const answer = (pool: readonly PoolQuestion[], qid: string, correct: boolean): NewEvent => ({
   t: 'answer',
   sid: SID,
@@ -248,5 +262,35 @@ describe('sessionItems', () => {
       answers: new Map([...base.answers, ['q1-again', relearnAnswer]]),
     };
     expect(sessionItems(answered, relearnFor)).toEqual(items);
+  });
+});
+
+describe('learnPool (spec 4.3)', () => {
+  const exam: ExamPoolQuestion[] = [
+    { ...q('xa1', 'a'), form: 'A' },
+    { ...q('xb1', 'b'), form: 'B' },
+  ];
+
+  it('adds the items of taken forms only, without their form', () => {
+    expect(learnPool(POOL, exam, new Set()).map((p) => p.id)).toEqual(POOL.map((p) => p.id));
+    const withA = learnPool(POOL, exam, new Set(['A']));
+    expect(withA.map((p) => p.id)).toEqual([...POOL.map((p) => p.id), 'xa1']);
+    expect(withA.at(-1)).toEqual(q('xa1', 'a'));
+  });
+});
+
+describe('pickVariant', () => {
+  const variants = [q('a1', 'a'), q('a2', 'a'), q('a3', 'a')];
+
+  it('prefers a never-answered variant, then the one answered longest ago', () => {
+    const someSeen = derive(eventsOf(answer(variants, 'a1', true), answer(variants, 'a3', true)), null);
+    for (let seed = 0; seed < 10; seed++) {
+      expect(pickVariant(variants, someSeen, () => seed / 10).id).toBe('a2');
+    }
+    const allSeen = derive(
+      eventsOf(answer(variants, 'a2', true), answer(variants, 'a1', true), answer(variants, 'a3', true)),
+      null,
+    );
+    expect(pickVariant(variants, allSeen, () => 0.5).id).toBe('a2');
   });
 });

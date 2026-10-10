@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type { NewEvent } from '../../schemas/events.ts';
 import { betXp, expectedXp, SURE_BREAKEVEN } from '../../src/engine/bets.ts';
+import { BOSS_COOLDOWN_MS, bossDraw, bossStatus } from '../../src/engine/boss.ts';
 import { moduleMastery } from '../../src/engine/mastery.ts';
 import { deriveMemory } from '../../src/engine/memory.ts';
 import { reviewQueue } from '../../src/engine/queue.ts';
+import { derive } from '../../src/engine/replay.ts';
+import type { PoolQuestion } from '../../src/engine/select.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
 import { answerOf, at, contentOf, examStartOf, submitOf } from '../fixtures/memory.ts';
@@ -147,6 +150,41 @@ describe('anti-grind audit (spec 3.11)', () => {
     ]);
     expect(first.xp).toBe(100);
     expect(twice.xp).toBe(100);
+  });
+
+  it('Re-rolling a boss: 20 h cooldown and a new draw', () => {
+    const module3 = ['flour', 'yeast', 'salt', 'water'];
+    const events = timelineOf(examOf('2026-10-10', SID, 'boss', module3.slice(0, 1)));
+    const submitted = Date.parse(events.at(-1)?.at ?? '');
+    const statusAt = (ms: number) =>
+      bossStatus({
+        module: 3,
+        progress: derive(events, null),
+        lessonsRead: true,
+        mastery: 70,
+        now: new Date(submitted + ms),
+      });
+    expect(statusAt(BOSS_COOLDOWN_MS - 1).cooldownUntil).not.toBeNull();
+    expect(statusAt(BOSS_COOLDOWN_MS).cooldownUntil).toBeNull();
+    const pool: PoolQuestion[] = Array.from({ length: 40 }, (_, i) => ({
+      id: `q-m3-${i}`,
+      concept: module3[i % 4] as string,
+      note: `m03/lesson-${(i % 2) + 1}`,
+      type: 'single',
+      module: 3,
+    }));
+    const drawOf = (seed: number) =>
+      bossDraw({
+        module: 3,
+        pool,
+        lessons: ['m03/lesson-1', 'm03/lesson-2'],
+        progress: derive([], null),
+        recall: () => 0.5,
+        studied: () => true,
+        now: new Date(submitted + BOSS_COOLDOWN_MS),
+        seed,
+      });
+    expect(drawOf(1)).not.toEqual(drawOf(2));
   });
 
   it('Peeking at mocks: each form pays once and a remix pays nothing', () => {
