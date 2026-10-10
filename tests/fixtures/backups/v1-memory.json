@@ -1,0 +1,166 @@
+{
+  "format": "ccp-study-backup",
+  "schemaVersion": 1,
+  "appVersion": "0.3.0",
+  "contentVersion": "c-1d2e3f",
+  "exportedAt": "2026-10-13T07:00:00.000Z",
+  "events": [
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM001",
+      "at": "2026-10-12T07:00:00.000Z",
+      "tz": 120,
+      "day": "2026-10-12",
+      "t": "session",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS01",
+      "mode": "check",
+      "phase": "start",
+      "seed": 2718281828,
+      "scope": "m01/what-a-bakery-cloud-is",
+      "qids": ["q-7k2m9p", "q-8n3p4r"]
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM002",
+      "at": "2026-10-12T07:01:00.000Z",
+      "tz": 120,
+      "day": "2026-10-12",
+      "t": "answer",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS01",
+      "mode": "check",
+      "qid": "q-7k2m9p",
+      "qv": 1,
+      "concept": "shared-kitchen",
+      "picked": ["b"],
+      "correct": true,
+      "sure": true,
+      "ms": 7600
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM003",
+      "at": "2026-10-12T07:02:00.000Z",
+      "tz": 120,
+      "day": "2026-10-12",
+      "t": "answer",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS01",
+      "mode": "check",
+      "qid": "q-8n3p4r",
+      "qv": 1,
+      "concept": "per-minute-rental",
+      "picked": [["l1", "r2"], ["l2", "r1"], ["l3", "r3"]],
+      "correct": false,
+      "sure": true,
+      "ms": 14100
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM004",
+      "at": "2026-10-12T07:03:00.000Z",
+      "tz": 120,
+      "day": "2026-10-12",
+      "t": "session",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS01",
+      "mode": "check",
+      "phase": "submit",
+      "seed": 2718281828
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM005",
+      "at": "2026-10-12T07:03:00.000Z",
+      "tz": 120,
+      "day": "2026-10-12",
+      "t": "lesson.done",
+      "note": "m01/what-a-bakery-cloud-is"
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM006",
+      "at": "2026-10-12T07:05:00.000Z",
+      "tz": 120,
+      "day": "2026-10-12",
+      "t": "settings",
+      "patch": {
+        "examDate": "2026-11-14"
+      }
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM007",
+      "at": "2026-10-13T06:30:00.000Z",
+      "tz": 120,
+      "day": "2026-10-13",
+      "t": "session",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS02",
+      "mode": "review",
+      "phase": "start",
+      "seed": 1618033988,
+      "scope": "review",
+      "qids": ["q-3m5n7q", "q-7k2m9p"]
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM008",
+      "at": "2026-10-13T06:31:00.000Z",
+      "tz": 120,
+      "day": "2026-10-13",
+      "t": "answer",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS02",
+      "mode": "review",
+      "qid": "q-3m5n7q",
+      "qv": 1,
+      "concept": "per-minute-rental",
+      "picked": ["c"],
+      "correct": false,
+      "sure": false,
+      "ms": 11800
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM009",
+      "at": "2026-10-13T06:32:00.000Z",
+      "tz": 120,
+      "day": "2026-10-13",
+      "t": "answer",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS02",
+      "mode": "review",
+      "qid": "q-7k2m9p",
+      "qv": 1,
+      "concept": "shared-kitchen",
+      "picked": ["b"],
+      "correct": true,
+      "sure": true,
+      "ms": 5200
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM010",
+      "at": "2026-10-13T06:33:00.000Z",
+      "tz": 120,
+      "day": "2026-10-13",
+      "t": "answer",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS02",
+      "mode": "review",
+      "qid": "q-8n3p4r",
+      "qv": 1,
+      "concept": "per-minute-rental",
+      "picked": [["l1", "r1"], ["l2", "r2"], ["l3", "r3"]],
+      "correct": true,
+      "sure": false,
+      "ms": 9900,
+      "relearn": true
+    },
+    {
+      "id": "01JB2M0000MEMEMEMEMEMEM011",
+      "at": "2026-10-13T06:34:00.000Z",
+      "tz": 120,
+      "day": "2026-10-13",
+      "t": "session",
+      "sid": "01JB2M0000MEMEMEMEMEMEMS02",
+      "mode": "review",
+      "phase": "submit",
+      "seed": 1618033988
+    }
+  ],
+  "kv": {
+    "lastExportAt": {
+      "value": "2026-10-13T07:00:00.000Z",
+      "updatedAt": "2026-10-13T07:00:00.000Z"
+    },
+    "examAsk": {
+      "value": "dismissed",
+      "updatedAt": "2026-10-12T07:04:00.000Z"
+    }
+  }
+}
