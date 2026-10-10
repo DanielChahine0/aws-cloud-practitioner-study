@@ -1,5 +1,11 @@
 /** The exam shell's keys and its focus bar text (spec 7.2 and 7.4), pure so the tests run without a browser. */
+import type { ContentIndex } from '../../schemas/chunks.ts';
+import type { SessionState } from '../engine/replay.ts';
+import { type MockRoute, toHash } from './router.ts';
 import { type RunnerKeyInput, runnerKey } from './runner-keys.ts';
+
+/** The `form` a remix mock's session events carry; forms A to D are upper case (spec 4.3). */
+export const REMIX_FORM = 'remix';
 
 export type ExamCommand =
   | { kind: 'choose'; n: number }
@@ -62,4 +68,20 @@ export function examBarText(args: {
     'Flag (f)',
     'Grid (g)',
   ].join(BAR_GAP);
+}
+
+/** The route of an exam session: `#/s/boss/m05`, `#/s/mock/a` or `#/s/mock/remix`. */
+export function examHashOf(session: Pick<SessionState, 'mode' | 'scope' | 'form'>): string {
+  if (session.mode === 'boss') return toHash({ kind: 'boss', module: Number(session.scope.slice(1)) });
+  const form = session.form === null || session.form === REMIX_FORM ? 'remix' : session.form.toLowerCase();
+  return toHash({ kind: 'mock', form: form as MockRoute });
+}
+
+/** The name of an exam session: `Boss: <short>`, `Mock A` or `Remix mock`. */
+export function examLabel(session: Pick<SessionState, 'mode' | 'scope' | 'form'>, idx: ContentIndex): string {
+  if (session.mode === 'boss') {
+    const module = Number(session.scope.slice(1));
+    return `Boss: ${idx.modules.find((m) => m.n === module)?.short ?? `Module ${module}`}`;
+  }
+  return session.form === null || session.form === REMIX_FORM ? 'Remix mock' : `Mock ${session.form}`;
 }

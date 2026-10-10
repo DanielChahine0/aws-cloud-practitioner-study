@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { type ExamKeyState, examBarText, examKey, formatClock } from '../../src/app/exam.ts';
+import type { ContentIndex } from '../../schemas/chunks.ts';
+import {
+  type ExamKeyState,
+  examBarText,
+  examHashOf,
+  examKey,
+  examLabel,
+  formatClock,
+} from '../../src/app/exam.ts';
 import type { RunnerKeyInput } from '../../src/app/runner-keys.ts';
+import { emptyIndexFields } from '../fixtures/index.ts';
 
 const key = (k: string, more: Partial<RunnerKeyInput> = {}): RunnerKeyInput => ({
   key: k,
@@ -87,5 +96,39 @@ describe('examBarText', () => {
     expect(examBarText({ label: 'Boss: Module 5', position: 1, total: 15, leftMs: 1_260_000 })).toBe(
       'Boss: Module 5   1/15   21:00   Flag (f)   Grid (g)',
     );
+  });
+});
+
+describe('examHashOf and examLabel', () => {
+  const IDX: ContentIndex = {
+    contentVersion: 'test',
+    modules: [
+      {
+        n: 5,
+        slug: 'pantry',
+        title: 'Module 5: Pantry',
+        short: 'Pantry',
+        chunk: 'content/m05.json',
+        lessons: [],
+      },
+    ],
+    concepts: [],
+    glossary: [],
+    missions: [],
+    questionVersions: {},
+    search: 'content/search.json',
+    ...emptyIndexFields(),
+  };
+
+  it('routes and names a boss, a mock and a remix', () => {
+    const boss = { mode: 'boss', scope: 'm05', form: null } as const;
+    const mock = { mode: 'mock', scope: '', form: 'B' } as const;
+    const remix = { mode: 'mock', scope: '', form: 'remix' } as const;
+    expect(examHashOf(boss)).toBe('#/s/boss/m05');
+    expect(examHashOf(mock)).toBe('#/s/mock/b');
+    expect(examHashOf(remix)).toBe('#/s/mock/remix');
+    expect(examLabel(boss, IDX)).toBe('Boss: Pantry');
+    expect(examLabel(mock, IDX)).toBe('Mock B');
+    expect(examLabel(remix, IDX)).toBe('Remix mock');
   });
 });

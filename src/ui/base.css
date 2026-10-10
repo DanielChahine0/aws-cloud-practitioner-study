@@ -1428,3 +1428,120 @@ tr.evidence > :first-child {
 .progress-line {
   margin: 0 0 4px;
 }
+
+/* The exam shell (spec 7.2 and 7.6): the focus bar, the question, the grid, the review page and the confirmation */
+.focus-bar {
+  gap: 12px 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+.exam-label {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exam-clock {
+  margin-left: auto;
+  font-weight: 600;
+}
+
+.exam-start .button-link,
+.exam-start .button {
+  min-height: 44px;
+}
+
+.exam .options {
+  margin-bottom: 24px;
+}
+
+.exam-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.exam-nav .button {
+  min-height: 44px;
+}
+
+.exam-nav .button:last-child {
+  margin-left: auto;
+}
+
+.button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--active);
+}
+
+.exam-grid-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+/* Answered cells are solid and unanswered ones dashed; a flagged cell also carries an F, so no state needs color. */
+.grid-cell {
+  position: relative;
+  width: 100%;
+  min-height: 44px;
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+  background: var(--pane);
+  border: 1px dashed var(--muted);
+  border-radius: 6px;
+}
+
+.grid-cell.is-answered {
+  color: var(--pane);
+  background: var(--active);
+  border-style: solid;
+  border-color: var(--active);
+}
+
+.grid-cell[aria-current="true"] {
+  outline: 2px solid var(--active);
+  outline-offset: 2px;
+}
+
+.grid-flag {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.exam-counts {
+  margin: 0 0 16px;
+}
+
+.exam-review h2 {
+  margin: 0 0 12px;
+}
+
+.exam-review .button {
+  min-height: 44px;
+}
+
+/* The focus bar's Flag and Grid show their state by an underline as well as by aria-pressed and aria-expanded. */
+.focus-bar .topbar-button[aria-pressed="true"],
+.focus-bar .topbar-button[aria-expanded="true"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+dialog.confirm {
+  width: min(400px, calc(100vw - 32px));
+  max-width: none;
+}
+
+dialog.confirm .button {
+  min-height: 44px;
+}

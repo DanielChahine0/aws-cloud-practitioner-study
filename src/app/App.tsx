@@ -1,10 +1,13 @@
+import { effect } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { ENGINE_VERSION } from '../engine/replay.ts';
 import { KV_KEYS } from '../store/kv.ts';
 import { startClock } from './clock.ts';
 import { index, loadError, loadIndex } from './content.ts';
+import { examTick, openExam, settleExam } from './exam-settle.ts';
 import { useKeyboard } from './keyboard.ts';
-import { events, initStore, kvRecords, saveError, storeReady, writeKv } from './progress.ts';
+import { watchRanks } from './memory.ts';
+import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
 import { Help } from './screens/Help.tsx';
 import { Palette } from './screens/Palette.tsx';
 import { Progress } from './screens/Progress.tsx';
@@ -20,6 +23,8 @@ export function App() {
     void initStore();
     return startClock();
   }, []);
+  useEffect(() => watchRanks(), []);
+  useExamTicker();
   useKeyboard();
   return (
     <>
@@ -33,6 +38,32 @@ export function App() {
       {overlay.value === 'help' && <Help />}
       {overlay.value === 'progress' && <Progress />}
     </>
+  );
+}
+
+/**
+ * The exam clock: while any boss or mock is open, wherever the route is, ticks `examTick` every second and settles the
+ * exam once its deadline has passed, also for an exam already past it when the log loads (spec 4.3).
+ */
+function useExamTicker(): void {
+  useEffect(
+    () =>
+      effect(() => {
+        if (!storeReady.value) return;
+        const open = openExam(progress.value);
+        if (open === null || open.deadline === null) return;
+        const { sid } = open;
+        const deadline = Date.parse(open.deadline);
+        const tick = (): void => {
+          const at = Date.now();
+          examTick.value = at;
+          if (at >= deadline) void settleExam(sid, new Date(at));
+        };
+        tick();
+        const timer = setInterval(tick, 1000);
+        return () => clearInterval(timer);
+      }),
+    [],
   );
 }
 

@@ -9,9 +9,8 @@ import { ModulePage } from './ModulePage.tsx';
 import { NotFound } from './NotFound.tsx';
 import { Runner } from './Runner.tsx';
 
-// Exam screens load on first use; Tasks 18, 19 and 21 replace these placeholders with the real screens.
-const BossScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
-const MockScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
+// Exam screens load on first use; Tasks 19 and 21 replace the placeholders that are left.
+const ExamScreen = lazyScreen(() => import('./Exam.tsx').then((m) => m.Exam));
 const MocksScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
 const ResultsScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
 const FocusScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
@@ -37,11 +36,11 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
     case 'review':
       return <Runner key={route} idx={idx} mode="review" scope="review" />;
     case 'boss':
-      return <BossScreen key={route} title={`Boss: Module ${route.module}`} />;
+      return <ExamScreen key={route} idx={idx} route={route} />;
     case 'mocks':
       return <MocksScreen title="Mock exams" />;
     case 'mock':
-      return <MockScreen key={route} title={`Mock ${route.form.toUpperCase()}`} />;
+      return <ExamScreen key={route} idx={idx} route={route} />;
     case 'focus':
       return <FocusScreen key={route} title="Focus quiz" />;
     case 'results':
