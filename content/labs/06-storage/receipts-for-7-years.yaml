@@ -1,0 +1,169 @@
+id: lab-m06-receipts-for-7-years
+module: 6
+title: Receipts for 7 years
+engine: simulate
+tier: core
+status: live
+rev: 1
+concepts:
+  - s3-lifecycle
+  - s3-storage-classes
+  - s3-standard
+  - s3-standard-ia
+  - s3-one-zone-ia
+  - s3-glacier-storage-classes
+notes:
+  - m06/amazon-s3-storage-classes-and-s3-lifecycle
+minutes: 8
+brief: >-
+  The cafe must keep 100 GB of card receipts for 7 years.
+  On day 20 the owner rechecks 10 GB and needs it back within 1 hour, one Availability Zone is lost on day 150, and on day 200 a tax review needs 5 GB within 24 hours.
+  Plan the first year of S3 Lifecycle moves within 600 lab credits; the stored and read sizes, read days, deadlines, zone loss, budget and every class price, fee, minimum stay and retrieval time are lab values.
+spec:
+  model: s3-lifecycle
+  constants:
+    gb: 100
+    classes:
+      - id: standard
+        label: S3 Standard
+        storage: 2
+        retrieval: 0
+        minDays: 0
+        hours: 0
+        zones: 3
+      - id: standard-ia
+        label: S3 Standard-IA
+        storage: 1.2
+        retrieval: 0.1
+        minDays: 30
+        hours: 0
+        zones: 3
+      - id: one-zone-ia
+        label: S3 One Zone-IA
+        storage: 1
+        retrieval: 0.1
+        minDays: 30
+        hours: 0
+        zones: 1
+      - id: glacier-flexible
+        label: S3 Glacier Flexible Retrieval
+        storage: 0.4
+        retrieval: 0.3
+        minDays: 90
+        hours: 5
+        zones: 3
+      - id: deep-archive
+        label: S3 Glacier Deep Archive
+        storage: 0.1
+        retrieval: 0.5
+        minDays: 180
+        hours: 12
+        zones: 3
+    reads:
+      - { day: 20, gb: 10, within: 1 }
+      - { day: 200, gb: 5, within: 24 }
+    zoneLoss: 150
+  params:
+    - kind: choice
+      id: first
+      label: Storage class from day 0
+      options:
+        - { id: standard, label: S3 Standard }
+        - { id: standard-ia, label: S3 Standard-IA }
+        - { id: one-zone-ia, label: S3 One Zone-IA }
+        - { id: glacier-flexible, label: S3 Glacier Flexible Retrieval }
+        - { id: deep-archive, label: S3 Glacier Deep Archive }
+      initial: standard
+    - kind: choice
+      id: second
+      label: Second storage class
+      options:
+        - { id: standard, label: S3 Standard }
+        - { id: standard-ia, label: S3 Standard-IA }
+        - { id: one-zone-ia, label: S3 One Zone-IA }
+        - { id: glacier-flexible, label: S3 Glacier Flexible Retrieval }
+        - { id: deep-archive, label: S3 Glacier Deep Archive }
+      initial: standard
+    - kind: choice
+      id: third
+      label: Third storage class
+      options:
+        - { id: standard, label: S3 Standard }
+        - { id: standard-ia, label: S3 Standard-IA }
+        - { id: one-zone-ia, label: S3 One Zone-IA }
+        - { id: glacier-flexible, label: S3 Glacier Flexible Retrieval }
+        - { id: deep-archive, label: S3 Glacier Deep Archive }
+      initial: standard
+    - kind: int
+      id: secondDay
+      label: Move to the second class on
+      min: 0
+      max: 365
+      step: 1
+      initial: 30
+      unit: day
+    - kind: int
+      id: thirdDay
+      label: Move to the third class on
+      min: 0
+      max: 365
+      step: 1
+      initial: 90
+      unit: day
+    - kind: int
+      id: expire
+      label: Delete receipts at age, 0 to keep them
+      min: 0
+      max: 3650
+      step: 1
+      initial: 0
+      unit: days
+  thresholds:
+    - { goal: g1, metric: keptDays, min: 2555 }
+    - { goal: g1, metric: lost, max: 0 }
+    - { goal: g2, metric: lateReads, max: 0 }
+    - { goal: g3, metric: cost, max: 600 }
+goals:
+  - id: g1
+    label: Every receipt is kept 7 years and none is lost
+    hint: Compliance needs the receipts for 7 years, so nothing may delete them sooner, and a class held in a single zone loses its only copy when that zone fails on day 150.
+  - id: g2
+    label: Both reads arrive before their deadlines
+    hint: The day 20 recheck needs its data within 1 hour, and the two archive classes in this lab take hours to bring data back (lab values); by day 200 a wait of up to 24 hours is fine.
+  - id: g3
+    label: The year costs no more than 600 lab credits
+    hint: Receipts that have gone cold cost less in a cheaper class, and a slower archive is fine once the next read allows a whole day.
+solution:
+  - { t: set, param: second, value: standard-ia }
+  - { t: set, param: third, value: deep-archive }
+wrongPaths:
+  - mistake: Holds the only copy in a one-zone class past day 150 to save money, so the zone loss destroys it
+    failsGoal: g1
+    actions:
+      - { t: set, param: second, value: one-zone-ia }
+      - { t: set, param: thirdDay, value: 200 }
+      - { t: set, param: third, value: deep-archive }
+  - mistake: Expires the receipts after a year like old logs, though compliance needs them for 7 years
+    failsGoal: g1
+    actions:
+      - { t: set, param: second, value: standard-ia }
+      - { t: set, param: third, value: deep-archive }
+      - { t: set, param: expire, value: 365 }
+  - mistake: Archives the receipts in the cheapest class from day 0, so the day 20 recheck waits 12 hours
+    failsGoal: g2
+    actions:
+      - { t: set, param: first, value: deep-archive }
+      - { t: set, param: second, value: deep-archive }
+      - { t: set, param: third, value: deep-archive }
+  - mistake: Archives in S3 Glacier Flexible Retrieval, whose higher storage price breaks the budget
+    failsGoal: g3
+    actions:
+      - { t: set, param: second, value: standard-ia }
+      - { t: set, param: third, value: glacier-flexible }
+debrief:
+  lines:
+    - S3 Glacier Deep Archive is the lowest-cost class to store in but returns data slowest and at the highest retrieval fee (lab values), so once the next read can wait a day it costs less over the year than S3 Glacier Flexible Retrieval.
+    - Archiving too early blocks quick access, since Deep Archive takes about 12 hours to return data that the owner needs within the hour.
+    - A one-zone class costs less, but receipts sitting in it on the day its zone is damaged are lost, so it suits secondary backups or data that is easy to recreate.
+    - An expiration action deletes objects for good, so it waits until compliance no longer needs the receipts.
+  questions: [q-t2w4yb, q-x8g2j3, q-ej43a3]
