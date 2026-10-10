@@ -1,0 +1,504 @@
+questions:
+  - id: q-2a69xq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: scalability
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 1
+    stem: >-
+      Which statement describes scalability as a benefit of the AWS Cloud?
+    options:
+      - id: a
+        text: Resources grow and shrink on their own as demand moves minute to minute
+        why: Automatic, moment-to-moment growing and shrinking is elasticity, not long-term planning.
+      - id: b
+        text: Resources are added over time, planned ahead, to take on growing load
+        correct: true
+        why: Scalability is forward-looking capacity planning that absorbs more work by adding resources.
+      - id: c
+        text: Resources stay in service when any single instance in the system fails
+        why: Staying up with no single point of failure is high availability, a different idea.
+      - id: d
+        text: Resources are billed only for the time that the application code runs
+        why: Paying only for run time is a pricing trait and says nothing about growth planning.
+    evidence:
+      - "Scalability looks ahead: long-term capacity planning so a system can absorb more users or work by adding resources."
+    takeaway: Scalability is planned, long-term growth that lets a system take on more load by adding resources.
+    history: []
+    verified:
+      keyHash: 836ff72bdb8f
+      fullHash: 117dbd0f1ee1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bcbwkr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: scalability
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 2
+    stem: >-
+      The cafe plans to open locations in several new cities over the next few years.
+      It is mapping out how its ordering system will add resources to absorb the extra customers.
+      Which cloud benefit is the cafe planning around?
+    options:
+      - id: a
+        text: Elasticity
+        why: Elasticity reacts to demand in the moment, while this plan looks years ahead.
+      - id: b
+        text: High availability
+        why: High availability removes single points of failure and does not plan for more customers.
+      - id: c
+        text: Scalability
+        correct: true
+        why: Planning ahead so the system can take on more users by adding resources is scalability.
+      - id: d
+        text: Agility
+        why: Agility is about adapting fast to change, such as redeploying quickly, not long-term capacity planning.
+    evidence:
+      - "Scalability looks ahead: long-term capacity planning so a system can absorb more users or work by adding resources."
+      - "**Scalability**: the ability to take on more load by adding resources, planned long term."
+    takeaway: Long-term planning to absorb more users by adding resources is scalability, not elasticity.
+    history: []
+    verified:
+      keyHash: e9114812dd87
+      fullHash: a0992d50504c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7rdbwh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elasticity
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 3
+    stem: >-
+      The cafe's menu site gets a rush every lunch hour and is nearly idle overnight.
+      The cafe wants capacity to follow these swings automatically so each hour costs only what it needs.
+      Which benefit does the cafe want?
+    options:
+      - id: a
+        text: Elasticity
+        correct: true
+        why: Elasticity scales out when demand spikes and back in when it falls, so each moment costs only what it needs.
+      - id: b
+        text: Scalability
+        why: Scalability is long-term capacity planning, not automatic hour-by-hour adjustment.
+      - id: c
+        text: Economies of scale
+        why: Economies of scale lower unit prices through huge volume, but do not shrink capacity overnight.
+      - id: d
+        text: High availability
+        why: High availability keeps the site up through failures but does not track daily demand.
+    evidence:
+      - "Elasticity reacts in the moment: resources scale out automatically when demand spikes and back in when it falls, so each moment costs only what it needs."
+    takeaway: Automatic, real-time growing and shrinking with demand is elasticity, while scalability is planned growth.
+    history: []
+    verified:
+      keyHash: 7ac2a9f26d0a
+      fullHash: 507805c4007a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-46vkkx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elasticity
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 1
+    stem: >-
+      How does elasticity on AWS help a business control its compute costs?
+    options:
+      - id: a
+        text: Capacity is planned years ahead to absorb expected growth
+        why: Long-term planning for growth is scalability, which does not cut cost during quiet hours.
+      - id: b
+        text: Capacity is copied across Availability Zones to survive failures
+        why: Redundant copies across zones give high availability, which adds cost rather than trimming it.
+      - id: c
+        text: Capacity is removed automatically as demand falls
+        correct: true
+        why: Elastic resources scale back in as demand drops, so the business stops paying for unused capacity.
+      - id: d
+        text: Capacity is added to a running instance as more CPU and memory
+        why: Giving one instance more power is vertical scaling and does not shrink spending when demand drops.
+    evidence:
+      - "Elasticity reacts in the moment: resources scale out automatically when demand spikes and back in when it falls, so each moment costs only what it needs."
+      - Buying for the peak wastes money and buying for the average leaves customers waiting, so capacity should track demand hour by hour.
+    takeaway: Elasticity saves money by shrinking resources automatically when demand falls, not by sizing for a fixed peak.
+    history: []
+    verified:
+      keyHash: 7a162906b4fe
+      fullHash: 74dbb7f1d342
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bxvsy0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vertical-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 1
+    stem: >-
+      What does it mean to scale up an Amazon EC2 workload?
+    options:
+      - id: a
+        text: Adding more instances that share the work in parallel
+        why: Adding parallel instances is scaling out, which is horizontal scaling.
+      - id: b
+        text: Giving a running instance more power to handle work
+        correct: true
+        why: Scaling up is vertical scaling, which makes an existing instance more powerful.
+      - id: c
+        text: Removing extra instances after a busy period ends
+        why: Removing surplus instances as demand falls is scaling in.
+      - id: d
+        text: Placing copies of an instance in another zone
+        why: Copies across Availability Zones add redundancy rather than more power per instance.
+    evidence:
+      - "**Scaling up (vertical)**: give running instances more power."
+    takeaway: Scaling up, or vertical scaling, means making a running instance more powerful.
+    history: []
+    verified:
+      keyHash: 7c4670b658c5
+      fullHash: 78961566bcd4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-5jx9gf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vertical-scaling
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 2
+    stem: >-
+      The cafe keeps one server for its kitchen display system.
+      It moves that server to a larger instance type with more CPU and memory, and still runs only that one instance.
+      Which kind of scaling did the cafe use?
+    options:
+      - id: a
+        text: Horizontal scaling
+        why: Horizontal scaling adds more instances, but the cafe still runs a single one.
+      - id: b
+        text: Predictive scaling
+        why: Predictive scaling schedules instances ahead of expected demand, not a bigger instance type.
+      - id: c
+        text: Scaling in
+        why: Scaling in removes instances, while the cafe gave its one instance more resources.
+      - id: d
+        text: Vertical scaling
+        correct: true
+        why: Making the one running instance more powerful is vertical scaling, also called scaling up.
+    evidence:
+      - "**Scaling up (vertical scaling)**: making a running instance more powerful."
+    takeaway: Moving one instance to a bigger size without adding instances is vertical scaling.
+    history: []
+    verified:
+      keyHash: a32df2879b22
+      fullHash: d23eb9a6bd27
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vjc32d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: horizontal-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 3
+    stem: >-
+      Weekend crowds are flooding the cafe's ordering site.
+      Each order is quick to handle, so a more powerful server would gain little time per order.
+      Which approach lets the site serve more customers at the same time?
+    options:
+      - id: a
+        text: Vertical scaling
+        why: More power per instance does not help here, since each order is already handled quickly.
+      - id: b
+        text: Horizontal scaling
+        correct: true
+        why: Adding instances that work in parallel serves more customers at once, like extra cashiers.
+      - id: c
+        text: Scaling in
+        why: Scaling in removes instances, which would make the weekend crowd wait longer.
+      - id: d
+        text: High availability
+        why: Redundancy across zones protects against failure but is not the answer to more customers.
+    evidence:
+      - More power per instance does not always help, since a faster cashier cannot hurry an undecided customer, but extra cashiers serve more people at once.
+      - "More customers arrive, but a bigger server cannot serve any one faster: scale out."
+    takeaway: When more users arrive but a bigger server would not speed each request, scale out by adding instances.
+    history: []
+    verified:
+      keyHash: 570f01337cfc
+      fullHash: 2f4b2f95d9e2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-edx8q9
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: horizontal-scaling
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 1
+    stem: >-
+      Which statements describe horizontal scaling of Amazon EC2 instances?
+    options:
+      - id: a
+        text: It adds instances that share the work in parallel
+        correct: true
+        why: Scaling out means more instances working side by side on the load.
+      - id: b
+        text: It gives a running instance more CPU and memory
+        why: Giving a running instance more resources is vertical scaling, not horizontal.
+      - id: c
+        text: It lets each tier scale out on its own
+        correct: true
+        why: Each tier adds instances on its own, so one tier can run more instances than another with nothing overprovisioned.
+      - id: d
+        text: It swaps each instance for a larger instance type
+        why: Moving to a larger type gives each instance more power, which is scaling up rather than out.
+      - id: e
+        text: It collects the metrics that trigger scaling
+        why: Collecting the metrics behind scaling decisions is the job of Amazon CloudWatch.
+    evidence:
+      - "**Scaling out (horizontal)**: more instances share the work in parallel."
+      - Each tier scales on its own, so order-takers can outnumber drink-makers while the back end has no backlog, and nothing is overprovisioned.
+    takeaway: Horizontal scaling adds parallel instances, and each tier can scale out on its own.
+    history: []
+    verified:
+      keyHash: 06059039be5d
+      fullHash: 51d963b48e30
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jys4v9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ec2-auto-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 3
+    stem: >-
+      The cafe is launching an online store and cannot predict when its traffic spikes will hit.
+      It wants servers added as demand rises and removed as it falls, without anyone watching.
+      Which AWS service should the cafe use?
+    options:
+      - id: a
+        text: Elastic Load Balancing
+        why: A load balancer spreads requests across instances but does not add or remove them.
+      - id: b
+        text: Amazon CloudWatch
+        why: CloudWatch collects the metrics that trigger scaling but does not launch instances itself.
+      - id: c
+        text: Amazon EC2 Auto Scaling
+        correct: true
+        why: EC2 Auto Scaling adds instances as demand rises and decommissions them as it falls.
+      - id: d
+        text: Amazon Lightsail
+        why: Lightsail offers simple, predictably priced hosting and does not follow demand automatically.
+    evidence:
+      - It adds instances as demand and key metrics rise and decommissions them as demand falls, keeping the desired number running every minute.
+      - "A new store cannot predict its traffic spikes: let Auto Scaling follow demand."
+    takeaway: To add and remove EC2 instances automatically with unpredictable demand, use Amazon EC2 Auto Scaling.
+    history: []
+    verified:
+      keyHash: c0cf7641038b
+      fullHash: c27932286781
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-r3t870
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ec2-auto-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's Auto Scaling group has a minimum capacity of 4, a desired capacity of 6 and a maximum capacity of 12.
+      A holiday promotion drives demand far above normal.
+      Which setting limits how many instances the group can run during the promotion?
+    options:
+      - id: a
+        text: The minimum capacity of 4
+        why: The minimum of 4 is the floor for quiet times, so it limits how few instances run, not how many.
+      - id: b
+        text: The desired capacity of 6
+        why: The desired capacity of 6 is the count it aims for at current load, and the group can rise above it.
+      - id: c
+        text: The maximum capacity of 12
+        correct: true
+        why: The group scales out between its minimum and maximum, and the maximum of 12 is the ceiling that caps cost.
+      - id: d
+        text: The instance type of its instances
+        why: The instance type sets each instance's CPU and memory, not how many instances the group may run.
+    evidence:
+      - "**Minimum capacity**: the floor, launched as soon as the group is created (4 in the example)."
+      - "**Desired capacity**: the count it aims to hold for the current load, defaulting to the minimum if unset (6)."
+      - "**Maximum capacity**: the ceiling that prevents over-scaling and caps cost (12), with scaling between minimum and maximum."
+    takeaway: An Auto Scaling group never runs more instances than its maximum capacity, which caps cost.
+    history: []
+    verified:
+      keyHash: f0c2b8cf0206
+      fullHash: e37b67ac6b63
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-p13mqv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: dynamic-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 3
+    stem: >-
+      A popular food blogger posts about the cafe without warning, and online orders jump within minutes.
+      Which Amazon EC2 Auto Scaling approach handles this surge?
+    options:
+      - id: a
+        text: Predictive scaling
+        why: Predictive scaling plans capacity for expected demand, and this surge came with no warning.
+      - id: b
+        text: Vertical scaling
+        why: Making one instance more powerful is not an Auto Scaling approach for sudden demand.
+      - id: c
+        text: Scaling in
+        why: Scaling in removes instances, which is the wrong move when orders jump.
+      - id: d
+        text: Dynamic scaling
+        correct: true
+        why: Dynamic scaling responds to demand in real time, so it reacts to an unplanned surge.
+    evidence:
+      - "**Dynamic scaling** responds to demand in real time, and **predictive scaling** schedules capacity ahead of expected demand."
+    takeaway: An unexpected surge calls for dynamic scaling, which reacts to demand in real time.
+    history: []
+    verified:
+      keyHash: 9c82a2b513d0
+      fullHash: 96567e702ee3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-twwd49
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: dynamic-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which statement describes dynamic scaling in Amazon EC2 Auto Scaling?
+    options:
+      - id: a
+        text: It schedules extra capacity ahead of demand it expects
+        why: Scheduling capacity ahead of expected demand is predictive scaling.
+      - id: b
+        text: It moves the workload onto a larger instance type
+        why: Moving to a larger instance type is vertical scaling, not an Auto Scaling approach.
+      - id: c
+        text: It adjusts capacity in real time as demand changes
+        correct: true
+        why: Dynamic scaling reacts to demand as it happens, adding or removing instances in real time.
+      - id: d
+        text: It keeps the same instance count at every hour
+        why: A fixed count does not scale at all, so it cannot follow changing demand.
+    evidence:
+      - "**Dynamic scaling**: Auto Scaling that reacts in real time."
+    takeaway: Dynamic scaling reacts to demand in real time, while predictive scaling plans ahead.
+    history: []
+    verified:
+      keyHash: 2bf6f28ed76b
+      fullHash: 0acb34dd8724
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hjv0ax
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: predictive-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 3
+    stem: >-
+      Every weekday the cafe's order traffic climbs at the same morning hour.
+      The cafe wants instances already running before the rush begins rather than added once it starts.
+      Which Amazon EC2 Auto Scaling approach fits?
+    options:
+      - id: a
+        text: Dynamic scaling
+        why: Dynamic scaling reacts once demand changes, so instances would arrive after the rush starts.
+      - id: b
+        text: Predictive scaling
+        correct: true
+        why: Predictive scaling schedules capacity ahead of anticipated demand, so instances are ready in time.
+      - id: c
+        text: Vertical scaling
+        why: A more powerful single instance is not an Auto Scaling approach for timing capacity.
+      - id: d
+        text: Scaling in
+        why: Scaling in removes instances, which does nothing to prepare for a morning rush.
+    evidence:
+      - "**Predictive scaling**: Auto Scaling that schedules capacity ahead of anticipated demand."
+    takeaway: A regular, expected rush points to predictive scaling, which adds capacity before demand arrives.
+    history: []
+    verified:
+      keyHash: bc5cd9148ed4
+      fullHash: b40cea3ea24f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-08eg4f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: predictive-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 1
+    stem: >-
+      What sets predictive scaling apart in Amazon EC2 Auto Scaling?
+    options:
+      - id: a
+        text: It keeps the group between its minimum and maximum
+        why: Every Auto Scaling group stays within its limits, so this does not set predictive scaling apart.
+      - id: b
+        text: It uses CloudWatch metrics to decide when to scale
+        why: CloudWatch metrics drive Auto Scaling changes in general, not only predictive scaling.
+      - id: c
+        text: It adjusts capacity in real time as demand changes
+        why: Reacting to demand as it happens is dynamic scaling, the real-time approach.
+      - id: d
+        text: It adds capacity before the demand it expects arrives
+        correct: true
+        why: Predictive scaling schedules capacity ahead of anticipated demand rather than reacting to it.
+    evidence:
+      - "**Predictive scaling**: Auto Scaling that schedules capacity ahead of anticipated demand."
+    takeaway: Predictive scaling schedules capacity ahead of expected demand instead of reacting to it.
+    history: []
+    verified:
+      keyHash: 0bcbfed1aade
+      fullHash: 2f6017a0b399
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

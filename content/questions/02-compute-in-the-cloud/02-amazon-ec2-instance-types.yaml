@@ -1,0 +1,602 @@
+questions:
+  - id: q-88kwg7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-types
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      When you choose an instance type for an Amazon EC2 server, what are you mainly deciding?
+    options:
+      - id: a
+        text: The blend of processor, memory, storage and network capacity
+        correct: true
+        why: Each type bundles its own mix of CPU, memory, storage and networking, and that mix is what you pick.
+      - id: b
+        text: The operating system and software the server starts with
+        why: The starting software comes from the machine image, not from the instance type you pick.
+      - id: c
+        text: The billing commitment the server runs under
+        why: How you pay is a separate pricing choice, so the type does not set your commitment.
+      - id: d
+        text: The Region whose data center hosts the server
+        why: Location is chosen apart from the type, and any type choice leaves the Region open.
+    evidence:
+      - Like coffee machines suited to different drinks, instance families each mix CPU, memory, storage and networking differently.
+      - "**Instance family**: types sharing one resource mix."
+    takeaway: An EC2 instance type sets how much CPU, memory, storage and networking a server gets.
+    history: []
+    verified:
+      keyHash: ebdd96b93ba7
+      fullHash: 5fdac274f75a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-v83pwr
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: ec2-instance-types
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's developer spots an instance type name on the EC2 launch page and wants to know what it reveals.
+      Which details can be read straight from that name?
+    options:
+      - id: a
+        text: The resource mix it offers
+        correct: true
+        why: The front part of a type name marks the family, which sets the server's resource mix.
+      - id: b
+        text: The software it boots with
+        why: The starting software comes from the machine image picked at launch, not from the type name.
+      - id: c
+        text: The place it runs in
+        why: A type name is the same in every Region, so it says nothing about where the server runs.
+      - id: d
+        text: The scale of its capacity
+        correct: true
+        why: The last part of a type name marks the size, which sets how large the server is in its family.
+      - id: e
+        text: The way it is billed
+        why: The same type can be bought On-Demand or with a commitment, so the name cannot show it.
+    evidence:
+      - Type names encode family and size.
+    takeaway: An EC2 type name packs in two facts, the family and the size, and nothing about price or place.
+    history: []
+    verified:
+      keyHash: 4f5e9e7381f1
+      fullHash: 5d0c7adf7658
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4e2ezy
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: ec2-instance-families
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is planning three new workloads on Amazon EC2.
+      Match each workload to the instance family that suits it.
+    pairs:
+      - left: An online trivia game server shared by many players
+        right: Compute optimized
+        why: A busy game server is limited by processor power, which is the strength of the compute optimized family.
+      - left: A big customer database held fully in RAM
+        right: Memory optimized
+        why: Keeping a large database in RAM calls for the large memory of the memory optimized family.
+      - left: A sales data warehouse read from local disks
+        right: Storage optimized
+        why: A warehouse that reads heavily from local disks needs the fast local storage of the storage optimized family.
+    evidence:
+      - "A multiplayer game server: compute optimized."
+      - "A large in-memory database: memory optimized."
+      - "A data warehouse on local disks: storage optimized."
+    takeaway: Each EC2 family fits the workload whose main demand matches its strength, such as CPU, memory or local disk.
+    history: []
+    verified:
+      keyHash: a0a73b199362
+      fullHash: f296d7c5825b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-3j4ghx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-families
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is moving a new workload to Amazon EC2 and must choose an instance family.
+      What should drive that choice?
+    options:
+      - id: a
+        text: Where the workload's users are located
+        why: User location guides the Region choice, and it does not set which resource mix the workload needs.
+      - id: b
+        text: Which resource limits the workload
+        correct: true
+        why: Families differ in their resource mix, so the one that eases the workload's bottleneck is the right pick.
+      - id: c
+        text: How the cafe plans to pay for the workload
+        why: How the cafe pays is decided apart from the family, so it says nothing about the resource mix needed.
+      - id: d
+        text: Which software the workload needs installed
+        why: The software comes from the machine image, which any family can run, so it does not drive this choice.
+    evidence:
+      - "Pick the family by the bottleneck: CPU, memory, accelerators or local disk."
+    takeaway: Choose an EC2 instance family by the workload's bottleneck, whether that is CPU, memory, accelerators or local disk.
+    history: []
+    verified:
+      keyHash: 8ad6219544a0
+      fullHash: 88e4f48c6501
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-7ft11h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: general-purpose-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is launching a new ordering website and has no idea yet whether it will lean on CPU, memory or disk.
+      Which EC2 instance family is the sensible starting point?
+    options:
+      - id: a
+        text: Compute optimized
+        why: This family pays off only when CPU is the known bottleneck, which the cafe cannot say yet.
+      - id: b
+        text: General purpose
+        correct: true
+        why: Its balanced mix suits a workload whose needs are still unknown, so it is the safe place to start.
+      - id: c
+        text: Memory optimized
+        why: This family targets big in-memory datasets, a need the new website has not shown.
+      - id: d
+        text: Storage optimized
+        why: This family serves heavy local disk access, which nothing in this scenario calls for.
+    evidence:
+      - "Unknown workload: start with general purpose."
+      - "**General purpose**: balanced, for web services, code repositories and unpredictable workloads."
+    takeaway: When a workload's needs are still unknown, start on general purpose instances and adjust later.
+    history: []
+    verified:
+      keyHash: 93a2ec970273
+      fullHash: e87f01360e88
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q2fky5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: general-purpose-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which EC2 instance family gives an even, all-round balance of resources for jobs such as hosting a code repository?
+    options:
+      - id: a
+        text: Memory optimized
+        why: This family tilts toward large amounts of memory rather than an even balance.
+      - id: b
+        text: Accelerated computing
+        why: This family adds GPUs or other co-processors, which a code repository does not need.
+      - id: c
+        text: General purpose
+        correct: true
+        why: This family keeps resources balanced and suits all-round jobs like a code repository.
+      - id: d
+        text: Compute optimized
+        why: This family tilts toward processor power rather than an even balance.
+    evidence:
+      - "**General purpose**: balanced, for web services, code repositories and unpredictable workloads."
+      - "**General purpose instances**: balanced, all-round instances."
+    takeaway: General purpose instances balance resources evenly for everyday jobs such as web services and code repositories.
+    history: []
+    verified:
+      keyHash: 819be84ba5ec
+      fullHash: a3a39e776d12
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6pcrsp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: compute-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 3
+    stem: >-
+      The cafe hosts an online trivia game for its customers.
+      The server spends nearly all its effort working out game moves for many players at once, while its data stays small.
+      Which EC2 instance family fits best?
+    options:
+      - id: a
+        text: Memory optimized
+        why: The game data is small, so a family built for huge in-memory datasets misses the real bottleneck.
+      - id: b
+        text: Storage optimized
+        why: The game does little local disk work, so fast local storage would sit mostly unused.
+      - id: c
+        text: General purpose
+        why: A balanced mix underserves a workload whose clear bottleneck is processor power.
+      - id: d
+        text: Compute optimized
+        correct: true
+        why: A game server limited by CPU is exactly the work this family is built to speed up.
+    evidence:
+      - "**Compute optimized**: CPU-heavy work like game servers, HPC, machine learning and scientific modeling."
+      - "A multiplayer game server: compute optimized."
+    takeaway: A CPU-bound workload such as a multiplayer game server belongs on compute optimized instances.
+    history: []
+    verified:
+      keyHash: c3f943d0fc0d
+      fullHash: 0a561c49c0eb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2skdfe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: compute-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which EC2 instance family is designed for work held back by processor power, such as scientific modeling or high performance computing?
+    options:
+      - id: a
+        text: Compute optimized
+        correct: true
+        why: This family is tuned for CPU-heavy jobs such as modeling and high performance computing.
+      - id: b
+        text: Storage optimized
+        why: This family speeds up local disk access, which is not the limit in CPU-bound work.
+      - id: c
+        text: Memory optimized
+        why: This family adds memory for big datasets, which does not relieve a processor bottleneck.
+      - id: d
+        text: General purpose
+        why: This family balances its resources instead of leaning toward processor power.
+    evidence:
+      - "**Compute optimized**: CPU-heavy work like game servers, HPC, machine learning and scientific modeling."
+      - "**Compute optimized instances**: instances for CPU-heavy work."
+    takeaway: Compute optimized instances serve CPU-heavy work such as HPC and scientific modeling.
+    history: []
+    verified:
+      keyHash: f6d0cf1cabef
+      fullHash: e8d66981e73c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4edgjg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: memory-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 3
+    stem: >-
+      The cafe wants live sales analytics that work through a very large dataset held entirely in RAM.
+      Which EC2 instance family fits best?
+    options:
+      - id: a
+        text: Storage optimized
+        why: This family suits big datasets read from local disks, not real-time work done in memory.
+      - id: b
+        text: Memory optimized
+        correct: true
+        why: Real-time analytics over a large dataset kept in RAM is the work this family targets.
+      - id: c
+        text: Compute optimized
+        why: This family adds processor power, but the limit here is how much data fits in memory.
+      - id: d
+        text: General purpose
+        why: A balanced mix offers too little memory for a very large in-memory dataset.
+    evidence:
+      - "**Memory optimized**: fast in-memory processing of large datasets, as in analytics and databases."
+      - In analytics, real-time in-memory work points to memory optimized, while big local datasets needing low-latency access and steady, high disk throughput point to storage optimized.
+    takeaway: Real-time analytics on a large dataset held in RAM points to memory optimized, not storage optimized, instances.
+    history: []
+    verified:
+      keyHash: d93230244b0f
+      fullHash: 51c68d71ced3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-s4av31
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: memory-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's reporting database keeps running out of RAM, while its processor sits mostly idle and its disks are quiet.
+      Which EC2 instance family should it move to?
+    options:
+      - id: a
+        text: Compute optimized
+        why: The processor is mostly idle, so more CPU would not ease the shortage of RAM.
+      - id: b
+        text: Storage optimized
+        why: The disks are quiet, so faster local storage would not fix the memory shortage.
+      - id: c
+        text: Accelerated computing
+        why: Adding GPUs or other co-processors does nothing for a database short on RAM.
+      - id: d
+        text: Memory optimized
+        correct: true
+        why: Memory is the bottleneck here, and this family is built to hold large datasets in RAM.
+    evidence:
+      - "Pick the family by the bottleneck: CPU, memory, accelerators or local disk."
+      - "**Memory optimized**: fast in-memory processing of large datasets, as in analytics and databases."
+    takeaway: When RAM is the bottleneck, as in a large database, move to memory optimized instances.
+    history: []
+    verified:
+      keyHash: 50b44e266083
+      fullHash: 000d036349ba
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-et2pg4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: accelerated-computing-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 3
+    stem: >-
+      The cafe wants to render rich graphics for its menu ads, work that runs far faster on GPUs than as software on a regular CPU.
+      Which EC2 instance family fits best?
+    options:
+      - id: a
+        text: Compute optimized
+        why: This family gives strong CPUs, but the scenario needs GPU hardware that beats CPU-run software.
+      - id: b
+        text: Memory optimized
+        why: Large memory does not supply the GPUs that make graphics rendering fast.
+      - id: c
+        text: Accelerated computing
+        correct: true
+        why: This family adds GPUs that handle graphics work far faster than software on a CPU.
+      - id: d
+        text: General purpose
+        why: A balanced family without GPUs would run the rendering as slower CPU software.
+    evidence:
+      - "**Accelerated computing**: hardware accelerators such as GPUs, co-processors that do floating-point math, graphics, pattern matching and machine learning more efficiently than software running on a CPU."
+    takeaway: Graphics or other work that GPUs speed up points to accelerated computing, not compute optimized, instances.
+    history: []
+    verified:
+      keyHash: b795b0b093d3
+      fullHash: 79e4237deb8b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-fqjshc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: accelerated-computing-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      What sets accelerated computing instances apart from the other EC2 instance families?
+    options:
+      - id: a
+        text: They hold very large datasets in fast memory
+        why: That describes memory optimized instances, which add RAM rather than co-processors.
+      - id: b
+        text: They give fast access to data on local disks
+        why: That describes storage optimized instances, which focus on local storage rather than co-processors.
+      - id: c
+        text: They keep every resource in an even balance
+        why: That describes general purpose instances, which add no special hardware.
+      - id: d
+        text: They add co-processors such as GPUs to the CPU
+        correct: true
+        why: These instances carry hardware accelerators that run some functions faster than CPU software.
+    evidence:
+      - "**Accelerated computing instances**: instances with GPUs or other accelerators."
+      - "**Hardware accelerator**: a co-processor that runs some functions more efficiently than CPU-run software."
+    takeaway: Accelerated computing instances stand out by adding GPUs or other hardware co-processors.
+    history: []
+    verified:
+      keyHash: 0aa122634852
+      fullHash: 370fe64f5e0f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-371je7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: storage-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 3
+    stem: >-
+      The cafe's sales data warehouse scans huge datasets kept on local disks and needs low-latency reads with steady, high disk throughput.
+      Which EC2 instance family fits best?
+    options:
+      - id: a
+        text: Memory optimized
+        why: This family suits real-time work in RAM, not heavy scanning of data on local disks.
+      - id: b
+        text: Compute optimized
+        why: More processor power does not speed up a workload limited by local disk throughput.
+      - id: c
+        text: Storage optimized
+        correct: true
+        why: Big local datasets with low-latency reads and high disk throughput are this family's strength.
+      - id: d
+        text: General purpose
+        why: A balanced mix lacks the fast local storage a disk-heavy warehouse needs.
+    evidence:
+      - "**Storage optimized**: fast access to local data, as in data warehousing, large databases and I/O-heavy apps."
+      - In analytics, real-time in-memory work points to memory optimized, while big local datasets needing low-latency access and steady, high disk throughput point to storage optimized.
+    takeaway: A data warehouse that leans on fast local disks belongs on storage optimized instances.
+    history: []
+    verified:
+      keyHash: 2b0dfb6e3da4
+      fullHash: f90c7f373e43
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4chz5v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: storage-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which EC2 instance family is designed for I/O-heavy applications that need quick reads and writes on local disks?
+    options:
+      - id: a
+        text: General purpose
+        why: This family balances its resources and does not focus on fast local storage.
+      - id: b
+        text: Storage optimized
+        correct: true
+        why: This family is built for fast local storage access in I/O-heavy applications.
+      - id: c
+        text: Compute optimized
+        why: This family focuses on processor power, not on quick local disk access.
+      - id: d
+        text: Memory optimized
+        why: This family focuses on large amounts of RAM, not on quick local disk access.
+    evidence:
+      - "**Storage optimized**: fast access to local data, as in data warehousing, large databases and I/O-heavy apps."
+      - "**Storage optimized instances**: instances for fast local storage."
+    takeaway: Storage optimized instances serve I/O-heavy apps that need fast access to local data.
+    history: []
+    verified:
+      keyHash: e9c9106a8ae7
+      fullHash: e6d2b0a026b0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-psfav6
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: ec2-instance-sizing
+    note: m02/amazon-ec2-instance-types
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe has already matched an EC2 instance family to its order system's bottleneck.
+      Which size choice within that family keeps the cost of that server in check?
+    options:
+      - id: a
+        text: Pick the largest size so it never needs a change
+        why: Bigger sizes cost more, and the size can be switched later anyway, so buying the largest wastes money.
+      - id: b
+        text: Pick a size with spare room for future growth
+        why: Paying now for capacity the order system does not yet use raises cost when the size can grow later.
+      - id: c
+        text: Pick the smallest size that performs well
+        correct: true
+        why: Larger sizes cost more, so the smallest one that meets the need saves money and can grow later.
+      - id: d
+        text: Pick the size with the most memory on offer
+        why: The most memory comes with the biggest and costliest sizes, which the order system may not need.
+    evidence:
+      - Bigger sizes cost more, so pick the smallest that performs well and switch later if needed.
+      - Size trades performance for cost, and nothing is permanent.
+    takeaway: Start with the smallest EC2 size that performs well, since larger sizes cost more and you can resize later.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only rightsizing best practice; options 1 to 3 all describe overprovisioning.)"
+  - id: q-ydntrz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-sizing
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      In Amazon EC2, what does an instance's size describe?
+    options:
+      - id: a
+        text: Its mix of resource kinds
+        why: The resource mix is set by the family, while size works within that family.
+      - id: b
+        text: Its scale inside its family
+        correct: true
+        why: Size sets the instance's scale inside its family, trading more capacity for a higher price.
+      - id: c
+        text: Its starting operating system
+        why: The operating system comes from the machine image, which has nothing to do with size.
+      - id: d
+        text: Its Availability Zone placement
+        why: Placement is chosen separately, and every size can run in any Availability Zone.
+    evidence:
+      - "**Instance size**: an instance's scale within its family."
+    takeaway: An EC2 instance size is its scale within a family, separate from the family's resource mix.
+    history: []
+    verified:
+      keyHash: 6819e134fbf0
+      fullHash: 732447f9d44e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-212pk3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-sizing
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which two pieces of information does the name of an EC2 instance type carry?
+    options:
+      - id: a
+        text: Its Region and its Availability Zone
+        why: An instance type name says nothing about where the instance runs, which is chosen separately.
+      - id: b
+        text: Its operating system and its AMI
+        why: The operating system comes from the AMI picked at launch, not from the instance type name.
+      - id: c
+        text: Its family and its size
+        correct: true
+        why: A type name encodes which family the instance belongs to and how large it is within that family.
+      - id: d
+        text: Its pricing model and its term
+        why: Pricing models such as On-Demand or Reserved Instances are chosen apart from the type name.
+    evidence:
+      - Type names encode family and size.
+    takeaway: An EC2 instance type name tells you both the instance family and the size within it.
+    history: []
+    verified:
+      keyHash: 70af844a9476
+      fullHash: f699e3425a9e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
