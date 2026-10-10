@@ -2,7 +2,7 @@
  * The one place learn screens get their question pool (spec 4.3): the practice items of the loaded module chunks,
  * plus the items of every form whose mock has started, so an untaken form never reaches a learn-mode selector.
  */
-import type { ExamChunk, ExamItemRef, ModuleChunk } from '../../schemas/chunks.ts';
+import type { ContentIndex, ExamChunk, ExamItemRef, ModuleChunk } from '../../schemas/chunks.ts';
 import { type ExamPoolQuestion, learnPool, type PoolQuestion } from '../engine/select.ts';
 import { ensureExamForm, examForms, index } from './content.ts';
 import { taken } from './memory.ts';
@@ -57,4 +57,24 @@ export function learnPoolNow(practice: readonly PoolQuestion[]): PoolQuestion[] 
   const forms = taken.peek();
   for (const form of forms) void ensureExamForm(form);
   return learnPool(practice, examPoolOf(examForms.peek(), index.peek()?.exam.items ?? {}), forms);
+}
+
+/**
+ * The forms a learn session must load before it shows (spec 4.3): the form of each of its exam items, plus `also`,
+ * which a review passes every taken form as, since its relearn variants come from their items too.
+ * Forms already loaded and forms the index does not list (they can never load) are left out.
+ */
+export function formsToLoad(
+  qids: readonly string[],
+  also: Iterable<string>,
+  exam: ContentIndex['exam'],
+  loaded: ReadonlyMap<string, ExamChunk>,
+): string[] {
+  const wanted = new Set(also);
+  for (const qid of qids) {
+    const form = exam.items[qid]?.form;
+    if (form !== undefined) wanted.add(form);
+  }
+  const listed = new Set(exam.forms.map((f) => f.id));
+  return [...wanted].filter((f) => listed.has(f) && !loaded.has(f)).sort();
 }

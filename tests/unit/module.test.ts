@@ -106,7 +106,7 @@ describe('bossLineOf', () => {
   });
 
   it('names the day of the pass', () => {
-    expect(bossLineOf(status({ passed: true, passedAt: '2026-10-12T15:00:00.000Z' }), NOW)).toBe(
+    expect(bossLineOf(status({ passed: true, passedAt: '2026-10-12T14:00:00.000Z' }), NOW)).toBe(
       'Passed on Oct 12.',
     );
   });

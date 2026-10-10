@@ -18,10 +18,10 @@ import { ulid } from '../../store/ulid.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { now } from '../clock.ts';
-import { ensureModule, examForms, modules } from '../content.ts';
+import { ensureExamForm, ensureModule, examForms, modules } from '../content.ts';
 import { nothingDueLine } from '../home.ts';
 import { isControl, isTyping } from '../keyboard.ts';
-import { learnPoolNow, practicePoolOf } from '../learn-pool.ts';
+import { formsToLoad, learnPoolNow, practicePoolOf } from '../learn-pool.ts';
 import { memory, memoryContent, queue, taken } from '../memory.ts';
 import { weakestConcepts } from '../module.ts';
 import { neighbors } from '../nav.ts';
@@ -100,6 +100,37 @@ function shippedOf(chunks: readonly ModuleChunk[]): Map<string, QuestionView> {
     for (const q of examForms.value.get(form)?.questions ?? []) out.set(q.id, q);
   }
   return out;
+}
+
+type FormsState = 'ready' | 'loading' | 'failed';
+
+/** What a runner shows while a session's form chunks fail to load. */
+const FORMS_ERROR = 'This session could not load. Check your connection and try again.';
+
+/**
+ * Loads the form chunks a session needs before it shows (`formsToLoad`), so a resumed session never drops an item of
+ * a taken form as unshipped: 'loading' until each is in `examForms`, then 'ready', or 'failed' when one cannot load.
+ */
+function useSessionForms(
+  idx: ContentIndex,
+  session: SessionState | undefined,
+  also: Iterable<string>,
+): FormsState {
+  const pending = session === undefined ? [] : formsToLoad(session.qids, also, idx.exam, examForms.value);
+  const key = pending.join(' ');
+  const [failed, setFailed] = useState<string | null>(null);
+  useEffect(() => {
+    if (key === '') return;
+    let live = true;
+    void Promise.all(key.split(' ').map((f) => ensureExamForm(f))).then((chunks) => {
+      if (live && chunks.includes(null)) setFailed(key);
+    });
+    return () => {
+      live = false;
+    };
+  }, [key]);
+  if (key === '') return 'ready';
+  return failed === key ? 'failed' : 'loading';
 }
 
 /** Starts the session of this mode and scope, or finds the one in progress; null when nothing can be asked. */
@@ -206,6 +237,9 @@ function FocusRunner({ idx, scope }: { idx: ContentIndex; scope: string }) {
     setSid(started);
   }, [allLoaded, concepts, sid, empty, scope, loaded]);
 
+  const session = sid === null ? undefined : progress.value.sessions.get(sid);
+  const forms = useSessionForms(idx, session, []);
+
   if (!known) return <NotFound hash={location.hash} />;
   const short = module === null ? undefined : idx.modules.find((m) => m.n === module)?.short;
   const crumbs = [
@@ -213,14 +247,15 @@ function FocusRunner({ idx, scope }: { idx: ContentIndex; scope: string }) {
     ...(module === null ? [] : [{ label: `Module ${module}: ${short ?? ''}`, href: `#/m/${pad2(module)}` }]),
     { label: modeLabel('focus'), href: location.hash },
   ];
-  const session = sid === null ? undefined : progress.value.sessions.get(sid);
   return (
     <>
       <Breadcrumbs items={crumbs} />
       <h1>{title}</h1>
       {empty ? (
         <p class="muted">No practice questions for this focus quiz yet.</p>
-      ) : !allLoaded || session === undefined ? (
+      ) : forms === 'failed' ? (
+        <p class="muted">{FORMS_ERROR}</p>
+      ) : !allLoaded || session === undefined || forms === 'loading' ? (
         <p class="muted">Loading</p>
       ) : (
         <Session
@@ -261,6 +296,8 @@ function ModuleRunner({ idx, mode, scope }: { idx: ContentIndex; mode: 'check' |
     if (started === null) setEmpty(true);
     else setSid(started);
   }, [startable, sid, empty, idx, mode, scope]);
+  const session = sid === null ? undefined : progress.value.sessions.get(sid);
+  const forms = useSessionForms(idx, session, []);
 
   if (!known) return <NotFound hash={location.hash} />;
 
@@ -272,7 +309,6 @@ function ModuleRunner({ idx, mode, scope }: { idx: ContentIndex; mode: 'check' |
       : [{ label: lessonMeta.title, href: `#/m/${pad2(module)}/l/${lessonMeta.slug}` }]),
     { label: modeLabel(mode), href: location.hash },
   ];
-  const session = sid === null ? undefined : progress.value.sessions.get(sid);
   return (
     <>
       <Breadcrumbs items={crumbs} />
@@ -283,7 +319,9 @@ function ModuleRunner({ idx, mode, scope }: { idx: ContentIndex; mode: 'check' |
             ? 'No practice questions for this lesson yet.'
             : 'No practice questions for this module yet.'}
         </p>
-      ) : chunk === undefined || session === undefined ? (
+      ) : forms === 'failed' ? (
+        <p class="muted">{FORMS_ERROR}</p>
+      ) : chunk === undefined || session === undefined || forms === 'loading' ? (
         <p class="muted">Loading</p>
       ) : (
         <Session
@@ -374,6 +412,9 @@ function ReviewRunner({ idx }: { idx: ContentIndex }) {
   useEffect(() => {
     if (missing) for (const m of idx.modules) ensureModule(m.n);
   }, [missing, idx]);
+  // Every taken form, not only the session's: a relearn variant comes from the whole learn pool, so it must not
+  // change when a form loads mid-session.
+  const forms = useSessionForms(idx, session, taken.value);
 
   return (
     <>
@@ -391,7 +432,9 @@ function ReviewRunner({ idx }: { idx: ContentIndex }) {
             <a href="#/">Back to Home</a>
           </p>
         </>
-      ) : session === undefined || missing ? (
+      ) : forms === 'failed' ? (
+        <p class="muted">{FORMS_ERROR}</p>
+      ) : session === undefined || missing || forms === 'loading' ? (
         <p class="muted">Loading</p>
       ) : (
         <Session
