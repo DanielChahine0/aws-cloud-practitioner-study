@@ -1,0 +1,9 @@
+# fixture-target: content/game/ranks.yaml
+- { id: basic, name: Basic, short: Basic, requires: {} }
+- id: bakery-plus
+  name: Bakery Plus
+  short: Bakery+
+  requires: { bosses: 5, hexesAt60: 5 }
+  facts:
+    - The bakery plan answers a burnt-oven call within half an hour.
+    - The bakery plan sends a pastry chef to every branch once a month.

@@ -1,5 +1,5 @@
 import type { RuleId } from '../../../schemas/validate-config.ts';
-import type { Context, Finding } from '../lib/context.ts';
+import { type Context, type Finding, FORMS_FILE, POOL_DIR } from '../lib/context.ts';
 import { r01 } from './r01-schema.ts';
 import { r02 } from './r02-ids.ts';
 import { r03 } from './r03-answer-counts.ts';
@@ -18,10 +18,35 @@ export const RULES: readonly Rule[] = [r01, r02, r03, r04, r05, r06, r07, r08, r
 
 const rank = (id: RuleId): number => Number(id.slice(1));
 
-/** Runs the given rules and reports any id that has no implementation yet. */
+/** Whether a finding's file holds exam-pool text, so its messages must carry ids and counts only (spec 2.6). */
+export function isExamFile(file: string): boolean {
+  return file.startsWith(`${POOL_DIR}/`) || file === FORMS_FILE;
+}
+
+/**
+ * A message cut down to what may be shown for an exam file: a YAML error keeps only its position, and any other
+ * message keeps the part before its first double quote, where rule messages quote item text.
+ */
+export function redactMessage(message: string): string {
+  if (message.startsWith('YAML:')) {
+    const at = /at line (\d+), column (\d+)/.exec(message);
+    return at === null ? 'YAML: parse error' : `YAML: parse error at line ${at[1]}, column ${at[2]}`;
+  }
+  const quote = message.indexOf('"');
+  return quote === -1 ? message : `${message.slice(0, quote)}"..."`;
+}
+
+/** The finding as it may be shown: ids and counts only for exam-pool and form files, unchanged for every other file. */
+export function redact(f: Finding): Finding {
+  return isExamFile(f.file) ? { ...f, message: redactMessage(f.message) } : f;
+}
+
+/** Runs the given rules and reports any id that has no implementation yet; exam findings come back redacted. */
 export function runRules(ctx: Context, ids: readonly RuleId[]): { findings: Finding[]; missing: RuleId[] } {
   const missing = ids.filter((id) => !RULES.some((rule) => rule.id === id));
-  const findings = RULES.filter((rule) => ids.includes(rule.id)).flatMap((rule) => rule.run(ctx));
+  const findings = RULES.filter((rule) => ids.includes(rule.id))
+    .flatMap((rule) => rule.run(ctx))
+    .map(redact);
   findings.sort(
     (a, b) => rank(a.rule) - rank(b.rule) || a.file.localeCompare(b.file) || (a.line ?? 0) - (b.line ?? 0),
   );

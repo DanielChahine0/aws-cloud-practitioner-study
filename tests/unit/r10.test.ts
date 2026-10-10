@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'vitest';
+import type { SingleQuestion } from '../../schemas/question.ts';
 import type { ValidateConfig } from '../../schemas/validate-config.ts';
 import { type Context, loadContext, type QuestionEntry } from '../../scripts/content/lib/context.ts';
 import { r10 } from '../../scripts/content/rules/r10-coverage.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
-import { matchQuestion, QUESTION_FILE, singleQuestion } from '../fixtures/questions.ts';
+import {
+  fixtureQuotas,
+  matchQuestion,
+  multiQuestion,
+  POOL_FILE,
+  QUESTION_FILE,
+  singleQuestion,
+} from '../fixtures/questions.ts';
 
 const BLUEPRINT = 'content/exam/blueprint.yaml';
 const OFF: ValidateConfig = {
@@ -25,6 +33,7 @@ function contextWith(
       path: QUESTION_FILE,
       line: 100 + i,
       index: ctx.questions.length + i,
+      module: 1,
       noteId: 'm01/what-a-bakery-cloud-is',
       q,
     }),
@@ -96,9 +105,56 @@ describe('R10 blueprint terms', () => {
 });
 
 describe('R10 exam quotas', () => {
-  it('reports the switch, because the exam pool arrives in Phase 3', () => {
-    expect(messages(contextWith({ examQuotas: true }))).toEqual([
-      'content/validate.yaml  examQuotas is on, but the exam pool arrives in Phase 3',
+  /** The fixture context with examQuotas on, the fixture quotas (or none), and the given exam-pool items. */
+  function examContext(items: readonly QuestionEntry['q'][], quotas = fixtureQuotas()): Context {
+    const ctx = contextWith({ examQuotas: true });
+    const pool = items.map(
+      (q, i): QuestionEntry => ({ path: POOL_FILE, line: 2 + i, index: i, module: 1, noteId: q.note, q }),
+    );
+    return { ...ctx, quotas, questions: [...ctx.questions, ...pool] };
+  }
+  const exam = (id: string, over: Partial<SingleQuestion> = {}): SingleQuestion =>
+    singleQuestion({ id, pool: 'exam', status: 'live', ...over });
+  const multi = (id: string, status: 'draft' | 'live' = 'live') =>
+    multiQuestion({ id, pool: 'exam', status });
+  const rental = (id: string) => exam(id, { concept: 'per-minute-rental', task: '4.1' });
+
+  it('reports a missing quotas file on the config', () => {
+    expect(messages({ ...examContext([]), quotas: null })).toEqual([
+      'content/validate.yaml  examQuotas is on, but content/exam/quotas.yaml is missing',
+    ]);
+  });
+
+  it('reports a short cell and a short domain multi-response target', () => {
+    expect(messages(examContext([exam('q-e00001'), rental('q-e00002')]))).toEqual([
+      'content/exam/quotas.yaml  cell m01 task 1.1 has 1 live exam items; it needs 2',
+      'content/exam/quotas.yaml  domain 1 has 0 live multi-response exam items; it needs 1',
+    ]);
+  });
+
+  it('passes a pool that meets every target, surplus items included', () => {
+    expect(
+      messages(examContext([multi('q-e00001'), exam('q-e00002'), exam('q-e00003'), rental('q-e00004')])),
+    ).toEqual([]);
+  });
+
+  it('reports a concept with 5 live exam items', () => {
+    const five = [multi('q-e00001'), exam('q-e00002'), exam('q-e00003'), exam('q-e00004'), exam('q-e00005')];
+    expect(messages(examContext([...five, rental('q-e00006')]))).toEqual([
+      'content/exam/quotas.yaml  concept shared-kitchen has 5 live exam items; at most 4',
+    ]);
+  });
+
+  it('never counts drafts, retired items or practice questions', () => {
+    const items = [
+      multi('q-e00001', 'draft'),
+      exam('q-e00002', { status: 'retired' }),
+      exam('q-e00003', { pool: 'practice' }),
+      rental('q-e00004'),
+    ];
+    expect(messages(examContext(items))).toEqual([
+      'content/exam/quotas.yaml  cell m01 task 1.1 has 0 live exam items; it needs 2',
+      'content/exam/quotas.yaml  domain 1 has 0 live multi-response exam items; it needs 1',
     ]);
   });
 });

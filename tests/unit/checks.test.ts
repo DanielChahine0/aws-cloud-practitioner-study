@@ -116,6 +116,7 @@ describe('makeBatches', () => {
       path: 'x.yaml',
       line: i,
       index: i,
+      module: 1,
       noteId: note,
       q: singleQuestion({ id: `q-${String(i).padStart(6, '0')}`, concept, note }),
     },

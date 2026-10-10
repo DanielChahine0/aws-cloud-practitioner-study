@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { matchQuestion, POOL_FILE, writePool } from '../fixtures/questions.ts';
 
 const QUESTIONS = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
 
@@ -56,17 +57,24 @@ describe('R3 answer counts', () => {
     ).toEqual(['2 q-b4k7m2: two options share the text "install a third oven at the harbour branch"']);
   });
 
-  it('reports repeated lefts and rights in a match, and a match in the exam pool', () => {
+  it('reports repeated lefts and rights in a match', () => {
     expect(
       r03(
         ['      - left: An empty cabinet overnight\n', '      - left: dough rising for forty minutes\n'],
         ['        right: Twenty minutes of cabinet time\n', '        right: Forty minutes of cabinet time\n'],
-        ['    pool: practice\n    type: match\n', '    pool: exam\n    type: match\n'],
       ),
     ).toEqual([
       '34 q-c8n3p5: two pairs share the left "dough rising for forty minutes"',
       '34 q-c8n3p5: two pairs share the right "forty minutes of cabinet time"',
-      '34 q-c8n3p5: match questions belong to the practice pool only',
+    ]);
+  });
+
+  it('reports a match in an exam-pool file', () => {
+    const root = makeFixtureRoot();
+    writePool(root, [matchQuestion({ pool: 'exam' })]);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(runRules(ctx, ['R3']).findings.map((f) => `${f.file}:${f.line}  ${f.message}`)).toEqual([
+      `${POOL_FILE}:2  q-3h8r2t: match questions belong to the practice pool only`,
     ]);
   });
 });

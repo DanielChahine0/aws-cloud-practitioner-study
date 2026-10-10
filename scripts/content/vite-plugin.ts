@@ -2,7 +2,7 @@ import { join, relative, sep } from 'node:path';
 import type { ErrorPayload, Plugin, ResolvedConfig } from 'vite';
 import { type BuiltContent, buildContent } from './build.ts';
 import { loadContext, localDate } from './lib/context.ts';
-import { formatFinding, runRules } from './rules/index.ts';
+import { formatFinding, redact, runRules } from './rules/index.ts';
 
 const WATCHED = ['resources', 'content'];
 const CHUNK_URL = /^\/content\/[^/]+\.json$/;
@@ -26,7 +26,10 @@ export function contentPlugin(root: string): Plugin {
     const problems: string[] = [];
     const ctx = loadContext(root, { today: localDate() });
     if (ctx.config === null) {
-      problems.push(...ctx.loadErrors.map(formatFinding), 'content/validate.yaml is missing or invalid');
+      problems.push(
+        ...ctx.loadErrors.map((f) => formatFinding(redact(f))),
+        'content/validate.yaml is missing or invalid',
+      );
     } else {
       const { findings, missing } = runRules(ctx, ctx.config.rules);
       problems.push(...missing.map((id) => `${id} is switched on but not implemented yet`));

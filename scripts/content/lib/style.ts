@@ -54,7 +54,7 @@ export function styleProblems(q: Question, note: LessonNote | undefined): string
   for (const n of visible.flatMap(numbersIn)) {
     if (n === '' || stated.has(n) || reported.has(n)) continue;
     reported.add(n);
-    problems.push(`the number ${n} is not in ${q.note}`);
+    problems.push(`the number "${n}" is not in ${q.note}`);
   }
   if (allTexts(q).some((text) => OLD_PLANS.test(text))) {
     problems.push('names a Support plan the exam no longer uses');
@@ -70,9 +70,9 @@ export interface ModuleStyle {
   byType: Record<'single' | 'multi' | 'match', number>;
 }
 
-/** Counts for the style limits of one module, over its non-retired practice questions. */
+/** Counts for the style limits of one module's questions of one pool, over the non-retired ones; the caller picks the pool. */
 export function moduleStyle(questions: readonly Question[]): ModuleStyle {
-  const counted = questions.filter((q) => q.status !== 'retired' && q.pool === 'practice');
+  const counted = questions.filter((q) => q.status !== 'retired');
   const byType = { single: 0, multi: 0, match: 0 };
   let correctLongest = 0;
   let negatives = 0;

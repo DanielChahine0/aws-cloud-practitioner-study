@@ -1,9 +1,10 @@
-import { appendFileSync } from 'node:fs';
+import { appendFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { loadContext } from '../../scripts/content/lib/context.ts';
+import { loadContext, RANKS_FILE } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
-import { sourceProblem } from '../../scripts/content/rules/r13-sources.ts';
+import { r13 as rule13, sourceProblem } from '../../scripts/content/rules/r13-sources.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 
 const DOCS = 'https://docs.aws.amazon.com/x.html';
@@ -80,5 +81,33 @@ describe('R13 sources', () => {
     ).toEqual([
       'content/missions/mission-00-guardrails.md source https://repost.aws/x is not on aws.amazon.com or docs.aws.amazon.com',
     ]);
+  });
+});
+
+describe('R13 rank facts (spec 3.4)', () => {
+  it('reports a rank fact that is no Module 11 Exam guide update sentence', () => {
+    const root = makeFixtureRoot();
+    writeFileSync(
+      join(root, RANKS_FILE),
+      [
+        '- { id: basic, name: Basic, short: Basic, requires: {} }',
+        '- id: bakery-plus',
+        '  name: Bakery Plus',
+        '  short: Bakery+',
+        '  requires: { bosses: 5 }',
+        '  facts: [The bakery plan answers within the hour., The bakery plan sends a chef monthly.]',
+        '',
+      ].join('\n'),
+    );
+    const findings = runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R13']).findings;
+    expect(findings.map((f) => `${f.file}  ${f.message}`)).toEqual([
+      `${RANKS_FILE}  rank bakery-plus fact 1 is not a Module 11 Exam guide update sentence`,
+      `${RANKS_FILE}  rank bakery-plus fact 2 is not a Module 11 Exam guide update sentence`,
+    ]);
+  });
+
+  it('passes the real ranks, whose facts are Module 11 update sentences', () => {
+    const ctx = loadContext(fileURLToPath(new URL('../../', import.meta.url)));
+    expect(rule13.run(ctx).filter((f) => f.file === RANKS_FILE)).toEqual([]);
   });
 });
