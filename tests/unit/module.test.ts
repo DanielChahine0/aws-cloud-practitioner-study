@@ -167,11 +167,12 @@ describe('labRows', () => {
     engine: LabMeta['engine'],
     title: string,
     minutes: number,
+    tier: LabMeta['tier'] = 'core',
   ): LabMeta => ({
     id,
     module,
     engine,
-    tier: 'core',
+    tier,
     rev: 1,
     title,
     minutes,
@@ -190,6 +191,7 @@ describe('labRows', () => {
         href: '#/m/02/lab/lab-m02-name-the-loaf',
         minutes: 5,
         engine: 'Configure',
+        stretch: false,
         done: false,
       },
       {
@@ -198,10 +200,24 @@ describe('labRows', () => {
         href: '#/m/02/lab/lab-m02-proof-time',
         minutes: 8,
         engine: 'Simulate',
+        stretch: false,
         done: true,
       },
     ]);
     expect(labRows({ labs: LABS }, 1, new Set()).map((r) => [r.engine, r.done])).toEqual([['Sort', false]]);
+  });
+
+  it('marks a stretch lab and names the Phase 5 engines', () => {
+    const labs = [
+      lab('lab-m05-two-loaves-two-ovens', 5, 'place', 'Two loaves, two ovens', 8),
+      lab('lab-m05-open-the-side-door', 5, 'trace', 'Open the side door', 10, 'stretch'),
+      lab('lab-m05-who-took-the-rye', 5, 'investigate', 'Who took the rye?', 7, 'stretch'),
+    ];
+    expect(labRows({ labs }, 5, new Set()).map((r) => [r.engine, r.stretch])).toEqual([
+      ['Place', false],
+      ['Trace', true],
+      ['Investigate', true],
+    ]);
   });
 
   it('gives a module without labs no rows and says so', () => {

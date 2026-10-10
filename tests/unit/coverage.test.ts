@@ -114,7 +114,7 @@ describe('report', () => {
     expect(report(load(root))).toEqual([
       'modules 1, lessons 1, glossary terms 1, concepts 2 (2 tested)',
       'questions: 2 draft, 1 live, 0 retired; live single 1, multi 0, match 0',
-      'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0',
+      'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0, place 0, trace 0, investigate 0',
       'Incidents: 1 shipped of 1; steps 2 live, 0 draft',
       'm01: 3 practice (single 1, multi 1, match 1); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
       'm01 labs: 1',
@@ -235,7 +235,7 @@ describe('exam-pool counts in the report (spec 2.6)', () => {
     expect(report(load(root))).toEqual([
       'modules 1, lessons 1, glossary terms 1, concepts 2 (2 tested)',
       'questions: 2 draft, 1 live, 0 retired; live single 1, multi 0, match 0',
-      'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0',
+      'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0, place 0, trace 0, investigate 0',
       'Incidents: 1 shipped of 1; steps 2 live, 0 draft',
       'm01: 3 practice (single 1, multi 1, match 1); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
       'm01 exam: 3 (single 3, multi 0); correct option longest in 0 of 3 singles (0%); negative stems 0 (0%)',

@@ -1,4 +1,5 @@
 /** Types of the JSON chunks that scripts/content/build.ts writes and the app reads (spec 2.10). */
+import type { LabEngineId } from './ids.ts';
 
 export interface LessonMeta {
   n: number;
@@ -120,7 +121,7 @@ export interface QuestionView {
 export interface LabMeta {
   id: string;
   module: number;
-  engine: 'sort' | 'configure' | 'simulate';
+  engine: LabEngineId;
   tier: 'core' | 'stretch';
   rev: number;
   title: string;

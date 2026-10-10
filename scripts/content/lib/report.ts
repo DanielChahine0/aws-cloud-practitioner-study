@@ -1,5 +1,5 @@
 /** The text of pnpm content:report: counts, style lines, coverage, needs-Dani, homed concepts and exam targets (spec 2.9). */
-import type { DomainIdValue } from '../../../schemas/ids.ts';
+import { type DomainIdValue, LAB_ENGINES } from '../../../schemas/ids.ts';
 import type { Question } from '../../../schemas/question.ts';
 import { domainOf, MAX_PER_CONCEPT } from '../../../src/engine/quotas.ts';
 import { NEEDS_DANI_ATTEMPTS } from './checks.ts';
@@ -65,7 +65,7 @@ export function report(ctx: Context): string[] {
   const labsBy = (pick: (lab: (typeof labs)[number]) => string, value: string): number =>
     labs.filter((lab) => pick(lab) === value).length;
   out.push(
-    `Labs: ${labs.length} live (${labsBy((l) => l.tier, 'core')} core, ${labsBy((l) => l.tier, 'stretch')} stretch); sort ${labsBy((l) => l.engine, 'sort')}, configure ${labsBy((l) => l.engine, 'configure')}, simulate ${labsBy((l) => l.engine, 'simulate')}`,
+    `Labs: ${labs.length} live (${labsBy((l) => l.tier, 'core')} core, ${labsBy((l) => l.tier, 'stretch')} stretch); ${LAB_ENGINES.map((e) => `${e} ${labsBy((l) => l.engine, e)}`).join(', ')}`,
   );
   out.push(incidentLine(ctx));
   const modulesWithQuestions = [...new Set(ctx.questions.map((e) => e.module))].sort((a, b) => a - b);
