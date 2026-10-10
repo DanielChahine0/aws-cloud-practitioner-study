@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ConceptMeta, ContentIndex, LessonMeta } from '../../schemas/chunks.ts';
+import type { ConceptMeta, ContentIndex, LessonMeta, MissionMeta } from '../../schemas/chunks.ts';
 import {
   examAskDue,
   examDateLabel,
@@ -13,6 +13,7 @@ import {
 import type { LessonRef } from '../../src/engine/next.ts';
 import type { ReviewQueue } from '../../src/engine/queue.ts';
 import type { SessionState } from '../../src/engine/replay.ts';
+import { emptyIndexFields } from '../fixtures/index.ts';
 
 const lesson = (
   n: number,
@@ -76,6 +77,7 @@ const IDX: ContentIndex = {
   missions: [],
   questionVersions: { 'q-aaaaaa': 1, 'q-bbbbbb': 2 },
   search: 'content/search.json',
+  ...emptyIndexFields(),
 };
 
 const REFS = lessonRefs(IDX);
@@ -95,6 +97,9 @@ const session = (mode: SessionState['mode'], scope: string): SessionState => ({
   startedAt: '2026-10-10T08:00:00.000Z',
   submittedAt: null,
   abandoned: false,
+  form: null,
+  deadline: null,
+  submitId: null,
 });
 
 const QUEUE: ReviewQueue = {
@@ -116,17 +121,43 @@ describe('memoryContentOf', () => {
       tested: true,
       confusableWith: ['rented-oven'],
       splitFrom: null,
+      tasks: ['1.1'],
     });
     expect(content.concepts.get('proofing-cabinet')).toEqual({
       module: 2,
       tested: true,
       confusableWith: [],
       splitFrom: 'shared-oven',
+      tasks: ['1.1'],
     });
     expect(content.concepts.get('bakery-history')?.tested).toBe(false);
     expect(content.aliases.get('common-oven')).toBe('shared-oven');
     expect(content.aliases.size).toBe(1);
     expect(content.questionVersions.get('q-bbbbbb')).toBe(2);
+  });
+
+  it('keeps the missions marked keep and leaves exam tasks and core labs empty', () => {
+    const mission = (id: string, keep: boolean): MissionMeta => ({
+      id,
+      title: `Title of ${id}`,
+      modules: [1],
+      services: [],
+      expectedCredits: '$0',
+      gate: false,
+      keep,
+      maxLiveHours: null,
+      canUseCredits: [],
+      leftovers: [],
+      sources: [],
+      html: '',
+    });
+    const content = memoryContentOf({
+      ...IDX,
+      missions: [mission('mission-01-kept', true), mission('mission-02-cleaned', false)],
+    });
+    expect([...content.keptMissions]).toEqual(['mission-01-kept']);
+    expect(content.examTasks.size).toBe(0);
+    expect(content.coreLabs.size).toBe(0);
   });
 });
 

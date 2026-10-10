@@ -1,8 +1,10 @@
 /**
  * pnpm content:checks <command>: the agent check pipeline (spec 2.7).
- *   prepare --modules 01,03 [--seed N]  write keyless batches for every question that needs a check, and keys.json
- *   lint <answers file>                 check one answer file against its batch until it prints OK
- *   grade                               grade every answer file and record the passes and failures
+ *   prepare --modules 01,03 [--seed N] [--pool exam]  write keyless batches for every question of the pool (practice
+ *                                                     by default) that needs a check, and keys.json
+ *   lint <answers file>                               check one answer file against its batch until it prints OK
+ *   grade                                             grade every answer file and record the passes and failures;
+ *                                                     an exam item's failure prints as its id and check only
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -29,7 +31,10 @@ switch (command) {
       fail('--modules lists module numbers 01 to 13');
     const seed = Number(option('--seed') ?? '1');
     if (!Number.isInteger(seed)) fail('--seed must be a whole number');
-    const { paths, questions } = prepare(loadContext(root), modules, seed);
+    const poolFlag = option('--pool') ?? 'practice';
+    if (poolFlag !== 'practice' && poolFlag !== 'exam') fail('--pool is practice or exam');
+    const pool = poolFlag === 'exam' ? 'exam' : 'practice';
+    const { paths, questions } = prepare(loadContext(root), modules, seed, pool);
     for (const path of paths) console.log(path);
     console.log(`prepared ${paths.length} batches for ${questions} questions`);
     break;
@@ -46,11 +51,13 @@ switch (command) {
     break;
   }
   case 'grade': {
-    const { passes, failures } = grade(root);
-    for (const f of failures) console.log(`FAIL ${f.id} ${f.check}: ${f.reason}`);
+    const { passes, failures, lines } = grade(root);
+    for (const line of lines) console.log(line);
     console.log(`graded ${passes + failures.length} answers: ${passes} passed, ${failures.length} failed`);
     break;
   }
   default:
-    fail('usage: pnpm content:checks prepare --modules 01,03 [--seed N] | lint <answers file> | grade');
+    fail(
+      'usage: pnpm content:checks prepare --modules 01,03 [--seed N] [--pool exam] | lint <answers file> | grade',
+    );
 }

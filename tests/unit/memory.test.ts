@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest';
 import type { Mode, NewEvent, StudyEvent } from '../../schemas/events.ts';
 import { addDays, dayStartAt, studyDayAt } from '../../src/engine/day.ts';
 import {
+  bossPassMark,
   CATCH_UP_OVER,
   CATCH_UP_PLAN,
   COUNTING_MODES,
   type ConceptInfo,
   deriveMemory,
+  EXAM_MODES,
   isDue,
   type MemoryContent,
   resolveConcept,
@@ -17,6 +19,7 @@ import { fnv1a } from '../../src/engine/rng.ts';
 import { recall, review, type SrsCard } from '../../src/engine/srs.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
+import { abandonOf, answerOf, at, contentOf, examStartOf, submitOf } from '../fixtures/memory.ts';
 
 const SID3 = '01JA00000000000000000000S3';
 
@@ -25,7 +28,10 @@ const info = (module: number, tested = true, splitFrom: string | null = null): C
   tested,
   confusableWith: [],
   splitFrom,
+  tasks: [],
 });
+
+const NO_EXTRAS = { examTasks: new Map(), coreLabs: new Map(), keptMissions: new Set<string>() };
 
 /** Made-up bakery content: 4 concepts in 2 modules, one untested, and one alias. */
 const CONTENT: MemoryContent = {
@@ -46,6 +52,7 @@ const CONTENT: MemoryContent = {
     ['q-fd2', 1],
     ['q-dc1', 1],
   ]),
+  ...NO_EXTRAS,
 };
 
 interface AnswerOptions {
@@ -376,6 +383,7 @@ describe('deriveMemory: qualifying days and catch-up', () => {
       concepts: new Map(ids.map((id) => [id, info(1)])),
       aliases: new Map(),
       questionVersions: new Map(),
+      ...NO_EXTRAS,
     };
     const firstDay = ids.map((id, i): [string, NewEvent] => [
       new Date(Date.UTC(2026, 9, 9, 8, 0, i)).toISOString(),
@@ -407,6 +415,7 @@ describe('deriveMemory: split concepts', () => {
     ]),
     aliases: new Map(),
     questionVersions: new Map(),
+    ...NO_EXTRAS,
   };
 
   it("starts each new concept from the old concept's card", () => {
@@ -459,5 +468,236 @@ describe('sessionSummary', () => {
     const reviewXp = [5, 6, 7].reduce((sum, i) => sum + (memory.xpByEvent.get(idOf(events, i)) ?? 0), 0);
     expect(summary).toEqual({ correct: 2, total: 3, xp: reviewXp, backTomorrow: 1 });
     expect(reviewXp).toBe(27);
+  });
+});
+
+describe('deriveMemory: boss and mock answers (spec 3.1, 3.2, 4.1)', () => {
+  const EXAM = contentOf([
+    { id: 'oven', module: 1 },
+    { id: 'proofing', module: 1 },
+    { id: 'crust', module: 2 },
+  ]);
+  type Log = (readonly [string, NewEvent])[];
+  interface Item {
+    concept: string;
+    correct: boolean;
+    flagged?: boolean;
+    picked?: string[];
+    qid?: string;
+  }
+  const S3 = '01JA00000000000000000000S3';
+  const S4 = '01JA00000000000000000000S4';
+  const qidOf = (item: Item, i: number) => item.qid ?? `qx-${item.concept}-${i}`;
+
+  /** An exam session on `day`: start at 10:00, every answer at 10:15, then the submit unless `open`. */
+  function exam(
+    day: string,
+    sid: string,
+    mode: 'boss' | 'mock',
+    items: readonly Item[],
+    opts: { scope?: string; form?: string; open?: boolean; hour?: number } = {},
+  ): Log {
+    const hour = opts.hour ?? 10;
+    const qids = items.map(qidOf);
+    const log: Log = [
+      [
+        at(day, hour, 0),
+        examStartOf(sid, mode, qids, {
+          scope: opts.scope ?? (mode === 'boss' ? 'm01' : 'a'),
+          deadline: at(day, hour, 21),
+          ...(opts.form === undefined ? {} : { form: opts.form }),
+        }),
+      ],
+      ...items.map(
+        (item, i) =>
+          [
+            new Date(Date.parse(at(day, hour, 15)) + i).toISOString(),
+            answerOf({
+              concept: item.concept,
+              qid: qidOf(item, i),
+              correct: item.correct,
+              sure: false,
+              mode,
+              sid,
+              ms: 0,
+              ...(item.flagged === undefined ? {} : { flagged: item.flagged }),
+              ...(item.picked === undefined ? {} : { picked: item.picked }),
+            }),
+          ] as const,
+      ),
+    ];
+    if (opts.open !== true) log.push([at(day, hour, 16), submitOf(sid, mode)]);
+    return log;
+  }
+  const checkRight = (day: string, concept: string, hour = 9): Log => [
+    [at(day, hour), answerOf({ concept, correct: true, sure: true, qid: `q-${concept}-1`, sid: S4 })],
+  ];
+  const memoryOf = (log: Log) => deriveMemory(timelineOf(log), EXAM);
+  const card = (log: Log, concept: string) => memoryOf(log).concepts.get(concept)?.card ?? null;
+  const fifteen = (right: number): Item[] =>
+    Array.from({ length: 15 }, (_, i) => ({ concept: 'oven', correct: i < right, qid: `qb-${i}` }));
+
+  it('keeps boss and mock out of the counting modes and passes a boss at 12 of 15', () => {
+    expect([...EXAM_MODES].sort()).toEqual(['boss', 'mock']);
+    expect(COUNTING_MODES.has('boss')).toBe(false);
+    expect(bossPassMark(15)).toBe(12);
+    expect(bossPassMark(10)).toBe(8);
+    expect(bossPassMark(11)).toBe(9);
+  });
+
+  it('applies a boss answer only on submit', () => {
+    const items = [{ concept: 'oven', correct: true }];
+    expect(card(exam('2026-10-10', SID, 'boss', items, { open: true }), 'oven')).toBeNull();
+    expect(card(exam('2026-10-10', SID, 'boss', items), 'oven')).toEqual(
+      review(null, 'good', new Date(at('2026-10-10', 10, 15))),
+    );
+  });
+
+  it('rates a correct flagged boss answer Hard and an unflagged one Good', () => {
+    const log = exam('2026-10-10', SID, 'boss', [
+      { concept: 'oven', correct: true, flagged: true },
+      { concept: 'proofing', correct: true, flagged: false },
+    ]);
+    const m = memoryOf(log);
+    const t = Date.parse(at('2026-10-10', 10, 15));
+    expect(m.concepts.get('oven')?.card).toEqual(review(null, 'hard', new Date(t)));
+    expect(m.concepts.get('oven')?.fsrsRating).toBe('hard');
+    expect(m.concepts.get('proofing')?.card).toEqual(review(null, 'good', new Date(t + 1)));
+  });
+
+  it('leaves a not-due concept alone when the boss answer is right', () => {
+    const before = checkRight('2026-10-10', 'oven');
+    const log = [...before, ...exam('2026-10-11', SID, 'boss', [{ concept: 'oven', correct: true }])];
+    const m = memoryOf(log);
+    expect(m.concepts.get('oven')?.card).toEqual(card(before, 'oven'));
+    expect(m.concepts.get('oven')?.lastAnswerDay).toBe('2026-10-11');
+    expect(m.concepts.get('oven')?.fsrsDay).toBe('2026-10-10');
+  });
+
+  it('applies Again to a not-due concept answered wrong in a boss', () => {
+    const before = checkRight('2026-10-10', 'oven');
+    const log = [...before, ...exam('2026-10-11', SID, 'boss', [{ concept: 'oven', correct: false }])];
+    expect(card(log, 'oven')).toEqual(
+      review(card(before, 'oven'), 'again', new Date(at('2026-10-11', 10, 15))),
+    );
+  });
+
+  it('a correct boss answer adds no success day', () => {
+    const m = memoryOf(exam('2026-10-10', SID, 'boss', [{ concept: 'oven', correct: true }]));
+    expect(m.concepts.get('oven')?.successDays).toEqual([]);
+  });
+
+  it('a second submit of one boss applies nothing', () => {
+    const once = exam('2026-10-10', SID, 'boss', fifteen(12));
+    const twice: Log = [
+      ...once,
+      [
+        at('2026-10-10', 10, 17),
+        answerOf({ concept: 'proofing', correct: false, sure: false, mode: 'boss' }),
+      ],
+      [at('2026-10-10', 10, 18), submitOf(SID, 'boss')],
+    ];
+    const a = memoryOf(once);
+    const b = memoryOf(twice);
+    expect(b.xp).toBe(a.xp);
+    expect(b.xp).toBe(100);
+    expect(b.concepts.get('oven')?.card).toEqual(a.concepts.get('oven')?.card);
+    expect(b.concepts.get('proofing')).toBeUndefined();
+  });
+
+  it('creates a card for an unstudied concept in a mock without counting it as new', () => {
+    const m = memoryOf(exam('2026-10-10', SID, 'mock', [{ concept: 'crust', correct: true }], { form: 'A' }));
+    expect(m.concepts.get('crust')?.card).not.toBeNull();
+    expect(m.concepts.get('crust')?.enteredOn).toBe('2026-10-10');
+    expect(m.newByDay.size).toBe(0);
+  });
+
+  it('applies one update per concept per day across a boss and a quiz', () => {
+    const boss = exam('2026-10-10', SID, 'boss', [{ concept: 'oven', correct: true }]);
+    const quiz: Log = [
+      [at('2026-10-10', 12), answerOf({ concept: 'oven', correct: true, sure: true, mode: 'quiz', sid: S3 })],
+    ];
+    expect(card([...boss, ...quiz], 'oven')).toEqual(card(boss, 'oven'));
+    const quizFirst: Log = [
+      [at('2026-10-10', 8), answerOf({ concept: 'oven', correct: true, sure: true, mode: 'quiz', sid: S3 })],
+    ];
+    expect(card([...quizFirst, ...boss], 'oven')).toEqual(card(quizFirst, 'oven'));
+  });
+
+  it('applies one extra Again for a later wrong boss answer the same day', () => {
+    const quiz: Log = [
+      [at('2026-10-10', 8), answerOf({ concept: 'oven', correct: true, sure: true, mode: 'quiz', sid: S3 })],
+    ];
+    const wrong = (sid: string, hour: number) =>
+      exam('2026-10-10', sid, 'boss', [{ concept: 'oven', correct: false, qid: `qb-${hour}` }], { hour });
+    const once = [...quiz, ...wrong(SID, 10)];
+    expect(card(once, 'oven')).toEqual(
+      review(card(quiz, 'oven'), 'again', new Date(at('2026-10-10', 10, 15))),
+    );
+    expect(card([...once, ...wrong(SID2, 12)], 'oven')).toEqual(card(once, 'oven'));
+  });
+
+  it('counts an unanswered mock item as Again', () => {
+    const before = checkRight('2026-10-10', 'oven');
+    const log = [
+      ...before,
+      ...exam('2026-10-11', SID, 'mock', [{ concept: 'oven', correct: false, picked: [] }], { form: 'A' }),
+    ];
+    expect(card(log, 'oven')).toEqual(
+      review(card(before, 'oven'), 'again', new Date(at('2026-10-11', 10, 15))),
+    );
+  });
+
+  it('pays 100 XP on the first boss pass of a module and nothing on a second pass', () => {
+    const failed = exam('2026-10-10', SID, 'boss', fifteen(11));
+    expect(memoryOf(failed).xp).toBe(0);
+    const passed = [...failed, ...exam('2026-10-11', SID2, 'boss', fifteen(12))];
+    const m = memoryOf(passed);
+    const events = timelineOf(passed);
+    expect(m.xp).toBe(100);
+    expect(m.xpByEvent.get(events.at(-1)?.id ?? '')).toBe(100);
+    const again = [...passed, ...exam('2026-10-12', S3, 'boss', fifteen(15))];
+    expect(memoryOf(again).xp).toBe(100);
+    const other = [...passed, ...exam('2026-10-12', S3, 'boss', fifteen(15), { scope: 'm02' })];
+    expect(memoryOf(other).xp).toBe(200);
+  });
+
+  it('pays 150 XP once per form and nothing for a remix', () => {
+    const one = [{ concept: 'oven', correct: true }];
+    const log = [
+      ...exam('2026-10-10', SID, 'mock', one, { form: 'A' }),
+      ...exam('2026-10-11', SID2, 'mock', one, { form: 'A' }),
+      ...exam('2026-10-12', S3, 'mock', one, { form: 'remix' }),
+    ];
+    expect(memoryOf(log).xp).toBe(150);
+    expect(memoryOf([...log, ...exam('2026-10-13', S4, 'mock', one, { form: 'B' })]).xp).toBe(300);
+  });
+
+  it('pays no XP per boss or mock item', () => {
+    const m = memoryOf([
+      ...exam('2026-10-10', SID, 'boss', fifteen(3)),
+      ...exam('2026-10-11', SID2, 'mock', [{ concept: 'crust', correct: true }], { form: 'remix' }),
+    ]);
+    expect(m.xp).toBe(0);
+    expect(m.xpByEvent.size).toBe(0);
+  });
+
+  it('qualifies the study day of a submitted boss', () => {
+    const m = memoryOf(exam('2026-10-10', SID, 'boss', fifteen(3)));
+    expect([...m.qualifyingDays]).toEqual(['2026-10-10']);
+    expect([...m.examsDone]).toEqual(['2026-10-10']);
+  });
+
+  it('ignores an abandoned boss', () => {
+    const log: Log = [
+      ...exam('2026-10-10', SID, 'boss', fifteen(15), { open: true }),
+      [at('2026-10-10', 10, 16), abandonOf(SID, 'boss')],
+      [at('2026-10-10', 10, 17), submitOf(SID, 'boss')],
+    ];
+    const m = memoryOf(log);
+    expect(m.concepts.size).toBe(0);
+    expect(m.xp).toBe(0);
+    expect(m.qualifyingDays.size).toBe(0);
+    expect(m.answered.size).toBe(15);
   });
 });

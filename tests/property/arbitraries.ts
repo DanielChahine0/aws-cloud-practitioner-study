@@ -6,6 +6,7 @@ const SIDS = ['01JA00000000000000000000S1', '01JA00000000000000000000S2', '01JA0
 const QIDS = ['q-aaaaaa', 'q-bbbbbb', 'q-cccccc'];
 const NOTES = ['m01/a', 'm01/b', 'm09/gone'];
 const CONCEPTS = ['shared-kitchen', 'per-minute-rental'];
+const MODES = ['check', 'quiz', 'focus', 'boss', 'mock'] as const;
 
 /** A schema-valid ULID. */
 export const ulidArb = fc
@@ -24,24 +25,37 @@ const bodyArb: fc.Arbitrary<Record<string, unknown>> = fc.oneof(
   fc.record({
     t: fc.constant('answer'),
     sid: fc.constantFrom(...SIDS),
-    mode: fc.constantFrom('check', 'quiz'),
+    mode: fc.constantFrom(...MODES),
     qid: fc.constantFrom(...QIDS),
     qv: fc.constant(1),
     concept: fc.constantFrom(...CONCEPTS),
-    picked: fc.constantFrom(['a'], ['b', 'c']),
+    picked: fc.constantFrom(['a'], ['b', 'c'], []),
     correct: fc.boolean(),
     sure: fc.boolean(),
+    flagged: fc.boolean(),
+    changes: fc.constantFrom([], [['a']], [['a'], ['b']]),
     ms: fc.nat(60_000),
   }),
   fc.record({
     t: fc.constant('session'),
     sid: fc.constantFrom(...SIDS),
-    mode: fc.constantFrom('check', 'quiz'),
+    mode: fc.constantFrom(...MODES),
     phase: fc.constantFrom('start', 'submit', 'abandon'),
     seed: fc.nat(),
     scope: fc.constantFrom('m01/a', 'm01'),
+    form: fc.constantFrom('A', 'B', 'remix'),
     qids: fc.subarray(QIDS),
+    deadline: fc
+      .integer({ min: Date.UTC(2026, 8, 1), max: Date.UTC(2026, 10, 14) })
+      .map((t) => new Date(t).toISOString()),
   }),
+  fc.record({
+    t: fc.constant('cause'),
+    sid: fc.constantFrom(...SIDS),
+    qid: fc.constantFrom(...QIDS),
+    cause: fc.constantFrom('unknown', 'confused', 'misread'),
+  }),
+  fc.record({ t: fc.constant('rank'), rank: fc.constantFrom('business-support-plus', 'enterprise') }),
   fc.record({ t: fc.constant('lesson.done'), note: fc.constantFrom(...NOTES) }),
   fc.record({
     t: fc.constant('flag'),

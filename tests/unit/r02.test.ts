@@ -1,9 +1,11 @@
 import { copyFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { stringify } from 'yaml';
 import { type Context, loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { POOL_FILE, singleQuestion, writePool } from '../fixtures/questions.ts';
 
 const CONCEPTS = 'content/concepts.yaml';
 
@@ -204,6 +206,72 @@ describe('R2 questions', () => {
       replaceIn(root, QUESTIONS, '  - id: q-c8n3p5\n', '  - id: q-b4k7m2\n');
     expect(withQuestionHead(same, twice)).toEqual([
       `${QUESTIONS} id 'q-b4k7m2' (question) is already used by question in ${QUESTIONS}`,
+    ]);
+  });
+});
+
+describe('R2 exam pool and frozen forms (spec 4.3)', () => {
+  const FORMS = 'content/exam/forms.yaml';
+  const formsText = (a: { frozen: boolean; qids: string[] }): string =>
+    stringify({
+      seed: 20261024,
+      forms: [
+        { id: 'A', ...a },
+        { id: 'B', frozen: false, qids: ['q-b00001'] },
+        { id: 'C', frozen: false, qids: ['q-c00001'] },
+        { id: 'D', frozen: false, qids: ['q-d00001'] },
+      ],
+    });
+  const FROZEN = formsText({ frozen: true, qids: ['q-a00001', 'q-a00002'] });
+
+  /** R2 messages with `headFiles` as HEAD, after `edit` changes the working tree. */
+  function r02Head(headFiles: Record<string, string>, edit: (root: string) => void): string[] {
+    const root = makeFixtureRoot();
+    edit(root);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    const withHead: Context = {
+      ...ctx,
+      head: (path) => headFiles[path] ?? null,
+      headPaths: (prefix) => Object.keys(headFiles).filter((path) => path.startsWith(prefix)),
+    };
+    return runRules(withHead, ['R2']).findings.map((f) => `${f.file}  ${f.message}`);
+  }
+  const writeForms = (text: string) => (root: string) => writeFileSync(join(root, FORMS), text);
+
+  it('keeps a frozen form unchanged against HEAD', () => {
+    const changed = formsText({ frozen: true, qids: ['q-a00001', 'q-a00003'] });
+    const reordered = formsText({ frozen: true, qids: ['q-a00002', 'q-a00001'] });
+    const thawed = formsText({ frozen: false, qids: ['q-a00001', 'q-a00002'] });
+    const message = `${FORMS}  form A is frozen in HEAD and may not change`;
+    expect(r02Head({ [FORMS]: FROZEN }, writeForms(FROZEN))).toEqual([]);
+    expect(r02Head({ [FORMS]: FROZEN }, writeForms(changed))).toEqual([message]);
+    expect(r02Head({ [FORMS]: FROZEN }, writeForms(reordered))).toEqual([message]);
+    expect(r02Head({ [FORMS]: FROZEN }, writeForms(thawed))).toEqual([message]);
+    expect(r02Head({ [FORMS]: FROZEN }, () => {})).toEqual([message]);
+  });
+
+  it('lets a form that is not frozen in HEAD change, and leaves a forms file that breaks its schema to R1', () => {
+    const open = formsText({ frozen: false, qids: ['q-a00001'] });
+    expect(r02Head({ [FORMS]: open }, writeForms(formsText({ frozen: true, qids: ['q-a00009'] })))).toEqual(
+      [],
+    );
+    expect(r02Head({ [FORMS]: FROZEN }, writeForms('seed: 1\nforms: []\n'))).toEqual([]);
+  });
+
+  it('reports a live exam id that HEAD has and the pool lost', () => {
+    const live = singleQuestion({ id: 'q-9d4r6t', pool: 'exam', status: 'live' });
+    const headPool = stringify({ questions: [live] });
+    expect(r02Head({ [POOL_FILE]: headPool }, (root) => writePool(root, [live]))).toEqual([]);
+    expect(r02Head({ [POOL_FILE]: headPool }, () => {})).toEqual([
+      `${POOL_FILE}  question 'q-9d4r6t' is live or retired in HEAD but is gone; retire it in place with status: retired`,
+    ]);
+  });
+
+  it('reports an exam id that repeats a practice id', () => {
+    expect(
+      r02Head({}, (root) => writePool(root, [singleQuestion({ id: 'q-b4k7m2', pool: 'exam' })])),
+    ).toEqual([
+      `content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml  id 'q-b4k7m2' (question) is already used by question in ${POOL_FILE}`,
     ]);
   });
 });

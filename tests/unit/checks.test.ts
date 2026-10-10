@@ -19,8 +19,15 @@ import {
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { fullHash, keyHash } from '../../scripts/content/lib/hashes.ts';
 import { r09 } from '../../scripts/content/rules/r09-verified.ts';
-import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
-import { matchQuestion, multiQuestion, singleQuestion, writeQuestions } from '../fixtures/questions.ts';
+import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import {
+  matchQuestion,
+  multiQuestion,
+  POOL_FILE,
+  singleQuestion,
+  writePool,
+  writeQuestions,
+} from '../fixtures/questions.ts';
 
 const load = (root: string) => loadContext(root, { today: FIXTURE_TODAY });
 const readJson = <T>(root: string, path: string): T =>
@@ -116,6 +123,7 @@ describe('makeBatches', () => {
       path: 'x.yaml',
       line: i,
       index: i,
+      module: 1,
       noteId: note,
       q: singleQuestion({ id: `q-${String(i).padStart(6, '0')}`, concept, note }),
     },
@@ -366,7 +374,7 @@ describe('stampQuestions', () => {
     );
     grade(root, FIXTURE_TODAY);
     const first = stampQuestions(load(root), FIXTURE_TODAY);
-    expect(first.summary).toBe('stamp: 2 live, 1 drafts to revise, 0 need Dani');
+    expect(first.summary).toBe('stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired');
     expect(first.revise).toEqual(['content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml']);
     const ctx = load(root);
     expect(r09.run(ctx)).toEqual([]);
@@ -380,7 +388,7 @@ describe('stampQuestions', () => {
       lastFailure: 'critic: The right column repeats the left.',
     });
     expect(stampQuestions(load(root), FIXTURE_TODAY).summary).toBe(
-      'stamp: 2 live, 1 drafts to revise, 0 need Dani',
+      'stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired',
     );
     expect(load(root).questions.find((e) => e.q.id === 'q-3h8r2t')?.q.review?.attempts).toBe(1);
 
@@ -405,7 +413,7 @@ describe('stampQuestions', () => {
     const review = load(root).questions.find((e) => e.q.id === 'q-3h8r2t')?.q.review;
     expect(review).toEqual({ attempts: 3, lastFailure: 'critic: the task does not fit' });
     expect(stampQuestions(load(root), FIXTURE_TODAY).summary).toBe(
-      'stamp: 2 live, 0 drafts to revise, 1 need Dani',
+      'stamp: 2 live, 0 drafts to revise, 1 need Dani, 0 retired',
     );
   });
 });
@@ -466,5 +474,93 @@ describe('kindOf', () => {
     expect(kindOf('solve-closed-100')).toBe('solve-closed');
     expect(kindOf('critic-cue-07')).toBe('critic-cue');
     expect(kindOf('critic-123')).toBe('critic');
+  });
+});
+
+describe('the exam pool', () => {
+  const conceptOf = new Map([
+    ['q-e1a2b3', 'shared-kitchen'],
+    ['q-e4c5d6', 'shared-kitchen'],
+    ['q-e7f8g9', 'per-minute-rental'],
+  ]);
+  /** The practice single and match in their lesson file, and three exam items in Module 1's pool file. */
+  function examSetup(): string {
+    const root = setup([singleQuestion(), matchQuestion()]);
+    writePool(root, [
+      singleQuestion({ id: 'q-e1a2b3', pool: 'exam' }),
+      singleQuestion({ id: 'q-e4c5d6', pool: 'exam', stem: `${singleQuestion().stem} At the mill.` }),
+      multiQuestion({ id: 'q-e7f8g9', pool: 'exam', concept: 'per-minute-rental' }),
+    ]);
+    return root;
+  }
+  const failCritic = (root: string, target: string, problem: string): void =>
+    answerAll(root, (batch, id, answer) =>
+      id === target && batch.startsWith('critic') && !batch.startsWith('critic-cue')
+        ? { ...answer, noTell: false, problems: [problem] }
+        : answer,
+    );
+
+  it('batches only exam items with --pool exam, at most one per concept, and tells the critic the pool', () => {
+    const root = examSetup();
+    expect(prepare(load(root), [1], 1).questions).toBe(2);
+    expect(
+      batchFiles(root)
+        .filter((b) => b.kind === 'critic')
+        .flatMap((b) => b.questions.map((q) => q.pool)),
+    ).toEqual(['practice', 'practice']);
+
+    expect(prepare(load(root), [1], 1, 'exam').questions).toBe(3);
+    for (const b of batchFiles(root)) {
+      const ids = b.questions.map((q) => String(q.id));
+      expect(ids.every((id) => conceptOf.has(id))).toBe(true);
+      const concepts = ids.map((id) => conceptOf.get(id));
+      expect(new Set(concepts).size).toBe(concepts.length);
+    }
+    expect(
+      batchFiles(root)
+        .filter((b) => b.kind === 'critic')
+        .flatMap((b) => b.questions.map((q) => q.pool)),
+    ).toEqual(['exam', 'exam', 'exam']);
+  });
+
+  it('prints an exam failure as its id and check only, and a practice failure with its reason', () => {
+    const root = examSetup();
+    prepare(load(root), [1], 1, 'exam');
+    failCritic(root, 'q-e1a2b3', 'The stem names the oven.');
+    expect(grade(root, FIXTURE_TODAY).lines).toEqual(['FAIL q-e1a2b3 critic']);
+
+    prepare(load(root), [1], 2);
+    failCritic(root, 'q-7k2m9p', 'The stem names the oven.');
+    expect(grade(root, FIXTURE_TODAY).lines).toEqual(['FAIL q-7k2m9p critic: The stem names the oven.']);
+  });
+
+  it('retires an exam draft at its third failed round and logs ids only', () => {
+    const root = examSetup();
+    const logs: string[][] = [];
+    const summaries: string[] = [];
+    for (const attempt of [1, 2, 3]) {
+      if (attempt > 1) replaceIn(root, POOL_FILE, 'on market days', `on market days (take ${attempt})`);
+      prepare(load(root), [1], attempt, 'exam');
+      failCritic(root, 'q-e1a2b3', 'The stem names the oven.');
+      grade(root, FIXTURE_TODAY);
+      const stamp = stampQuestions(load(root), FIXTURE_TODAY);
+      logs.push(stamp.log);
+      summaries.push(stamp.summary);
+    }
+    expect(logs).toEqual([
+      ['review q-e1a2b3 attempts 1 critic', `live q-e4c5d6 (${POOL_FILE})`, `live q-e7f8g9 (${POOL_FILE})`],
+      ['review q-e1a2b3 attempts 2 critic'],
+      ['retire q-e1a2b3'],
+    ]);
+    expect(summaries).toEqual([
+      'stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired',
+      'stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired',
+      'stamp: 2 live, 0 drafts to revise, 0 need Dani, 1 retired',
+    ]);
+    const retired = load(root).questions.find((e) => e.q.id === 'q-e1a2b3')?.q;
+    expect(retired?.status).toBe('retired');
+    expect(retired?.review).toEqual({ attempts: 3, lastFailure: 'critic: The stem names the oven.' });
+    expect(stampQuestions(load(root), FIXTURE_TODAY).revise).toEqual([]);
+    expect(prepare(load(root), [1], 4, 'exam').questions).toBe(0);
   });
 });

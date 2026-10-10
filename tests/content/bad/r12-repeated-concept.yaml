@@ -1,0 +1,16 @@
+# fixture-target: content/exam/forms.yaml
+# Forms A and B repeat the fixture's live practice question, which is no exam item, so R12 fires.
+seed: 20261024
+forms:
+  - id: A
+    frozen: false
+    qids: [q-7k2m9p]
+  - id: B
+    frozen: false
+    qids: [q-7k2m9p]
+  - id: C
+    frozen: false
+    qids: [q-5n4w8x]
+  - id: D
+    frozen: false
+    qids: [q-3h8r2t]

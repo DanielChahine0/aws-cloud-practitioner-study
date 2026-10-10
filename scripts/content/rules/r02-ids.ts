@@ -1,6 +1,14 @@
 import { parse as parseYaml } from 'yaml';
+import { Forms } from '../../../schemas/exam.ts';
 import { Question, QuestionFile } from '../../../schemas/question.ts';
-import { CONCEPTS_FILE, type Finding, QUESTIONS_DIR, type QuestionEntry } from '../lib/context.ts';
+import {
+  CONCEPTS_FILE,
+  type Finding,
+  FORMS_FILE,
+  POOL_DIR,
+  QUESTIONS_DIR,
+  type QuestionEntry,
+} from '../lib/context.ts';
 import { correctKey } from '../lib/hashes.ts';
 import { finding, type Rule } from './rule.ts';
 
@@ -81,9 +89,21 @@ function idsIn(yamlText: string | null): string[] | null {
   );
 }
 
+/** The forms of a forms.yaml text that pass the schema; [] when it is missing or does not parse. */
+function formsIn(yamlText: string | null): Forms['forms'] {
+  if (yamlText === null) return [];
+  try {
+    const parsed = Forms.safeParse(parseYaml(yamlText));
+    return parsed.success ? parsed.data.forms : [];
+  } catch {
+    return [];
+  }
+}
+
 /**
- * R2 Ids: ids are unique across concepts, aliases, missions and questions; no concept id in HEAD disappears;
- * a live or retired question in HEAD stays, and a live question whose answer changes takes a key-fix version.
+ * R2 Ids: ids are unique across concepts, aliases, missions and questions of both pools; no concept id in HEAD
+ * disappears; a live or retired question in HEAD stays, and a live question whose answer changes takes a key-fix
+ * version; a form frozen in HEAD keeps its qids, their order and `frozen: true` (spec 4.3).
  */
 export const r02: Rule = {
   id: 'R2',
@@ -125,13 +145,14 @@ export const r02: Rule = {
     // An item that fails the schema, or a file that does not parse, is R1's finding, not a question that is gone.
     const present = new Set<string>();
     const unreadable = new Set<string>();
+    const questionDirs = [`${QUESTIONS_DIR}/`, `${POOL_DIR}/`];
     for (const path of ctx.files) {
-      if (!path.startsWith(`${QUESTIONS_DIR}/`) || !path.endsWith('.yaml')) continue;
+      if (!questionDirs.some((dir) => path.startsWith(dir)) || !path.endsWith('.yaml')) continue;
       const ids = idsIn(ctx.read(path));
       if (ids === null) unreadable.add(path);
       for (const id of ids ?? []) present.add(id);
     }
-    for (const path of ctx.headPaths(`${QUESTIONS_DIR}/`)) {
+    for (const path of questionDirs.flatMap((dir) => ctx.headPaths(dir))) {
       if (unreadable.has(path)) continue;
       for (const head of headQuestions(ctx.head(path))) {
         if (head.status === 'draft') continue;
@@ -161,6 +182,21 @@ export const r02: Rule = {
             ),
           );
         }
+      }
+    }
+
+    // A forms.yaml that does not parse is R1's finding; a missing one breaks every form frozen in HEAD.
+    if (ctx.forms !== null || ctx.read(FORMS_FILE) === null) {
+      const now = new Map((ctx.forms?.forms ?? []).map((f) => [f.id, f] as const));
+      for (const before of formsIn(ctx.head(FORMS_FILE))) {
+        if (!before.frozen) continue;
+        const after = now.get(before.id);
+        const same =
+          after?.frozen === true &&
+          after.qids.length === before.qids.length &&
+          after.qids.every((qid, i) => qid === before.qids[i]);
+        if (!same)
+          out.push(finding('R2', FORMS_FILE, `form ${before.id} is frozen in HEAD and may not change`));
       }
     }
     return out;

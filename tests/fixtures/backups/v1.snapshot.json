@@ -5,9 +5,11 @@
       [
         {
           "at": "2026-10-10T08:01:00.000Z",
+          "changes": [],
           "concept": "shared-kitchen",
           "correct": true,
           "day": "2026-10-10",
+          "flagged": false,
           "id": "01JA9X0000AAAAAAAAAAAAAAA2",
           "mode": "check",
           "picked": [
@@ -26,9 +28,11 @@
       [
         {
           "at": "2026-10-10T08:02:00.000Z",
+          "changes": [],
           "concept": "per-minute-rental",
           "correct": false,
           "day": "2026-10-10",
+          "flagged": false,
           "id": "01JA9X0000AAAAAAAAAAAAAAA3",
           "mode": "check",
           "picked": [
@@ -54,6 +58,7 @@
       ]
     ]
   ],
+  "causes": [],
   "checkScores": [
     [
       "m01/what-a-bakery-cloud-is",
@@ -65,6 +70,7 @@
     ]
   ],
   "eventCount": 6,
+  "exams": [],
   "flags": 1,
   "lastShown": [
     [
@@ -82,6 +88,7 @@
       "2026-10-10T08:03:00.000Z"
     ]
   ],
+  "ranks": [],
   "sessions": [
     [
       "01JA9X0000AAAAAAAAAAAAAAS1",
@@ -92,9 +99,11 @@
             "q-7k2m9p",
             {
               "at": "2026-10-10T08:01:00.000Z",
+              "changes": [],
               "concept": "shared-kitchen",
               "correct": true,
               "day": "2026-10-10",
+              "flagged": false,
               "id": "01JA9X0000AAAAAAAAAAAAAAA2",
               "mode": "check",
               "picked": [
@@ -111,9 +120,11 @@
             "q-8n3p4r",
             {
               "at": "2026-10-10T08:02:00.000Z",
+              "changes": [],
               "concept": "per-minute-rental",
               "correct": false,
               "day": "2026-10-10",
+              "flagged": false,
               "id": "01JA9X0000AAAAAAAAAAAAAAA3",
               "mode": "check",
               "picked": [
@@ -138,6 +149,8 @@
             }
           ]
         ],
+        "deadline": null,
+        "form": null,
         "mode": "check",
         "qids": [
           "q-7k2m9p",
@@ -147,6 +160,7 @@
         "seed": 3141592653,
         "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
         "startedAt": "2026-10-10T08:00:00.000Z",
+        "submitId": "01JA9X0000AAAAAAAAAAAAAAA5",
         "submittedAt": "2026-10-10T08:03:00.000Z"
       }
     ]

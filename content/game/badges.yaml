@@ -1,0 +1,41 @@
+# Badges (spec 3.10): derived from the event log, never stored, and worth no XP.
+- id: first-brew
+  name: First Brew
+  rule: First lesson check submitted.
+- id: clean-queue
+  name: Clean Queue
+  rule: Due queue reached 0 after at least 10 reviews, on 7 distinct study days.
+- id: changed-my-mind
+  name: Changed My Mind
+  rule: 5 distinct misconceptions cleared, each by the rule in 3.1 (a correct Sure answer on a different question at least 1 study day later).
+- id: long-memory
+  name: Long Memory
+  rule: 50 concepts with stability of 21 days or more.
+- id: well-calibrated
+  name: Well Calibrated
+  rule: "Over the last 150 counted answers, with at least 40 Sure and 40 Not sure: Sure accuracy at least 85% and Not sure accuracy at most 75%."
+- id: hands-on
+  name: Hands On
+  rule: Every core lab in 5 modules completed.
+  arrives: labs
+- id: lab-complete
+  name: Lab Complete
+  rule: All 26 core labs completed.
+  arrives: labs
+- id: leave-no-trace
+  name: Leave No Trace
+  rule: 3 missions closed, each with cleanup and the next-day usage check confirmed (the kept Mission 1 does not count).
+  arrives: missions
+- id: full-dress-rehearsal
+  name: Full Dress Rehearsal
+  rule: All 65 questions of an unseen form answered before the timer ran out.
+- id: pass-mark
+  name: Pass Mark
+  rule: An unseen form scored at 80% or more.
+- id: even-keel
+  name: Even Keel
+  rule: 75% or more in every domain of one unseen form.
+- id: architect
+  name: Architect
+  rule: All 13 capstone decisions with a final grade of 8/12 or more and no criterion at 0.
+  arrives: capstone

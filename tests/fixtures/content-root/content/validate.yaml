@@ -1,5 +1,6 @@
-# Fixture switches: the Phase 2 rules; practicePerConcept stays 0 because the tree holds one live question.
-rules: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R13]
+# Fixture switches: the Phase 3 rules; practicePerConcept stays 0 because the tree holds one live question,
+# and examQuotas stays false because the tree holds no exam pool, so R12 passes without forms.yaml.
+rules: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R12, R13]
 practicePerConcept: 0
 examQuotas: false
 blueprintTerms: true

@@ -3,6 +3,13 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import {
+  POOL_FILE,
+  QUESTION_FILE,
+  singleQuestion,
+  writePool,
+  writeQuestions,
+} from '../fixtures/questions.ts';
 
 describe('loadContext', () => {
   it('loads the fixture tree with no errors', () => {
@@ -122,6 +129,74 @@ describe('loadContext', () => {
       'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml YAML',
       'content/questions/02-more/01-lists.yaml (root)',
       'content/questions/notes.yaml not a question file path (content/questions/NN-module/NN-lesson.yaml), so no rule checks it',
+    ]);
+  });
+});
+
+describe('loadContext on exam files (spec 2.6)', () => {
+  it("loads an exam-pool file with its module and each item's note", () => {
+    const root = makeFixtureRoot();
+    writePool(root, [singleQuestion({ id: 'q-9d4r6t', pool: 'exam' })]);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(ctx.loadErrors).toEqual([]);
+    expect(ctx.questions.map((e) => [e.path, e.module, e.noteId, e.q.id])).toEqual([
+      [POOL_FILE, 1, 'm01/what-a-bakery-cloud-is', 'q-9d4r6t'],
+      [QUESTION_FILE, 1, 'm01/what-a-bakery-cloud-is', 'q-b4k7m2'],
+      [QUESTION_FILE, 1, 'm01/what-a-bakery-cloud-is', 'q-c8n3p5'],
+    ]);
+  });
+
+  it('keeps practice items out of pool files and exam items out of content/questions/', () => {
+    const root = makeFixtureRoot();
+    writePool(root, [singleQuestion({ id: 'q-9d4r6t' })]);
+    writeQuestions(root, [singleQuestion({ pool: 'exam' })]);
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(ctx.loadErrors).toEqual([
+      { rule: 'R1', file: POOL_FILE, line: 2, message: 'q-9d4r6t: pool files hold pool: exam only' },
+      {
+        rule: 'R1',
+        file: QUESTION_FILE,
+        line: 2,
+        message: 'q-7k2m9p: exam items live under content/exam/pool/',
+      },
+    ]);
+    expect(ctx.questions).toEqual([]);
+  });
+
+  it('reports a pool item whose note is in another module, and a stray pool path', () => {
+    const root = makeFixtureRoot();
+    writePool(root, [singleQuestion({ pool: 'exam' })], 'content/exam/pool/02-proofing.yaml');
+    writePool(root, [], 'content/exam/pool/extra.yaml');
+    writePool(root, [], 'content/exam/pool/01-baking/items.yaml');
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(ctx.loadErrors.map((f) => `${f.file}  ${f.message}`)).toEqual([
+      'content/exam/pool/01-baking/items.yaml  not a pool file path; use content/exam/pool/NN-module-slug.yaml',
+      'content/exam/pool/02-proofing.yaml  q-7k2m9p: note m01/what-a-bakery-cloud-is is not in module 02',
+      'content/exam/pool/extra.yaml  not a pool file path; use content/exam/pool/NN-module-slug.yaml',
+    ]);
+  });
+
+  it('loads absent quotas and forms as null, and needs the rank and badge files', () => {
+    const root = makeFixtureRoot();
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect([ctx.quotas, ctx.forms]).toEqual([null, null]);
+    expect(ctx.ranks?.map((r) => r.id)).toEqual(['basic']);
+    expect(ctx.badges).toHaveLength(12);
+    unlinkSync(join(root, 'content/game/ranks.yaml'));
+    unlinkSync(join(root, 'content/game/badges.yaml'));
+    expect(loadContext(root, { today: FIXTURE_TODAY }).loadErrors).toEqual([
+      { rule: 'R1', file: 'content/game/ranks.yaml', message: 'required file is missing' },
+      { rule: 'R1', file: 'content/game/badges.yaml', message: 'required file is missing' },
+    ]);
+  });
+
+  it('reports a forms file that breaks its schema', () => {
+    const root = makeFixtureRoot();
+    writeFileSync(join(root, 'content/exam/forms.yaml'), 'seed: 1\nforms: []\n');
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(ctx.forms).toBeNull();
+    expect(ctx.loadErrors.map((f) => `${f.file}  ${f.message}`)).toEqual([
+      'content/exam/forms.yaml  forms: Too small: expected array to have exactly 4 items',
     ]);
   });
 });

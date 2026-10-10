@@ -5,7 +5,14 @@ import { loadContext } from '../../scripts/content/lib/context.ts';
 import { asLive, demote, draftCheck } from '../../scripts/content/lib/draft.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
-import { matchQuestion, QUESTION_FILE, singleQuestion, writeQuestions } from '../fixtures/questions.ts';
+import {
+  matchQuestion,
+  POOL_FILE,
+  QUESTION_FILE,
+  singleQuestion,
+  writePool,
+  writeQuestions,
+} from '../fixtures/questions.ts';
 
 const load = (root: string) => loadContext(root, { today: FIXTURE_TODAY });
 
@@ -87,5 +94,28 @@ describe('demote', () => {
     ]);
     expect(readFileSync(join(root, QUESTION_FILE), 'utf8')).toContain('status: draft');
     expect(demote(load(root))).toEqual([]);
+  });
+});
+
+describe('draftCheck on an exam-pool file (spec 2.6)', () => {
+  it('reports a concept past 4 open exam items and a task outside the concept, by id only', () => {
+    const root = makeFixtureRoot();
+    const ids = ['q-e00001', 'q-e00002', 'q-e00003', 'q-e00004'];
+    writePool(root, [
+      ...ids.map((id) => singleQuestion({ id, pool: 'exam' })),
+      singleQuestion({ id: 'q-e00005', pool: 'exam', task: '4.1' }),
+    ]);
+    const { questions, problems } = draftCheck(load(root), POOL_FILE);
+    expect(questions).toBe(5);
+    expect(problems).toEqual([
+      `R6 ${POOL_FILE}:126  q-e00005: task 4.1 is not one of shared-kitchen's tasks (1.1)`,
+      `${POOL_FILE}  concept shared-kitchen would hold 5 exam items; at most 4`,
+    ]);
+  });
+
+  it('leaves the practice coverage check out of a pool file', () => {
+    const root = makeFixtureRoot();
+    writePool(root, [singleQuestion({ id: 'q-e00001', pool: 'exam' })]);
+    expect(draftCheck(load(root), POOL_FILE).problems).toEqual([]);
   });
 });

@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { Blueprint } from '../../schemas/blueprint.ts';
 import { TASK_IDS } from '../../schemas/common.ts';
 import { Concept } from '../../schemas/concept.ts';
+import { Forms, Quotas } from '../../schemas/exam.ts';
 import { FingerprintFile } from '../../schemas/fingerprint.ts';
+import { Badges, Ranks } from '../../schemas/game.ts';
+import { BADGE_IDS } from '../../schemas/ids.ts';
 import { MissionFrontmatter } from '../../schemas/mission.ts';
 import { LessonFrontmatter } from '../../schemas/note.ts';
 import { Question } from '../../schemas/question.ts';
@@ -31,6 +34,7 @@ function blueprint(weights = [24, 30, 34, 12], taskIds: readonly string[] = TASK
     tasks: taskIds.map((id) => ({
       id,
       text: `Fixture task ${id} statement`,
+      short: `task ${id}`,
       terms: ['AWS Lambda', { term: 'AWS VPN', coveredBy: 'aws-site-to-site-vpn' }],
       url: GUIDE_URL,
       verified_on: '2026-10-09',
@@ -251,5 +255,111 @@ describe('Question', () => {
       Question.safeParse({ ...single, verified: { ...verified, checks: verified.checks.slice(0, 2) } })
         .success,
     ).toBe(false);
+  });
+});
+
+/** The per-form task counts of the real registry (spec 4.3), with every cell in Module 1. */
+const FORM_TASKS: Record<string, number> = {
+  '1.1': 4,
+  '1.2': 2,
+  '1.3': 7,
+  '1.4': 3,
+  '2.1': 3,
+  '2.2': 10,
+  '2.3': 3,
+  '2.4': 3,
+  '3.1': 2,
+  '3.2': 2,
+  '3.3': 4,
+  '3.4': 3,
+  '3.5': 2,
+  '3.6': 4,
+  '3.7': 3,
+  '3.8': 2,
+  '4.1': 3,
+  '4.2': 1,
+  '4.3': 4,
+};
+function quotas(tasks: Record<string, number> = FORM_TASKS) {
+  return {
+    form: {
+      size: 65,
+      domains: { '1': 16, '2': 19, '3': 22, '4': 8 },
+      tasks,
+      multi: { '1': 2, '2': 2, '3': 3, '4': 1 },
+    },
+    pool: { size: 260, forms: 4, maxPerConcept: 4, multi: { '1': 8, '2': 8, '3': 12, '4': 4 } },
+    cells: Object.entries(tasks).map(([task, n]) => ({ module: 1, task, target: 4 * n })),
+    multiByModule: [
+      { module: 1, domain: '1', target: 8 },
+      { module: 1, domain: '2', target: 8 },
+      { module: 1, domain: '3', target: 12 },
+      { module: 1, domain: '4', target: 4 },
+    ],
+  };
+}
+const form = (id: string, qids = ['q-aaaaaa', 'q-bbbbbb']) => ({ id, frozen: false, qids });
+
+describe('Quotas and Forms', () => {
+  it('accepts quotas whose tasks, cells and multi shares add up', () => {
+    expect(messages(Quotas.safeParse(quotas()))).toEqual([]);
+  });
+
+  it('rejects task counts that do not sum to 65', () => {
+    const tasks = { ...FORM_TASKS, '2.2': 11 };
+    const result = quotas(tasks);
+    expect(messages(Quotas.safeParse({ ...result, cells: quotas().cells }))).toEqual([
+      'form.tasks: tasks sum to 66, not 65',
+      'form.tasks: tasks of domain 2 sum to 20, not 19',
+      'cells: cells of task 2.2 sum to 40, not 44',
+    ]);
+  });
+
+  it('rejects quotas with a task missing', () => {
+    const { '4.3': _gone, ...tasks } = FORM_TASKS;
+    expect(Quotas.safeParse(quotas(tasks)).success).toBe(false);
+  });
+
+  it('accepts four forms A to D and rejects three, a wrong order and a repeated qid', () => {
+    const forms = { seed: 20261024, forms: ['A', 'B', 'C', 'D'].map((id) => form(id)) };
+    expect(messages(Forms.safeParse(forms))).toEqual([]);
+    expect(Forms.safeParse({ ...forms, forms: forms.forms.slice(0, 3) }).success).toBe(false);
+    expect(
+      messages(Forms.safeParse({ ...forms, forms: ['B', 'A', 'C', 'D'].map((id) => form(id)) })),
+    ).toEqual(['forms.0.id: form 1 must be A', 'forms.1.id: form 2 must be B']);
+    const repeated = { ...forms, forms: [form('A', ['q-aaaaaa', 'q-aaaaaa']), ...forms.forms.slice(1)] };
+    expect(messages(Forms.safeParse(repeated))).toEqual(['forms.0.qids: form A lists q-aaaaaa twice']);
+  });
+});
+
+describe('Ranks and Badges', () => {
+  const basic = { id: 'basic', name: 'Basic', short: 'Basic', requires: {} };
+  const plus = {
+    id: 'business-support-plus',
+    name: 'Business Support+',
+    short: 'Business+',
+    requires: { bosses: 5, hexesAt60: 5 },
+    facts: ['A first made-up fact about the plan.', 'A second made-up fact about the plan.'],
+  };
+
+  it('accepts basic first and later ranks with two facts', () => {
+    expect(messages(Ranks.safeParse([basic, plus]))).toEqual([]);
+  });
+
+  it('rejects a first rank other than basic and a rank with one fact', () => {
+    expect(messages(Ranks.safeParse([plus]))).toEqual([
+      '0: the first rank must be basic, with requires {} and no facts',
+    ]);
+    expect(Ranks.safeParse([basic, { ...plus, facts: plus.facts.slice(0, 1) }]).success).toBe(false);
+  });
+
+  it('accepts the 12 badges in order and rejects 11', () => {
+    const badges = BADGE_IDS.map((id) => ({ id, name: `Badge ${id}`, rule: 'A made-up rule for the test.' }));
+    expect(messages(Badges.safeParse(badges))).toEqual([]);
+    expect(Badges.safeParse(badges.slice(0, 11)).success).toBe(false);
+    expect(messages(Badges.safeParse([badges[1], badges[0], ...badges.slice(2)]))).toEqual([
+      '0.id: badge 1 must be first-brew',
+      '1.id: badge 2 must be clean-queue',
+    ]);
   });
 });

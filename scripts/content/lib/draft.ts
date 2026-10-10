@@ -1,7 +1,8 @@
 /** The `--draft <file>` and `--demote` modes of pnpm content:validate (spec 2.7, 2.9 and 8.4). */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { formatFinding } from '../rules/index.ts';
+import { MAX_PER_CONCEPT } from '../../../src/engine/quotas.ts';
+import { formatFinding, isExamFile, redact, redactMessage } from '../rules/index.ts';
 import { r01 } from '../rules/r01-schema.ts';
 import { r03 } from '../rules/r03-answer-counts.ts';
 import { r04 } from '../rules/r04-explanations.ts';
@@ -10,8 +11,9 @@ import { r06 } from '../rules/r06-references.ts';
 import { r07 } from '../rules/r07-originality.ts';
 import type { Rule } from '../rules/rule.ts';
 import type { Context, LessonNote, QuestionEntry } from './context.ts';
+import { examConceptCounts } from './coverage.ts';
 import { editQuestionFile, type QuestionEdit } from './question-files.ts';
-import { coverageProblems, styleProblems } from './style.ts';
+import { coverageProblems, isOpen, styleProblems } from './style.ts';
 
 /** The rules a draft file must pass as if it were live, in id order. */
 const DRAFT_RULES: readonly Rule[] = [r01, r03, r04, r05, r06, r07];
@@ -26,22 +28,44 @@ export function asLive(ctx: Context, file: string): Context {
   return { ...ctx, questions };
 }
 
-/** Every problem `--draft` reports for one question file: rule findings, style problems and missing coverage. */
+/**
+ * The exam-pool cap a pool draft must keep (spec 2.6): no concept of the file above 4 open exam items over the whole
+ * pool. A task outside the concept's tasks is R6's finding, which `--draft` already runs.
+ */
+function examDraftProblems(file: string, ctx: Context): string[] {
+  const open = examConceptCounts(ctx, isOpen);
+  const aliasOf = new Map<string, string>();
+  for (const c of ctx.concepts) for (const alias of c.aliases ?? []) aliasOf.set(alias, c.id);
+  const concepts = new Set(
+    ctx.questions
+      .filter((e) => e.path === file && isOpen(e.q))
+      .map((e) => aliasOf.get(e.q.concept) ?? e.q.concept),
+  );
+  return [...concepts]
+    .sort()
+    .filter((id) => (open.get(id) ?? 0) > MAX_PER_CONCEPT)
+    .map((id) => `concept ${id} would hold ${open.get(id)} exam items; at most ${MAX_PER_CONCEPT}`);
+}
+
+/** Every problem `--draft` reports for one question file: rule findings, style problems and missing coverage or the exam cap. */
 export function draftCheck(ctx: Context, file: string): { questions: number; problems: string[] } {
   const live = asLive(ctx, file);
   const findings = DRAFT_RULES.flatMap((rule) => rule.run(live)).filter((f) => f.file === file);
   findings.sort((a, b) => Number(a.rule.slice(1)) - Number(b.rule.slice(1)) || (a.line ?? 0) - (b.line ?? 0));
-  const problems = findings.map(formatFinding);
+  const exam = isExamFile(file);
+  const problems = findings.map((f) => formatFinding(redact(f)));
   const notes = new Map(ctx.notes.map((n) => [n.id, n] as const));
   const entries = ctx.questions.filter((e) => e.path === file && e.q.status !== 'retired');
   for (const entry of entries) {
     const note = notes.get(entry.q.note);
     const lesson = note?.kind === 'lesson' ? (note as LessonNote) : undefined;
     for (const problem of styleProblems(entry.q, lesson)) {
-      problems.push(`${file}:${entry.line}  ${entry.q.id}: ${problem}`);
+      problems.push(`${file}:${entry.line}  ${entry.q.id}: ${exam ? redactMessage(problem) : problem}`);
     }
   }
-  for (const problem of coverageProblems(file, ctx)) problems.push(`${file}  ${problem}`);
+  for (const problem of exam ? examDraftProblems(file, ctx) : coverageProblems(file, ctx)) {
+    problems.push(`${file}  ${problem}`);
+  }
   return { questions: entries.length, problems };
 }
 

@@ -1,12 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import type { NewEvent } from '../../schemas/events.ts';
 import { betXp, expectedXp, SURE_BREAKEVEN } from '../../src/engine/bets.ts';
+import { BOSS_COOLDOWN_MS, bossDraw, bossStatus } from '../../src/engine/boss.ts';
 import { moduleMastery } from '../../src/engine/mastery.ts';
 import { deriveMemory } from '../../src/engine/memory.ts';
+import { firstAttempts, mockDeadline, mockHistory } from '../../src/engine/mock.ts';
 import { reviewQueue } from '../../src/engine/queue.ts';
+import { meets, type RankDef, rankFacts } from '../../src/engine/ranks.ts';
+import { readiness } from '../../src/engine/readiness.ts';
+import { derive } from '../../src/engine/replay.ts';
+import type { PoolQuestion } from '../../src/engine/select.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
-import { timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, contentOf } from '../fixtures/memory.ts';
+import { SID, SID2, timelineOf } from '../fixtures/events.ts';
+import { answerOf, at, contentOf, examStartOf, submitOf } from '../fixtures/memory.ts';
 
 /** One test per Phase 2 row of the anti-grind audit (spec 3.11), named after the row. */
 const CONTENT = contentOf([
@@ -22,6 +28,38 @@ type Log = readonly (readonly [string, NewEvent])[];
 const memoryOf = (log: Log) => deriveMemory(timelineOf(log), CONTENT);
 const right = (concept: string, qid: string, mode: 'check' | 'quiz' = 'check') =>
   answerOf({ concept, qid, mode, correct: true, sure: true });
+const SID3 = '01JA00000000000000000000S3';
+
+/** A submitted boss or mock on `day` over the given concepts, every item right. */
+const examOf = (
+  day: string,
+  sid: string,
+  mode: 'boss' | 'mock',
+  concepts: readonly string[],
+  form?: string,
+): Log => [
+  [
+    at(day, 10),
+    examStartOf(
+      sid,
+      mode,
+      concepts.map((c) => `qx-${c}`),
+      {
+        scope: mode === 'boss' ? 'm03' : 'a',
+        deadline: at(day, 11),
+        ...(form === undefined ? {} : { form }),
+      },
+    ),
+  ],
+  ...concepts.map(
+    (c, i) =>
+      [
+        at(day, 10, 20 + i),
+        answerOf({ concept: c, qid: `qx-${c}`, mode, sid, correct: true, sure: false }),
+      ] as const,
+  ),
+  [at(day, 10, 40), submitOf(sid, mode)],
+];
 
 describe('anti-grind audit (spec 3.11)', () => {
   it('Re-answering the same concept', () => {
@@ -106,6 +144,107 @@ describe('anti-grind audit (spec 3.11)', () => {
   });
 
   it.todo('Lightning spam (lightning arrives in Phase 4)');
-  it.todo('Re-rolling a boss (bosses arrive in Phase 3)');
-  it.todo('Peeking at mocks (mocks arrive in Phase 3)');
+  it('Re-rolling a boss: a second pass pays nothing', () => {
+    const module3 = ['flour', 'yeast', 'salt', 'water'];
+    const first = memoryOf(examOf('2026-10-10', SID, 'boss', module3));
+    const twice = memoryOf([
+      ...examOf('2026-10-10', SID, 'boss', module3),
+      ...examOf('2026-10-11', SID2, 'boss', module3),
+    ]);
+    expect(first.xp).toBe(100);
+    expect(twice.xp).toBe(100);
+  });
+
+  it('Re-rolling a boss: 20 h cooldown and a new draw', () => {
+    const module3 = ['flour', 'yeast', 'salt', 'water'];
+    const events = timelineOf(examOf('2026-10-10', SID, 'boss', module3.slice(0, 1)));
+    const submitted = Date.parse(events.at(-1)?.at ?? '');
+    const statusAt = (ms: number) =>
+      bossStatus({
+        module: 3,
+        progress: derive(events, null),
+        lessonsRead: true,
+        mastery: 70,
+        now: new Date(submitted + ms),
+      });
+    expect(statusAt(BOSS_COOLDOWN_MS - 1).cooldownUntil).not.toBeNull();
+    expect(statusAt(BOSS_COOLDOWN_MS).cooldownUntil).toBeNull();
+    const pool: PoolQuestion[] = Array.from({ length: 40 }, (_, i) => ({
+      id: `q-m3-${i}`,
+      concept: module3[i % 4] as string,
+      note: `m03/lesson-${(i % 2) + 1}`,
+      type: 'single',
+      module: 3,
+    }));
+    const drawOf = (seed: number) =>
+      bossDraw({
+        module: 3,
+        pool,
+        lessons: ['m03/lesson-1', 'm03/lesson-2'],
+        progress: derive([], null),
+        recall: () => 0.5,
+        studied: () => true,
+        now: new Date(submitted + BOSS_COOLDOWN_MS),
+        seed,
+      });
+    expect(drawOf(1)).not.toEqual(drawOf(2));
+  });
+
+  it('Peeking at mocks: each form pays once and a remix pays nothing', () => {
+    const all = ['oven', 'proofing', 'crust', 'flour'];
+    const memory = memoryOf([
+      ...examOf('2026-10-10', SID, 'mock', all, 'A'),
+      ...examOf('2026-10-13', SID2, 'mock', all, 'A'),
+      ...examOf('2026-10-16', SID3, 'mock', all, 'remix'),
+    ]);
+    expect(memory.xp).toBe(150);
+  });
+
+  it('Peeking at mocks: a remix never counts toward Ready or a rank', () => {
+    const sid = '01JA00000000000000000000RX';
+    const start = at('2026-10-27', 9);
+    const picks = [
+      ['q-oven-1', 'oven'],
+      ['q-proofing-1', 'proofing'],
+    ] as const;
+    const log: Log = [
+      [
+        start,
+        examStartOf(
+          sid,
+          'mock',
+          picks.map(([qid]) => qid),
+          { form: 'remix', deadline: mockDeadline(new Date(start)) },
+        ),
+      ],
+      ...picks.map(
+        ([qid, concept], i) =>
+          [
+            at('2026-10-27', 9, i + 1),
+            answerOf({ concept, qid, mode: 'mock', sid, correct: true, sure: true }),
+          ] as const,
+      ),
+      [at('2026-10-27', 10), submitOf(sid, 'mock')],
+    ];
+    const events = timelineOf(log);
+    const progress = derive(events, null);
+    expect(mockHistory(progress).map((a) => a.percent)).toEqual([1]);
+    expect(firstAttempts(progress)).toEqual([]);
+    const now = new Date(at('2026-10-27', 12));
+    const memory = deriveMemory(events, CONTENT);
+    const r = readiness({ memory, content: CONTENT, attempts: firstAttempts(progress), now, tz: 0 });
+    expect(r.mock).toBeNull();
+    expect(r.capped).toBe(true);
+    // One mock at 80 is enough here, so only skipping the remix can keep this rank unmet.
+    const oneMock: RankDef = {
+      id: 'one-mock',
+      name: 'One Mock',
+      short: 'One Mock',
+      requires: { unseenMocksAt80: 1, latestMockWithinDays: 14, ready: true },
+      facts: [],
+    };
+    expect(
+      meets(oneMock, rankFacts({ progress, mastery: new Map(), ready: true, today: '2026-10-27' })),
+    ).toBe(false);
+  });
 });

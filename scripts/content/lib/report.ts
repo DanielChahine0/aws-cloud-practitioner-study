@@ -1,7 +1,10 @@
-/** The text of pnpm content:report: counts, style lines, coverage, needs-Dani and homed concepts (spec 2.9). */
+/** The text of pnpm content:report: counts, style lines, coverage, needs-Dani, homed concepts and exam targets (spec 2.9). */
+import type { DomainIdValue } from '../../../schemas/ids.ts';
+import type { Question } from '../../../schemas/question.ts';
+import { domainOf, MAX_PER_CONCEPT } from '../../../src/engine/quotas.ts';
 import { NEEDS_DANI_ATTEMPTS } from './checks.ts';
-import { type Context, type LessonNote, questionFileOf } from './context.ts';
-import { conceptsMdDrift, coverage, practiceCounts } from './coverage.ts';
+import { type Context, type LessonNote, POOL_DIR, QUOTAS_FILE, questionFileOf } from './context.ts';
+import { conceptsMdDrift, coverage, examConceptCounts, examCounts, practiceCounts } from './coverage.ts';
 import { parseGlossary } from './glossary.ts';
 import { notesAnchors } from './markdown.ts';
 import { isOpen, moduleStyle, PER_CONCEPT_TARGET } from './style.ts';
@@ -10,14 +13,29 @@ const DRIFT_LINES = 10;
 const pct = (n: number, of: number): string => `${of === 0 ? 0 : Math.round((n / of) * 100)}%`;
 const pad2 = (n: number): string => String(n).padStart(2, '0');
 
-/** The default report: counts, one style line per module with questions, and the concepts.md drift. */
+/** One module's style line for one pool, with counts only, so it is safe for exam-pool items too; null when empty. */
+function styleLine(module: number, pool: Question['pool'], qs: readonly Question[]): string | null {
+  const s = moduleStyle(qs);
+  if (s.total === 0) return null;
+  const types =
+    pool === 'practice'
+      ? `${s.total} practice (single ${s.byType.single}, multi ${s.byType.multi}, match ${s.byType.match})`
+      : `${s.total} (single ${s.byType.single}, multi ${s.byType.multi})`;
+  return (
+    `m${pad2(module)}${pool === 'exam' ? ' exam' : ''}: ${types}; ` +
+    `correct option longest in ${s.correctLongest} of ${s.singles} singles (${pct(s.correctLongest, s.singles)}); ` +
+    `negative stems ${s.negatives} (${pct(s.negatives, s.total)})`
+  );
+}
+
+/** The default report: practice counts, one style line per module for each pool, and the concepts.md drift. */
 export function report(ctx: Context): string[] {
   const lessons = ctx.notes.filter((n) => n.kind === 'lesson');
   const modules = new Set(ctx.notes.map((n) => n.module)).size;
   const glossary = ctx.shared.find((f) => f.path === 'resources/glossary.md');
   const terms = glossary === undefined ? 0 : parseGlossary(glossary.text, glossary.path).length;
   const tested = ctx.concepts.filter((c) => c.tested !== false).length;
-  const qs = ctx.questions.map((e) => e.q);
+  const qs = ctx.questions.filter((e) => e.q.pool === 'practice').map((e) => e.q);
   const by = (status: string): number => qs.filter((q) => q.status === status).length;
   const live = qs.filter((q) => q.status === 'live');
   const liveBy = (type: string): number => live.filter((q) => q.type === type).length;
@@ -25,19 +43,13 @@ export function report(ctx: Context): string[] {
     `modules ${modules}, lessons ${lessons.length}, glossary terms ${terms}, concepts ${ctx.concepts.length} (${tested} tested)`,
     `questions: ${by('draft')} draft, ${by('live')} live, ${by('retired')} retired; live single ${liveBy('single')}, multi ${liveBy('multi')}, match ${liveBy('match')}`,
   ];
-  const byModule = new Map<number, typeof qs>();
-  for (const e of ctx.questions) {
-    const m = Number(e.noteId.slice(1, 3));
-    byModule.set(m, [...(byModule.get(m) ?? []), e.q]);
-  }
-  for (const m of [...byModule.keys()].sort((a, b) => a - b)) {
-    const s = moduleStyle(byModule.get(m) ?? []);
-    if (s.total === 0) continue;
-    out.push(
-      `m${pad2(m)}: ${s.total} practice (single ${s.byType.single}, multi ${s.byType.multi}, match ${s.byType.match}); ` +
-        `correct option longest in ${s.correctLongest} of ${s.singles} singles (${pct(s.correctLongest, s.singles)}); ` +
-        `negative stems ${s.negatives} (${pct(s.negatives, s.total)})`,
-    );
+  const modulesWithQuestions = [...new Set(ctx.questions.map((e) => e.module))].sort((a, b) => a - b);
+  for (const m of modulesWithQuestions) {
+    const of = (pool: Question['pool']): Question[] =>
+      ctx.questions.filter((e) => e.module === m && e.q.pool === pool).map((e) => e.q);
+    for (const line of [styleLine(m, 'practice', of('practice')), styleLine(m, 'exam', of('exam'))]) {
+      if (line !== null) out.push(line);
+    }
   }
   const drift = conceptsMdDrift(ctx);
   out.push(`concepts.md drift: ${drift.length}`, ...drift.slice(0, DRIFT_LINES).map((line) => `  ${line}`));
@@ -111,7 +123,9 @@ export function homed(ctx: Context, noteId: string): HomedConcepts {
         need: Math.max(0, PER_CONCEPT_TARGET - open),
       };
     });
-  const existing = ctx.questions.filter((e) => e.noteId === noteId && e.q.status !== 'retired').length;
+  const existing = ctx.questions.filter(
+    (e) => e.q.pool === 'practice' && e.noteId === noteId && e.q.status !== 'retired',
+  ).length;
   return { note: noteId, title: note.fm?.title ?? note.slugFromPath, concepts, existing };
 }
 
@@ -128,8 +142,90 @@ export function targets(ctx: Context): Target[] {
     if (note.kind !== 'lesson') continue;
     const need = homed(ctx, note.id).concepts.reduce((sum, c) => sum + c.need, 0);
     if (need === 0) continue;
-    const file = ctx.questions.find((e) => e.noteId === note.id)?.path ?? questionFileOf(note.path);
+    const file =
+      ctx.questions.find((e) => e.q.pool === 'practice' && e.noteId === note.id)?.path ??
+      questionFileOf(note.path);
     out.push({ note: note.id, file, need });
   }
   return out;
+}
+
+/** One cell or multi-response share of `--exam-targets`; `liveNeed` 0 is the only sign that it is met. */
+interface ExamNeed {
+  target: number;
+  /** Extra items asked of the writers, so one retired or stuck item never blocks the forms. */
+  spare: number;
+  /** Live items. */
+  live: number;
+  /** Live items plus drafts below 3 failed check rounds. */
+  open: number;
+  /** Items to write now: target + spare - open, never below 0. */
+  need: number;
+  /** Live items still missing: target - live, never below 0; the test R10 and the fan-out loop share. */
+  liveNeed: number;
+}
+export interface ExamTarget {
+  module: number;
+  file: string;
+  cells: (ExamNeed & { task: string })[];
+  multi: (ExamNeed & { domain: DomainIdValue })[];
+  /** The module's tested concepts that can still take an exam item, with their open exam items. */
+  concepts: { id: string; note: string; tasks: string[]; open: number }[];
+}
+
+const examNeed = (target: number, spare: number, live: number, open: number): ExamNeed => ({
+  target,
+  spare,
+  live,
+  open,
+  need: Math.max(0, target + spare - open),
+  liveNeed: Math.max(0, target - live),
+});
+
+/** A cell's spare: one item per started ten of its target, never below one. */
+export const cellSpare = (target: number): number => Math.max(1, Math.ceil(0.1 * target));
+
+/** `--exam-targets`: per module with quota cells, its pool file, cell and multi-response needs, and open concepts. */
+export function examTargets(ctx: Context): ExamTarget[] {
+  const quotas = ctx.quotas;
+  if (quotas === null) throw new Error(`${QUOTAS_FILE} is missing; run pnpm content:quotas`);
+  const isLive = (q: Question): boolean => q.status === 'live';
+  const live = examCounts(ctx, isLive);
+  const open = examCounts(ctx, isOpen);
+  const conceptOpen = examConceptCounts(ctx, isOpen);
+  const multiOf = (module: number, d: DomainIdValue, keep: (q: Question) => boolean): number =>
+    ctx.questions.filter(
+      (e) =>
+        e.module === module &&
+        e.q.pool === 'exam' &&
+        e.q.type === 'multi' &&
+        domainOf(e.q.task) === d &&
+        keep(e.q),
+    ).length;
+  const modules = [...new Set(quotas.cells.map((c) => c.module))].sort((a, b) => a - b);
+  return modules.map((module) => {
+    const readme = ctx.notes.find((n) => n.kind === 'module' && n.module === module);
+    const dir = readme?.path.split('/')[1] ?? pad2(module);
+    const file =
+      ctx.questions.find((e) => e.q.pool === 'exam' && e.module === module)?.path ??
+      `${POOL_DIR}/${dir}.yaml`;
+    const cells = quotas.cells
+      .filter((c) => c.module === module)
+      .map((c) => {
+        const key = `${module}|${c.task}`;
+        const spare = cellSpare(c.target);
+        return { task: c.task, ...examNeed(c.target, spare, live.get(key) ?? 0, open.get(key) ?? 0) };
+      });
+    const multi = quotas.multiByModule
+      .filter((m) => m.module === module)
+      .map((m) => ({
+        domain: m.domain,
+        ...examNeed(m.target, 1, multiOf(module, m.domain, isLive), multiOf(module, m.domain, isOpen)),
+      }));
+    const concepts = ctx.concepts
+      .filter((c) => c.tested !== false && Number(c.home.slice(1, 3)) === module)
+      .map((c) => ({ id: c.id, note: c.home, tasks: [...c.tasks], open: conceptOpen.get(c.id) ?? 0 }))
+      .filter((c) => c.open < MAX_PER_CONCEPT);
+    return { module, file, cells, multi, concepts };
+  });
 }
