@@ -68,21 +68,30 @@ export async function initStore(): Promise<void> {
   }
 }
 
-/** Stamps an event with its id, time, offset and study day, shows it at once, then writes it. */
-export async function record(e: NewEvent, now = new Date()): Promise<StudyEvent> {
-  const event = {
+/** Stamps an event with its id, time, offset and study day. */
+const stamp = (e: NewEvent, now: Date): StudyEvent =>
+  ({
     ...e,
     id: ulid(now.getTime()),
     at: now.toISOString(),
     tz: tzOffset(now),
     day: studyDay(now),
-  } as StudyEvent;
-  const firstAnswer = event.t === 'answer' && !events.value.some((x) => x.t === 'answer');
-  events.value = [...events.value, event];
+  }) as StudyEvent;
+
+/** Adds stamped events to the log signal; the first answer ever asks the browser to keep the log. */
+function show(added: readonly StudyEvent[]): void {
+  const firstAnswer = added.some((x) => x.t === 'answer') && !events.value.some((x) => x.t === 'answer');
+  events.value = [...events.value, ...added];
   if (firstAnswer) {
     // Ask the browser to keep the log through storage pressure (spec 8.1); a refusal changes nothing here.
     navigator.storage?.persist?.().catch(() => undefined);
   }
+}
+
+/** Stamps an event with its id, time, offset and study day, shows it at once, then writes it. */
+export async function record(e: NewEvent, now = new Date()): Promise<StudyEvent> {
+  const event = stamp(e, now);
+  show([event]);
   if (db !== null) {
     try {
       await appendEvent(db, event);
@@ -91,6 +100,23 @@ export async function record(e: NewEvent, now = new Date()): Promise<StudyEvent>
     }
   }
   return event;
+}
+
+/**
+ * Records several events as one step: they reach the log signal together and IndexedDB in one transaction, so a tab
+ * closed partway keeps all of them or none (an exam settle, spec 4.3).
+ */
+export async function recordAll(es: readonly NewEvent[], now = new Date()): Promise<StudyEvent[]> {
+  const added = es.map((e) => stamp(e, now));
+  show(added);
+  if (db !== null) {
+    try {
+      await putEvents(db, added);
+    } catch {
+      failed();
+    }
+  }
+  return added;
 }
 
 /** Sets one kv value, stamped with `now`. */

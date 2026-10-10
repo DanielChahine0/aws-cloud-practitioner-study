@@ -88,6 +88,7 @@ export const isAnswered = (draft: ExamDraft, qid: string): boolean => (draft.pic
  * The events of a submit: one answer per question in session order, an unanswered one with `picked: []` and
  * `correct: false` (spec 4.3), every one `sure: false` (spec 3.1), then the session submit.
  * A question whose text is not loaded is left out, and still counts as wrong because the score is over `qids`.
+ * A question the session already has an answer for is left out too, since replay keeps only the first.
  */
 export function submitEvents(args: {
   draft: ExamDraft;
@@ -99,7 +100,7 @@ export function submitEvents(args: {
   const out: NewEvent[] = [];
   for (const qid of session.qids) {
     const q = questions.get(qid);
-    if (q === undefined) continue;
+    if (q === undefined || session.answers.has(qid)) continue;
     const picked = draft.picks[qid] ?? [];
     const changes = draft.changes[qid] ?? [];
     out.push({

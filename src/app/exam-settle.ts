@@ -8,7 +8,7 @@ import type { Progress, SessionState } from '../engine/replay.ts';
 import { KV_KEYS } from '../store/kv.ts';
 import { ensureExamForm, ensureModule, index, loadError, modules } from './content.ts';
 import { examDraftOf, newDraft, submitEvents } from './exam-session.ts';
-import { kvRecords, progress, record, writeKv } from './progress.ts';
+import { kvRecords, progress, recordAll, writeKv } from './progress.ts';
 
 /** The wall clock in milliseconds, ticked every second by App while an exam is open; the focus bar reads it. */
 export const examTick = signal(Date.now());
@@ -81,7 +81,8 @@ const settling = new Set<string>();
 /**
  * Records the answers and the submit of an open exam, then clears its draft; true when it recorded.
  * It is the only caller of `submitEvents`, ignores a second call while one is in flight, and re-reads the session
- * right before recording, so a duplicate submit can never reach the log.
+ * right before recording, so a duplicate submit can never reach the log; the answers and the submit are written as one
+ * transaction, so a settle cut off partway leaves nothing behind.
  */
 export async function settleExam(sid: string, now: Date): Promise<boolean> {
   if (settling.has(sid)) return false;
@@ -95,7 +96,7 @@ export async function settleExam(sid: string, now: Date): Promise<boolean> {
     const session = progress.peek().sessions.get(sid);
     if (session === undefined || session.submittedAt !== null || session.abandoned) return false;
     const draft = examDraftOf(kvRecords.peek()[KV_KEYS.examSession]?.value, sid) ?? newDraft(sid);
-    for (const e of submitEvents({ draft, session, questions, mode: first.mode })) await record(e, now);
+    await recordAll(submitEvents({ draft, session, questions, mode: first.mode }), now);
     await writeKv(KV_KEYS.examSession, null, now);
     return true;
   } finally {
