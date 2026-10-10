@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   CREDITS_NOTE,
+  checkLabel,
   ENGINE_LABEL,
   goalWord,
   hintLine,
@@ -10,6 +11,9 @@ import {
   placedLine,
   RESET_ASK,
   returnedLine,
+  SIM_IDLE,
+  SIM_RESULTS,
+  simChartLabel,
   TRAY_EMPTY,
 } from '../../src/app/lab.ts';
 
@@ -53,5 +57,26 @@ describe('lab copy', () => {
       'Placed Rye for the market in Shared kitchen.',
     );
     expect(returnedLine('Rye for the market')).toBe('Rye for the market is back in the tray.');
+  });
+});
+
+describe('the check button', () => {
+  it('names the check button by engine', () => {
+    expect(checkLabel('sort')).toBe('Check');
+    expect(checkLabel('configure')).toBe('Check');
+    expect(checkLabel('simulate')).toBe('Run and check');
+  });
+});
+
+describe('Simulate copy', () => {
+  it('says what a Simulate lab shows before and after a run', () => {
+    expect(SIM_IDLE).toBe('Not run yet. Press Run and check to run the simulation with these parameters.');
+    expect(SIM_RESULTS).toBe('Results of the last run');
+    expect(simChartLabel('scaling', ['Orders', 'Capacity'])).toBe(
+      'Orders and Capacity for each hour from 0:00 to 23:00',
+    );
+    expect(simChartLabel('s3-lifecycle', ['Cost so far'])).toBe(
+      'Cost so far at the end of each 30-day month',
+    );
   });
 });

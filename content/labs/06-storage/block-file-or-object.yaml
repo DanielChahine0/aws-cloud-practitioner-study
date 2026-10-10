@@ -1,0 +1,191 @@
+id: lab-m06-block-file-or-object
+module: 6
+title: Block, file or object
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts:
+  - block-storage
+  - object-storage
+  - file-storage
+  - ec2-instance-store
+  - amazon-ebs
+  - data-persistence
+  - amazon-s3
+  - amazon-efs
+  - amazon-fsx
+  - aws-storage-gateway
+notes:
+  - m06/introduction-to-storage
+  - m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+  - m06/amazon-elastic-file-system-amazon-efs
+  - m06/amazon-fsx
+  - m06/aws-storage-gateway
+  - m06/comparing-storage-services
+minutes: 6
+brief: >-
+  The cafe is moving its order system and back office onto AWS and linking the storage in the shop cupboard to the cloud, and each kind of data needs a fitting home.
+  Sort each storage need under the service that fits it.
+spec:
+  buckets:
+    - id: instance-store
+      label: Amazon EC2 instance store
+      detail: Block storage
+    - id: ebs
+      label: Amazon EBS
+      detail: Block storage
+    - id: s3
+      label: Amazon S3
+      detail: Object storage
+    - id: efs
+      label: Amazon EFS
+      detail: File storage
+    - id: fsx
+      label: Amazon FSx
+      detail: File storage
+    - id: storage-gateway
+      label: AWS Storage Gateway
+      detail: Hybrid storage
+  cards:
+    - id: nightly-crunch
+      text: Scratch space for a heavy nightly sales calculation, at no extra cost and fine to lose
+      bucket: instance-store
+      goal: g1
+    - id: order-db
+      text: The order database on one EC2 instance, which must keep its data through a stop
+      bucket: ebs
+      goal: g2
+    - id: till-disk
+      text: The till server's data drive, kept when the server moves to a larger instance type
+      bucket: ebs
+      goal: g2
+    - id: promo-pdfs
+      text: Poster PDFs and menu photos that are always fetched whole
+      bucket: s3
+      goal: g3
+    - id: training-videos
+      text: Recorded barista training videos, uploaded once and never edited
+      bucket: s3
+      goal: g3
+    - id: recipe-manuals
+      text: Recipe manuals that several Linux servers open and update at the same time
+      bucket: efs
+      also: [fsx]
+      goal: g4
+    - id: windows-share
+      text: The back office Windows file share that signs staff in with Active Directory
+      bucket: fsx
+      goal: g4
+    - id: roast-model
+      text: Very fast shared storage for training a machine learning model on roasting data
+      bucket: fsx
+      goal: g4
+    - id: cupboard-share
+      text: A file share in the shop cupboard that keeps hot files local and the rest in the cloud
+      bucket: storage-gateway
+      goal: g5
+    - id: tape-backups
+      text: Tape backup software in the shop that should send its tapes to the cloud
+      bucket: storage-gateway
+      goal: g5
+goals:
+  - id: g1
+    label: Throwaway block data sits on Amazon EC2 instance store
+    hint: Ask whether losing the data on a stop would hurt, and whether the disk that comes with the host at no extra cost is enough.
+  - id: g2
+    label: Block data that must persist sits on Amazon EBS
+    hint: Ask whether the data must outlive a stop or a move to another instance, which takes a volume that lives apart from the host.
+  - id: g3
+    label: Whole, rarely changed files sit in Amazon S3
+    hint: Ask whether the file is always read and written whole and rarely changes once it is stored.
+  - id: g4
+    label: Shared file systems sit on Amazon EFS or Amazon FSx
+    hint: Ask how the clients share files - Linux servers over NFS, Windows users over SMB with Active Directory, or a high-performance system for ML.
+  - id: g5
+    label: Systems in the shop reach the cloud through AWS Storage Gateway
+    hint: Ask whether the system stays in the shop and keeps its usual routine, such as a file share or tape backup software, while the cloud holds the data.
+solution:
+  - { t: place, card: nightly-crunch, bucket: instance-store }
+  - { t: place, card: order-db, bucket: ebs }
+  - { t: place, card: till-disk, bucket: ebs }
+  - { t: place, card: promo-pdfs, bucket: s3 }
+  - { t: place, card: training-videos, bucket: s3 }
+  - { t: place, card: recipe-manuals, bucket: efs }
+  - { t: place, card: windows-share, bucket: fsx }
+  - { t: place, card: roast-model, bucket: fsx }
+  - { t: place, card: cupboard-share, bucket: storage-gateway }
+  - { t: place, card: tape-backups, bucket: storage-gateway }
+wrongPaths:
+  - mistake: Pays for a persistent EBS volume to hold scratch data that can be lost
+    failsGoal: g1
+    actions:
+      - { t: place, card: nightly-crunch, bucket: ebs }
+      - { t: place, card: order-db, bucket: ebs }
+      - { t: place, card: till-disk, bucket: ebs }
+      - { t: place, card: promo-pdfs, bucket: s3 }
+      - { t: place, card: training-videos, bucket: s3 }
+      - { t: place, card: recipe-manuals, bucket: efs }
+      - { t: place, card: windows-share, bucket: fsx }
+      - { t: place, card: roast-model, bucket: fsx }
+      - { t: place, card: cupboard-share, bucket: storage-gateway }
+      - { t: place, card: tape-backups, bucket: storage-gateway }
+  - mistake: Thinks EC2 instance store keeps its data through a stop
+    failsGoal: g2
+    actions:
+      - { t: place, card: nightly-crunch, bucket: instance-store }
+      - { t: place, card: order-db, bucket: instance-store }
+      - { t: place, card: till-disk, bucket: ebs }
+      - { t: place, card: promo-pdfs, bucket: s3 }
+      - { t: place, card: training-videos, bucket: s3 }
+      - { t: place, card: recipe-manuals, bucket: efs }
+      - { t: place, card: windows-share, bucket: fsx }
+      - { t: place, card: roast-model, bucket: fsx }
+      - { t: place, card: cupboard-share, bucket: storage-gateway }
+      - { t: place, card: tape-backups, bucket: storage-gateway }
+  - mistake: Puts write-once videos on a shared file system instead of object storage
+    failsGoal: g3
+    actions:
+      - { t: place, card: nightly-crunch, bucket: instance-store }
+      - { t: place, card: order-db, bucket: ebs }
+      - { t: place, card: till-disk, bucket: ebs }
+      - { t: place, card: promo-pdfs, bucket: s3 }
+      - { t: place, card: training-videos, bucket: efs }
+      - { t: place, card: recipe-manuals, bucket: efs }
+      - { t: place, card: windows-share, bucket: fsx }
+      - { t: place, card: roast-model, bucket: fsx }
+      - { t: place, card: cupboard-share, bucket: storage-gateway }
+      - { t: place, card: tape-backups, bucket: storage-gateway }
+  - mistake: Thinks Amazon EFS serves Windows shares with Active Directory
+    failsGoal: g4
+    actions:
+      - { t: place, card: nightly-crunch, bucket: instance-store }
+      - { t: place, card: order-db, bucket: ebs }
+      - { t: place, card: till-disk, bucket: ebs }
+      - { t: place, card: promo-pdfs, bucket: s3 }
+      - { t: place, card: training-videos, bucket: s3 }
+      - { t: place, card: recipe-manuals, bucket: efs }
+      - { t: place, card: windows-share, bucket: efs }
+      - { t: place, card: roast-model, bucket: fsx }
+      - { t: place, card: cupboard-share, bucket: storage-gateway }
+      - { t: place, card: tape-backups, bucket: storage-gateway }
+  - mistake: Thinks Amazon FSx keeps a local cache of hot files in the shop
+    failsGoal: g5
+    actions:
+      - { t: place, card: nightly-crunch, bucket: instance-store }
+      - { t: place, card: order-db, bucket: ebs }
+      - { t: place, card: till-disk, bucket: ebs }
+      - { t: place, card: promo-pdfs, bucket: s3 }
+      - { t: place, card: training-videos, bucket: s3 }
+      - { t: place, card: recipe-manuals, bucket: efs }
+      - { t: place, card: windows-share, bucket: fsx }
+      - { t: place, card: roast-model, bucket: fsx }
+      - { t: place, card: cupboard-share, bucket: fsx }
+      - { t: place, card: tape-backups, bucket: storage-gateway }
+debrief:
+  lines:
+    - Instance store and Amazon EBS are both block storage, but only an EBS volume keeps its data when the instance stops.
+    - Amazon S3 keeps each file whole as an object with its metadata, which suits photos, PDFs and videos that rarely change.
+    - Amazon EFS shares a Linux NFS file system, while Amazon FSx runs Windows, Lustre and other file systems in the cloud.
+    - Amazon EFS and Amazon FSx keep no cache on site, so shop systems that need fast local access, or that keep their backup routine, reach the cloud through AWS Storage Gateway.
+  questions: [q-03fdrg, q-bj7kg9, q-2xa0xb]

@@ -50,3 +50,17 @@ export function placedLine(card: string, bucket: string): string {
 export function returnedLine(card: string): string {
   return `${card} is back in the tray.`;
 }
+
+/** The check button's words: Simulate runs the model before it checks (Task 13). */
+export function checkLabel(engine: LabEngineId): string {
+  return engine === 'simulate' ? 'Run and check' : 'Check';
+}
+
+export const SIM_IDLE = 'Not run yet. Press Run and check to run the simulation with these parameters.';
+export const SIM_RESULTS = 'Results of the last run';
+/** The accessible name of a Simulate chart, naming its series and its points. */
+export function simChartLabel(model: 'scaling' | 's3-lifecycle', series: readonly string[]): string {
+  return model === 'scaling'
+    ? `${series.join(' and ')} for each hour from 0:00 to 23:00`
+    : `${series.join(' and ')} at the end of each 30-day month`;
+}

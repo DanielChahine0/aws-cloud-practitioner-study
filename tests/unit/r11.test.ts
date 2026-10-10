@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { SortAction, SortSpec } from '../../schemas/lab.ts';
-import { loadContext } from '../../scripts/content/lib/context.ts';
-import { r11 } from '../../scripts/content/rules/r11-labs.ts';
+import type { LabFile, SortAction, SortSpec } from '../../schemas/lab.ts';
+import { type LabEntry, loadContext } from '../../scripts/content/lib/context.ts';
+import { labProblems, r11 } from '../../scripts/content/rules/r11-labs.ts';
 import { replayLab } from '../../src/labs/contract.ts';
 import type { AnyLabEngine, EngineEntry } from '../../src/labs/engines.ts';
 import { SORT, type SortState } from '../../src/labs/sort/model.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { bakeryConfigureLab, bakerySimulateLab } from '../fixtures/lab-specs.ts';
 import { bakeryLab, dropFixtureLab, writeLab } from '../fixtures/labs.ts';
 
 /** The engine `engineOf` hands R11: the real registry while `entry` is undefined, else this stub (null: none). */
@@ -119,5 +120,92 @@ describe('R11 labs replay (spec 2.9)', () => {
       'lab-m01-sort-the-bakes: wrongPaths[0] (Treats borrowed ovens as a cabinet billed by the minute) meets g1, which it should fail',
       'lab-m01-sort-the-bakes: wrongPaths[1] (Treats a rented cabinet as an oven borrowed from the kitchen) meets g2, which it should fail',
     ]);
+  });
+});
+
+const labEntryOf = (lab: LabFile): LabEntry => ({
+  path: `content/labs/01-baking-basics/${lab.id.slice('lab-m01-'.length)}.yaml`,
+  module: 1,
+  slug: lab.id.slice('lab-m01-'.length),
+  lab,
+});
+
+describe('R11 on Configure labs', () => {
+  it('replays the bakery Configure lab without a problem', () => {
+    expect(labProblems(labEntryOf(bakeryConfigureLab()))).toEqual([]);
+  });
+
+  it('reports a wrong path that meets the goal it should fail', () => {
+    const lab = bakeryConfigureLab();
+    const wrongPaths = [
+      {
+        ...lab.wrongPaths[0],
+        actions: lab.solution,
+        failsGoal: 'g1',
+        mistake: 'Picks the biggest oven to be safe',
+      },
+    ];
+    expect(
+      labProblems(labEntryOf({ ...lab, wrongPaths: [...wrongPaths, ...lab.wrongPaths.slice(1)] })),
+    ).toEqual([
+      'lab-m01-pick-the-oven: wrongPaths[0] (Picks the biggest oven to be safe) meets g1, which it should fail',
+    ]);
+  });
+
+  it('reports a set action on a field value of the wrong type', () => {
+    const lab = bakeryConfigureLab({ solution: [{ t: 'set', field: 'door', value: 3 }] });
+    expect(labProblems(labEntryOf(lab))).toHaveLength(1);
+    expect(labProblems(labEntryOf(lab))[0]).toMatch(/^lab-m01-pick-the-oven: solution\[0\]\.value: /);
+  });
+});
+
+describe('R11 on Simulate labs', () => {
+  it('replays the bakery Simulate lab without a problem', () => {
+    expect(labProblems(labEntryOf(bakerySimulateLab()))).toEqual([]);
+  });
+
+  it('runs the model before judging the start, so a start that already passes is reported', () => {
+    const lab = bakerySimulateLab();
+    const spec = lab.spec as { thresholds: unknown[] };
+    const easy = {
+      ...spec,
+      thresholds: [
+        { goal: 'g1', metric: 'droppedShare', max: 50 },
+        { goal: 'g2', metric: 'cost', max: 40 },
+      ],
+    };
+    expect(labProblems(labEntryOf({ ...lab, spec: easy }))).toContain(
+      'lab-m01-oven-rush: the starting state already meets every goal',
+    );
+  });
+
+  it('judges a wrong path without run on its outcome, never on Not run yet', () => {
+    const lab = bakerySimulateLab();
+    const wrongPaths = [
+      {
+        actions: lab.solution,
+        failsGoal: 'g1',
+        mistake: 'Adds ovens but sends every order to the first one',
+      },
+      ...lab.wrongPaths.slice(1),
+    ];
+    expect(labProblems(labEntryOf({ ...lab, wrongPaths }))).toEqual([
+      'lab-m01-oven-rush: wrongPaths[0] (Adds ovens but sends every order to the first one) meets g1, which it should fail',
+    ]);
+  });
+
+  it('reports a solution that leaves a threshold unmet, with the reading', () => {
+    const lab = bakerySimulateLab({ solution: [{ t: 'set', param: 'max', value: 3 }] });
+    expect(labProblems(labEntryOf(lab))).toEqual([
+      'lab-m01-oven-rush: the solution leaves g1 unmet: Dropped share: 29.4% (max 1%)',
+    ]);
+  });
+
+  it('reports a spec whose constants break the model', () => {
+    const lab = bakerySimulateLab();
+    const spec = { ...(lab.spec as object), constants: { orders: [1], perInstance: 40, credits: 1 } };
+    expect(labProblems(labEntryOf({ ...lab, spec }))[0]).toMatch(
+      /^lab-m01-oven-rush: spec: constants\.orders: /,
+    );
   });
 });

@@ -173,6 +173,58 @@ class Journey {
     return this;
   }
 
+  /**
+   * A lightning round at `at` (spec 4.1), as the screen writes it: the start with its 90 second deadline, one answer
+   * per `[concept, correct]` five seconds apart on the concept's variant a, then at the end the submit and one
+   * `review.now` per missed concept, a millisecond apart.
+   */
+  lightning(at: string, answers: readonly (readonly [string, boolean])[]): this {
+    this.sessions += 1;
+    const sid = `01JB${String(this.sessions).padStart(22, '0')}`;
+    const start = Date.parse(at);
+    const iso = (ms: number): string => new Date(ms).toISOString();
+    this.items.push([
+      iso(start),
+      {
+        t: 'session',
+        sid,
+        mode: 'lightning',
+        phase: 'start',
+        seed: this.sessions,
+        scope: 'lightning',
+        qids: answers.map(([concept]) => variantId(concept, 'a')),
+        deadline: iso(start + 90_000),
+      },
+    ]);
+    answers.forEach(([concept, correct], i) => {
+      this.items.push([
+        iso(start + (i + 1) * 5_000),
+        {
+          t: 'answer',
+          sid,
+          mode: 'lightning',
+          qid: variantId(concept, 'a'),
+          qv: 1,
+          concept,
+          picked: [correct ? 'a' : 'b'],
+          correct,
+          sure: false,
+          ms: 5_000,
+        },
+      ]);
+    });
+    const end = start + (answers.length + 1) * 5_000;
+    this.items.push([
+      iso(end),
+      { t: 'session', sid, mode: 'lightning', phase: 'submit', seed: this.sessions },
+    ]);
+    const missed = [...new Set(answers.filter(([, correct]) => !correct).map(([concept]) => concept))];
+    missed.forEach((concept, i) => {
+      this.items.push([iso(end + i + 1), { t: 'review.now', concept }]);
+    });
+    return this;
+  }
+
   events(): StudyEvent[] {
     const sorted = [...this.items].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
     return timelineOf(sorted);
@@ -294,8 +346,8 @@ export function comebackTenDays(): StudyEvent[] {
 /**
  * Five days from Monday, October 19: Modules 1 to 3 read and checked, then each module's two core labs, each
  * followed by its debrief over two concepts; one lab with a hint, a rerun of a done lab on day two, a solved
- * incident on October 21, a day whose only completion is a lab (October 22) and a day of a rerun alone
- * (October 23), which does not qualify.
+ * incident on October 21, a day whose only completion is a lab (October 22), a lightning round with one miss on
+ * October 22 and a day of a rerun alone (October 23), which does not qualify.
  */
 export function handsOnWeek(): StudyEvent[] {
   const j = new Journey();
@@ -322,5 +374,10 @@ export function handsOnWeek(): StudyEvent[] {
   j.lab('2026-10-22T10:00:00.000Z', 'lab-m03-a', 2);
   j.lab('2026-10-23T10:00:00.000Z', 'lab-m02-a', 0);
   j.incident('2026-10-21T12:00:00.000Z', 'inc-001', [conceptId(2, 3), conceptId(2, 8)], true);
+  j.lightning('2026-10-22T19:00:00.000Z', [
+    [conceptId(1, 1), true],
+    [conceptId(1, 2), false],
+    [conceptId(1, 3), true],
+  ]);
   return j.events();
 }

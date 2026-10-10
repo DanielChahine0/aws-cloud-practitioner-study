@@ -7,9 +7,13 @@ import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1, 
 import {
   labDoneCount,
   labFor,
+  SYNTHETIC_CONFIGURE_LAB_ID,
+  SYNTHETIC_SIMULATE_LAB_ID,
   SYNTHETIC_SORT_LAB_ID,
   SYNTHETIC_SORT_TITLE,
   storedDraftActions,
+  syntheticConfigureLab,
+  syntheticSimulateLab,
   syntheticSortLab,
   useSyntheticLab,
 } from './lab-helpers.ts';
@@ -266,5 +270,148 @@ test('lab cards and buckets are at least 44 px tall and stack on a phone', async
   const goals = await page.locator('.lab-goals').boundingBox();
   if (!board || !goals) throw new Error('the board or the goals have no box');
   expect(goals.y).toBeGreaterThanOrEqual(board.y + board.height);
+  await expectNoSidewaysScroll(page);
+});
+
+const CONFIGURE_URL = `/#/m/01/lab/${SYNTHETIC_CONFIGURE_LAB_ID}`;
+
+/**
+ * Serves and opens another synthetic lab: the hash change alone keeps the index the Sort setup loaded, so the page
+ * reloads to fetch the index and the chunk again through the new lab's routes.
+ */
+async function useLabAt(page: Page, lab: Parameters<typeof useSyntheticLab>[1], url: string): Promise<void> {
+  await useSyntheticLab(page, lab);
+  await page.goto(url);
+  await page.reload();
+}
+
+const useConfigureLab = (page: Page): Promise<void> => useLabAt(page, syntheticConfigureLab, CONFIGURE_URL);
+
+test('a Configure lab works by keyboard alone and shows the lab credits line', async ({
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName === 'webkit',
+    'WebKit opens a native menu for letter keys on a select, so typing a letter is unreliable there',
+  );
+  await useConfigureLab(page);
+  await expect(h1(page, 'Choose the bakery Region')).toBeVisible();
+  await expect(page.getByText('Prices are in lab credits, a made-up unit, not AWS prices.')).toBeVisible();
+  const region = page.getByLabel('Region', { exact: true });
+  await region.focus();
+  await page.keyboard.press('n');
+  await expect(region).toHaveValue('northport');
+  await expect(
+    page.getByText(
+      'Home country. 40 ms from the bakery. Runs the order service. Price index 120 lab credits.',
+    ),
+  ).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await page.keyboard.press('Tab');
+  await expect(page.getByLabel('Keep a spare copy in a second zone')).toBeFocused();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('All 2 goals met. Plus 40 XP.', { exact: true })).toBeAttached();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+});
+
+test('a Configure lab has no axe violations and no sideways scroll', async ({ page }) => {
+  await useConfigureLab(page);
+  await expect(h1(page, 'Choose the bakery Region')).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+  await page.getByRole('button', { name: /^Check/ }).click();
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+});
+
+test('Configure selects and checkboxes are at least 44 px tall on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useConfigureLab(page);
+  await expect(h1(page, 'Choose the bakery Region')).toBeVisible();
+  for (const control of [page.getByLabel('Region', { exact: true }), page.locator('label.config-toggle')]) {
+    expect((await control.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
+  }
+  await expectNoSidewaysScroll(page);
+});
+
+const SIMULATE_URL = `/#/m/01/lab/${SYNTHETIC_SIMULATE_LAB_ID}`;
+const SIM_IDLE_LINE = 'Not run yet. Press Run and check to run the simulation with these parameters.';
+
+test('a Simulate lab works by keyboard alone and runs before it checks', async ({ page, browserName }) => {
+  test.skip(
+    browserName === 'webkit',
+    'WebKit opens a native menu for letter keys on a select, so typing a letter is unreliable there',
+  );
+  await useLabAt(page, syntheticSimulateLab, SIMULATE_URL);
+  await expect(h1(page, 'Bakery morning rush')).toBeVisible();
+  await expect(page.getByText('Prices are in lab credits, a made-up unit, not AWS prices.')).toBeVisible();
+  await expect(page.getByText(SIM_IDLE_LINE)).toBeVisible();
+  await expect(page.getByRole('button', { name: /^Run and check/ })).toBeVisible();
+  const mode = page.getByLabel('When ovens are added');
+  await mode.focus();
+  await page.keyboard.press('a');
+  await expect(mode).toHaveValue('predictive');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  const most = page.getByLabel('Most ovens', { exact: true });
+  await expect(most).toBeFocused();
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('ArrowUp');
+  await expect(most).toHaveValue('3');
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  const results = page.getByRole('table', { name: 'Results of the last run' });
+  await expect(results.getByRole('row', { name: 'Daily cost 29 lab credits' })).toBeVisible();
+  await expect(results.getByRole('row', { name: 'Dropped share 29.4%' })).toBeVisible();
+  await expect(
+    page.getByRole('img', { name: 'Orders and Capacity for each hour from 0:00 to 23:00' }),
+  ).toBeVisible();
+  await page.keyboard.press('Tab');
+  await expect(page.getByLabel('Share orders across ovens')).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(page.getByText(SIM_IDLE_LINE)).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('All 2 goals met. Plus 40 XP.', { exact: true })).toBeAttached();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+});
+
+test('a Simulate lab has no axe violations and no sideways scroll, before and after a run', async ({
+  page,
+}) => {
+  await useLabAt(page, syntheticSimulateLab, SIMULATE_URL);
+  await expect(h1(page, 'Bakery morning rush')).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+  await page.getByRole('button', { name: /^Run and check/ }).click();
+  await expect(page.getByRole('table', { name: 'Results of the last run' })).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+});
+
+test('Simulate inputs, selects and checkboxes are at least 44 px tall on a phone', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useLabAt(page, syntheticSimulateLab, SIMULATE_URL);
+  await expect(h1(page, 'Bakery morning rush')).toBeVisible();
+  const controls = [
+    page.getByLabel('When ovens are added'),
+    page.getByLabel('Fewest ovens', { exact: true }),
+    page.getByLabel('Ovens at opening', { exact: true }),
+    page.getByLabel('Most ovens', { exact: true }),
+    page.locator('label.sim-toggle'),
+  ];
+  for (const control of controls) {
+    expect((await control.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
+  }
+  await page.getByRole('button', { name: /^Run and check/ }).click();
+  await expect(
+    page.getByRole('img', { name: 'Orders and Capacity for each hour from 0:00 to 23:00' }),
+  ).toBeVisible();
   await expectNoSidewaysScroll(page);
 });

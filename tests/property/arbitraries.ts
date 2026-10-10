@@ -8,7 +8,17 @@ const NOTES = ['m01/a', 'm01/b', 'm09/gone'];
 const CONCEPTS = ['shared-kitchen', 'per-minute-rental'];
 const LABS = ['lab-m01-a', 'lab-m01-b', 'lab-m09-gone'];
 const INCIDENTS = ['inc-001', 'inc-002', 'inc-999'];
-const MODES = ['check', 'quiz', 'focus', 'review', 'incident', 'debrief', 'boss', 'mock'] as const;
+const MODES = [
+  'check',
+  'quiz',
+  'focus',
+  'review',
+  'incident',
+  'debrief',
+  'boss',
+  'mock',
+  'lightning',
+] as const;
 
 /** A schema-valid ULID. */
 export const ulidArb = fc
@@ -79,6 +89,7 @@ const bodyArb: fc.Arbitrary<Record<string, unknown>> = fc.oneof(
     qv: fc.constant(1),
     reason: fc.constantFrom('typo', 'ambiguous'),
   }),
+  fc.record({ t: fc.constant('review.now'), concept: fc.constantFrom(...CONCEPTS, 'unknown-concept') }),
 );
 
 /** One schema-valid event with a random ULID. */

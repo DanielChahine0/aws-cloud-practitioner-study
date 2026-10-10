@@ -2096,8 +2096,179 @@ dialog.confirm .button {
 }
 
 /* Labs: Configure */
+.config {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.config-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+/* As with the match selects, WebKit keeps a native select at its own height, so this one drops its native look. */
+.config-field select {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 44px;
+  padding: 0 36px 0 12px;
+  font: inherit;
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--pane);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.config-field select:hover {
+  border-color: var(--active);
+}
+
+.field-detail {
+  margin: 4px 0 0;
+}
 
 /* Labs: Simulate */
+
+.sim {
+  display: grid;
+  gap: 16px;
+}
+
+.sim-params {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+@media (min-width: 640px) {
+  .sim-params {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.sim-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.sim-field select,
+.sim-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  color: var(--text);
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* As with the Configure selects, WebKit keeps a native select at its own height, so this one drops its native look. */
+.sim-field select {
+  padding-right: 36px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.sim-field input {
+  max-width: 10rem;
+}
+
+.sim-field select:hover,
+.sim-field input:hover {
+  border-color: var(--active);
+}
+
+.sim-idle {
+  margin: 0;
+}
+
+.sim-metrics {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sim-metrics caption {
+  margin-bottom: 4px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.sim-metrics th,
+.sim-metrics td {
+  padding: 6px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.sim-metrics td {
+  text-align: right;
+}
+
+.sim-chart {
+  margin: 0;
+}
+
+.sim-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sim-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.sim-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sim-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.sim-swatch-1 {
+  background: var(--active);
+}
+
+.sim-swatch-2 {
+  background: var(--muted);
+}
 
 /* Incident */
 .incident-paid {
