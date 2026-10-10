@@ -1,0 +1,85 @@
+id: inc-012
+title: Latte art videos stutter overseas
+modules: [ 4 ]
+concepts: [ edge-locations, region-selection ]
+brief: >-
+  Fans on another continent love the cafe's latte art videos, but they say the videos stutter and the site drags.
+  The owner wants faster loading for them now and is also thinking about opening a branch over there.
+steps:
+  - id: q-n1xgbw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-locations
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's videos are hosted in its home Region, far from the overseas fans.
+      Why would serving them through edge locations make the videos load faster for those fans?
+    options:
+      - id: a
+        text: They host the Amazon Route 53 DNS service
+        why: Route 53 turns names into IP addresses, which does not change how fast the video data reaches the fans.
+      - id: b
+        text: They leave heavy compute to the Regions
+        why: This is true, but it says what edge locations skip, not what makes the videos arrive sooner.
+      - id: c
+        text: They cache content close to viewers
+        correct: true
+        why: A cached copy close to the fans travels a shorter distance, which cuts latency and speeds transfers.
+      - id: d
+        text: They sit outside every Availability Zone
+        why: This is true, but being outside an AZ says where they are not, not why the videos load faster.
+    evidence:
+      - Edge locations sit apart from Regions, in spots like Atlanta and Shanghai, and cache data, video and apps for higher transfer speeds and lower latency.
+      - Regions run most AWS services; edge locations are not for heavy compute, databases or redundant storage.
+    takeaway: Edge locations speed delivery to distant users by caching content close to them, outside any Region.
+    history: []
+    verified:
+      keyHash: b6bc2903e596
+      fullHash: 89b5c1a82fbe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-bnss48
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: region-selection
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe now plans a branch on that continent with its own ordering app and customer data, and no law there limits where the data may be kept.
+      Which facts point the cafe toward one Region over another for the branch?
+    options:
+      - id: a
+        text: Customers far from a Region see more delay
+        correct: true
+        why: Distance to the branch's customers changes latency, so a nearer Region keeps the ordering app quick.
+      - id: b
+        text: New services reach some Regions later than others
+        correct: true
+        why: Features roll out gradually, so the cafe must check that a candidate Region has every service the app uses.
+      - id: c
+        text: Some laws force data to stay inside one country
+        why: No law on that continent limits where the branch's data is kept, so compliance does not narrow the choice here.
+      - id: d
+        text: Each Region sets its own rates for a service
+        correct: true
+        why: Rates differ between Regions, so price is a real difference between the candidates.
+      - id: e
+        text: Uptime is broadly equal from Region to Region
+        why: Equal uptime across Regions means it does not separate the candidates for the branch.
+    evidence:
+      - The four factors are compliance, proximity, feature availability and pricing.
+      - Check compliance first, since a legal rule can settle the Region alone, but most businesses have none and move on to the rest.
+      - Uptime and performance are broadly equal across Regions, and licensing or hardware specs are on-premises concerns.
+    takeaway: With no legal rule in play, choose a Region by proximity, feature availability and pricing.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The stem's 'that continent' leans on an earlier step, so the step does not stand on its own."
