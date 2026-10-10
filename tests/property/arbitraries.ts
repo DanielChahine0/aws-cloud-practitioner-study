@@ -7,6 +7,7 @@ const QIDS = ['q-aaaaaa', 'q-bbbbbb', 'q-cccccc'];
 const NOTES = ['m01/a', 'm01/b', 'm09/gone'];
 const CONCEPTS = ['shared-kitchen', 'per-minute-rental'];
 const LABS = ['lab-m01-a', 'lab-m01-b', 'lab-m09-gone'];
+const INCIDENTS = ['inc-001', 'inc-002', 'inc-999'];
 const MODES = ['check', 'quiz', 'focus', 'review', 'incident', 'debrief', 'boss', 'mock'] as const;
 
 /** A schema-valid ULID. */
@@ -58,6 +59,14 @@ const bodyArb: fc.Arbitrary<Record<string, unknown>> = fc.oneof(
   }),
   fc.record({ t: fc.constant('rank'), rank: fc.constantFrom('business-support-plus', 'enterprise') }),
   fc.record({ t: fc.constant('lesson.done'), note: fc.constantFrom(...NOTES) }),
+  fc.record(
+    {
+      t: fc.constantFrom('incident.offered', 'incident.done'),
+      incident: fc.constantFrom(...INCIDENTS),
+      firstTry: fc.boolean(),
+    },
+    { requiredKeys: ['t', 'incident'] },
+  ),
   fc.record({
     t: fc.constant('lab.done'),
     lab: fc.constantFrom(...LABS),

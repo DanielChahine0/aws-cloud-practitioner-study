@@ -3,7 +3,7 @@ import { addDays } from '../../src/engine/day.ts';
 import { deriveMemory } from '../../src/engine/memory.ts';
 import { FREEZE_CAP, FREEZE_EVERY, streakOf } from '../../src/engine/streak.ts';
 import { timelineOf } from '../fixtures/events.ts';
-import { at, contentOf, labDoneOf } from '../fixtures/memory.ts';
+import { at, contentOf, incidentDoneOf, labDoneOf } from '../fixtures/memory.ts';
 
 /** `count` consecutive study days starting at `from`. */
 const run = (from: string, count: number): string[] =>
@@ -82,5 +82,14 @@ describe('streakOf (spec 3.5)', () => {
       [at('2026-10-10'), labDoneOf('lab-m01-a', 1)],
     ]);
     expect(streakOf(deriveMemory(log, content).qualifyingDays, '2026-10-10').current).toBe(2);
+  });
+
+  it('counts a day whose only completion is a solved incident', () => {
+    const events = timelineOf([
+      [at('2026-10-10'), incidentDoneOf('inc-001', false)],
+      [at('2026-10-11'), incidentDoneOf('inc-002', true)],
+    ]);
+    const days = deriveMemory(events, contentOf([])).qualifyingDays;
+    expect(streakOf(days, '2026-10-11')).toMatchObject({ current: 2 });
   });
 });

@@ -8,7 +8,7 @@ import { FORM_IDS } from '../../schemas/ids.ts';
  * Version 3 applies boss and mock answers on submit, pays exam XP and qualifies exam days.
  * Version 4 judges past days with the exam date in force when they happened, keeps the schedule of the current
  * exam date, and counts the inherited card of a split concept not yet answered as due.
- * Version 5 pays lab XP, counts lab debriefs and gives Hands On per complete module.
+ * Version 5 pays lab XP, counts lab debriefs and gives Hands On per complete module, pays incident XP.
  */
 export const ENGINE_VERSION = 5;
 
@@ -120,7 +120,11 @@ export interface Progress {
   ranks: ReadonlySet<string>;
   /** Lab id to its first completion. */
   labsDone: ReadonlyMap<string, LabDone>;
-  /** Events that refer to a question, note or lab the shipped content does not have. */
+  /** Study day to the first incident offered that day (spec 4.5); later offers the same day are ignored. */
+  incidentsOffered: ReadonlyMap<string, string>;
+  /** Incident id to the study day of its first `incident.done`; a solved incident is never offered again. */
+  incidentsDone: ReadonlyMap<string, string>;
+  /** Events that refer to a question, note, lab or incident the shipped content does not have. */
   unknownEvents: number;
 }
 
@@ -226,6 +230,8 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
   const causes = new Map<string, Cause>();
   const ranks = new Set<string>();
   const labsDone = new Map<string, LabDone>();
+  const incidentsOffered = new Map<string, string>();
+  const incidentsDone = new Map<string, string>();
   let flags = 0;
   let unknownEvents = 0;
 
@@ -263,6 +269,14 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
         if (!labsDone.has(e.lab))
           labsDone.set(e.lab, { at: e.at, day: e.day, rev: e.rev, hints: e.hints, eventId: e.id });
         break;
+      case 'incident.offered':
+        if (refs && !refs.incidents.has(e.incident)) unknownEvents++;
+        if (!incidentsOffered.has(e.day)) incidentsOffered.set(e.day, e.incident);
+        break;
+      case 'incident.done':
+        if (refs && !refs.incidents.has(e.incident)) unknownEvents++;
+        if (!incidentsDone.has(e.incident)) incidentsDone.set(e.incident, e.day);
+        break;
       default:
         break;
     }
@@ -280,6 +294,8 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
     causes,
     ranks,
     labsDone,
+    incidentsOffered,
+    incidentsDone,
     unknownEvents,
   };
 }

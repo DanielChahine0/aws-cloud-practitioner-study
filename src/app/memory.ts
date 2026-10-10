@@ -174,7 +174,14 @@ export const rankUp = computed<RankDef | null>(() => {
 /** The extras line's entries (spec 4.6): a ready boss and a due mock, at most two. */
 export const extraItems = computed(() => {
   const at = now.value;
-  return extras({ bosses: bosses.value, progress: progress.value, today: studyDay(at), now: at, lab: null });
+  return extras({
+    bosses: bosses.value,
+    progress: progress.value,
+    today: studyDay(at),
+    now: at,
+    lab: null,
+    incident: null,
+  });
 });
 
 /** Badges earned, each with the event that earned it. */

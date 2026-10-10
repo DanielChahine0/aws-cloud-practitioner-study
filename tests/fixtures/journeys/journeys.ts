@@ -46,6 +46,25 @@ class Journey {
     return this.session(at, 'debrief', labId, concepts, script);
   }
 
+  /**
+   * Today's incident: the offer at `at`, a minute later the incident session with one step per concept (all right
+   * when `firstTry`, else the last step wrong and not Sure), and the `incident.done` right after its submit.
+   */
+  incident(at: string, id: string, steps: readonly string[], firstTry: boolean): this {
+    const start = this.push(new Date(at), { t: 'incident.offered', incident: id });
+    const last = steps[steps.length - 1] ?? '';
+    this.session(
+      start.toISOString(),
+      'incident',
+      id,
+      steps,
+      firstTry ? {} : { wrong: [last], notSure: [last] },
+    );
+    const done = new Date(start.getTime() + (steps.length + 2) * 60_000);
+    this.push(done, { t: 'incident.done', incident: id, firstTry });
+    return this;
+  }
+
   examDate(at: string, examDate: string | null): this {
     this.push(new Date(at), { t: 'settings', patch: { examDate } });
     return this;
@@ -274,8 +293,9 @@ export function comebackTenDays(): StudyEvent[] {
 
 /**
  * Five days from Monday, October 19: Modules 1 to 3 read and checked, then each module's two core labs, each
- * followed by its debrief over two concepts; one lab with a hint, a rerun of a done lab on day two, a day whose
- * only completion is a lab (October 22) and a day of a rerun alone (October 23), which does not qualify.
+ * followed by its debrief over two concepts; one lab with a hint, a rerun of a done lab on day two, a solved
+ * incident on October 21, a day whose only completion is a lab (October 22) and a day of a rerun alone
+ * (October 23), which does not qualify.
  */
 export function handsOnWeek(): StudyEvent[] {
   const j = new Journey();
@@ -301,5 +321,6 @@ export function handsOnWeek(): StudyEvent[] {
   j.debrief('2026-10-21T11:01:00.000Z', 'lab-m02-b', [conceptId(2, 2), conceptId(2, 7)]);
   j.lab('2026-10-22T10:00:00.000Z', 'lab-m03-a', 2);
   j.lab('2026-10-23T10:00:00.000Z', 'lab-m02-a', 0);
+  j.incident('2026-10-21T12:00:00.000Z', 'inc-001', [conceptId(2, 3), conceptId(2, 8)], true);
   return j.events();
 }
