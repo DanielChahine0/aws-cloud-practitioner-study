@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { runRules } from '../../scripts/content/rules/index.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
+import { POOL_FILE, singleQuestion, writePool } from '../fixtures/questions.ts';
 
 const LESSON = 'resources/01-baking-basics/01-what-a-bakery-cloud-is.md';
 const CONCEPTS = 'content/concepts.yaml';
@@ -151,6 +152,29 @@ describe('R6 question references', () => {
   it("reports a question task that is not one of its concept's tasks", () => {
     expect(r06(inQuestions('    task: "4.1"\n', '    task: "1.1"\n'))).toEqual([
       "q-c8n3p5: task 1.1 is not one of per-minute-rental's tasks (4.1)",
+    ]);
+  });
+});
+
+describe('R6 exam-pool references', () => {
+  const r06Pool = (over: Parameters<typeof singleQuestion>[0]): string[] => {
+    const root = makeFixtureRoot();
+    writePool(root, [singleQuestion({ id: 'q-9d4r6t', pool: 'exam', ...over })]);
+    return runRules(loadContext(root, { today: FIXTURE_TODAY }), ['R6']).findings.map(
+      (f) => `${f.file}  ${f.message}`,
+    );
+  };
+
+  it("accepts a pool item outside its note's question file", () => {
+    expect(r06Pool({})).toEqual([]);
+  });
+
+  it('keeps every other reference check for pool items', () => {
+    expect(r06Pool({ task: '4.1' })).toEqual([
+      `${POOL_FILE}  q-9d4r6t: task 4.1 is not one of shared-kitchen's tasks (1.1)`,
+    ]);
+    expect(r06Pool({ concept: 'rye-bread' })).toEqual([
+      `${POOL_FILE}  q-9d4r6t: concept 'rye-bread' is not registered`,
     ]);
   });
 });

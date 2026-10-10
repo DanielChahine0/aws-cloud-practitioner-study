@@ -10,6 +10,7 @@ const ROOT = resolve(import.meta.dirname, '..', '..');
 /** Each prompt's current version; a new version of a prompt changes its line here. */
 const VERSIONS: Record<string, number> = {
   'question-writer': 2,
+  'exam-writer': 1,
   'solve-closed': 1,
   'solve-notes': 1,
   critic: 1,
@@ -34,5 +35,30 @@ describe('agent prompts', () => {
     expect(read('question-writer')).toContain('`need`');
     for (const name of ['solve-closed', 'solve-notes', 'critic']) expect(read(name)).toContain('keys.json');
     expect(readFileSync(join(ROOT, 'content', 'STYLE.md'), 'utf8')).toContain('**NOT**');
+  });
+});
+
+describe('the exam writer (spec 2.7)', () => {
+  const prompt = readFileSync(join(ROOT, 'agents', 'exam-writer.md'), 'utf8');
+
+  it('points at the style guide and the pool, and works from --exam-targets', () => {
+    expect(prompt).toContain('content/STYLE.md');
+    expect(prompt).toContain('content/exam/pool/');
+    expect(prompt).toContain('--exam-targets');
+    expect(prompt).toContain('pool: exam');
+  });
+
+  it('forbids the practice questions, the fingerprints and the course, and returns ids only', () => {
+    const never = prompt.split('\n').find((line) => line.startsWith('Never read'));
+    for (const banned of ['content/questions/', 'content/fingerprints/', '.results/', 'AWS exam questions']) {
+      expect(never, banned).toContain(banned);
+    }
+    expect(prompt).toContain('Never quote a stem');
+  });
+
+  it('has the style guide replace the cafe rules for exam items', () => {
+    expect(readFileSync(join(ROOT, 'content', 'STYLE.md'), 'utf8')).toContain(
+      'For an item with pool: exam, the cafe rules above do not apply, and this section replaces them.',
+    );
   });
 });

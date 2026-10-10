@@ -3,7 +3,7 @@ import type { Review, Verified } from '../../../schemas/question.ts';
 
 /** The fields only the tools write; `null` removes the key. */
 export interface QuestionEdit {
-  status?: 'draft' | 'live';
+  status?: 'draft' | 'live' | 'retired';
   verified?: Verified | null;
   review?: Review | null;
 }

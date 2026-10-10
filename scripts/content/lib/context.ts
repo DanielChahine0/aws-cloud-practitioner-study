@@ -4,7 +4,9 @@ import { join } from 'node:path';
 import { isNode, isSeq, LineCounter, parseDocument, parse as parseYaml } from 'yaml';
 import { Blueprint } from '../../../schemas/blueprint.ts';
 import { Concept } from '../../../schemas/concept.ts';
+import { Forms, Quotas } from '../../../schemas/exam.ts';
 import { FingerprintFile } from '../../../schemas/fingerprint.ts';
+import { type Badge, Badges, type Rank, Ranks } from '../../../schemas/game.ts';
 import { MissionFrontmatter } from '../../../schemas/mission.ts';
 import { LessonFrontmatter, ModuleFrontmatter } from '../../../schemas/note.ts';
 import { Question, QuestionFile } from '../../../schemas/question.ts';
@@ -60,7 +62,9 @@ export interface QuestionEntry {
   path: string;
   line: number;
   index: number;
-  /** The note the file belongs to, from its path: m01/what-a-bakery-cloud-is. */
+  /** The module of the file, from its NN: a lesson file's module, or an exam-pool file's module. */
+  module: number;
+  /** The note the item belongs to: a lesson file's note from its path, an exam-pool item's `note`. */
   noteId: string;
   q: Question;
 }
@@ -86,8 +90,14 @@ export interface Context {
   concepts: readonly Concept[];
   blueprint: Blueprint | null;
   missions: readonly Mission[];
-  /** Questions that passed the schema, in file then item order. */
+  /** Questions that passed the schema, practice files and exam-pool files alike, in file then item order. */
   questions: readonly QuestionEntry[];
+  /** content/exam/quotas.yaml, or null when it is absent or invalid. */
+  quotas: Quotas | null;
+  /** content/exam/forms.yaml, or null when it is absent or invalid. */
+  forms: Forms | null;
+  ranks: Rank[] | null;
+  badges: Badge[] | null;
   fingerprints: ReadonlyMap<number, ModulePrints>;
   allow: readonly (readonly string[])[];
   loadErrors: readonly Finding[];
@@ -102,6 +112,11 @@ export const CONCEPTS_FILE = 'content/concepts.yaml';
 export const BLUEPRINT_FILE = 'content/exam/blueprint.yaml';
 export const ALLOW_FILE = 'content/fingerprints/allow.txt';
 export const QUESTIONS_DIR = 'content/questions';
+export const POOL_DIR = 'content/exam/pool';
+export const QUOTAS_FILE = 'content/exam/quotas.yaml';
+export const FORMS_FILE = 'content/exam/forms.yaml';
+export const RANKS_FILE = 'content/game/ranks.yaml';
+export const BADGES_FILE = 'content/game/badges.yaml';
 
 /** The question file of a lesson note: resources/NN-module/LL-lesson.md keeps its questions in content/questions/NN-module/LL-lesson.yaml. */
 export function questionFileOf(lessonPath: string): string {
@@ -112,6 +127,7 @@ const NOTE = /^resources\/(\d{2})-([a-z0-9-]+)\/(?:(\d{2})-([a-z0-9-]+)|README)\
 const SHARED = /^resources\/[^/]+\.md$/;
 const MISSION = /^content\/missions\/(mission-\d{2})-[a-z0-9-]+\.md$/;
 const PRINTS = /^content\/fingerprints\/m(\d{2})\.json$/;
+const POOL = /^content\/exam\/pool\/(\d{2})-[a-z0-9-]+\.yaml$/;
 const SKIP_DIRS = new Set([
   '.git',
   'node_modules',
@@ -183,10 +199,10 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     }
   };
 
-  const yamlFile = (path: string): unknown => {
+  const yamlFile = (path: string, optional = false): unknown => {
     const text = read(path);
     if (text === null) {
-      errors.push({ rule: 'R1', file: path, message: 'required file is missing' });
+      if (!optional) errors.push({ rule: 'R1', file: path, message: 'required file is missing' });
       return undefined;
     }
     try {
@@ -285,7 +301,13 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
   };
 
   const questions: QuestionEntry[] = [];
-  const loadQuestions = (path: string, match: RegExpExecArray): void => {
+  /** Loads one question file: a lesson's practice file (`pool` practice) or a module's exam-pool file (`pool` exam). */
+  const loadQuestions = (
+    path: string,
+    module: number,
+    pool: 'practice' | 'exam',
+    lessonNote?: string,
+  ): void => {
     const lineCounter = new LineCounter();
     const doc = parseDocument(read(path) ?? '', { lineCounter });
     const [yamlError] = doc.errors;
@@ -315,7 +337,27 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
         schemaErrors(path, result.error.issues, `questions[${index}] (${label})`, line);
         continue;
       }
-      questions.push({ path, line: line ?? 1, index, noteId: `m${match[1]}/${match[3]}`, q: result.data });
+      const q = result.data;
+      const at = line ?? 1;
+      if (q.pool !== pool) {
+        const message =
+          pool === 'exam'
+            ? `${q.id}: pool files hold pool: exam only`
+            : `${q.id}: exam items live under ${POOL_DIR}/`;
+        errors.push({ rule: 'R1', file: path, line: at, message });
+        continue;
+      }
+      if (pool === 'exam' && Number(q.note.slice(1, 3)) !== module) {
+        const nn = String(module).padStart(2, '0');
+        errors.push({
+          rule: 'R1',
+          file: path,
+          line: at,
+          message: `${q.id}: note ${q.note} is not in module ${nn}`,
+        });
+        continue;
+      }
+      questions.push({ path, line: at, index, module, noteId: lessonNote ?? q.note, q });
     }
   };
 
@@ -352,6 +394,28 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     else schemaErrors(BLUEPRINT_FILE, parsed.error.issues);
   }
 
+  /** An optional or required YAML file parsed by `schema`, or null with R1 findings. */
+  const schemaFile = <T>(
+    path: string,
+    schema: {
+      safeParse: (
+        data: unknown,
+      ) => { success: true; data: T } | { success: false; error: { issues: Issue[] } };
+    },
+    optional: boolean,
+  ): T | null => {
+    const data = yamlFile(path, optional);
+    if (data === undefined) return null;
+    const parsed = schema.safeParse(data);
+    if (parsed.success) return parsed.data;
+    schemaErrors(path, parsed.error.issues);
+    return null;
+  };
+  const quotas = schemaFile<Quotas>(QUOTAS_FILE, Quotas, true);
+  const forms = schemaFile<Forms>(FORMS_FILE, Forms, true);
+  const ranks = schemaFile<Rank[]>(RANKS_FILE, Ranks, false);
+  const badges = schemaFile<Badge[]>(BADGES_FILE, Badges, false);
+
   const notes: Note[] = [];
   const shared: TextFile[] = [];
   const missions: Mission[] = [];
@@ -377,7 +441,20 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     }
     const questionFile = QUESTION.exec(path);
     if (questionFile) {
-      loadQuestions(path, questionFile);
+      loadQuestions(path, Number(questionFile[1]), 'practice', `m${questionFile[1]}/${questionFile[3]}`);
+      continue;
+    }
+    const poolFile = POOL.exec(path);
+    if (poolFile) {
+      loadQuestions(path, Number(poolFile[1]), 'exam');
+      continue;
+    }
+    if (path.startsWith(`${POOL_DIR}/`)) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message: `not a pool file path; use ${POOL_DIR}/NN-module-slug.yaml`,
+      });
       continue;
     }
     if (path.startsWith(`${QUESTIONS_DIR}/`) && path.endsWith('.yaml')) {
@@ -425,6 +502,10 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     blueprint,
     missions,
     questions,
+    quotas,
+    forms,
+    ranks,
+    badges,
     fingerprints,
     allow: allowText === null ? [] : phrasesFrom(allowText.split('\n')),
     loadErrors: errors,

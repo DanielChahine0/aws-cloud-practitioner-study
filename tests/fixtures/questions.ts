@@ -1,6 +1,8 @@
-import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { stringify } from 'yaml';
+import { TASK_IDS, type TaskId } from '../../schemas/common.ts';
+import type { Quotas } from '../../schemas/exam.ts';
 import type { MatchQuestion, MultiQuestion, Question, SingleQuestion } from '../../schemas/question.ts';
 
 /** The fixture tree's one question file. */
@@ -144,4 +146,36 @@ export function matchQuestion(over: Partial<MatchQuestion> = {}): MatchQuestion 
 /** Writes the given questions as the fixture tree's question file. */
 export function writeQuestions(root: string, questions: readonly Question[], file = QUESTION_FILE): void {
   writeFileSync(join(root, file), stringify({ questions }, { lineWidth: 0 }));
+}
+
+/** The exam-pool file of the fixture tree's one module; the tree ships without it. */
+export const POOL_FILE = 'content/exam/pool/01-baking-basics.yaml';
+
+/** Writes the given questions as an exam-pool file, creating content/exam/pool/ when needed. */
+export function writePool(root: string, questions: readonly unknown[], file = POOL_FILE): void {
+  mkdirSync(dirname(join(root, file)), { recursive: true });
+  writeFileSync(join(root, file), stringify({ questions }, { lineWidth: 0 }));
+}
+
+/**
+ * Made-up quotas for the fixture tree's two concepts, for tests that set `ctx.quotas` directly: cells m01 1.1
+ * (target 2) and m01 4.1 (target 1), and 1 multi-response item in domain 1. Only R10 and the targets read it, so it
+ * skips the schema's sums.
+ */
+export function fixtureQuotas(): Quotas {
+  const tasks = Object.fromEntries(TASK_IDS.map((t) => [t, 0])) as Record<TaskId, number>;
+  return {
+    form: {
+      size: 65,
+      domains: { '1': 16, '2': 19, '3': 22, '4': 8 },
+      tasks,
+      multi: { '1': 2, '2': 2, '3': 3, '4': 1 },
+    },
+    pool: { size: 260, forms: 4, maxPerConcept: 4, multi: { '1': 1, '2': 0, '3': 0, '4': 0 } },
+    cells: [
+      { module: 1, task: '1.1', target: 2 },
+      { module: 1, task: '4.1', target: 1 },
+    ],
+    multiByModule: [{ module: 1, domain: '1', target: 1 }],
+  };
 }

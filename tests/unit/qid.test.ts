@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { QID_ALPHABET, Qid } from '../../schemas/question.ts';
-import { newQid, takenQids } from '../../scripts/content/lib/qid.ts';
+import { newQid, qidSourceTexts, takenQids } from '../../scripts/content/lib/qid.ts';
+import { makeFixtureRoot } from '../fixtures/content-root.ts';
+import { singleQuestion, writePool } from '../fixtures/questions.ts';
 
 describe('newQid', () => {
   it('draws 6 characters of the Crockford alphabet that the schema accepts', () => {
@@ -28,5 +30,15 @@ describe('takenQids', () => {
       'q-7k2m9p',
       'q-abcdef',
     ]);
+  });
+});
+
+describe('qidSourceTexts', () => {
+  it('reads practice and exam-pool files, so an id used in a pool file is taken', () => {
+    const root = makeFixtureRoot();
+    writePool(root, [singleQuestion({ id: 'q-9d4r6t', pool: 'exam' })]);
+    const taken = takenQids(qidSourceTexts(root));
+    expect(taken.has('q-9d4r6t')).toBe(true);
+    expect(taken.has('q-b4k7m2')).toBe(true);
   });
 });

@@ -10,13 +10,23 @@ import {
   phraseIn,
   resourcesText,
 } from '../../scripts/content/lib/coverage.ts';
-import { homed, needsDani, report, targets } from '../../scripts/content/lib/report.ts';
+import {
+  cellSpare,
+  examTargets,
+  homed,
+  needsDani,
+  report,
+  targets,
+} from '../../scripts/content/lib/report.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 import {
+  fixtureQuotas,
   matchQuestion,
   multiQuestion,
+  POOL_FILE,
   QUESTION_FILE,
   singleQuestion,
+  writePool,
   writeQuestions,
 } from '../fixtures/questions.ts';
 
@@ -195,6 +205,77 @@ describe('open questions per concept', () => {
         file: 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml',
         need: 4,
       },
+    ]);
+  });
+});
+
+describe('exam-pool counts in the report (spec 2.6)', () => {
+  const pool = [
+    singleQuestion({ id: 'q-e00001', pool: 'exam', status: 'live' }),
+    singleQuestion({ id: 'q-e00002', pool: 'exam' }),
+    singleQuestion({
+      id: 'q-e00003',
+      pool: 'exam',
+      review: { attempts: 3, lastFailure: 'critic: made-up reason' },
+    }),
+    singleQuestion({ id: 'q-e00004', pool: 'exam', status: 'retired' }),
+    multiQuestion({ id: 'q-e00005', pool: 'exam', status: 'retired' }),
+  ];
+
+  it('leaves exam items out of the practice lines and prints a counts-only exam line', () => {
+    const root = makeFixtureRoot();
+    writeQuestions(root, [singleQuestion({ status: 'live' }), multiQuestion(), matchQuestion()]);
+    writePool(root, pool);
+    expect(report(load(root))).toEqual([
+      'modules 1, lessons 1, glossary terms 1, concepts 2 (2 tested)',
+      'questions: 2 draft, 1 live, 0 retired; live single 1, multi 0, match 0',
+      'm01: 3 practice (single 1, multi 1, match 1); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
+      'm01 exam: 3 (single 3, multi 0); correct option longest in 0 of 3 singles (0%); negative stems 0 (0%)',
+      'concepts.md drift: 0',
+    ]);
+  });
+
+  it('gives a cell one spare item per started ten of its target, never below one', () => {
+    expect([1, 2, 10, 11, 20, 21].map(cellSpare)).toEqual([1, 1, 1, 2, 2, 3]);
+  });
+
+  it('gives each cell and multi-response share its spare, open, need and liveNeed', () => {
+    const root = makeFixtureRoot();
+    writePool(root, pool);
+    expect(examTargets({ ...load(root), quotas: fixtureQuotas() })).toEqual([
+      {
+        module: 1,
+        file: POOL_FILE,
+        cells: [
+          { task: '1.1', target: 2, spare: 1, live: 1, open: 2, need: 1, liveNeed: 1 },
+          { task: '4.1', target: 1, spare: 1, live: 0, open: 0, need: 2, liveNeed: 1 },
+        ],
+        multi: [{ domain: '1', target: 1, spare: 1, live: 0, open: 0, need: 2, liveNeed: 1 }],
+        concepts: [
+          { id: 'shared-kitchen', note: 'm01/what-a-bakery-cloud-is', tasks: ['1.1'], open: 2 },
+          { id: 'per-minute-rental', note: 'm01/what-a-bakery-cloud-is', tasks: ['4.1'], open: 0 },
+        ],
+      },
+    ]);
+  });
+
+  it('names the pool file a module would get, and needs quotas.yaml', () => {
+    const root = makeFixtureRoot();
+    expect(examTargets({ ...load(root), quotas: fixtureQuotas() }).map((t) => t.file)).toEqual([
+      'content/exam/pool/01-baking-basics.yaml',
+    ]);
+    expect(() => examTargets(load(root))).toThrow(
+      'content/exam/quotas.yaml is missing; run pnpm content:quotas',
+    );
+  });
+
+  it('keeps homed and targets on practice files when a pool file exists', () => {
+    const root = makeFixtureRoot();
+    const before = homed(load(root), 'm01/what-a-bakery-cloud-is').existing;
+    writePool(root, pool);
+    expect(homed(load(root), 'm01/what-a-bakery-cloud-is').existing).toBe(before);
+    expect(targets(load(root))).toEqual([
+      { note: 'm01/what-a-bakery-cloud-is', file: QUESTION_FILE, need: 2 },
     ]);
   });
 });

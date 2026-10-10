@@ -1,6 +1,8 @@
-/** Blueprint-term search and coverage by exam task (spec 2.3); Phase 2's R10 reuses missingTerms. */
+/** Blueprint-term search, practice and exam-pool counts, and coverage by exam task (spec 2.3, 2.6); R10 reuses them. */
 import type { TaskId } from '../../../schemas/common.ts';
+import type { DomainIdValue } from '../../../schemas/ids.ts';
 import type { Question } from '../../../schemas/question.ts';
+import { domainOf } from '../../../src/engine/quotas.ts';
 import type { Context } from './context.ts';
 import { stripMarkdown } from './text.ts';
 
@@ -48,17 +50,53 @@ export function missingTerms(ctx: Context): TermStatus[] {
   return blueprintTerms(ctx).filter((t) => !t.found && t.coveredBy === null);
 }
 
-/** Practice questions per concept id that pass `keep`, with a question tagged by an alias counted for the concept that lists it. */
-export function practiceCounts(ctx: Context, keep: (q: Question) => boolean): Map<string, number> {
+/** Questions of one pool per concept id that pass `keep`, with a question tagged by an alias counted for the concept that lists it. */
+function conceptCounts(
+  ctx: Context,
+  pool: Question['pool'],
+  keep: (q: Question) => boolean,
+): Map<string, number> {
   const target = new Map<string, string>();
   for (const c of ctx.concepts) {
     for (const alias of c.aliases ?? []) target.set(alias, c.id);
   }
   const counts = new Map<string, number>();
   for (const { q } of ctx.questions) {
-    if (q.pool !== 'practice' || !keep(q)) continue;
+    if (q.pool !== pool || !keep(q)) continue;
     const id = target.get(q.concept) ?? q.concept;
     counts.set(id, (counts.get(id) ?? 0) + 1);
+  }
+  return counts;
+}
+
+/** Practice questions per concept id that pass `keep`, aliases counted for the concept that lists them. */
+export function practiceCounts(ctx: Context, keep: (q: Question) => boolean): Map<string, number> {
+  return conceptCounts(ctx, 'practice', keep);
+}
+
+/** Exam-pool items per concept id that pass `keep`, aliases counted for the concept that lists them. */
+export function examConceptCounts(ctx: Context, keep: (q: Question) => boolean): Map<string, number> {
+  return conceptCounts(ctx, 'exam', keep);
+}
+
+/** Exam-pool items that pass `keep`, per quota cell key `<module>|<task>`, the module being the pool file's. */
+export function examCounts(ctx: Context, keep: (q: Question) => boolean): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const { module, q } of ctx.questions) {
+    if (q.pool !== 'exam' || !keep(q)) continue;
+    const key = `${module}|${q.task}`;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return counts;
+}
+
+/** Multi-response exam-pool items that pass `keep`, per domain. */
+export function examMultiByDomain(ctx: Context, keep: (q: Question) => boolean): Map<DomainIdValue, number> {
+  const counts = new Map<DomainIdValue, number>();
+  for (const { q } of ctx.questions) {
+    if (q.pool !== 'exam' || q.type !== 'multi' || !keep(q)) continue;
+    const d = domainOf(q.task);
+    counts.set(d, (counts.get(d) ?? 0) + 1);
   }
   return counts;
 }
@@ -72,7 +110,7 @@ export interface TaskCoverage {
   missing: string[];
 }
 
-/** Per task: tested concepts tagged with it, live practice questions on it, exam items (0 until Phase 3) and missing terms. */
+/** Per task: tested concepts tagged with it, live practice questions and live exam-pool items on it, and missing terms. */
 export function coverage(ctx: Context): TaskCoverage[] {
   const missing = missingTerms(ctx);
   return (ctx.blueprint?.tasks ?? []).map((task) => ({
@@ -82,7 +120,8 @@ export function coverage(ctx: Context): TaskCoverage[] {
     live: ctx.questions.filter(
       (e) => e.q.status === 'live' && e.q.pool === 'practice' && e.q.task === task.id,
     ).length,
-    exam: 0,
+    exam: ctx.questions.filter((e) => e.q.status === 'live' && e.q.pool === 'exam' && e.q.task === task.id)
+      .length,
     missing: missing.filter((t) => t.task === task.id).map((t) => t.term),
   }));
 }

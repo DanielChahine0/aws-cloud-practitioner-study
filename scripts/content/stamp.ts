@@ -1,6 +1,7 @@
 /**
- * pnpm content:stamp: writes the verified block and status: live for every practice question with all three passes at
- * its current hashes, and a review block for every draft that failed a check at its current hashes (spec 2.7).
+ * pnpm content:stamp: writes the verified block and status: live for every question with all three passes at its
+ * current hashes, and a review block for every draft that failed a check at its current hashes (spec 2.7); an exam
+ * draft at its third failed round is retired in place and printed as `retire <id>`.
  * Prints each file to revise as `revise <path>`, then the summary.
  */
 import { resolve } from 'node:path';
