@@ -5,8 +5,8 @@ import { moduleMastery } from '../../src/engine/mastery.ts';
 import { deriveMemory } from '../../src/engine/memory.ts';
 import { reviewQueue } from '../../src/engine/queue.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
-import { timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, contentOf } from '../fixtures/memory.ts';
+import { SID, SID2, timelineOf } from '../fixtures/events.ts';
+import { answerOf, at, contentOf, examStartOf, submitOf } from '../fixtures/memory.ts';
 
 /** One test per Phase 2 row of the anti-grind audit (spec 3.11), named after the row. */
 const CONTENT = contentOf([
@@ -22,6 +22,38 @@ type Log = readonly (readonly [string, NewEvent])[];
 const memoryOf = (log: Log) => deriveMemory(timelineOf(log), CONTENT);
 const right = (concept: string, qid: string, mode: 'check' | 'quiz' = 'check') =>
   answerOf({ concept, qid, mode, correct: true, sure: true });
+const SID3 = '01JA00000000000000000000S3';
+
+/** A submitted boss or mock on `day` over the given concepts, every item right. */
+const examOf = (
+  day: string,
+  sid: string,
+  mode: 'boss' | 'mock',
+  concepts: readonly string[],
+  form?: string,
+): Log => [
+  [
+    at(day, 10),
+    examStartOf(
+      sid,
+      mode,
+      concepts.map((c) => `qx-${c}`),
+      {
+        scope: mode === 'boss' ? 'm03' : 'a',
+        deadline: at(day, 11),
+        ...(form === undefined ? {} : { form }),
+      },
+    ),
+  ],
+  ...concepts.map(
+    (c, i) =>
+      [
+        at(day, 10, 20 + i),
+        answerOf({ concept: c, qid: `qx-${c}`, mode, sid, correct: true, sure: false }),
+      ] as const,
+  ),
+  [at(day, 10, 40), submitOf(sid, mode)],
+];
 
 describe('anti-grind audit (spec 3.11)', () => {
   it('Re-answering the same concept', () => {
@@ -106,6 +138,24 @@ describe('anti-grind audit (spec 3.11)', () => {
   });
 
   it.todo('Lightning spam (lightning arrives in Phase 4)');
-  it.todo('Re-rolling a boss (bosses arrive in Phase 3)');
-  it.todo('Peeking at mocks (mocks arrive in Phase 3)');
+  it('Re-rolling a boss: a second pass pays nothing', () => {
+    const module3 = ['flour', 'yeast', 'salt', 'water'];
+    const first = memoryOf(examOf('2026-10-10', SID, 'boss', module3));
+    const twice = memoryOf([
+      ...examOf('2026-10-10', SID, 'boss', module3),
+      ...examOf('2026-10-11', SID2, 'boss', module3),
+    ]);
+    expect(first.xp).toBe(100);
+    expect(twice.xp).toBe(100);
+  });
+
+  it('Peeking at mocks: each form pays once and a remix pays nothing', () => {
+    const all = ['oven', 'proofing', 'crust', 'flour'];
+    const memory = memoryOf([
+      ...examOf('2026-10-10', SID, 'mock', all, 'A'),
+      ...examOf('2026-10-13', SID2, 'mock', all, 'A'),
+      ...examOf('2026-10-16', SID3, 'mock', all, 'remix'),
+    ]);
+    expect(memory.xp).toBe(150);
+  });
 });

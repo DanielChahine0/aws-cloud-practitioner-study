@@ -5,7 +5,7 @@ import { addDays, DAY_MS } from '../../src/engine/day.ts';
 import { moduleMastery } from '../../src/engine/mastery.ts';
 import { deriveMemory } from '../../src/engine/memory.ts';
 import { toPlain } from '../../src/engine/replay.ts';
-import { timelineOf } from '../fixtures/events.ts';
+import { SID, timelineOf } from '../fixtures/events.ts';
 import { JOURNEY_CONTENT, variantId } from '../fixtures/journeys/content.ts';
 import { answerOf, contentOf } from '../fixtures/memory.ts';
 
@@ -17,7 +17,7 @@ const CONTENT = contentOf([
   { id: 'menu', module: 2, tested: false },
 ]);
 const CONCEPTS = ['oven', 'proofing', 'crust', 'menu', 'old-oven', 'ghost'];
-const MODES: Mode[] = ['check', 'quiz', 'review', 'lightning'];
+const MODES: Mode[] = ['check', 'quiz', 'focus', 'review', 'lightning', 'boss', 'mock'];
 const START = '2026-10-01';
 
 type Item = readonly [string, NewEvent];
@@ -52,6 +52,35 @@ const itemArb = (days: { min: number; max: number }): fc.Arbitrary<Item> =>
               mode: s.mode,
               relearn: s.relearn,
             }),
+          ],
+        ),
+    },
+    {
+      weight: 2,
+      arbitrary: fc
+        .record({
+          day: fc.integer(days),
+          minute: fc.integer({ min: 0, max: 1_400 }),
+          mode: fc.constantFrom<'boss' | 'mock'>('boss', 'mock'),
+          phase: fc.constantFrom<'start' | 'submit' | 'abandon'>('start', 'submit', 'submit', 'abandon'),
+          form: fc.constantFrom('A', 'B', 'remix'),
+        })
+        .map(
+          (s): Item => [
+            timeOf(s.day, s.minute),
+            s.phase === 'start'
+              ? {
+                  t: 'session',
+                  sid: SID,
+                  mode: s.mode,
+                  phase: 'start',
+                  seed: 7,
+                  scope: 'm01',
+                  qids: ['q-oven-1', 'q-proofing-1', 'q-crust-1'],
+                  form: s.form,
+                  deadline: timeOf(s.day, s.minute + 21),
+                }
+              : { t: 'session', sid: SID, mode: s.mode, phase: s.phase, seed: 7 },
           ],
         ),
     },
@@ -192,23 +221,48 @@ describe('grind invariance', () => {
 });
 
 describe('replay cost', () => {
-  it('replays a 15,000-event log in under a second', () => {
+  it('replays a 15,000-event log in under a second, a third of it in bosses and mocks', () => {
     const concepts = [...JOURNEY_CONTENT.concepts.keys()];
     const items: Item[] = [];
     for (let day = 0; day < 100; day++) {
-      for (let n = 0; n < 150; n++) {
+      const sid = `01JC${String(day).padStart(22, '0')}`;
+      const mode = day % 2 === 0 ? 'boss' : 'mock';
+      const examQids: string[] = [];
+      const answers: Item[] = [];
+      for (let n = 0; n < 148; n++) {
         const concept = concepts[(day * 37 + n) % concepts.length] as string;
-        items.push([
-          timeOf(day, n * 5),
+        const qid = variantId(concept, n % 2 === 0 ? 'a' : 'b');
+        const exam = n % 3 === 0;
+        if (exam) examQids.push(qid);
+        answers.push([
+          timeOf(day, 5 + n * 5),
           answerOf({
             concept,
-            qid: variantId(concept, n % 2 === 0 ? 'a' : 'b'),
+            qid,
             correct: (day + n) % 5 !== 0,
-            sure: n % 3 !== 0,
-            mode: n % 4 === 0 ? 'quiz' : 'review',
+            sure: exam ? false : n % 3 !== 0,
+            mode: exam ? mode : n % 4 === 1 ? 'quiz' : 'review',
+            sid: exam ? sid : SID,
+            ...(exam ? { flagged: n % 7 === 0 } : {}),
           }),
         ]);
       }
+      const form = day % 8 === 1 ? 'A' : 'remix';
+      items.push([
+        timeOf(day, 0),
+        {
+          t: 'session',
+          sid,
+          mode,
+          phase: 'start',
+          seed: day,
+          scope: mode === 'boss' ? `m${String((day % 13) + 1).padStart(2, '0')}` : 'a',
+          qids: examQids,
+          deadline: timeOf(day, 90),
+          ...(mode === 'mock' ? { form } : {}),
+        },
+      ]);
+      items.push(...answers, [timeOf(day, 745), { t: 'session', sid, mode, phase: 'submit', seed: day }]);
     }
     const events: StudyEvent[] = timelineOf(items);
     expect(events).toHaveLength(15_000);

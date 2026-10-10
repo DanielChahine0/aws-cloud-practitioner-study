@@ -5,8 +5,9 @@ import { FORM_IDS } from '../../schemas/ids.ts';
  * The pure replay (spec 8): every bit of progress is derived from the event log, never stored.
  * Changing what `derive` or `deriveMemory` computes from the same events bumps `ENGINE_VERSION`.
  * Version 2 adds XP and FSRS (`src/engine/memory.ts`) and the answer's id, concept and relearn flag.
+ * Version 3 applies boss and mock answers on submit, pays exam XP and qualifies exam days.
  */
-export const ENGINE_VERSION = 2;
+export const ENGINE_VERSION = 3;
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;

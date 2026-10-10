@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ConceptMeta, ContentIndex, LessonMeta } from '../../schemas/chunks.ts';
+import type { ConceptMeta, ContentIndex, LessonMeta, MissionMeta } from '../../schemas/chunks.ts';
 import {
   examAskDue,
   examDateLabel,
@@ -119,17 +119,43 @@ describe('memoryContentOf', () => {
       tested: true,
       confusableWith: ['rented-oven'],
       splitFrom: null,
+      tasks: ['1.1'],
     });
     expect(content.concepts.get('proofing-cabinet')).toEqual({
       module: 2,
       tested: true,
       confusableWith: [],
       splitFrom: 'shared-oven',
+      tasks: ['1.1'],
     });
     expect(content.concepts.get('bakery-history')?.tested).toBe(false);
     expect(content.aliases.get('common-oven')).toBe('shared-oven');
     expect(content.aliases.size).toBe(1);
     expect(content.questionVersions.get('q-bbbbbb')).toBe(2);
+  });
+
+  it('keeps the missions marked keep and leaves exam tasks and core labs empty', () => {
+    const mission = (id: string, keep: boolean): MissionMeta => ({
+      id,
+      title: `Title of ${id}`,
+      modules: [1],
+      services: [],
+      expectedCredits: '$0',
+      gate: false,
+      keep,
+      maxLiveHours: null,
+      canUseCredits: [],
+      leftovers: [],
+      sources: [],
+      html: '',
+    });
+    const content = memoryContentOf({
+      ...IDX,
+      missions: [mission('mission-01-kept', true), mission('mission-02-cleaned', false)],
+    });
+    expect([...content.keptMissions]).toEqual(['mission-01-kept']);
+    expect(content.examTasks.size).toBe(0);
+    expect(content.coreLabs.size).toBe(0);
   });
 });
 

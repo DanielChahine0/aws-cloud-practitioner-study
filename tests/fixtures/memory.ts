@@ -10,12 +10,21 @@ export interface ConceptSpec {
   confusableWith?: readonly string[];
   splitFrom?: string | null;
   aliases?: readonly string[];
+  tasks?: readonly string[];
+}
+
+/** The Phase 3 extras of `MemoryContent`, empty unless a test sets them. */
+export interface ContentExtras {
+  examTasks?: ReadonlyMap<string, string>;
+  coreLabs?: ReadonlyMap<number, readonly string[]>;
+  keptMissions?: ReadonlySet<string>;
 }
 
 /** Builds a `MemoryContent` from concept specs, with aliases pointing at their concept. */
 export function contentOf(
   specs: readonly ConceptSpec[],
   questionVersions: ReadonlyMap<string, number> = new Map(),
+  extras: ContentExtras = {},
 ): MemoryContent {
   const concepts = new Map<string, ConceptInfo>();
   const aliases = new Map<string, string>();
@@ -25,10 +34,18 @@ export function contentOf(
       tested: s.tested ?? true,
       confusableWith: s.confusableWith ?? [],
       splitFrom: s.splitFrom ?? null,
+      tasks: s.tasks ?? [],
     });
     for (const alias of s.aliases ?? []) aliases.set(alias, s.id);
   }
-  return { concepts, aliases, questionVersions };
+  return {
+    concepts,
+    aliases,
+    questionVersions,
+    examTasks: extras.examTasks ?? new Map(),
+    coreLabs: extras.coreLabs ?? new Map(),
+    keptMissions: extras.keptMissions ?? new Set(),
+  };
 }
 
 /** An ISO time on a study day at a UTC hour, for logs written at offset 0. */

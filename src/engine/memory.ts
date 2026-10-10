@@ -1,4 +1,5 @@
 import type { Mode, StudyEvent } from '../../schemas/events.ts';
+import { FORM_IDS } from '../../schemas/ids.ts';
 import { betXp } from './bets.ts';
 import { addDays, dayStartAt, nextDayStart, studyDayAt } from './day.ts';
 import type { SessionState } from './replay.ts';
@@ -11,7 +12,7 @@ import { effortBonus, XP } from './xp.ts';
  * It sits beside `derive` because it needs the content, while `derive` must work without it.
  */
 
-/** The modes whose answers count toward memory (spec 3.1); lightning, bosses and mocks do not, yet. */
+/** The modes whose answers count toward memory (spec 3.1); lightning, bosses and mocks do not. */
 export const COUNTING_MODES: ReadonlySet<Mode> = new Set<Mode>([
   'check',
   'quiz',
@@ -19,6 +20,17 @@ export const COUNTING_MODES: ReadonlySet<Mode> = new Set<Mode>([
   'review',
   'incident',
 ]);
+
+/**
+ * Boss and mock answers (spec 3.1, 4.1): held per session and applied once, on its first submit,
+ * with no XP per item, no success day and at most one update per concept per day.
+ */
+export const EXAM_MODES: ReadonlySet<Mode> = new Set<Mode>(['boss', 'mock']);
+
+/** The boss pass mark: 80% of the drawn items, rounded up, so 12 of 15 (spec 4.2). */
+export function bossPassMark(total: number): number {
+  return Math.ceil((4 * total) / 5);
+}
 
 /** Catch-up (spec 3.7): above this many due concepts, a day's plan is the lowest-R `CATCH_UP_PLAN`. */
 export const CATCH_UP_OVER = 100;
@@ -29,6 +41,8 @@ export interface ConceptInfo {
   tested: boolean;
   confusableWith: readonly string[];
   splitFrom: string | null;
+  /** The blueprint task ids the concept is tagged with (`2.3`). */
+  tasks: readonly string[];
 }
 
 /** What the replay needs from the content index; `aliases` maps an alias to its surviving concept id. */
@@ -36,6 +50,12 @@ export interface MemoryContent {
   concepts: ReadonlyMap<string, ConceptInfo>;
   aliases: ReadonlyMap<string, string>;
   questionVersions: ReadonlyMap<string, number>;
+  /** Exam-pool question id to its blueprint task, for every item of a form. */
+  examTasks: ReadonlyMap<string, string>;
+  /** Module number to its core lab ids; empty until labs ship (Phase 4). */
+  coreLabs: ReadonlyMap<number, readonly string[]>;
+  /** Missions whose resources are kept on purpose, so they never count as cleaned up. */
+  keptMissions: ReadonlySet<string>;
 }
 
 export interface Misconception {
@@ -75,6 +95,8 @@ export interface MemoryState {
   examDate: string | null;
   /** Counted answers to an older question version, kept for XP and left out of FSRS (spec 8.4). */
   staleAnswers: number;
+  /** Study days with a submitted boss or mock, each of which qualifies (spec 3.5). */
+  examsDone: ReadonlySet<string>;
 }
 
 interface MutableConcept extends ConceptMemory {
@@ -82,6 +104,9 @@ interface MutableConcept extends ConceptMemory {
 }
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
+type SessionEvent = Extract<StudyEvent, { t: 'session' }>;
+
+const FORMS: ReadonlySet<string> = new Set(FORM_IDS);
 
 const byId = (a: StudyEvent, b: StudyEvent): number => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
@@ -140,6 +165,12 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
   const newByDay = new Map<string, number>();
   const catchUpPlans = new Map<string, readonly string[]>();
   const starts = new Map<string, { at: string; tz: number }>();
+  const examStarts = new Map<string, SessionEvent>();
+  const examAnswers = new Map<string, Map<string, AnswerEvent>>();
+  const examsClosed = new Set<string>();
+  const examsDone = new Set<string>();
+  const bossesPassed = new Set<string>();
+  const formsPaid = new Set<string>();
   const lessons = new Set<string>();
   let xp = 0;
   let staleAnswers = 0;
@@ -180,7 +211,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
 
   const closeDay = () => {
     if (day === null) return;
-    if (completion) {
+    if (completion || examsDone.has(day)) {
       qualifyingDays.add(day);
       return;
     }
@@ -236,26 +267,35 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     cm.extraAgainDay = e.day;
   };
 
+  /** The memory of a key, created on first use from the card of the concept it was split from. */
+  const conceptOf = (key: string): MutableConcept => {
+    const known = concepts.get(key);
+    if (known) return known;
+    const cm = freshConcept();
+    const from = content.concepts.get(key)?.splitFrom ?? null;
+    const old = from === null ? undefined : concepts.get(from);
+    if (old?.card) {
+      cm.card = old.card;
+      cm.enteredOn = old.enteredOn;
+    }
+    concepts.set(key, cm);
+    return cm;
+  };
+
+  const isStale = (e: AnswerEvent): boolean => {
+    const shipped = content.questionVersions.get(e.qid);
+    return shipped !== undefined && e.qv < shipped;
+  };
+
   const applyAnswer = (e: AnswerEvent) => {
     const key = keyOf(e.concept);
-    const shipped = content.questionVersions.get(e.qid);
-    const stale = shipped !== undefined && e.qv < shipped;
+    const stale = isStale(e);
     const isNew = !answered.has(e.qid);
     if (!COUNTING_MODES.has(e.mode) || key === null) {
       answered.add(e.qid);
       return;
     }
-    let cm = concepts.get(key);
-    if (!cm) {
-      cm = freshConcept();
-      const from = content.concepts.get(key)?.splitFrom ?? null;
-      const old = from === null ? undefined : concepts.get(from);
-      if (old?.card) {
-        cm.card = old.card;
-        cm.enteredOn = old.enteredOn;
-      }
-      concepts.set(key, cm);
-    }
+    const cm = conceptOf(key);
     if (stale) staleAnswers++;
     if (e.relearn !== true) {
       countedAnswer = true;
@@ -267,6 +307,71 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     if (!e.correct && e.sure) cm.misconception = { qid: e.qid, day: e.day };
     else if (e.correct && e.sure && mark && mark.qid !== e.qid && e.day > mark.day) cm.misconception = null;
     answered.add(e.qid);
+  };
+
+  /** Holds the first answer per question of an open boss or mock until its submit. */
+  const holdExamAnswer = (e: AnswerEvent) => {
+    answered.add(e.qid);
+    const held = examAnswers.get(e.sid);
+    if (held && !held.has(e.qid)) held.set(e.qid, e);
+  };
+
+  /**
+   * One boss or mock answer on submit: wrong applies Again whatever the due state, right applies Hard
+   * (flagged) or Good only when the concept has no card or was due when the session started; a concept
+   * already updated today gets only the one extra Again of a later wrong answer.
+   */
+  const applyExamAnswer = (e: AnswerEvent) => {
+    const key = keyOf(e.concept);
+    if (key === null) return;
+    const cm = conceptOf(key);
+    if (!isStale(e)) {
+      if (cm.fsrsDay !== e.day) {
+        const card = cm.card;
+        const start = starts.get(e.sid) ?? { at: e.at, tz: e.tz };
+        const dueAtStart = card === null || isDue(card, new Date(start.at), start.tz);
+        if (!e.correct || dueAtStart) {
+          const rating = e.correct ? rate(true, e.flagged !== true) : 'again';
+          update(cm, key, rating, e);
+          cm.fsrsDay = e.day;
+          cm.fsrsRating = rating;
+          if (card === null) cm.enteredOn = e.day;
+        }
+      } else {
+        laterAnswer(cm, key, e, false);
+      }
+    }
+    cm.lastAnswerDay = e.day;
+  };
+
+  /** Opens a boss or mock on start; closes it on its first submit or abandon, applying a submit. */
+  const applyExamSession = (e: SessionEvent) => {
+    if (e.phase === 'start') {
+      examStarts.set(e.sid, e);
+      examAnswers.set(e.sid, new Map());
+      examsClosed.delete(e.sid);
+      return;
+    }
+    const start = examStarts.get(e.sid);
+    if (!start || examsClosed.has(e.sid)) return;
+    examsClosed.add(e.sid);
+    const held = examAnswers.get(e.sid) ?? new Map<string, AnswerEvent>();
+    examAnswers.delete(e.sid);
+    if (e.phase === 'abandon') return;
+    for (const a of [...held.values()].sort(byId)) applyExamAnswer(a);
+    const qids = start.qids ?? [];
+    const correct = qids.filter((qid) => held.get(qid)?.correct === true).length;
+    if (start.mode === 'boss') {
+      const scope = start.scope ?? '';
+      if (qids.length > 0 && correct >= bossPassMark(qids.length) && !bossesPassed.has(scope)) {
+        bossesPassed.add(scope);
+        earn(e, XP.boss);
+      }
+    } else if (start.form !== undefined && FORMS.has(start.form) && !formsPaid.has(start.form)) {
+      formsPaid.add(start.form);
+      earn(e, XP.mock);
+    }
+    examsDone.add(e.day);
   };
 
   for (const e of sorted) {
@@ -281,6 +386,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     switch (e.t) {
       case 'session':
         if (e.phase === 'start') starts.set(e.sid, { at: e.at, tz: e.tz });
+        if (EXAM_MODES.has(e.mode)) applyExamSession(e);
         break;
       case 'lesson.done':
         if (!lessons.has(e.note)) {
@@ -290,7 +396,8 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
         }
         break;
       case 'answer':
-        applyAnswer(e);
+        if (EXAM_MODES.has(e.mode)) holdExamAnswer(e);
+        else applyAnswer(e);
         break;
       default:
         break;
@@ -315,6 +422,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     catchUpPlans,
     examDate,
     staleAnswers,
+    examsDone,
   };
 }
 

@@ -1,7 +1,14 @@
 import type { Mode, NewEvent, StudyEvent } from '../../../schemas/events.ts';
 import { addDays } from '../../../src/engine/day.ts';
 import { timelineOf } from '../events.ts';
-import { conceptId, lessonConcepts, lessonNote, variantId } from './content.ts';
+import { conceptId, lessonConcepts, lessonNote, MOCK_A_ITEMS, variantId } from './content.ts';
+
+/** How one exam item goes, by qid; right, unflagged and answered unless listed. */
+interface ExamScript {
+  wrong?: readonly string[];
+  flagged?: readonly string[];
+  blank?: readonly string[];
+}
 
 /** How one answer of a scripted session goes; right and Sure unless listed. */
 interface Script {
@@ -75,6 +82,67 @@ class Journey {
     return this;
   }
 
+  /**
+   * A boss or mock: the start with its deadline at `at`, then, `submitAfter` minutes later, one answer per
+   * `[qid, concept]` item a millisecond apart (as the app writes them at submit) and the submit.
+   */
+  exam(
+    at: string,
+    mode: 'boss' | 'mock',
+    scope: string,
+    form: string | null,
+    items: readonly (readonly [string, string])[],
+    script: ExamScript,
+    minutes: number,
+    submitAfter: number,
+  ): this {
+    this.sessions += 1;
+    const sid = `01JB${String(this.sessions).padStart(22, '0')}`;
+    const start = Date.parse(at);
+    const deadline = new Date(start + minutes * 60_000).toISOString();
+    this.items.push([
+      new Date(start).toISOString(),
+      {
+        t: 'session',
+        sid,
+        mode,
+        phase: 'start',
+        seed: this.sessions,
+        scope,
+        qids: items.map(([qid]) => qid),
+        deadline,
+        ...(form === null ? {} : { form }),
+      },
+    ]);
+    const end = start + submitAfter * 60_000;
+    items.forEach(([qid, concept], i) => {
+      const blank = script.blank?.includes(qid) ?? false;
+      const wrong = blank || (script.wrong?.includes(qid) ?? false);
+      this.items.push([
+        new Date(end + i).toISOString(),
+        {
+          t: 'answer',
+          sid,
+          mode,
+          qid,
+          qv: 1,
+          concept,
+          picked: blank ? [] : [wrong ? 'b' : 'a'],
+          correct: !wrong,
+          sure: false,
+          flagged: script.flagged?.includes(qid) ?? false,
+          changes: [],
+          ms: 0,
+        },
+      ]);
+    });
+    this.items.push([
+      new Date(end + items.length).toISOString(),
+      { t: 'session', sid, mode, phase: 'submit', seed: this.sessions },
+    ]);
+    return this;
+  }
+
   events(): StudyEvent[] {
     const sorted = [...this.items].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
     return timelineOf(sorted);
@@ -111,7 +179,8 @@ export function firstWeek(): StudyEvent[] {
 
 /**
  * The exam date set to Saturday, November 14 on November 1, a check over Modules 1 to 4 that day,
- * then a review of all 40 concepts every day to November 12, a few of them wrong.
+ * then a review of all 40 concepts every day to November 12, a few of them wrong, with the Module 1 boss
+ * on November 5 (13 of 15 right, one flagged) and Mock A on November 8 (65 items on the 40 concepts).
  */
 export function examCrunch(): StudyEvent[] {
   const j = new Journey();
@@ -137,6 +206,38 @@ export function examCrunch(): StudyEvent[] {
       wrong,
     });
   }
+  const m1 = moduleConcepts(1);
+  const bossItems = [
+    ...m1.map((c) => [variantId(c, 'b'), c] as const),
+    ...m1.slice(0, 5).map((c) => [variantId(c, 'a'), c] as const),
+  ];
+  j.exam(
+    '2026-11-05T12:00:00.000Z',
+    'boss',
+    'm01',
+    null,
+    bossItems,
+    {
+      wrong: [variantId(conceptId(1, 3), 'b'), variantId(conceptId(1, 7), 'b')],
+      flagged: [variantId(conceptId(1, 5), 'a')],
+    },
+    21,
+    18,
+  );
+  j.exam(
+    '2026-11-08T09:00:00.000Z',
+    'mock',
+    'a',
+    'A',
+    MOCK_A_ITEMS,
+    {
+      wrong: MOCK_A_ITEMS.filter((_, i) => i % 6 === 5).map(([qid]) => qid),
+      flagged: MOCK_A_ITEMS.filter((_, i) => i % 9 === 0).map(([qid]) => qid),
+      blank: ['qx-a-65'],
+    },
+    90,
+    80,
+  );
   return j.events();
 }
 

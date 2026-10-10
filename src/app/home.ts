@@ -16,7 +16,10 @@ const plural = (n: number, one: string, many: string): string => `${n} ${n === 1
 /** The module of a note id such as `m03/aws-lambda`. */
 const moduleOf = (noteId: string): number => Number(noteId.slice(1, 3));
 
-/** What the memory replay needs from the index: concepts with their module, aliases, and question versions. */
+/**
+ * What the memory replay needs from the index: concepts with their module and tasks, aliases, question
+ * versions and kept missions; exam tasks arrive with the exam index (Task 17) and core labs in Phase 4.
+ */
 export function memoryContentOf(idx: ContentIndex): MemoryContent {
   const concepts = new Map<string, ConceptInfo>();
   const aliases = new Map<string, string>();
@@ -26,10 +29,18 @@ export function memoryContentOf(idx: ContentIndex): MemoryContent {
       tested: c.tested,
       confusableWith: c.confusableWith,
       splitFrom: c.splitFrom,
+      tasks: c.tasks,
     });
     for (const alias of c.aliases) aliases.set(alias, c.id);
   }
-  return { concepts, aliases, questionVersions: new Map(Object.entries(idx.questionVersions)) };
+  return {
+    concepts,
+    aliases,
+    questionVersions: new Map(Object.entries(idx.questionVersions)),
+    examTasks: new Map(),
+    coreLabs: new Map(),
+    keptMissions: new Set(idx.missions.filter((m) => m.keep).map((m) => m.id)),
+  };
 }
 
 /** Every lesson in course order, as the Next action reads it. */
