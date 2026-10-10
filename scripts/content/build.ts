@@ -1,7 +1,12 @@
 import { createHash } from 'node:crypto';
 import type {
+  BadgeView,
   ConceptMeta,
   ContentIndex,
+  DomainView,
+  ExamChunk,
+  ExamFormMeta,
+  ExamItemRef,
   GlossaryItem,
   LessonChunk,
   LessonMeta,
@@ -9,8 +14,10 @@ import type {
   ModuleChunk,
   ModuleMeta,
   QuestionView,
+  RankView,
   SearchChunk,
   SearchEntry,
+  TaskView,
 } from '../../schemas/chunks.ts';
 import type { Concept } from '../../schemas/concept.ts';
 import { normalize } from '../../src/app/search.ts';
@@ -20,6 +27,7 @@ import {
   type LessonNote,
   type ModuleNote,
   type Note,
+  POOL_DIR,
   type QuestionEntry,
 } from './lib/context.ts';
 import { evidenceForm, noteLines, sectionAt } from './lib/evidence.ts';
@@ -94,6 +102,53 @@ export function confusableLinks(concepts: readonly Concept[]): Map<string, strin
     links.set(c.id, unique.slice(0, MAX_CONFUSABLE));
   }
   return links;
+}
+
+/**
+ * The mock forms (spec 4.3): one chunk per form, `content/exam-a.<hash8>.json` to `exam-d`, holding that form's live
+ * items in form order, so an untaken form's text never loads outside its own mock. Pool items in no form never ship.
+ * Errors name ids only, because exam-pool text must never reach tool output.
+ */
+function formChunks(
+  ctx: Context,
+  notesById: ReadonlyMap<string, Note>,
+  emit: (stem: string, data: unknown) => string,
+): { forms: ExamFormMeta[]; items: Record<string, ExamItemRef> } {
+  const forms: ExamFormMeta[] = [];
+  const items: Record<string, ExamItemRef> = {};
+  if (ctx.forms === null) return { forms, items };
+  const pool = new Map(
+    ctx.questions.filter(({ q }) => q.pool === 'exam').map((entry) => [entry.q.id, entry] as const),
+  );
+  for (const form of ctx.forms.forms) {
+    const questions: QuestionView[] = [];
+    for (const qid of form.qids) {
+      const entry = pool.get(qid);
+      if (entry === undefined) throw new Error(`form ${form.id} lists ${qid}, which is not in ${POOL_DIR}/`);
+      if (entry.q.status !== 'live') continue;
+      if (entry.q.type === 'match') throw new Error(`${qid} in form ${form.id} is a match item`);
+      const taken = items[qid];
+      if (taken !== undefined) throw new Error(`${qid} sits in forms ${taken.form} and ${form.id}`);
+      const note = notesById.get(entry.noteId);
+      if (note === undefined) throw new Error(`${entry.path}: ${entry.noteId} is not a note`);
+      questions.push(questionView(entry, note));
+      items[qid] = {
+        version: entry.q.version,
+        concept: entry.q.concept,
+        task: entry.q.task,
+        form: form.id,
+        type: entry.q.type,
+      };
+    }
+    const chunk: ExamChunk = { form: form.id, questions };
+    forms.push({
+      id: form.id,
+      chunk: emit(`exam-${form.id.toLowerCase()}`, chunk),
+      frozen: form.frozen,
+      size: questions.length,
+    });
+  }
+  return { forms, items };
 }
 
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
@@ -272,6 +327,28 @@ export function buildContent(ctx: Context): BuiltContent {
     });
 
   const searchChunk: SearchChunk = { entries: search };
+  const domains: DomainView[] = (ctx.blueprint?.domains ?? []).map(({ id, name, weight }) => ({
+    id,
+    name,
+    weight,
+  }));
+  const tasks: TaskView[] = (ctx.blueprint?.tasks ?? []).map(({ id, text, short }) => ({
+    id,
+    domain: id.charAt(0),
+    text,
+    short,
+  }));
+  const ranks: RankView[] = (ctx.ranks ?? []).map((rank) => {
+    const requires: Record<string, number | boolean> = {};
+    for (const [key, value] of Object.entries(rank.requires)) if (value !== undefined) requires[key] = value;
+    return { id: rank.id, name: rank.name, short: rank.short, requires, facts: [...(rank.facts ?? [])] };
+  });
+  const badges: BadgeView[] = (ctx.badges ?? []).map((badge) => ({
+    id: badge.id,
+    name: badge.name,
+    rule: badge.rule,
+    arrives: badge.arrives ?? null,
+  }));
   const body = {
     modules,
     concepts,
@@ -279,6 +356,10 @@ export function buildContent(ctx: Context): BuiltContent {
     missions,
     questionVersions,
     search: emit('search', searchChunk),
+    blueprint: { domains, tasks },
+    ranks,
+    badges,
+    exam: formChunks(ctx, notesById, emit),
   };
   const contentVersion = `c-${sha256(JSON.stringify(body)).slice(0, 6)}`;
   const index: ContentIndex = { contentVersion, ...body };

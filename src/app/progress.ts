@@ -26,7 +26,10 @@ const refs = computed<ContentRefs | null>(() => {
   const idx = index.value;
   if (idx === null) return null;
   return {
-    questions: new Map(Object.entries(idx.questionVersions)),
+    questions: new Map([
+      ...Object.entries(idx.questionVersions),
+      ...Object.entries(idx.exam.items).map(([qid, item]) => [qid, item.version] as const),
+    ]),
     notes: new Set(idx.modules.flatMap((m) => m.lessons.map((l) => `m${pad2(m.n)}/${l.slug}`))),
   };
 });

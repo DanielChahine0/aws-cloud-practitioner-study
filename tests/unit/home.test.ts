@@ -13,6 +13,7 @@ import {
 import type { LessonRef } from '../../src/engine/next.ts';
 import type { ReviewQueue } from '../../src/engine/queue.ts';
 import type { SessionState } from '../../src/engine/replay.ts';
+import { emptyIndexFields } from '../fixtures/index.ts';
 
 const lesson = (
   n: number,
@@ -76,6 +77,7 @@ const IDX: ContentIndex = {
   missions: [],
   questionVersions: { 'q-aaaaaa': 1, 'q-bbbbbb': 2 },
   search: 'content/search.json',
+  ...emptyIndexFields(),
 };
 
 const REFS = lessonRefs(IDX);

@@ -3,6 +3,7 @@ import type { ContentIndex } from '../../schemas/chunks.ts';
 import { index } from '../../src/app/content.ts';
 import { nextUp } from '../../src/app/memory.ts';
 import { storeReady } from '../../src/app/progress.ts';
+import { emptyIndexFields } from '../fixtures/index.ts';
 
 const IDX: ContentIndex = {
   contentVersion: 'test',
@@ -23,6 +24,7 @@ const IDX: ContentIndex = {
   missions: [],
   questionVersions: {},
   search: 'content/search.json',
+  ...emptyIndexFields(),
 };
 
 describe('nextUp', () => {
