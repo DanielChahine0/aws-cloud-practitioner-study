@@ -3,72 +3,13 @@ import { expect, type Page, test } from '@playwright/test';
 import type { QuestionView } from '../../schemas/chunks.ts';
 import { findEvidence } from '../../src/app/evidence.ts';
 import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1 } from './helpers.ts';
+import { chunkFor, finishByClicking, lessonsOf, pickRight, pickWrong, shown } from './questions.ts';
 
 /** Every practice e2e test uses Module 3, which the Phase 1 pilot fills with live questions. */
 const LAMBDA = '/#/m/03/l/aws-lambda';
 const QUIZ = '/#/s/quiz/m03';
 
 failOnPageProblems();
-
-/** The live questions of a module, read the way the app reads them: the index named in the page, then the chunk. */
-async function chunkFor(page: Page, module: number): Promise<QuestionView[]> {
-  return page.evaluate(async (n) => {
-    const name = document.querySelector<HTMLMetaElement>('meta[name="ccp-content"]')?.content ?? '';
-    const index = (await (await fetch(name)).json()) as { modules: { n: number; chunk: string }[] };
-    const chunk = index.modules.find((m) => m.n === n)?.chunk ?? '';
-    return ((await (await fetch(chunk)).json()) as { questions: QuestionView[] }).questions;
-  }, module);
-}
-
-/** The lesson slugs of a module, from the index. */
-async function lessonsOf(page: Page, module: number): Promise<string[]> {
-  return page.evaluate(async (n) => {
-    const name = document.querySelector<HTMLMetaElement>('meta[name="ccp-content"]')?.content ?? '';
-    const index = (await (await fetch(name)).json()) as {
-      modules: { n: number; lessons: { slug: string }[] }[];
-    };
-    return index.modules.find((m) => m.n === n)?.lessons.map((l) => l.slug) ?? [];
-  }, module);
-}
-
-/** The question on screen, found by the runner's `data-qid`. */
-async function shown(page: Page, questions: readonly QuestionView[]): Promise<QuestionView> {
-  const runner = page.locator('section.runner');
-  await expect(runner).toBeVisible();
-  const qid = await runner.getAttribute('data-qid');
-  const q = questions.find((x) => x.id === qid);
-  if (q === undefined) throw new Error(`question ${qid} is not in the chunk`);
-  return q;
-}
-
-/** Picks the right answer with the mouse; a match pairs each left with its own right. */
-async function pickRight(page: Page, q: QuestionView): Promise<void> {
-  if (q.type === 'match') {
-    for (const [i, pair] of q.pairs.entries()) {
-      await page.getByRole('combobox', { name: pair.left, exact: true }).selectOption(`r${i + 1}`);
-    }
-    return;
-  }
-  const role = q.type === 'single' ? 'radio' : 'checkbox';
-  for (const option of q.options.filter((o) => o.correct)) {
-    await page.getByRole(role, { name: option.text, exact: true }).check();
-  }
-}
-
-/** Picks a wrong answer with the mouse. */
-async function pickWrong(page: Page, q: QuestionView): Promise<void> {
-  if (q.type === 'match') {
-    for (const [i, pair] of q.pairs.entries()) {
-      await page
-        .getByRole('combobox', { name: pair.left, exact: true })
-        .selectOption(`r${((i + 1) % q.pairs.length) + 1}`);
-    }
-    return;
-  }
-  const role = q.type === 'single' ? 'radio' : 'checkbox';
-  const wrong = q.options.filter((o) => !o.correct).slice(0, q.select ?? 1);
-  for (const option of wrong) await page.getByRole(role, { name: option.text, exact: true }).check();
-}
 
 /** Answers the question on screen with keys only: digits (and letters in a match), then Enter twice. */
 async function answerByKeys(page: Page, q: QuestionView): Promise<void> {
@@ -87,21 +28,6 @@ async function answerByKeys(page: Page, q: QuestionView): Promise<void> {
   await expect(page.getByRole('button', { name: /^Next/ })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('.verdict')).toHaveCount(0);
-}
-
-/** Answers every question of the session on screen correctly by clicking; returns the end line. */
-async function finishByClicking(page: Page, questions: readonly QuestionView[]): Promise<string> {
-  const end = page.locator('.end-line');
-  for (;;) {
-    await expect(page.locator('section.runner, .end-line').first()).toBeVisible();
-    if (await end.isVisible()) return end.innerText();
-    const q = await shown(page, questions);
-    await pickRight(page, q);
-    await page.getByRole('button', { name: /^Check/ }).click();
-    await expect(page.locator('.verdict')).toHaveText('Correct');
-    await page.getByRole('button', { name: /^Next/ }).click();
-    await expect(page.locator('.verdict')).toHaveCount(0);
-  }
 }
 
 /**
@@ -155,7 +81,7 @@ test('a lesson check runs end to end and marks the lesson on its module page', a
   await page.keyboard.press('Enter');
   await expect(page.locator('.verdict')).toHaveCount(0);
   const line = await finishByClicking(page, questions);
-  const [correct, total] = (/^(\d+)\/(\d+)(?: · |$)/.exec(line) ?? []).slice(1);
+  const [correct, total] = (/^(\d+)\/(\d+) · \+\d+ XP$/.exec(line) ?? []).slice(1);
   expect(correct).toBe(total);
 
   await page.reload();
@@ -236,7 +162,7 @@ test('Read in notes opens the lesson with its evidence line highlighted', async 
   await expect(evidence).toBeInViewport();
 });
 
-test('every live question of Modules 1 and 3 finds exactly one evidence line in its note', async ({
+test('every live question of all 13 modules finds exactly one evidence line in its note', async ({
   page,
 }) => {
   test.skip(test.info().project.name !== 'chromium-desktop', 'one browser runs the content sweep');
@@ -244,7 +170,7 @@ test('every live question of Modules 1 and 3 finds exactly one evidence line in 
   // The app's own matcher, run in the page; a string expression, so the site's CSP has no say.
   await page.evaluate(`window.findEvidence = ${findEvidence.toString()}`);
   const misses: string[] = [];
-  for (const module of [1, 3]) {
+  for (let module = 1; module <= 13; module++) {
     const questions = await chunkFor(page, module);
     expect(questions.length, `live questions in Module ${module}`).toBeGreaterThan(0);
     for (const q of questions) {

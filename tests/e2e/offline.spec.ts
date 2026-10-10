@@ -1,6 +1,8 @@
 import { expect, type Page, test } from '@playwright/test';
-import { eventsOf } from '../fixtures/events.ts';
+import type { NewEvent } from '../../schemas/events.ts';
+import { eventsOf, timelineOf } from '../fixtures/events.ts';
 import { failOnPageProblems, h1, seedEvents } from './helpers.ts';
+import { chunkFor } from './questions.ts';
 
 const HOME_TITLE = 'AWS Cloud Practitioner Essentials';
 
@@ -74,4 +76,42 @@ test('offline, the app replays a seeded log', async ({ page, context }) => {
   await page.goto('/#/m/07');
   await page.reload();
   await expect(page.locator('a.row', { hasText: lesson.title })).toContainText('Read');
+});
+
+test('offline, a review shows a concept that fell due', async ({ page, context }) => {
+  await installWorker(page);
+  const questions = await chunkFor(page, 3);
+  const [q] = questions;
+  if (q === undefined) throw new Error('Module 3 has no live questions');
+  // A wrong Not sure answer three days ago rates Again, so the concept fell due two days ago in any zone.
+  const ago = (minutes: number): string =>
+    new Date(Date.now() - (3 * 24 * 60 - minutes) * 60_000).toISOString();
+  const sid = `01K7${'0'.repeat(20)}RV`;
+  const items: (readonly [string, NewEvent])[] = [
+    [ago(0), { t: 'session', sid, mode: 'check', phase: 'start', seed: 1, scope: q.note, qids: [q.id] }],
+    [
+      ago(1),
+      {
+        t: 'answer',
+        sid,
+        mode: 'check',
+        qid: q.id,
+        qv: q.version,
+        concept: q.concept,
+        picked: ['z'],
+        correct: false,
+        sure: false,
+        ms: 5000,
+      },
+    ],
+    [ago(2), { t: 'session', sid, mode: 'check', phase: 'submit', seed: 1 }],
+  ];
+  await seedEvents(page, timelineOf(items));
+
+  await context.setOffline(true);
+  await page.goto('/#/s/review');
+  const runner = page.locator('section.runner');
+  await expect(runner).toBeVisible();
+  const qid = await runner.getAttribute('data-qid');
+  expect(questions.find((x) => x.id === qid)?.concept).toBe(q.concept);
 });
