@@ -1724,3 +1724,74 @@ dialog.confirm .button {
 .recall-strong {
   background: var(--active);
 }
+
+/* Phase 3 Progress sections (spec 7.3): readiness bars, the 14-day strip, badges, mock history and the reset. */
+.readiness-bars {
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+}
+
+.day-strip {
+  display: block;
+  width: 100%;
+  max-width: 276px;
+  height: auto;
+  margin: 8px 0;
+}
+
+.day-strip rect {
+  fill: var(--active);
+}
+
+.badges,
+.mock-history {
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.badge {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: 4px 0;
+  color: var(--muted);
+}
+
+.badge-earned {
+  color: var(--text);
+}
+
+.mock-row {
+  margin: 4px 0;
+}
+
+.reset input {
+  width: 10em;
+  min-height: 44px;
+}
+
+#progress-title:focus {
+  outline: none;
+}

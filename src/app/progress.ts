@@ -6,7 +6,7 @@ import { type ContentRefs, derive } from '../engine/replay.ts';
 import { type BackupData, mergeEvents, mergeKv } from '../store/backup.ts';
 import { allEvents, appendEvent, putEvents } from '../store/events.ts';
 import { openDb } from '../store/idb.ts';
-import { allKv, type KvRecords, putKv, setKv } from '../store/kv.ts';
+import { allKv, KV_KEYS, type KvRecords, putKv, setKv } from '../store/kv.ts';
 import { migrateStored } from '../store/migrations/stored.ts';
 import { replaceStores } from '../store/replace.ts';
 import { ulid } from '../store/ulid.ts';
@@ -35,6 +35,12 @@ const refs = computed<ContentRefs | null>(() => {
 });
 
 export const progress = computed(() => derive(events.value, refs.value));
+
+/** The time of the last export, from kv, or null; here rather than in the lazily loaded Progress overlay, for Home. */
+export function lastExportAt(): string | null {
+  const value = kvRecords.value[KV_KEYS.lastExportAt]?.value;
+  return typeof value === 'string' ? value : null;
+}
 
 /** The open database; null before `initStore` and when IndexedDB failed, so the log lives in memory only. */
 let db: IDBDatabase | null = null;
@@ -134,4 +140,17 @@ export async function mergeIn(backup: BackupData): Promise<number> {
   events.value = mergeEvents(events.value, added);
   kvRecords.value = kv;
   return new Set(added.map((e) => e.id)).size;
+}
+
+/** Deletes every event and kv record in this browser (spec 7.3, the typed reset), then empties the signals. */
+export async function resetAll(): Promise<void> {
+  if (db !== null) {
+    try {
+      await replaceStores(db, [], {});
+    } catch {
+      failed();
+    }
+  }
+  events.value = [];
+  kvRecords.value = {};
 }

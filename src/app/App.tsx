@@ -9,12 +9,15 @@ import { useKeyboard } from './keyboard.ts';
 import { rankUp, watchRanks } from './memory.ts';
 import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
 import { Help } from './screens/Help.tsx';
+import { lazyScreen } from './screens/Lazy.tsx';
 import { Palette } from './screens/Palette.tsx';
-import { Progress } from './screens/Progress.tsx';
 import { Screen } from './screens/Screen.tsx';
 import { TopBar } from './screens/TopBar.tsx';
 import { exam, overlay, route } from './state.ts';
 import { rankUpLine, rulesLine } from './topbar.ts';
+
+// The Progress overlay loads on first open, so its sections stay out of the initial bundle (spec 2.10).
+const Progress = lazyScreen(() => import('./screens/Progress.tsx').then((m) => m.Progress));
 
 /** The shell: the top bar, the screen for the route once the content index has loaded, and the open dialog. */
 export function App() {

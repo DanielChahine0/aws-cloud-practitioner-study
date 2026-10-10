@@ -16,21 +16,31 @@ import { KV_KEYS } from '../../store/kv.ts';
 import { closeOnBackdrop } from '../../ui/backdrop.ts';
 import { now } from '../clock.ts';
 import { index } from '../content.ts';
+import { shortDate } from '../dates.ts';
 import { memory, streak } from '../memory.ts';
-import { events, kvRecords, mergeIn, progress, record, replaceAll, writeKv } from '../progress.ts';
+import {
+  events,
+  kvRecords,
+  lastExportAt,
+  mergeIn,
+  progress,
+  record,
+  replaceAll,
+  writeKv,
+} from '../progress.ts';
 import { overlay } from '../state.ts';
+import { BadgeList } from './progress/BadgeList.tsx';
+import { Calibration } from './progress/Calibration.tsx';
+import { Causes } from './progress/Causes.tsx';
+import { DayStrip } from './progress/DayStrip.tsx';
+import { MockHistory } from './progress/MockHistory.tsx';
+import { RankSection } from './progress/RankSection.tsx';
+import { ReadinessSection } from './progress/ReadinessSection.tsx';
+import { ResetSection } from './progress/ResetSection.tsx';
 
 const count = (n: number): string => n.toLocaleString('en-US');
 const plural = (n: number, one: string, many: string): string => `${count(n)} ${n === 1 ? one : many}`;
-const shortDate = (iso: string): string =>
-  new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
-
-/** The time of the last export, from kv, or null. */
-export function lastExportAt(): string | null {
-  const value = kvRecords.value[KV_KEYS.lastExportAt]?.value;
-  return typeof value === 'string' ? value : null;
-}
 
 /** Saves the whole log and kv as a backup file and remembers when (spec 8.3). */
 async function exportBackup(): Promise<void> {
@@ -64,7 +74,10 @@ export function Progress() {
 
   useEffect(() => {
     const el = dialog.current;
-    if (el !== null && !el.open) el.showModal();
+    if (el === null || el.open) return;
+    el.showModal();
+    // The sheet opens at its top, on the title, not scrolled down to its first button (Export a backup).
+    el.querySelector<HTMLElement>('#progress-title')?.focus();
   }, []);
 
   const p = progress.value;
@@ -83,14 +96,25 @@ export function Progress() {
       onMouseDown={(event) => closeOnBackdrop(event.currentTarget, event)}
     >
       <div class="sheet-body">
-        <h2 id="progress-title">Progress</h2>
+        <h2 id="progress-title" tabIndex={-1}>
+          Progress
+        </h2>
         <p class="progress-summary">
           {plural(answers, 'answer', 'answers')}, {plural(p.lessonsDone.size, 'lesson', 'lessons')} read
         </p>
         <LevelAndStreak />
+        <RankSection />
+        {index.value !== null && <ReadinessSection idx={index.value} />}
+        <DayStrip />
+        <Calibration />
+        <Causes />
+        {index.value !== null && <BadgeList idx={index.value} />}
+        <MockHistory />
 
         <h3>Backup</h3>
-        <p class="muted">{last === null ? 'No backup yet' : `Last backup ${shortDate(last)}`}</p>
+        <p class="muted">
+          {last === null ? 'No backup yet' : `Last backup ${shortDate(studyDay(new Date(last)))}`}
+        </p>
         <p class="sheet-actions">
           <button class="button" type="button" onClick={() => void exportBackup()}>
             Export a backup
@@ -164,6 +188,8 @@ export function Progress() {
         <p class="muted">
           Content {contentVersion} · Engine {ENGINE_VERSION} · Storage {SCHEMA_VERSION} · App {APP_VERSION}
         </p>
+
+        <ResetSection />
 
         <form method="dialog">
           <button class="button" type="submit">

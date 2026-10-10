@@ -38,10 +38,9 @@ import {
   readinessNow,
   streak,
 } from '../memory.ts';
-import { events, progress, record, storeReady, writeKv } from '../progress.ts';
+import { events, lastExportAt, progress, record, storeReady, writeKv } from '../progress.ts';
 import { toHash } from '../router.ts';
 import { overlay } from '../state.ts';
-import { lastExportAt } from './Progress.tsx';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
