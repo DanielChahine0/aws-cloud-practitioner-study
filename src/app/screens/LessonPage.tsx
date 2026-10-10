@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 import type { ContentIndex, ModuleChunk } from '../../../schemas/chunks.ts';
+import { KV_KEYS } from '../../store/kv.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { Html } from '../../ui/Html.tsx';
 import { showTermPopover } from '../../ui/TermPopover.tsx';
@@ -7,7 +8,7 @@ import { useTitle } from '../../ui/useTitle.ts';
 import { ensureModule, glossary, modules } from '../content.ts';
 import { findEvidence } from '../evidence.ts';
 import { neighbors } from '../nav.ts';
-import { progress, record, storeReady } from '../progress.ts';
+import { progress, record, storeReady, writeKv } from '../progress.ts';
 import { pad2 } from '../router.ts';
 import { homedConcepts } from '../runner.ts';
 import { highlight, openTerm } from '../state.ts';
@@ -29,6 +30,14 @@ export function LessonPage({ idx, module, slug, anchor }: Props) {
   const lesson = chunk?.lessons[slug];
   useTitle(lessonMeta?.title ?? 'Not found');
   useEffect(() => ensureModule(module), [module]);
+
+  // The lesson being read, for Next's "Continue" (spec 4.6): reading writes no event, so kv keeps it, once per open.
+  const known = lessonMeta !== undefined;
+  const ready = storeReady.value;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    if (ready && known) void writeKv(KV_KEYS.currentLesson, `m${pad2(module)}/${slug}`);
+  }, [ready, known, module, slug]);
 
   // A layout effect, so the note opens at its anchor and its terms answer clicks from the first frame it shows.
   useLayoutEffect(() => {
