@@ -22,7 +22,7 @@ import {
 import { betXp } from './bets.ts';
 import { addDays, dayStartAt, nextDayStart, studyDayAt } from './day.ts';
 import type { SessionState } from './replay.ts';
-import { capDue, rate, recall, review, type SrsCard, type SrsRating } from './srs.ts';
+import { capDue, type ExamCap, rate, recall, review, type SrsCard, type SrsRating } from './srs.ts';
 import { effortBonus, XP } from './xp.ts';
 
 /**
@@ -155,15 +155,6 @@ export function isDue(card: SrsCard, at: Date, tz: number): boolean {
   return Date.parse(card.due) < nextDayStart(at, tz).getTime();
 }
 
-/** The exam date of the last `settings` event that sets one (or clears it); replay uses it throughout. */
-function examDateOf(sorted: readonly StudyEvent[]): string | null {
-  let examDate: string | null = null;
-  for (const e of sorted) {
-    if (e.t === 'settings' && 'examDate' in e.patch) examDate = e.patch.examDate ?? null;
-  }
-  return examDate;
-}
-
 /** The ids with the lowest recall at `at`, ties by id. */
 function lowestRecall(cards: readonly (readonly [string, SrsCard])[], at: Date, count: number): string[] {
   return cards
@@ -176,9 +167,14 @@ function lowestRecall(cards: readonly (readonly [string, SrsCard])[], at: Date, 
 /** Replays the log in id order into memory state; unknown ids are skipped, never thrown on (spec 8.4). */
 export function deriveMemory(events: readonly StudyEvent[], content: MemoryContent): MemoryState {
   const sorted = [...events].sort(byId);
-  const examDate = examDateOf(sorted);
   const splitSources = new Set<string>();
-  for (const info of content.concepts.values()) if (info.splitFrom !== null) splitSources.add(info.splitFrom);
+  /** Each tested split concept with the id it was split from, whose card it inherits until answered. */
+  const splitTargets: [string, string][] = [];
+  for (const [id, info] of content.concepts) {
+    if (info.splitFrom === null) continue;
+    splitSources.add(info.splitFrom);
+    if (info.tested) splitTargets.push([id, info.splitFrom]);
+  }
 
   const concepts = new Map<string, MutableConcept>();
   const xpByEvent = new Map<string, number>();
@@ -204,7 +200,15 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
   const missionsClosed = new Set<string>();
   const finalDecisions = new Map<number, readonly number[]>();
   const cleanDays = new Set<string>();
-  let reviewsToday = 0;
+  /** Non-relearn review answers per study day, kept per day so a day left and entered again keeps its count. */
+  const reviewsByDay = new Map<string, number>();
+  /**
+   * Each card's FSRS due before the exam cap, with what the cap reads, so a change of exam date re-caps
+   * every card from that event on and never rewrites the days before it.
+   */
+  const uncapped = new Map<string, { due: string; cap: Omit<ExamCap, 'examDate'> }>();
+  /** The exam date in force at the current event. */
+  let examDate: string | null = null;
   let xp = 0;
   let staleAnswers = 0;
 
@@ -220,12 +224,28 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     return splitSources.has(id) && !content.concepts.has(id) ? id : null;
   };
 
+  /** Every tested card, including the card a split concept inherits before its first answer, as the queue sees it. */
   const testedCards = (): [string, SrsCard][] => {
     const out: [string, SrsCard][] = [];
     for (const [id, cm] of concepts) {
       if (cm.card !== null && content.concepts.get(id)?.tested === true) out.push([id, cm.card]);
     }
+    for (const [id, from] of splitTargets) {
+      const card = concepts.has(id) ? null : (concepts.get(from)?.card ?? null);
+      if (card !== null) out.push([id, card]);
+    }
     return out;
+  };
+
+  /** Applies a new exam date to every card from this event on (spec 3.6), from its uncapped due. */
+  const setExamDate = (next: string | null) => {
+    if (next === examDate) return;
+    examDate = next;
+    for (const [key, raw] of uncapped) {
+      const cm = concepts.get(key);
+      if (!cm?.card) continue;
+      cm.card = { ...cm.card, due: capDue(new Date(raw.due), { ...raw.cap, examDate }).toISOString() };
+    }
   };
 
   const grant = (badge: BadgeId, e: StudyEvent) => {
@@ -268,7 +288,8 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
    * never moves as more events of that day arrive.
    */
   const countCleanDay = (e: StudyEvent) => {
-    if (badges.has('clean-queue') || cleanDays.has(e.day) || reviewsToday < CLEAN_QUEUE.reviews) return;
+    if (badges.has('clean-queue') || cleanDays.has(e.day)) return;
+    if ((reviewsByDay.get(e.day) ?? 0) < CLEAN_QUEUE.reviews) return;
     const end = dayStartAt(addDays(e.day, 1), e.tz).getTime();
     if (!testedCards().every(([, card]) => Date.parse(card.due) >= end)) return;
     cleanDays.add(e.day);
@@ -283,7 +304,9 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     const last = cm.card?.lastReview ?? null;
     const moment = last !== null && last > e.at ? last : e.at;
     const next = review(cm.card, rating, new Date(moment));
-    const due = capDue(new Date(next.due), { concept: key, reviewDay: e.day, examDate, tz: e.tz });
+    const cap = { concept: key, reviewDay: e.day, tz: e.tz };
+    uncapped.set(key, { due: next.due, cap });
+    const due = capDue(new Date(next.due), { ...cap, examDate });
     cm.card = { ...next, due: due.toISOString() };
     if (content.concepts.get(key)?.tested !== true) return;
     if (next.stability >= LONG_MEMORY.stabilityDays) longCards.add(key);
@@ -347,6 +370,8 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     if (old?.card) {
       cm.card = old.card;
       cm.enteredOn = old.enteredOn;
+      const raw = from === null ? undefined : uncapped.get(from);
+      if (raw) uncapped.set(key, raw);
     }
     concepts.set(key, cm);
     return cm;
@@ -369,7 +394,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     if (stale) staleAnswers++;
     if (e.relearn !== true) {
       countedAnswer = true;
-      if (e.mode === 'review') reviewsToday++;
+      if (e.mode === 'review') reviewsByDay.set(e.day, (reviewsByDay.get(e.day) ?? 0) + 1);
       let counted = false;
       if (cm.lastAnswerDay !== e.day) counted = firstOfDay(cm, key, e, stale, isNew);
       else laterAnswer(cm, key, e, stale);
@@ -507,7 +532,6 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
       day = e.day;
       completion = false;
       countedAnswer = false;
-      reviewsToday = 0;
       openDay(e);
     }
     dayTz = e.tz;
@@ -536,6 +560,9 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
         break;
       case 'decision':
         applyDecision(e);
+        break;
+      case 'settings':
+        if ('examDate' in e.patch) setExamDate(e.patch.examDate ?? null);
         break;
       default:
         break;
