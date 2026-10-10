@@ -359,8 +359,8 @@ questions:
     takeaway: To fit a pre-trained model to your own domain, fine-tune it with your data rather than start over.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Key option 3 repeats the stem's 'pre-trained model', pointing at it."
+      attempts: 4
+      lastFailure: "critic: Option 3 repeats the stem's 'pre-trained' model, which no distractor does."
   - id: q-7f9y5e
     version: 1
     status: live

@@ -106,8 +106,8 @@ questions:
     takeaway: A subnet is public only when an attached internet gateway exists and its route table sends 0.0.0.0/0 there.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 says 'that gateway', echoing the stem, and option 4 is the only other one naming a gateway.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 5 says 'that gateway', which points back to option 3 and ties the pair together.)"
   - id: q-hdypgs
     version: 1
     status: draft
@@ -141,8 +141,8 @@ questions:
     takeaway: Public subnets turn on auto-assign public IPv4 so the resources launched there get public addresses.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 4 repeats the stem's word 'public', and its 'auto-assign' echoes 'no manual step', which points at the key. Option 4 starts with 'Its' while options 1 to 3 start with 'A' or 'The', so the options are not parallel."
+      attempts: 4
+      lastFailure: "critic: The stem asks what to 'switch on', which fits only option 3, a 'setting'; options 2 and 4 cannot be switched on."
   - id: q-gea5ar
     version: 1
     status: live
@@ -181,7 +181,7 @@ questions:
       on: 2026-10-09
   - id: q-qfdx3z
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: private-subnets
@@ -209,9 +209,11 @@ questions:
       - Placing subnets in two AZs is a best practice for high availability, keeping instances reachable if one AZ suffers an outage.
     takeaway: Putting private subnets in two AZs keeps their resources reachable when one AZ fails.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 1 is much longer and starts 'Each subnet still has to', breaking the 'They ...' pattern of the other options."
+    verified:
+      keyHash: 074e33dd1abc
+      fullHash: 20b169fbb183
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-tg3f55
     version: 1
     status: live
@@ -316,8 +318,8 @@ questions:
     takeaway: Each public subnet must be explicitly associated with the route table that sends 0.0.0.0/0 to the internet gateway.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: Option 1 repeats the stem's words 'route table' and 'existing', which points at the key."
+      attempts: 3
+      lastFailure: "critic: Option 3 alone repeats the stem's 'route table', which points at the key."
   - id: q-8nm6qc
     version: 1
     status: draft
@@ -351,8 +353,8 @@ questions:
     takeaway: A subnet's name does not make it public; it needs a route to an attached internet gateway.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only fact that decides whether a subnet is private; the others are true of every subnet.)"
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is what keeps a subnet private; the others are true of every subnet.)"
   - id: q-kndvw3
     version: 1
     status: draft
@@ -384,5 +386,74 @@ questions:
     takeaway: A private subnet stays private because its route table has no 0.0.0.0/0 route to the internet gateway.
     history: []
     review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is what makes a subnet private; the others hold for any subnet.)"
+  - id: q-9waax7
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: public-subnets
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 1
+    stem: >-
+      Which route table entry makes a subnet in a VPC a public subnet?
+    options:
+      - id: a
+        text: 0.0.0.0/0 sent to a NAT gateway
+        why: A NAT gateway route lets private instances start outbound connections, which keeps the subnet private.
+      - id: b
+        text: The VPC range sent to the local target
+        why: The local route only keeps traffic inside the VPC, and every route table starts with one.
+      - id: c
+        text: 0.0.0.0/0 sent to an internet gateway
+        correct: true
+        why: A subnet becomes public only once its associated route table points 0.0.0.0/0 at an attached internet gateway.
+      - id: d
+        text: An office range sent to a virtual private gateway
+        why: A virtual private gateway route reaches an approved private network, not the public internet.
+    evidence:
+      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+      - Its Routes tab starts with a single local route that keeps traffic inside the VPC.
+    takeaway: A subnet is public because its route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+    history: []
+    review:
       attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2, no 0.0.0.0/0 route, is what makes a subnet private; the others hold for any subnet.)"
+      lastFailure: "critic: Option 4 states the number 10.0.0.0/16, which no cited evidence line contains; confirm the note states it or swap it for a plain 'the VPC range'."
+  - id: q-2jd63p
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: public-subnets
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's VPC already has an internet gateway attached, and servers in its first web subnet are reachable from the internet.
+      It adds a second subnet named web-public-2, with auto-assign public IPv4 switched on, yet customers cannot reach the servers launched there.
+      What should the cafe do?
+    options:
+      - id: a
+        text: Attach a second internet gateway to the VPC
+        why: The VPC's one attached gateway already serves the first subnet, so a second gateway adds nothing the new subnet lacks.
+      - id: b
+        text: Associate it with the first subnet's route table
+        correct: true
+        why: That table sends 0.0.0.0/0 to the gateway, and the new subnet only becomes public once it is associated with such a route.
+      - id: c
+        text: Move it into the first subnet's Availability Zone
+        why: The zone a subnet sits in does not decide whether it is public; the missing piece is the route to the gateway.
+      - id: d
+        text: Give it a larger CIDR block in the VPC range
+        why: A bigger address block holds more servers but gives none of them a path to the internet gateway.
+    evidence:
+      - Naming a subnet "public" does not make it public, because it still needs an attached internet gateway and a route to it.
+      - On the Subnet associations tab, explicitly associate both public subnets with this table.
+      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+    takeaway: A subnet's name and public addresses do not make it public; associating it with a route to the internet gateway does.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: The question tests spreading subnets across Availability Zones for high availability, which fits task 3.2 (global infrastructure) better than 3.5, and the concept 'Public subnets' is not what the key turns on."

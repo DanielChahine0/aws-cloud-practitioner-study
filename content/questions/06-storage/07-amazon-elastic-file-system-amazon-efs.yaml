@@ -364,8 +364,8 @@ questions:
     takeaway: To bring files read in EFS IA or Archive back to Standard, turn on the optional return rule, since the default leaves them put.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the longest and the only one phrased as an action on read, standing apart from the idle-time options.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the longest and most specific, describing an 'optional rule'.)"
   - id: q-wgb8nx
     version: 1
     status: live

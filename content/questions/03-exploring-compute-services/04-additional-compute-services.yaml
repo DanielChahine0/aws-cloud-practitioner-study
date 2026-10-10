@@ -227,8 +227,8 @@ questions:
     takeaway: Batch computing is large, compute-heavy work, often split into jobs that run in parallel.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 both describe heavy parallel processing and form an obvious pair, while 2, 4 and 5 each name a different, unrelated use case.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 describe high performance computing; 3, 4 and 5 describe Snowball, latency and scaling.)"
 
   - id: q-wz0hrz
     version: 1
@@ -412,8 +412,8 @@ questions:
     takeaway: Batch computing covers large, compute-heavy jobs such as ML training, unlike live scaling, quick transactions or plain storage.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: The stem says 'four computing tasks', a number the cited note does not state."
+      attempts: 4
+      lastFailure: "critic: The stem says 'four computing tasks', a number no cited evidence line states."
 
   - id: q-x5mkbz
     version: 1

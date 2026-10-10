@@ -36,7 +36,7 @@ questions:
       on: 2026-10-09
   - id: q-vv6me8
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -68,9 +68,11 @@ questions:
       - Growth brings read floods and heavy queries on big datasets, bottlenecking relational back ends like Amazon RDS.
     takeaway: Read floods and heavy queries on big datasets are what usually slow a growing relational database.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Options 1 and 4 are the only heavy-load options ('heavy', 'flood') while options 2, 3 and 5 describe light load, so the keys stand out without knowledge."
+    verified:
+      keyHash: 38a5fda4a57f
+      fullHash: a01edc494401
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-1q7mfh
     version: 1
     status: live
@@ -178,7 +180,7 @@ questions:
       on: 2026-10-09
   - id: q-yph3ws
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-elasticache
@@ -207,9 +209,11 @@ questions:
       - It scales the cache only, not the database's storage.
     takeaway: Offloading repeat reads to ElastiCache can let the database run on smaller, cheaper instances.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one describing a change gained; the others describe what stays the same with 'still' or 'stay'.)"
+    verified:
+      keyHash: 2fe258614268
+      fullHash: 85d4024b61b8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-pbmwv1
     version: 1
     status: live
@@ -411,8 +415,8 @@ questions:
     takeaway: On a cache miss, the app reads the database and stores the result so the next request hits the cache.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the lazy-loading cache-miss flow; ElastiCache does not load from RDS on its own and promotion is unrelated.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the lazy loading pattern on a cache miss.)"
   - id: q-mn81vz
     version: 1
     status: live

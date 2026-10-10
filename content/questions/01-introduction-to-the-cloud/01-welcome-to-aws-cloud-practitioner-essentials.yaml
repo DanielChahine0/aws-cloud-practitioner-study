@@ -64,11 +64,11 @@ questions:
     takeaway: Moving a back end to AWS keeps the client-server model, so the guest's phone stays the client that sends requests and shows replies.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Task 3.1 is about methods of deploying and operating in AWS, but the question tests which role the client plays in the client-server model, not a deployment or operating method."
+      attempts: 4
+      lastFailure: "critic: Task 3.1 (deploying and operating methods) fits poorly, since the question tests the client-server model, a cloud concept."
   - id: q-2k67rk
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: pay-as-you-go-pricing
@@ -98,9 +98,11 @@ questions:
       - On AWS there is no prepayment, and you need not worry about capacity constraints.
     takeaway: No prepayment, no term and a charge only for what is consumed is pay-as-you-go pricing.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 'Pay-as-you-go' is the signature cloud pricing phrase; the other three all describe commitment or fixed pricing, so it stands out as the odd one.)"
+    verified:
+      keyHash: 6238cb00f017
+      fullHash: f13b7d93151b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-9wx5re
     version: 1
     status: draft
@@ -138,8 +140,8 @@ questions:
     takeaway: Pay-as-you-go means no upfront payment and a bill that follows actual consumption.
     history: []
     review:
-      attempts: 3
-      lastFailure: "solve-closed: a second option is defensible: Pay-as-you-go means no upfront payment and a bill that tracks consumption; options 1 and 5 describe commitment and volume discounts. Option 2 is also a direct consequence of paying only for use, so it competes with 3 and 4 for the two picks."
+      attempts: 4
+      lastFailure: "solve-closed: a second option is defensible: Pay-as-you-go means paying for what you consume with no upfront payment; option 1 is also a true consequence."
   - id: q-va2dze
     version: 1
     status: live
@@ -180,7 +182,7 @@ questions:
       on: 2026-10-09
   - id: q-cec23m
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: resource-provisioning
@@ -210,9 +212,11 @@ questions:
       - You provision resources when demand appears and deprovision them as fast when it fades, by hand or automatically through configuration.
     takeaway: Provision resources as demand rises and deprovision them as it falls, so capacity follows the load.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: The key (option 2, dynamic scaling) and distractors 1 and 3 (scheduled and predictive scaling) test EC2 Auto Scaling policy types, while the concept and the cited m01 note cover only general resource provisioning, so the question drifts off its one concept."
+    verified:
+      keyHash: e9f4e1ba6bb9
+      fullHash: 6ec3978df25b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-1zgb64
     version: 1
     status: draft
@@ -245,8 +249,8 @@ questions:
     takeaway: Deploying to the cloud keeps the client-server model, with AWS supplying the server side over the internet.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Key option 1 says 'server side', echoing the stem's 'client-server design'."
+      attempts: 4
+      lastFailure: "critic: Task 3.1 (deploying and operating methods) fits poorly, since the question tests the client-server model, a cloud concept."
   - id: q-tk9efy
     version: 1
     status: live

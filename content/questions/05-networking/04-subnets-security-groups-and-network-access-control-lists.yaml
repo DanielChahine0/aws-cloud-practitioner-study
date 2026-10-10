@@ -213,8 +213,8 @@ questions:
     takeaway: The default network ACL allows everything, while a custom one denies everything until you add allow rules.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 5 form a mirrored pair, blocks every packet versus passes every packet.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 5 mirror each other: 'passes every packet' and 'blocks every packet'.)"
   - id: q-3jft13
     version: 1
     status: live

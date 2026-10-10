@@ -71,8 +71,8 @@ questions:
     takeaway: An internet gateway is a managed, highly available, horizontally scaling VPC part that carries traffic both in and out.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 describe an internet gateway; 1 is Direct Connect, 4 a virtual private gateway and 5 a VPN.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 describe an internet gateway; 1, 4 and 5 describe other connectivity.)"
   - id: q-pyekcy
     version: 1
     status: live

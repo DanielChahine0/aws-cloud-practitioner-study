@@ -352,8 +352,8 @@ questions:
     takeaway: To survive one zone's outage without leaving a Region, replicate across another Availability Zone in that Region.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one using 'different' and is the textbook high-availability choice; 1 and 4 repeat 'same zone' and 2 jumps Regions, so 3 stands out as the balanced middle option.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the standard high-availability choice, another AZ in the same Region.)"
   - id: q-032ns6
     version: 1
     status: live

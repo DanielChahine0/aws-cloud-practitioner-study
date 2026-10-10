@@ -76,8 +76,8 @@ questions:
     takeaway: Thin bandwidth, no connectivity or huge volume are the signals to move data offline.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1, 2 and 4 are the classic Snowball cases; 3, 5 and 6 are clear reasons to upload online instead.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2, 3 and 5 are the Snowball use cases; 1, 4 and 6 argue for online transfer.)"
   - id: q-71ted3
     version: 1
     status: live

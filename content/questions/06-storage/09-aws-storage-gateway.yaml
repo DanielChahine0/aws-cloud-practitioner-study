@@ -72,8 +72,8 @@ questions:
     takeaway: Storage Gateway deploys as a virtual machine, a hardware appliance or an EC2 instance.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1, 3 and 5 are the known Storage Gateway forms; Fargate and Lambda are not ways to deploy an appliance.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1, 2 and 5 are the Storage Gateway deployment forms; Lambda and Fargate are not.)"
   - id: q-enpnf4
     version: 1
     status: live

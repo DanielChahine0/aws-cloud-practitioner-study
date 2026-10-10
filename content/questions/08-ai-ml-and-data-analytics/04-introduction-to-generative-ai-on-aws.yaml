@@ -1,7 +1,7 @@
 questions:
   - id: q-rh0vxh
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: deep-learning
@@ -29,9 +29,11 @@ questions:
       - ML subset with decades-old theory that needed modern hardware; neural networks pass summaries through layers of artificial neurons (math functions) to form a model, cracking harder problems like computer vision and NLP.
     takeaway: Deep learning rests on decades-old theory that only became practical once modern hardware could run it.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true historical claim; options 1 and 3 are not real limits on ML and 2 describes the older approach.)"
+    verified:
+      keyHash: a8d8415614e6
+      fullHash: f854f298a0a0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-evmqy3
     version: 1
     status: live
@@ -204,8 +206,8 @@ questions:
     takeaway: Generative AI nests inside deep learning, which nests inside machine learning, which nests inside AI.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 1 uses the abbreviation 'FMs' without spelling out foundation models."
+      attempts: 4
+      lastFailure: "critic: Option 4 'one part of deep learning' echoes the stem's 'the other parts of artificial intelligence'."
   - id: q-fcnd42
     version: 1
     status: live
@@ -484,5 +486,39 @@ questions:
     takeaway: Generative AI runs on foundation models, which are huge models pre-trained on massive data.
     history: []
     review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 describes foundation models, the basis of generative AI; the others are rules or narrow models.)"
+  - id: q-t7rq59
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: generative-ai
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Generative AI is one kind of deep learning.
+      What sets it apart from the rest of deep learning?
+    options:
+      - id: a
+        text: It sits inside the wider field of AI
+        why: Every kind of deep learning sits inside AI, so this does not set generative AI apart.
+      - id: b
+        text: It runs data through layers of neurons
+        why: Layered neural networks are what all deep learning uses, not a trait unique to generative AI.
+      - id: c
+        text: It produces new content of its own
+        correct: true
+        why: Generative AI is the deep learning that produces new content, such as conversations, stories, images and music.
+      - id: d
+        text: It solves harder problems than older ML
+        why: Cracking harder problems such as computer vision is true of all deep learning, so it is shared rather than distinctive.
+    evidence:
+      - Deep learning producing original content and ideas (conversations, stories, images, music), powered by foundation models (FMs), huge models pre-trained on massive data.
+      - "ML subset with decades-old theory that needed modern hardware; neural networks pass summaries through layers of artificial neurons (math functions) to form a model, cracking harder problems like computer vision and NLP."
+    takeaway: What marks generative AI out within deep learning is that it creates new content rather than only analyzing data.
+    history: []
+    review:
       attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the definition of foundation models; the other options do not describe generative AI.)"
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one that names a concrete outcome with an example ('such as stories'), while the rest are generic traits shared by all deep learning.)"

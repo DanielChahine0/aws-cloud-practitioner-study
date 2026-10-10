@@ -143,8 +143,8 @@ questions:
     takeaway: Loosely coupled components fail independently and keep sending while a receiver is unavailable.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 are the only outcomes of decoupling; the rest describe queue mechanics.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 are the decoupling benefits; 1 and 5 are mechanics and 4 is about SNS.)"
   - id: q-ynmr52
     version: 1
     status: live
@@ -508,7 +508,7 @@ questions:
       on: 2026-10-09
   - id: q-wv6495
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: publish-subscribe
@@ -537,9 +537,11 @@ questions:
       - "Customers want only some kinds of updates: separate Amazon SNS topics."
     takeaway: Separate publish-subscribe topics let each subscriber receive only the kinds of messages they signed up for.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 3 form a contrast pair and 2 is the more specific one, splitting updates per kind.)"
+    verified:
+      keyHash: c4ffc87788e8
+      fullHash: 9e6baeb73f8c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-c63zd1
     version: 1
     status: live

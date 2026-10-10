@@ -176,7 +176,7 @@ questions:
       on: 2026-10-09
   - id: q-9bx6yz
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -209,9 +209,11 @@ questions:
       - It does not group accounts or set SCPs (AWS Organizations) or create users (IAM).
     takeaway: AWS Artifact does two things, reports and agreements, and leaves accounts and users to Organizations and IAM.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Key option 5 says 'third-party audit reports' but its why says 'AWS's own audit reports', so text and why disagree."
+    verified:
+      keyHash: 48b0c38b6398
+      fullHash: "57731116e564"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-j0qmrk
     version: 1
     status: live
@@ -322,7 +324,7 @@ questions:
       on: 2026-10-09
   - id: q-2avh7y
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-artifact-reports
@@ -349,9 +351,11 @@ questions:
       - "**AWS Artifact Reports**: third-party audit reports on AWS."
     takeaway: AWS Artifact Reports contain independent third-party audits of AWS, not customer self-checks.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 1's why only says it is 'exactly what this option describes' instead of saying why Reports holds those audits."
+    verified:
+      keyHash: 9388cc3a5278
+      fullHash: dff7cc145264
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-09h2mh
     version: 1
     status: live

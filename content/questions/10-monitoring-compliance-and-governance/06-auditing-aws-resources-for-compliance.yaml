@@ -285,8 +285,8 @@ questions:
     takeaway: AWS Audit Manager tests whether controls work and supports internal risk assessments, all through read-only access.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 fit AWS Audit Manager; 1 is AWS Config, 3 is GuardDuty and 4 is CloudTrail.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 describe Audit Manager; 1, 3 and 4 describe GuardDuty, CloudTrail and Config.)"
   - id: q-c8d2s6
     version: 1
     status: draft
@@ -318,8 +318,8 @@ questions:
     takeaway: AWS Audit Manager replaces manual, team-by-team proof gathering with continual automated evidence collection.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Key option 2 'gather the proof' reuses the stem's word 'proof'."
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 uses 'the proof', a definite reference back to the stem.)"
   - id: q-9taz85
     version: 1
     status: live

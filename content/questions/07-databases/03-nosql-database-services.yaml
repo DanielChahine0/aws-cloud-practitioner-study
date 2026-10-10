@@ -167,8 +167,8 @@ questions:
     takeaway: With a flexible schema an attribute can be added to some items only, leaving the rest untouched.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true DynamoDB behavior; option 3 describes a relational table.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true one: DynamoDB items carry an attribute only when written.)"
   - id: q-hr3kg3
     version: 1
     status: draft
@@ -205,8 +205,8 @@ questions:
     takeaway: A flexible schema lets items in one table differ in attributes and change them freely over time.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 both describe a flexible schema, while 3 is a hedged caveat with 'still' and 4 and 5 describe relational tables.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 describe a flexible NoSQL schema; 1 and 2 are relational traits.)"
   - id: q-fqvcnk
     version: 1
     status: live
@@ -456,8 +456,8 @@ questions:
     takeaway: A flexible schema lets the cafe add a new attribute to just the items that need it, with no schema change first.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only one tied to the scenario's specific members; the rest are generic table settings.)"
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 alone refers back to specific subjects with 'those members'; the rest are generic table features.)"
   - id: q-az9tjx
     version: 1
     status: live
@@ -492,5 +492,42 @@ questions:
     verified:
       keyHash: 7b57b9cbf7a8
       fullHash: 39ab000a51d2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-cm276f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: flexible-schema
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe moves its loyalty records from a relational database into a NoSQL one.
+      Later it starts tracking a new kind of member detail.
+      Which chore from the relational days does it no longer face?
+    options:
+      - id: a
+        text: Setting the read and write capacity it provisions
+        why: Provisioned capacity still has to be set or auto scaled in a NoSQL table, so this chore remains.
+      - id: b
+        text: Giving each new member a unique key value
+        why: Every NoSQL item is still named by a unique key, so this chore remains after the move.
+      - id: c
+        text: Choosing which keys encrypt the stored records
+        why: The NoSQL service still offers a choice of encryption keys, so this decision remains.
+      - id: d
+        text: Altering the column layout that every row shares
+        correct: true
+        why: With a flexible schema, the new detail goes only on the items that have it, with no layout change for all.
+    evidence:
+      - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+      - In certain cases they struggle to perform or scale, and fixed schemas suit changing attributes poorly.
+    takeaway: A flexible schema lets a new attribute appear on some items without redesigning every record first.
+    history: []
+    verified:
+      keyHash: 9984ca11bad2
+      fullHash: f18d2ab47971
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09

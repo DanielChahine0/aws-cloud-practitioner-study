@@ -66,8 +66,8 @@ questions:
     takeaway: Reviewed, versioned and repeatable multi-Region rollouts call for IaC over console work or scripts.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the odd one out, the only non-console, non-CLI approach and a named practice.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the known best practice for repeatable builds; the others are manual or partial.)"
   - id: q-7pn04g
     version: 1
     status: live
@@ -212,8 +212,8 @@ questions:
     takeaway: Reusing one template in another account or Region gives an identical environment with fewer errors.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only one that reuses the template unchanged; the others convert, copy or rebuild it.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only sound CloudFormation practice; the others defeat the point of a template.)"
   - id: q-dv03bv
     version: 1
     status: live

@@ -65,8 +65,8 @@ questions:
     takeaway: On EC2 the customer controls the OS and software on its instances, while AWS manages the host, hypervisor and isolation.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the odd one out, the only customer-side item among three AWS-side ones.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the odd one out, the only customer-side item among three AWS-side items.)"
   - id: q-rjqabt
     version: 1
     status: live
@@ -420,7 +420,7 @@ questions:
       on: 2026-10-09
   - id: q-988mvs
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-ec2
@@ -449,6 +449,8 @@ questions:
       - A stopped instance can be restarted later, a terminated one is deleted, and neither restarts by itself unless configured to.
     takeaway: Stopping an EC2 instance when it is idle saves money, because only running instances are billed.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: Option 3 'billed' repeats the stem's 'bill', and it is the only option about charges."
+    verified:
+      keyHash: f6629c4ded3a
+      fullHash: 16e2f1fe964a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

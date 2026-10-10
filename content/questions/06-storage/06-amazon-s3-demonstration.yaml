@@ -74,8 +74,8 @@ questions:
     takeaway: Details S3 tracks itself are system-defined metadata, while tags and notes you add are user-defined metadata.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 are both added by staff, leaving 3, 4 and 5 as the system-set group.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2, 3 and 4 are system metadata; 1 and 5 are user-defined.)"
   - id: q-49atgb
     version: 1
     status: live

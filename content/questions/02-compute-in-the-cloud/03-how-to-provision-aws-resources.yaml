@@ -31,8 +31,8 @@ questions:
     takeaway: Console clicks, CLI commands and SDK code all turn into the same AWS API calls underneath.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement; console and CLI share no script, session or CloudShell limit.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement; the console and CLI both call the AWS APIs.)"
   - id: q-c2jr2a
     version: 1
     status: live
@@ -133,8 +133,8 @@ questions:
     takeaway: Clicking through the console for repeated production launches is slow and prone to missed settings.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true statement; 1, 3 and 4 are false about console launches and billing.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement; the others are false claims about the console.)"
   - id: q-azhc3p
     version: 1
     status: live

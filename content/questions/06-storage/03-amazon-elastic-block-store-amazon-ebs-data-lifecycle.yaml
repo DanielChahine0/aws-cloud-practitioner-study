@@ -35,8 +35,8 @@ questions:
     takeaway: The customer owns the EBS data lifecycle, including backing up volumes and removing ones it no longer needs.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 are the only two customer actions; the other three are AWS duties, so the count matches select 2.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are customer duties; 1, 2 and 3 are AWS duties, so the split is known without the stem.)"
   - id: q-xvfy1s
     version: 1
     status: live
@@ -105,8 +105,8 @@ questions:
     takeaway: To recover a corrupted EBS volume, create a new volume from its most recent snapshot.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only action that recovers data; enlarging, retyping or reattaching a corrupted volume does not fix it.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one that does not repeat 'the corrupted volume'.)"
   - id: q-2ajvtj
     version: 1
     status: live

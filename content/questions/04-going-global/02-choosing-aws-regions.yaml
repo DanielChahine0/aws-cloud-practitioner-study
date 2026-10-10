@@ -213,8 +213,8 @@ questions:
     takeaway: Regional AWS rates follow local operating and energy costs plus local taxes and tax incentives.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are the real drivers of Region price differences; hardware, uptime and licensing do not vary by Region.)"
+      attempts: 4
+      lastFailure: "critic: Option 2 'Local taxes' repeats the stem's word 'local', which points at one key."
   - id: q-w2pk5v
     version: 1
     status: live
@@ -286,8 +286,8 @@ questions:
     takeaway: GDPR requires consent before collecting personal data and lets people see or erase what is held.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 4 are the only true GDPR-style duties; 1, 3 and 5 are not requirements of a privacy law like GDPR.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 5 are GDPR principles; the others are false or belong to HIPAA or GovCloud.)"
   - id: q-0n09j0
     version: 1
     status: live

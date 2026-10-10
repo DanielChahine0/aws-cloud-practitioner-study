@@ -141,8 +141,8 @@ questions:
     takeaway: A heterogeneous migration moves to a different engine and may require application changes.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 4 are the only ones about the engines differing; 1, 2 and 5 hold for any DMS migration.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 4 are specific to heterogeneous migration; 1, 3 and 5 hold for any DMS migration.)"
   - id: q-fd58c7
     version: 1
     status: live
@@ -286,8 +286,8 @@ questions:
     takeaway: AWS DMS copies data with a replication task while the source database stays live.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 are the only true DMS facts; 3 says 'never', 4 is Snowball and 5 is false.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 3 are true of AWS DMS; 2, 4 and 5 are false of it.)"
   - id: q-xzgjqr
     version: 1
     status: live

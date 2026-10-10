@@ -182,8 +182,8 @@ questions:
     takeaway: Reattaching an EBS volume to a different instance type keeps the data when the cafe resizes its instance.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only workable action; volumes need no resizing, replicas never attach, instance store is not the fix.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only one that is a workable, accurate EBS action; the others misstate how volumes work.)"
   - id: q-gj7912
     version: 1
     status: live

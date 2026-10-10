@@ -66,8 +66,8 @@ questions:
     takeaway: Each app gets its own migration strategy, and the strategies combine into one tailored plan.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only broad summary statement; options 1 to 3 each describe one single strategy.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only statement about the whole plan; the other three each define one strategy.)"
   - id: q-hamxsz
     version: 1
     status: live
@@ -560,7 +560,7 @@ questions:
       on: 2026-10-09
   - id: q-thtb4c
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: seven-migration-strategies
@@ -596,6 +596,8 @@ questions:
       - Retain and retire involve no migration.
     takeaway: Of the seven Rs, retain and retire are the two that move nothing to AWS.
     history: []
-    review:
-      attempts: 2
-      lastFailure: "critic: The stem writes 'Which two strategies', repeating the count the app already adds as (Select TWO.)."
+    verified:
+      keyHash: 1bb3935b3b64
+      fullHash: 789dc9dda76d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -66,8 +66,8 @@ questions:
     takeaway: Load balancing improves performance by keeping any one resource from carrying the whole workload.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only true description of load balancing; 2, 3 and 4 are false on their own.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only accurate description of load distribution; the others are false.)"
   - id: q-0sxzy0
     version: 1
     status: live
@@ -291,8 +291,8 @@ questions:
     takeaway: Auto Scaling changes how many instances run, and ELB only spreads traffic across them.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 are the only two load balancer jobs; 2, 4 and 5 are all Auto Scaling, so the select-2 count points at the pair.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 are load balancer jobs; 1, 4 and 5 are Auto Scaling jobs.)"
   - id: q-bt0e83
     version: 1
     status: live

@@ -327,7 +327,7 @@ questions:
       on: 2026-10-09
   - id: q-h8cm29
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -359,9 +359,11 @@ questions:
       - "**CloudWatch Logs**: central log storage and search."
     takeaway: CloudWatch Logs is where log files are kept centrally and searched or filtered later.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 4 are CloudWatch Logs traits; 2 is Config, 3 is metrics and 5 is CloudTrail.)"
+    verified:
+      keyHash: ad5f41f95cb3
+      fullHash: ac1fd72b19d6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-vmjcan
     version: 1
     status: live

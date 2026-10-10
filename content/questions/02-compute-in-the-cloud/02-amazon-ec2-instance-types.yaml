@@ -530,8 +530,8 @@ questions:
     takeaway: Start with the smallest EC2 size that performs well, since larger sizes cost more and you can resize later.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only rightsizing best practice; options 1 to 3 all describe overprovisioning.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the right-sizing best practice; the others oversize.)"
   - id: q-ydntrz
     version: 1
     status: live

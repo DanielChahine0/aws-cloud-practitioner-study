@@ -281,8 +281,8 @@ questions:
     takeaway: IAM Access Analyzer validates IAM policies and reveals external access to set, verify and refine permissions.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 4 are the only pair that describe one service (IAM Access Analyzer); each other option maps to a different service.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 4 are IAM Access Analyzer features; the others belong to Trusted Advisor, IAM and CloudTrail.)"
   - id: q-wgqfrw
     version: 1
     status: live

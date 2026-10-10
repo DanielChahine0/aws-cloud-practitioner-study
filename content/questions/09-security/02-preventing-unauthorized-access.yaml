@@ -389,7 +389,7 @@ questions:
       on: 2026-10-09
   - id: q-gpwbqs
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: access-keys
@@ -417,9 +417,11 @@ questions:
       - Access keys are long-term credentials, an access key ID plus a secret access key, that sign programmatic requests to the AWS CLI or API, and AWS advises temporary credentials from roles instead and never creating them for the root user.
     takeaway: Avoid long-term access keys where you can, never create them for the root user, and prefer role credentials.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 2 repeats the stem's word 'script', which points at the key."
+    verified:
+      keyHash: 8111431a7df9
+      fullHash: b221ed78ad3b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-yjv1nr
     version: 1
     status: live
@@ -772,8 +774,8 @@ questions:
     takeaway: IAM Identity Center federates with an existing identity source to give staff one login across accounts.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are true of IAM Identity Center; 1, 2 and 3 are false for it.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 5 are true of IAM Identity Center; 1, 2 and 4 are false of it.)"
   - id: q-exrpf7
     version: 1
     status: live
@@ -912,8 +914,8 @@ questions:
     takeaway: Systems Manager automates node tasks such as user management and patching across your fleet.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 1 (key) is the only option that repeats the stem's 'on nodes'."
+      attempts: 4
+      lastFailure: "critic: Option 2 'on nodes' repeats the stem's 'on nodes', which points at the key."
   - id: q-7gjhvq
     version: 1
     status: live
@@ -1019,5 +1021,40 @@ questions:
     takeaway: Systems Manager lists every node, in the cloud or on site, with details such as node ID and operating system in one view.
     history: []
     review:
+      attempts: 3
+      lastFailure: "critic: The stem calls Systems Manager an 'access management service' to fit task 2.3, but a node inventory is an operations task, not access management."
+  - id: q-zan4tp
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-systems-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      To keep its machines secure, the cafe's IT lead wants one view of every server across its AWS accounts and its back-office hardware.
+      The same tool should show each machine's operating system and apply security patches automatically.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS IAM Identity Center
+        why: IAM Identity Center gives staff one login across accounts and apps, but it does not inventory or patch servers.
+      - id: b
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates credentials such as database passwords, not the servers' operating systems.
+      - id: c
+        text: AWS Systems Manager
+        correct: true
+        why: Systems Manager shows nodes across accounts and hybrid setups in one view and automates their security patching.
+      - id: d
+        text: AWS Identity and Access Management (IAM)
+        why: IAM controls which identities may use AWS resources but does not oversee or patch the servers themselves.
+    evidence:
+      - "**AWS Systems Manager** shows all your nodes, meaning connection points, across accounts, Regions, multi-cloud and hybrid setups in one view."
+      - It reports details like node ID and operating system and automates registry changes, user management and security patching.
+    takeaway: Systems Manager secures a hybrid fleet by showing every node in one view and automating its security patching.
+    history: []
+    review:
       attempts: 2
-      lastFailure: "critic: The stem calls the key an 'access management service', but Systems Manager's node inventory is operations, not access management. Task 2.3 (access management) does not fit a question about inventorying nodes."
+      lastFailure: "critic: Task 2.3 (access management) does not fit: overseeing and patching nodes is operations work, not access management, so Systems Manager sits poorly under it. The stem names three jobs and asks for the last, adding reading load without adding a scenario the reader must reason about."

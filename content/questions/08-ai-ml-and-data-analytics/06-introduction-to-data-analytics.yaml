@@ -280,8 +280,8 @@ questions:
     takeaway: The choice of ELT over ETL comes down to the team's needs and infrastructure.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only vague, hedged 'what its needs call for' answer against three specific conditions.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the vague, hedged catch-all while the others are specific conditions.)"
   - id: q-z4gbe2
     version: 1
     status: live
@@ -352,8 +352,8 @@ questions:
     takeaway: Zero-ETL fits only when data is both already usable and already in place.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 both describe data needing no work, a matched pair against 2, 4 and 5 which all describe ETL steps.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 3 describe zero-ETL; 2, 4 and 5 describe ETL and ELT pipelines.)"
   - id: q-wd9xep
     version: 1
     status: live

@@ -1,7 +1,7 @@
 questions:
   - id: q-2eddfb
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cloud-governance
@@ -28,9 +28,11 @@ questions:
       - Governance means rules that keep building and running a deployment efficient and aligned with business goals.
     takeaway: Governance is the rule set that keeps cloud work efficient and aligned with business goals.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only abstract, goal-oriented phrasing among concrete technical approaches.)"
+    verified:
+      keyHash: 63c97eeb0a08
+      fullHash: 7e3d10a4bbf0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-emkm99
     version: 1
     status: live
@@ -494,8 +496,8 @@ questions:
     takeaway: License Manager enforces license limits and automates entitlement rollout across accounts.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 both repeat the word 'usage', marking them as a pair.)"
+      attempts: 4
+      lastFailure: "critic: Task 1.4 (cloud economics) fits poorly, since License Manager comes from the governance note and fits task 2.2."
   - id: q-yqtcbv
     version: 1
     status: live

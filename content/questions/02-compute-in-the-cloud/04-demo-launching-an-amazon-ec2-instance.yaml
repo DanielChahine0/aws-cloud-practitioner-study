@@ -289,8 +289,8 @@ questions:
     takeaway: An AMI captures how an instance is set up, so business data needs its own storage and backups.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement about AMIs; options 1, 2 and 4 are false.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement about AMIs; the others are false.)"
   - id: q-qtsy84
     version: 1
     status: live

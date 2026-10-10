@@ -433,8 +433,8 @@ questions:
     takeaway: Choosing purchase options that fit the traffic pattern is a Cost Optimization lever.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Key option 3 puts a customer-facing site on Spot Instances, which can be reclaimed, so the key is debatable. A Well-Architected pillar question fits task 1.2 better than 1.4."
+      attempts: 4
+      lastFailure: "critic: Option 3 pairs Spot Instances with customer-facing weekend peaks, which Spot interruptions do not suit, so the key is debatable. No cited evidence line mentions Savings Plans or Spot Instances, so the key is not grounded in the note."
   - id: q-wfye2v
     version: 1
     status: live

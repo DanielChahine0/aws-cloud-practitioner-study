@@ -66,8 +66,8 @@ questions:
     takeaway: Linking accounts to one primary account gives one bill that still shows the spend of each linked account.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is consolidated billing, the only option that combines accounts; the others act per account.)"
+      attempts: 4
+      lastFailure: "critic: Task 4.1 (pricing models) fits poorly, since consolidated billing is a billing resource under task 4.2."
   - id: q-x003qz
     version: 1
     status: live
@@ -106,7 +106,7 @@ questions:
       on: 2026-10-09
   - id: q-7he2y3
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -140,9 +140,11 @@ questions:
       - The dashboard links to budget and consolidated billing features, but AWS Organizations groups the accounts.
     takeaway: The billing dashboard gives a quick view of the month's forecast and top-cost services, while Organizations groups accounts.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 are Cost Explorer views; 3 and 5 are Organizations and 4 is Pricing Calculator.)"
+    verified:
+      keyHash: 166f7e3046fd
+      fullHash: cb32dfb30316
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-gn5az9
     version: 1
     status: live

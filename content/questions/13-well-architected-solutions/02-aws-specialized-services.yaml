@@ -418,8 +418,8 @@ questions:
     takeaway: Amazon AppStream 2.0 streams individual desktop and SaaS apps to a browser on any device.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 1 says 'streamed', which echoes 'Stream' in the stem's AppStream 2.0 and points at the key."
+      attempts: 4
+      lastFailure: "critic: Option 1 'streamed' echoes the service name AppStream in the stem, which gives the key away."
   - id: q-g02dpe
     version: 1
     status: live
@@ -563,8 +563,8 @@ questions:
     takeaway: IoT requires a physical device with sensors that shares data online; plain apps and software features are not IoT.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 4 are the only physical devices that both sense something and connect online.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are the only internet-connected devices; 1 and 2 are apps and 3 is offline.)"
   - id: q-6zdycj
     version: 1
     status: live

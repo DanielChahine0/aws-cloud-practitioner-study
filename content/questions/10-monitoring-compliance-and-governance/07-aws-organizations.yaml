@@ -136,8 +136,8 @@ questions:
     takeaway: To group some accounts apart while keeping them inside an existing OU, nest a new OU within it.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 3 (key) is the only option that repeats the stem's 'developer OU'."
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is how SCPs inherit in Organizations; the others do not fit.)"
   - id: q-jd3nh3
     version: 1
     status: live

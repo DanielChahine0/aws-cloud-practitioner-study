@@ -71,8 +71,8 @@ questions:
     takeaway: Tier 1 AI services come pre-trained by AWS and span groups such as language, vision and search.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 5 (key) 'pre-trained' echoes the stem's 'pre-built', a shared clue word."
+      attempts: 4
+      lastFailure: "critic: Option 1 'pre-trained' echoes the stem's 'pre-built'. Option 2 switches to 'your team', breaking parallel grammar with the other options."
   - id: q-4xaq5m
     version: 1
     status: live
@@ -504,8 +504,8 @@ questions:
     takeaway: SageMaker AI pairs custom model building with managed infrastructure and standard MLOps governance.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 1 (Polly text-to-speech) is off-category and easy to rule out next to SageMaker AI benefits."
+      attempts: 4
+      lastFailure: "critic: Option 3 switches to 'your team' while the stem and other options speak of 'a team', breaking parallel grammar."
   - id: q-9tq910
     version: 1
     status: live
@@ -579,8 +579,8 @@ questions:
     takeaway: Tier 3 ML frameworks run on infrastructure you manage, such as EC2, Amazon EMR and Amazon ECS.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Key option 4 (ECS) why says infrastructure the team manages, yet ECS can run on Fargate, which option 2 rejects as AWS-managed. ML frameworks infrastructure fits task 3.7 better than 3.3. Takeaway uses 'Tier 3' without the stem defining it."
+      attempts: 4
+      lastFailure: "solve-closed: a second option is defensible: EC2, ECS and EMR give self-managed infrastructure for framework training; Fargate could be argued but is serverless."
   - id: q-rvtxre
     version: 1
     status: live

@@ -37,7 +37,7 @@ questions:
       on: 2026-10-09
   - id: q-x48rw3
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cost-optimization
@@ -65,9 +65,11 @@ questions:
       - Small tweaks add up and often improve performance and reliability too.
     takeaway: Small cost tweaks add up and often lift performance and reliability along with savings.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Options 2, 3 and 4 are Support plan and data transfer facts, not cost or design outcomes, so they are off-category and easy to rule out."
+    verified:
+      keyHash: 79cdc630da83
+      fullHash: b86b6aea9a6e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-zm6nd9
     version: 1
     status: live
@@ -279,8 +281,8 @@ questions:
     takeaway: Read replicas scale reads out so the RDS primary does not need a costlier, larger instance.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 2 (key) is the only option that repeats the stem's word 'RDS'."
+      attempts: 4
+      lastFailure: "critic: Option 3 is the only option that repeats the stem's 'RDS', which points at the key."
   - id: q-qzq1yp
     version: 1
     status: live
@@ -383,8 +385,8 @@ questions:
     takeaway: Cost optimization balances cost against performance and operational efficiency rather than chasing the lowest bill.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: Option 2 starts with 'Cost', repeating the stem's 'Cost optimization', which points at the key."
+      attempts: 3
+      lastFailure: "critic: The stem asks for 'which three things', a count no cited evidence line states."
   - id: q-jmg705
     version: 1
     status: live

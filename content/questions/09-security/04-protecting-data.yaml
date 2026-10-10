@@ -68,8 +68,8 @@ questions:
     takeaway: Encryption can use one key to encrypt and decrypt, or separate keys for each step.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true statement; masking uses no key pair, hashing is one-way and TLS is in transit.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true statement; the others misdescribe hashing, masking and TLS.)"
   - id: q-1ts5ye
     version: 1
     status: draft
@@ -101,8 +101,8 @@ questions:
     takeaway: DynamoDB encrypts every table at rest by default, using AWS KMS keys on the server side.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only true statement, since DynamoDB encrypts all data at rest with KMS keys by default.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement: DynamoDB encrypts at rest by default with KMS keys.)"
   - id: q-v89tg9
     version: 1
     status: live
@@ -216,8 +216,8 @@ questions:
     takeaway: AWS KMS keys never leave the service, and a key can be disabled temporarily.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only true KMS fact; keys never leave KMS, are not TLS certs and are not root-only.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement about KMS keys.)"
   - id: q-y8hk72
     version: 1
     status: live
@@ -427,8 +427,8 @@ questions:
     takeaway: Encryption in transit protects data on the move, such as records sent from a database to an app.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only data in motion; the other three are all data at rest.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only data that is moving ('sent'), the odd one out among data at rest.)"
   - id: q-vg6ppm
     version: 1
     status: live
@@ -530,8 +530,8 @@ questions:
     takeaway: Encrypted data stays unreadable to everyone except those who hold the right key.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: Option 1 repeats the stem's 'read' and is a general principle while the other options each name a mechanism, so grammar points at the key."
+      attempts: 3
+      lastFailure: "critic: Option 3 'can read the data' repeats the stem's 'reading', which no distractor does."
   - id: q-mbppzp
     version: 1
     status: live
@@ -635,5 +635,42 @@ questions:
     verified:
       keyHash: aad1c314145b
       fullHash: 3966816b4b6d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-vf4nvk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-encryption
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      A payment partner must be able to lock card details on the cafe's behalf but never unlock them.
+      The cafe itself must still turn the details back into readable form later.
+      Which approach fits?
+    options:
+      - id: a
+        text: Hash them with a salt before they are stored
+        why: Hashing and salting are one-way, so the cafe could never turn the card details back into readable form.
+      - id: b
+        text: Mask every digit of them except the last few
+        why: Masking works without keys and does not let the cafe recover the hidden digits later.
+      - id: c
+        text: Encrypt them with one key, decrypt with another
+        correct: true
+        why: Separate keys let the partner hold only the locking key while the cafe keeps the key that unlocks.
+      - id: d
+        text: Send them only over links protected by TLS
+        why: TLS protects the details while they move but does nothing to stop the partner reading what it handles.
+    evidence:
+      - One key can lock and unlock, or separate encryption and decryption keys can split the work.
+      - Hashing and salting, used for stored passwords, are one-way and cannot be reversed.
+    takeaway: Encryption can split the work between separate keys, so one party locks data that only another can unlock.
+    history: []
+    verified:
+      keyHash: a83df5f3c0ca
+      fullHash: c15cee50c05b
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09

@@ -73,8 +73,8 @@ questions:
     takeaway: AWS Health reports service events, planned changes and account notices that affect your resources, not general AWS news.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1, 2 and 4 are the only ones tied to the cafe's own instance, app or account; 3, 5 and 6 are general announcements.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2, 4 and 6 are the only ones that say 'the cafe's'.)"
   - id: q-8x6k11
     version: 1
     status: live

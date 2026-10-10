@@ -251,8 +251,8 @@ questions:
     takeaway: Content management and dev and test workloads on a managed FSx file system point to FSx for OpenZFS.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 1's why rules it out for serving SMB rather than NFS, which the stem never asks about; it should say it is not aimed at content management or dev and test."
+      attempts: 4
+      lastFailure: "critic: Option 4's why argues about NFS v3 to v4.2, which the stem never mentions, rather than the two uses the stem names."
   - id: q-f51sx1
     version: 1
     status: draft
@@ -286,8 +286,8 @@ questions:
 
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Key option 2 'OpenZFS' shares 'ZFS' with the stem, which points straight at it."
+      attempts: 4
+      lastFailure: "critic: Option 1 'OpenZFS' repeats the stem's 'ZFS file system', which gives the key away."
   - id: q-3zqbqd
     version: 1
     status: live
@@ -389,8 +389,8 @@ questions:
     takeaway: NFS v3 to v4.2 for analytics, content management and dev and test points to Amazon FSx for OpenZFS.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: Option 4's why only describes FSx for NetApp ONTAP and never says why it misses this stem, though ONTAP also serves NFS."
+      attempts: 3
+      lastFailure: "critic: Option 4 (FSx for NetApp ONTAP) also serves NFS, and its why does not say why it is wrong for this stem. Option 4's why only describes ONTAP and does not tie it to the stem."
   - id: q-1rvmp0
     version: 1
     status: live
@@ -433,3 +433,36 @@ questions:
       fullHash: 3dcf91a50704
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-2977zm
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: fsx-for-openzfs
+    note: m06/amazon-fsx
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's developers plan to keep their dev and test files on Amazon FSx for OpenZFS.
+      Which protocol will their machines use to reach that storage?
+    options:
+      - id: a
+        text: SMB
+        why: SMB is the Windows sharing protocol that FSx for Windows File Server uses, not the one OpenZFS serves.
+      - id: b
+        text: Lustre
+        why: Lustre is the file system behind FSx for Lustre for ML and HPC, not how the OpenZFS option is reached.
+      - id: c
+        text: NFS
+        correct: true
+        why: FSx for OpenZFS serves its ZFS storage to the developers' machines over the NFS protocol.
+      - id: d
+        text: iSCSI
+        why: iSCSI presents block volumes, as Volume Gateway does, rather than the OpenZFS option's shared file system.
+    evidence:
+      - "FSx for OpenZFS: ZFS storage over NFS v3 to v4.2, for migrations, analytics, content management and dev and test."
+    takeaway: Amazon FSx for OpenZFS shares its ZFS file system with clients over NFS.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: Option 4's 'shared network file system' echoes the stem's 'files', the only option that names files, which points at the key."

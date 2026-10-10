@@ -186,8 +186,8 @@ questions:
     takeaway: With Amazon RDS, AWS handles patching and backups while the customer keeps security and encryption.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 are the only customer duties for RDS; the other four are all AWS duties, so a select-2 split gives it away.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 are customer duties on RDS; the rest are AWS duties.)"
   - id: q-qde6tq
     version: 1
     status: live

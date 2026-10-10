@@ -109,8 +109,8 @@ questions:
     takeaway: An S3 object is made of its data, its metadata and a key that names it in its bucket.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Data, metadata and key are the parts of an S3 object; the rest describe block or file storage.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: An S3 object is data, metadata and a key; the others are block or file terms.)"
   - id: q-bp7pa4
     version: 1
     status: live
@@ -212,8 +212,8 @@ questions:
     takeaway: Settings such as versioning, logging and permissions are set on the S3 bucket, the basic unit of access control.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Options 1 to 3 all start 'The object', so option 4 is the odd one out and the shortest, which points at the key."
+      attempts: 4
+      lastFailure: "critic: Options 2, 3 and 4 all start 'The object', so option 1 stands out as the odd one and points at the key."
   - id: q-68t9dv
     version: 1
     status: live
@@ -387,8 +387,8 @@ questions:
     takeaway: Brief access to one private object for an outside party fits an S3 presigned URL.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 2 'S3 Audit Logs' is not a real S3 feature name and is unlikely to be in the glossary."
+      attempts: 4
+      lastFailure: "critic: Option 3 'S3 Audit Logs' is not a real S3 feature name, so it is easy to rule out. Option 3 names a feature that is not in the glossary, against the distractor rule."
   - id: q-9tehxx
     version: 1
     status: live
@@ -596,5 +596,41 @@ questions:
     takeaway: A presigned URL gives temporary access to an object, and the link stops working once it expires.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one about the link itself, hinting at an expired presigned URL.)"
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 alone mentions 'the link' and an access period, matching a presigned link.)"
+  - id: q-85qk13
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-presigned-urls
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "2.3"
+    level: 2
+    stem: >-
+      A visiting trainer needs to stream one staff training video from the cafe's private bucket during tomorrow's session.
+      The cafe wants its permissions left unchanged and the access to lapse by itself after the session.
+      Which option fits?
+    options:
+      - id: a
+        text: An S3 Access Point
+        why: An Access Point sets standing rules for a group sharing a dataset, not a grant that ends by itself.
+      - id: b
+        text: An S3 presigned URL
+        correct: true
+        why: A presigned URL gives access to the video that expires on its own, with no change to the bucket policy.
+      - id: c
+        text: An S3 bucket policy
+        why: Opening the video through the bucket policy changes the cafe's permissions and stays until someone edits it back.
+      - id: d
+        text: An identity-based policy
+        why: This policy sits on an IAM user, group or role and keeps granting access until it is removed.
+    evidence:
+      - Presigned URLs grant expiring access without touching the bucket policy.
+    takeaway: For brief access to one object that should end by itself, hand out an S3 presigned URL.
+    history: []
+    verified:
+      keyHash: fc770e1de474
+      fullHash: 53cf570869a6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -71,8 +71,8 @@ questions:
     takeaway: Business uses of ML fall into predicting values, making decisions and detecting anomalies.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 are both fixed rules or scripts, leaving the three ML-style items as the set.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 are rule-based, not ML, so the three ML use cases are found without the stem.)"
   - id: q-710dgr
     version: 1
     status: live

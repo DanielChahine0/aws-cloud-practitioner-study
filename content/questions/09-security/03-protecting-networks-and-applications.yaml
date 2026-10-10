@@ -30,8 +30,8 @@ questions:
     takeaway: A DDoS attack is a DoS attack launched from many compromised machines at once.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one naming many machines, the trait that marks an attack as distributed.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the defining trait of a DDoS versus a DoS; the others hold for both.)"
   - id: q-dgncfp
     version: 1
     status: live
@@ -140,8 +140,8 @@ questions:
     takeaway: A UDP flood pairs a forged sender address with small requests that trigger big replies.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 4 describe a reflection and amplification attack; 3 and 5 are not how a DDoS works.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 5 describe reflection and amplification correctly; 1, 2 and 4 misdescribe the attack.)"
   - id: q-gxf0xv
     version: 1
     status: live
@@ -433,8 +433,8 @@ questions:
     takeaway: Firewall Manager centrally enforces WAF rules, security group rules and Network Firewall firewalls.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 1 repeats the stem's word 'Firewall' from Firewall Manager, which points at a key."
+      attempts: 4
+      lastFailure: "critic: Option 6 'AWS Network Firewall firewalls' repeats 'Firewall' from the stem's service name."
   - id: q-wdc48t
     version: 1
     status: live

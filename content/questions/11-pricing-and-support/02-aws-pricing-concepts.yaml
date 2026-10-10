@@ -319,7 +319,7 @@ questions:
       on: 2026-10-09
   - id: q-zd1875
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: s3-pricing
@@ -348,3 +348,8 @@ questions:
       - "Example: downloads from a static website hosted in S3 count as outbound transfer."
     takeaway: Visitor downloads from an S3 static website are outbound transfer, part of the S3 transfer cost component.
     history: []
+    verified:
+      keyHash: b10c82a8c053
+      fullHash: e545483ad8df
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

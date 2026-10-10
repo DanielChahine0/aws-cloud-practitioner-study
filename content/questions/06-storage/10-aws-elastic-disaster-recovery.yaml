@@ -72,8 +72,8 @@ questions:
     takeaway: Elastic Disaster Recovery uses source-server agents and lets you test recovery without touching production.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Options 1, 2 and 4 each name another service (S3 Lifecycle, EBS snapshots, Storage Gateway), so the two keys are the only options that can describe Elastic Disaster Recovery."
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 describe Elastic Disaster Recovery; the others describe other services.)"
   - id: q-d41d6d
     version: 1
     status: draft
@@ -107,11 +107,11 @@ questions:
     takeaway: Recovering to AWS cuts downtime and data loss without the cost of a standby data center.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the only one that names AWS, in a set of otherwise on-premises copies.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one that names AWS; the others are on-premises variants of the same sentence.)"
   - id: q-mk1nmy
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: disaster-recovery
@@ -141,9 +141,11 @@ questions:
       - "Hospital: patient-record servers stay recoverable and tested for regulators."
     takeaway: Elastic Disaster Recovery lets you drill recovery as often as needed while production keeps running.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: The scenario is set in a hospital instead of the cafe."
+    verified:
+      keyHash: 82a0fead864d
+      fullHash: 3cbcc881dc58
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
   - id: q-tfxmrw
     version: 1
     status: live
@@ -212,8 +214,8 @@ questions:
     takeaway: Continuous block-level replication keeps an up-to-date copy, so a failure loses very little data.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 4 share 'Ongoing copying', and option 2 is the more technical of the pair.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 describes Elastic Disaster Recovery's continuous block replication.)"
   - id: q-j3gga4
     version: 1
     status: live
@@ -320,8 +322,8 @@ questions:
     takeaway: Elastic Disaster Recovery protects servers of any kind, physical, virtual or cloud, rather than managed data stores.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 5 are the only ones not on an AWS service, so they stand out as the pair.)"
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 3 are the only two not on AWS services, the odd pair out.)"
   - id: q-phcjrv
     version: 1
     status: live
@@ -394,7 +396,7 @@ questions:
       on: 2026-10-09
   - id: q-m549r1
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: block-level-replication
@@ -424,6 +426,43 @@ questions:
       - Recovery tests leave production alone, and recovery instances start fast.
     takeaway: Block-level replication continuously sends only the disk blocks that change, keeping the copy current.
     history: []
-    review:
-      attempts: 2
-      lastFailure: 'critic: the cue round found the key from the options alone (tell: Option 2 is the only one tied to the scenario ("the order changed"), matching block-level replication.)'
+    verified:
+      keyHash: d1ed4dfb82cb
+      fullHash: 0c2ce556e667
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-43t4az
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-elastic-disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe is setting up AWS Elastic Disaster Recovery for the ordering servers in its back office.
+      What does it install so their data starts flowing to AWS?
+    options:
+      - id: a
+        text: An AWS Storage Gateway appliance in the back office
+        why: The service replicates without Storage Gateway, so no gateway appliance is part of the setup.
+      - id: b
+        text: A lightweight agent on each source machine
+        correct: true
+        why: Lightweight agents on the source servers send their block-level data to AWS nonstop.
+      - id: c
+        text: A tape library that writes nightly copies
+        why: Nightly tapes copy in batches, while this service replicates block-level data to AWS nonstop.
+      - id: d
+        text: An AWS Snow Family device for the copying
+        why: A Snow Family device moves data offline in batches, not as the nonstop copying this service relies on.
+    evidence:
+      - Lightweight agents on source servers replicate block-level data to AWS nonstop, without Storage Gateway.
+    takeaway: Elastic Disaster Recovery uses lightweight agents on source servers, with no gateway appliance needed.
+    history: []
+    verified:
+      keyHash: 387041187ae9
+      fullHash: c0bd9f9c6df4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

@@ -252,8 +252,8 @@ questions:
     takeaway: To find one item in a growing DynamoDB table, query its partition key rather than scanning everything.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 queries on the order number, the only field that is a natural unique key.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the natural partition key for orders; the other choices would not be the key.)"
   - id: q-xgk78h
     version: 1
     status: draft
@@ -291,8 +291,8 @@ questions:
     takeaway: A DynamoDB query fetches items by partition key value and suits growing tables better than a scan.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 4 and 5 are the only ones about how a query reads data and scales; the others are generic DynamoDB facts.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 are the known advantages of query over scan.)"
   - id: q-g6ht3v
     version: 1
     status: draft
@@ -325,8 +325,8 @@ questions:
     takeaway: To fetch specific items from a large DynamoDB table, query by partition key instead of scanning.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the efficient DynamoDB read; joins and a SQL database endpoint are not DynamoDB features and a scan is the costly path.)"
+      attempts: 3
+      lastFailure: "critic: The stem says 'thousands of items', a number no cited evidence line states."
   - id: q-sjtm11
     version: 1
     status: live
@@ -361,3 +361,38 @@ questions:
       fullHash: 18e63390d082
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-3cdqbj
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-query
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's app finds order number 5 in its DynamoDB orders table with a query instead of a scan.
+      Which statement describes what the query does?
+    options:
+      - id: a
+        text: Reads every item, then keeps the matches
+        why: Reading back the whole table is what a scan does, which is the slower path the app avoids here.
+      - id: b
+        text: Looks up items by partition key value
+        correct: true
+        why: A query returns the items whose partition key matches the value the app supplies, here order number 5.
+      - id: c
+        text: Joins orders to users through a foreign key
+        why: DynamoDB tables stand alone with no foreign keys, so a query cannot join the orders table to another.
+      - id: d
+        text: Runs a SQL SELECT over the table's endpoint
+        why: SQL through an endpoint and port is how clients reach RDS, while DynamoDB uses its own query language.
+    evidence:
+      - A scan returns the whole table, while a query fetches items by partition key.
+      - A query for order number 5 returned that single item, the better tool as tables grow.
+      - RDS links rigid tables with foreign keys, and DynamoDB tables stand alone with flexible schemas.
+    takeaway: A DynamoDB query matches a partition key value and returns only those items, unlike a scan of the whole table.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: Options 3 and 4 describe table traits (encryption at rest, flexible attributes) rather than ways to find items, so only option 2 competes with the key and the item is easy to narrow."

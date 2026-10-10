@@ -29,8 +29,8 @@ questions:
     takeaway: Purpose-built databases mean choosing the engine that fits each workload rather than forcing all data into one.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Key option 1 'built for it' echoes the stem's 'purpose-built'."
+      attempts: 4
+      lastFailure: "critic: Option 3 'the engine built for it' echoes the stem's 'purpose-built', which points at the key."
   - id: q-tnjhy3
     version: 1
     status: draft
@@ -68,8 +68,8 @@ questions:
     takeaway: Different data shapes call for different engines, so split workloads across best-fit databases instead of one.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 restate the same idea (one engine per job), so they pair up against the rest.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 4 restate the same purpose-built database idea, standing apart from the other three.)"
   - id: q-8c83x8
     version: 1
     status: live
@@ -595,11 +595,11 @@ questions:
     takeaway: Choose a database by what the workload needs, not by what the team already runs.
     history: []
     review:
-      attempts: 2
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 restates the purpose-built database principle and is the only one naming how the data is used.)"
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 alone names the stem's specific data ('the referral data').)"
   - id: q-sw0mr3
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: purpose-built-databases
@@ -627,6 +627,39 @@ questions:
       - AWS steers each workload to its best-fit purpose-built tool, and offers more than the course covers.
     takeaway: Using different databases for orders, sessions and relationships shows each workload placed in its best-fit engine.
     history: []
+    verified:
+      keyHash: 971e2db68f9e
+      fullHash: 459038b1f80a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-csngez
+    version: 1
+    status: draft
+    type: match
+    pool: practice
+    concept: purpose-built-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe gives each of its workloads its own best-fit database instead of one engine for everything.
+      Match each workload to the database that fits it.
+    pairs:
+      - left: A menu catalog of JSON-like records whose fields change often
+        right: Amazon DocumentDB (with MongoDB compatibility)
+        why: DocumentDB takes semistructured documents too complex for rows and columns, which suits a changing catalog.
+      - left: A web of customers who refer friends, queried in real time
+        right: Amazon Neptune
+        why: Neptune is a graph database built for highly connected data such as referral links.
+      - left: Loyalty points looked up by customer ID as key-value pairs
+        right: Amazon DynamoDB
+        why: DynamoDB handles key-value data, so simple lookups of points by customer ID fit it well.
+    evidence:
+      - Fit the database to the business need, not the data to the database, as none suits every job.
+      - Where DynamoDB handles key-value data, DocumentDB takes semistructured data too complex for rows and columns.
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+    takeaway: The purpose-built approach sends each workload to the database designed for its kind of data.
+    history: []
     review:
       attempts: 2
-      lastFailure: 'critic: the cue round found the key from the options alone (tell: Option 3 echoes the purpose-built idea with "a store suited to its data".)'
+      lastFailure: "critic: Pair 4 right 'DynamoDB Accelerator (DAX)' is a cache, not a database, though the stem frames every pair as a best-fit database; also it drops the 'Amazon' prefix of its full name. No evidence line supports the Managed Blockchain or DAX pairs."

@@ -146,8 +146,8 @@ questions:
     takeaway: A Savings Plan discount follows compute across families, sizes and serverless services such as Lambda.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 2 both open with 'Their discount' and are the only flexibility claims.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 pair up as the only two that both begin 'Their discount', describing discount scope.)"
   - id: q-qngdwe
     version: 1
     status: live

@@ -215,8 +215,8 @@ questions:
     takeaway: Edge locations cache content near users, while databases and heavy compute belong in a Region.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Option 4 repeats the stem's word 'database', which points at the key."
+      attempts: 4
+      lastFailure: "critic: Option 3 alone mentions databases, echoing the stem's 'order database'."
   - id: q-k02cy9
     version: 1
     status: live

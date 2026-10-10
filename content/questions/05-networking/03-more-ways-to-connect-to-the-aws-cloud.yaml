@@ -214,8 +214,8 @@ questions:
     takeaway: PrivateLink needs no public IP and lets you choose exactly which services a VPC can reach.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 3 are true of a VPC endpoint; 2, 4 and 5 are false for private endpoint traffic.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are true of private VPC endpoints; 1, 2 and 3 are false of them.)"
   - id: q-akkdy7
     version: 1
     status: live
@@ -498,8 +498,8 @@ questions:
     takeaway: Amazon API Gateway creates, publishes, secures and monitors APIs, while other services run the code and store the data.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 5 together paraphrase the API Gateway tagline (create, secure, monitor APIs at any scale); the rest map to other services.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 5 use the plural 'APIs' while the distractors use singular 'API' as a modifier.)"
   - id: q-3q29c3
     version: 1
     status: live

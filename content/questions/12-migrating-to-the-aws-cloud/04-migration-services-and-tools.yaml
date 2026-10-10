@@ -213,8 +213,8 @@ questions:
     takeaway: AWS Migration Hub itself is free, so tracking a migration there adds no charge of its own.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement, since AWS Migration Hub has no charge of its own.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is true: Migration Hub itself has no charge.)"
   - id: q-zqy286
     version: 1
     status: live

@@ -430,7 +430,7 @@ questions:
     takeaway: Partner-centered training sits in AWS Training and Certification and spans full certification down to one service or goal.
     history: []
     review:
-      attempts: 3
+      attempts: 4
       lastFailure: "solve-closed: picked c, the key is b"
   - id: q-21gvex
     version: 1

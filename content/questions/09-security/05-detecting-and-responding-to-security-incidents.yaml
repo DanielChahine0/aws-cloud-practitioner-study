@@ -348,8 +348,8 @@ questions:
     takeaway: Prevention alone can miss unknown flaws, so detecting and responding fast is part of security.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the only limitation; the other three are named security principles stated as strengths.)"
+      attempts: 4
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one stating a limitation; the others state what a control does.)"
   - id: q-fxg96d
     version: 1
     status: live

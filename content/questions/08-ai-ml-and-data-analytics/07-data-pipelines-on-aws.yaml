@@ -214,8 +214,8 @@ questions:
     takeaway: Redshift is both the pipeline's data warehouse and a fast engine for heavy, frequent SQL on large datasets.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: Options 3 and 4, the keys, are the two longest options, a length tell."
+      attempts: 4
+      lastFailure: "critic: Options 3 and 5 are the two longest options (64 and 65 characters), a length tell for the keys."
   - id: q-8e2n1p
     version: 1
     status: live
