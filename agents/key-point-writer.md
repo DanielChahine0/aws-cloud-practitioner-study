@@ -30,6 +30,7 @@ Never read the course source text, `~/Library/Application Support/ccp-study/`, `
 - Use the exam guide's current names only, and never name Developer Support, Business Support or Enterprise On-Ramp Support.
 - Use a number only when your evidence line states it, written the same way.
 - Never copy a sentence of a note, a question or the brief into `text`; the evidence line is the only copied text.
+- Never write the em dash (U+2014) anywhere in the file; use a plain hyphen.
 
 A made-up bakery example of one item:
 

@@ -381,13 +381,21 @@ describe('the key point report, module concepts and the draft check', () => {
       'evidence: Cabinets are free.',
     );
     replaceIn(root, KEY_POINTS, 'back to the shared kitchen.', 'back. The kitchen lends them on.');
+    replaceIn(
+      root,
+      KEY_POINTS,
+      'newer billing term that',
+      `newer billing term ${String.fromCodePoint(0x2014)} the one that`,
+    );
     expect(draftProblems(ctxOf(root), KEY_POINTS)).toEqual([
+      '25: em dash (U+2014); use a plain hyphen',
       `${PROOFING}: evidence is not a whole line of the home note of any of its concepts`,
       `${CAPACITY}: one sentence per string`,
     ]);
     replaceIn(root, KEY_POINTS, 'status: draft', 'status: ready');
     expect(draftProblems(ctxOf(root), KEY_POINTS)).toEqual([
       '14: keyPoints.1.status: Invalid option: expected one of "draft"|"live"|"retired"',
+      '25: em dash (U+2014); use a plain hyphen',
     ]);
     expect(draftProblems(ctxOf(root), 'content/project/key-points/02-missing.yaml')).toEqual([
       'content/project/key-points/02-missing.yaml: no such key point file',

@@ -25,7 +25,7 @@ import { NEEDS_DANI_ATTEMPTS, type PassLog } from './checks.ts';
 import { type Context, localDate } from './context.ts';
 import { splitFrontmatter } from './markdown.ts';
 import { BRIEF_FILE, evidenceHolds, type KeyPointEntry, keyPointHash, projectOf } from './project.ts';
-import { multiSentenceLines } from './text.ts';
+import { emDashLines, multiSentenceLines } from './text.ts';
 
 export const KP_RESULTS_DIR = '.results/key-points';
 export const KP_BATCH_SIZE = 10;
@@ -468,12 +468,14 @@ export function moduleConcepts(ctx: Context, module: number): { id: string; name
 
 /**
  * Every problem of one key point file as R1, R5 and R8 will see it, applying R5 to drafts too, so a writer can loop
- * until it holds none: R1 findings as `<line>: <message>`, then `<id>: <problem>` per key point.
+ * until it holds none: R1 findings and R8's em dash lines as `<line>: <message>`, then `<id>: <problem>` per key point.
  */
 export function draftProblems(ctx: Context, file: string): string[] {
   if (!ctx.files.includes(file)) return [`${file}: no such key point file`];
   const project = projectOf(ctx);
   const out = project.errors.filter((f) => f.file === file).map((f) => `${f.line ?? 1}: ${f.message}`);
+  for (const line of emDashLines(ctx.read(file) ?? ''))
+    out.push(`${line}: em dash (U+2014); use a plain hyphen`);
   for (const { path, kp } of project.keyPoints) {
     if (path !== file || kp.status === 'retired') continue;
     if (evidenceHolds(ctx, kp) !== true) out.push(`${kp.id}: ${EVIDENCE_MISS}`);
