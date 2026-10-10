@@ -1545,9 +1545,10 @@ tr.evidence > :first-child {
   border-color: var(--active);
 }
 
+/* The current cell gets a bar along its foot in the text color, so it differs from the outline focus ring in both states. */
 .grid-cell[aria-current="true"] {
-  outline: 2px solid var(--active);
-  outline-offset: 2px;
+  font-weight: 700;
+  box-shadow: inset 0 -4px 0 currentcolor;
 }
 
 .grid-flag {
