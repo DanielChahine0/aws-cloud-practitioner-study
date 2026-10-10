@@ -178,8 +178,11 @@ kbd {
   border-radius: 6px;
 }
 
-/* A touch screen has no "/" key to show. */
-@media (hover: none) {
+/*
+ * A touch screen has no "/" key to show; below 375 px the key also goes, or the top bar with its due count and
+ * streak runs past the right gutter.
+ */
+@media (hover: none), (max-width: 374px) {
   .search {
     padding-right: 12px;
   }
@@ -1173,12 +1176,18 @@ tr.evidence > :first-child {
   color: var(--muted);
 }
 
+/*
+ * The line sits on the top bar's bottom border, under the page column's text: 16 px in from each side on a phone,
+ * and at most 68ch wide, centred, on a wider screen, so it starts under CCP and ends under Search.
+ */
 .level-line {
   position: absolute;
-  right: 0;
+  right: 16px;
   bottom: -1px;
-  left: 0;
+  left: 16px;
+  max-width: 68ch;
   height: 2px;
+  margin: 0 auto;
 }
 
 .level-fill {
