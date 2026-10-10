@@ -40,6 +40,8 @@ const Answer = z.strictObject({
   flagged: z.optional(z.boolean()),
   changes: z.optional(z.array(z.array(z.string()))),
   ms: z.number().check(z.minimum(0)),
+  /** A relearn step in a review (spec 3.6): 0 XP and no FSRS update. */
+  relearn: z.optional(z.boolean()),
 });
 
 const Session = z.strictObject({

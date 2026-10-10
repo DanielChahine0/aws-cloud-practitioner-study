@@ -1073,7 +1073,7 @@ type Base = { id: string /* ULID */; at: string /* UTC ISO */; tz: number /* off
 type Event = Base & (
   | { t: 'answer'; sid: string; mode: Mode; qid: string; qv: number; concept: string;
       picked: string[] | [string, string][]; correct: boolean; sure: boolean; flagged?: boolean;
-      changes?: string[][]; ms: number }
+      changes?: string[][]; ms: number; relearn?: boolean }
   | { t: 'session'; sid: string; mode: Mode; phase: 'start' | 'submit' | 'abandon';
       seed: number; form?: string; qids?: string[]; deadline?: string }
   | { t: 'lesson.done'; note: string }
@@ -1091,6 +1091,8 @@ type Event = Base & (
 ```
 
 - XP, levels, FSRS cards, badges and freeze use are never stored, because they are always derived.
+- A relearn answer in a review (3.6) carries `relearn: true`, so replay gives it 0 XP and no FSRS update.
+- The flag is optional, so every older event and backup stays valid at schema version 1.
 - Ranks are derived too, but each promotion also writes a `rank` event, and the shown rank is the highest one recorded or computed, so no rescore or replay can take it away (3.4).
 - Missions done by hand before the missions screen exists are recorded by a one-time `Already done` action (Phase 6), which writes their `mission` events with the dates Dani enters as `at`.
 - A mock session's `start` event stores its `qids`, so replay never depends on `forms.yaml`.

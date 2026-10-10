@@ -5,14 +5,17 @@
       [
         {
           "at": "2026-10-10T08:01:00.000Z",
+          "concept": "shared-kitchen",
           "correct": true,
           "day": "2026-10-10",
+          "id": "01JA9X0000AAAAAAAAAAAAAAA2",
           "mode": "check",
           "picked": [
             "b"
           ],
           "qid": "q-7k2m9p",
           "qv": 1,
+          "relearn": false,
           "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
           "sure": true
         }
@@ -23,8 +26,10 @@
       [
         {
           "at": "2026-10-10T08:02:00.000Z",
+          "concept": "per-minute-rental",
           "correct": false,
           "day": "2026-10-10",
+          "id": "01JA9X0000AAAAAAAAAAAAAAA3",
           "mode": "check",
           "picked": [
             [
@@ -42,6 +47,7 @@
           ],
           "qid": "q-8n3p4r",
           "qv": 1,
+          "relearn": false,
           "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
           "sure": false
         }
@@ -86,14 +92,17 @@
             "q-7k2m9p",
             {
               "at": "2026-10-10T08:01:00.000Z",
+              "concept": "shared-kitchen",
               "correct": true,
               "day": "2026-10-10",
+              "id": "01JA9X0000AAAAAAAAAAAAAAA2",
               "mode": "check",
               "picked": [
                 "b"
               ],
               "qid": "q-7k2m9p",
               "qv": 1,
+              "relearn": false,
               "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
               "sure": true
             }
@@ -102,8 +111,10 @@
             "q-8n3p4r",
             {
               "at": "2026-10-10T08:02:00.000Z",
+              "concept": "per-minute-rental",
               "correct": false,
               "day": "2026-10-10",
+              "id": "01JA9X0000AAAAAAAAAAAAAAA3",
               "mode": "check",
               "picked": [
                 [
@@ -121,6 +132,7 @@
               ],
               "qid": "q-8n3p4r",
               "qv": 1,
+              "relearn": false,
               "sid": "01JA9X0000AAAAAAAAAAAAAAS1",
               "sure": false
             }
