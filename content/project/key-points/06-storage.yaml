@@ -1,0 +1,48 @@
+# Reference key points for decision 6: Storage classes and lifecycle.
+module: 6
+keyPoints:
+  - id: kp-06-photos-in-s3-standard
+    status: live
+    text: Product photos that the menu site and loyalty app show all day sit in S3 Standard, because they are read constantly and must load fast for every customer.
+    concepts: [s3-standard, s3-storage-classes]
+    evidence: "S3 Standard: the general-purpose default when no class is named, with fast retrieval at an affordable price, for apps, games, dynamic websites, content distribution and big data analytics."
+    verified:
+      fullHash: 61cf4e86aa2a
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-06-lifecycle-cools-receipts
+    status: live
+    text: A lifecycle rule moves each receipt to a cheaper class as it ages, so fresh receipts stay quick to open while old ones stop paying the frequent-access rate, with no manual copying.
+    concepts: [s3-lifecycle]
+    evidence: Transition actions move objects to another class at a set age, such as Standard-IA after 30 days or Glacier Deep Archive after a year.
+    verified:
+      fullHash: a63b1af61c0e
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-06-deep-archive-old-receipts
+    status: live
+    text: Receipts nobody opens after their first year end up in S3 Glacier Deep Archive, the cheapest class, since a slow restore is fine for a compliance record checked once in a while.
+    concepts: [s3-glacier-storage-classes]
+    evidence: Meant for long-term retention and digital preservation, such as compliance archives that finance, healthcare or government keep 7-10 years or more.
+    verified:
+      fullHash: 6c236aa1dff4
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-06-expire-after-retention
+    status: live
+    text: An expiration action deletes each receipt once its legal holding period ends, so the archive reaches back no further than the law requires and the cafe stops paying to store records it no longer must keep.
+    concepts: [s3-lifecycle]
+    evidence: Expiration actions delete objects for good, such as when compliance no longer needs them.
+    verified:
+      fullHash: 2b77a6eed3c0
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-06-pos-backups-standard-ia
+    status: live
+    text: Point-of-sale backups go to S3 Standard-IA, which stores them cheaply while they sit unused yet returns them fast on the bad day a restore is needed, at the cost of a retrieval fee.
+    concepts: [s3-standard-ia]
+    evidence: "S3 Standard-IA: data used less often but needed fast, with S3 Standard's durability, throughput and latency, cheaper storage and a per-GiB retrieval fee, for backups and disaster recovery files."
+    verified:
+      fullHash: e75c94007440
+      checks: [ critic@1 ]
+      on: 2026-10-10
