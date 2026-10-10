@@ -156,8 +156,9 @@ aws s3 rb s3://YOUR-BUCKET --profile ccp-admin
 ## Usage check
 
 - On the next study day, open Cost Explorer with daily granularity, grouped by Service.
-- Compare AWS Lambda, Amazon S3 and CloudWatch for the day of Start with the day before Start, not with zero, because Mission 1 keeps S3 billing every day.
-- Each one should be back to that earlier baseline.
+- Cost Explorer counts days in UTC, so find the bar for the day before Start and the latest full day after Cleanup.
+- Check that AWS Lambda, Amazon S3 and CloudWatch on that latest day are back to their level on the day before Start, comparing with that day and not with zero, because Mission 1 keeps S3 billing every day.
+- If one is still higher, go back to Cleanup and look for a leftover bucket, function or log group.
 - Then note the remaining credit balance, which this page records with the usage button.
 
 ## Never do
