@@ -19,7 +19,10 @@ import { parseUpdateLine } from './update-line.ts';
 
 export const RESULTS_DIR = '.results/checks';
 export const BATCH_SIZE = 10;
-/** A practice draft with this many failed check rounds (2 failed revisions) waits for Dani (spec 2.7). */
+/**
+ * A draft with this many failed check rounds (2 failed revisions) leaves the loop (spec 2.7): a practice draft waits
+ * for Dani, and an exam draft is retired in place, because Dani must never see an exam item before a mock.
+ */
 export const NEEDS_DANI_ATTEMPTS = 3;
 
 export const BATCH_KINDS = ['solve-closed', 'solve-notes', 'critic-cue', 'critic'] as const;
@@ -115,10 +118,10 @@ function stampedVersion(v: Verified | undefined, check: CheckName, kh: string, f
   return entry === undefined ? null : Number(entry.slice(check.length + 1));
 }
 
-const moduleOf = (entry: QuestionEntry): number => Number(entry.noteId.slice(1, 3));
+const moduleOf = (entry: QuestionEntry): number => entry.module;
 
 /**
- * Non-retired practice questions of the given modules whose stamp is missing or stale, with the checks each still needs.
+ * Non-retired questions of one pool in the given modules whose stamp is missing or stale, with the checks each still needs.
  * solve-closed is kept by a stamp or pass at the current keyHash; solve-notes and critic need a pass at the current
  * fullHash and prompt version. A question that already failed a check at its current hashes waits for a revision.
  */
@@ -127,6 +130,7 @@ export function candidates(
   modules: readonly number[],
   passes: PassLog,
   failures: readonly Failure[] = [],
+  pool: Question['pool'] = 'practice',
 ): Candidate[] {
   const out: Candidate[] = [];
   const versions = new Map<CheckName, number | null>();
@@ -142,7 +146,7 @@ export function candidates(
   };
   for (const entry of ctx.questions) {
     const { q } = entry;
-    if (q.status === 'retired' || q.pool !== 'practice' || !modules.includes(moduleOf(entry))) continue;
+    if (q.status === 'retired' || q.pool !== pool || !modules.includes(moduleOf(entry))) continue;
     const kh = keyHash(q);
     const fh = fullHash(q);
     if (q.verified?.keyHash === kh && q.verified.fullHash === fh) continue;
@@ -293,26 +297,29 @@ function payloadOf(c: Candidate, kind: BatchKind, order: readonly (string | numb
         concept: { id: q.concept, name: concept?.name ?? q.concept },
         task: { id: q.task, text: task?.text ?? '' },
         note: q.note,
+        pool: q.pool,
       };
     }
   }
 }
 
 /**
- * pnpm content:checks prepare: clears batches/ and answers/, then writes every batch of the given modules and keys.json.
+ * pnpm content:checks prepare: clears batches/ and answers/, then writes every batch of one pool in the given modules
+ * and keys.json.
  * Returns the batch paths (relative to the root) and the number of questions that need any check.
  */
 export function prepare(
   ctx: Context,
   modules: readonly number[],
   seed: number,
+  pool: Question['pool'] = 'practice',
 ): { paths: string[]; questions: number } {
   const p = paths(ctx.root);
   rmSync(p.batches, { recursive: true, force: true });
   rmSync(p.answers, { recursive: true, force: true });
   mkdirSync(p.batches, { recursive: true });
   mkdirSync(p.answers, { recursive: true });
-  const cands = candidates(ctx, modules, readPasses(ctx.root), readFailures(ctx.root)).filter(
+  const cands = candidates(ctx, modules, readPasses(ctx.root), readFailures(ctx.root), pool).filter(
     (c) => c.needs.length > 0,
   );
   const keys: KeyFile = {};
@@ -510,9 +517,13 @@ const CRITIC_FLAGS = [
 
 /**
  * pnpm content:checks grade: grades every prepared batch against the current question files, merges the passes into
- * passes.json and the failures into failures.json, and returns this run's counts.
+ * passes.json and the failures into failures.json, and returns this run's counts and the lines to print: an exam
+ * item's failure prints as its id and check only, because its reason may quote the item (spec 2.6).
  */
-export function grade(root: string, today = localDate()): { passes: number; failures: Failure[] } {
+export function grade(
+  root: string,
+  today = localDate(),
+): { passes: number; failures: Failure[]; lines: string[] } {
   const p = paths(root);
   const keys = readJsonFile<KeyFile>(p.keys, {});
   const ctx = loadContext(root, { today });
@@ -625,17 +636,21 @@ export function grade(root: string, today = localDate()): { passes: number; fail
     (f) => !unanswered.has(f) && !old.some((o) => o.id === f.id && o.check === f.check && o.hash === f.hash),
   );
   writeJson(p.failures, [...old, ...added]);
-  return { passes: passed.length, failures };
+  const lines = failures.map((f) =>
+    questions.get(f.id)?.pool === 'exam' ? `FAIL ${f.id} ${f.check}` : `FAIL ${f.id} ${f.check}: ${f.reason}`,
+  );
+  return { passes: passed.length, failures, lines };
 }
 
 /**
- * pnpm content:stamp: stamps and promotes every practice question with all three passes at its current hashes, and
- * records each new failure at a draft's current hashes in its review block (spec 2.7).
+ * pnpm content:stamp: stamps and promotes every question with all three passes at its current hashes, and records each
+ * new failure at a draft's current hashes in its review block (spec 2.7). An exam draft that reaches
+ * NEEDS_DANI_ATTEMPTS is retired in place, and exam lines carry ids, attempts and check names only.
  */
 export function stampQuestions(
   ctx: Context,
   today = localDate(),
-): { log: string[]; live: number; revise: string[]; needsDani: number; summary: string } {
+): { log: string[]; live: number; revise: string[]; needsDani: number; retired: number; summary: string } {
   const root = ctx.root;
   const passes = readPasses(root);
   const failures = readFailures(root);
@@ -648,7 +663,8 @@ export function stampQuestions(
 
   for (const entry of ctx.questions) {
     const { q } = entry;
-    if (q.status === 'retired' || q.pool !== 'practice') continue;
+    if (q.status === 'retired') continue;
+    const exam = q.pool === 'exam';
     const kh = keyHash(q);
     const fh = fullHash(q);
     const versionOf = (check: CheckName): number | null => {
@@ -679,13 +695,27 @@ export function stampQuestions(
       continue;
     }
     let attempts = q.review?.attempts ?? 0;
+    let review = q.review;
     const fresh = current.filter((f) => f.stamped !== true);
     if (q.status === 'draft' && fresh.length > 0) {
       const first = fresh[0] as Failure;
       attempts += 1;
-      edit(entry.path, q.id, { review: { attempts, lastFailure: `${first.check}: ${first.reason}` } });
-      log.push(`review ${q.id} (${entry.path}) attempts ${attempts}: ${first.check}: ${first.reason}`);
+      review = { attempts, lastFailure: `${first.check}: ${first.reason}` };
       for (const f of fresh) f.stamped = true;
+      if (!exam || attempts < NEEDS_DANI_ATTEMPTS) {
+        edit(entry.path, q.id, { review });
+        log.push(
+          exam
+            ? `review ${q.id} attempts ${attempts} ${first.check}`
+            : `review ${q.id} (${entry.path}) attempts ${attempts}: ${first.check}: ${first.reason}`,
+        );
+      }
+    }
+    if (exam && q.status === 'draft' && attempts >= NEEDS_DANI_ATTEMPTS) {
+      edit(entry.path, q.id, review === undefined ? { status: 'retired' } : { status: 'retired', review });
+      log.push(`retire ${q.id}`);
+      state.set(q.id, { status: 'retired', attempts, failed: false, path: entry.path });
+      continue;
     }
     state.set(q.id, { status: q.status, attempts, failed: current.length > 0, path: entry.path });
   }
@@ -700,7 +730,10 @@ export function stampQuestions(
   const drafts = all.filter((s) => s.status === 'draft');
   const reviseDrafts = drafts.filter((s) => s.failed && s.attempts < NEEDS_DANI_ATTEMPTS);
   const needsDani = drafts.filter((s) => s.attempts >= NEEDS_DANI_ATTEMPTS).length;
+  const retired =
+    ctx.questions.filter((e) => e.q.pool === 'exam' && e.q.status === 'retired').length +
+    all.filter((s) => s.status === 'retired').length;
   const revise = [...new Set(reviseDrafts.map((s) => s.path))].sort();
-  const summary = `stamp: ${live} live, ${reviseDrafts.length} drafts to revise, ${needsDani} need Dani`;
-  return { log, live, revise, needsDani, summary };
+  const summary = `stamp: ${live} live, ${reviseDrafts.length} drafts to revise, ${needsDani} need Dani, ${retired} retired`;
+  return { log, live, revise, needsDani, retired, summary };
 }
