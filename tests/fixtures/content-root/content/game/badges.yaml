@@ -1,0 +1,13 @@
+# Fixture badges: the 12 ids in order with made-up bakery rules.
+- { id: first-brew, name: First Brew, rule: The first tray of rolls came out of the oven. }
+- { id: clean-queue, name: Clean Queue, rule: No order waited at the counter for a whole week. }
+- { id: changed-my-mind, name: Changed My Mind, rule: Five wrong recipes were fixed by tasting again. }
+- { id: long-memory, name: Long Memory, rule: Fifty recipes were baked from memory a month later. }
+- { id: well-calibrated, name: Well Calibrated, rule: The oven thermometer matched the dial every time. }
+- { id: hands-on, name: Hands On, rule: Every station in five kitchens was worked once., arrives: labs }
+- { id: lab-complete, name: Lab Complete, rule: All the practice bakes were finished., arrives: labs }
+- { id: leave-no-trace, name: Leave No Trace, rule: Three kitchens were left spotless after closing., arrives: missions }
+- { id: full-dress-rehearsal, name: Full Dress Rehearsal, rule: A full service ran before the timer rang. }
+- { id: pass-mark, name: Pass Mark, rule: A tasting panel scored a new menu at four of five. }
+- { id: even-keel, name: Even Keel, rule: Every course of one menu scored three of four. }
+- { id: architect, name: Architect, rule: All thirteen kitchen plans were approved., arrives: capstone }

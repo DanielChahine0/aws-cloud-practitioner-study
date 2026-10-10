@@ -1,0 +1,23 @@
+# Ranks (spec 3.4); each fact is a Module 11 Exam guide update sentence, word for word.
+- { id: basic, name: Basic, short: Basic, requires: {} }
+- id: business-support-plus
+  name: Business Support+
+  short: Business+
+  requires: { bosses: 5, hexesAt60: 5 }
+  facts:
+    - AWS calls Business Support+ the minimum plan it recommends for production workloads.
+    - With Business Support+, a business-critical or mission-critical system that is down gets a response in under 30 minutes.
+- id: enterprise
+  name: Enterprise
+  short: Enterprise
+  requires: { bosses: 13, hexesAt60: 13 }
+  facts:
+    - Enterprise Support includes a designated technical account manager.
+    - With Enterprise Support, a business-critical or mission-critical system that is down gets a response in under 15 minutes.
+- id: unified-operations
+  name: Unified Operations
+  short: Unified Ops
+  requires: { unseenMocksAt80: 2, latestMockWithinDays: 14, ready: true }
+  facts:
+    - Unified Operations is the only plan that includes 24/7 workload monitoring.
+    - With Unified Operations, an Incident Management Engineer responds in under 5 minutes when a business-critical or mission-critical system is down.

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ConceptId, HttpsUrl, IsoDate, TASK_IDS, TaskId } from './common.ts';
+import { DOMAIN_IDS } from './ids.ts';
 
 const Term = z.union([z.string().min(2), z.strictObject({ term: z.string().min(2), coveredBy: ConceptId })]);
 export type BlueprintTerm = z.infer<typeof Term>;
@@ -12,7 +13,7 @@ export const Blueprint = z
     domains: z
       .array(
         z.strictObject({
-          id: z.enum(['1', '2', '3', '4']),
+          id: z.enum(DOMAIN_IDS),
           name: z.string().min(1),
           weight: z.number().int().min(1).max(100),
           url: HttpsUrl,
@@ -25,6 +26,8 @@ export const Blueprint = z
         z.strictObject({
           id: TaskId,
           text: z.string().min(10),
+          /** A few words for one-line UI copy, such as `access management` (Home's weakest line). */
+          short: z.string().min(3).max(40).regex(/[^.]$/, 'must not end with a period'),
           terms: z.array(Term),
           url: HttpsUrl,
           verified_on: IsoDate,
