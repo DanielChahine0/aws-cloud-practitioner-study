@@ -1,0 +1,122 @@
+id: inc-004
+title: Servers for the new branch
+modules:
+  - 2
+concepts:
+  - aws-management-console
+  - ec2-key-pairs
+  - amazon-machine-image
+brief: >-
+  The cafe is opening a branch across town, and the IT lead has until opening week to stand up the servers behind its
+  ordering kiosks. The lead also wants every later kiosk server to come up the same way as the first.
+steps:
+  - id: q-0z5dnz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-management-console
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      At the main shop, staff built every production server by clicking through the AWS Management Console, and one
+      went live with a setting left unchecked.
+      What does that slip show about the console?
+    options:
+      - id: a
+        text: It fits visual browser work better than typed commands
+        why: The console is a visual browser tool, but being visual does not explain why one server went live with a missed setting.
+      - id: b
+        text: It fits checking bills better than writing scripts
+        why: The console is good for bills, but that strength says nothing about the slip in building every production server.
+      - id: c
+        text: It fits one-time setups better than repeated launches
+        correct: true
+        why: The console suits one-time work, and redoing its screens for every production server is slow and invites a missed setting.
+      - id: d
+        text: It fits learning AWS better than calling it from code
+        why: The console is good for learning, but that does not explain why repeating its screens for each server let a setting slip.
+    evidence:
+      - Repeating its screens for every production launch is slow and invites slips like a missed checkbox.
+      - Best for learning, test environments, bills, monitoring, non-technical tasks and one-time manual setups.
+    takeaway: The console suits one-off and visual work, but repeated production launches through it are slow and prone to slips.
+    history: []
+    verified:
+      keyHash: b8cee39a7ef8
+      fullHash: 4d166fd59288
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qf7ngw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-key-pairs
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 1
+    stem: >-
+      While launching the branch's first kiosk server, the IT lead creates a new key pair for logging in.
+      Which part of that key pair is placed on the instance itself?
+    options:
+      - id: a
+        text: The private key
+        why: The private key stays with the IT lead for logging in, rather than being stored on the instance.
+      - id: b
+        text: The public key
+        correct: true
+        why: A key pair puts the public key on the instance, and the matching private key is what the lead logs in with.
+      - id: c
+        text: The user data script
+        why: User data is a launch script that configures the instance, and it is not part of a key pair.
+      - id: d
+        text: The security group
+        why: A security group is the instance's firewall, separate from the key pair used to log in.
+    evidence:
+      - "**Key pair**: a public key on the instance and a private key you keep for logging in, created at launch or reused."
+    takeaway: An EC2 key pair stores the public key on the instance, while you keep the private key to log in.
+    history: []
+    verified:
+      keyHash: a6c968ed403f
+      fullHash: 4f3c751a9472
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5dtvbj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-machine-image
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The IT lead builds a custom AMI from the finished kiosk server.
+      A staff member says the AMI now holds a safe copy of every kiosk order.
+      Which statement should the lead give to correct them?
+    options:
+      - id: a
+        text: One AMI gives every later kiosk server an identical setup
+        why: This is true of an AMI, but it repeats why the lead built one and does not correct the claim about the orders.
+      - id: b
+        text: Instance data lives on Amazon EBS volumes, not in the AMI
+        correct: true
+        why: An AMI holds the OS, software and setup for launches and is no data store or backup, so the orders need their own backup.
+      - id: c
+        text: The instance type, not the AMI, sets each server's hardware
+        why: This is true, since the instance type sets the hardware, but it says nothing about where the kiosk orders are kept.
+      - id: d
+        text: AMIs can also come from AWS or AWS Marketplace vendors
+        why: This is true, since AMIs come from AWS and AWS Marketplace too, but where an AMI comes from does not touch the claim about the orders.
+    evidence:
+      - It does not set size or networking, and it is no data store or backup, since instance data typically lives on volumes like Amazon EBS.
+      - An AMI is a configuration template, not a backup.
+      - Build a custom AMI, use an AWS one for common operating systems and software, or buy one on AWS Marketplace.
+    takeaway: An AMI is a configuration template for launching instances, not a backup of the data they hold.
+    history: []
+    verified:
+      keyHash: 9461932ac61a
+      fullHash: c628d363b2ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

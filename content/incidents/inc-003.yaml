@@ -1,0 +1,125 @@
+id: inc-003
+title: Orders vanish when the kitchen app restarts
+modules:
+  - 2
+concepts:
+  - amazon-sqs
+  - loose-coupling
+  - amazon-eventbridge
+brief: >-
+  On busy mornings, the cafe's ordering app hands each online order straight to the kitchen app. Whenever the kitchen
+  app restarts for an update, a few orders vanish and customers wait for drinks nobody started.
+steps:
+  - id: q-q6cb8k
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sqs
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe's first fix pushed each online order out to the kitchen app the moment it was sent, so orders that arrived
+      during a restart were still lost.
+      Which service would instead hold each order until the kitchen app is ready to pull it, and let the kitchen app
+      delete it once the drink is made?
+    options:
+      - id: a
+        text: Amazon SNS
+        why: SNS pushes a message to its subscribers at once and does not park it for later, the same loss the first fix had.
+      - id: b
+        text: Amazon API Gateway
+        why: API Gateway fronts an API and passes each request on to the backend, so it keeps nothing for a kitchen app that is down.
+      - id: c
+        text: Amazon SQS
+        correct: true
+        why: An SQS queue keeps each message until a consumer pulls it, processes it and deletes it, so orders wait out a restart.
+      - id: d
+        text: Amazon Data Firehose
+        why: Data Firehose delivers streaming data to lakes, warehouses or analytics tools, not single orders to the kitchen app.
+    evidence:
+      - Unlike SQS, SNS does not park messages for later, so in the coffee shop it is the barista calling out a finished drink, not the order board.
+      - "SQS is a message queue: producers drop messages in, and a consumer later picks each one up, processes it and deletes it."
+      - It moves any volume of messages between components without losing them, and the receiver need not be available at send time.
+    takeaway: Amazon SQS holds messages until a consumer is ready, while Amazon SNS pushes them at once and keeps nothing for later.
+    history: []
+    verified:
+      keyHash: 49787a5b845f
+      fullHash: 838f0f1945f4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ddcz4v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: loose-coupling
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      With a queue now between the cafe's ordering app and kitchen app, the kitchen app crashes in the middle of a rush.
+      The ordering app keeps taking orders, and they wait until the kitchen app recovers.
+      Which design property explains this?
+    options:
+      - id: a
+        text: Elasticity
+        why: Elasticity grows and shrinks resources as demand changes, which does not explain orders surviving a crash.
+      - id: b
+        text: Vertical scaling
+        why: Vertical scaling gives an instance more CPU and memory, which says nothing about orders surviving a crash.
+      - id: c
+        text: Multi-tenancy
+        why: Multi-tenancy means instances share a physical host, which does not explain why the ordering app keeps working.
+      - id: d
+        text: Loose coupling
+        correct: true
+        why: A queue between the apps makes them loosely coupled, so the kitchen app's failure stays contained while orders wait.
+    evidence:
+      - "**Loosely coupled**: a message queue sits between them, so A keeps sending while B is down and messages wait until B handles them."
+      - Loose coupling contains failures instead of letting them cascade, and it is the target for AWS architectures.
+    takeaway: A queue between components loosely couples them, so one can fail while the other keeps working.
+    history: []
+    verified:
+      keyHash: 89613c5f1142
+      fullHash: 6fcfdb8dcfb3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-t46623
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-eventbridge
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe now wants each new order to start a loyalty points update, a stock check and a receipt email, all at once.
+      The loyalty service is sometimes down for updates, and its copy of each order must wait until it recovers.
+      Which service should route each new order to all three of these services?
+    options:
+      - id: a
+        text: Amazon SNS
+        why: SNS can push one message to many subscribers, but it does not park messages, so the loyalty service would miss orders.
+      - id: b
+        text: Amazon EventBridge
+        correct: true
+        why: EventBridge routes each order to every service that needs it and holds it for a service that is down until it recovers.
+      - id: c
+        text: Amazon SQS
+        why: In an SQS queue one consumer picks up each message and deletes it, so a single queue does not hand one order to three services.
+      - id: d
+        text: Amazon API Gateway
+        why: API Gateway fronts an API and passes each request to one backend, rather than routing one order to several services.
+    evidence:
+      - 'EventBridge routes events like "order placed" to each service, copes with peaks, keeps services independent and holds events for a service that is down until it recovers.'
+      - "It handles the event pipeline end to end: intake, filtering, transformation and delivery."
+    takeaway: Amazon EventBridge routes one event to many services and holds it for any service that is down until it recovers.
+    history: []
+    verified:
+      keyHash: 0b3034df8919
+      fullHash: 98bb0709a21b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
