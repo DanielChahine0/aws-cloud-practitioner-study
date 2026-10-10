@@ -1,0 +1,1527 @@
+questions:
+  - id: q-28btaj
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-license-manager
+    note: m10/governance
+    task: "1.4"
+    level: 2
+    stem: >-
+      An engineering consultancy is moving its servers to AWS and plans to keep running database software whose usage rights it already bought from a vendor.
+      It wants to track how much of that purchased capacity is in use and stop launches that would exceed its vendor contracts.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS License Manager
+        correct: true
+        why: License Manager tracks the consultancy's own licenses, enforces usage caps and can block launches that would break the contract terms.
+      - id: b
+        text: AWS Service Catalog
+        why: Service Catalog offers approved resources for staff to launch, but it does not count license use against a vendor contract.
+      - id: c
+        text: AWS Control Tower
+        why: Control Tower governs how accounts are set up across an organization, which says nothing about software license counts.
+      - id: d
+        text: AWS Cost Explorer
+        why: Cost Explorer shows AWS spending over time, but it cannot enforce limits on licenses the consultancy bought from a vendor.
+    evidence:
+      - "License Manager tracks and controls those licenses and tunes their cost."
+      - "It curbs noncompliance with usage caps, blocked launches and other controls."
+    takeaway: Keeping existing licenses in use and in check on AWS, with usage caps and cost control, is the job of AWS License Manager.
+    history: []
+    verified:
+      keyHash: c7cfba62b6cc
+      fullHash: a8aa802c4f17
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yw2c6v
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: bring-your-own-license
+    note: m10/governance
+    task: "1.4"
+    level: 3
+    stem: >-
+      A logistics firm runs Microsoft SQL Server on Amazon EC2 and already owns SQL Server licenses from an earlier purchase.
+      It wants to reuse them on AWS instead of paying for a license with each instance.
+      Which licensing model fits, and who handles license compliance under it?
+    options:
+      - id: a
+        text: BYOL, with the firm handling license compliance
+        correct: true
+        why: BYOL reuses licenses the firm already owns, and since AWS did not supply them, keeping their use within the terms stays with the firm.
+      - id: b
+        text: BYOL, with AWS handling license compliance
+        why: BYOL is the right model, but AWS takes on license cost and compliance only for licenses it supplies itself, not for owned ones.
+      - id: c
+        text: License-included, with AWS handling license compliance
+        why: AWS does handle compliance for licenses it includes, but the firm would then pay for a new license with each instance.
+      - id: d
+        text: License-included, with the firm handling license compliance
+        why: License-included instances have AWS supply the license and handle its compliance, and the firm's owned licenses go unused.
+    evidence:
+      - "With the Bring Your Own License (BYOL) model you reuse licenses you already own on AWS, while with included licenses, such as SQL Server license-included instances on Amazon EC2, AWS supplies the license and handles its cost and compliance."
+      - "BYOL reuses vendor-bought licenses (Microsoft, say) on EC2 Dedicated Hosts or Amazon WorkSpaces, flexibly and often far cheaper than AWS-bought ones."
+    takeaway: BYOL reuses licenses a company already owns, while license-included instances have AWS supply and charge for the license.
+    history: []
+    verified:
+      keyHash: 6a5194adbb25
+      fullHash: feb55a7396ef
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-s8wydh
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: regulatory-compliance
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      An online fashion retailer stores personal data about shoppers in the European Union, so GDPR applies to it.
+      Which statement describes what compliance means for the retailer?
+    options:
+      - id: a
+        text: Its data must satisfy every rule that binds the retailer
+        correct: true
+        why: Compliance is the bar of meeting every law, industry standard and internal policy that applies, with GDPR as one of them here.
+      - id: b
+        text: Its traffic must be watched nonstop for unusual behavior
+        why: Constant watching for anomalies is monitoring, which supports compliance but does not by itself mean meeting GDPR.
+      - id: c
+        text: Its controls must be reviewed now and then to see they work
+        why: A periodic review of controls is auditing, a check along the way rather than the bar of meeting the rules itself.
+      - id: d
+        text: Its records must be shielded from any unauthorized access
+        why: Stopping unauthorized access is the securing step, a foundation for compliance rather than a definition of it.
+    evidence:
+      - "It is a security and data-protection bar: your resources and data must satisfy each internal policy, industry standard and regulation that binds you."
+      - "Rules follow the workload: GDPR for EU consumer data, HIPAA for US healthcare apps."
+    takeaway: Compliance means meeting every regulation, industry standard and internal policy that applies to a workload's data.
+    history: []
+    verified:
+      keyHash: 6e6c0fe17ca7
+      fullHash: 7f14e45ff7e6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kepb3d
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: secure-monitor-audit-comply-progression
+    note: m10/introduction-to-monitoring-compliance-and-governance-in-the-aws-cloud
+    task: "2.2"
+    level: 1
+    stem: >-
+      A bike rental chain is planning the governance work for its new AWS environment and wants to follow the usual four-stage progression.
+      In which order should the stages run?
+    options:
+      - id: a
+        text: Monitor, secure, audit, comply
+        why: Watching for threats has little to protect until the environment is secured, so securing must come before monitoring.
+      - id: b
+        text: Secure, audit, monitor, comply
+        why: A periodic audit checks controls that constant monitoring already watches, so monitoring comes before auditing, not after it.
+      - id: c
+        text: Secure, monitor, audit, comply
+        correct: true
+        why: The chain first protects the environment, then watches it nonstop, then checks its controls periodically, and finally proves it meets its rules.
+      - id: d
+        text: Monitor, secure, comply, audit
+        why: This puts monitoring before securing and proof of compliance before the audit that checks the controls behind it.
+    evidence:
+      - "Order: secure, monitor, audit, comply."
+      - "Audit: check periodically that controls work and policies are followed."
+    takeaway: Governance stages run secure, monitor, audit, comply, so the periodic audit follows constant monitoring.
+    history: []
+    verified:
+      keyHash: 965676b180e6
+      fullHash: f7b5b5208b9b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-k8826x
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloud-monitoring
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      An event ticketing website runs on AWS resources that add and remove capacity on their own as ticket sales rise and fall.
+      Why does the ticketing team still need cloud monitoring?
+    options:
+      - id: a
+        text: To confirm resources keep performing well and catch problems early
+        correct: true
+        why: Scaling happens without the team, so monitoring is how it confirms the site stays healthy and learns of trouble before buyers do.
+      - id: b
+        text: To show regulators that its sales practices meet the laws that apply
+        why: Proving that practices meet laws is compliance, a later step that monitoring supports but does not replace.
+      - id: c
+        text: To review on a schedule that its access controls work as planned
+        why: A scheduled review of controls is auditing, which happens periodically rather than watching health as the site scales.
+      - id: d
+        text: To keep unauthorized users away from the ticketing servers
+        why: Keeping out unauthorized users is the job of security controls, while monitoring watches health and performance.
+    evidence:
+      - "AWS services scale on their own, so you must keep checking they behave."
+      - "Its goal is peak performance and early warning of problems."
+    takeaway: Because AWS resources scale on their own, monitoring is how a team keeps checking performance and catches problems early.
+    history: []
+    verified:
+      keyHash: 6a90385017af
+      fullHash: e09d9df516fe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-897vag
+    version: 1
+    status: retired
+    type: multi
+    select: 2
+    pool: exam
+    concept: amazon-cloudwatch
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which tasks can Amazon CloudWatch perform?
+    options:
+      - id: a
+        text: Record which identity made each API call, and from where
+        why: Answering who called an API, and from where, is the auditing job of AWS CloudTrail rather than CloudWatch.
+      - id: b
+        text: Gather performance numbers from servers in a data center
+        correct: true
+        why: CloudWatch gives one real-time view of AWS resources, their apps and on-premises servers, so hybrid monitoring fits.
+      - id: c
+        text: Supply third-party audit reports about the controls of AWS
+        why: Audit reports on how AWS itself was assessed come from AWS Artifact, while CloudWatch tracks performance numbers.
+      - id: d
+        text: Flag unusual changes in the volume of API calls
+        why: Spotting API call volume that strays from the normal pattern is the job of CloudTrail Insights, not CloudWatch.
+      - id: e
+        text: Take an action when a tracked number crosses a set threshold
+        correct: true
+        why: A CloudWatch alarm reacts to a threshold by sending a notice or changing resources, such as adding instances.
+      - id: f
+        text: Track the agreements an account has accepted with AWS
+        why: Reviewing and tracking agreements with AWS happens in AWS Artifact Agreements, which has no part in monitoring.
+    evidence:
+      - "Amazon CloudWatch is a single real-time hub for watching AWS resources, the apps on them, and on-premises servers."
+      - "An alarm can notify through SNS or scale EC2 automatically."
+      - "Choose it for performance numbers and thresholds, not for who called an API."
+    takeaway: CloudWatch monitors AWS and on-premises resources in one place and can act when a metric crosses a threshold.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: CloudWatch alarms act on thresholds and the agent collects on-premises metrics; CloudWatch anomaly detection on API call metrics could also be argued for option 2."
+  - id: q-mtzrh7
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloudwatch-metrics
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      A print shop's ordering app on Amazon EC2 keeps a running count of pages each printer has produced, a value AWS has no built-in measure for.
+      The shop wants that count tracked over time in Amazon CloudWatch.
+      Which feature should it use?
+    options:
+      - id: a
+        text: A custom CloudWatch metric
+        correct: true
+        why: A custom metric tracks a value AWS does not measure by default, such as the shop's page count, over time.
+      - id: b
+        text: A shared CloudWatch dashboard
+        why: A dashboard displays metrics that already exist, so the page count must first be tracked as a metric to appear there.
+      - id: c
+        text: A CloudWatch alarm
+        why: An alarm reacts when a metric crosses a threshold, so it needs the page count tracked as a metric before it can act.
+      - id: d
+        text: A CloudTrail trail
+        why: A trail records API calls made in the account, which says nothing about how many pages a printer produced.
+    evidence:
+      - "Track a value per resource, built in (EC2 CPU) or custom"
+      - "Metric: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+    takeaway: A CloudWatch metric tracks a value over time, and custom metrics cover values AWS does not measure by itself.
+    history: []
+    verified:
+      keyHash: a5b381ede594
+      fullHash: 847320c6ebb9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-3766jk
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloudwatch-alarms
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 3
+    stem: >-
+      An online pharmacy wants its on-call engineer to receive a text message whenever CPU use on its order servers rises above a chosen level.
+      Which approach fits?
+    options:
+      - id: a
+        text: A CloudWatch alarm that sends a notice through Amazon SNS
+        correct: true
+        why: An alarm fires when the CPU metric passes the chosen level and can text the engineer through Amazon SNS.
+      - id: b
+        text: A CloudWatch dashboard that refreshes in near real time
+        why: A dashboard shows the CPU numbers on a screen, but it sends nothing to an engineer who is away from it.
+      - id: c
+        text: CloudTrail Insights turned on for the account's trail
+        why: CloudTrail Insights flags unusual API activity, which is unrelated to how busy the order servers' CPUs are.
+      - id: d
+        text: An AWS Config rule that checks each server's instance type
+        why: A Config rule judges resource settings against a policy, while the pharmacy needs a reaction to a live performance number.
+    evidence:
+      - "Act when a metric crosses a threshold: notify, or change resources"
+      - "An alarm can notify through SNS or scale EC2 automatically."
+    takeaway: A CloudWatch alarm acts when a metric crosses a threshold, such as texting staff through Amazon SNS.
+    history: []
+    verified:
+      keyHash: 3f36ba864af7
+      fullHash: 47c05f9e6600
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zzqy0g
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloudwatch-dashboards
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which feature gives a team one customizable console page that shows its chosen CloudWatch metrics together and refreshes on its own?
+    options:
+      - id: a
+        text: CloudWatch dashboards
+        correct: true
+        why: A CloudWatch dashboard is a custom console page that gathers chosen metrics into one view and keeps itself up to date.
+      - id: b
+        text: CloudWatch alarms
+        why: Alarms watch for a metric crossing a threshold and then act, rather than laying metrics out on one page.
+      - id: c
+        text: CloudWatch Logs
+        why: CloudWatch Logs stores and searches log files, which is a different job from showing metrics on one page.
+      - id: d
+        text: The AWS Health Dashboard
+        why: The AWS Health Dashboard shows AWS events affecting an account, not a page of metrics the team picked itself.
+    evidence:
+      - "Custom console pages, one view, near real time, self-refreshing"
+      - "CloudWatch dashboard: a self-refreshing console page of metrics."
+    takeaway: A CloudWatch dashboard puts chosen metrics on one custom console page that refreshes itself.
+    history: []
+    verified:
+      keyHash: 2c1a9f118bca
+      fullHash: ae6c6865efb7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-w84apn
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloudwatch-logs
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 3
+    stem: >-
+      Players of a game studio's online title reported failed sign-ins last night.
+      The engineers want the error messages that the game server's application writes collected in one place, so they can search them.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon CloudWatch Logs
+        correct: true
+        why: CloudWatch Logs collects application log files centrally and lets the engineers search and filter them for the errors.
+      - id: b
+        text: AWS CloudTrail event history
+        why: Event history lists API and console calls made in the account, while the sign-in errors live inside the game's own logs.
+      - id: c
+        text: AWS Config
+        why: Config records and judges resource settings, which would show no application error messages from the game server.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices, and it does not read or search an application's log files.
+    evidence:
+      - "Collect, store and monitor log files centrally; view, search, filter"
+      - "Metrics measure, alarms react, dashboards display, Logs keeps searchable detail."
+    takeaway: To search an application's own log files in one place, use CloudWatch Logs rather than CloudTrail's API records.
+    history: []
+    verified:
+      keyHash: 48ed0ea70ff4
+      fullHash: 8f271b253868
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-9w17yb
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-cloudtrail
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      A credit union finds that the access settings on one of its storage buckets changed over the weekend.
+      Its security lead must find out which identity made the change, when it happened and from which IP address.
+      Which service answers this?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        correct: true
+        why: CloudTrail records each API call with the caller, the time, the source IP and the result, which answers all three questions.
+      - id: b
+        text: Amazon CloudWatch
+        why: CloudWatch tracks performance metrics and alarms, which shows how resources behave but names no caller behind a change.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor might flag a bucket that is open too widely, but it keeps no record of who changed the settings or when.
+      - id: d
+        text: AWS Artifact
+        why: Artifact hands out AWS's own audit reports and agreements, which hold nothing about activity inside the credit union's account.
+    evidence:
+      - "Who called, when, from which IP, and the result: a new state or a denial."
+      - "CloudTrail answers who did what, when, where, and with what result."
+    takeaway: For who changed what, when and from where in an AWS account, look to the API call records in CloudTrail.
+    history: []
+    verified:
+      keyHash: 94db51d6c1d2
+      fullHash: 81a4fd0ebefb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-n1w5vt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloudtrail-event-history
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      A small architecture firm wants to look up management actions taken in its account over the past few weeks in one Region.
+      It wants to do this right away, with no setup and no extra charge.
+      Which AWS CloudTrail feature fits?
+    options:
+      - id: a
+        text: Event history
+        correct: true
+        why: Event history is available without setup and shows recent management events per Region for free, so the firm can search it now.
+      - id: b
+        text: A trail sending logs to Amazon S3
+        why: A trail must be created first and stores logs in S3, so it only captures actions from the moment it starts.
+      - id: c
+        text: CloudTrail Insights
+        why: Insights must be enabled and only flags unusual API volume or error rates, rather than listing the firm's recent actions.
+      - id: d
+        text: Log file integrity validation
+        why: Integrity validation proves delivered log files were left untouched, which does nothing to list recent account actions.
+    evidence:
+      - "Single actions (API or console calls); event history shows 90 days of management events per Region, free, searchable, downloadable, unchangeable"
+      - "Event history: free 90-day view of management events."
+    takeaway: CloudTrail event history is a free, ready-made view of recent management events in each Region.
+    history: []
+    verified:
+      keyHash: cb21502a1ed6
+      fullHash: 3ab55b3572db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-jkrv5h
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloudtrail-logs
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      A payment processor must keep a record of every API call in its AWS account for several years to support its PCI audits.
+      Which CloudTrail feature keeps those records for that long?
+    options:
+      - id: a
+        text: CloudTrail logs delivered to Amazon S3
+        correct: true
+        why: Log files sent to S3 have no time cap, so the processor can keep years of API records as audit proof.
+      - id: b
+        text: CloudTrail event history in the console
+        why: Event history keeps only a rolling window of recent management events, far short of the years the audits require.
+      - id: c
+        text: CloudTrail Insights on a trail
+        why: Insights flags unusual spikes in API activity, but it is no long-term store of every call made in the account.
+      - id: d
+        text: CloudTrail log file integrity validation
+        why: Integrity validation shows whether delivered files were altered, but it stores nothing itself and keeps no records for years.
+    evidence:
+      - "The files holding events, sent to S3 or CloudWatch Logs, no 90-day cap, usable as PCI or HIPAA proof"
+      - "Event history is free for 90 days, while S3 logs serve long audits."
+    takeaway: For API records that must outlast the event history window, send CloudTrail logs to Amazon S3.
+    history: []
+    verified:
+      keyHash: da89c6ed6e7e
+      fullHash: 3c81bc4f5ee4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-3ffpp6
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloudtrail-insights
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      A weather data startup wants AWS to learn the usual volume and error rate of API calls in its account and to flag any sudden departure from that pattern.
+      Which feature fits?
+    options:
+      - id: a
+        text: CloudTrail Insights
+        correct: true
+        why: Insights studies normal API volume and error rates and flags deviations, which is the pattern detection the startup wants.
+      - id: b
+        text: CloudTrail event history
+        why: Event history lists past management events for searching, but it does not learn a baseline or flag unusual activity.
+      - id: c
+        text: Log file integrity validation
+        why: Integrity validation shows whether log files were tampered with, which says nothing about unusual API volume.
+      - id: d
+        text: AWS Config rules
+        why: Config rules judge resource settings against a standard, rather than watching the rate of API calls for odd spikes.
+    evidence:
+      - "Studies management events for normal API volume and error rates, and flags deviations once enabled on a trail or event data store"
+      - "Insights flags unusual API activity."
+    takeaway: CloudTrail Insights learns normal API volume and error rates and flags activity that departs from them.
+    history: []
+    verified:
+      keyHash: 964fde9bd965
+      fullHash: 07e34e9a3e4d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-j0kf30
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: log-file-integrity-validation
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      A car insurance company's examiner asks it to prove that its stored records of API activity stayed unchanged after AWS CloudTrail delivered them.
+      Which CloudTrail feature shows this?
+    options:
+      - id: a
+        text: Log file integrity validation
+        correct: true
+        why: Integrity validation exposes changes made to delivered log files, so any editing of the stored records shows up.
+      - id: b
+        text: CloudTrail Insights
+        why: Insights looks for unusual API volume or error rates, which is a different question from whether stored records were altered.
+      - id: c
+        text: CloudTrail event history
+        why: Event history is a searchable view of recent management events and offers no check that delivered files are unchanged.
+      - id: d
+        text: A trail that delivers logs to Amazon S3
+        why: A trail stores the records in S3, but storing them alone gives no proof that nobody edited them after delivery.
+    evidence:
+      - "Integrity validation exposes tampering, and a separate log account blocks root-level edits."
+      - "Log file integrity validation: reveals tampered logs."
+    takeaway: CloudTrail log file integrity validation reveals whether delivered log files were tampered with.
+    history: []
+    verified:
+      keyHash: 0d89340382cd
+      fullHash: 0bbdc65ec410
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7e8qaa
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-artifact
+    note: m10/compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which AWS service is a no-cost portal for downloading AWS compliance reports on demand and for managing certain agreements with AWS?
+    options:
+      - id: a
+        text: AWS Artifact
+        correct: true
+        why: Artifact is the free portal that supplies AWS's own audit reports and handles agreements between a customer and AWS.
+      - id: b
+        text: AWS Audit Manager
+        why: Audit Manager gathers evidence about a customer's own controls, rather than handing out AWS's reports and agreements.
+      - id: c
+        text: AWS Config
+        why: Config evaluates the settings of a customer's resources against rules and holds no AWS reports or agreements.
+      - id: d
+        text: AWS Control Tower
+        why: Control Tower sets up and governs a multi-account environment, which has nothing to do with AWS's audit reports.
+    evidence:
+      - "A free portal that hands you AWS's own audit reports whenever needed and lets you handle certain online agreements."
+      - "AWS Artifact gives no-cost, on-demand reports and agreements."
+    takeaway: AWS Artifact is the free, on-demand source for AWS compliance reports and for agreements with AWS.
+    history: []
+    verified:
+      keyHash: 6086b7ddb7a1
+      fullHash: 8962d57b05a9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-v60267
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-artifact-agreements
+    note: m10/compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      A home health agency in the United States uses AWS Organizations.
+      It must review and accept the HIPAA business associate addendum that AWS offers, for all of its accounts at once, then keep track of it.
+      Where should it do this?
+    options:
+      - id: a
+        text: AWS Artifact Agreements
+        correct: true
+        why: Artifact Agreements is where a customer reads, accepts and tracks agreements with AWS, including HIPAA ones, across an organization.
+      - id: b
+        text: AWS Artifact Reports
+        why: Artifact Reports supplies audit reports on AWS for download, but agreements are accepted in the other part of Artifact.
+      - id: c
+        text: AWS Audit Manager
+        why: Audit Manager collects evidence about the agency's own controls and offers no place to accept agreements with AWS.
+      - id: d
+        text: AWS Organizations
+        why: Organizations groups and governs the agency's accounts, but agreements with AWS are signed and tracked through Artifact.
+    evidence:
+      - "Agreements: where you read, sign and track your agreements with AWS, for a single account or across AWS Organizations, including HIPAA ones."
+      - "AWS Artifact Agreements: the part of Artifact for signing and tracking agreements with AWS."
+    takeaway: Agreements with AWS, such as HIPAA ones, are reviewed, accepted and tracked in AWS Artifact Agreements.
+    history: []
+    verified:
+      keyHash: ac4c491e6ba1
+      fullHash: 160c4f73d8a0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0bx4ry
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-artifact-reports
+    note: m10/compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      A fintech startup's external examiner wants current third-party attestations showing how AWS itself meets security standards.
+      Where can the startup download them?
+    options:
+      - id: a
+        text: AWS Artifact Reports
+        correct: true
+        why: Artifact Reports holds up-to-date third-party audits of AWS that the startup can download and pass to its auditor.
+      - id: b
+        text: AWS Artifact Agreements
+        why: Artifact Agreements is for reading and accepting agreements with AWS, and it holds no audit reports on AWS itself.
+      - id: c
+        text: AWS Audit Manager
+        why: Audit Manager builds reports on the startup's own controls, not independent audits of how AWS meets standards.
+      - id: d
+        text: AWS CloudTrail logs
+        why: CloudTrail logs record API calls inside the startup's account, which says nothing about how AWS was audited.
+    evidence:
+      - "Reports: up-to-date outside audits of AWS against worldwide, regional and industry security rules, which you can show your auditors or regulators as proof."
+      - "AWS Artifact Reports: third-party audit reports on AWS."
+    takeaway: Independent audit reports on AWS itself come from AWS Artifact Reports, ready to hand to an auditor.
+    history: []
+    verified:
+      keyHash: 032ae0eec3e5
+      fullHash: aafe2d79a2e0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5533wk
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-config
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which capabilities does AWS Config provide?
+    options:
+      - id: a
+        text: Gathering audit evidence automatically across teams
+        why: Collecting audit evidence automatically is the job of AWS Audit Manager, while Config evaluates resource settings.
+      - id: b
+        text: Keeping a history of settings and each change made to them
+        correct: true
+        why: Config keeps a record of each resource's settings and tracks every change to them over time.
+      - id: c
+        text: Supplying outside assessments of AWS's own security
+        why: Outside assessments of AWS itself come from AWS Artifact, while Config looks at the customer's own resources.
+      - id: d
+        text: Testing whether procedures and policies work as intended
+        why: Testing whether controls such as procedures work is the job of AWS Audit Manager rather than Config.
+      - id: e
+        text: Letting staff review and accept agreements with AWS
+        why: Reviewing and accepting agreements with AWS happens in AWS Artifact Agreements, not in Config.
+      - id: f
+        text: Judging resources against rules the company defines
+        correct: true
+        why: Config evaluates resource settings against rules the company sets and reports which resources pass or fail.
+    evidence:
+      - "AWS Config records configurations, tracks changes and checks them against your rules."
+      - "Only Config evaluates configurations: Audit Manager gathers evidence, AWS CloudTrail records API calls, and AWS Artifact serves AWS's own audit reports."
+    takeaway: AWS Config records resource configurations, tracks their changes and checks them against your rules.
+    history: []
+    verified:
+      keyHash: caca85e32b95
+      fullHash: 64cb8fbda99b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-062jm9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: config-rules
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      A hotel group's policy says every storage volume in its account must be encrypted.
+      It wants each volume that breaks this policy to be reported as noncompliant, now and whenever settings change later.
+      What should it set up?
+    options:
+      - id: a
+        text: An AWS Config rule
+        correct: true
+        why: A Config rule is the standard Config checks each volume against, and it keeps reporting pass or fail as settings change.
+      - id: b
+        text: An Amazon CloudWatch alarm
+        why: An alarm reacts to a metric crossing a threshold, and encryption is a resource setting rather than a performance number.
+      - id: c
+        text: An AWS Audit Manager framework
+        why: A framework maps resources to a standard for gathering audit evidence, but the per-volume setting check comes from Config.
+      - id: d
+        text: An AWS Artifact report
+        why: An Artifact report covers how AWS itself was audited, which says nothing about the hotel group's own volumes.
+    evidence:
+      - "Config rule: a standard Config checks resources against."
+      - "It reports pass and fail and keeps watching so settings stay put, as compliance is ongoing."
+    takeaway: An AWS Config rule states a required setting and keeps reporting which resources pass or fail it.
+    history: []
+    verified:
+      keyHash: 7391681234a7
+      fullHash: ef015172542d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-hmjyrd
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: automated-remediation
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A school district's routine compliance scans sometimes find resources whose settings break district policy.
+      The district wants those resources put back to the required settings without waiting for an engineer to act.
+      Which approach fits?
+    options:
+      - id: a
+        text: Automated remediation in AWS Config
+        correct: true
+        why: Config can fix a noncompliant resource automatically, which restores the required settings with no engineer involved.
+      - id: b
+        text: A CloudTrail trail that logs the change
+        why: A trail records who made the change, but logging it leaves the resource in its noncompliant state.
+      - id: c
+        text: Read-only access in AWS Audit Manager
+        why: Read-only access protects audit evidence from edits, which is the opposite of changing the resource back.
+      - id: d
+        text: A report from AWS Artifact Reports
+        why: An Artifact report describes how AWS was audited and cannot change any setting in the district's account.
+    evidence:
+      - "It alerts you to noncompliant resources and can fix them automatically."
+      - "Automated remediation: fixes that restore compliance."
+    takeaway: AWS Config automated remediation returns noncompliant resources to the required settings without manual work.
+    history: []
+    verified:
+      keyHash: 3125b6f46e65
+      fullHash: 88c3343df1f4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4enhad
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-audit-manager
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      A mortgage lender must show outside examiners that its controls over customer funds work as intended.
+      It wants the supporting proof gathered automatically and continuously across its teams.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Audit Manager
+        correct: true
+        why: Audit Manager automates evidence collection across teams and tests whether controls work, which is the proof the lender needs.
+      - id: b
+        text: AWS Artifact
+        why: Artifact supplies reports on how AWS was audited, which proves nothing about the lender's own controls.
+      - id: c
+        text: AWS Config
+        why: Config checks resource settings against rules, but gathering audit evidence about controls is Audit Manager's job.
+      - id: d
+        text: AWS CloudTrail
+        why: CloudTrail records API calls that may feed an audit, but it does not collect and organize evidence for auditors.
+    evidence:
+      - "Audit Manager is fully managed, audits usage continually and automates evidence collection across teams."
+      - "Audit Manager automates evidence and offers prebuilt frameworks."
+    takeaway: To prove controls work with evidence gathered automatically, pick AWS Audit Manager.
+    history: []
+    verified:
+      keyHash: 3791f1fb5c92
+      fullHash: ce269cb138cf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qsrwwz
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: audit-manager-frameworks
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which ready-made item maps a company's AWS resources to the requirements of a standard or regulation, sparing the company the work of drawing up that mapping itself?
+    options:
+      - id: a
+        text: An AWS Audit Manager framework
+        correct: true
+        why: Audit Manager ships prebuilt frameworks that map resources to standards and regulations, so no mapping is drawn up by hand.
+      - id: b
+        text: An AWS Config rule
+        why: A Config rule checks one setting on resources, rather than mapping them to every requirement of a whole standard.
+      - id: c
+        text: An AWS Organizations service control policy
+        why: A service control policy caps permissions for accounts in an organization and maps nothing to a regulation.
+      - id: d
+        text: An AWS Artifact agreement
+        why: An Artifact agreement is a contract with AWS, which holds no mapping of the company's resources to a standard.
+    evidence:
+      - "Prebuilt frameworks map your resources to standards and regulations."
+      - "Framework: prebuilt mapping of resources to a standard."
+    takeaway: Audit Manager's prebuilt frameworks map your resources to the requirements of standards and regulations.
+    history: []
+    verified:
+      keyHash: 72959694c9e2
+      fullHash: da2f1c8d626e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4wx1yx
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: organizational-units
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      A biotech company runs many AWS accounts in AWS Organizations.
+      The accounts that hold lab research data all share the same regulatory needs, and the company wants to manage those accounts together, so a policy set once reaches each of them.
+      What should it do?
+    options:
+      - id: a
+        text: Place the lab accounts in one organizational unit
+        correct: true
+        why: An OU gathers accounts with the same compliance needs so policies applied to it reach every account inside.
+      - id: b
+        text: Turn on consolidated billing for the organization
+        why: Consolidated billing rolls every account's charges into one bill, but it sets apart no group of lab accounts for policies.
+      - id: c
+        text: Create an IAM group for researchers in each account
+        why: An IAM group gathers users inside one account, so it groups people rather than the lab accounts themselves.
+      - id: d
+        text: Turn on AWS CloudTrail in every lab account
+        why: CloudTrail records the API calls made in each account, which audits activity but groups no accounts for policies.
+    evidence:
+      - "Grouping: OUs gather accounts by security, compliance or budget needs, such as a developer OU."
+      - "OUs group accounts and can nest."
+    takeaway: In AWS Organizations, accounts with shared compliance or security needs are grouped into an organizational unit.
+    history: []
+    verified:
+      keyHash: bdd95b86a7a0
+      fullHash: 5e02ac7b68fe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-r2qwpg
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: member-accounts
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      Which statement about a member account in AWS Organizations is true?
+    options:
+      - id: a
+        text: It can sit directly under the root and still share the bill
+        correct: true
+        why: A member account may live under the root instead of in an OU, and it is still billed through the management account.
+      - id: b
+        text: It must first belong to an organizational unit to join at all
+        why: Placing an account in an OU is optional, since a member account may also sit directly under the root.
+      - id: c
+        text: It gets a bill of its own apart from the organization
+        why: Member account charges roll up to the management account, so the member pays no separate bill of its own.
+      - id: d
+        text: It creates the organization and holds final control
+        why: Creating and governing the organization is the role of the management account, the owner, rather than a member.
+    evidence:
+      - "In an OU, or under the root and still billed jointly"
+      - "Member account: a child account billed through the management account."
+    takeaway: A member account can sit in an OU or directly under the root, and its charges roll up to the management account.
+    history: []
+    verified:
+      keyHash: 79c3b4dd834a
+      fullHash: d399bed015d4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rk47bd
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-control-tower
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A restaurant franchise group is giving each of its locations a separate AWS environment and wants governance built in from the start.
+      Which capabilities does AWS Control Tower provide for this?
+    options:
+      - id: a
+        text: Offering staff a catalog of approved resources to launch
+        why: A curated catalog of approved resources is what AWS Service Catalog offers, not Control Tower.
+      - id: b
+        text: Creating each new account from one configurable template
+        correct: true
+        why: Control Tower's Account Factory builds every new account from one template, so each location starts out the same way.
+      - id: c
+        text: Tracking software licenses brought over from on premises
+        why: Tracking and controlling software licenses is the job of AWS License Manager rather than Control Tower.
+      - id: d
+        text: Sharing vetted networking and security setups for reuse
+        why: Sharing approved baseline networking and security setups is part of AWS Service Catalog, which governs resources rather than accounts.
+      - id: e
+        text: Blocking launches that would go past a license limit
+        why: Usage caps and blocked launches that keep licenses compliant come from AWS License Manager, not Control Tower.
+      - id: f
+        text: Enforcing rules that block or fix nonconforming resources
+        correct: true
+        why: Control Tower's guardrails stop deployments that break the rules and catch noncompliant accounts and resources.
+    evidence:
+      - "Account Factory: stamps out each new account from one configurable template."
+      - "Controls (guardrails): high-level rules, like road crash barriers, that block nonconforming deployments and catch and fix noncompliant accounts and resources."
+      - "Control Tower builds and polices a governed multi-account environment, with the landing zone as its outer boundary."
+    takeaway: AWS Control Tower sets up and polices a governed multi-account environment with templated accounts and controls.
+    history: []
+    verified:
+      keyHash: d22ae4a67270
+      fullHash: f95441c1890a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8y2znk
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: control-tower-landing-zone
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      In AWS Control Tower, what is the landing zone?
+    options:
+      - id: a
+        text: The governed boundary holding its OUs, accounts and resources
+        correct: true
+        why: The landing zone is the best-practice multi-account boundary that holds everything meant to follow the compliance rules.
+      - id: b
+        text: The template that every newly created account is built from
+        why: Building each new account from one template is the work of Account Factory, a different part of Control Tower.
+      - id: c
+        text: The high-level rules that block deployments breaking policy
+        why: Rules that block nonconforming deployments are Control Tower's controls, also called guardrails.
+      - id: d
+        text: The visual summary of accounts, controls and compliance status
+        why: The ongoing visual summary of accounts and compliance is the Control Tower dashboard, not the landing zone.
+    evidence:
+      - "Landing zone: the outer, best-practice multi-account boundary; every OU, account, user and resource you want under compliance rules lives inside it."
+      - "Landing zone: the governed boundary around OUs, accounts, users and resources."
+    takeaway: The Control Tower landing zone is the governed outer boundary that holds the OUs, accounts and resources under its rules.
+    history: []
+    verified:
+      keyHash: 9857b62f8130
+      fullHash: a3ecbc17b52b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2f7htm
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: control-tower-account-factory
+    note: m10/governance
+    task: "2.2"
+    level: 3
+    stem: >-
+      A regional airline's cloud team often gets requests from departments for fresh, isolated AWS environments, each with its own billing and security boundary.
+      The team uses AWS Control Tower and wants every new one to start with an identical baseline, created automatically from one shared definition rather than by hand.
+      Which part of Control Tower fits?
+    options:
+      - id: a
+        text: Landing zone
+        why: The landing zone is the boundary new accounts live inside, but it does not create the accounts themselves.
+      - id: b
+        text: Controls
+        why: Controls block or fix things that break the rules, but building each new account from one definition is a separate part.
+      - id: c
+        text: Account Factory
+        correct: true
+        why: Account Factory creates each new account from one configurable template, so every request yields the same setup.
+      - id: d
+        text: Dashboard
+        why: The dashboard summarizes accounts and compliance status, which reports on accounts rather than creating them.
+    evidence:
+      - "Account Factory: stamps out each new account from one configurable template."
+      - "Account Factory: one template for every new account."
+    takeaway: AWS Control Tower's Account Factory creates every new account from one configurable template.
+    history: []
+    verified:
+      keyHash: 45b3cedcfe2b
+      fullHash: 4c0862777855
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-j533tc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: control-tower-controls
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      A toy manufacturer governs its accounts with AWS Control Tower.
+      It wants high-level rules that stop teams from deploying resources that break company policy and that catch accounts already out of line.
+      Which part of Control Tower provides these rules?
+    options:
+      - id: a
+        text: The guardrails
+        correct: true
+        why: Guardrails, also called controls, are high-level rules that block nonconforming deployments and detect noncompliant accounts and resources.
+      - id: b
+        text: Account Factory
+        why: Account Factory creates new accounts from a template, but it does not police resources after they are deployed.
+      - id: c
+        text: The landing zone
+        why: The landing zone marks what falls under the rules, while the rules themselves come from the controls.
+      - id: d
+        text: The dashboard
+        why: The dashboard shows compliance status, so it reports on problems without blocking any deployment.
+    evidence:
+      - "Controls (guardrails): high-level rules, like road crash barriers, that block nonconforming deployments and catch and fix noncompliant accounts and resources."
+      - "Controls (guardrails): high-level governance rules."
+    takeaway: Control Tower controls, or guardrails, block nonconforming deployments and catch noncompliant accounts and resources.
+    history: []
+    verified:
+      keyHash: 1655b96a0a41
+      fullHash: 3e6a05055bfc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2794p3
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-service-catalog
+    note: m10/governance
+    task: "2.2"
+    level: 3
+    stem: >-
+      A university's researchers keep asking the IT team which resources they may launch, and some guess at settings on their own.
+      IT wants to offer a curated set of approved, preconfigured resources that researchers can launch themselves.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Service Catalog
+        correct: true
+        why: Service Catalog holds a curated catalog of approved resources that researchers can launch on their own with consistent settings.
+      - id: b
+        text: AWS Control Tower
+        why: Control Tower governs how accounts are created and policed, while choosing approved resources for self-service is Service Catalog.
+      - id: c
+        text: AWS License Manager
+        why: License Manager tracks software licenses and their limits, which does not give researchers approved resources to launch.
+      - id: d
+        text: AWS Marketplace
+        why: The Marketplace sells third-party software, so it is no curated list of resources the university itself approved.
+    evidence:
+      - "It lets you build, share and organize a curated catalog of approved resources, such as baseline networking and security tools for new accounts, for consistent governance."
+      - "Service Catalog offers curated, approved self-service resources."
+    takeaway: AWS Service Catalog lets staff self-serve from a curated catalog of approved resources.
+    history: []
+    verified:
+      keyHash: 738117a3bd7d
+      fullHash: 9eb9747ccf69
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-a0nq78
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: service-control-policies
+    note: m10/aws-organizations
+    task: "2.3"
+    level: 3
+    stem: >-
+      A media company wants no user or role in its development accounts to use services outside an approved list, whatever IAM permissions they hold.
+      The development accounts sit in one OU in AWS Organizations.
+      What should the company attach to that OU?
+    options:
+      - id: a
+        text: A service control policy
+        correct: true
+        why: An SCP caps the services and actions available to users and roles in every account of the OU, whatever IAM grants them.
+      - id: b
+        text: An AWS managed policy
+        why: A managed policy is an IAM policy for users, groups or roles, and it cannot be attached to an OU.
+      - id: c
+        text: An IAM role
+        why: A role is an identity that grants permissions when assumed, rather than a cap that applies across an OU's accounts.
+      - id: d
+        text: An AWS Config rule
+        why: A Config rule reports resource settings that break a rule, but it does not limit which services users can call.
+    evidence:
+      - "Cap on services, resources and API actions for an account's users and roles"
+      - "SCPs cap permissions and attach only to OUs or member accounts."
+    takeaway: An SCP attached to an OU caps what users and roles in its accounts can do, whatever their IAM permissions allow.
+    history: []
+    verified:
+      keyHash: a90f1b212240
+      fullHash: fddd2a20dc49
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-gxkekg
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: iam-access-analyzer
+    note: m10/aws-trusted-advisor
+    task: "2.3"
+    level: 3
+    stem: >-
+      A nonprofit's security team wants to see which of its resources can be reached from outside its account and to trim permissions that go unused or are too broad.
+      Which service fits?
+    options:
+      - id: a
+        text: IAM Access Analyzer
+        correct: true
+        why: Access Analyzer reviews external access and IAM policies and trims unused or broad access toward least privilege.
+      - id: b
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs broad best-practice checks, but fine-grained review of IAM permissions needs Access Analyzer.
+      - id: c
+        text: Amazon Inspector
+        why: Inspector scans workloads for software vulnerabilities, which is a different job from refining IAM permissions.
+      - id: d
+        text: AWS Config
+        why: Config checks resource settings against rules, but it does not analyze who can reach resources or trim permissions.
+    evidence:
+      - "It analyzes external access and checks policies against corporate security standards, so you can set, verify and refine permissions."
+      - "It validates and auto-reviews IAM policies, shows who can access what, and trims unused or overly broad access toward least privilege."
+    takeaway: IAM Access Analyzer shows who can reach your resources and refines IAM permissions toward least privilege.
+    history: []
+    verified:
+      keyHash: b89743122f02
+      fullHash: 37ecf5f45f12
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zx3rb8
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-compliance-resources
+    note: m10/compliance
+    task: "2.4"
+    level: 3
+    stem: >-
+      A risk officer at a regional bank wants case studies of regulated firms that solved governance problems on AWS, plus whitepapers and a security checklist for reviewers.
+      Where should the officer look?
+    options:
+      - id: a
+        text: AWS Customer Compliance Center
+        correct: true
+        why: The Customer Compliance Center gathers customer stories, compliance whitepapers and the auditing security checklist in one place.
+      - id: b
+        text: AWS Artifact
+        why: Artifact supplies AWS's audit reports and agreements, while stories and the checklist live in the Compliance Center.
+      - id: c
+        text: AWS Audit Manager
+        why: Audit Manager collects evidence about a company's own controls and holds no library of stories or whitepapers.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks an account against best practices, which is no source of compliance stories or whitepapers.
+    evidence:
+      - "Stories, key answers and the audit checklist live in the Customer Compliance Center, not Artifact."
+      - "Its whitepapers cover key compliance questions, a risk and compliance overview, and an auditing security checklist."
+    takeaway: Compliance stories, whitepapers and the auditing security checklist live in the Customer Compliance Center, not in Artifact.
+    history: []
+    verified:
+      keyHash: 86f13070a24a
+      fullHash: 272dc76aff28
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-y4mm01
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-trusted-advisor
+    note: m10/aws-trusted-advisor
+    task: "2.4"
+    level: 3
+    stem: >-
+      An online travel agency wants an automated service that keeps checking its account against AWS best practices and points out open security gaps and wasted spending.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Trusted Advisor
+        correct: true
+        why: Trusted Advisor runs ongoing best-practice checks across the account and flags security gaps and savings.
+      - id: b
+        text: Amazon Inspector
+        why: Inspector scans workloads for software vulnerabilities and gives no advice on wasted spending.
+      - id: c
+        text: IAM Access Analyzer
+        why: Access Analyzer refines IAM permissions, a narrow security task that leaves cost and other best practices unchecked.
+      - id: d
+        text: AWS Health
+        why: AWS Health reports AWS events affecting the agency's resources, rather than checking its setup against best practices.
+    evidence:
+      - "AWS Trusted Advisor is that expert, automated: it runs live best-practice checks across your account."
+      - "For ongoing cost, security and performance advice, pick Trusted Advisor over Inspector or IAM Access Analyzer."
+    takeaway: For ongoing automated best-practice checks on security and cost, pick AWS Trusted Advisor.
+    history: []
+    verified:
+      keyHash: 6257ef584f28
+      fullHash: 8dbfebedbd1e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-jws0yb
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: trusted-advisor-check-categories
+    note: m10/aws-trusted-advisor
+    task: "2.4"
+    level: 1
+    stem: >-
+      Which AWS Trusted Advisor findings belong to the check category that guards against unauthorized access?
+    options:
+      - id: a
+        text: An EBS volume has no snapshot
+        why: A volume without a snapshot is a fault tolerance finding, since the risk is lost data rather than a security gap.
+      - id: b
+        text: An RDS database instance sits idle
+        why: An idle database wastes money, so it is a cost optimization finding rather than a security one.
+      - id: c
+        text: MFA is off for the root user
+        correct: true
+        why: A root user without MFA is a security check, since that account holds the widest access of all.
+      - id: d
+        text: EC2 instances all run in one Availability Zone
+        why: Instances crowded into one Availability Zone are a fault tolerance finding, since one zone failing could halt the app.
+      - id: e
+        text: An EC2 instance is barely used
+        why: An underused instance is a cost optimization finding that points to scaling down, not to a gap in access control.
+      - id: f
+        text: A security group allows traffic from anywhere
+        correct: true
+        why: A security group that admits anyone exposes resources to attack, which is why it falls in the security category.
+    evidence:
+      - "Root user without MFA, security groups open to the public"
+      - "Its checks fall into five categories: security, cost optimization, performance, service limits and fault tolerance."
+    takeaway: Trusted Advisor's security checks flag gaps such as a root user without MFA and security groups open to the public.
+    history: []
+    verified:
+      keyHash: e5482080529a
+      fullHash: 4ca4912645bd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-h40p5r
+    version: 1
+    status: retired
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-organizations
+    note: m10/aws-organizations
+    task: "4.2"
+    level: 2
+    stem: >-
+      An accounting firm runs a separate AWS account for each of its practice areas and wants to manage their costs from one place.
+      Which billing benefits does AWS Organizations give the firm?
+    options:
+      - id: a
+        text: Caps on the services each account may use
+        why: Service control policies in Organizations do cap what accounts may use, but that is an access limit, not a billing benefit.
+      - id: b
+        text: Alerts when spending passes a set amount
+        why: Spending alerts against a custom budget come from AWS Budgets, a separate service, rather than from Organizations.
+      - id: c
+        text: A single bill that covers every account
+        correct: true
+        why: Consolidated billing rolls each account's charges into one bill paid through the parent account.
+      - id: d
+        text: Groups of accounts that share one policy
+        why: Organizational units do group accounts for shared policies, but grouping serves security and compliance needs, not billing.
+      - id: e
+        text: Charts of past costs and a cost forecast
+        why: Charting costs and forecasting them is the job of AWS Cost Explorer, a separate service, rather than of Organizations.
+      - id: f
+        text: Pricing discounts earned on pooled usage
+        correct: true
+        why: Because the bills roll up to the parent account, discounts apply to the usage of all accounts together.
+    evidence:
+      - "Consolidated billing: child bills roll up to the parent account, where discounts apply."
+      - "Organizations centrally manages many accounts, including one consolidated bill."
+    takeaway: AWS Organizations combines all accounts into one consolidated bill, where discounts apply to the combined usage.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 alone repeats the stem's word 'billing' as 'bill', which points at the key."
+  - id: q-hxafcc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: management-account
+    note: m10/aws-organizations
+    task: "4.2"
+    level: 3
+    stem: >-
+      In an organization that uses consolidated billing in AWS Organizations, which account pays the combined bill for the charges of every account?
+    options:
+      - id: a
+        text: The management account
+        correct: true
+        why: Member accounts are billed through the management account, which owns the organization and pays the combined bill.
+      - id: b
+        text: Each member account
+        why: Member charges roll up to the management account, so no member pays the organization's combined bill.
+      - id: c
+        text: The organization root
+        why: The root is the top container for OUs and accounts, rather than an account that receives a bill.
+      - id: d
+        text: An OU created for billing
+        why: An OU only groups accounts, so it cannot receive or pay a bill for the organization.
+    evidence:
+      - "Member account: a child account billed through the management account."
+      - "Management account: the owner account that sets up the organization and has final control."
+    takeaway: Under consolidated billing, every member account's charges are billed through the management account.
+    history: []
+    verified:
+      keyHash: dc2131f513d4
+      fullHash: 47cc55b7e0ad
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rq68h8
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-health
+    note: m10/aws-health
+    task: "4.3"
+    level: 1
+    stem: >-
+      Which kinds of information does AWS Health provide about the resources in an AWS account?
+    options:
+      - id: a
+        text: CPU use measured on each running instance
+        why: Performance numbers such as CPU use are CloudWatch metrics, while AWS Health reports events that AWS raises.
+      - id: b
+        text: An inventory that lists every resource
+        why: A resource inventory comes from AWS Config, while AWS Health reports events about resources rather than listing them.
+      - id: c
+        text: Disruptions in AWS services the account uses
+        correct: true
+        why: AWS Health is the main feed of events that hit an account's resources, including service events such as disruptions.
+      - id: d
+        text: Log files gathered from running applications
+        why: Collecting and searching application log files is the job of CloudWatch Logs, not of AWS Health.
+      - id: e
+        text: Planned changes such as upcoming maintenance
+        correct: true
+        why: AWS Health covers planned changes that will touch the account's resources, so teams can prepare for them.
+      - id: f
+        text: A history of setting changes on resources
+        why: A history of configuration changes comes from AWS Config, while AWS Health reports AWS events and notices.
+    evidence:
+      - "AWS Health is the main feed of events affecting your resources."
+      - "It covers service events, planned changes and account notices."
+    takeaway: AWS Health reports service events, planned changes and account notices that affect your resources.
+    history: []
+    verified:
+      keyHash: cf672e7d088b
+      fullHash: a96d08787bb4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-gn69qr
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-health-dashboard
+    note: m10/aws-health
+    task: "4.3"
+    level: 3
+    stem: >-
+      During a service disruption, an online crafts marketplace wants a view specific to its own account of the AWS events affecting its resources, with updates and timely advice on fixes.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Health Dashboard
+        correct: true
+        why: The AWS Health Dashboard gives an account-specific view of events with updates and fix advice during a disruption.
+      - id: b
+        text: Amazon CloudWatch dashboards
+        why: CloudWatch dashboards show metrics the team picked, but they carry no AWS notices or fix advice about service events.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices rather than reporting AWS events during a disruption.
+      - id: d
+        text: AWS Control Tower
+        why: Control Tower's dashboard summarizes account compliance, which says nothing about AWS events hitting the marketplace.
+    evidence:
+      - "The dashboard adds updates and timely fix advice to manage service health at scale."
+      - "AWS Health Dashboard: account-specific health view."
+    takeaway: The AWS Health Dashboard is the account-specific view of AWS events affecting your resources, with fix advice.
+    history: []
+    verified:
+      keyHash: bd0bfda3f1fc
+      fullHash: dda0829a740a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-f6w85g
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-health-api
+    note: m10/aws-health
+    task: "4.3"
+    level: 2
+    stem: >-
+      Which option lets a company's in-house operations tool read AWS Health events in code instead of through the console?
+    options:
+      - id: a
+        text: The AWS Health API
+        correct: true
+        why: The AWS Health API gives programmatic access to Health events, and it requires AWS Premium Support.
+      - id: b
+        text: The AWS Health Dashboard
+        why: The dashboard is a console view for people, so it does not let the tool read events in code.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor reports best-practice findings, and it is no programmatic source of AWS Health events.
+      - id: d
+        text: CloudWatch dashboards
+        why: CloudWatch dashboards display chosen metrics in the console and expose no AWS Health events to code.
+    evidence:
+      - "AWS Health API: programmatic access."
+      - "Its API needs AWS Premium Support."
+    takeaway: The AWS Health API gives programmatic access to Health events and needs AWS Premium Support.
+    history: []
+    verified:
+      keyHash: e6ab11e7bafc
+      fullHash: cae7481d8234
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qcrmc9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: service-limits
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 2
+    stem: >-
+      A podcast hosting startup is about to launch many more resources and wants to know in advance whether it is nearing the caps AWS sets on how much its account may use.
+      Which option fits?
+    options:
+      - id: a
+        text: Trusted Advisor's service limits checks
+        correct: true
+        why: Trusted Advisor's service limits checks flag usage that is near or at a limit, so the startup can act before a launch fails.
+      - id: b
+        text: AWS Health's notices on service events
+        why: AWS Health reports AWS events affecting resources, and it does not compare the startup's usage with its limits.
+      - id: c
+        text: AWS Config's results from rule evaluations
+        why: Config rules check resource settings against policies rather than how close usage is to a service limit.
+      - id: d
+        text: CloudWatch Logs searches of app log files
+        why: CloudWatch Logs searches log files, which does not report how close the account is to its limits.
+    evidence:
+      - "Usage near or at a limit"
+      - "Many are soft limits, raised through the Service Quota console"
+    takeaway: Trusted Advisor's service limits checks warn when usage nears a limit, and many such limits can be raised.
+    history: []
+    verified:
+      keyHash: 980515c4aa8a
+      fullHash: 9f17dc80d749
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
