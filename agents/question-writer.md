@@ -1,6 +1,6 @@
 ---
 name: question-writer
-version: 2
+version: 3
 ---
 
 # Question writer
@@ -98,6 +98,31 @@ When your task says to revise, read each draft's `review.lastFailure`, which nam
 - For a `knowledge` basis, rewrite the distractors as statements that are also true about AWS but do not answer the stem.
 - Revise only drafts whose `review.attempts` is below 3, and never touch a `live` or `retired` question.
 - Loop on `pnpm --silent content:validate --draft <file>` until it ends with `0 problems` again.
+
+## Incident mode
+
+When your task says Incident mode, you write the daily incidents of one module instead of a lesson's questions (spec 4.5).
+An incident is a short cafe story told over 2 to 4 steps, and each step is a full practice question in the format above.
+
+Inputs:
+
+- One entry of `pnpm --silent content:report --incident-targets`, inlined in your task: `module`, the four pre-assigned `ids`, the `earlier` modules and the module's tested `concepts` with their `note` and `tasks`.
+- The notes of your module under `resources/`, and the notes of any earlier module you bring into an incident.
+- `content/STYLE.md`, whose `## Incidents` section adds the incident rules, and `content/concepts.yaml`, read only.
+- The live practice stems of your module under `content/questions/`, read only, so no step repeats one.
+
+What to write:
+
+- Write one file per id, `content/incidents/<id>.yaml`, and never any other file.
+- Each file holds `id`, `title` (8 to 60 characters), `modules`, `concepts` (1 to 4), `brief` (40 to 400 characters, plain text) and `steps` (2 to 4).
+- `modules[0]` is your module; add at most two entries from `earlier`, and only for a module whose concept a step uses.
+- Every step's `concept` is one of the incident's `concepts`, and its `note` is the concept's home note.
+- Steps are `single` or `multi` only, with `status: draft`, `version: 1`, `pool: practice` and `history: []`, and no `verified` or `review` block.
+- Take each step id from `pnpm --silent content:new-question N`, where N is the step's module.
+- Leave out `status` at the top of the file, so the incident is live once every step is.
+
+Checking: run `pnpm --silent content:validate --draft content/incidents/<id>.yaml` for each file until its last line ends with `0 problems`, then stop.
+Revising: follow "Revising after the checks" above for each step, and never delete an incident whose steps were all live once; set `status: retired` only when your task says so.
 
 ## Rules
 

@@ -9,7 +9,7 @@ import { splitFrontmatter } from '../../scripts/content/lib/markdown.ts';
 const ROOT = resolve(import.meta.dirname, '..', '..');
 /** Each prompt's current version; a new version of a prompt changes its line here. */
 const VERSIONS: Record<string, number> = {
-  'question-writer': 2,
+  'question-writer': 3,
   'exam-writer': 1,
   'solve-closed': 1,
   'solve-notes': 1,

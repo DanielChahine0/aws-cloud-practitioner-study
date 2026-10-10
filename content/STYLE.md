@@ -161,3 +161,18 @@ Any figure the cited notes do not state is called a lab value.
 
 Every card placement, goal, hint and debrief line rests on a line of a note the lab lists in `notes`.
 Support plans appear only by their four current names: Basic Support, AWS Business Support+, AWS Enterprise Support and AWS Unified Operations.
+
+## Incidents
+
+A daily incident is a short cafe story told over 2 to 4 steps in `content/incidents/inc-NNN.yaml` (spec 4.5).
+The question rules above `## Labs` apply to each step, which is a full practice question with its own whys, evidence and takeaway.
+
+- Tell one story: the brief sets the scene, and each step moves it on, from noticing the problem to fixing it.
+- Make each step stand on its own, so a reader who missed the step before can still answer it.
+- Never let the brief or an earlier step give away a later step's answer.
+- Keep the brief to plain text, 40 to 400 characters, with no Markdown and no answer in it.
+- Use `single` or `multi` steps only, since a `match` step breaks the story into a table.
+- Draw on earlier modules only when the story needs them, and list each one in `modules` after the home module.
+
+- Good: `The bill for the loyalty app doubled overnight, and the manager wants to know why before the morning rush.`
+- Bad: `The cafe should have used Auto Scaling, so the bill doubled.` gives the answer in the brief.

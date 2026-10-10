@@ -14,6 +14,8 @@ import {
   cellSpare,
   examTargets,
   homed,
+  INCIDENT_MODULES,
+  incidentTargets,
   labTargets,
   needsDani,
   report,
@@ -113,6 +115,7 @@ describe('report', () => {
       'modules 1, lessons 1, glossary terms 1, concepts 2 (2 tested)',
       'questions: 2 draft, 1 live, 0 retired; live single 1, multi 0, match 0',
       'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0',
+      'Incidents: 1 shipped of 1; steps 2 live, 0 draft',
       'm01: 3 practice (single 1, multi 1, match 1); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
       'm01 labs: 1',
       'concepts.md drift: 0',
@@ -233,6 +236,7 @@ describe('exam-pool counts in the report (spec 2.6)', () => {
       'modules 1, lessons 1, glossary terms 1, concepts 2 (2 tested)',
       'questions: 2 draft, 1 live, 0 retired; live single 1, multi 0, match 0',
       'Labs: 1 live (1 core, 0 stretch); sort 1, configure 0, simulate 0',
+      'Incidents: 1 shipped of 1; steps 2 live, 0 draft',
       'm01: 3 practice (single 1, multi 1, match 1); correct option longest in 0 of 1 singles (0%); negative stems 0 (0%)',
       'm01 exam: 3 (single 3, multi 0); correct option longest in 0 of 3 singles (0%); negative stems 0 (0%)',
       'm01 labs: 1',
@@ -318,5 +322,36 @@ describe('lab targets (spec 5.1)', () => {
     const root = makeFixtureRoot();
     writePool(root, [singleQuestion({ id: 'q-e00001', pool: 'exam', status: 'live' })]);
     expect(labTargets(load(root))).toEqual(FIXTURE_TARGETS);
+  });
+});
+
+describe('incident steps and the counts (spec 4.5)', () => {
+  it('never counts a step toward practicePerConcept, coverage or the homed counts', () => {
+    const ctx = load(makeFixtureRoot());
+    const homedLive = homed(ctx, 'm01/what-a-bakery-cloud-is').concepts.map((c) => [c.id, c.live]);
+    expect(homedLive).toEqual([
+      ['shared-kitchen', 1],
+      ['per-minute-rental', 1],
+    ]);
+    expect(coverage(ctx).map((r) => [r.task, r.live])).toEqual(
+      expect.arrayContaining([
+        ['1.1', 1],
+        ['4.1', 1],
+      ]),
+    );
+  });
+
+  it('pre-assigns four incident ids per module from Module 2 to Module 13', () => {
+    expect(INCIDENT_MODULES).toEqual({ first: 2, last: 13, each: 4 });
+    const targets = incidentTargets(load(makeFixtureRoot()));
+    expect(targets.map((t) => t.module)).toEqual([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    expect(targets[0]).toEqual({
+      module: 2,
+      ids: ['inc-001', 'inc-002', 'inc-003', 'inc-004'],
+      earlier: [1],
+      concepts: [],
+    });
+    expect(targets[11]?.ids).toEqual(['inc-045', 'inc-046', 'inc-047', 'inc-048']);
+    expect(targets[11]?.earlier).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   });
 });
