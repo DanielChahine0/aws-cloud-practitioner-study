@@ -1,0 +1,707 @@
+questions:
+  - id: q-8z5d59
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-rds
+    note: m07/relational-database-services
+    task: "2.1"
+    level: 2
+    stem: >-
+      An online bookstore moves its order database from a server it ran itself to Amazon RDS for MySQL.
+      An audit rule says the order records must be unreadable to anyone who copies the stored files or listens on the network.
+      Under the shared responsibility model, who must set this up, and why?
+    options:
+      - id: a
+        text: AWS, since it runs the servers and operating system beneath RDS
+        why: AWS does run the layers beneath RDS, but making the order records unreadable to outsiders is not part of that upkeep.
+      - id: b
+        text: The bookstore, since it picks when the automated backups run
+        why: The bookstore does choose the backup schedule, but that choice has nothing to do with keeping the records unreadable.
+      - id: c
+        text: The bookstore, since data security stays with the customer
+        correct: true
+        why: The audit rule calls for encryption at rest and in transit, and on RDS that kind of data protection stays with the bookstore.
+      - id: d
+        text: AWS, since RDS applies the engine patches for the bookstore
+        why: RDS does take engine patching off the bookstore, but patching does not make the order records unreadable to outsiders.
+    evidence:
+      - AWS runs infrastructure, OS, patching and backups, while you own security measures and encryption at rest and in transit.
+    takeaway: With Amazon RDS, AWS handles patching, backups and hardware, while the customer still secures and encrypts the data.
+    history: []
+    verified:
+      keyHash: b785f4aee5a1
+      fullHash: 98f7274018ff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-gp87jx
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: ec2-hosted-vs-managed-databases
+    note: m07/introduction-to-databases
+    task: "2.1"
+    level: 2
+    stem: >-
+      A regional clinic is closing its server room and moving its PostgreSQL appointment database to AWS.
+      Its vendor software needs custom settings in the operating system, so the clinic's team will install and patch both the operating system and PostgreSQL itself.
+      Which approach fits?
+    options:
+      - id: a
+        text: Run PostgreSQL on an Amazon EC2 instance
+        correct: true
+        why: On its own EC2 instance the clinic controls the operating system, and it takes on installing and patching both layers.
+      - id: b
+        text: Run PostgreSQL on Amazon RDS
+        why: RDS patches the engine and the operating system for the clinic, so the team cannot change the OS settings the vendor needs.
+      - id: c
+        text: Run PostgreSQL on Amazon Aurora
+        why: Aurora is a managed PostgreSQL-compatible engine, so AWS keeps the operating system out of the clinic's hands.
+      - id: d
+        text: Run PostgreSQL on a server in its own room
+        why: The clinic is closing its server room and moving to AWS, so keeping a server on site does not fit.
+    evidence:
+      - With EC2 hosted databases you still install, patch, back up and scale the database and its operating system yourself, while AWS managed databases such as Amazon RDS hand those tasks to AWS.
+      - Self-hosting on EC2 is for full control, OS included, and is not automatically cheaper or faster.
+    takeaway: When a team needs control of the operating system and will patch it, a database on EC2 fits better than a managed service.
+    history: []
+    verified:
+      keyHash: 804b9f0dff10
+      fullHash: 2e1249318b19
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-n8mdq2
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-dynamodb-global-tables
+    note: m07/nosql-database-services
+    task: "3.2"
+    level: 2
+    stem: >-
+      A mobile game studio keeps its player profiles in Amazon DynamoDB and is opening servers in two more AWS Regions.
+      It wants each of those Regions to hold its own copy of the profiles that players there can both read and write.
+      Which DynamoDB feature fits?
+    options:
+      - id: a
+        text: DynamoDB global tables
+        correct: true
+        why: Global tables keep a writable copy of the data in each chosen Region, so players read and write close to home.
+      - id: b
+        text: DynamoDB Accelerator (DAX)
+        why: DAX is a cache that speeds up reads, and it does not create writable copies of the profiles in other Regions.
+      - id: c
+        text: DynamoDB auto scaling
+        why: Auto scaling adjusts throughput to traffic, but it leaves the profile data in the one Region where it already is.
+      - id: d
+        text: DynamoDB encryption at rest
+        why: Encryption at rest protects the stored profiles, but it does not place copies of them in the new Regions.
+    evidence:
+      - "Use cases: gaming, finance and global mobile apps, served worldwide by **global tables**."
+      - "**Availability**: 99.999%, copies in three facilities per Region and in other Regions."
+    takeaway: DynamoDB global tables copy a table into other Regions so worldwide apps get local reads and writes.
+    history: []
+    verified:
+      keyHash: 7408bd21f79b
+      fullHash: 53c2b4a16ebc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-r2126h
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: amazon-elasticache-high-availability
+    note: m07/in-memory-caching-services
+    task: "3.2"
+    level: 2
+    stem: >-
+      A concert ticketing site keeps its session data in Amazon ElastiCache.
+      The site must keep serving sessions even if a power failure takes down one of the separate data center sites inside its Region.
+      Which ElastiCache setup supports this?
+    options:
+      - id: a
+        text: Replicas in other Availability Zones that take over from the primary
+        correct: true
+        why: A replica in a zone the power failure did not touch is promoted, so the cache keeps serving sessions.
+      - id: b
+        text: Replicas in the primary's own Availability Zone that take over from it
+        why: Replicas that share the primary's zone go down with it, so nothing is left to serve sessions.
+      - id: c
+        text: Nightly backups of the cache copied to a second Availability Zone
+        why: A backup must first be restored to a new cache, so sessions stop being served during the outage.
+      - id: d
+        text: A single larger node in the busiest Availability Zone
+        why: One node in one zone has no copy elsewhere, so the cache stops when that zone loses power.
+    evidence:
+      - Primary and replicas in separate AZs survive a zone outage
+      - Failed nodes replaced, a replica promoted, usually in minutes
+    takeaway: ElastiCache survives a zone outage by replicating from a primary to replicas placed in other Availability Zones.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 4 are near twins that differ only in Availability Zone placement, and option 4 is the cross-AZ variant.)"
+  - id: q-wapmmz
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-backup
+    note: m07/additional-database-services
+    task: "3.6"
+    level: 3
+    stem: >-
+      A logistics company set up data protection one service at a time for its EBS volumes, EFS file systems, RDS databases and DynamoDB tables, and the separate plans now overlap.
+      It wants one dashboard to set protection rules and see restore points for all of them.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Backup
+        correct: true
+        why: AWS Backup brings backups for EBS, EFS, RDS, DynamoDB and more under one set of policies and one view.
+      - id: b
+        text: Amazon Data Lifecycle Manager
+        why: Data Lifecycle Manager automates EBS snapshots only, so it cannot cover the file systems and databases too.
+      - id: c
+        text: AWS Elastic Disaster Recovery
+        why: Elastic Disaster Recovery replicates servers for fast recovery, not central backup policies across these services.
+      - id: d
+        text: AWS Storage Gateway
+        why: Storage Gateway links on-premises systems to AWS storage and does not manage backups of these AWS resources.
+    evidence:
+      - Separate disk and database backup plans overlap and confuse, so it unifies them in one dashboard.
+      - It covers EBS, Amazon EFS, RDS, DynamoDB and more, even on-premises data.
+    takeaway: AWS Backup replaces scattered per-service backup plans with one central place for policies and restore points.
+    history: []
+    verified:
+      keyHash: e077f9029405
+      fullHash: 008ad5c72b43
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-bnhjtm
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: aws-backup
+    note: m07/additional-database-services
+    task: "3.6"
+    level: 2
+    select: 2
+    stem: >-
+      A media company already uses AWS Backup, and its auditors set two new rules.
+      Restores must still work if the company's main AWS Region goes offline, and every member account must follow one shared set of rules.
+      Which AWS Backup capabilities meet these rules?
+    options:
+      - id: a
+        text: Keeping copies of backups in a second Region
+        correct: true
+        why: Copies held in another Region can still be restored when the main Region is offline, which meets the first rule.
+      - id: b
+        text: Applying policies across a whole organization
+        correct: true
+        why: Organization-wide policies put every member account under the same rules, which meets the second rule.
+      - id: c
+        text: Showing jobs and restore points in one view
+        why: One view helps the team watch backups, but it neither survives a Region outage nor makes accounts follow rules.
+      - id: d
+        text: Protecting new resources as soon as they appear
+        why: Auto-protection covers resources as they are created, but it does not keep restores working when a Region fails.
+      - id: e
+        text: Encrypting backups and setting their schedules
+        why: Encryption and schedules protect each backup, but they meet neither the outage rule nor the shared-rules rule.
+    evidence:
+      - "**Cross-Region redundancy**: copies in other Regions allow restores during a Regional outage."
+      - "**Compliance**: audit logs, reports, organization-wide policies and activity tracking."
+      - "**Central management**: one view of jobs, restore points and compliance across services and accounts, with schedules, encryption and auto-protection of new resources."
+    takeaway: AWS Backup copies in other Regions survive a Regional outage, and organization-wide policies hold every account to one set of rules.
+    history: []
+    verified:
+      keyHash: 9499d64e2d14
+      fullHash: 0976c11642d1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-q0mbxe
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-aurora
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      An insurance broker pays steep license fees for a high-end commercial relational database.
+      It wants a managed, MySQL-compatible database that gives similar performance for far less money.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Aurora
+        correct: true
+        why: Aurora is MySQL-compatible and delivers commercial-grade performance at a small fraction of the cost.
+      - id: b
+        text: Amazon DynamoDB
+        why: DynamoDB is a NoSQL key-value database, so it is not a MySQL-compatible stand-in for a relational engine.
+      - id: c
+        text: Amazon Redshift
+        why: Redshift is a data warehouse for analytics rather than a replacement for an operational relational database.
+      - id: d
+        text: Amazon Neptune
+        why: Neptune is a graph database for highly connected data and does not offer MySQL compatibility.
+    evidence:
+      - About one-tenth the cost of high-end commercial databases at similar performance, so it suits replacing pricey commercial engines.
+      - MySQL- and PostgreSQL-compatible, built to cut needless I/O (the video also lists distributed SQL, DSQL).
+    takeaway: Aurora suits replacing costly commercial relational engines, matching their performance for much less.
+    history: []
+    verified:
+      keyHash: c758db09db72
+      fullHash: 8afa3ede69ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-r35adf
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: amazon-dynamodb
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    select: 2
+    stem: >-
+      Which statements describe Amazon DynamoDB?
+    options:
+      - id: a
+        text: It is a serverless NoSQL database for key-value and document data.
+        correct: true
+        why: DynamoDB is fully managed and serverless, and it stores key-value and document data without a fixed schema.
+      - id: b
+        text: It keeps single-digit millisecond latency as the workload grows.
+        correct: true
+        why: DynamoDB is built to answer in single-digit milliseconds no matter how large the workload becomes.
+      - id: c
+        text: It applies engine upgrades during weekly maintenance windows.
+        why: DynamoDB has no maintenance windows or downtime, since AWS handles upgrades without the customer scheduling them.
+      - id: d
+        text: It links tables with foreign keys and joins them in SQL queries.
+        why: Foreign keys and SQL joins belong to relational databases, while DynamoDB stores key-value items without them.
+      - id: e
+        text: It stores each table on one server whose size the customer picks.
+        why: DynamoDB is serverless and spreads data over many servers, so no customer picks a single server size.
+    evidence:
+      - Fully managed, serverless NoSQL for key-value and document data.
+      - Single-digit millisecond latency at any scale, with no patching, upgrades, maintenance windows, downtime or cold starts.
+    takeaway: DynamoDB is a serverless NoSQL database that stays fast at any scale with no maintenance windows.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 3 describe DynamoDB while 2, 4 and 5 describe relational RDS, so only the pair matches select 2.)"
+  - id: q-crtsxr
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: amazon-elasticache
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    select: 2
+    stem: >-
+      An online furniture store's product pages send the same queries to its Amazon RDS database over and over, and pages load slowly during sales.
+      The team plans to add Amazon ElastiCache.
+      Which outcomes does adding the cache bring?
+    options:
+      - id: a
+        text: Repeated reads come back from memory with sub-millisecond latency.
+        correct: true
+        why: ElastiCache answers from RAM in under a millisecond, so the repeated product queries return much faster.
+      - id: b
+        text: Fewer reads reach RDS, which may allow a smaller database instance.
+        correct: true
+        why: Cache hits take read load off RDS, so the store may be able to run a smaller and cheaper instance.
+      - id: c
+        text: Product data can live only in the cache, so RDS can be shut down.
+        why: A cache lacks the lasting storage of a database, so it works beside RDS and never replaces it.
+      - id: d
+        text: The cache expands the storage of RDS as new products are added.
+        why: ElastiCache scales only the cache itself and leaves the storage of the RDS database unchanged.
+      - id: e
+        text: Sales reports that join many tables run in the cache, not RDS.
+        why: A cache lacks the rich queries of a database, so reports that join tables still run on RDS.
+    evidence:
+      - Sub-millisecond reads and writes (the video says microsecond reads).
+      - Reading from the cache can let you run smaller, cheaper database instances.
+      - It scales the cache only, not the database's storage.
+    takeaway: ElastiCache speeds up repeated reads from memory and offloads the database, which can then be smaller.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 5 are the only true statements about a cache in front of RDS; 2, 3 and 4 are false.)"
+  - id: q-f2xccj
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-documentdb
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 3
+    stem: >-
+      A recipe website stores each recipe as a nested JSON record whose fields change often.
+      Its developers already use MongoDB drivers and tools and want a fully managed service that keeps them working.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon DocumentDB
+        correct: true
+        why: DocumentDB stores JSON-like documents with changing schemas and works with existing MongoDB drivers and tools.
+      - id: b
+        text: Amazon DynamoDB
+        why: DynamoDB handles flexible key-value data, but it does not let the team keep using its MongoDB drivers and tools.
+      - id: c
+        text: Amazon Neptune
+        why: Neptune is built for graphs of highly connected data, not for MongoDB-style JSON documents.
+      - id: d
+        text: Amazon ElastiCache
+        why: ElastiCache is an in-memory cache that sits beside a database, not a managed document store.
+    evidence:
+      - Fully managed, it stores, queries and indexes JSON-like documents with dynamic schemas, ideal when schemas change often.
+      - "**MongoDB compatibility**: MongoDB APIs, drivers, tools, code and skills carry over with few changes."
+    takeaway: For JSON documents with changing fields and existing MongoDB skills, Amazon DocumentDB is the managed fit.
+    history: []
+    verified:
+      keyHash: 2b88ec6f81b4
+      fullHash: 2084c8321138
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-h9z7ab
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-neptune
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A payments startup wants to spot fraud rings in real time by following chains of links between accounts, devices and cards.
+      Which database service is designed for this kind of highly connected data?
+    options:
+      - id: a
+        text: Amazon Neptune
+        correct: true
+        why: Neptune is a graph database that follows relationships quickly, which suits fraud detection across linked records.
+      - id: b
+        text: Amazon DynamoDB
+        why: DynamoDB looks items up by key and has no built-in way to traverse chains of relationships.
+      - id: c
+        text: Amazon Aurora
+        why: Aurora keeps data in relational tables, where many-hop relationship chains become clumsy and slow to query.
+      - id: d
+        text: Amazon Redshift
+        why: Redshift is a data warehouse for analytics, not a database built to traverse connected records in real time.
+    evidence:
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+      - "Use cases: social network mapping, fraud detection, search and recommendations."
+    takeaway: When the questions are about chains of relationships, such as fraud rings, a graph database like Neptune fits.
+    history: []
+    verified:
+      keyHash: e033238a509b
+      fullHash: 6efc2c8f7d4e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-y0jyd9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-managed-blockchain
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A seafood wholesaler and its partner fleets want a shared, tamper-evident ledger network that records each catch from the boat to the store for food-safety checks.
+      Which AWS service runs this kind of network?
+    options:
+      - id: a
+        text: Amazon Managed Blockchain
+        correct: true
+        why: Managed Blockchain runs blockchain networks, which give the partners one shared and tamper-evident record of each shipment.
+      - id: b
+        text: Amazon Neptune
+        why: Neptune maps relationships in a graph, but it does not run a ledger network shared among companies.
+      - id: c
+        text: Amazon DynamoDB
+        why: DynamoDB is a key-value database owned by one account, not a ledger network run across partners.
+      - id: d
+        text: Amazon DocumentDB
+        why: DocumentDB stores JSON documents for one application and does not provide a shared ledger network.
+    evidence:
+      - "**Amazon Managed Blockchain** runs blockchain networks, such as a grocer's food-safety shipment tracking."
+    takeaway: A shared ledger that several companies use to trace goods points to Amazon Managed Blockchain.
+    history: []
+    verified:
+      keyHash: 185dbf86dc40
+      fullHash: cde3b1a1a978
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zdjpp9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-dynamodb-accelerator
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      Which option adds an in-memory cache built specifically for Amazon DynamoDB to cut the time its reads take?
+    options:
+      - id: a
+        text: DynamoDB Accelerator (DAX)
+        correct: true
+        why: DAX is the cache made for DynamoDB, and it sharply reduces how long DynamoDB reads take.
+      - id: b
+        text: DynamoDB global tables
+        why: Global tables copy a table into other Regions, and they are not a cache in front of DynamoDB.
+      - id: c
+        text: Amazon ElastiCache serverless
+        why: ElastiCache serverless is a general-purpose cache, not one built into DynamoDB itself.
+      - id: d
+        text: Amazon RDS read replicas
+        why: Read replicas offload reads from an RDS database and have no role in DynamoDB.
+    evidence:
+      - "**DynamoDB Accelerator (DAX)** is a built-in cache that sharply cuts DynamoDB read times."
+    takeaway: DynamoDB Accelerator (DAX) is the cache built for DynamoDB to make its reads even faster.
+    history: []
+    verified:
+      keyHash: 8f84d78b3db3
+      fullHash: d62354f50a8a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yw3vxt
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: relational-databases
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A bike rental shop keeps customers, bikes and rentals in separate tables where every row has the same fixed columns.
+      Staff run one query that joins the tables to list each customer's past rentals.
+      Which type of database fits this design?
+    options:
+      - id: a
+        text: A relational database
+        correct: true
+        why: Related tables under a fixed schema, joined by one query, are the defining traits of a relational database.
+      - id: b
+        text: A key-value NoSQL database
+        why: A key-value database uses a flexible schema and does not join related tables in one query.
+      - id: c
+        text: A graph database
+        why: A graph database stores nodes and their connections rather than tables of rows with fixed columns.
+      - id: d
+        text: An in-memory cache
+        why: A cache only holds copies of hot data in RAM and is not the lasting home for the shop's records.
+    evidence:
+      - Tables of rows and columns follow a rigid schema and share attributes, so one query spans customers and orders.
+    takeaway: Fixed-column tables that one query can join across point to a relational database.
+    history: []
+    verified:
+      keyHash: 5f3cd37fb981
+      fullHash: 50f57f95180c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zvasfb
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: nosql-databases
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      What mainly sets a NoSQL database apart from a relational database?
+    options:
+      - id: a
+        text: Its schema is flexible, so items can hold different attributes
+        correct: true
+        why: The core difference is the flexible schema, which lets each item carry its own set of attributes.
+      - id: b
+        text: It indexes the primary key of every item by default
+        why: Relational databases index their primary keys too, so this trait does not set NoSQL apart from them.
+      - id: c
+        text: It can run on AWS as a fully managed database service
+        why: AWS also runs relational engines as managed services, so being managed is not what separates the two models.
+      - id: d
+        text: It can return query results quickly even for very large datasets
+        why: Speed and scale are not the core difference, since a relational database can also be fast for the right workload.
+    evidence:
+      - The core difference is flexible versus rigid schema, not speed or scaling, and NoSQL still indexes the primary key by default.
+    takeaway: NoSQL differs from relational mainly by a flexible schema, not by raw speed or size.
+    history: []
+    verified:
+      keyHash: 09231d8acb4e
+      fullHash: 644edba14b01
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5x93p6
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: in-memory-caching
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A news publisher's website asks its database for the same few headlines many times a minute, and those headlines rarely change.
+      Which approach best cuts both the database load and the response time?
+    options:
+      - id: a
+        text: Keep the hot results in an in-memory cache beside the database
+        correct: true
+        why: Serving the rarely changing headlines from RAM answers far faster and spares the database the repeat reads.
+      - id: b
+        text: Add a standby copy of the database in a second Availability Zone
+        why: A standby only takes over when the primary fails, so it does not answer the repeated headline reads any faster.
+      - id: c
+        text: Move older articles that readers rarely open to archive storage
+        why: Archiving cold articles saves storage cost, but the hot headlines still hit the database on every request.
+      - id: d
+        text: Add more storage capacity to the existing database instance
+        why: More storage does not reduce the number of repeat reads hitting the database or speed them up.
+    evidence:
+      - Read-heavy traffic for data that rarely changes is common, and a caching layer is one of the best remedies.
+      - Lacking a database's lasting storage and rich queries, a cache complements the database, never replaces it.
+    takeaway: Read-heavy, rarely changing data is best served from an in-memory cache that sits beside the database.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the most specific and 'hot results' hints at repeated reads.)"
+  - id: q-1jqq0d
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: amazon-dynamodb
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    select: 2
+    stem: >-
+      A language-learning app keeps each learner's progress in Amazon DynamoDB, and its operations lead sets two rules.
+      The two-person team cannot spend time keeping the database engine updated, and learner progress must stay reachable if a single data center goes offline.
+      Which DynamoDB traits meet these rules?
+    options:
+      - id: a
+        text: AWS handles patches and upgrades with no maintenance windows
+        correct: true
+        why: AWS keeps the engine current with no patching or maintenance windows for the team, which meets the rule about upkeep.
+      - id: b
+        text: Encryption is applied automatically at rest and in transit
+        why: Automatic encryption protects the progress data, but it neither removes upkeep nor keeps data reachable when a data center goes offline.
+      - id: c
+        text: Copies of the data are kept in three facilities per Region
+        correct: true
+        why: With copies in three separate facilities, losing one data center still leaves the progress data reachable, which meets the second rule.
+      - id: d
+        text: Throughput follows real traffic through auto scaling
+        why: Auto scaling matches capacity to demand, but it does not keep the data reachable when a data center goes offline.
+      - id: e
+        text: Items in one table can carry different attributes
+        why: A flexible schema lets progress records differ, but it meets neither the upkeep rule nor the outage rule.
+    evidence:
+      - Single-digit millisecond latency at any scale, with no patching, upgrades, maintenance windows, downtime or cold starts.
+      - "**Availability**: 99.999%, copies in three facilities per Region and in other Regions."
+    takeaway: DynamoDB needs no patching or maintenance windows, and it keeps copies in three facilities per Region for availability.
+    history: []
+    verified:
+      keyHash: d4f29402eaa4
+      fullHash: 4dd58348dd40
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ah2p8s
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: amazon-elasticache
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    select: 2
+    stem: >-
+      A travel booking site will add Amazon ElastiCache beside its Amazon RDS database.
+      Its developers want to keep the caching client code they already wrote for their current self-run cache, and the team wants no manual work adding or removing cache nodes as bookings rise and fall.
+      Which ElastiCache capabilities meet these needs?
+    options:
+      - id: a
+        text: Compatibility with Redis OSS, Valkey and Memcached
+        correct: true
+        why: Support for the common open-source caching engines lets the developers keep their existing client code, which meets the first need.
+      - id: b
+        text: Encryption at rest and in transit through TLS
+        why: Encryption protects the cached bookings, but it neither keeps the client code working nor sizes the cache by itself.
+      - id: c
+        text: Replicas placed in separate Availability Zones
+        why: Replicas in other zones keep the cache up through a zone outage, but they do not size the cache to demand on their own.
+      - id: d
+        text: A serverless option that scales with demand
+        correct: true
+        why: The serverless option grows and shrinks the cache with demand, so nobody adds or removes nodes by hand.
+      - id: e
+        text: Reads and writes that finish in under a millisecond
+        why: Sub-millisecond speed makes pages load fast, but it neither keeps the client code nor sizes the cache on its own.
+    evidence:
+      - Fully managed caching compatible with Redis OSS, Valkey and Memcached, so existing tools keep working.
+      - You resize the cache with demand, or let the serverless option scale itself, while AWS runs the infrastructure.
+    takeaway: ElastiCache keeps Redis OSS, Valkey and Memcached tools working, and its serverless option sizes the cache by itself.
+    history: []
+    verified:
+      keyHash: 56786b8e965f
+      fullHash: 1584b01d5a02
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-n70kjw
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: amazon-dynamodb-partition-key
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 2
+    stem: >-
+      A veterinary chain keeps appointment records in an Amazon DynamoDB table keyed on appointment number.
+      Records with or without a vaccine notes attribute save fine, but one record that left out the appointment number is refused.
+      Which fact about DynamoDB tables explains the refused record?
+    options:
+      - id: a
+        text: A table lets each item carry its own set of other attributes
+        why: This is why the records with and without vaccine notes both save, but it does not explain the refused record.
+      - id: b
+        text: A table expects every item to carry its partition key value
+        correct: true
+        why: The appointment number is the partition key, so a record without a value for it cannot be stored in the table.
+      - id: c
+        text: A table is reached by apps through API calls in the AWS SDK
+        why: The app does write through the SDK and DynamoDB APIs, but that path refuses no record for a missing attribute.
+      - id: d
+        text: A table holds no foreign keys that link it to other tables
+        why: DynamoDB tables stand alone without foreign keys, so no broken link to another table could cause the refusal.
+    evidence:
+      - A table needs only a name (orders) and a partition key (order number, type Number), and is usable once active.
+      - Each item must carry a partition key value, while its other attributes can vary.
+    takeaway: Every DynamoDB item must hold a value for the table's partition key, while its other attributes can differ.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The stem's 'keyed on' shares the word key with option 4's 'partition key', a clue word only partly masked by option 2's 'foreign keys'. Option 1's why says the SDK and API path refuses no record, but the refusal itself comes back through that API call; the why should say the access path does not explain the refusal."
