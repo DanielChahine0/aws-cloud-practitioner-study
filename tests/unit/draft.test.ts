@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadContext } from '../../scripts/content/lib/context.ts';
@@ -34,7 +34,9 @@ describe('asLive', () => {
       singleQuestion({ id: 'q-9r9r9r', status: 'retired' }),
     ]);
     const ctx = asLive(load(root), QUESTION_FILE);
-    expect(ctx.questions.map((e) => [e.q.id, e.q.status, e.q.verified])).toEqual([
+    expect(
+      ctx.questions.filter((e) => e.incident === null).map((e) => [e.q.id, e.q.status, e.q.verified]),
+    ).toEqual([
       ['q-7k2m9p', 'live', undefined],
       ['q-3h8r2t', 'live', undefined],
       ['q-9r9r9r', 'retired', undefined],
@@ -88,7 +90,9 @@ describe('demote', () => {
     expect(demote(load(root))).toEqual([
       `demoted q-7k2m9p (${QUESTION_FILE}): its evidence no longer matches m01/what-a-bakery-cloud-is`,
     ]);
-    const statuses = load(root).questions.map((e) => [e.q.id, e.q.status]);
+    const statuses = load(root)
+      .questions.filter((e) => e.incident === null)
+      .map((e) => [e.q.id, e.q.status]);
     expect(statuses).toEqual([
       ['q-7k2m9p', 'draft'],
       ['q-3h8r2t', 'live'],
@@ -151,5 +155,28 @@ describe('labDraftCheck (spec 5.1)', () => {
       labs: 0,
       problems: [`R1 ${FIXTURE_LAB}  minutes: Too small: expected number to be >=2`],
     });
+  });
+});
+
+describe('draftCheck on an incident file (spec 4.5)', () => {
+  const INCIDENT = 'content/incidents/inc-001.yaml';
+
+  it('checks every step as live with no coverage line, since steps never count toward coverage', () => {
+    const root = makeFixtureRoot();
+    const { questions, problems } = draftCheck(load(root), INCIDENT);
+    expect(questions).toBe(2);
+    expect(problems).toEqual([]);
+  });
+
+  it('reports a step whose why is too short, by step id and line', () => {
+    const root = makeFixtureRoot();
+    const text = readFileSync(join(root, INCIDENT), 'utf8').replace(
+      'why: Baking early adds no oven capacity and leaves the buns stale by morning.',
+      'why: Too early.',
+    );
+    writeFileSync(join(root, INCIDENT), text);
+    expect(draftCheck(load(root), INCIDENT).problems).toEqual([
+      expect.stringMatching(/^R4 content\/incidents\/inc-001\.yaml:7 +q-d2f6h8: /),
+    ]);
   });
 });

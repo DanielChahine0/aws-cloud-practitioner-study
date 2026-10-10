@@ -1,6 +1,6 @@
 /**
  * pnpm content:checks <command>: the agent check pipeline (spec 2.7).
- *   prepare --modules 01,03 [--seed N] [--pool exam]  write keyless batches for every question of the pool (practice
+ *   prepare --modules 01,03 [--seed N] [--pool exam|incident]  write keyless batches for every question of the pool (practice
  *                                                     by default) that needs a check, and keys.json
  *   lint <answers file>                               check one answer file against its batch until it prints OK
  *   grade                                             grade every answer file and record the passes and failures;
@@ -32,8 +32,10 @@ switch (command) {
     const seed = Number(option('--seed') ?? '1');
     if (!Number.isInteger(seed)) fail('--seed must be a whole number');
     const poolFlag = option('--pool') ?? 'practice';
-    if (poolFlag !== 'practice' && poolFlag !== 'exam') fail('--pool is practice or exam');
-    const pool = poolFlag === 'exam' ? 'exam' : 'practice';
+    if (poolFlag !== 'practice' && poolFlag !== 'exam' && poolFlag !== 'incident') {
+      fail('--pool is practice, exam or incident');
+    }
+    const pool = poolFlag === 'exam' ? 'exam' : poolFlag === 'incident' ? 'incident' : 'practice';
     const { paths, questions } = prepare(loadContext(root), modules, seed, pool);
     for (const path of paths) console.log(path);
     console.log(`prepared ${paths.length} batches for ${questions} questions`);
@@ -58,6 +60,6 @@ switch (command) {
   }
   default:
     fail(
-      'usage: pnpm content:checks prepare --modules 01,03 [--seed N] [--pool exam] | lint <answers file> | grade',
+      'usage: pnpm content:checks prepare --modules 01,03 [--seed N] [--pool exam|incident] | lint <answers file> | grade',
     );
 }

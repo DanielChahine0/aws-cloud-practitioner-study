@@ -14,6 +14,9 @@ import { POOL_FILE, singleQuestion, writePool } from '../fixtures/questions.ts';
 const LESSON_ROUTE = '#/m/01/l/what-a-bakery-cloud-is';
 const QUESTIONS_FILE = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
 const LESSON_SLUG = 'what-a-bakery-cloud-is';
+const INCIDENT_FILE = 'content/incidents/inc-001.yaml';
+/** The fixture incident's two live steps, which join `questionVersions` once the incident ships. */
+const STEPS = { 'q-d2f6h8': 1, 'q-e3g7j9': 1 };
 
 const MULTI = `
   - id: q-9q4r5s
@@ -171,7 +174,7 @@ describe('buildContent on the fixture tree', () => {
       ['d', false],
     ]);
     expect(single?.stem).toMatch(/^A harbour branch sells out .* Which choice fits the bakery cloud\?$/);
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-d9p4r6': 1 });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-d9p4r6': 1, ...STEPS });
   });
 
   it('ships the draft match only once it is live, with its pairs in authored order', () => {
@@ -188,7 +191,7 @@ describe('buildContent on the fixture tree', () => {
       'Two cabinets for ten minutes each',
     ]);
     expect(match?.read.route).toBe(`${LESSON_ROUTE}/paying-by-the-minute`);
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-c8n3p5': 1, 'q-d9p4r6': 1 });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-c8n3p5': 1, 'q-d9p4r6': 1, ...STEPS });
   });
 
   it('adds the Select suffix to a multi stem and cites an update line by its sentence', () => {
@@ -204,18 +207,18 @@ describe('buildContent on the fixture tree', () => {
       text: 'The fixture guide names a newer billing term.',
     });
     expect(chunk.questions.map((q) => q.id)).toEqual(['q-9q4r5s', 'q-b4k7m2', 'q-d9p4r6']);
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-9q4r5s': 3, 'q-d9p4r6': 1 });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-9q4r5s': 3, 'q-d9p4r6': 1, ...STEPS });
   });
 
   it('never ships a retired question or one from the exam pool', () => {
     const root = makeFixtureRoot();
     dropFixtureLab(root);
     for (let i = 0; i < 2; i++) replaceIn(root, QUESTIONS_FILE, 'status: live', 'status: retired');
-    expect(build(root).index.questionVersions).toEqual({});
+    expect(build(root).index.questionVersions).toEqual(STEPS);
     const exam = makeFixtureRoot();
     dropFixtureLab(exam);
     for (let i = 0; i < 3; i++) replaceIn(exam, QUESTIONS_FILE, 'pool: practice', 'pool: exam');
-    expect(build(exam).index.questionVersions).toEqual({});
+    expect(build(exam).index.questionVersions).toEqual(STEPS);
   });
 
   it('fails when a retired question is still a debrief question of a live lab', () => {
@@ -245,6 +248,37 @@ describe('buildContent on the fixture tree', () => {
       '\n- See [later](02-gone.md).\n',
     );
     expect(() => build(root)).toThrow('link to 02-gone.md has no page on the site');
+  });
+});
+
+describe('daily incidents in the chunks and the index (spec 2.10, 4.5)', () => {
+  it('ships a live incident whose steps are all live in its home chunk and the index', () => {
+    const { index, json } = build();
+    expect(index.incidents).toEqual([{ id: 'inc-001', title: 'Saturday rush at the harbour', modules: [1] }]);
+    const chunk = json<ModuleChunk>(index.modules[0]?.chunk ?? '');
+    expect(chunk.incidents.map((i) => [i.id, i.brief.slice(0, 20), i.steps.map((s) => s.id)])).toEqual([
+      ['inc-001', 'The harbour branch i', ['q-d2f6h8', 'q-e3g7j9']],
+    ]);
+    expect(chunk.incidents[0]?.steps[0]?.read.route).toBe(`${LESSON_ROUTE}/shared-kitchen`);
+    expect(chunk.questions.map((q) => q.id)).toEqual(['q-b4k7m2', 'q-d9p4r6']);
+  });
+
+  it('keeps an incident with a draft step, or a retired incident, out of the chunk, the index and questionVersions', () => {
+    const draft = makeFixtureRoot();
+    replaceIn(
+      draft,
+      INCIDENT_FILE,
+      '    status: live\n    pool: practice\n    type: single\n    concept: per-minute-rental',
+      '    status: draft\n    pool: practice\n    type: single\n    concept: per-minute-rental',
+    );
+    const retired = makeFixtureRoot();
+    replaceIn(retired, INCIDENT_FILE, 'modules: [1]', 'status: retired\nmodules: [1]');
+    for (const root of [draft, retired]) {
+      const { index, json } = build(root);
+      expect(index.incidents).toEqual([]);
+      expect(json<ModuleChunk>(index.modules[0]?.chunk ?? '').incidents).toEqual([]);
+      expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-d9p4r6': 1 });
+    }
   });
 });
 
@@ -328,7 +362,7 @@ describe('mock forms, ranks, badges and the blueprint in the index', () => {
       'q-exc001': { version: 2, concept: 'shared-kitchen', task: '1.1', form: 'C', type: 'single' },
       'q-exd001': { version: 2, concept: 'shared-kitchen', task: '1.1', form: 'D', type: 'single' },
     });
-    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-d9p4r6': 1 });
+    expect(index.questionVersions).toEqual({ 'q-b4k7m2': 1, 'q-d9p4r6': 1, ...STEPS });
     const { exam: _exam, ...rest } = index;
     const elsewhere = [...built.files]
       .filter(([name]) => !/^content\/(exam-[a-d]|index)\./.test(name))

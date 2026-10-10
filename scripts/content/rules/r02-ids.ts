@@ -5,6 +5,7 @@ import {
   CONCEPTS_FILE,
   type Finding,
   FORMS_FILE,
+  INCIDENTS_DIR,
   LABS_DIR,
   POOL_DIR,
   QUESTIONS_DIR,
@@ -109,6 +110,30 @@ function withoutRev(lab: Record<string, unknown>): string {
   return JSON.stringify(rest);
 }
 
+/**
+ * The id of an incident file text and whether it shipped (it has steps and every one is live or retired), tolerating a
+ * file that fails the schema; null when it does not parse or names no id.
+ */
+function incidentIn(yamlText: string | null): { id: string; shipped: boolean } | null {
+  if (yamlText === null) return null;
+  let data: unknown;
+  try {
+    data = parseYaml(yamlText);
+  } catch {
+    return null;
+  }
+  if (typeof data !== 'object' || data === null) return null;
+  const { id, steps } = data as { id?: unknown; steps?: unknown };
+  if (typeof id !== 'string') return null;
+  const statuses = Array.isArray(steps)
+    ? steps.map((s: unknown) =>
+        typeof s === 'object' && s !== null ? (s as { status?: unknown }).status : null,
+      )
+    : [];
+  const shipped = statuses.length > 0 && statuses.every((s) => s === 'live' || s === 'retired');
+  return { id, shipped };
+}
+
 /** The forms of a forms.yaml text that pass the schema; [] when it is missing or does not parse. */
 function formsIn(yamlText: string | null): Forms['forms'] {
   if (yamlText === null) return [];
@@ -121,10 +146,10 @@ function formsIn(yamlText: string | null): Forms['forms'] {
 }
 
 /**
- * R2 Ids: ids are unique across concepts, aliases, missions, questions of both pools and labs; no concept id in HEAD
- * disappears; a live or retired question in HEAD stays, and a live question whose answer changes takes a key-fix
- * version; a lab in HEAD stays, and any edit to it raises its `rev`; a form frozen in HEAD keeps its qids, their
- * order and `frozen: true` (spec 4.3, 5.1).
+ * R2 Ids: ids are unique across concepts, aliases, missions, questions of both pools, labs, incidents and incident
+ * steps; no concept id in HEAD disappears; a live or retired question in HEAD stays, and a live question whose answer
+ * changes takes a key-fix version; a lab in HEAD stays, and any edit to it raises its `rev`; an incident that shipped
+ * in HEAD stays; a form frozen in HEAD keeps its qids, their order and `frozen: true` (spec 4.3, 4.5, 5.1).
  */
 export const r02: Rule = {
   id: 'R2',
@@ -141,7 +166,10 @@ export const r02: Rule = {
     for (const c of ctx.concepts)
       for (const alias of c.aliases ?? []) claim(alias, `alias of ${c.id}`, CONCEPTS_FILE);
     for (const m of ctx.missions) claim(m.id, 'mission', m.path);
-    for (const entry of ctx.questions) claim(entry.q.id, 'question', entry.path);
+    for (const i of ctx.incidents) claim(i.incident.id, 'incident', i.path);
+    for (const entry of ctx.questions) {
+      claim(entry.q.id, entry.incident === null ? 'question' : `step of ${entry.incident}`, entry.path);
+    }
     for (const entry of ctx.labs) claim(entry.lab.id, 'lab', entry.path);
 
     // A working tree that does not parse is R1's finding; comparing it with HEAD would only bury that one error.
@@ -231,6 +259,28 @@ export const r02: Rule = {
       if (after !== null && withoutRev(after) !== withoutRev(before) && now <= was) {
         out.push(finding('R2', path, `lab ${id} changed since HEAD, so it needs rev ${was + 1}`));
       }
+    }
+
+    // An incident shipped once every step in HEAD was live or retired; then it leaves only with status: retired.
+    const incidentsNow = new Set<string>();
+    const incidentsUnreadable = new Set<string>();
+    for (const path of ctx.files) {
+      if (!path.startsWith(`${INCIDENTS_DIR}/`) || !path.endsWith('.yaml')) continue;
+      const now = incidentIn(ctx.read(path));
+      if (now === null) incidentsUnreadable.add(path);
+      else incidentsNow.add(now.id);
+    }
+    for (const path of ctx.headPaths(`${INCIDENTS_DIR}/`)) {
+      const head = incidentIn(ctx.head(path));
+      if (head === null || !head.shipped || incidentsUnreadable.has(path) || incidentsNow.has(head.id))
+        continue;
+      out.push(
+        finding(
+          'R2',
+          path,
+          `incident ${head.id} was in HEAD and is gone; retire it with status: retired instead`,
+        ),
+      );
     }
 
     // A forms.yaml that does not parse is R1's finding; a missing one breaks every form frozen in HEAD.

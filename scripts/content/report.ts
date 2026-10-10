@@ -8,11 +8,21 @@
  *   --lab-targets        JSON of each module's folder, its lab ids, and its tested concepts with their live practice ids
  *   --exam-targets       JSON of each module's exam-pool cells and multi-response shares, with spare, live, open,
  *                        need and liveNeed counts, and its concepts that can still take an exam item (ids only)
+ *   --incident-targets   JSON of Modules 2 to 13 with their four incident ids, earlier modules and tested concepts
  */
 import { resolve } from 'node:path';
 import { loadContext } from './lib/context.ts';
 import { missingTerms } from './lib/coverage.ts';
-import { coverageReport, examTargets, homed, labTargets, needsDani, report, targets } from './lib/report.ts';
+import {
+  coverageReport,
+  examTargets,
+  homed,
+  incidentTargets,
+  labTargets,
+  needsDani,
+  report,
+  targets,
+} from './lib/report.ts';
 
 const args = process.argv.slice(2);
 const ctx = loadContext(resolve(import.meta.dirname, '..', '..'));
@@ -32,6 +42,8 @@ if (homedAt >= 0) {
   }
 } else if (args.includes('--lab-targets')) {
   console.log(JSON.stringify(labTargets(ctx), null, 2));
+} else if (args.includes('--incident-targets')) {
+  console.log(JSON.stringify(incidentTargets(ctx), null, 2));
 } else if (args.includes('--targets')) {
   console.log(JSON.stringify(targets(ctx), null, 2));
 } else if (args.includes('--exam-targets')) {

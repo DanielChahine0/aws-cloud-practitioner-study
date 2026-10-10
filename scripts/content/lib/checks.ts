@@ -9,7 +9,14 @@ import { basename, join } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { z } from 'zod';
 import { CHECK_NAMES, type CheckName, type Question, type Verified } from '../../../schemas/question.ts';
-import { type Context, loadContext, localDate, type Note, type QuestionEntry } from './context.ts';
+import {
+  type Context,
+  isIncidentFile,
+  loadContext,
+  localDate,
+  type Note,
+  type QuestionEntry,
+} from './context.ts';
 import { evidenceForm, noteLines, sectionAt } from './evidence.ts';
 import { fullHash, keyHash } from './hashes.ts';
 import { splitFrontmatter } from './markdown.ts';
@@ -121,7 +128,13 @@ function stampedVersion(v: Verified | undefined, check: CheckName, kh: string, f
 const moduleOf = (entry: QuestionEntry): number => entry.module;
 
 /**
+ * The check pools: `practice` and `exam` are the question files of each pool, `incident` the incident steps alone.
+ */
+export type CheckPool = Question['pool'] | 'incident';
+
+/**
  * Non-retired questions of one pool in the given modules whose stamp is missing or stale, with the checks each still needs.
+ * An incident step is in the `incident` pool only, by its home module.
  * solve-closed is kept by a stamp or pass at the current keyHash; solve-notes and critic need a pass at the current
  * fullHash and prompt version. A question that already failed a check at its current hashes waits for a revision.
  */
@@ -130,7 +143,7 @@ export function candidates(
   modules: readonly number[],
   passes: PassLog,
   failures: readonly Failure[] = [],
-  pool: Question['pool'] = 'practice',
+  pool: CheckPool = 'practice',
 ): Candidate[] {
   const out: Candidate[] = [];
   const versions = new Map<CheckName, number | null>();
@@ -146,7 +159,8 @@ export function candidates(
   };
   for (const entry of ctx.questions) {
     const { q } = entry;
-    if (q.status === 'retired' || q.pool !== pool || !modules.includes(moduleOf(entry))) continue;
+    const inPool = pool === 'incident' ? entry.incident !== null : entry.incident === null && q.pool === pool;
+    if (q.status === 'retired' || !inPool || !modules.includes(moduleOf(entry))) continue;
     const kh = keyHash(q);
     const fh = fullHash(q);
     if (q.verified?.keyHash === kh && q.verified.fullHash === fh) continue;
@@ -312,7 +326,7 @@ export function prepare(
   ctx: Context,
   modules: readonly number[],
   seed: number,
-  pool: Question['pool'] = 'practice',
+  pool: CheckPool = 'practice',
 ): { paths: string[]; questions: number } {
   const p = paths(ctx.root);
   rmSync(p.batches, { recursive: true, force: true });
@@ -721,7 +735,8 @@ export function stampQuestions(
   }
 
   for (const [path, byId] of edits) {
-    writeFileSync(join(root, path), editQuestionFile(ctx.read(path) ?? '', byId));
+    const listKey = isIncidentFile(path) ? 'steps' : 'questions';
+    writeFileSync(join(root, path), editQuestionFile(ctx.read(path) ?? '', byId, listKey));
   }
   if (existsSync(paths(root).failures)) writeJson(paths(root).failures, failures);
 

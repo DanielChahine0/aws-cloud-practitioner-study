@@ -16,9 +16,12 @@ function parse(text: string): Document.Parsed {
   return doc;
 }
 
+/** Where a file keeps its items: `questions` in lesson and pool files, `steps` in incident files. */
+export type ListKey = 'questions' | 'steps';
+
 /** The question maps of a parsed file by id. */
-function itemsById(doc: Document.Parsed): Map<string, YAMLMap> {
-  const seq = doc.get('questions');
+function itemsById(doc: Document.Parsed, listKey: ListKey): Map<string, YAMLMap> {
+  const seq = doc.get(listKey);
   const out = new Map<string, YAMLMap>();
   for (const item of isSeq(seq) ? seq.items : []) {
     const id = isMap(item) ? item.get('id') : undefined;
@@ -61,8 +64,14 @@ function span(text: string, pair: Pair): [number, number] {
 }
 
 /** Applies one key edit to one question by splicing only that key's lines, so every other byte keeps its source. */
-function editKey(text: string, id: string, key: (typeof KEYS)[number], value: unknown): string {
-  const item = itemsById(parse(text)).get(id);
+function editKey(
+  text: string,
+  id: string,
+  key: (typeof KEYS)[number],
+  value: unknown,
+  listKey: ListKey,
+): string {
+  const item = itemsById(parse(text), listKey).get(id);
   if (item === undefined) throw new Error(`${id} is not in this file`);
   const pair = item.items.find((p) => isScalar(p.key) && p.key.value === key);
   const first = item.items[0];
@@ -85,16 +94,20 @@ function editKey(text: string, id: string, key: (typeof KEYS)[number], value: un
 /**
  * Applies edits to the questions of one file by id, splicing only the edited keys so comments, key order and the
  * source text of every other line (folded stems included) stay byte for byte; a `verified` block's `checks` list is
- * written in flow style. Throws on an id that is not in the file.
+ * written in flow style. Throws on an id that is not in the file. An incident file keeps its items under `steps`.
  */
-export function editQuestionFile(text: string, edits: ReadonlyMap<string, QuestionEdit>): string {
-  const ids = itemsById(parse(text));
+export function editQuestionFile(
+  text: string,
+  edits: ReadonlyMap<string, QuestionEdit>,
+  listKey: ListKey = 'questions',
+): string {
+  const ids = itemsById(parse(text), listKey);
   for (const id of edits.keys()) if (!ids.has(id)) throw new Error(`${id} is not in this file`);
   let out = text;
   for (const [id, edit] of edits) {
     for (const key of KEYS) {
       const value = edit[key];
-      if (value !== undefined) out = editKey(out, id, key, value);
+      if (value !== undefined) out = editKey(out, id, key, value, listKey);
     }
   }
   parse(out);

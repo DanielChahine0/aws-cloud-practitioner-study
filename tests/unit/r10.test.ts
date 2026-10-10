@@ -36,6 +36,7 @@ function contextWith(
       module: 1,
       noteId: 'm01/what-a-bakery-cloud-is',
       q,
+      incident: null,
     }),
   );
   return { ...ctx, config: { ...OFF, ...switches }, questions: [...ctx.questions, ...added] };
@@ -109,7 +110,15 @@ describe('R10 exam quotas', () => {
   function examContext(items: readonly QuestionEntry['q'][], quotas = fixtureQuotas()): Context {
     const ctx = contextWith({ examQuotas: true });
     const pool = items.map(
-      (q, i): QuestionEntry => ({ path: POOL_FILE, line: 2 + i, index: i, module: 1, noteId: q.note, q }),
+      (q, i): QuestionEntry => ({
+        path: POOL_FILE,
+        line: 2 + i,
+        index: i,
+        module: 1,
+        noteId: q.note,
+        q,
+        incident: null,
+      }),
     );
     return { ...ctx, quotas, questions: [...ctx.questions, ...pool] };
   }
