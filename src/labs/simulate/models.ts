@@ -1,10 +1,19 @@
 /**
- * The six Simulate models (spec 5.1): pure, deterministic, no randomness.
+ * The eight Simulate models (spec 5.1): six since Phase 4 Task 13, `purchase` and `data-loss` since
+ * Phase 5 Task 5; pure, deterministic, no randomness.
  * Every money figure is in lab credits, a made-up unit; `schemas/lab.ts` validates the constants
  * with `SIM_CONSTANTS` before any of these functions sees them, so they only cast.
  */
 
-export type SimModel = 'scaling' | 'compute-cost' | 's3-lifecycle' | 'cache' | 'bill' | 'transfer';
+export type SimModel =
+  | 'scaling'
+  | 'compute-cost'
+  | 's3-lifecycle'
+  | 'cache'
+  | 'bill'
+  | 'transfer'
+  | 'purchase'
+  | 'data-loss';
 export type SimValue = number | string | boolean;
 export type SimValues = Readonly<Record<string, SimValue>>;
 
@@ -107,6 +116,46 @@ export interface TransferConstants {
   deviceTb: number;
 }
 
+/** The ways to buy compute that `purchase` compares (spec 5.2, Pay less for beans). */
+export const PURCHASE_OPTIONS = [
+  'on-demand',
+  'reserved',
+  'savings-plan',
+  'spot',
+  'dedicated-instance',
+  'dedicated-host',
+] as const;
+export type PurchaseOption = (typeof PURCHASE_OPTIONS)[number];
+export interface PurchaseWorkload {
+  id: string;
+  label: string;
+  /** Hours it runs each month it runs. */
+  hours: number;
+  /** Months of the year it runs. */
+  months: number;
+  /** Whether it can stop and resume later, so Spot suits it. */
+  interruptible: boolean;
+  needs: 'none' | 'dedicated-instance' | 'dedicated-host';
+}
+export interface PurchaseConstants {
+  workloads: PurchaseWorkload[];
+  /** Lab credits per hour for each option. */
+  rates: Readonly<Record<PurchaseOption, number>>;
+  /** The months a Reserved Instance or a Savings Plan bills, whether the workload runs or not. */
+  termMonths: number;
+}
+export interface DataLossConstants {
+  hours: number;
+  /** Orders written each hour. */
+  perHour: number;
+  /** The hour the instance stops, which erases an instance store. */
+  stopAt: number;
+  /** The hour the Availability Zone is lost, with every volume in it. */
+  zoneLossAt: number;
+  fullSnapshot: number;
+  incrementalSnapshot: number;
+}
+
 const CREDITS = 'lab credits';
 /** Days 0 to 364 make the modelled year of `s3-lifecycle`. */
 const YEAR = 365;
@@ -175,6 +224,17 @@ export function modelParams(model: SimModel, constants: unknown): ParamShape[] {
         kind: 'choice',
         options: ['online', 'offline'],
       }));
+    case 'purchase':
+      return (constants as PurchaseConstants).workloads.map((w) => ({
+        id: w.id,
+        kind: 'choice',
+        options: [...PURCHASE_OPTIONS],
+      }));
+    case 'data-loss':
+      return [
+        { id: 'store', kind: 'choice', options: ['instance-store', 'ebs'] },
+        { id: 'snapshotEvery', kind: 'int', min: 0, max: 24 },
+      ];
   }
 }
 
@@ -207,6 +267,17 @@ export function metricInfo(model: SimModel, metric: string, constants: unknown):
       alertDay: { label: 'Alert day', unit: 'day of 30' },
     },
     transfer: { late: { label: 'Late jobs', unit: '' } },
+    purchase: {
+      total: { label: 'Yearly cost', unit: CREDITS },
+      interrupted: { label: 'Jobs Spot may stop', unit: '' },
+      unmet: { label: 'Hardware needs not met', unit: '' },
+    },
+    'data-loss': {
+      stopLost: { label: 'Orders lost at the stop', unit: '' },
+      zoneLost: { label: 'Orders lost with the zone', unit: '' },
+      snapshots: { label: 'Snapshots taken', unit: '' },
+      cost: { label: 'Snapshot cost', unit: CREDITS },
+    },
   };
   const own = Object.hasOwn(fixed[model], metric) ? fixed[model][metric] : undefined;
   if (own !== undefined) return own;
@@ -214,8 +285,8 @@ export function metricInfo(model: SimModel, metric: string, constants: unknown):
   if (dot < 0) return null;
   const head = metric.slice(0, dot);
   const id = metric.slice(dot + 1);
-  if (model === 'compute-cost' && head === 'cost') {
-    const w = (constants as ComputeCostConstants).workloads.find((x) => x.id === id);
+  if ((model === 'compute-cost' || model === 'purchase') && head === 'cost') {
+    const w = (constants as ComputeCostConstants | PurchaseConstants).workloads.find((x) => x.id === id);
     return w === undefined ? null : { label: `Cost: ${w.label}`, unit: CREDITS };
   }
   if (model === 'transfer' && (head === 'days' || head === 'devices')) {
@@ -398,6 +469,53 @@ function transfer(c: TransferConstants, v: SimValues): SimResult {
   return { metrics, series: [] };
 }
 
+const COMMITMENTS: ReadonlySet<string> = new Set(['reserved', 'savings-plan']);
+const MEETS: Readonly<Record<PurchaseWorkload['needs'], readonly string[]>> = {
+  none: PURCHASE_OPTIONS,
+  'dedicated-instance': ['dedicated-instance', 'dedicated-host'],
+  'dedicated-host': ['dedicated-host'],
+};
+
+function purchase(c: PurchaseConstants, v: SimValues): SimResult {
+  const metrics: Record<string, number> = {};
+  let total = 0;
+  let interrupted = 0;
+  let unmet = 0;
+  for (const w of c.workloads) {
+    const picked = str(v, w.id);
+    const o: PurchaseOption = (PURCHASE_OPTIONS as readonly string[]).includes(picked)
+      ? (picked as PurchaseOption)
+      : 'on-demand';
+    const cost = round2(c.rates[o] * w.hours * (COMMITMENTS.has(o) ? c.termMonths : w.months));
+    metrics[`cost.${w.id}`] = cost;
+    total += cost;
+    if (o === 'spot' && !w.interruptible) interrupted += 1;
+    if (!MEETS[w.needs].includes(o)) unmet += 1;
+  }
+  metrics.total = round2(total);
+  metrics.interrupted = interrupted;
+  metrics.unmet = unmet;
+  return { metrics, series: [] };
+}
+
+function dataLoss(c: DataLossConstants, v: SimValues): SimResult {
+  const ebs = str(v, 'store') === 'ebs';
+  const every = num(v, 'snapshotEvery');
+  const at: number[] = [];
+  if (ebs && every > 0) for (let h = every; h < c.hours; h += every) at.push(h);
+  // A snapshot due at the hour the zone fails is taken first.
+  const last = at.filter((h) => h <= c.zoneLossAt).at(-1) ?? 0;
+  return {
+    metrics: {
+      stopLost: ebs ? 0 : c.stopAt * c.perHour,
+      zoneLost: (c.zoneLossAt - (ebs ? last : c.stopAt)) * c.perHour,
+      snapshots: at.length,
+      cost: at.length === 0 ? 0 : round2(c.fullSnapshot + (at.length - 1) * c.incrementalSnapshot),
+    },
+    series: [],
+  };
+}
+
 /** Runs one model over validated constants and the parameter values on screen. */
 export function runModel(model: SimModel, constants: unknown, values: SimValues): SimResult {
   switch (model) {
@@ -413,5 +531,9 @@ export function runModel(model: SimModel, constants: unknown, values: SimValues)
       return bill(constants as BillConstants, values);
     case 'transfer':
       return transfer(constants as TransferConstants, values);
+    case 'purchase':
+      return purchase(constants as PurchaseConstants, values);
+    case 'data-loss':
+      return dataLoss(constants as DataLossConstants, values);
   }
 }

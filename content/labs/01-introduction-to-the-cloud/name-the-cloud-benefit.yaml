@@ -1,0 +1,197 @@
+id: lab-m01-name-the-cloud-benefit
+module: 1
+title: Name the cloud benefit in each cafe story
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts:
+  - benefits-of-the-aws-cloud
+  - trade-fixed-expense-for-variable-expense
+  - economies-of-scale
+  - stop-spending-money-on-data-centers
+  - stop-guessing-capacity
+  - increase-speed-and-agility
+  - go-global-in-minutes
+notes: [m01/benefits-of-the-aws-cloud]
+minutes: 6
+brief: >-
+  After its first year on AWS, the cafe owner wrote down the small wins the team noticed.
+  File each story under the cloud benefit it shows.
+spec:
+  buckets:
+    - id: fixed-to-variable
+      label: Trade fixed expense for variable expense
+    - id: economies-of-scale
+      label: Benefit from massive economies of scale
+    - id: no-data-centers
+      label: Stop running data centers
+      detail: Stop spending money running and maintaining data centers
+    - id: stop-guessing
+      label: Stop guessing capacity
+    - id: speed-agility
+      label: Increase speed and agility
+    - id: go-global
+      label: Go global in minutes
+  cards:
+    - id: no-upfront-servers
+      text: The cafe skips a big server purchase and pays each month for what the order app actually used
+      bucket: fixed-to-variable
+      goal: g1
+    - id: quiet-winter
+      text: In the quiet winter months the computing bill shrinks along with the orders
+      bucket: fixed-to-variable
+      goal: g1
+    - id: small-team-big-tech
+      text: A tiny cafe startup can afford the same advanced technology as a national chain
+      bucket: economies-of-scale
+      also: [fixed-to-variable]
+      goal: g1
+    - id: bulk-hardware
+      text: The cafe pays a lower price per server hour than it could ever get buying a few machines of its own
+      bucket: economies-of-scale
+      goal: g1
+    - id: back-room-upkeep
+      text: AWS now handles the power, upkeep and server racking the cafe used to do in its back room
+      bucket: no-data-centers
+      goal: g2
+    - id: sunday-repairs
+      text: Nobody at the cafe spends Sunday rewiring a server rack, so the manager plans the new menu instead
+      bucket: no-data-centers
+      goal: g2
+    - id: forecast-gone
+      text: The cafe no longer buys servers for a sales forecast years ahead that may never come true
+      bucket: stop-guessing
+      goal: g3
+    - id: festival-rush
+      text: A surprise street festival rush is met by scaling up the order app, then back down after
+      bucket: stop-guessing
+      goal: g3
+    - id: throwaway-test
+      text: A developer spins up a test copy of the menu site for an idea, then deletes it when the idea flops
+      bucket: speed-agility
+      goal: g4
+    - id: seasonal-drink
+      text: The new seasonal drink ordering feature reaches customers sooner because the team can build and release changes quickly
+      bucket: speed-agility
+      goal: g4
+    - id: india-branch
+      text: A branch opening in India runs the order app from AWS there instead of waiting months for a local server room
+      bucket: go-global
+      goal: g5
+    - id: shop-worldwide
+      text: The online bean shop starts serving buyers in Europe and Asia the same week the owner decides to sell there
+      bucket: go-global
+      goal: g5
+goals:
+  - id: g1
+    label: Cost stories sit under variable expense or economies of scale
+    hint: Ask whether the saving comes from paying only for what was used, or from lower prices AWS earns by buying hardware in bulk.
+  - id: g2
+    label: Physical upkeep stories sit under Stop running data centers
+    hint: Ask who now does the physical work of powering, racking and maintaining servers, rather than how the bill is paid.
+  - id: g3
+    label: Demand stories sit under Stop guessing capacity
+    hint: Ask whether the cafe once had to forecast hardware ahead of time, and can now follow real demand as it comes.
+  - id: g4
+    label: Experiment stories sit under Increase speed and agility
+    hint: Ask whether the story is about trying ideas quickly, dropping the failures, and getting changes to market sooner.
+  - id: g5
+    label: Expansion stories sit under Go global in minutes
+    hint: Ask whether the story takes the app to customers in another part of the world without building there first.
+solution:
+  - { t: place, card: no-upfront-servers, bucket: fixed-to-variable }
+  - { t: place, card: quiet-winter, bucket: fixed-to-variable }
+  - { t: place, card: small-team-big-tech, bucket: economies-of-scale }
+  - { t: place, card: bulk-hardware, bucket: economies-of-scale }
+  - { t: place, card: back-room-upkeep, bucket: no-data-centers }
+  - { t: place, card: sunday-repairs, bucket: no-data-centers }
+  - { t: place, card: forecast-gone, bucket: stop-guessing }
+  - { t: place, card: festival-rush, bucket: stop-guessing }
+  - { t: place, card: throwaway-test, bucket: speed-agility }
+  - { t: place, card: seasonal-drink, bucket: speed-agility }
+  - { t: place, card: india-branch, bucket: go-global }
+  - { t: place, card: shop-worldwide, bucket: go-global }
+wrongPaths:
+  - mistake: Credits the lower price per server hour to usage billing instead of bulk buying
+    failsGoal: g1
+    actions:
+      - { t: place, card: no-upfront-servers, bucket: fixed-to-variable }
+      - { t: place, card: quiet-winter, bucket: fixed-to-variable }
+      - { t: place, card: small-team-big-tech, bucket: economies-of-scale }
+      - { t: place, card: bulk-hardware, bucket: fixed-to-variable }
+      - { t: place, card: back-room-upkeep, bucket: no-data-centers }
+      - { t: place, card: sunday-repairs, bucket: no-data-centers }
+      - { t: place, card: forecast-gone, bucket: stop-guessing }
+      - { t: place, card: festival-rush, bucket: stop-guessing }
+      - { t: place, card: throwaway-test, bucket: speed-agility }
+      - { t: place, card: seasonal-drink, bucket: speed-agility }
+      - { t: place, card: india-branch, bucket: go-global }
+      - { t: place, card: shop-worldwide, bucket: go-global }
+  - mistake: Thinks handing physical server upkeep to AWS is about how the bill is paid
+    failsGoal: g2
+    actions:
+      - { t: place, card: no-upfront-servers, bucket: fixed-to-variable }
+      - { t: place, card: quiet-winter, bucket: fixed-to-variable }
+      - { t: place, card: small-team-big-tech, bucket: economies-of-scale }
+      - { t: place, card: bulk-hardware, bucket: economies-of-scale }
+      - { t: place, card: back-room-upkeep, bucket: fixed-to-variable }
+      - { t: place, card: sunday-repairs, bucket: no-data-centers }
+      - { t: place, card: forecast-gone, bucket: stop-guessing }
+      - { t: place, card: festival-rush, bucket: stop-guessing }
+      - { t: place, card: throwaway-test, bucket: speed-agility }
+      - { t: place, card: seasonal-drink, bucket: speed-agility }
+      - { t: place, card: india-branch, bucket: go-global }
+      - { t: place, card: shop-worldwide, bucket: go-global }
+  - mistake: Reads scaling with a surprise rush as speed and agility rather than ending capacity guesses
+    failsGoal: g3
+    actions:
+      - { t: place, card: no-upfront-servers, bucket: fixed-to-variable }
+      - { t: place, card: quiet-winter, bucket: fixed-to-variable }
+      - { t: place, card: small-team-big-tech, bucket: economies-of-scale }
+      - { t: place, card: bulk-hardware, bucket: economies-of-scale }
+      - { t: place, card: back-room-upkeep, bucket: no-data-centers }
+      - { t: place, card: sunday-repairs, bucket: no-data-centers }
+      - { t: place, card: forecast-gone, bucket: stop-guessing }
+      - { t: place, card: festival-rush, bucket: speed-agility }
+      - { t: place, card: throwaway-test, bucket: speed-agility }
+      - { t: place, card: seasonal-drink, bucket: speed-agility }
+      - { t: place, card: india-branch, bucket: go-global }
+      - { t: place, card: shop-worldwide, bucket: go-global }
+  - mistake: Thinks deleting a failed test environment is about sizing capacity to demand
+    failsGoal: g4
+    actions:
+      - { t: place, card: no-upfront-servers, bucket: fixed-to-variable }
+      - { t: place, card: quiet-winter, bucket: fixed-to-variable }
+      - { t: place, card: small-team-big-tech, bucket: economies-of-scale }
+      - { t: place, card: bulk-hardware, bucket: economies-of-scale }
+      - { t: place, card: back-room-upkeep, bucket: no-data-centers }
+      - { t: place, card: sunday-repairs, bucket: no-data-centers }
+      - { t: place, card: forecast-gone, bucket: stop-guessing }
+      - { t: place, card: festival-rush, bucket: stop-guessing }
+      - { t: place, card: throwaway-test, bucket: stop-guessing }
+      - { t: place, card: seasonal-drink, bucket: speed-agility }
+      - { t: place, card: india-branch, bucket: go-global }
+      - { t: place, card: shop-worldwide, bucket: go-global }
+  - mistake: Thinks skipping a server room abroad is mainly about data center upkeep, not reaching new customers
+    failsGoal: g5
+    actions:
+      - { t: place, card: no-upfront-servers, bucket: fixed-to-variable }
+      - { t: place, card: quiet-winter, bucket: fixed-to-variable }
+      - { t: place, card: small-team-big-tech, bucket: economies-of-scale }
+      - { t: place, card: bulk-hardware, bucket: economies-of-scale }
+      - { t: place, card: back-room-upkeep, bucket: no-data-centers }
+      - { t: place, card: sunday-repairs, bucket: no-data-centers }
+      - { t: place, card: forecast-gone, bucket: stop-guessing }
+      - { t: place, card: festival-rush, bucket: stop-guessing }
+      - { t: place, card: throwaway-test, bucket: speed-agility }
+      - { t: place, card: seasonal-drink, bucket: speed-agility }
+      - { t: place, card: india-branch, bucket: no-data-centers }
+      - { t: place, card: shop-worldwide, bucket: go-global }
+debrief:
+  lines:
+    - The two cost benefits differ in where the saving comes from, either paying only for what was used or the lower prices AWS earns by buying hardware in bulk.
+    - AWS runs the physical layer, so the cafe stops spending time and money paying for utilities and maintaining servers.
+    - Scaling to a real rush ends capacity guesses, which is a different win from the speed of trying and dropping ideas.
+    - Deploying to a Region abroad takes the app to new customers without building a data center there.
+  questions: [q-y1nwv1, q-z5kgg6, q-dn0smx]

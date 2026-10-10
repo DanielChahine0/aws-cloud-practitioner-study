@@ -1,7 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/** The tests' own port, so a `pnpm preview` left running on 4173 never blocks `pnpm verify` or `pnpm site:deploy`. */
-const BASE_URL = 'http://localhost:4317';
+/**
+ * The tests' own port, so a `pnpm preview` left running on 4173 never blocks `pnpm verify` or `pnpm site:deploy`.
+ * E2E_PORT moves it, so two worktrees on one machine can run end-to-end tests at the same time.
+ */
+const PORT = Number(process.env.E2E_PORT ?? 4317);
+if (!Number.isInteger(PORT) || PORT < 1024 || PORT > 65535) {
+  throw new Error(`E2E_PORT must be a whole number from 1024 to 65535, not '${process.env.E2E_PORT}'`);
+}
+const BASE_URL = `http://localhost:${PORT}`;
 
 /** End-to-end and accessibility tests against the production build, which `vite preview` serves with the site's CSP. */
 export default defineConfig({
@@ -18,7 +25,7 @@ export default defineConfig({
     serviceWorkers: 'block',
   },
   webServer: {
-    command: 'pnpm exec vite preview --port 4317 --strictPort',
+    command: `pnpm exec vite preview --port ${PORT} --strictPort`,
     url: BASE_URL,
     reuseExistingServer: false,
     timeout: 60_000,

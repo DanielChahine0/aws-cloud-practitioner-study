@@ -1,8 +1,12 @@
 import type { Finding } from '../lib/context.ts';
 import { evidenceForm, noteLines } from '../lib/evidence.ts';
+import { evidenceHolds, projectOf } from '../lib/project.ts';
 import { finding, type Rule } from './rule.ts';
 
-/** R5 Evidence: each evidence line of a live question is a whole line of its cited note, compared case-sensitively. */
+/**
+ * R5 Evidence: each evidence line of a live question is a whole line of its cited note, and the evidence line of a live
+ * key point is a whole line of the home note of one of its concepts, compared case-sensitively.
+ */
 export const r05: Rule = {
   id: 'R5',
   title: 'Evidence',
@@ -29,6 +33,18 @@ export const r05: Rule = {
           );
         }
       }
+    }
+    for (const { path, line, kp } of projectOf(ctx).keyPoints) {
+      // R6 reports a concept that resolves to no note, so only a definite miss is an R5 finding.
+      if (kp.status !== 'live' || evidenceHolds(ctx, kp) !== false) continue;
+      out.push(
+        finding(
+          'R5',
+          path,
+          `${kp.id}: evidence is not a whole line of the home note of any of its concepts`,
+          line,
+        ),
+      );
     }
     return out;
   },
