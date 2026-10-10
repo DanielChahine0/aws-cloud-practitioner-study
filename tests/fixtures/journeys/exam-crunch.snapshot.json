@@ -201,6 +201,46 @@
       "qx-a-64",
       "qx-a-65"
     ],
+    "badges": [
+      [
+        "changed-my-mind",
+        {
+          "day": "2026-11-04",
+          "eventId": "01M6KWX9300000000000000000"
+        }
+      ],
+      [
+        "clean-queue",
+        {
+          "day": "2026-11-08",
+          "eventId": "01M6Y7DEK00000000000000000"
+        }
+      ],
+      [
+        "first-brew",
+        {
+          "day": "2026-11-01",
+          "eventId": "01M6ANDPZ00000000000000000"
+        }
+      ],
+      [
+        "pass-mark",
+        {
+          "day": "2026-11-08",
+          "eventId": "01M6XAR3610000000000000000"
+        }
+      ]
+    ],
+    "calibration": {
+      "notSure": {
+        "right": 0,
+        "total": 0
+      },
+      "sure": {
+        "right": 139,
+        "total": 150
+      }
+    },
     "catchUpPlans": [],
     "concepts": [
       [

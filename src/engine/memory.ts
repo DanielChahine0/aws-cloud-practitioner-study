@@ -1,5 +1,24 @@
 import type { Mode, StudyEvent } from '../../schemas/events.ts';
 import { FORM_IDS } from '../../schemas/ids.ts';
+import {
+  ARCHITECT,
+  type BadgeEarned,
+  type BadgeId,
+  CALIBRATION,
+  type Calibration,
+  CHANGED_MIND,
+  CLEAN_QUEUE,
+  CORE_LABS,
+  calibrationOf,
+  decisionPasses,
+  domainScores,
+  EVEN_KEEL,
+  HANDS_ON_MODULES,
+  LEAVE_NO_TRACE,
+  LONG_MEMORY,
+  PASS_MARK,
+  wellCalibrated,
+} from './badges.ts';
 import { betXp } from './bets.ts';
 import { addDays, dayStartAt, nextDayStart, studyDayAt } from './day.ts';
 import type { SessionState } from './replay.ts';
@@ -97,6 +116,10 @@ export interface MemoryState {
   staleAnswers: number;
   /** Study days with a submitted boss or mock, each of which qualifies (spec 3.5). */
   examsDone: ReadonlySet<string>;
+  /** Each badge with the first event at which its rule held (spec 3.10). */
+  badges: ReadonlyMap<BadgeId, BadgeEarned>;
+  /** Sure and Not sure accuracy over the last 150 counted answers. */
+  calibration: Calibration;
 }
 
 interface MutableConcept extends ConceptMemory {
@@ -172,6 +195,17 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
   const bossesPassed = new Set<string>();
   const formsPaid = new Set<string>();
   const lessons = new Set<string>();
+  const badges = new Map<BadgeId, BadgeEarned>();
+  const window: { correct: boolean; sure: boolean }[] = [];
+  const clearedMarks = new Set<string>();
+  const longCards = new Set<string>();
+  const labsDone = new Set<string>();
+  const missionCleaned = new Map<string, string>();
+  const missionsClosed = new Set<string>();
+  const finalDecisions = new Map<number, readonly number[]>();
+  let cleanDays = 0;
+  let reviewsToday = 0;
+  let lastEvent: StudyEvent | null = null;
   let xp = 0;
   let staleAnswers = 0;
 
@@ -195,6 +229,10 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     return out;
   };
 
+  const grant = (badge: BadgeId, e: StudyEvent) => {
+    if (!badges.has(badge)) badges.set(badge, { day: e.day, eventId: e.id });
+  };
+
   const earn = (e: StudyEvent, amount: number) => {
     if (amount <= 0) return;
     xp += amount;
@@ -211,13 +249,22 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
 
   const closeDay = () => {
     if (day === null) return;
+    const end = dayStartAt(addDays(day, 1), dayTz).getTime();
+    let clearCache: boolean | null = null;
+    const isClear = (): boolean => {
+      if (clearCache === null) clearCache = testedCards().every(([, card]) => Date.parse(card.due) >= end);
+      return clearCache;
+    };
+    if (reviewsToday >= CLEAN_QUEUE.reviews && isClear() && lastEvent !== null) {
+      cleanDays++;
+      if (cleanDays >= CLEAN_QUEUE.days) grant('clean-queue', lastEvent);
+    }
     if (completion || examsDone.has(day)) {
       qualifyingDays.add(day);
       return;
     }
     if (!countedAnswer) return;
-    const end = dayStartAt(addDays(day, 1), dayTz).getTime();
-    const clear = testedCards().every(([, card]) => Date.parse(card.due) >= end);
+    const clear = isClear();
     const today = day;
     const plan = catchUpPlans.get(today);
     const planDone = plan?.every((id) => concepts.get(id)?.lastAnswerDay === today) === true;
@@ -228,6 +275,10 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     const next = review(cm.card, rating, new Date(e.at));
     const due = capDue(new Date(next.due), { concept: key, reviewDay: e.day, examDate, tz: e.tz });
     cm.card = { ...next, due: due.toISOString() };
+    if (content.concepts.get(key)?.tested !== true) return;
+    if (next.stability >= LONG_MEMORY.stabilityDays) longCards.add(key);
+    else longCards.delete(key);
+    if (longCards.size >= LONG_MEMORY.concepts) grant('long-memory', e);
   };
 
   const firstOfDay = (cm: MutableConcept, key: string, e: AnswerEvent, stale: boolean, isNew: boolean) => {
@@ -299,13 +350,23 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     if (stale) staleAnswers++;
     if (e.relearn !== true) {
       countedAnswer = true;
+      if (e.mode === 'review') reviewsToday++;
+      window.push({ correct: e.correct, sure: e.sure });
+      if (window.length > CALIBRATION.window) window.shift();
+      if (!badges.has('well-calibrated') && wellCalibrated(calibrationOf(window))) {
+        grant('well-calibrated', e);
+      }
       if (cm.lastAnswerDay !== e.day) firstOfDay(cm, key, e, stale, isNew);
       else laterAnswer(cm, key, e, stale);
       cm.lastAnswerDay = e.day;
     }
     const mark = cm.misconception;
     if (!e.correct && e.sure) cm.misconception = { qid: e.qid, day: e.day };
-    else if (e.correct && e.sure && mark && mark.qid !== e.qid && e.day > mark.day) cm.misconception = null;
+    else if (e.correct && e.sure && mark && mark.qid !== e.qid && e.day > mark.day) {
+      cm.misconception = null;
+      clearedMarks.add(`${key}|${mark.qid}`);
+      if (clearedMarks.size >= CHANGED_MIND) grant('changed-my-mind', e);
+    }
     answered.add(e.qid);
   };
 
@@ -344,6 +405,47 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     cm.lastAnswerDay = e.day;
   };
 
+  /** Full Dress Rehearsal, Pass Mark and Even Keel, judged at the submit of a form's first attempt. */
+  const firstAttemptBadges = (
+    e: SessionEvent,
+    qids: readonly string[],
+    held: ReadonlyMap<string, AnswerEvent>,
+    correct: number,
+  ) => {
+    if (qids.length === 0) return;
+    if (qids.every((qid) => (held.get(qid)?.picked.length ?? 0) > 0)) grant('full-dress-rehearsal', e);
+    if (correct / qids.length >= PASS_MARK) grant('pass-mark', e);
+    const answers = qids.map((qid) => ({ qid, correct: held.get(qid)?.correct === true }));
+    const domains = [...domainScores(answers, content.examTasks).values()];
+    if (domains.every((d) => d.total > 0 && d.correct / d.total >= EVEN_KEEL)) grant('even-keel', e);
+  };
+
+  const applyLab = (e: Extract<StudyEvent, { t: 'lab.done' }>) => {
+    labsDone.add(e.lab);
+    const modules = [...content.coreLabs.values()];
+    const done = (labs: readonly string[]) => labs.every((lab) => labsDone.has(lab));
+    if (modules.filter((labs) => labs.length > 0 && done(labs)).length >= HANDS_ON_MODULES)
+      grant('hands-on', e);
+    const all = modules.flat();
+    if (all.length >= CORE_LABS && done(all)) grant('lab-complete', e);
+  };
+
+  const applyMission = (e: Extract<StudyEvent, { t: 'mission' }>) => {
+    if (e.step === 'cleaned' && !missionCleaned.has(e.mission)) missionCleaned.set(e.mission, e.day);
+    if (e.step !== 'usage-ok' || content.keptMissions.has(e.mission)) return;
+    const cleaned = missionCleaned.get(e.mission);
+    if (cleaned === undefined || e.day <= cleaned) return;
+    missionsClosed.add(e.mission);
+    if (missionsClosed.size >= LEAVE_NO_TRACE) grant('leave-no-trace', e);
+  };
+
+  const applyDecision = (e: Extract<StudyEvent, { t: 'decision' }>) => {
+    if (e.stage !== 'final') return;
+    finalDecisions.set(e.module, e.scores);
+    const all = [...finalDecisions.values()];
+    if (all.length >= ARCHITECT.decisions && all.every(decisionPasses)) grant('architect', e);
+  };
+
   /** Opens a boss or mock on start; closes it on its first submit or abandon, applying a submit. */
   const applyExamSession = (e: SessionEvent) => {
     if (e.phase === 'start') {
@@ -370,6 +472,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     } else if (start.form !== undefined && FORMS.has(start.form) && !formsPaid.has(start.form)) {
       formsPaid.add(start.form);
       earn(e, XP.mock);
+      firstAttemptBadges(e, qids, held, correct);
     }
     examsDone.add(e.day);
   };
@@ -380,6 +483,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
       day = e.day;
       completion = false;
       countedAnswer = false;
+      reviewsToday = 0;
       openDay(e);
     }
     dayTz = e.tz;
@@ -387,6 +491,7 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
       case 'session':
         if (e.phase === 'start') starts.set(e.sid, { at: e.at, tz: e.tz });
         if (EXAM_MODES.has(e.mode)) applyExamSession(e);
+        if (e.phase === 'submit' && e.mode === 'check' && starts.has(e.sid)) grant('first-brew', e);
         break;
       case 'lesson.done':
         if (!lessons.has(e.note)) {
@@ -399,9 +504,19 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
         if (EXAM_MODES.has(e.mode)) holdExamAnswer(e);
         else applyAnswer(e);
         break;
+      case 'lab.done':
+        applyLab(e);
+        break;
+      case 'mission':
+        applyMission(e);
+        break;
+      case 'decision':
+        applyDecision(e);
+        break;
       default:
         break;
     }
+    lastEvent = e;
   }
   closeDay();
 
@@ -423,6 +538,8 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     examDate,
     staleAnswers,
     examsDone,
+    badges,
+    calibration: calibrationOf(window),
   };
 }
 

@@ -186,6 +186,25 @@
       "q-bake-12-09-a",
       "q-bake-12-10-a"
     ],
+    "badges": [
+      [
+        "first-brew",
+        {
+          "day": "2026-10-12",
+          "eventId": "01M4QM0DS00000000000000000"
+        }
+      ]
+    ],
+    "calibration": {
+      "notSure": {
+        "right": 20,
+        "total": 20
+      },
+      "sure": {
+        "right": 110,
+        "total": 110
+      }
+    },
     "catchUpPlans": [
       [
         "2026-10-27",
