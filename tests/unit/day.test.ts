@@ -1,3 +1,4 @@
+import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import {
   addDays,
@@ -95,6 +96,22 @@ describe('day arithmetic', () => {
     );
     expect(nextDayStart(new Date('2026-10-10T02:00:00Z'), 120).toISOString()).toBe(
       '2026-10-11T02:00:00.000Z',
+    );
+  });
+
+  it('ends every moment at the start of the study day after its own, in any offset', () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: Date.UTC(1990, 0, 1), max: Date.UTC(2090, 0, 1) }),
+        fc.integer({ min: -720, max: 840 }),
+        (ms, tz) => {
+          const at = new Date(ms);
+          expect(nextDayStart(at, tz).getTime()).toBe(
+            dayStartAt(addDays(studyDayAt(at, tz), 1), tz).getTime(),
+          );
+        },
+      ),
+      { seed: 20_261_010, numRuns: 2_000 },
     );
   });
 });
