@@ -1,0 +1,62 @@
+id: lab-m05-reach-the-menu
+module: 5
+title: Why can't customers reach the menu?
+engine: trace
+tier: core
+status: live
+rev: 1
+concepts: [security-groups, network-acls, stateful-packet-filtering, stateless-packet-filtering, packets, subnets, cidr-blocks]
+notes: [m05/subnets-security-groups-and-network-access-control-lists, m05/amazon-vpc-demo]
+minutes: 7
+brief: >-
+  Customers get no answer from the cafe's online menu, and the owner wants SSH to the menu server from the back office only.
+  Switch rules on or off until every case gets its expected result.
+  In this lab, customers use HTTPS on port 443 and staff use SSH on port 22, the network ACL tries its rules from the lowest number up, and each reply leaves on a high port from 1024 to 65535 (a lab value), which the network ACL checks again while the security group lets it out on its own.
+spec:
+  kind: network
+  target: Menu web server
+  sg:
+    label: menu-web-sg
+    rules:
+      - { id: sg-https-any, dir: in, proto: tcp, from: 443, to: 443, cidr: 0.0.0.0/0, on: false }
+      - { id: sg-ssh-any, dir: in, proto: tcp, from: 22, to: 22, cidr: 0.0.0.0/0, on: false }
+      - { id: sg-ssh-office, dir: in, proto: tcp, from: 22, to: 22, cidr: 192.0.2.0/24, on: true }
+      - { id: sg-replies-out, dir: out, proto: tcp, from: 1024, to: 65535, cidr: 0.0.0.0/0, on: false }
+  nacl:
+    label: menu-subnet-acl
+    rules:
+      - { id: acl-https-in, n: 100, dir: in, proto: tcp, from: 443, to: 443, cidr: 0.0.0.0/0, action: allow, on: true }
+      - { id: acl-ssh-in, n: 110, dir: in, proto: tcp, from: 22, to: 22, cidr: 0.0.0.0/0, action: allow, on: true }
+      - { id: acl-replies-out, n: 100, dir: out, proto: tcp, from: 1024, to: 65535, cidr: 0.0.0.0/0, action: allow, on: false }
+  cases:
+    - { id: customer-https, goal: g1, label: A customer opens the menu over HTTPS, dir: in, proto: tcp, ip: 203.0.113.25, port: 443, reply: 49320, expect: allow }
+    - { id: stranger-ssh, goal: g2, label: An unknown address tries SSH, dir: in, proto: tcp, ip: 198.51.100.40, port: 22, reply: 50511, expect: deny }
+    - { id: office-ssh, goal: g2, label: The back office signs in over SSH, dir: in, proto: tcp, ip: 192.0.2.14, port: 22, reply: 51734, expect: allow }
+goals:
+  - id: g1
+    label: Customers load the menu and get the page back
+    hint: Follow the customer's request in and the page back out, and ask which layer forgets the request once it has passed.
+  - id: g2
+    label: SSH reaches the menu server from the back office only
+    hint: Follow the back office session in and its reply out, and let the layer that guards this one server decide who may sign in.
+solution:
+  - { t: toggle, rule: sg-https-any, on: true }
+  - { t: toggle, rule: acl-replies-out, on: true }
+wrongPaths:
+  - mistake: Adds the reply rule to the security group, thinking it rechecks replies the way the network ACL does
+    failsGoal: g1
+    actions:
+      - { t: toggle, rule: sg-https-any, on: true }
+      - { t: toggle, rule: sg-replies-out, on: true }
+  - mistake: Blames the security group for the blocked back office SSH and opens SSH to the whole internet
+    failsGoal: g2
+    actions:
+      - { t: toggle, rule: sg-https-any, on: true }
+      - { t: toggle, rule: sg-ssh-any, on: true }
+      - { t: toggle, rule: acl-replies-out, on: true }
+debrief:
+  lines:
+    - The security group is stateful, so once it lets the customer's request in, the page goes back out without an outbound rule.
+    - The network ACL is stateless, so its outbound list must allow the reply even though its inbound list admitted the request.
+    - The network ACL lets SSH into the whole subnet, so the security group's narrow back office rule decides who reaches this one server.
+  questions: [q-3jft13, q-bnkz4w, q-jgx1ne]
