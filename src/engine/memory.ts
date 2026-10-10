@@ -275,8 +275,14 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
     if (cleanDays.size >= CLEAN_QUEUE.days) grant('clean-queue', e);
   };
 
+  /**
+   * One FSRS update for `e`, at its own time or at the card's last review when that is later: a boss or mock
+   * answer is held until its submit, so the card may have been reviewed after it, and FSRS never steps back.
+   */
   const update = (cm: MutableConcept, key: string, rating: SrsRating, e: AnswerEvent) => {
-    const next = review(cm.card, rating, new Date(e.at));
+    const last = cm.card?.lastReview ?? null;
+    const moment = last !== null && last > e.at ? last : e.at;
+    const next = review(cm.card, rating, new Date(moment));
     const due = capDue(new Date(next.due), { concept: key, reviewDay: e.day, examDate, tz: e.tz });
     cm.card = { ...next, due: due.toISOString() };
     if (content.concepts.get(key)?.tested !== true) return;
