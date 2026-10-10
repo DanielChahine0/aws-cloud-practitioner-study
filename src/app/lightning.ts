@@ -1,6 +1,5 @@
 /** The lightning round's copy and pure helpers (spec 4.1 and 7.2), so the tests run without a browser. */
 import type { NewEvent } from '../../schemas/events.ts';
-import { studyDay } from '../engine/day.ts';
 import { missedConcepts } from '../engine/lightning.ts';
 import type { Progress, SessionState } from '../engine/replay.ts';
 
@@ -22,10 +21,13 @@ export function missLine(n: number): string | null {
   return `${n} ${n === 1 ? 'concept goes' : 'concepts go'} back into today's review.`;
 }
 
-/** Whether a lightning round has already started on study day `today`, so a new round pays nothing (spec 3.2). */
+/**
+ * Whether a lightning round has already started on study day `today`, so a new round pays nothing (spec 3.2). It reads
+ * the day stamped on each start, as the replay pays, so a change of zone since never moves a round to another day.
+ */
 export function paidToday(progress: Progress, today: string): boolean {
   for (const s of progress.sessions.values()) {
-    if (s.mode === 'lightning' && studyDay(new Date(s.startedAt)) === today) return true;
+    if (s.mode === 'lightning' && s.startDay === today) return true;
   }
   return false;
 }

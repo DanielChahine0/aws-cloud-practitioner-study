@@ -1,12 +1,14 @@
 /**
- * Records today's incident offer (spec 4.5): on the first Home render of a study day with no offer yet, the pick of
- * `src/engine/incident.ts` becomes an `incident.offered` event, so it holds all day. Loaded only through `import()`.
+ * Records today's incident offer (spec 4.5): on the first Home render of a study day with no shipped offer yet, the
+ * pick of `src/engine/incident.ts` becomes an `incident.offered` event, so it holds all day while its incident ships.
+ * Loaded only through `import()`.
  */
 import { studyDay } from '../engine/day.ts';
 import { pickIncident } from '../engine/incident.ts';
+import { incidentToday } from '../engine/next.ts';
 import { index } from './content.ts';
 import { modulesRead } from './incident.ts';
-import { mastery } from './memory.ts';
+import { mastery, shippedIncidents } from './memory.ts';
 import { progress, record, storeReady } from './progress.ts';
 
 let inFlight: Promise<void> | null = null;
@@ -23,7 +25,8 @@ async function offer(at: Date): Promise<void> {
   if (!storeReady.peek() || idx === null || byModule === null) return;
   const today = studyDay(at);
   const p = progress.peek();
-  if (p.incidentsOffered.has(today)) return;
+  // An offer whose incident no longer ships, after a deploy or an import, does not hold the day (spec 8.4).
+  if (incidentToday(p, today, shippedIncidents.peek()) !== null) return;
   const incident = pickIncident({
     incidents: idx.incidents,
     solved: new Set(p.incidentsDone.keys()),

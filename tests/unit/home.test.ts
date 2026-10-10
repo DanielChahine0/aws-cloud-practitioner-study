@@ -115,6 +115,7 @@ const session = (mode: SessionState['mode'], scope: string): SessionState => ({
   qids: ['q-aaaaaa', 'q-bbbbbb', 'q-cccccc'],
   answers: new Map(),
   startedAt: '2026-10-10T08:00:00.000Z',
+  startDay: '2026-10-10',
   submittedAt: null,
   abandoned: false,
   form: null,

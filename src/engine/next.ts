@@ -133,11 +133,16 @@ export function weakestLab(args: {
 }
 
 /**
- * Today's incident as recorded (spec 4.5): the first `incident.offered` of the study day and whether it is solved.
+ * Today's incident as recorded (spec 4.5): the first `incident.offered` of the study day whose incident still ships,
+ * and whether it is solved. An offer the shipped content dropped is kept in the log and skipped here (spec 8.4).
  * It lives here, not in `incident.ts`, so Home never loads the pick to read the offer.
  */
-export function incidentToday(progress: Progress, today: string): { incident: string; done: boolean } | null {
-  const incident = progress.incidentsOffered.get(today);
+export function incidentToday(
+  progress: Progress,
+  today: string,
+  shipped: ReadonlySet<string>,
+): { incident: string; done: boolean } | null {
+  const incident = progress.incidentsOffered.get(today)?.find((id) => shipped.has(id));
   if (incident === undefined) return null;
   return { incident, done: progress.incidentsDone.has(incident) };
 }

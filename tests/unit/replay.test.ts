@@ -421,7 +421,7 @@ describe('exam sessions in replay (spec 4.1, 4.3, 4.4)', () => {
 });
 
 describe('derive: daily incidents (spec 4.5)', () => {
-  it('keeps the first offer of each study day and the day of each first solve', () => {
+  it('keeps every offer of each study day once, in log order, and the day of each first solve', () => {
     const p = derive(
       timelineOf([
         [at('2026-10-10', 9), incidentOfferedOf('inc-002')],
@@ -433,8 +433,8 @@ describe('derive: daily incidents (spec 4.5)', () => {
       null,
     );
     expect([...p.incidentsOffered]).toEqual([
-      ['2026-10-10', 'inc-002'],
-      ['2026-10-11', 'inc-007'],
+      ['2026-10-10', ['inc-002', 'inc-007']],
+      ['2026-10-11', ['inc-007']],
     ]);
     expect([...p.incidentsDone]).toEqual([['inc-002', '2026-10-10']]);
   });

@@ -355,6 +355,7 @@ describe('extras (spec 4.6)', () => {
 });
 
 describe('incidentToday', () => {
+  const SHIPPED = new Set(['inc-002', 'inc-007']);
   const progressOf = (log: readonly (readonly [string, NewEvent])[]) => derive(timelineOf(log), null);
 
   it('reads the first offer of the study day and whether it is solved', () => {
@@ -362,14 +363,20 @@ describe('incidentToday', () => {
       [at('2026-10-10', 9), incidentOfferedOf('inc-002')],
       [at('2026-10-10', 9, 5), incidentOfferedOf('inc-007')],
     ] as const;
-    expect(incidentToday(progressOf(offered), '2026-10-10')).toEqual({ incident: 'inc-002', done: false });
+    expect(incidentToday(progressOf(offered), '2026-10-10', SHIPPED)).toEqual({
+      incident: 'inc-002',
+      done: false,
+    });
     const solved = [...offered, [at('2026-10-10', 11), incidentDoneOf('inc-002', true)]] as const;
-    expect(incidentToday(progressOf(solved), '2026-10-10')).toEqual({ incident: 'inc-002', done: true });
+    expect(incidentToday(progressOf(solved), '2026-10-10', SHIPPED)).toEqual({
+      incident: 'inc-002',
+      done: true,
+    });
   });
 
   it('is null on a day with no offer, whatever came before', () => {
     const log = [[at('2026-10-09', 9), incidentOfferedOf('inc-002')]] as const;
-    expect(incidentToday(progressOf(log), '2026-10-10')).toBeNull();
+    expect(incidentToday(progressOf(log), '2026-10-10', SHIPPED)).toBeNull();
   });
 });
 
