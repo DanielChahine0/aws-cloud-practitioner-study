@@ -1,0 +1,359 @@
+questions:
+  - id: q-pgw2dj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: infrastructure-as-code
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 1
+    stem: >-
+      Which approach keeps a whole architecture as a declared blueprint in source control that tools rebuild the same way in any Region?
+    options:
+      - id: a
+        text: Manual console provisioning
+        why: Clicking through the console builds one resource at a time and stores no blueprint to rebuild from.
+      - id: b
+        text: Infrastructure as code
+        correct: true
+        why: IaC saves the architecture as versioned code that tools rebuild identically wherever needed.
+      - id: c
+        text: Scripted CLI automation
+        why: CLI scripts list steps to run rather than declare a whole architecture, and they grow hard to maintain.
+      - id: d
+        text: Programmatic SDK calls
+        why: SDK calls let app code perform single steps such as saving data, not rebuild an entire architecture.
+    evidence:
+      - Infrastructure as code (IaC) stores the architecture as a source-controlled blueprint that tools rebuild anywhere, identically and easily.
+    takeaway: IaC turns the architecture into source-controlled code that rebuilds identically anywhere.
+    history: []
+    verified:
+      keyHash: 8d21bb7454c7
+      fullHash: e5de59d4ad71
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gvkk1n
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: infrastructure-as-code
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe is opening in three new Regions.
+      It wants one declared definition of its setup that is peer reviewed, versioned and rolled out the same way to every Region.
+      Which approach fits best?
+    options:
+      - id: a
+        text: Build each Region in the console
+        why: The console suits small one-off jobs and leaves no definition to review or version.
+      - id: b
+        text: Automate it with CLI scripts
+        why: Scripts automate only part of the work and grow hard to maintain across Regions.
+      - id: c
+        text: Mix console work with CLI scripts
+        why: Mixing methods lets the Regions drift apart, and leaves no single definition to review.
+      - id: d
+        text: Adopt infrastructure as code
+        correct: true
+        why: Declarative IaC can be versioned, reviewed and deployed the same way to every Region.
+    evidence:
+      - For consistent multi-Region rollouts, the console fits only small one-off jobs, scripts automate partly but get hard to maintain, and mixing methods causes drift.
+      - IaC is declarative, so teams can version, review and automate deployments.
+    takeaway: Reviewed, versioned and repeatable multi-Region rollouts call for IaC over console work or scripts.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the odd one out, the only non-console, non-CLI approach and a named practice.)"
+  - id: q-7pn04g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudformation
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 3
+    stem: >-
+      The cafe's ordering system runs on EC2 instances behind a load balancer with Auto Scaling in one Region.
+      It wants an identical copy in a second Region, built from a text file that declares every resource.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk runs uploaded app code on a managed platform rather than building a declared resource stack.
+      - id: b
+        text: AWS Config
+        why: Config records and evaluates resource settings, but it does not provision anything.
+      - id: c
+        text: AWS CloudFormation
+        correct: true
+        why: CloudFormation reads one template and provisions the same stack in another Region.
+      - id: d
+        text: AWS Systems Manager
+        why: Systems Manager helps operate existing resources rather than creating a stack from a template.
+    evidence:
+      - Copying Region A's setup to Region B -> one CloudFormation template.
+      - One template across accounts or Regions gives identical environments from one command, with fewer errors and more resilience.
+    takeaway: Copying a declared multi-resource stack to another Region is a job for one CloudFormation template.
+    history: []
+    verified:
+      keyHash: f71300fed1ed
+      fullHash: ab05c029dc33
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-stdqhj
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-cloudformation
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 1
+    stem: >-
+      Which statements describe what AWS CloudFormation does?
+    options:
+      - id: a
+        text: It provisions and configures resources through AWS APIs.
+        correct: true
+        why: CloudFormation turns the template into AWS API calls that create and configure each resource.
+      - id: b
+        text: It records resource settings and tracks how they change.
+        why: Recording and tracking resource settings is what AWS Config does, not CloudFormation.
+      - id: c
+        text: It builds matching environments across accounts and Regions.
+        correct: true
+        why: Running the same template in each account or Region yields matching environments with fewer errors.
+      - id: d
+        text: It turns uploaded code into a running, auto-scaled web app.
+        why: Turning uploaded code into a running web environment is AWS Elastic Beanstalk, not CloudFormation.
+      - id: e
+        text: It manages nodes centrally and automates their patching.
+        why: Central node management and patching belong to AWS Systems Manager, not CloudFormation.
+    evidence:
+      - Its templates are text files declaring what to build, not how, and it provisions and configures it all through AWS APIs.
+      - One template across accounts or Regions gives identical environments from one command, with fewer errors and more resilience.
+    takeaway: CloudFormation provisions resources from code through AWS APIs and gives consistent environments across accounts and Regions.
+    history: []
+    verified:
+      keyHash: edcaf7436a60
+      fullHash: 4a4892ef61db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2w2z0q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudformation-templates
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 1
+    stem: >-
+      What does an AWS CloudFormation template contain?
+    options:
+      - id: a
+        text: A record of the API calls made in an account
+        why: A record of API calls is an AWS CloudTrail log, not a template that builds anything.
+      - id: b
+        text: The allow and deny rules attached to an identity
+        why: Allow and deny rules for an identity make up an IAM policy, not a template.
+      - id: c
+        text: A text declaration of the resources to build
+        correct: true
+        why: A template is a text file that declares what resources should exist for CloudFormation to create.
+      - id: d
+        text: A history of how resource settings have changed
+        why: A history of resource setting changes comes from AWS Config, not from a template.
+    evidence:
+      - "**CloudFormation template**: A text document declaring the resources to build."
+      - Its templates are text files declaring what to build, not how, and it provisions and configures it all through AWS APIs.
+    takeaway: A CloudFormation template is a text file that declares what to build, leaving the how to CloudFormation.
+    history: []
+    verified:
+      keyHash: 5a7cf818a2b3
+      fullHash: f4180ef08463
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gt9ahj
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: cloudformation-templates
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe already builds its loyalty app stack from a CloudFormation template in its main account.
+      It now needs an identical environment in a separate testing account with as few mistakes as possible.
+      What should it do?
+    options:
+      - id: a
+        text: Turn the template into a list of CLI commands
+        why: Rebuilding resource by resource with commands repeats the manual steps the template already removes.
+      - id: b
+        text: Deploy the same template in the test account
+        correct: true
+        why: Reusing one template across accounts produces an identical environment from one command.
+      - id: c
+        text: Copy the template and hand-edit it for testing
+        why: Hand edits make a second template that can drift from the first, so the environments may stop matching.
+      - id: d
+        text: Recreate the template's stack in the console
+        why: Console work suits small one-off jobs and invites mistakes when copying a whole stack by hand.
+    evidence:
+      - One template across accounts or Regions gives identical environments from one command, with fewer errors and more resilience.
+    takeaway: Reusing one template in another account or Region gives an identical environment with fewer errors.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only one that reuses the template unchanged; the others convert, copy or rebuild it.)"
+  - id: q-dv03bv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: programmatic-access
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 1
+    stem: >-
+      The cafe's developer reaches AWS only through AWS CLI commands in a terminal on her laptop and AWS SDK calls in the loyalty app's code, never through a browser.
+      What is this way of using AWS called?
+    options:
+      - id: a
+        text: Console access
+        why: Console access means working in the browser-based AWS Management Console, which the developer avoids.
+      - id: b
+        text: CloudShell access
+        why: AWS CloudShell is a terminal opened in the browser, and the developer never works through a browser.
+      - id: c
+        text: Infrastructure as code
+        why: IaC declares a whole architecture in templates, not individual CLI commands and SDK calls.
+      - id: d
+        text: Programmatic access
+        correct: true
+        why: Using AWS through code, with the AWS CLI or SDKs, is programmatic access.
+    evidence:
+      - "**Programmatic access**: Using AWS through code, with the AWS CLI or SDKs."
+    takeaway: Programmatic access means driving AWS through code, using the AWS CLI or the AWS SDKs.
+    history: []
+    verified:
+      keyHash: cf7fd9d9733a
+      fullHash: 6ec50c2e2dff
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-z8azya
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: programmatic-access
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      Match each cafe need to the way of calling AWS APIs that suits it.
+    pairs:
+      - left: A script that backs up EBS volumes every night
+        right: AWS CLI
+        why: The CLI lets a coder script routine jobs like EBS backups across services from one command line.
+      - left: The loyalty app saving each signup to Amazon S3
+        right: AWS SDKs
+        why: An SDK lets app code perform a single step such as writing user data to S3.
+      - left: A new manager checking the billing dashboard
+        right: AWS Management Console
+        why: The console suits newcomers who want search, simple workflows and billing dashboards.
+      - left: A CI/CD pipeline that rolls out stacks in every Region
+        right: Infrastructure as code
+        why: IaC suits organization-wide automation such as CI/CD pipelines and consistent multi-Region rollouts.
+    evidence:
+      - Programmatic access suits developers, the console newcomers, and IaC repeatable work at scale.
+      - "**Programmatic access**: Using AWS through code, with the AWS CLI or SDKs."
+    takeaway: Programmatic access via the CLI or SDKs serves developers, while the console serves newcomers and IaC serves scale.
+    history: []
+    verified:
+      keyHash: 9ac1f4772646
+      fullHash: 8b8bd17315cf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2yjc4y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: infrastructure-as-code
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 1
+    stem: >-
+      Infrastructure as code is called declarative.
+      Which statement explains what that word says about the way the cafe's definitions are written?
+    options:
+      - id: a
+        text: They are kept in source control as a blueprint
+        why: IaC files do live in source control, but that is where they are kept, not what declarative means.
+      - id: b
+        text: They name the end state and leave out the steps
+        correct: true
+        why: Declarative means stating what should exist and leaving how to build it to the tooling.
+      - id: c
+        text: They can rebuild the same setup in other Regions
+        why: Rebuilding anywhere is a benefit of IaC, but it does not describe the declarative way of writing it.
+      - id: d
+        text: They are carried out by tools calling AWS APIs
+        why: Tools do turn definitions into API calls, but that is how they run, not what declarative means.
+    evidence:
+      - IaC is declarative, so teams can version, review and automate deployments.
+      - "**Declarative**: Stating what should exist, not how to build it."
+      - Infrastructure as code (IaC) stores the architecture as a source-controlled blueprint that tools rebuild anywhere, identically and easily.
+    takeaway: IaC is declarative, so definitions say what should exist and tools work out how to build it.
+    history: []
+    verified:
+      keyHash: ee608bd39241
+      fullHash: "139047612135"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kyqdw6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudformation-templates
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe writes a CloudFormation template that lists a load balancer, two EC2 instances and a database, with no build steps.
+      Once the cafe submits it, how do those resources get created?
+    options:
+      - id: a
+        text: It reuses the template across accounts and Regions
+        why: Reuse across accounts and Regions is a real benefit, but it does not say how this stack gets built.
+      - id: b
+        text: It provisions and configures them through AWS APIs
+        correct: true
+        why: CloudFormation reads what the template declares and provisions and configures it through AWS APIs.
+      - id: c
+        text: It frees the team's time to focus on its apps
+        why: Saving the team time is a result of using CloudFormation, not the way the resources get built.
+      - id: d
+        text: It handles multi-tier stacks with tangled dependencies
+        why: CloudFormation does cope with complex stacks, but that says what it can handle, not how it builds them.
+    evidence:
+      - Its templates are text files declaring what to build, not how, and it provisions and configures it all through AWS APIs.
+      - CloudFormation models and sets up AWS resources from code, freeing time for apps.
+      - It handles simple to complex multi-tier apps with intricate dependencies and, once learned, speeds deployment.
+    takeaway: A template only declares what to build, and CloudFormation provisions it through AWS APIs.
+    history: []
+    verified:
+      keyHash: dbfe6a48e46b
+      fullHash: ede278647112
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
