@@ -23,7 +23,7 @@ Serve this study site from a private S3 bucket that only CloudFront can read, so
 ## Before you start
 
 - Mission 0 is done and its Verify holds.
-- Your plan status record says the free plan offers Amazon S3, Amazon CloudFront and AWS CloudFormation; if any of them is missing or unknown, stop here and keep using `pnpm preview` on the Mac.
+- Your Plan status form says the free plan offers Amazon S3, Amazon CloudFront and AWS CloudFormation; if any of them is unticked, stop here and keep using `pnpm preview` on the Mac.
 - Your terminal is signed in with `aws login --profile ccp-admin`.
 - The repo has no uncommitted changes and `pnpm verify` passes, because the deploy command refuses to run otherwise.
 
