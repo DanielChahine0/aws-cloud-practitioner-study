@@ -16,7 +16,7 @@ import {
   shownRank,
 } from '../engine/ranks.ts';
 import { readiness } from '../engine/readiness.ts';
-import { takenForms } from '../engine/replay.ts';
+import { practiceForms, takenForms } from '../engine/replay.ts';
 import { streakOf } from '../engine/streak.ts';
 import { KV_KEYS } from '../store/kv.ts';
 import { now } from './clock.ts';
@@ -89,8 +89,11 @@ export const ranks = computed<readonly RankDef[]>(() =>
   (index.value?.ranks ?? []).map((r) => ({ ...r, requires: r.requires as RankDef['requires'] })),
 );
 
-/** The forms A to D whose mock has started, so their items may join practice (spec 4.3). */
+/** The forms A to D whose mock has started, so the next mock takes another form (spec 4.3). */
 export const taken = computed(() => takenForms(progress.value));
+
+/** The forms A to D whose mock is submitted or abandoned, so their items may join practice (spec 4.3). */
+export const learnForms = computed(() => practiceForms(progress.value));
 
 /** Each module's boss: unlocked, ready, passed, cooling down or open (spec 4.2). */
 export const bosses = computed<ReadonlyMap<number, BossStatus>>(() => {

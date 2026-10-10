@@ -6,6 +6,7 @@ import {
   ENGINE_VERSION,
   examsOf,
   openSession,
+  practiceForms,
   snapshotOf,
   takenForms,
 } from '../../src/engine/replay.ts';
@@ -319,6 +320,22 @@ describe('exam sessions in replay (spec 4.1, 4.3, 4.4)', () => {
     expect(p.sessions.get('01JA00000000000000000000S3')?.form).toBe('C');
     expect([...takenForms(p)]).toEqual(['B']);
     expect(p.sessions.get(SID2)?.form).toBe('remix');
+  });
+
+  it('lets a form join practice only once its mock is submitted or abandoned, never a remix', () => {
+    const S3 = '01JA00000000000000000000S3';
+    const p = derive(
+      eventsOf(
+        examStartOf(SID, 'mock', ['qm1'], { form: 'A', deadline: DEADLINE }),
+        submitOf(SID, 'mock'),
+        examStartOf(SID2, 'mock', ['qm2'], { form: 'B', deadline: DEADLINE }),
+        abandonOf(SID2, 'mock'),
+        examStartOf(S3, 'mock', ['qm3'], { form: 'C', deadline: DEADLINE }),
+      ),
+      null,
+    );
+    expect([...takenForms(p)].sort()).toEqual(['A', 'B', 'C']);
+    expect([...practiceForms(p)].sort()).toEqual(['A', 'B']);
   });
 
   it('lists exam results by mode and scope in submit order', () => {

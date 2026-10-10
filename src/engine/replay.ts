@@ -272,6 +272,19 @@ export function takenForms(p: Progress): ReadonlySet<string> {
   return taken;
 }
 
+/**
+ * The forms `A` to `D` whose mock is over, submitted or abandoned: only these may join practice (spec 4.3), so no
+ * learn screen shows an item, its key or its explanation while its mock is still open.
+ */
+export function practiceForms(p: Progress): ReadonlySet<string> {
+  const closed = new Set<string>();
+  for (const s of p.sessions.values()) {
+    if (s.mode !== 'mock' || s.form === null || !FORMS.has(s.form)) continue;
+    if (s.submittedAt !== null || s.abandoned) closed.add(s.form);
+  }
+  return closed;
+}
+
 /** The submitted exams of one mode, and of one scope when given, in submit order. */
 export function examsOf(p: Progress, mode: 'boss' | 'mock', scope?: string): ExamResult[] {
   return [...p.exams.values()].filter((r) => r.mode === mode && (scope === undefined || r.scope === scope));

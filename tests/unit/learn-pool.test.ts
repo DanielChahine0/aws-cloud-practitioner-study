@@ -49,6 +49,19 @@ const MOCK_A_STARTED = eventsOf({
   qids: ['x-aaaaa1'],
   deadline: '2026-10-10T09:30:00.000Z',
 });
+const MOCK_A_SUBMITTED = eventsOf(
+  {
+    t: 'session',
+    sid: SID,
+    mode: 'mock',
+    phase: 'start',
+    seed: 7,
+    form: 'A',
+    qids: ['x-aaaaa1'],
+    deadline: '2026-10-10T09:30:00.000Z',
+  },
+  { t: 'session', sid: SID, mode: 'mock', phase: 'submit', seed: 7 },
+);
 const IDX: ContentIndex = {
   contentVersion: 'test',
   modules: [],
@@ -110,11 +123,11 @@ describe('the learn pool (spec 4.3)', () => {
     expect(ids(learnPool(PRACTICE, examPoolOf(FORMS, ITEMS), taken))).not.toContain('x-bbbbb1');
   });
 
-  it('learnPoolNow adds the loaded items of taken forms only', () => {
+  it('learnPoolNow adds the loaded items of forms whose mock is over only', () => {
     index.value = IDX;
     examForms.value = FORMS;
     expect(ids(learnPoolNow(PRACTICE))).toEqual(['q-ppppp1']);
-    events.value = MOCK_A_STARTED;
+    events.value = MOCK_A_SUBMITTED;
     expect(ids(learnPoolNow(PRACTICE))).toEqual(['q-ppppp1', 'x-aaaaa1']);
   });
 });

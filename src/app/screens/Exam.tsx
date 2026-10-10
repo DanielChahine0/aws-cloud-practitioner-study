@@ -34,7 +34,7 @@ import {
 import { examControls, examQuestions, loadModules, openExam, settleExam } from '../exam-settle.ts';
 import { isControl, isTyping } from '../keyboard.ts';
 import { learnPoolNow, practicePoolOf } from '../learn-pool.ts';
-import { bosses, memory, memoryContent, taken } from '../memory.ts';
+import { bosses, learnForms, memory, memoryContent, taken } from '../memory.ts';
 import { kvRecords, newSessionSeed, progress, record, storeReady, writeKv } from '../progress.ts';
 import { pad2, type Route, toHash } from '../router.ts';
 import { displayOrder } from '../runner.ts';
@@ -168,7 +168,7 @@ async function startExam(idx: ContentIndex, route: ExamRoute, form: string | nul
     const n = route.module;
     const chunks = await loadModules(Array.from({ length: n }, (_, i) => i + 1));
     if (chunks === null) return START_ERROR;
-    await Promise.all([...taken.peek()].map((f) => ensureExamForm(f)));
+    await Promise.all([...learnForms.peek()].map((f) => ensureExamForm(f)));
     const at = new Date();
     const qids = bossDraw({
       module: n,

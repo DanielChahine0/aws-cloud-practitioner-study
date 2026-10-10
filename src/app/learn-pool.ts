@@ -1,11 +1,12 @@
 /**
  * The one place learn screens get their question pool (spec 4.3): the practice items of the loaded module chunks,
- * plus the items of every form whose mock has started, so an untaken form never reaches a learn-mode selector.
+ * plus the items of every form whose mock is over, so an untaken form, or the form of a mock still open, never
+ * reaches a learn-mode selector.
  */
 import type { ContentIndex, ExamChunk, ExamItemRef, ModuleChunk } from '../../schemas/chunks.ts';
 import { type ExamPoolQuestion, learnPool, type PoolQuestion } from '../engine/select.ts';
 import { ensureExamForm, examForms, index } from './content.ts';
-import { taken } from './memory.ts';
+import { learnForms } from './memory.ts';
 
 /** The module of a note id such as `m03/aws-lambda`. */
 const moduleOf = (note: string): number => Number(note.slice(1, 3));
@@ -50,18 +51,18 @@ export function examPoolOf(
 }
 
 /**
- * A learn screen's pool now: asks for every taken form's chunk (a form not loaded yet joins on a later call),
- * then adds the loaded items of taken forms to the practice items.
+ * A learn screen's pool now: asks for the chunk of every form whose mock is over (a form not loaded yet joins on a
+ * later call), then adds the loaded items of those forms to the practice items.
  */
 export function learnPoolNow(practice: readonly PoolQuestion[]): PoolQuestion[] {
-  const forms = taken.peek();
+  const forms = learnForms.peek();
   for (const form of forms) void ensureExamForm(form);
   return learnPool(practice, examPoolOf(examForms.peek(), index.peek()?.exam.items ?? {}), forms);
 }
 
 /**
  * The forms a learn session must load before it shows (spec 4.3): the form of each of its exam items, plus `also`,
- * which a review passes every taken form as, since its relearn variants come from their items too.
+ * which a review passes every form of its learn pool as, since its relearn variants come from their items too.
  * Forms already loaded and forms the index does not list (they can never load) are left out.
  */
 export function formsToLoad(

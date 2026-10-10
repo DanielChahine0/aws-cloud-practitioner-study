@@ -23,16 +23,17 @@ export interface ExamPoolQuestion extends PoolQuestion {
 }
 
 /**
- * The pool every learn mode selects from (spec 4.3): the practice items plus the items of each taken form.
- * Items of a form whose mock never started stay out, so no selector can return them.
+ * The pool every learn mode selects from (spec 4.3): the practice items plus the items of each form in `forms`,
+ * which the app passes as the forms whose mock is over (`practiceForms`).
+ * Items of any other form stay out, so no selector can return them.
  */
 export function learnPool(
   practice: readonly PoolQuestion[],
   exam: readonly ExamPoolQuestion[],
-  taken: ReadonlySet<string>,
+  forms: ReadonlySet<string>,
 ): PoolQuestion[] {
   const joined = exam
-    .filter((q) => taken.has(q.form))
+    .filter((q) => forms.has(q.form))
     .map(({ id, concept, note, type, module }) => ({ id, concept, note, type, module }));
   return [...practice, ...joined];
 }

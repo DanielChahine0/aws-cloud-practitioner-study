@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { bossDraw } from '../../src/engine/boss.ts';
-import { derive, type Progress, takenForms } from '../../src/engine/replay.ts';
+import { derive, type Progress, practiceForms, takenForms } from '../../src/engine/replay.ts';
 import {
   type ExamPoolQuestion,
   learnPool,
@@ -10,11 +10,11 @@ import {
   selectQuiz,
 } from '../../src/engine/select.ts';
 import { eventsOf, SID } from '../fixtures/events.ts';
-import { examStartOf } from '../fixtures/memory.ts';
+import { abandonOf, examStartOf, submitOf } from '../fixtures/memory.ts';
 
 /**
  * The leakage test (spec 4.3 and 9, an exit criterion of Phase 3): no learn-mode selector ever returns an item
- * of a form whose mock has not started. Made-up bakery pools: 2 modules of 6 concepts, and 4 forms of 12 items
+ * of a form whose mock has not started, nor of a form whose mock is still open. Made-up bakery pools: 2 modules of 6 concepts, and 4 forms of 12 items
  * on the same concepts.
  */
 const concepts = (m: number) => Array.from({ length: 6 }, (_, i) => `bake-0${m}-0${i + 1}`);
@@ -45,7 +45,7 @@ const ALL_CONCEPTS = [...concepts(1), ...concepts(2)];
 
 /** Every learn-mode selection over the learn pool of `progress`, for a few seeds. */
 function everySelection(progress: Progress): string[] {
-  const pool = learnPool(PRACTICE, EXAM, takenForms(progress));
+  const pool = learnPool(PRACTICE, EXAM, practiceForms(progress));
   const out: string[] = [];
   for (let seed = 0; seed < 25; seed++) {
     out.push(
@@ -73,6 +73,10 @@ function everySelection(progress: Progress): string[] {
   }
   return out;
 }
+const MOCK_A = examStartOf(SID, 'mock', ['xa-bake-01-01'], {
+  form: 'A',
+  deadline: '2026-10-27T11:30:00.000Z',
+});
 const formOf = (id: string) => (id.startsWith('x') ? id.slice(1, 2).toUpperCase() : null);
 
 describe('leakage (spec 4.3)', () => {
@@ -82,16 +86,19 @@ describe('leakage (spec 4.3)', () => {
     expect(picked.filter((id) => formOf(id) !== null)).toEqual([]);
   });
 
-  it('lets only Form A items in once Mock A has started', () => {
-    const progress = derive(
-      eventsOf(
-        examStartOf(SID, 'mock', ['xa-bake-01-01'], { form: 'A', deadline: '2026-10-27T11:30:00.000Z' }),
-      ),
-      null,
-    );
-    const forms = new Set(everySelection(progress).map(formOf));
-    expect(forms.has('A')).toBe(true);
-    expect([...forms].filter((f) => f !== null && f !== 'A')).toEqual([]);
+  it('never returns a Form A item while Mock A is still open', () => {
+    const progress = derive(eventsOf(MOCK_A), null);
+    const picked = everySelection(progress);
+    expect(picked.length).toBeGreaterThan(0);
+    expect(picked.filter((id) => formOf(id) !== null)).toEqual([]);
+  });
+
+  it('lets only Form A items in once Mock A is submitted or abandoned', () => {
+    for (const close of [submitOf(SID, 'mock'), abandonOf(SID, 'mock')]) {
+      const forms = new Set(everySelection(derive(eventsOf(MOCK_A, close), null)).map(formOf));
+      expect(forms.has('A')).toBe(true);
+      expect([...forms].filter((f) => f !== null && f !== 'A')).toEqual([]);
+    }
   });
 
   it('a form counts as taken once its mock starts', () => {

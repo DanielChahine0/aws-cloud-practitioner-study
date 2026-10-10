@@ -22,7 +22,7 @@ import { ensureExamForm, ensureModule, examForms, modules } from '../content.ts'
 import { nothingDueLine } from '../home.ts';
 import { isControl, isTyping } from '../keyboard.ts';
 import { formsToLoad, learnPoolNow, practicePoolOf } from '../learn-pool.ts';
-import { memory, memoryContent, queue, taken } from '../memory.ts';
+import { learnForms, memory, memoryContent, queue } from '../memory.ts';
 import { weakestConcepts } from '../module.ts';
 import { neighbors } from '../nav.ts';
 import { events, newSessionSeed, progress, record, storeReady } from '../progress.ts';
@@ -87,16 +87,16 @@ function markedMisconception(concept: string): boolean {
   return (memory.peek()?.concepts.get(memoryConcept(concept))?.misconception ?? null) !== null;
 }
 
-/** The learn pool of some chunks plus the items of taken forms (spec 4.3), with each concept as memory keys it. */
+/** The learn pool of some chunks plus the items of forms whose mock is over (spec 4.3), concepts as memory keys them. */
 function poolOf(chunks: readonly ModuleChunk[]): PoolQuestion[] {
   return learnPoolNow(practicePoolOf(chunks, memoryConcept));
 }
 
-/** Every question a session may show: the loaded chunks' and the loaded chunks of taken forms. */
+/** Every question a session may show: the loaded chunks' and the loaded chunks of the learn pool's forms. */
 function shippedOf(chunks: readonly ModuleChunk[]): Map<string, QuestionView> {
   const out = new Map<string, QuestionView>();
   for (const c of chunks) for (const q of c.questions) out.set(q.id, q);
-  for (const form of taken.value) {
+  for (const form of learnForms.value) {
     for (const q of examForms.value.get(form)?.questions ?? []) out.set(q.id, q);
   }
   return out;
@@ -413,9 +413,9 @@ function ReviewRunner({ idx }: { idx: ContentIndex }) {
   useEffect(() => {
     if (missing) for (const m of idx.modules) ensureModule(m.n);
   }, [missing, idx]);
-  // Every taken form, not only the session's: a relearn variant comes from the whole learn pool, so it must not
-  // change when a form loads mid-session.
-  const forms = useSessionForms(idx, session, taken.value);
+  // Every form of the learn pool, not only the session's: a relearn variant comes from the whole learn pool, so it
+  // must not change when a form loads mid-session.
+  const forms = useSessionForms(idx, session, learnForms.value);
 
   return (
     <>
