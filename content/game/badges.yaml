@@ -17,7 +17,6 @@
 - id: hands-on
   name: Hands On
   rule: Every core lab in 5 modules completed.
-  arrives: labs
 - id: lab-complete
   name: Lab Complete
   rule: All 26 core labs completed.
