@@ -1,13 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import {
+  backLine,
   CREDITS_NOTE,
   checkLabel,
+  DOWN_MARK,
+  downLine,
   ENGINE_LABEL,
+  FAILURE_LEGEND,
+  failureButton,
   goalWord,
   hintLine,
   labCheckLine,
   labDoneLine,
   labLede,
+  PIECES_EMPTY,
+  PIECES_LEGEND,
   placedLine,
   RESET_ASK,
   returnedLine,
@@ -91,5 +98,24 @@ describe('Simulate copy', () => {
     expect(simChartLabel('s3-lifecycle', ['Cost so far'])).toBe(
       'Cost so far at the end of each 30-day month',
     );
+  });
+});
+
+describe('Place copy', () => {
+  it('words the tray, the failure buttons and the down mark', () => {
+    expect(PIECES_EMPTY).toBe('Every piece is placed.');
+    expect(PIECES_LEGEND).toBe('Pieces');
+    expect(FAILURE_LEGEND).toBe('Try a failure');
+    expect(DOWN_MARK).toBe('Down');
+    expect(failureButton('Oven Row A')).toBe('Oven Row A fails');
+  });
+
+  it('announces a placed piece, a returned piece and a failure preview', () => {
+    expect(placedLine('First shop front', 'Public subnet A')).toBe(
+      'Placed First shop front in Public subnet A.',
+    );
+    expect(returnedLine('First shop front')).toBe('First shop front is back in the tray.');
+    expect(downLine('Oven Row A')).toBe('Oven Row A is down.');
+    expect(backLine('Oven Row A')).toBe('Oven Row A is back.');
   });
 });

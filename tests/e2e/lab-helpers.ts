@@ -4,6 +4,7 @@ import type { ContentIndex, LabMeta, LabView, ModuleChunk, QuestionView } from '
 import { SCHEMA_VERSION } from '../../schemas/version.ts';
 import { DB_NAME, STORES } from '../../src/store/idb.ts';
 import { KV_KEYS } from '../../src/store/kv.ts';
+import { bakeryPlaceLab } from '../fixtures/lab-place.ts';
 import { bakerySimulateLab } from '../fixtures/lab-specs.ts';
 
 export const SYNTHETIC_SORT_LAB_ID = 'lab-m01-bakery-sort';
@@ -239,5 +240,28 @@ export function syntheticSimulateLab(questions: QuestionView[]): LabView {
     notes: notesOf(questions),
     debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
     credits: true,
+  };
+}
+
+export const SYNTHETIC_PLACE_LAB_ID = 'lab-m01-bakery-ovens';
+
+/** The bakery Place lab of `tests/fixtures/lab-place.ts` as the build ships it, with `questions` as its debrief. */
+export function syntheticPlaceLab(questions: QuestionView[]): LabView {
+  const lab = bakeryPlaceLab();
+  return {
+    id: SYNTHETIC_PLACE_LAB_ID,
+    module: 1,
+    engine: 'place',
+    tier: 'core',
+    rev: 1,
+    title: lab.title,
+    minutes: lab.minutes,
+    concepts: lab.concepts,
+    brief: lab.brief,
+    spec: lab.spec,
+    goals: lab.goals,
+    notes: notesOf(questions),
+    debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
+    credits: false,
   };
 }

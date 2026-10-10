@@ -2275,6 +2275,148 @@ dialog.confirm .button {
 }
 
 /* Labs: Place */
+.place-tray {
+  display: grid;
+  gap: 8px;
+  min-height: 44px;
+  margin: 0;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+}
+
+.piece {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.piece:hover,
+.piece[aria-pressed="true"] {
+  border-color: var(--active);
+}
+
+.piece[aria-pressed="true"] {
+  box-shadow: inset 3px 0 0 var(--active);
+}
+
+.piece-detail {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.place-map {
+  display: grid;
+  gap: 12px;
+}
+
+.place-box {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  padding: 12px;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.place-box .place-box {
+  background: var(--surface);
+}
+
+.place-box .place-box .place-box {
+  background: var(--pane);
+}
+
+.place-box[data-kind="bench"] {
+  border-style: dashed;
+}
+
+.place-box.is-down {
+  border: 2px dashed var(--bad);
+}
+
+.place-name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.place-detail {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.slot-target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.slot-target:hover {
+  border-color: var(--active);
+}
+
+.slot-n {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.slot-count {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.down-mark {
+  font-weight: 600;
+  color: var(--bad);
+}
+
+.place-failures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.place-failures legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.place-failures button[aria-pressed="true"] {
+  border: 2px dashed var(--bad);
+}
 
 /* Labs: Trace */
 
