@@ -9,7 +9,10 @@ import {
   type BillConstants,
   type CacheConstants,
   type ComputeCostConstants,
+  type DataLossConstants,
   type LifecycleConstants,
+  PURCHASE_OPTIONS,
+  type PurchaseConstants,
   runModel,
   type ScalingConstants,
   type SimModel,
@@ -18,9 +21,9 @@ import {
 } from '../../src/labs/simulate/models.ts';
 
 /**
- * The six Simulate labs, fixed by Phase 4 Task 13: constants, parameters, solution, thresholds and
- * wrong paths. Writers copy them and write only the text; this test holds every shipped lab to them,
- * and its orderings hold the lessons the numbers teach.
+ * The Simulate labs, fixed by Phase 4 Task 13 (six) and Phase 5 Task 5 (two): constants, parameters,
+ * solution, thresholds and wrong paths. Writers copy them and write only the text; this test holds
+ * every shipped lab to them, and its orderings hold the lessons the numbers teach.
  */
 
 type Action = { t: 'set'; param: string; value: number | string | boolean };
@@ -45,6 +48,10 @@ const toggle = (id: string, initial: boolean) => ({ kind: 'toggle' as const, id,
 
 interface SimLab {
   id: string;
+  /** The task that fixed the numbers, as the test titles name it. */
+  fixedIn: string;
+  /** The content wave that writes the lab. */
+  wave: string;
   model: SimModel;
   constants: unknown;
   params: unknown[];
@@ -155,11 +162,60 @@ const TRANSFER: TransferConstants = {
   deviceTb: 80,
 };
 
+const PURCHASE: PurchaseConstants = {
+  workloads: [
+    {
+      id: 'till',
+      label: 'Till and order server',
+      hours: 720,
+      months: 12,
+      interruptible: false,
+      needs: 'none',
+    },
+    {
+      id: 'roast-plan',
+      label: 'Weekend roast planning',
+      hours: 16,
+      months: 12,
+      interruptible: true,
+      needs: 'none',
+    },
+    { id: 'promo', label: 'Holiday promo site', hours: 720, months: 1, interruptible: false, needs: 'none' },
+    {
+      id: 'loyalty',
+      label: 'Loyalty software',
+      hours: 720,
+      months: 12,
+      interruptible: false,
+      needs: 'dedicated-host',
+    },
+  ],
+  rates: {
+    'on-demand': 1,
+    reserved: 0.6,
+    'savings-plan': 0.65,
+    spot: 0.3,
+    'dedicated-instance': 1.2,
+    'dedicated-host': 1.5,
+  },
+  termMonths: 12,
+};
+const BEANS_FIX = [set('till', 'reserved'), set('roast-plan', 'spot'), set('loyalty', 'dedicated-host')];
+const DATA_LOSS: DataLossConstants = {
+  hours: 72,
+  perHour: 40,
+  stopAt: 20,
+  zoneLossAt: 50,
+  fullSnapshot: 20,
+  incrementalSnapshot: 1,
+};
 const RUSH_FIX = [set('mode', 'predictive'), set('max', 5), set('balancer', true)];
 
 const SIM_LABS: SimLab[] = [
   {
     id: 'lab-m02-morning-rush',
+    fixedIn: 'Task 13',
+    wave: 'CS',
     model: 'scaling',
     constants: SCALING,
     params: [
@@ -204,6 +260,8 @@ const SIM_LABS: SimLab[] = [
   },
   {
     id: 'lab-m03-bursty-or-steady',
+    fixedIn: 'Task 13',
+    wave: 'CS',
     model: 'compute-cost',
     constants: COMPUTE,
     params: [
@@ -227,6 +285,8 @@ const SIM_LABS: SimLab[] = [
   },
   {
     id: 'lab-m06-receipts-for-7-years',
+    fixedIn: 'Task 13',
+    wave: 'CS',
     model: 's3-lifecycle',
     constants: LIFECYCLE,
     params: [
@@ -270,6 +330,8 @@ const SIM_LABS: SimLab[] = [
   },
   {
     id: 'lab-m07-cache-the-menu',
+    fixedIn: 'Task 13',
+    wave: 'CS',
     model: 'cache',
     constants: CACHE,
     params: [
@@ -295,6 +357,8 @@ const SIM_LABS: SimLab[] = [
   },
   {
     id: 'lab-m11-the-monthly-bill',
+    fixedIn: 'Task 13',
+    wave: 'CS',
     model: 'bill',
     constants: BILL,
     params: [int('commit', 0, 100, 10, 0), toggle('consolidated', false), int('alert', 50, 150, 10, 100)],
@@ -317,6 +381,8 @@ const SIM_LABS: SimLab[] = [
   },
   {
     id: 'lab-m12-online-or-offline',
+    fixedIn: 'Task 13',
+    wave: 'CS',
     model: 'transfer',
     constants: TRANSFER,
     params: [
@@ -339,6 +405,77 @@ const SIM_LABS: SimLab[] = [
         actions: [set('receipt-archive', 'online')],
         failsGoal: 'g2',
         outcome: { 'days.receipt-archive': 231.48 },
+      },
+    ],
+  },
+  {
+    id: 'lab-m02-pay-less-for-beans',
+    fixedIn: 'Phase 5 Task 5',
+    wave: 'p5stretch',
+    model: 'purchase',
+    constants: PURCHASE,
+    params: PURCHASE.workloads.map((w) => choice(w.id, [...PURCHASE_OPTIONS], 'on-demand')),
+    thresholds: [
+      { goal: 'g1', metric: 'total', max: 20000 },
+      { goal: 'g1', metric: 'cost.roast-plan', max: 100 },
+      { goal: 'g2', metric: 'interrupted', max: 0 },
+      { goal: 'g3', metric: 'unmet', max: 0 },
+    ],
+    solution: BEANS_FIX,
+    outcome: {
+      'cost.till': 5184,
+      'cost.roast-plan': 57.6,
+      'cost.promo': 720,
+      'cost.loyalty': 12960,
+      total: 18921.6,
+      interrupted: 0,
+      unmet: 0,
+    },
+    wrongPaths: [
+      {
+        actions: [set('till', 'spot'), set('roast-plan', 'spot'), set('loyalty', 'dedicated-host')],
+        failsGoal: 'g2',
+        outcome: { interrupted: 1, total: 16329.6 },
+      },
+      { actions: [...BEANS_FIX, set('promo', 'reserved')], failsGoal: 'g1', outcome: { total: 23385.6 } },
+      {
+        actions: [set('till', 'reserved'), set('roast-plan', 'spot'), set('loyalty', 'dedicated-instance')],
+        failsGoal: 'g3',
+        outcome: { unmet: 1 },
+      },
+      {
+        actions: [set('roast-plan', 'spot'), set('loyalty', 'dedicated-host')],
+        failsGoal: 'g1',
+        outcome: { total: 22377.6 },
+      },
+      {
+        actions: [set('till', 'reserved'), set('loyalty', 'dedicated-host')],
+        failsGoal: 'g1',
+        outcome: { 'cost.roast-plan': 192, total: 19056 },
+      },
+    ],
+  },
+  {
+    id: 'lab-m06-lose-the-instance',
+    fixedIn: 'Phase 5 Task 5',
+    wave: 'p5stretch',
+    model: 'data-loss',
+    constants: DATA_LOSS,
+    params: [choice('store', ['instance-store', 'ebs'], 'instance-store'), int('snapshotEvery', 0, 24, 1, 0)],
+    thresholds: [
+      { goal: 'g1', metric: 'stopLost', max: 0 },
+      { goal: 'g2', metric: 'zoneLost', max: 120 },
+      { goal: 'g3', metric: 'cost', max: 40 },
+    ],
+    solution: [set('store', 'ebs'), set('snapshotEvery', 6)],
+    outcome: { stopLost: 0, zoneLost: 80, snapshots: 11, cost: 30 },
+    wrongPaths: [
+      { actions: [set('snapshotEvery', 6)], failsGoal: 'g1', outcome: { stopLost: 800, snapshots: 0 } },
+      { actions: [set('store', 'ebs')], failsGoal: 'g2', outcome: { zoneLost: 2000 } },
+      {
+        actions: [set('store', 'ebs'), set('snapshotEvery', 1)],
+        failsGoal: 'g3',
+        outcome: { cost: 90, snapshots: 71 },
       },
     ],
   },
@@ -370,7 +507,7 @@ function numbersOf(value: unknown): unknown {
   );
 }
 
-describe.each(SIM_LABS)('$id, as fixed in Task 13', (lab) => {
+describe.each(SIM_LABS)('$id, as fixed in $fixedIn', (lab) => {
   it('fails a goal at the start and meets every goal with its solution, with the fixed outcome', () => {
     const spec = specOf(lab);
     expect(allPass(checkLab(ENTRY, spec, SIMULATE.init(spec)))).toBe(false);
@@ -395,7 +532,7 @@ const shipped = new Map(loadContext(ROOT).labs.map((e) => [e.lab.id, e.lab] as c
 describe.each(SIM_LABS)('the shipped $id', (lab) => {
   const file = shipped.get(lab.id);
   if (file === undefined) {
-    it('is not shipped yet (wave CS writes it)', () => {
+    it(`is not shipped yet (wave ${lab.wave} writes it)`, () => {
       expect(shipped.has(lab.id)).toBe(false);
     });
     return;
@@ -485,5 +622,39 @@ describe('the orderings the lessons rest on', () => {
     const archive = TRANSFER.jobs.find((j) => j.id === 'receipt-archive');
     expect(online.metrics['days.receipt-archive']).toBeGreaterThan(archive?.deadline ?? 0);
     expect(archive?.deadline).toBeGreaterThan(TRANSFER.turnaround);
+  });
+
+  const beans = (values: SimValues) => runModel('purchase', PURCHASE, values).metrics;
+  const each = (workload: string) =>
+    Object.fromEntries(PURCHASE_OPTIONS.map((o) => [o, beans({ [workload]: o })[`cost.${workload}`]]));
+
+  it('Pay less for beans: a commitment beats On-Demand for the all-year till, and On-Demand beats one for the one-month promo', () => {
+    expect(each('till')).toMatchObject({ reserved: 5184, 'savings-plan': 5616, 'on-demand': 8640 });
+    expect(each('promo')).toMatchObject({ 'on-demand': 720, reserved: 5184 });
+  });
+
+  it('Pay less for beans: Spot is the cheapest option for the roast batch, and only Spot stays under 100', () => {
+    const roast = each('roast-plan');
+    expect(roast).toMatchObject({ spot: 57.6, reserved: 115.2, 'savings-plan': 124.8, 'on-demand': 192 });
+    expect(PURCHASE_OPTIONS.filter((o) => (roast[o] ?? 0) <= 100)).toEqual(['spot']);
+  });
+
+  const loss = (values: SimValues) => runModel('data-loss', DATA_LOSS, values).metrics;
+  const EVERY = [0, 1, 6, 12, 24];
+
+  it('Lose the instance: snapshots never protect the instance store', () => {
+    for (let every = 0; every <= 24; every += 1) {
+      expect(loss({ store: 'instance-store', snapshotEvery: every })).toMatchObject({
+        stopLost: 800,
+        snapshots: 0,
+      });
+    }
+  });
+
+  it('Lose the instance: on EBS more frequent snapshots never lose more orders and cost more', () => {
+    const ebs = EVERY.map((every) => loss({ store: 'ebs', snapshotEvery: every }));
+    expect(ebs.map((m) => m.zoneLost)).toEqual([2000, 0, 80, 80, 80]);
+    expect(ebs.map((m) => m.cost)).toEqual([0, 90, 30, 24, 21]);
+    expect(ebs.map((m) => m.stopLost)).toEqual([0, 0, 0, 0, 0]);
   });
 });
