@@ -1064,7 +1064,7 @@ IndexedDB database `ccp-study`:
 | Store | Content | Source of truth |
 |---|---|---|
 | `events` | append-only facts keyed by ULID | yes |
-| `kv` | ADR drafts, lab working state, active exam session (seed, item order, `deadline`), mission ticks, `plan` (`{ plan, credits, endsOn, services: Record<string, boolean>, recordedAt }`, from Mission 0), `examAsk`, `rankSeen`, `lastExportAt`; each value has `updatedAt` | yes |
+| `kv` | ADR drafts, lab working state, active exam session (seed, item order, `deadline`), mission ticks, `plan` (`{ plan, credits, endsOn, services: Record<string, boolean>, recordedAt }`, from Mission 0), `examAsk`, `rankSeen`, `lastExportAt`, `currentLesson` (the lesson last opened, for Next), `engineVersion` (the engine whose "Rules updated" line was dismissed), `schemaVersion` (the storage version of the local log) and `preMigration` (the log and `kv` as they were before the last local migration); each value has `updatedAt` | yes |
 | `cache` | derived snapshot keyed by `lastEventId:ENGINE_VERSION:contentVersion` | no |
 
 ```ts

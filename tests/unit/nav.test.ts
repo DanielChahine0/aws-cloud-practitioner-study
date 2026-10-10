@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest';
 import type { ModuleMeta } from '../../schemas/chunks.ts';
 import { neighbors, up } from '../../src/app/nav.ts';
 
-const lesson = (n: number, slug: string) => ({ n, slug, title: `Title of ${slug}`, concepts: [] });
+const lesson = (n: number, slug: string) => ({
+  n,
+  slug,
+  title: `Title of ${slug}`,
+  concepts: [],
+  minutes: 1,
+  checkConcepts: 0,
+});
 const MODULES: ModuleMeta[] = [
   {
     n: 1,
