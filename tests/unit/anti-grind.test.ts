@@ -310,3 +310,37 @@ describe('anti-grind audit (spec 3.11)', () => {
     ).toBe(false);
   });
 });
+
+describe('anti-grind audit (spec 3.11): missions and the capstone', () => {
+  it('Re-grading a capstone decision pays once', () => {
+    const grade = (stage: 'self' | 'final', scores: [number, number, number, number]): NewEvent => ({
+      t: 'decision',
+      module: 4,
+      stage,
+      scores,
+    });
+    const once: Log = [
+      [at('2026-11-15', 9), grade('self', [1, 1, 1, 1])],
+      [at('2026-11-15', 10), grade('final', [2, 2, 2, 2])],
+    ];
+    expect(memoryOf(once).xp).toBe(30);
+    const regraded: Log = [
+      ...once,
+      [at('2026-11-16', 9), grade('final', [3, 3, 3, 3])],
+      [at('2026-11-16', 10), grade('self', [3, 3, 3, 3])],
+      [at('2026-11-16', 11), grade('final', [3, 3, 3, 3])],
+    ];
+    expect(memoryOf(regraded).xp).toBe(30);
+  });
+
+  it('Closing a mission twice pays once', () => {
+    const run = (day: string, next: string): Log => [
+      [at(day, 9), { t: 'mission', mission: 'mission-04', step: 'start' }],
+      [at(day, 10), { t: 'mission', mission: 'mission-04', step: 'verified' }],
+      [at(day, 11), { t: 'mission', mission: 'mission-04', step: 'cleaned' }],
+      [at(next, 9), { t: 'mission', mission: 'mission-04', step: 'usage-ok', credits: 120 }],
+    ];
+    expect(memoryOf(run('2026-10-20', '2026-10-21')).xp).toBe(75);
+    expect(memoryOf([...run('2026-10-20', '2026-10-21'), ...run('2026-10-22', '2026-10-23')]).xp).toBe(75);
+  });
+});

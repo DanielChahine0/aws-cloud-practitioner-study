@@ -33,6 +33,9 @@ const baseArb = fc.record({
   day: fc.constantFrom('2026-10-09', '2026-10-10'),
 });
 
+/** A rubric score of one criterion. */
+const score = fc.integer({ min: 0, max: 3 });
+
 const bodyArb: fc.Arbitrary<Record<string, unknown>> = fc.oneof(
   fc.record({
     t: fc.constant('answer'),
@@ -83,6 +86,25 @@ const bodyArb: fc.Arbitrary<Record<string, unknown>> = fc.oneof(
     rev: fc.integer({ min: 1, max: 3 }),
     hints: fc.integer({ min: 0, max: 2 }),
   }),
+  fc.record(
+    {
+      t: fc.constant('mission'),
+      mission: fc.constantFrom('mission-00', 'mission-01', 'mission-03', 'mission-99'),
+      step: fc.constantFrom('start', 'verified', 'cleaned', 'usage-ok'),
+      credits: fc.integer({ min: 0, max: 200 }),
+    },
+    { requiredKeys: ['t', 'mission', 'step'] },
+  ),
+  fc.record(
+    {
+      t: fc.constant('decision'),
+      module: fc.constantFrom(1, 2, 13),
+      stage: fc.constantFrom('self', 'final'),
+      scores: fc.tuple(score, score, score, score),
+      keyPoints: fc.array(fc.constantFrom('kp-01-a', 'kp-02-gone'), { maxLength: 2 }),
+    },
+    { requiredKeys: ['t', 'module', 'stage', 'scores'] },
+  ),
   fc.record({
     t: fc.constant('flag'),
     qid: fc.constantFrom(...QIDS),
