@@ -1,5 +1,5 @@
 import type { KvRecord, KvValue } from '../../schemas/backup.ts';
-import { done, request, STORES } from './idb.ts';
+import { commit, request, STORES } from './idb.ts';
 
 /**
  * Keyed records with `updatedAt` (spec 8.1), merged per key by the newer `updatedAt` on import.
@@ -28,7 +28,7 @@ export async function setKv(db: IDBDatabase, key: string, value: unknown, now: D
   const record: KvRecord = { key, value, updatedAt: now.toISOString() };
   const tx = db.transaction(STORES.kv, 'readwrite');
   tx.objectStore(STORES.kv).put(record);
-  await done(tx);
+  await commit(tx);
   return record;
 }
 
@@ -44,5 +44,5 @@ export async function putKv(db: IDBDatabase, records: KvRecords): Promise<void> 
   const tx = db.transaction(STORES.kv, 'readwrite');
   const store = tx.objectStore(STORES.kv);
   for (const [key, { value, updatedAt }] of Object.entries(records)) store.put({ key, value, updatedAt });
-  await done(tx);
+  await commit(tx);
 }

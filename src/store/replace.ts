@@ -1,5 +1,5 @@
 import type { StudyEvent } from '../../schemas/events.ts';
-import { done, STORES } from './idb.ts';
+import { commit, STORES } from './idb.ts';
 import type { KvRecords } from './kv.ts';
 
 /**
@@ -18,5 +18,5 @@ export async function replaceStores(
   kvStore.clear();
   for (const e of events) eventStore.put(e);
   for (const [key, { value, updatedAt }] of Object.entries(kv)) kvStore.put({ key, value, updatedAt });
-  await done(tx);
+  await commit(tx);
 }
