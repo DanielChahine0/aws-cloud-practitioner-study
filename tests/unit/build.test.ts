@@ -8,8 +8,8 @@ import { buildContent, confusableLinks, readingMinutes } from '../../scripts/con
 import { CONCEPTS_FILE, FORMS_FILE, loadContext } from '../../scripts/content/lib/context.ts';
 import { normalize } from '../../src/app/search.ts';
 import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
-import { dropFixtureLab } from '../fixtures/labs.ts';
-import { POOL_FILE } from '../fixtures/questions.ts';
+import { bakeryLab, dropFixtureLab, writeLab } from '../fixtures/labs.ts';
+import { POOL_FILE, singleQuestion, writePool } from '../fixtures/questions.ts';
 
 const LESSON_ROUTE = '#/m/01/l/what-a-bakery-cloud-is';
 const QUESTIONS_FILE = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
@@ -94,6 +94,7 @@ describe('buildContent on the fixture tree', () => {
         confusableWith: ['per-minute-rental'],
         aliases: [],
         splitFrom: null,
+        labs: ['lab-m01-sort-the-bakes'],
       },
       {
         id: 'per-minute-rental',
@@ -105,6 +106,7 @@ describe('buildContent on the fixture tree', () => {
         confusableWith: ['shared-kitchen'],
         aliases: [],
         splitFrom: null,
+        labs: ['lab-m01-sort-the-bakes'],
       },
     ]);
     expect(index.glossary).toEqual([
@@ -119,7 +121,7 @@ describe('buildContent on the fixture tree', () => {
     expect(index.missions[0]?.html).toContain('<h2 id="goal">Goal</h2>');
   });
 
-  it('writes a search chunk with a normalized entry per module, lesson, concept, term and mission', () => {
+  it('writes a search chunk with a normalized entry per module, lesson, concept, term, mission and lab', () => {
     const { index, json } = build();
     const { entries } = json<SearchChunk>(index.search);
     expect(entries.map((e) => `${e.kind} ${e.route}`)).toEqual([
@@ -129,6 +131,7 @@ describe('buildContent on the fixture tree', () => {
       `concept ${LESSON_ROUTE}/paying-by-the-minute`,
       `term ${LESSON_ROUTE}`,
       'mission #/missions/mission-00',
+      'lab #/m/01/lab/lab-m01-sort-the-bakes',
     ]);
     expect(entries[1]).toEqual({
       kind: 'lesson',
@@ -206,11 +209,21 @@ describe('buildContent on the fixture tree', () => {
 
   it('never ships a retired question or one from the exam pool', () => {
     const root = makeFixtureRoot();
+    dropFixtureLab(root);
     for (let i = 0; i < 2; i++) replaceIn(root, QUESTIONS_FILE, 'status: live', 'status: retired');
     expect(build(root).index.questionVersions).toEqual({});
     const exam = makeFixtureRoot();
+    dropFixtureLab(exam);
     for (let i = 0; i < 3; i++) replaceIn(exam, QUESTIONS_FILE, 'pool: practice', 'pool: exam');
     expect(build(exam).index.questionVersions).toEqual({});
+  });
+
+  it('fails when a retired question is still a debrief question of a live lab', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, QUESTIONS_FILE, 'status: live', 'status: retired');
+    expect(() => build(root)).toThrow(
+      'lab-m01-sort-the-bakes: debrief question q-b4k7m2 is not a live practice question; run pnpm content:validate',
+    );
   });
 
   it('fails when a live question cites a line its note does not have', () => {
@@ -446,5 +459,96 @@ describe('confusableLinks', () => {
 
   it('gives an empty list to a concept nothing links', () => {
     expect(confusableLinks([concept('rye')]).get('rye')).toEqual([]);
+  });
+});
+
+describe('labs in the module chunks and the index (spec 2.10, 5.1)', () => {
+  const LAB_ROUTE = '#/m/01/lab/lab-m01-sort-the-bakes';
+
+  it('ships the live lab in its module chunk without its solution or wrong paths', () => {
+    const { index, json } = build();
+    const chunk = json<ModuleChunk>(index.modules[0]?.chunk ?? '');
+    expect(chunk.labs.map((l) => l.id)).toEqual(['lab-m01-sort-the-bakes']);
+    const lab = chunk.labs[0];
+    expect(lab).not.toHaveProperty('solution');
+    expect(lab).not.toHaveProperty('wrongPaths');
+    expect(lab).toMatchObject({
+      id: 'lab-m01-sort-the-bakes',
+      module: 1,
+      engine: 'sort',
+      tier: 'core',
+      rev: 1,
+      title: 'Sort the bakes',
+      minutes: 4,
+      concepts: ['shared-kitchen', 'per-minute-rental'],
+      goals: bakeryLab().goals,
+      notes: [{ route: LESSON_ROUTE, title: 'What a Bakery Cloud Is' }],
+      credits: false,
+    });
+    expect(lab?.spec).toEqual(bakeryLab().spec);
+    expect(lab?.debrief.lines).toEqual(bakeryLab().debrief.lines);
+    expect(lab?.debrief.questions.map((q) => [q.id, q.read.route])).toEqual([
+      ['q-b4k7m2', `${LESSON_ROUTE}/shared-kitchen`],
+      ['q-d9p4r6', `${LESSON_ROUTE}/paying-by-the-minute`],
+    ]);
+  });
+
+  it('lists the lab in the index and finds it in search', () => {
+    const { index, json } = build();
+    expect(index.labs).toEqual([
+      {
+        id: 'lab-m01-sort-the-bakes',
+        module: 1,
+        engine: 'sort',
+        tier: 'core',
+        rev: 1,
+        title: 'Sort the bakes',
+        minutes: 4,
+      },
+    ]);
+    const { entries } = json<SearchChunk>(index.search);
+    expect(entries.at(-1)).toEqual({
+      kind: 'lab',
+      title: 'Sort the bakes',
+      detail: 'Module 1 lab',
+      route: LAB_ROUTE,
+      text: normalize(`${bakeryLab().brief} Shared kitchen Per-minute rental`),
+    });
+  });
+
+  it('marks a lab that mentions lab credits, and leaves out a retired lab', () => {
+    const credits = makeFixtureRoot();
+    writeLab(
+      credits,
+      bakeryLab({ brief: `${bakeryLab().brief} Each cabinet costs 2 lab credits a minute.` }),
+    );
+    const chunk = (root: string) => {
+      const { index, json } = build(root);
+      return { index, chunk: json<ModuleChunk>(index.modules[0]?.chunk ?? '') };
+    };
+    expect(chunk(credits).chunk.labs[0]?.credits).toBe(true);
+    const retired = makeFixtureRoot();
+    writeLab(retired, bakeryLab({ status: 'retired' }));
+    const { index, chunk: m01 } = chunk(retired);
+    expect(m01.labs).toEqual([]);
+    expect(index.labs).toEqual([]);
+    expect(index.concepts.some((c) => 'labs' in c)).toBe(false);
+  });
+
+  it('fails on a debrief question from the exam pool, naming its id only', () => {
+    const root = makeFixtureRoot();
+    const exam = singleQuestion({ id: 'q-9d4r6t', pool: 'exam', status: 'live' });
+    writePool(root, [exam]);
+    writeLab(root, bakeryLab({ debrief: { ...bakeryLab().debrief, questions: ['q-b4k7m2', 'q-9d4r6t'] } }));
+    let message = '';
+    try {
+      build(root);
+    } catch (error) {
+      message = error instanceof Error ? error.message : String(error);
+    }
+    expect(message).toBe(
+      'lab-m01-sort-the-bakes: debrief question q-9d4r6t is not a live practice question; run pnpm content:validate',
+    );
+    expect(message).not.toContain(exam.stem);
   });
 });
