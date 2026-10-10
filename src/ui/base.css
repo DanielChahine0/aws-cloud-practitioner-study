@@ -1402,3 +1402,20 @@ tr.evidence > :first-child {
     display: none;
   }
 }
+
+/* Reviews (spec 3.1 and 3.6): the misconception line and the end of a chunk. */
+.misconception {
+  margin: 0 0 4px;
+  padding-left: 8px;
+  font-weight: 600;
+  border-left: 3px solid var(--bad);
+}
+
+.review-done {
+  margin: 0 0 8px;
+}
+
+/* Progress: the level and streak lines under the summary. */
+.progress-line {
+  margin: 0 0 4px;
+}

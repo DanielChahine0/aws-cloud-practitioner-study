@@ -4,10 +4,11 @@ import {
   canSubmit,
   collapseSpace,
   displayOrder,
-  endLine,
+  endSummaryLine,
   isCorrect,
   modeLabel,
   quizAvailability,
+  verdictAnnouncement,
 } from '../../src/app/runner.ts';
 
 const option = (id: string, correct = false): OptionView => ({
@@ -136,10 +137,31 @@ describe('displayOrder', () => {
 });
 
 describe('labels', () => {
-  it('writes the end line and the mode names', () => {
-    expect(endLine(9, 12)).toBe('9/12 correct');
+  it('names the modes', () => {
     expect(modeLabel('check')).toBe('Lesson check');
     expect(modeLabel('quiz')).toBe('Module quiz');
+    expect(modeLabel('review')).toBe('Review');
+  });
+
+  it('announces the verdict with the XP of the answer, and the verdict alone at 0 XP', () => {
+    expect(verdictAnnouncement(true, 10)).toBe('Correct. Plus 10 XP');
+    expect(verdictAnnouncement(false, 5)).toBe('Incorrect. Plus 5 XP');
+    expect(verdictAnnouncement(true, 0)).toBe('Correct.');
+    expect(verdictAnnouncement(false, 0)).toBe('Incorrect.');
+  });
+
+  it('writes the end line with XP and the concepts back tomorrow, leaving out each part at 0', () => {
+    expect(endSummaryLine({ correct: 9, total: 12, xp: 95, backTomorrow: 3 })).toBe(
+      '9/12 · +95 XP · 3 concepts back tomorrow',
+    );
+    expect(endSummaryLine({ correct: 9, total: 12, xp: 95, backTomorrow: 1 })).toBe(
+      '9/12 · +95 XP · 1 concept back tomorrow',
+    );
+    expect(endSummaryLine({ correct: 4, total: 5, xp: 0, backTomorrow: 2 })).toBe(
+      '4/5 · 2 concepts back tomorrow',
+    );
+    expect(endSummaryLine({ correct: 5, total: 5, xp: 50, backTomorrow: 0 })).toBe('5/5 · +50 XP');
+    expect(endSummaryLine({ correct: 0, total: 3, xp: 0, backTomorrow: 0 })).toBe('0/3');
   });
 });
 

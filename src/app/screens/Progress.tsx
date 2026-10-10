@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { SCHEMA_VERSION } from '../../../schemas/version.ts';
+import { studyDay } from '../../engine/day.ts';
+import { level } from '../../engine/level.ts';
 import { ENGINE_VERSION } from '../../engine/replay.ts';
 import {
   APP_VERSION,
@@ -12,14 +14,17 @@ import {
 } from '../../store/backup.ts';
 import { KV_KEYS } from '../../store/kv.ts';
 import { closeOnBackdrop } from '../../ui/backdrop.ts';
+import { now } from '../clock.ts';
 import { index } from '../content.ts';
-import { events, kvRecords, mergeIn, progress, replaceAll, writeKv } from '../progress.ts';
+import { memory, streak } from '../memory.ts';
+import { events, kvRecords, mergeIn, progress, record, replaceAll, writeKv } from '../progress.ts';
 import { overlay } from '../state.ts';
 
 const count = (n: number): string => n.toLocaleString('en-US');
 const plural = (n: number, one: string, many: string): string => `${count(n)} ${n === 1 ? one : many}`;
 const shortDate = (iso: string): string =>
   new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 /** The time of the last export, from kv, or null. */
 export function lastExportAt(): string | null {
@@ -82,6 +87,7 @@ export function Progress() {
         <p class="progress-summary">
           {plural(answers, 'answer', 'answers')}, {plural(p.lessonsDone.size, 'lesson', 'lessons')} read
         </p>
+        <LevelAndStreak />
 
         <h3>Backup</h3>
         <p class="muted">{last === null ? 'No backup yet' : `Last backup ${shortDate(last)}`}</p>
@@ -145,6 +151,8 @@ export function Progress() {
           </p>
         )}
 
+        <ExamDate />
+
         <h3>Diagnostics</h3>
         <p class="muted">
           {p.unknownEvents > 0
@@ -164,6 +172,72 @@ export function Progress() {
         </form>
       </div>
     </dialog>
+  );
+}
+
+/** Level, XP and today's XP, then the streak with its freezes (spec 3.3 and 3.5). */
+function LevelAndStreak() {
+  const m = memory.value;
+  const s = streak.value;
+  const today = studyDay(now.value);
+  return (
+    <>
+      {m !== null && (
+        <p class="progress-line">
+          Level {level(m.xp)} · {count(m.xp)} XP · {count(m.xpByDay.get(today) ?? 0)} today
+        </p>
+      )}
+      {s !== null && (
+        <p class="progress-line">
+          Streak {plural(s.current, 'day', 'days')} · {plural(s.freezes, 'freeze', 'freezes')} · longest{' '}
+          {count(s.longest)}
+        </p>
+      )}
+    </>
+  );
+}
+
+/**
+ * The exam date (spec 7.5), editable here at any time; each change is a `settings` event, so replay re-caps every due.
+ * Clearing it also marks the Home question as answered, so Home never asks again.
+ */
+function ExamDate() {
+  const current = memory.value?.examDate ?? null;
+  const [date, setDate] = useState(current ?? '');
+  useEffect(() => setDate(current ?? ''), [current]);
+  const valid = ISO_DAY.test(date);
+  return (
+    <>
+      <h3>Exam date</h3>
+      {current === null && <p class="muted">No exam date set</p>}
+      <form
+        class="sheet-actions"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (valid && date !== current) void record({ t: 'settings', patch: { examDate: date } });
+        }}
+      >
+        <label class="date-field">
+          Exam date
+          <input type="date" value={date} onInput={(event) => setDate(event.currentTarget.value)} />
+        </label>
+        <button class="button" type="submit" disabled={!valid || date === current}>
+          Save
+        </button>
+        {current !== null && (
+          <button
+            class="link-button"
+            type="button"
+            onClick={() => {
+              void record({ t: 'settings', patch: { examDate: null } });
+              void writeKv(KV_KEYS.examAsk, 'dismissed');
+            }}
+          >
+            Clear
+          </button>
+        )}
+      </form>
+    </>
   );
 }
 

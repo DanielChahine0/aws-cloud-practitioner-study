@@ -1,38 +1,53 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { ContentIndex, ModuleChunk, QuestionView } from '../../../schemas/chunks.ts';
 import type { StudyEvent } from '../../../schemas/events.ts';
+import { SURE_HINT } from '../../engine/bets.ts';
+import { studyDayAt, tzOffset } from '../../engine/day.ts';
+import { resolveConcept, sessionSummary } from '../../engine/memory.ts';
+import { CHUNK_SIZE } from '../../engine/queue.ts';
 import { openSession, type SessionState } from '../../engine/replay.ts';
-import { selectCheck, selectQuiz } from '../../engine/select.ts';
+import {
+  type PoolQuestion,
+  relearnVariant,
+  selectCheck,
+  selectQuiz,
+  sessionItems,
+} from '../../engine/select.ts';
+import { recall } from '../../engine/srs.ts';
 import { ulid } from '../../store/ulid.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
+import { now } from '../clock.ts';
 import { ensureModule, modules } from '../content.ts';
+import { nothingDueLine } from '../home.ts';
 import { isControl, isTyping } from '../keyboard.ts';
+import { memory, memoryContent, queue } from '../memory.ts';
 import { neighbors } from '../nav.ts';
 import { newSessionSeed, progress, record, storeReady } from '../progress.ts';
-import { pad2 } from '../router.ts';
+import { pad2, toHash } from '../router.ts';
 import {
   canSubmit,
   displayOrder,
-  endLine,
+  endSummaryLine,
   homedConcepts,
   isCorrect,
   leftId,
   modeLabel,
   type Picked,
   rightId,
+  verdictAnnouncement,
 } from '../runner.ts';
 import { type RunnerCommand, runnerKey } from '../runner-keys.ts';
 import { highlight, navigate, overlay } from '../state.ts';
 import { NotFound } from './NotFound.tsx';
 
-type RunnerMode = 'check' | 'quiz';
+type RunnerMode = 'check' | 'quiz' | 'review';
 type FlagReason = Extract<StudyEvent, { t: 'flag' }>['reason'];
 
 interface Props {
   idx: ContentIndex;
   mode: RunnerMode;
-  /** `m03/aws-lambda` for a lesson check, `m03` for a module quiz. */
+  /** `m03/aws-lambda` for a lesson check, `m03` for a module quiz, `review` for a review. */
   scope: string;
 }
 
@@ -51,11 +66,35 @@ const REASONS: readonly { id: FlagReason; label: string }[] = [
   { id: 'other', label: 'Other' },
 ];
 
+/** The concept a question tests, as memory keys it (aliases resolved); the raw id when memory does not know it. */
+function memoryConcept(concept: string): string {
+  const content = memoryContent.peek();
+  return (content === null ? null : resolveConcept(content, concept)) ?? concept;
+}
+
+/** The concept's recall now (spec 3.6), or 0 without a card, which ranks it first in a module quiz (spec 4.1). */
+function conceptRecall(concept: string): number {
+  const card = memory.peek()?.concepts.get(memoryConcept(concept))?.card ?? null;
+  return card === null ? 0 : recall(card, now.peek());
+}
+
+/** True when the concept carries a misconception mark (spec 3.1) at this moment. */
+function markedMisconception(concept: string): boolean {
+  return (memory.peek()?.concepts.get(memoryConcept(concept))?.misconception ?? null) !== null;
+}
+
+/** The selection pool of some chunks, with each concept as memory keys it. */
+function poolOf(chunks: readonly ModuleChunk[]): PoolQuestion[] {
+  return chunks.flatMap((c) =>
+    c.questions.map((q) => ({ id: q.id, concept: memoryConcept(q.concept), note: q.note })),
+  );
+}
+
 /** Starts the session of this mode and scope, or finds the one in progress; null when nothing can be asked. */
 function startOrResume(
   idx: ContentIndex,
   chunk: ModuleChunk,
-  mode: RunnerMode,
+  mode: 'check' | 'quiz',
   scope: string,
 ): string | null {
   const open = openSession(progress.peek(), mode, scope);
@@ -71,15 +110,23 @@ function startOrResume(
           progress: progress.peek(),
           seed,
         })
-      : selectQuiz({ pool, progress: progress.peek(), seed, recall: () => 0 });
+      : selectQuiz({ pool, progress: progress.peek(), seed, recall: conceptRecall });
   if (qids.length === 0) return null;
   const sid = ulid();
   void record({ t: 'session', sid, mode, phase: 'start', scope, seed, qids });
   return sid;
 }
 
-/** The runner `#/s/check/mNN/<slug>` and `#/s/quiz/mNN`: one question at a time, then the end line. */
+/** The runner `#/s/check/mNN/<slug>`, `#/s/quiz/mNN` and `#/s/review`: one question at a time, then the end line. */
 export function Runner({ idx, mode, scope }: Props) {
+  return mode === 'review' ? (
+    <ReviewRunner idx={idx} />
+  ) : (
+    <ModuleRunner idx={idx} mode={mode} scope={scope} />
+  );
+}
+
+function ModuleRunner({ idx, mode, scope }: { idx: ContentIndex; mode: 'check' | 'quiz'; scope: string }) {
   const module = Number(scope.slice(1, 3));
   const slug = mode === 'check' ? (scope.split('/')[1] ?? '') : null;
   const meta = idx.modules.find((m) => m.n === module);
@@ -128,7 +175,123 @@ export function Runner({ idx, mode, scope }: Props) {
       ) : chunk === undefined || session === undefined ? (
         <p class="muted">Loading</p>
       ) : (
-        <Session idx={idx} chunk={chunk} session={session} mode={mode} module={module} slug={slug} />
+        <Session
+          idx={idx}
+          shipped={new Map(chunk.questions.map((q) => [q.id, q] as const))}
+          pool={[]}
+          session={session}
+          mode={mode}
+          module={module}
+          slug={slug}
+        />
+      )}
+    </>
+  );
+}
+
+/** The modules that home some concepts. */
+function modulesOf(concepts: readonly string[]): number[] {
+  const content = memoryContent.peek();
+  const out = new Set<number>();
+  for (const c of concepts) {
+    const module = content?.concepts.get(c)?.module;
+    if (module !== undefined) out.add(module);
+  }
+  return [...out].sort((a, b) => a - b);
+}
+
+/**
+ * The review `#/s/review` (spec 3.6 and 3.7): resumes today's review, or abandons one from an earlier study day
+ * and starts on the first 20 queue concepts, one variant each, once their modules have loaded.
+ */
+function ReviewRunner({ idx }: { idx: ContentIndex }) {
+  useTitle('Review');
+  const [sid, setSid] = useState<string | null>(null);
+  const [empty, setEmpty] = useState(false);
+  const [wanted, setWanted] = useState<readonly string[] | null>(null);
+  const ready = storeReady.value;
+  const q = queue.value;
+  const loaded = modules.value;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    if (!ready || q === null || sid !== null || empty || wanted !== null) return;
+    const at = now.peek();
+    const tz = tzOffset(at);
+    const open = openSession(progress.peek(), 'review', 'review');
+    if (open !== null) {
+      if (studyDayAt(new Date(open.startedAt), tz) === studyDayAt(at, tz)) {
+        setSid(open.sid);
+        return;
+      }
+      void record({ t: 'session', sid: open.sid, mode: 'review', phase: 'abandon', seed: open.seed });
+    }
+    const concepts = q.items.slice(0, CHUNK_SIZE);
+    if (concepts.length === 0) setEmpty(true);
+    else setWanted(concepts);
+  }, [ready, q, sid, empty, wanted]);
+
+  useEffect(() => {
+    if (wanted !== null) for (const n of modulesOf(wanted)) ensureModule(n);
+  }, [wanted]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    if (wanted === null || sid !== null) return;
+    const chunks = modulesOf(wanted).map((n) => loaded.get(n));
+    if (chunks.some((c) => c === undefined)) return;
+    const seed = newSessionSeed();
+    const qids = selectCheck({
+      concepts: wanted,
+      pool: poolOf(chunks.filter((c): c is ModuleChunk => c !== undefined)),
+      progress: progress.peek(),
+      seed,
+    });
+    if (qids.length === 0) {
+      setEmpty(true);
+      return;
+    }
+    const started = ulid();
+    void record({ t: 'session', sid: started, mode: 'review', phase: 'start', scope: 'review', seed, qids });
+    setSid(started);
+  }, [wanted, sid, loaded]);
+
+  const session = sid === null ? undefined : progress.value.sessions.get(sid);
+  const shipped = new Map([...loaded.values()].flatMap((c) => c.questions.map((x) => [x.id, x] as const)));
+  // A resumed review can hold questions of modules not loaded yet; the index says which ids still ship.
+  const missing = session?.qids.some((id) => id in idx.questionVersions && !shipped.has(id)) === true;
+  useEffect(() => {
+    if (missing) for (const m of idx.modules) ensureModule(m.n);
+  }, [missing, idx]);
+
+  return (
+    <>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '#/' },
+          { label: modeLabel('review'), href: toHash({ kind: 'review' }) },
+        ]}
+      />
+      <h1>{modeLabel('review')}</h1>
+      {empty ? (
+        <>
+          <p class="muted">{q === null ? 'Nothing due.' : nothingDueLine(q, now.value)}</p>
+          <p>
+            <a href="#/">Back to Home</a>
+          </p>
+        </>
+      ) : session === undefined || missing ? (
+        <p class="muted">Loading</p>
+      ) : (
+        <Session
+          idx={idx}
+          shipped={shipped}
+          pool={poolOf([...loaded.values()])}
+          session={session}
+          mode="review"
+          module={null}
+          slug={null}
+        />
       )}
     </>
   );
@@ -136,22 +299,30 @@ export function Runner({ idx, mode, scope }: Props) {
 
 interface SessionProps {
   idx: ContentIndex;
-  chunk: ModuleChunk;
+  /** Every loaded live question by id. */
+  shipped: ReadonlyMap<string, QuestionView>;
+  /** Where a review's relearn variants come from; empty for checks and quizzes. */
+  pool: readonly PoolQuestion[];
   session: SessionState;
   mode: RunnerMode;
-  module: number;
+  module: number | null;
   slug: string | null;
 }
 
-function Session({ idx, chunk, session, mode, module, slug }: SessionProps) {
-  const shipped = new Map(chunk.questions.map((q) => [q.id, q] as const));
-  const qids = session.qids.filter((id) => shipped.has(id));
+function Session({ idx, shipped, pool, session, mode, module, slug }: SessionProps) {
+  const items = sessionItems(session, (qid, concept) =>
+    relearnVariant({ concept: memoryConcept(concept), avoid: qid, pool, seed: session.seed }),
+  ).filter((item) => shipped.has(item.qid));
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  const shownQid = feedback?.qid ?? qids.find((id) => !session.answers.has(id)) ?? null;
-  const finished = shownQid === null;
+  const shown =
+    feedback === null
+      ? items.find((item) => !session.answers.has(item.qid))
+      : items.find((item) => item.qid === feedback.qid);
+  // Complete once every item has an answer; a wrong review answer adds its relearn item before this is read.
+  const complete = items.every((item) => session.answers.has(item.qid));
   const submitted = useRef(session.submittedAt !== null);
 
-  // Submits once every question has an answer: right after the last answer, or on resuming such a session.
+  // Submits once every item has an answer: right after the last answer, or on resuming such a session.
   const finish = (): void => {
     if (submitted.current) return;
     submitted.current = true;
@@ -163,14 +334,12 @@ function Session({ idx, chunk, session, mode, module, slug }: SessionProps) {
   const finishRef = useRef(finish);
   finishRef.current = finish;
   useEffect(() => {
-    if (finished) finishRef.current();
-  }, [finished]);
+    if (complete) finishRef.current();
+  }, [complete]);
 
-  if (shownQid === null) {
-    const correct = qids.filter((id) => session.answers.get(id)?.correct === true).length;
-    return <EndLine idx={idx} mode={mode} module={module} slug={slug} line={endLine(correct, qids.length)} />;
-  }
-  const q = shipped.get(shownQid);
+  if (shown === undefined)
+    return <EndLine idx={idx} mode={mode} module={module} slug={slug} session={session} />;
+  const q = shipped.get(shown.qid);
   if (q === undefined) return null;
   return (
     <Question
@@ -178,13 +347,11 @@ function Session({ idx, chunk, session, mode, module, slug }: SessionProps) {
       q={q}
       session={session}
       mode={mode}
-      position={qids.indexOf(q.id) + 1}
-      total={qids.length}
+      relearn={shown.relearn}
+      position={items.indexOf(shown) + 1}
+      total={items.length}
       feedback={feedback}
-      onAnswered={(f) => {
-        setFeedback(f);
-        if (qids.every((id) => id === f.qid || session.answers.has(id))) finish();
-      }}
+      onAnswered={setFeedback}
       onNext={() => setFeedback(null)}
     />
   );
@@ -195,22 +362,50 @@ function EndLine({
   mode,
   module,
   slug,
-  line,
+  session,
 }: {
   idx: ContentIndex;
   mode: RunnerMode;
-  module: number;
+  module: number | null;
   slug: string | null;
-  line: string;
+  session: SessionState;
 }) {
-  const next = slug === null ? null : neighbors(idx.modules, module, slug).next;
+  const m = memory.value;
+  const content = memoryContent.value;
+  const at = now.value;
+  const line =
+    m === null || content === null
+      ? ''
+      : endSummaryLine(sessionSummary(session, m, content, at, tzOffset(at)));
+  if (mode === 'review') {
+    const more = (queue.value?.items.length ?? 0) > 0;
+    return (
+      <>
+        <p class="end-line" aria-live="polite">
+          {line}
+        </p>
+        <p class="review-done">Done for now.</p>
+        <ul class="end-links">
+          <li>
+            <a href="#/">Back to Home</a>
+          </li>
+          {more && (
+            <li>
+              <a href={toHash({ kind: 'review' })}>Review more</a>
+            </li>
+          )}
+        </ul>
+      </>
+    );
+  }
+  const next = slug === null || module === null ? null : neighbors(idx.modules, module, slug).next;
   return (
     <>
       <p class="end-line" aria-live="polite">
         {line}
       </p>
       <ul class="end-links">
-        {mode === 'check' && slug !== null ? (
+        {mode === 'check' && slug !== null && module !== null ? (
           <>
             <li>
               <a href={`#/m/${pad2(module)}/l/${slug}`}>Back to the lesson</a>
@@ -221,7 +416,7 @@ function EndLine({
               </li>
             )}
           </>
-        ) : (
+        ) : module !== null ? (
           <>
             <li>
               <a href={`#/m/${pad2(module)}`}>Back to Module {module}</a>
@@ -230,7 +425,7 @@ function EndLine({
               <a href={`#/s/quiz/m${pad2(module)}`}>Another quiz</a>
             </li>
           </>
-        )}
+        ) : null}
       </ul>
     </>
   );
@@ -240,6 +435,8 @@ interface QuestionProps {
   q: QuestionView;
   session: SessionState;
   mode: RunnerMode;
+  /** True for a review's relearn step (spec 3.6), which the answer event carries. */
+  relearn: boolean;
   position: number;
   total: number;
   feedback: Feedback | null;
@@ -247,7 +444,17 @@ interface QuestionProps {
   onNext: () => void;
 }
 
-function Question({ q, session, mode, position, total, feedback, onAnswered, onNext }: QuestionProps) {
+function Question({
+  q,
+  session,
+  mode,
+  relearn,
+  position,
+  total,
+  feedback,
+  onAnswered,
+  onNext,
+}: QuestionProps) {
   const order = displayOrder(q, session.seed);
   const [choice, setChoice] = useState<string[]>([]);
   /** Match: left index to the right id it is paired with. */
@@ -257,6 +464,10 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
   const [reportOpen, setReportOpen] = useState(false);
   /** True once the answer's event is committed; Next waits for it (spec 8.1). */
   const [stored, setStored] = useState(false);
+  /** The live region's words, with the XP the replay gave the stored answer. */
+  const [announce, setAnnounce] = useState('');
+  /** Whether the concept carried a misconception as the question showed (spec 3.1), so feedback can say so. */
+  const [wasSure] = useState(() => markedMisconception(q.concept));
   const stem = useRef<HTMLParagraphElement>(null);
   const nextButton = useRef<HTMLButtonElement>(null);
   const shownAt = useRef(Date.now());
@@ -289,11 +500,15 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
       correct,
       sure,
       ms: Date.now() - shownAt.current,
+      ...(relearn ? { relearn: true } : {}),
     });
     onAnswered({ qid: q.id, picked, correct });
     // Next turns on and takes focus once the answer is stored (spec 8.1 waits for the commit before showing Next).
     // The page stays where the reader is, with the verdict under the stem; on a phone Next sits in the sticky bar.
-    void saved.then(() => setStored(true));
+    void saved.then((event) => {
+      setStored(true);
+      setAnnounce(verdictAnnouncement(correct, memory.peek()?.xpByEvent.get(event.id) ?? 0));
+    });
   };
 
   useEffect(() => {
@@ -422,7 +637,7 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
         {q.stem}
       </p>
       {answered ? (
-        <Review q={q} order={order} feedback={feedback} expandAll={expandAll} />
+        <Review q={q} order={order} feedback={feedback} expandAll={expandAll} wasSure={wasSure} />
       ) : q.type === 'match' ? (
         <MatchForm
           q={q}
@@ -456,7 +671,7 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
         </fieldset>
       )}
       <p class="visually-hidden" aria-live="polite">
-        {feedback === null ? '' : feedback.correct ? 'Correct.' : 'Incorrect.'}
+        {announce}
       </p>
       {answered && (
         <div class="after">
@@ -490,7 +705,7 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
           <button class="button" type="button" disabled={!ready} onClick={() => submit(true)}>
             Sure <kbd>Shift+Enter</kbd>
           </button>
-          <span class="muted submit-hint">Press Sure when you are more than 71% sure.</span>
+          <span class="muted submit-hint">{SURE_HINT}</span>
         </div>
       )}
       {reportOpen ? (
@@ -583,21 +798,30 @@ function Verdict({ correct }: { correct: boolean }) {
   );
 }
 
+/** The first line of feedback for a concept answered wrong with Sure before (spec 3.1). */
+function SureLastTime() {
+  return <p class="misconception">You were sure last time</p>;
+}
+
 function Review({
   q,
   order,
   feedback,
   expandAll,
+  wasSure,
 }: {
   q: QuestionView;
   order: readonly string[];
   feedback: Feedback;
   expandAll: boolean;
+  /** The concept carried a misconception as the question showed: say so first and pin every why open. */
+  wasSure: boolean;
 }) {
   if (q.type === 'match') {
     const chosen = new Map((feedback.picked as [string, string][]).map(([l, r]) => [l, r]));
     return (
       <>
+        {wasSure && <SureLastTime />}
         <Verdict correct={feedback.correct} />
         <ul class="review">
           {q.pairs.map((p, i) => {
@@ -636,6 +860,7 @@ function Review({
   const chosen = new Set(feedback.picked as string[]);
   return (
     <>
+      {wasSure && <SureLastTime />}
       <Verdict correct={feedback.correct} />
       <ul class="review">
         {order.map((id, i) => {
@@ -657,7 +882,7 @@ function Review({
                   {option.correct && <span class="tag ok">Correct answer</span>}
                 </p>
               )}
-              <details open={expandAll || mine || option.correct}>
+              <details open={expandAll || wasSure || mine || option.correct}>
                 <summary>Why</summary>
                 <p>{option.why}</p>
               </details>

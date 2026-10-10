@@ -155,7 +155,7 @@ test('a lesson check runs end to end and marks the lesson on its module page', a
   await page.keyboard.press('Enter');
   await expect(page.locator('.verdict')).toHaveCount(0);
   const line = await finishByClicking(page, questions);
-  const [correct, total] = (/^(\d+)\/(\d+) correct$/.exec(line) ?? []).slice(1);
+  const [correct, total] = (/^(\d+)\/(\d+)(?: · |$)/.exec(line) ?? []).slice(1);
   expect(correct).toBe(total);
 
   await page.reload();
