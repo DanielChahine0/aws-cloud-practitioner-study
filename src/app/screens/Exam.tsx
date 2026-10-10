@@ -1,3 +1,4 @@
+import { effect, untracked } from '@preact/signals';
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { ContentIndex, QuestionView } from '../../../schemas/chunks.ts';
 import { bossDeadline, bossDraw } from '../../engine/boss.ts';
@@ -31,7 +32,7 @@ import {
   remixTargets,
   toggleFlag,
 } from '../exam-session.ts';
-import { examControls, examQuestions, loadModules, openExam, settleExam } from '../exam-settle.ts';
+import { examControls, examQuestions, examTick, loadModules, openExam, settleExam } from '../exam-settle.ts';
 import { isControl, isTyping } from '../keyboard.ts';
 import { learnPoolNow, practicePoolOf } from '../learn-pool.ts';
 import { bosses, learnForms, memory, memoryContent, taken } from '../memory.ts';
@@ -305,6 +306,22 @@ function ExamRun({ idx, session }: { idx: ContentIndex; session: SessionState })
     shownAt.current = at;
     return next;
   };
+  /**
+   * Saves the time on the current question on every tick of the exam clock, before the deadline's settle reads the
+   * draft, so the question on screen when time runs out keeps its time, and a reload loses at most a second.
+   */
+  const flush = useRef<() => void>(() => undefined);
+  flush.current = () => {
+    const now = progress.peek().sessions.get(session.sid);
+    if (now !== undefined && now.submittedAt === null && !now.abandoned) save(timed(draft));
+  };
+  useEffect(
+    () =>
+      effect(() => {
+        if (examTick.value > 0) untracked(() => flush.current());
+      }),
+    [],
+  );
   const go = (index: number): void => {
     save({ ...timed(draft), current: Math.min(Math.max(0, index), qids.length - 1) });
     setView('question');
