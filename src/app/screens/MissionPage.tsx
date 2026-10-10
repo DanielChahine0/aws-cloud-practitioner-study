@@ -1,9 +1,12 @@
 import { Fragment } from 'preact';
+import { useEffect } from 'preact/hooks';
 import type { ContentIndex, MissionMeta } from '../../../schemas/chunks.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { Html } from '../../ui/Html.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
+import { missionAnnounce, slotAfter } from '../mission-copy.ts';
 import { pad2 } from '../router.ts';
+import { MissionFlow } from './MissionFlow.tsx';
 import { NotFound } from './NotFound.tsx';
 
 function lifetime(m: MissionMeta): string {
@@ -31,6 +34,10 @@ function breakable(url: string) {
 export function MissionPage({ idx, id }: { idx: ContentIndex; id: string }) {
   const m = idx.missions.find((x) => x.id === id);
   useTitle(m?.title ?? 'Not found');
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the line belongs to one mission, so it clears when another opens
+  useEffect(() => {
+    missionAnnounce.value = '';
+  }, [id]);
   if (m === undefined) return <NotFound hash={`#/missions/${id}`} />;
   return (
     <>
@@ -61,7 +68,18 @@ export function MissionPage({ idx, id }: { idx: ContentIndex; id: string }) {
         <dt>Can use credits</dt>
         <dd>{m.canUseCredits.length === 0 ? 'Nothing' : m.canUseCredits.join(', ')}</dd>
       </dl>
-      <Html className="prose" html={m.html} />
+      {m.sections.map((section) => {
+        const slot = slotAfter(section.id, m);
+        return (
+          <Fragment key={section.id}>
+            <Html className="prose" html={section.html} />
+            {slot !== null && <MissionFlow mission={m} slot={slot} />}
+          </Fragment>
+        );
+      })}
+      <p class="visually-hidden" aria-live="polite">
+        {missionAnnounce.value}
+      </p>
       <h2>Sources</h2>
       <ul class="sources">
         {m.sources.map((s) => (

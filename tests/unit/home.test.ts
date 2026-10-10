@@ -190,7 +190,8 @@ describe('memoryContentOf', () => {
       canUseCredits: [],
       leftovers: [],
       sources: [],
-      html: '',
+      sections: [],
+      steps: [],
     });
     const content = memoryContentOf({
       ...IDX,

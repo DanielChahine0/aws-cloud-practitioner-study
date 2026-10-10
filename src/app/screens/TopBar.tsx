@@ -3,6 +3,7 @@ import { levelProgress } from '../../engine/level.ts';
 import { BAR_GAP, formatClock } from '../exam.ts';
 import { examControls, examTick } from '../exam-clock.ts';
 import { memory, queue, rank, ranks, streak } from '../memory.ts';
+import { liveChip } from '../missions.ts';
 import { storeReady } from '../progress.ts';
 import { toHash } from '../router.ts';
 import { exam, examPosition, navigate, overlay } from '../state.ts';
@@ -87,15 +88,22 @@ function SiteBar() {
   const shown = ready && ranks.value.length > 0 ? rank.value : null;
   const xp = ready ? (memory.value?.xp ?? null) : null;
   const flash = useXpFlash(xp);
+  const chip = liveChip.value;
   return (
     <header class="topbar">
       <nav class="topbar-inner" aria-label="Site">
         <a class="brand" href="#/">
           CCP
         </a>
-        <a class="topbar-missions" href="#/missions">
-          Missions
-        </a>
+        {chip === null ? (
+          <a class="topbar-missions" href="#/missions">
+            Missions
+          </a>
+        ) : (
+          <a class="topbar-live" href={chip.href} aria-label={chip.aria}>
+            <span class="live-pill">{chip.label}</span>
+          </a>
+        )}
         {(due > 0 || days > 0 || shown !== null) && (
           <span class="topbar-stats">
             {due > 0 && (

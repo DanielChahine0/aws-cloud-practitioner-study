@@ -8,6 +8,7 @@ import type {
   ExamFormMeta,
   ExamItemRef,
   GlossaryItem,
+  HeadingMeta,
   IncidentMeta,
   IncidentView,
   LabMeta,
@@ -163,6 +164,17 @@ function formChunks(
 
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 const pad2 = (n: number): string => String(n).padStart(2, '0');
+
+/** A mission's steps: the H3 headings under its `## Steps` section, in order. */
+export function missionSteps(headings: readonly HeadingMeta[]): MissionMeta['steps'] {
+  const steps: MissionMeta['steps'] = [];
+  let inSteps = false;
+  for (const h of headings) {
+    if (h.depth === 2) inSteps = h.id === 'steps';
+    else if (inSteps) steps.push({ id: h.id, title: h.text });
+  }
+  return steps;
+}
 
 /** Renders the notes, glossary and missions of a loaded context into hashed JSON chunks (spec 2.10). */
 export function buildContent(ctx: Context): BuiltContent {
@@ -405,7 +417,7 @@ export function buildContent(ctx: Context): BuiltContent {
     .map((mission) => {
       const fm = mission.fm;
       if (fm === null) throw new Error(`${mission.path}: invalid frontmatter; run pnpm content:validate`);
-      const { sections } = renderDoc(mission.body, { path: mission.path, routes, terms: null });
+      const { sections, headings } = renderDoc(mission.body, { path: mission.path, routes, terms: null });
       search.push({
         kind: 'mission',
         title: fm.title,
@@ -425,7 +437,8 @@ export function buildContent(ctx: Context): BuiltContent {
         canUseCredits: [...fm.canUseCredits],
         leftovers: [...fm.leftovers],
         sources: fm.sources.map((s) => ({ url: s.url, verified_on: s.verified_on })),
-        html: sections.map((s) => s.html).join(''),
+        sections,
+        steps: missionSteps(headings),
       };
     });
 
