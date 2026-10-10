@@ -1,17 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import type { ConceptMeta, ContentIndex, LessonMeta, MissionMeta } from '../../schemas/chunks.ts';
 import {
+  EXTRAS_JOIN,
+  EXTRAS_LEAD,
   examAskDue,
   examDateLabel,
+  extraLink,
+  extrasLine,
+  goNoGoLine,
   hexLabel,
   lessonRefs,
   memoryContentOf,
   nextLabel,
   nothingDueLine,
+  readinessLine,
+  reminderOf,
   streakLine,
+  weakestLine,
 } from '../../src/app/home.ts';
 import type { LessonRef } from '../../src/engine/next.ts';
 import type { ReviewQueue } from '../../src/engine/queue.ts';
+import type { Readiness } from '../../src/engine/readiness.ts';
 import type { SessionState } from '../../src/engine/replay.ts';
 import { emptyIndexFields } from '../fixtures/index.ts';
 
@@ -380,9 +389,17 @@ describe('labels', () => {
   });
 
   it('labels a hex with its module, mastery and band', () => {
-    expect(hexLabel(5, 'Networking', 64, 'solid')).toBe('Module 5 Networking, mastery 64, solid');
-    expect(hexLabel(1, 'Baking Basics', 0, 'outline')).toBe('Module 1 Baking Basics, mastery 0, not started');
-    expect(hexLabel(2, 'Proofing', 25, 'faint')).toBe('Module 2 Proofing, mastery 25, started');
+    expect(hexLabel(5, 'Networking', 64, 'solid', null)).toBe('Module 5 Networking, mastery 64, solid');
+    expect(hexLabel(1, 'Baking Basics', 0, 'outline', null)).toBe(
+      'Module 1 Baking Basics, mastery 0, not started',
+    );
+    expect(hexLabel(2, 'Proofing', 25, 'faint', null)).toBe('Module 2 Proofing, mastery 25, started');
+    expect(hexLabel(5, 'Networking', 64, 'solid', 'passed')).toBe(
+      'Module 5 Networking, mastery 64, solid, boss passed',
+    );
+    expect(hexLabel(3, 'Compute', 61, 'solid', 'ready')).toBe(
+      'Module 3 Compute, mastery 61, solid, boss ready',
+    );
   });
 });
 
@@ -406,5 +423,92 @@ describe('examAskDue', () => {
   it('stays away once a date is set or the question was dismissed', () => {
     expect(examAskDue({ idx: IDX, lessonsDone: allRead, examDate: '2026-11-14', examAsk: null })).toBe(false);
     expect(examAskDue({ idx: IDX, lessonsDone: allRead, examDate: null, examAsk: 'dismissed' })).toBe(false);
+  });
+});
+
+const readinessOf = (over: Partial<Readiness>): Readiness => ({
+  value: 0.62,
+  label: 'Close',
+  capped: false,
+  memory: 0.6,
+  mock: 0.64,
+  domains: { '1': 0.6, '2': 0.6, '3': 0.6, '4': 0.6 },
+  weakest: null,
+  at: '2026-11-14T04:00:00.000Z',
+  ...over,
+});
+
+describe('readinessLine', () => {
+  it('shows the floored number and the label', () => {
+    expect(readinessLine(readinessOf({}))).toBe('Readiness 62  Close');
+    expect(readinessLine(readinessOf({ value: 0.85, label: 'Ready' }))).toBe('Readiness 85  Ready');
+  });
+
+  it('shows 79 for 0.799 and 80 for 0.80', () => {
+    expect(readinessLine(readinessOf({ value: 0.799 }))).toBe('Readiness 79  Close');
+    expect(readinessLine(readinessOf({ value: 0.8 }))).toBe('Readiness 80  Close');
+  });
+
+  it('names the cap before the first unseen mock', () => {
+    expect(readinessLine(readinessOf({ value: 0.7, capped: true, mock: null }))).toBe(
+      'Readiness 70  capped until your first unseen mock',
+    );
+  });
+
+  it('shows a dash before 40 concepts have evidence', () => {
+    expect(readinessLine(readinessOf({ value: null, label: 'Building' }))).toBe('Readiness -');
+  });
+});
+
+describe('Home lines', () => {
+  it('names the weakest task with its short name', () => {
+    expect(weakestLine({ id: '2.3', short: 'access management' })).toBe(
+      'Weakest: 2.3 access management (focus quiz)',
+    );
+  });
+
+  it('writes the go/no-go line with the exam date', () => {
+    expect(goNoGoLine('2026-11-14', 'Close')).toBe(
+      'Exam Sat 14 Nov, readiness Close. Rescheduling closes 24 h before the appointment.',
+    );
+    expect(goNoGoLine('2026-11-14', 'Building')).toBe(
+      'Exam Sat 14 Nov, readiness Building. Rescheduling closes 24 h before the appointment.',
+    );
+  });
+
+  it('joins the extras with a bar', () => {
+    expect(extrasLine([{ label: 'Boss: Networking' }, { label: 'Mock B' }])).toBe(
+      'Optional today: Boss: Networking  |  Mock B',
+    );
+    expect(extrasLine([{ label: 'Mock A' }])).toBe('Optional today: Mock A');
+    expect(`${EXTRAS_LEAD}Boss: Networking${EXTRAS_JOIN}Mock B`).toBe(
+      'Optional today: Boss: Networking  |  Mock B',
+    );
+  });
+
+  it('links a boss extra to its boss and a mock extra to its form', () => {
+    const modules = [{ n: 5, short: 'Networking' }];
+    expect(extraLink({ kind: 'boss', module: 5 }, modules)).toEqual({
+      label: 'Boss: Networking',
+      href: '#/s/boss/m05',
+    });
+    expect(extraLink({ kind: 'mock', form: 'B' }, modules)).toEqual({ label: 'Mock B', href: '#/s/mock/b' });
+  });
+});
+
+describe('reminderOf', () => {
+  const none = { 'go-no-go': false, 'exam-ask': false, backup: false, 'first-run': false };
+
+  it('puts go/no-go first, then the exam date question, the backup reminder and the first-run line', () => {
+    expect(reminderOf({ 'go-no-go': true, 'exam-ask': true, backup: true, 'first-run': true })).toBe(
+      'go-no-go',
+    );
+    expect(reminderOf({ ...none, 'exam-ask': true, backup: true, 'first-run': true })).toBe('exam-ask');
+    expect(reminderOf({ ...none, backup: true, 'first-run': true })).toBe('backup');
+    expect(reminderOf({ ...none, 'first-run': true })).toBe('first-run');
+  });
+
+  it('shows nothing when no line is due', () => {
+    expect(reminderOf(none)).toBeNull();
   });
 });

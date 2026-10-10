@@ -6,15 +6,15 @@ import { startClock } from './clock.ts';
 import { index, loadError, loadIndex } from './content.ts';
 import { examTick, openExam, settleExam } from './exam-settle.ts';
 import { useKeyboard } from './keyboard.ts';
-import { watchRanks } from './memory.ts';
+import { rankUp, watchRanks } from './memory.ts';
 import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
 import { Help } from './screens/Help.tsx';
 import { Palette } from './screens/Palette.tsx';
 import { Progress } from './screens/Progress.tsx';
 import { Screen } from './screens/Screen.tsx';
 import { TopBar } from './screens/TopBar.tsx';
-import { overlay, route } from './state.ts';
-import { rulesLine } from './topbar.ts';
+import { exam, overlay, route } from './state.ts';
+import { rankUpLine, rulesLine } from './topbar.ts';
 
 /** The shell: the top bar, the screen for the route once the content index has loaded, and the open dialog. */
 export function App() {
@@ -31,6 +31,7 @@ export function App() {
       <TopBar />
       <SaveError />
       <RulesUpdated />
+      <RankUp />
       <main id="main" class="page" tabIndex={-1}>
         <Body />
       </main>
@@ -104,6 +105,20 @@ function RulesUpdated() {
     <div class="banner banner-info" role="status">
       <span>Rules updated, progress recalculated.</span>
       <button class="link-button" type="button" onClick={stampEngine}>
+        Dismiss
+      </button>
+    </div>
+  );
+}
+
+/** The one promotion line of spec 3.4; Dismiss writes `rankSeen`, so neither a reload nor a replay brings it back. */
+function RankUp() {
+  const up = storeReady.value ? rankUp.value : null;
+  if (up === null || exam.value !== null) return null;
+  return (
+    <div class="banner banner-info" role="status">
+      <span>{rankUpLine(up)}</span>
+      <button class="link-button" type="button" onClick={() => void writeKv(KV_KEYS.rankSeen, up.id)}>
         Dismiss
       </button>
     </div>

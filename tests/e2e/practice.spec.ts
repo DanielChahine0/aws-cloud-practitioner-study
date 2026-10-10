@@ -378,7 +378,7 @@ test.describe('accessibility and layout', () => {
 
   test('Progress with the import preview open has no axe violations', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Progress' }).click();
+    await page.locator('button.topbar-rank').click();
     const sheet = page.getByRole('dialog', { name: 'Progress' });
     const backup = {
       format: 'ccp-study-backup',

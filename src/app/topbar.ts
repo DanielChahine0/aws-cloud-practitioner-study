@@ -36,3 +36,13 @@ export function rulesLine(args: {
   if (!args.ready || args.stored === ENGINE_VERSION) return 'none';
   return args.events === 0 ? 'stamp' : 'show';
 }
+
+/** The rank button's name: the visible plan name first (WCAG 2.5.3), then what it does. */
+export function rankLabel(name: string): string {
+  return `${name}: rank, open Progress`;
+}
+
+/** The one dismissible promotion line under the top bar (spec 3.4): the plan name and its two facts. */
+export function rankUpLine(rank: { name: string; facts: readonly string[] }): string {
+  return `${rank.name}: ${rank.facts.join(' ')}`;
+}

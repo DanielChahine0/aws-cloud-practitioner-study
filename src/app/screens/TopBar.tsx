@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { levelProgress } from '../../engine/level.ts';
 import { BAR_GAP, formatClock } from '../exam.ts';
 import { examControls, examTick } from '../exam-settle.ts';
-import { memory, queue, streak } from '../memory.ts';
+import { memory, queue, rank, ranks, streak } from '../memory.ts';
 import { storeReady } from '../progress.ts';
 import { toHash } from '../router.ts';
 import { exam, examPosition, navigate, overlay } from '../state.ts';
-import { dueLabel, FLASH_MS, streakLabel, xpGain } from '../topbar.ts';
+import { dueLabel, FLASH_MS, rankLabel, streakLabel, xpGain } from '../topbar.ts';
 
 const openProgress = (): void => {
   overlay.value = 'progress';
@@ -83,6 +83,7 @@ function SiteBar() {
   const ready = storeReady.value;
   const due = ready ? (queue.value?.items.length ?? 0) : 0;
   const days = ready ? (streak.value?.current ?? 0) : 0;
+  const shown = ready && ranks.value.length > 0 ? rank.value : null;
   const xp = ready ? (memory.value?.xp ?? null) : null;
   const flash = useXpFlash(xp);
   return (
@@ -91,8 +92,10 @@ function SiteBar() {
         <a class="brand" href="#/">
           CCP
         </a>
-        <a href="#/missions">Missions</a>
-        {(due > 0 || days > 0) && (
+        <a class="topbar-missions" href="#/missions">
+          Missions
+        </a>
+        {(due > 0 || days > 0 || shown !== null) && (
           <span class="topbar-stats">
             {due > 0 && (
               <button
@@ -120,9 +123,25 @@ function SiteBar() {
                 {days}d
               </button>
             )}
+            {(due > 0 || days > 0) && shown !== null && (
+              <span class="topbar-sep" aria-hidden="true">
+                ·
+              </span>
+            )}
+            {shown !== null && (
+              <button
+                class="topbar-button topbar-rank"
+                type="button"
+                aria-label={rankLabel(shown.name)}
+                onClick={openProgress}
+              >
+                <span class="rank-name">{shown.name}</span>
+                <span class="rank-short">{shown.short}</span>
+              </button>
+            )}
           </span>
         )}
-        <button class="topbar-button" type="button" onClick={openProgress}>
+        <button class="topbar-button topbar-progress" type="button" onClick={openProgress}>
           Progress
         </button>
         <button

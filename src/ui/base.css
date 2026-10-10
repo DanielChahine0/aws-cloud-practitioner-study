@@ -1626,3 +1626,63 @@ dialog.confirm .button {
 .cause {
   min-height: 44px;
 }
+
+/* Phase 3 Home (spec 7.2): readiness, the next rank, the extras, the go/no-go line, boss rings and dots. */
+.readiness-line {
+  margin: 16px 0 4px;
+  font-weight: 600;
+  white-space: pre-wrap;
+}
+
+.weakest-line,
+.rank-line,
+.extras-line {
+  margin: 4px 0;
+}
+
+.extras-line {
+  white-space: pre-wrap;
+}
+
+.go-no-go {
+  font-weight: 600;
+}
+
+/* The ring sits in the gap around a passed hex, so the SVG may draw past its box. */
+.hex svg {
+  overflow: visible;
+}
+
+.hex polygon.hex-ring {
+  fill: none;
+  stroke: var(--active);
+  stroke-width: 2;
+}
+
+.hex-dot {
+  position: absolute;
+  top: 12%;
+  right: 16%;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--pane);
+  border-radius: 50%;
+  background: var(--active);
+}
+
+.rank-short {
+  display: none;
+}
+
+/* On a phone the bar reads `18 · 9d · Business+` (spec 7.2): Missions waits on Home, and the rank opens Progress. */
+@media (max-width: 480px) {
+  .rank-name,
+  .topbar .topbar-missions,
+  .topbar-stats:has(.topbar-rank) ~ .topbar-progress {
+    display: none;
+  }
+
+  .rank-short {
+    display: inline;
+  }
+}

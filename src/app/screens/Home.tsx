@@ -1,28 +1,70 @@
 import { useState } from 'preact/hooks';
 import type { ContentIndex } from '../../../schemas/chunks.ts';
+import { studyDay } from '../../engine/day.ts';
 import { hexBand } from '../../engine/mastery.ts';
+import { nextRankLine } from '../../engine/ranks.ts';
+import { goNoGo } from '../../engine/readiness.ts';
 import { reminderDue } from '../../store/backup.ts';
 import { KV_KEYS } from '../../store/kv.ts';
 import { HexMap } from '../../ui/HexMap.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { now } from '../clock.ts';
 import { TARGET_EXAM_DATE } from '../config.ts';
-import { examAskDue, examDateLabel, nextLabel, nothingDueLine, streakLine } from '../home.ts';
-import { examAsk, mastery, memory, nextUp, queue, streak } from '../memory.ts';
+import {
+  EXTRAS_JOIN,
+  EXTRAS_LEAD,
+  examAskDue,
+  examDateLabel,
+  extraLink,
+  goNoGoLine,
+  nextLabel,
+  nothingDueLine,
+  readinessLine,
+  reminderOf,
+  streakLine,
+  weakestLine,
+} from '../home.ts';
+import {
+  bosses,
+  examAsk,
+  extraItems,
+  mastery,
+  memory,
+  nextUp,
+  queue,
+  rank,
+  rankFacts,
+  ranks,
+  readinessNow,
+  streak,
+} from '../memory.ts';
 import { events, progress, record, storeReady, writeKv } from '../progress.ts';
+import { toHash } from '../router.ts';
 import { overlay } from '../state.ts';
 import { lastExportAt } from './Progress.tsx';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
-/** Home `#/` (spec 7.2): the Next button, the streak reset line, the 13 hexes and at most one reminder line. */
+/**
+ * Home `#/` (spec 7.2): the Next button, the streak reset line, the 13 hexes, readiness, the next rank, the
+ * extras, at most one reminder line, and the ways to Missions and the mocks.
+ */
 export function Home({ idx }: { idx: ContentIndex }) {
   useTitle('Home');
   const byModule = mastery.value;
+  const statuses = storeReady.value ? bosses.value : null;
   const hexes = idx.modules.map((m) => {
     const value = byModule?.get(m.n) ?? 0;
-    return { module: m.n, short: m.short, mastery: value, band: hexBand(value, false) };
+    const status = statuses?.get(m.n);
+    const passed = status?.passed === true;
+    return {
+      module: m.n,
+      short: m.short,
+      mastery: value,
+      band: hexBand(value, passed),
+      boss: passed ? ('passed' as const) : status?.ready === true ? ('ready' as const) : null,
+    };
   });
   return (
     <>
@@ -30,9 +72,15 @@ export function Home({ idx }: { idx: ContentIndex }) {
       <NextBlock idx={idx} />
       <StreakReset />
       <HexMap hexes={hexes} />
+      <ReadinessLines idx={idx} />
+      <NextRank />
+      <Extras idx={idx} />
       <HomeLine idx={idx} />
       <p>
         <a href="#/missions">Missions: real AWS, done by hand</a>
+      </p>
+      <p>
+        <a href="#/s/mock">Mock exams</a>
       </p>
     </>
   );
@@ -72,39 +120,110 @@ function StreakReset() {
   return line === null ? null : <p class="muted streak-line">{line}</p>;
 }
 
+/** `Readiness 62  Close` and, when a task has at least 3 concepts, the weakest one as a focus quiz link (spec 3.9). */
+function ReadinessLines({ idx }: { idx: ContentIndex }) {
+  const r = storeReady.value ? readinessNow.value : null;
+  if (r === null) return null;
+  const weakest = r.weakest;
+  const task = weakest === null ? undefined : idx.blueprint.tasks.find((t) => t.id === weakest.task);
+  return (
+    <>
+      <p class="readiness-line">{readinessLine(r)}</p>
+      {task !== undefined && (
+        <p class="weakest-line">
+          <a href={toHash({ kind: 'focus', scope: task.id })}>{weakestLine(task)}</a>
+        </p>
+      )}
+    </>
+  );
+}
+
+/** What the next rank needs (spec 3.4); nothing at the top rank. */
+function NextRank() {
+  const shown = storeReady.value && ranks.value.length > 0 ? rank.value : null;
+  if (shown === null) return null;
+  const r = readinessNow.value;
+  const label = r === null || r.value === null ? '-' : r.label;
+  const line = nextRankLine(ranks.value, shown, rankFacts.value, label);
+  return line === null ? null : <p class="muted rank-line">{line}</p>;
+}
+
+/** Optional extras once Next is done for today (spec 4.6): a ready boss, then the next mock. */
+function Extras({ idx }: { idx: ContentIndex }) {
+  const action = nextUp.value;
+  const items = extraItems.value;
+  if (action === null || action.kind !== 'done' || items.length === 0) return null;
+  const links = items.map((e) => extraLink(e, idx.modules));
+  // The visible text equals `extrasLine(links)`, so its tested copy is the copy on screen.
+  return (
+    <p class="extras-line">
+      {EXTRAS_LEAD}
+      {links.map((link, i) => (
+        <span key={link.href}>
+          {i > 0 && <span aria-hidden="true">{EXTRAS_JOIN}</span>}
+          <a href={link.href}>{link.label}</a>
+        </span>
+      ))}
+    </p>
+  );
+}
+
 const openProgress = (): void => {
   overlay.value = 'progress';
 };
 
-/** At most one line (spec 4.6): the exam date question, the backup reminder, or the first-run line. */
+/**
+ * At most one line (spec 4.6): the go/no-go reminder, the exam date question, the backup reminder, or the
+ * first-run line, in that order.
+ */
 function HomeLine({ idx }: { idx: ContentIndex }) {
   if (!storeReady.value) return null;
   const examDate = memory.value?.examDate ?? null;
-  if (examAskDue({ idx, lessonsDone: progress.value.lessonsDone, examDate, examAsk: examAsk.value })) {
-    return <ExamQuestion />;
-  }
-  if (events.value.length === 0) {
-    return (
-      <p class="home-line">
-        Progress lives in this browser.{' '}
-        <button class="link-button" type="button" onClick={openProgress}>
-          Import a backup
-        </button>
-      </p>
-    );
-  }
-  const last = lastExportAt();
+  const r = readinessNow.value;
   const at = now.value;
-  if (!reminderDue(events.value, last, at)) return null;
-  const days = last === null ? 0 : Math.floor((at.getTime() - new Date(last).getTime()) / DAY_MS);
-  return (
-    <p class="home-line">
-      {last === null ? 'No backup yet.' : `Last backup ${days} days ago.`}{' '}
-      <button class="link-button" type="button" onClick={openProgress}>
-        Export a backup
-      </button>
-    </p>
-  );
+  const last = lastExportAt();
+  const empty = events.value.length === 0;
+  const which = reminderOf({
+    'go-no-go': examDate !== null && r !== null && goNoGo({ examDate, today: studyDay(at), readiness: r }),
+    'exam-ask': examAskDue({
+      idx,
+      lessonsDone: progress.value.lessonsDone,
+      examDate,
+      examAsk: examAsk.value,
+    }),
+    backup: !empty && reminderDue(events.value, last, at),
+    'first-run': empty,
+  });
+  switch (which) {
+    case 'go-no-go':
+      return examDate === null || r === null ? null : (
+        <p class="home-line go-no-go">{goNoGoLine(examDate, r.label)}</p>
+      );
+    case 'exam-ask':
+      return <ExamQuestion />;
+    case 'backup': {
+      const days = last === null ? 0 : Math.floor((at.getTime() - new Date(last).getTime()) / DAY_MS);
+      return (
+        <p class="home-line">
+          {last === null ? 'No backup yet.' : `Last backup ${days} days ago.`}{' '}
+          <button class="link-button" type="button" onClick={openProgress}>
+            Export a backup
+          </button>
+        </p>
+      );
+    }
+    case 'first-run':
+      return (
+        <p class="home-line">
+          Progress lives in this browser.{' '}
+          <button class="link-button" type="button" onClick={openProgress}>
+            Import a backup
+          </button>
+        </p>
+      );
+    case null:
+      return null;
+  }
 }
 
 /** The one-time exam date question (spec 7.5); Save writes a settings event, Not now a kv mark. */
