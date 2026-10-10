@@ -2,7 +2,7 @@
 
 CCP Study is Dani's personal static study site for the AWS Certified Cloud Practitioner exam (CLF-C02).
 It serves the own-words notes in `resources/` as a reader with search, glossary popovers and dated "Exam guide update" lines.
-Lesson checks and module quizzes let Dani practise with saved progress, and reviews and labs arrive phase by phase.
+Lesson checks, module quizzes and daily reviews let Dani practise every module with saved progress, offline too, and labs arrive phase by phase.
 The design is `docs/superpowers/specs/2026-10-09-aws-cpe-study-site-design.md`, and the implementation plans live in `docs/superpowers/plans/`.
 
 ## Commands
@@ -19,7 +19,7 @@ The design is `docs/superpowers/specs/2026-10-09-aws-cpe-study-site-design.md`, 
 | `pnpm content:new-question [count]` | Prints fresh question ids, none used in the working tree or in `HEAD` |
 | `pnpm content:checks <command>` | Runs the agent checks: `prepare --modules 01,03` writes keyless batches, `lint <file>` checks an answer file, `grade` grades every answer |
 | `pnpm content:stamp` | Stamps each question whose three checks passed at its current hashes and sets it live; failed drafts get a `review` block |
-| `pnpm content:report` | Counts and style lines; `--coverage` lists coverage by task and missing blueprint terms, `--needs-dani` lists drafts that failed twice |
+| `pnpm content:report` | Counts and style lines; `--coverage` lists coverage by task and missing blueprint terms, `--needs-dani` lists drafts that failed 3 check rounds, `--homed <note>` gives a note's concepts with their `live`, `open` and `need` counts, and `--targets` lists the notes whose concepts still need drafts |
 | `pnpm content:updates` | Checks (`--check <file>`) and applies (`--apply <dir>`) the update-writer results for missing blueprint terms |
 | `pnpm site:deploy` | Runs `pnpm verify`, then publishes `dist/` to the Mission 1 bucket and refreshes CloudFront |
 
@@ -31,6 +31,21 @@ Three checks then run on keyless batches: a closed-book solve, a solve from the 
 `pnpm content:stamp` is the only way to `live`: it writes the `verified` block with the hashes the checks passed at, and rule R9 fails a live question whose text changed since.
 When a note edit breaks a question's evidence line, `pnpm content:validate --demote` sets that question back to `draft` so it goes through the checks again.
 Only live questions ship in the module chunks; drafts and retired questions never reach the site.
+Rule R10 keeps every tested concept at 2 or more live practice questions and every blueprint term in `resources/` or mapped by `coveredBy`.
+A draft that failed its checks three times waits for Dani, so `--targets` asks the writers for fresh drafts in its place.
+
+## Daily reviews
+
+Every tested concept you answer gets one FSRS memory card, and the review queue brings each concept back when its recall drops to about 90%.
+Home's Next button picks what to do now: resume a session, review what is due, continue or check a lesson, start the next one, or stop at "Done for today".
+Check and Sure are a bet: Sure pays 10 XP when right and 0 when wrong, while Check pays 8 or 5, so press Sure only when you are more than 71% sure.
+A wrong answer in a review brings another variant of the concept back a few questions later, and a wrong Sure marks a misconception that leads the next day's queue.
+XP, the level, the streak with its freezes and the 13 module hexes are all replayed from the event log, so a rule change recalculates them instead of losing them.
+
+## Offline
+
+After one visit, a service worker keeps the whole site, every module included, so reviews work without a network.
+A new version downloads in the background and takes over on the next launch, so an open page never mixes two versions.
 
 ## Progress and backups
 
