@@ -5,10 +5,11 @@ import { SCHEMA_VERSION } from '../../schemas/version.ts';
 import { studyDay, tzOffset } from '../engine/day.ts';
 import { type ContentRefs, derive } from '../engine/replay.ts';
 import { type BackupData, mergeEvents, mergeKv } from '../store/backup.ts';
-import { allEvents, appendEvent, clearEvents, putEvents } from '../store/events.ts';
+import { allEvents, appendEvent, putEvents } from '../store/events.ts';
 import { openDb } from '../store/idb.ts';
-import { allKv, clearKv, KV_KEYS, type KvRecords, putKv, setKv } from '../store/kv.ts';
+import { allKv, KV_KEYS, type KvRecords, putKv, setKv } from '../store/kv.ts';
 import { migrateLocal } from '../store/migrations/index.ts';
+import { replaceStores } from '../store/replace.ts';
 import { ulid } from '../store/ulid.ts';
 import { index } from './content.ts';
 import { pad2 } from './router.ts';
@@ -43,7 +44,7 @@ const failed = (): void => {
 
 /**
  * Brings a stored log and kv up to `SCHEMA_VERSION` (spec 8.2): a migration first keeps the old data under kv
- * `preMigration`, then rewrites both stores; kv `schemaVersion` is stamped whenever it differs.
+ * `preMigration` and rewrites both stores in one transaction; kv `schemaVersion` is stamped whenever it differs.
  */
 async function migrateStored(
   store: IDBDatabase,
@@ -55,22 +56,16 @@ async function migrateStored(
   const now = new Date();
   let out = { events: loaded, kv };
   if (result.migrated) {
-    const copy = await setKv(
-      store,
-      KV_KEYS.preMigration,
-      { schemaVersion: result.from, events: loaded, kv },
-      now,
-    );
     // Migration steps return events in the current schema, which the app writes itself, as record() does.
     const migrated = result.data.events as StudyEvent[];
-    const nextKv = {
+    const nextKv: KvRecords = {
       ...result.data.kv,
-      [KV_KEYS.preMigration]: { value: copy.value, updatedAt: copy.updatedAt },
+      [KV_KEYS.preMigration]: {
+        value: { schemaVersion: result.from, events: loaded, kv },
+        updatedAt: now.toISOString(),
+      },
     };
-    await clearEvents(store);
-    await clearKv(store);
-    await putEvents(store, migrated);
-    await putKv(store, nextKv);
+    await replaceStores(store, migrated, nextKv);
     out = { events: migrated, kv: nextKv };
   }
   if (out.kv[KV_KEYS.schemaVersion]?.value !== SCHEMA_VERSION) {
@@ -147,10 +142,7 @@ export async function replaceAll(backup: BackupData): Promise<number> {
   const next = mergeEvents(backup.events, []);
   if (db !== null) {
     try {
-      await clearEvents(db);
-      await clearKv(db);
-      await putEvents(db, next);
-      await putKv(db, backup.kv);
+      await replaceStores(db, next, backup.kv);
     } catch {
       failed();
     }

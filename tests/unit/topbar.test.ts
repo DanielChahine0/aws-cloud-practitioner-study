@@ -3,11 +3,11 @@ import { dueLabel, FLASH_MAX, rulesLine, streakLabel, xpGain } from '../../src/a
 import { ENGINE_VERSION } from '../../src/engine/replay.ts';
 
 describe('top bar labels', () => {
-  it('names the due count and the streak for screen readers, in the singular for one', () => {
-    expect(dueLabel(18)).toBe('18 concepts due; start a review');
-    expect(dueLabel(1)).toBe('1 concept due; start a review');
-    expect(streakLabel(9)).toBe('Streak 9 days; open Progress');
-    expect(streakLabel(1)).toBe('Streak 1 day; open Progress');
+  it('starts each name with the visible text, then names the count in the singular for one', () => {
+    expect(dueLabel(18)).toBe('18 due: 18 concepts, start a review');
+    expect(dueLabel(1)).toBe('1 due: 1 concept, start a review');
+    expect(streakLabel(9)).toBe('9d streak: 9 days, open Progress');
+    expect(streakLabel(1)).toBe('1d streak: 1 day, open Progress');
   });
 });
 

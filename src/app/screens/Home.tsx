@@ -40,8 +40,8 @@ export function Home({ idx }: { idx: ContentIndex }) {
 
 /** The Next button (spec 4.6), or "Done for today" with when the next reviews fall due. */
 function NextBlock({ idx }: { idx: ContentIndex }) {
-  // Next waits for the stored log, so a returning reader never sees the first-run lesson flash past.
-  const action = storeReady.value ? nextUp.value : null;
+  // nextUp waits for the stored log, so a returning reader never sees the first-run lesson flash past.
+  const action = nextUp.value;
   if (action === null) return <div class="next-block" />;
   const { label, href, minutes } = nextLabel(action, idx);
   if (href === null) {

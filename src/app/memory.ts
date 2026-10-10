@@ -10,7 +10,7 @@ import { KV_KEYS } from '../store/kv.ts';
 import { now } from './clock.ts';
 import { index } from './content.ts';
 import { lessonRefs, memoryContentOf } from './home.ts';
-import { events, kvRecords, progress } from './progress.ts';
+import { events, kvRecords, progress, storeReady } from './progress.ts';
 
 export const memoryContent = computed(() => {
   const idx = index.value;
@@ -55,10 +55,11 @@ export const currentLesson = computed(() => {
 /** `dismissed` once Not now was pressed on the exam date question. */
 export const examAsk = computed(() => kvRecords.value[KV_KEYS.examAsk]?.value ?? null);
 
+/** Null until the stored log has loaded, so neither the Next button nor Enter acts on an empty log. */
 export const nextUp = computed(() => {
   const list = lessons.value;
   const q = queue.value;
-  if (list === null || q === null) return null;
+  if (!storeReady.value || list === null || q === null) return null;
   const at = now.value;
   return nextAction({
     lessons: list,

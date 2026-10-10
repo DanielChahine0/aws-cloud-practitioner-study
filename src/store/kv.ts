@@ -46,9 +46,3 @@ export async function putKv(db: IDBDatabase, records: KvRecords): Promise<void> 
   for (const [key, { value, updatedAt }] of Object.entries(records)) store.put({ key, value, updatedAt });
   await done(tx);
 }
-
-export async function clearKv(db: IDBDatabase): Promise<void> {
-  const tx = db.transaction(STORES.kv, 'readwrite');
-  tx.objectStore(STORES.kv).clear();
-  await done(tx);
-}

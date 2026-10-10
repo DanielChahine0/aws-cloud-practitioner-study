@@ -8,12 +8,13 @@ export const FLASH_MAX = 200;
 
 const plural = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
 
+/** Each name starts with the visible text (`3 due`, `9d`), so a voice command for what is seen matches (WCAG 2.5.3). */
 export function dueLabel(due: number): string {
-  return `${plural(due, 'concept', 'concepts')} due; start a review`;
+  return `${due} due: ${plural(due, 'concept', 'concepts')}, start a review`;
 }
 
 export function streakLabel(days: number): string {
-  return `Streak ${plural(days, 'day', 'days')}; open Progress`;
+  return `${days}d streak: ${plural(days, 'day', 'days')}, open Progress`;
 }
 
 /** The gain to flash when XP moves from `before` to `after`; null for the first value, no gain, or a jump. */
