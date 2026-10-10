@@ -27,6 +27,7 @@ export function up(route: Route): Route | null {
     case 'module':
     case 'missions':
     case 'review':
+    case 'lightning':
     case 'not-found':
       return { kind: 'home' };
     case 'mission':
@@ -35,6 +36,7 @@ export function up(route: Route): Route | null {
       return { kind: 'lesson', module: route.module, slug: route.slug, anchor: null };
     case 'quiz':
     case 'boss':
+    case 'lab':
       return { kind: 'module', module: route.module };
     case 'focus':
       return route.scope.startsWith('m')
@@ -42,6 +44,7 @@ export function up(route: Route): Route | null {
         : { kind: 'home' };
     case 'mocks':
     case 'results':
+    case 'incident':
       return { kind: 'home' };
     case 'mock':
       return { kind: 'mocks' };

@@ -15,6 +15,19 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 export default defineConfig({
   define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [preact(), contentPlugin(root), swPlugin(root)],
-  build: { target: 'es2022', assetsInlineLimit: 0 },
+  build: {
+    target: 'es2022',
+    assetsInlineLimit: 0,
+    // Every module the entry imports statically ships as one chunk: lazy screens that share them (the lab, the exam,
+    // the Help sheet) would otherwise split them into several small chunks, each compressed on its own (spec 2.10).
+    // The service worker is an entry of its own and stays out.
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [{ name: 'app', tags: ['$initial'], test: (id) => !id.endsWith('/src/sw.ts') }],
+        },
+      },
+    },
+  },
   preview: { headers: { 'Content-Security-Policy': CSP } },
 });

@@ -1,0 +1,118 @@
+id: lab-m01-who-patches-what
+module: 1
+title: Who patches what?
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts:
+  - shared-responsibility-model
+  - security-of-the-cloud
+  - security-in-the-cloud
+  - operating-system-patching
+  - client-side-encryption
+notes: [m01/the-aws-shared-responsibility-model]
+minutes: 5
+brief: >-
+  The cafe moved its order server onto AWS, and the owner wants a clear list of who keeps each part safe now.
+  Sort each job under the side that owns it.
+spec:
+  buckets:
+    - id: aws
+      label: AWS
+      detail: Security of the cloud
+    - id: cafe
+      label: The cafe
+      detail: Security in the cloud
+  cards:
+    - id: guards
+      text: Guards, badge readers and cameras at the building that houses the cafe's server
+      bucket: aws
+      goal: g1
+    - id: climate
+      text: Fire controls and cooling in the server halls
+      bucket: aws
+      goal: g1
+    - id: hypervisor
+      text: Keeping the cafe's virtual server walled off from other customers on the same machine
+      bucket: aws
+      goal: g1
+    - id: hardware
+      text: Replacing a failed disk or network switch behind the service
+      bucket: aws
+      goal: g1
+    - id: os-patch
+      text: Applying this month's vendor fix to the operating system on the cafe's order server
+      bucket: cafe
+      goal: g2
+    - id: os-users
+      text: Adding the new night manager as a user who can sign in to that operating system
+      bucket: cafe
+      goal: g2
+    - id: recipe-access
+      text: Choosing whether the recipe files are open to everyone, to the head chef only, or to nobody
+      bucket: cafe
+      goal: g3
+    - id: client-encrypt
+      text: Encrypting the loyalty list on the cafe laptop before it is uploaded
+      bucket: cafe
+      goal: g3
+goals:
+  - id: g1
+    label: Building, hardware and isolation jobs sit under AWS
+    hint: Ask who can walk into the building, touch the hardware or run the layer that splits one machine among customers.
+  - id: g2
+    label: Operating system jobs sit under the cafe
+    hint: A vendor ships operating system fixes, but only whoever can sign in to the system can apply them, and AWS keeps no back door.
+  - id: g3
+    label: Data and access jobs sit under the cafe
+    hint: Ask who chooses what the cafe stores, who may read it, and where it gets encrypted before it leaves.
+solution:
+  - { t: place, card: guards, bucket: aws }
+  - { t: place, card: climate, bucket: aws }
+  - { t: place, card: hypervisor, bucket: aws }
+  - { t: place, card: hardware, bucket: aws }
+  - { t: place, card: os-patch, bucket: cafe }
+  - { t: place, card: os-users, bucket: cafe }
+  - { t: place, card: recipe-access, bucket: cafe }
+  - { t: place, card: client-encrypt, bucket: cafe }
+wrongPaths:
+  - mistake: Thinks the cafe must keep its own virtual server isolated from other customers
+    failsGoal: g1
+    actions:
+      - { t: place, card: guards, bucket: aws }
+      - { t: place, card: climate, bucket: aws }
+      - { t: place, card: hypervisor, bucket: cafe }
+      - { t: place, card: hardware, bucket: aws }
+      - { t: place, card: os-patch, bucket: cafe }
+      - { t: place, card: os-users, bucket: cafe }
+      - { t: place, card: recipe-access, bucket: cafe }
+      - { t: place, card: client-encrypt, bucket: cafe }
+  - mistake: Thinks AWS patches the operating system the cafe runs on its server
+    failsGoal: g2
+    actions:
+      - { t: place, card: guards, bucket: aws }
+      - { t: place, card: climate, bucket: aws }
+      - { t: place, card: hypervisor, bucket: aws }
+      - { t: place, card: hardware, bucket: aws }
+      - { t: place, card: os-patch, bucket: aws }
+      - { t: place, card: os-users, bucket: cafe }
+      - { t: place, card: recipe-access, bucket: cafe }
+      - { t: place, card: client-encrypt, bucket: cafe }
+  - mistake: Thinks AWS encrypts data on the cafe's own laptop before it is uploaded
+    failsGoal: g3
+    actions:
+      - { t: place, card: guards, bucket: aws }
+      - { t: place, card: climate, bucket: aws }
+      - { t: place, card: hypervisor, bucket: aws }
+      - { t: place, card: hardware, bucket: aws }
+      - { t: place, card: os-patch, bucket: cafe }
+      - { t: place, card: os-users, bucket: cafe }
+      - { t: place, card: recipe-access, bucket: cafe }
+      - { t: place, card: client-encrypt, bucket: aws }
+debrief:
+  lines:
+    - AWS secures the cloud itself, from the buildings and hardware to the network and hypervisor, and never shares physical security.
+    - The cafe applies its own operating system patches, because only the cafe can sign in to that system.
+    - What the cafe stores, who may read it and encrypting it before upload all stay with the cafe.
+  questions: [q-a7kxvk, q-g5351d, q-x67nxf]

@@ -73,8 +73,23 @@ describe('up', () => {
     expect(up({ kind: 'quiz', module: 3 })).toEqual({ kind: 'module', module: 3 });
   });
 
+  it('goes from a lab to its module', () => {
+    expect(up({ kind: 'lab', module: 3, id: 'lab-m03-pick-the-compute' })).toEqual({
+      kind: 'module',
+      module: 3,
+    });
+  });
+
   it('goes from a review to Home', () => {
     expect(up({ kind: 'review' })).toEqual({ kind: 'home' });
+  });
+
+  it('goes from the lightning round to Home', () => {
+    expect(up({ kind: 'lightning' })).toEqual({ kind: 'home' });
+  });
+
+  it('goes from the daily incident to Home', () => {
+    expect(up({ kind: 'incident' })).toEqual({ kind: 'home' });
   });
 
   it('goes from a boss or a module focus quiz to its module, from a mock to the mock list, else Home', () => {

@@ -99,6 +99,7 @@ describe('KV_KEYS', () => {
       preMigration: 'preMigration',
       rankSeen: 'rankSeen',
       examSession: 'examSession',
+      labDrafts: 'labDrafts',
     });
   });
 });

@@ -10,6 +10,7 @@ import { commit, request, STORES } from './idb.ts';
  * `rankSeen` is the id of the rank whose promotion line was dismissed (spec 3.4); `examSession` is the draft of the
  * open boss or mock, `{ sid, picks, flagged, changes, ms, current }`, which the exam shell writes on every change
  * and turns into answer events at submit (spec 8.1).
+ * `labDrafts` holds `Record<lab id, { rev, actions, hints }>` for unfinished labs.
  */
 export const KV_KEYS = {
   lastExportAt: 'lastExportAt',
@@ -20,6 +21,7 @@ export const KV_KEYS = {
   preMigration: 'preMigration',
   rankSeen: 'rankSeen',
   examSession: 'examSession',
+  labDrafts: 'labDrafts',
 } as const;
 
 export type KvRecords = Record<string, KvValue>;

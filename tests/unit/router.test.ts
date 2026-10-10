@@ -23,6 +23,13 @@ describe('parseHash', () => {
     expect(parseHash('#/s/check/m03/aws-lambda')).toEqual({ kind: 'check', module: 3, slug: 'aws-lambda' });
     expect(parseHash('#/s/quiz/m13')).toEqual({ kind: 'quiz', module: 13 });
     expect(parseHash('#/s/review')).toEqual({ kind: 'review' });
+    expect(parseHash('#/s/lightning')).toEqual({ kind: 'lightning' });
+  });
+
+  it('reads the daily incident route, and nothing under it', () => {
+    expect(parseHash('#/s/incident')).toEqual({ kind: 'incident' });
+    expect(toHash({ kind: 'incident' })).toBe('#/s/incident');
+    expect(parseHash('#/s/incident/inc-001')).toEqual({ kind: 'not-found', hash: '#/s/incident/inc-001' });
   });
 
   it('reads the boss, mock, focus and results routes', () => {
@@ -38,6 +45,27 @@ describe('parseHash', () => {
       kind: 'results',
       sid: '01JA0000000000000000000000',
     });
+  });
+
+  it('reads a lab route only when its module matches the module in the lab id', () => {
+    expect(parseHash('#/m/03/lab/lab-m03-pick-the-compute')).toEqual({
+      kind: 'lab',
+      module: 3,
+      id: 'lab-m03-pick-the-compute',
+    });
+    expect(toHash({ kind: 'lab', module: 3, id: 'lab-m03-pick-the-compute' })).toBe(
+      '#/m/03/lab/lab-m03-pick-the-compute',
+    );
+    for (const hash of [
+      '#/m/04/lab/lab-m03-pick-the-compute',
+      '#/m/03/lab/lab-m3-pick-the-compute',
+      '#/m/03/lab/pick-the-compute',
+      '#/m/03/lab/lab-m03-',
+      '#/m/14/lab/lab-m14-x',
+      '#/m/03/lab/',
+    ]) {
+      expect(parseHash(hash)).toEqual({ kind: 'not-found', hash });
+    }
   });
 
   it('sends anything else to not-found with the hash it got', () => {
@@ -84,6 +112,7 @@ describe('toHash', () => {
     { kind: 'check', module: 3, slug: 'aws-lambda' },
     { kind: 'quiz', module: 3 },
     { kind: 'review' },
+    { kind: 'lightning' },
     { kind: 'boss', module: 5 },
     { kind: 'mocks' },
     { kind: 'mock', form: 'b' },
@@ -91,6 +120,7 @@ describe('toHash', () => {
     { kind: 'focus', scope: '2.3' },
     { kind: 'focus', scope: 'm05' },
     { kind: 'results', sid: '01JA0000000000000000000000' },
+    { kind: 'incident' },
     { kind: 'not-found', hash: '#/nowhere' },
   ];
 
@@ -102,6 +132,7 @@ describe('toHash', () => {
     expect(toHash({ kind: 'check', module: 3, slug: 'aws-lambda' })).toBe('#/s/check/m03/aws-lambda');
     expect(toHash({ kind: 'quiz', module: 3 })).toBe('#/s/quiz/m03');
     expect(toHash({ kind: 'review' })).toBe('#/s/review');
+    expect(toHash({ kind: 'lightning' })).toBe('#/s/lightning');
     expect(toHash({ kind: 'boss', module: 5 })).toBe('#/s/boss/m05');
     expect(toHash({ kind: 'mocks' })).toBe('#/s/mock');
     expect(toHash({ kind: 'mock', form: 'a' })).toBe('#/s/mock/a');

@@ -13,6 +13,10 @@ import { Runner } from './Runner.tsx';
 const ExamScreen = lazyScreen(() => import('./Exam.tsx').then((m) => m.Exam));
 const MocksScreen = lazyScreen(() => import('./Mocks.tsx').then((m) => m.Mocks));
 const ResultsScreen = lazyScreen(() => import('./Results.tsx').then((m) => m.Results));
+const LightningScreen = lazyScreen(() => import('./Lightning.tsx').then((m) => m.Lightning));
+// The lab screen, its engine views and their copy load on first use too.
+const LabScreen = lazyScreen(() => import('./Lab.tsx').then((m) => m.Lab));
+const IncidentScreen = lazyScreen(() => import('./Incident.tsx').then((m) => m.Incident));
 
 /** The screen for a route; the content index is always loaded by the time this renders. */
 export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
@@ -34,6 +38,8 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
       return <Runner key={route} idx={idx} mode="quiz" scope={`m${pad2(route.module)}`} />;
     case 'review':
       return <Runner key={route} idx={idx} mode="review" scope="review" />;
+    case 'lightning':
+      return <LightningScreen key={route} idx={idx} />;
     case 'boss':
       return <ExamScreen key={route} idx={idx} route={route} />;
     case 'mocks':
@@ -44,6 +50,10 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
       return <Runner key={route} idx={idx} mode="focus" scope={route.scope} />;
     case 'results':
       return <ResultsScreen key={route} idx={idx} sid={route.sid} />;
+    case 'lab':
+      return <LabScreen key={route} idx={idx} route={route} />;
+    case 'incident':
+      return <IncidentScreen key={route} idx={idx} />;
     case 'not-found':
       return <NotFound hash={route.hash} />;
   }

@@ -133,3 +133,46 @@ Loop on `pnpm --silent content:validate --draft <file>` until it ends with `0 pr
 ## Return
 
 Return only this JSON: `{ "module": <n>, "files": [<paths>], "labs": [<ids>], "problems": [<anything you could not fix>] }`.
+
+## Configure labs
+
+A Configure spec is `fields` and `rules`; `ConfigureSpec` in `schemas/lab.ts` is the shape and `bakeryConfigureLab` in `tests/fixtures/lab-specs.ts` is a complete example.
+Each field is one decision: a `select` of 2 to 8 options with ids, labels and an optional `detail`, or a `toggle` with an `initial` boolean.
+Each rule is `{ goal, field, in }`: the goal passes when every one of its rules finds the field's value in `in`.
+Actions are `{ t: set, field: <field id>, value: <option id or boolean> }` and `{ t: reset }`, and every field starts at its `initial`.
+Set `initial` so the start fails at least one goal, and so no goal passes by leaving a field untouched unless another goal of the lab needs that field changed.
+Write `minutes` from 4 to 6.
+
+### Launch the order server (Module 2)
+
+Use the id `lab-m02-launch-the-order-server` in `content/labs/02-compute-in-the-cloud/launch-the-order-server.yaml`.
+Declare a select `instance-family` of the five families the instance types note names, a select `purchase` of the purchase options the pricing note names, and inbound rules as toggles, such as HTTPS from anywhere, SSH from anywhere and SSH from the cafe only.
+Goals: the family fits a balanced web order server; the purchase option suits a server that runs all year and must never be interrupted; the inbound rules open HTTPS to customers and SSH to the cafe only.
+Wrong paths: Spot for the order server, a compute optimized family for a balanced load, and SSH open to anyone, each failing the goal it breaks.
+
+### Choose the Region (Module 4)
+
+Use the id `lab-m04-choose-the-region` in `content/labs/04-going-global/choose-the-region.yaml`.
+Declare one select `region` of three or four fictional Regions with made-up names, never real Region codes; each option's `detail` states the data residency, the latency to the cafe's customers in ms, whether the needed service runs there, and a price index in lab credits.
+Rank the four factors the Region note teaches: compliance first, then the services, then proximity, then price.
+Goal g1 lists the Regions that keep the data where the law requires, g2 the Regions that also run the service, and g3 only the closest Region left after g1 and g2, so a cheaper or nearer Region never beats a compliant one.
+Wrong paths: the cheapest Region abroad (fails g1) and the nearest Region without the service (fails g2).
+Call every latency and price a lab value in the brief, and write prices only as lab credits.
+
+## Simulate labs
+
+A Simulate spec is `model`, `constants`, `params` and `thresholds`; `SimulateSpec` and `SIM_CONSTANTS` in `schemas/lab.ts` are the shapes, `modelParams` and `metricInfo` in `src/labs/simulate/models.ts` list each model's parameters and metrics, and `bakerySimulateLab` in `tests/fixtures/lab-specs.ts` is a complete example.
+Actions are `{ t: set, param: <id>, value: <number, option id or boolean> }`, `{ t: run }` and `{ t: reset }`; the screen and R11 run the model before every check, so a solution or wrong path never needs a `run` action.
+Your lab is one row of `SIM_LABS` in `tests/content/sim-labs.test.ts`: copy its model, constants, parameter ids, kinds, ranges, steps, initials and option ids, thresholds, solution and wrong-path actions exactly, and write only the text: the title, the brief, goal labels and hints, parameter and option labels, units, constant labels, wrong-path mistakes and the debrief.
+`pnpm vitest run tests/content/sim-labs.test.ts` fails when any number differs from the table; never retune a number to make a check pass.
+Name every constant a lab value in the brief, write every price as lab credits, and write `minutes` from 6 to 10.
+Each threshold fails each wrong path for the reason its `mistake` names: `min 0` leaves no instance ready overnight, a one-zone class for the only copy loses data, Lambda for the steady high-volume worker costs more, and so on; say that reason in the goal's hint without naming the setting.
+
+### Model notes for the brief and the debrief
+
+- `scaling` (Morning rush): `dynamic` follows the previous hour, `predictive` scales ahead of the forecast, and without a load balancer one instance takes every order.
+- `compute-cost` (Bursty or steady): Lambda charges per request and per GB-second while the code runs, and the instance costs the same flat month whether busy or idle.
+- `s3-lifecycle` (Receipts for 7 years): each class has a storage price, a retrieval price, a minimum duration charged when data leaves early, a retrieval time and its zone count; a read slower than its deadline is late, and a zone loss on day 150 destroys data held in a one-zone class.
+- `cache` (Cache the menu): the cache serves its hit share of reads, and the database slows down once its load passes its capacity.
+- `bill` (The monthly bill): consolidated billing sums usage before the tiers apply, a commitment lowers the hourly rate, inbound transfer is free, and the alert day is when spending crosses the alert share of the budget.
+- `transfer` (Online or offline transfer): online days use 80% of the link, offline jobs ship together in one lab turnaround, and the device count is the data divided by the lab device capacity, rounded up; neither Snowball figure is in the notes, so both are lab values.

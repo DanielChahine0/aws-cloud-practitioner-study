@@ -1,4 +1,5 @@
-import { useState } from 'preact/hooks';
+import { effect } from '@preact/signals';
+import { useEffect, useState } from 'preact/hooks';
 import type { ContentIndex } from '../../../schemas/chunks.ts';
 import { studyDay } from '../../engine/day.ts';
 import { hexBand } from '../../engine/mastery.ts';
@@ -19,6 +20,7 @@ import {
   goNoGoLine,
   nextLabel,
   nothingDueLine,
+  overdueLightning,
   readinessLine,
   reminderOf,
   streakLine,
@@ -51,6 +53,20 @@ const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
  */
 export function Home({ idx }: { idx: ContentIndex }) {
   useTitle('Home');
+  useLightningSettle();
+  const ready = storeReady.value;
+  const at = now.value;
+  // Today's incident is picked on the first render of a study day and kept as an event (spec 4.5).
+  // A load that fails (a reload while it is in flight, or offline without the chunk) offers nothing; the next render
+  // tries again.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    if (!ready) return;
+    void import('../incident-offer.ts').then(
+      (m) => m.offerIncident(at),
+      () => undefined,
+    );
+  }, [ready, at]);
   const byModule = mastery.value;
   const statuses = storeReady.value ? bosses.value : null;
   const hexes = idx.modules.map((m) => {
@@ -81,7 +97,27 @@ export function Home({ idx }: { idx: ContentIndex }) {
       <p>
         <a href="#/s/mock">Mock exams</a>
       </p>
+      <p>
+        <a href="#/s/lightning">Lightning round</a>
+      </p>
     </>
+  );
+}
+
+/**
+ * Settles a lightning round left open past its deadline (spec 4.1) once the store is ready, so a tab closed
+ * mid-round still closes its session and queues its misses; the settle code loads only when one is found.
+ */
+function useLightningSettle(): void {
+  useEffect(
+    () =>
+      effect(() => {
+        if (!storeReady.value) return;
+        const at = now.value;
+        if (overdueLightning(progress.value, at).length === 0) return;
+        void import('../lightning-settle.ts').then((m) => m.settleLightning(at));
+      }),
+    [],
   );
 }
 
@@ -147,12 +183,12 @@ function NextRank() {
   return line === null ? null : <p class="muted rank-line">{line}</p>;
 }
 
-/** Optional extras once Next is done for today (spec 4.6): a ready boss, then the next mock. */
+/** Optional extras once Next is done for today (spec 4.6): a ready boss, the next mock, then a core lab. */
 function Extras({ idx }: { idx: ContentIndex }) {
   const action = nextUp.value;
   const items = extraItems.value;
   if (action === null || action.kind !== 'done' || items.length === 0) return null;
-  const links = items.map((e) => extraLink(e, idx.modules));
+  const links = items.map((e) => extraLink(e, idx));
   // The visible text equals `extrasLine(links)`, so its tested copy is the copy on screen.
   return (
     <p class="extras-line">

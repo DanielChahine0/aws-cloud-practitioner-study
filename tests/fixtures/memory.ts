@@ -95,6 +95,25 @@ export function submitOf(sid: string, mode: Mode): NewEvent {
   return { t: 'session', sid, mode, phase: 'submit', seed: 7 };
 }
 
+/** A lightning round start (spec 4.1): scope `lightning`, its questions and its deadline. */
+export function lightningStartOf(sid: string, qids: readonly string[], deadline: string): NewEvent {
+  return {
+    t: 'session',
+    sid,
+    mode: 'lightning',
+    phase: 'start',
+    seed: 7,
+    scope: 'lightning',
+    qids: [...qids],
+    deadline,
+  };
+}
+
+/** The `review.now` a lightning miss writes (spec 3.6). */
+export function reviewNowOf(concept: string): NewEvent {
+  return { t: 'review.now', concept };
+}
+
 /** A boss or mock start: the scope (`m03` for a boss), the form (`A` to `D` or `remix`) and the deadline. */
 export function examStartOf(
   sid: string,

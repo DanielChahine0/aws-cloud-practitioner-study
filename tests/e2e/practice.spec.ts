@@ -173,21 +173,28 @@ test('every live question of all 13 modules finds exactly one evidence line in i
   for (let module = 1; module <= 13; module++) {
     const questions = await chunkFor(page, module);
     expect(questions.length, `live questions in Module ${module}`).toBeGreaterThan(0);
+    // One page visit and one evaluate per lesson, so the sweep's round trips grow with lessons, not questions.
+    const byLesson = new Map<string, typeof questions>();
     for (const q of questions) {
       const lesson = q.read.route.split('/').slice(0, 5).join('/');
-      if ((await page.evaluate(() => location.hash)) !== lesson) {
-        await page.goto(`/${lesson}`);
-        await expect(page.locator('.prose')).toBeVisible();
-      }
+      byLesson.set(lesson, [...(byLesson.get(lesson) ?? []), q]);
+    }
+    for (const [lesson, group] of byLesson) {
+      await page.goto(`/${lesson}`);
+      await expect(page.locator('.prose')).toBeVisible();
       const hits = await page.evaluate(
-        (text) =>
-          (window as unknown as { findEvidence: (root: ParentNode, text: string) => unknown[] }).findEvidence(
-            document.querySelector('.prose') ?? document,
-            text,
-          ).length,
-        q.read.text,
+        (texts) =>
+          texts.map(
+            (text) =>
+              (
+                window as unknown as { findEvidence: (root: ParentNode, text: string) => unknown[] }
+              ).findEvidence(document.querySelector('.prose') ?? document, text).length,
+          ),
+        group.map((q) => q.read.text),
       );
-      if (hits !== 1) misses.push(`${q.id} has ${hits} hits for "${q.read.text}"`);
+      group.forEach((q, i) => {
+        if (hits[i] !== 1) misses.push(`${q.id} has ${hits[i]} hits for "${q.read.text}"`);
+      });
     }
   }
   expect(misses).toEqual([]);

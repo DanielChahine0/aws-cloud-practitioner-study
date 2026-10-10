@@ -436,6 +436,7 @@ export const Question = z.discriminatedUnion('type', [
 - **Phase switches:** `content/validate.yaml` lists the active rules and the R10 switches (`practicePerConcept`: 0, 2 or 3; `examQuotas`; `blueprintTerms`).
   - A rule, once on, stays on, and the exit criteria in 10.1 give the set at each phase.
   - Phase 0 turns on R1, R2, R6, R7, R8 and R13; Phase 1 adds R3, R4, R5 and R9; Phase 2 adds R10 with 2 per concept and `blueprintTerms`; Phase 3 adds `examQuotas` and R12; Phase 4 adds R11; Phase 6 raises the practice target to 3.
+  - NOTE: for labs, R2 requires a committed lab's `rev` to rise with any edit, and R7's run check and the retired Support plan check cover every lab string, which R11 also reports (Phase 4).
 - Each rule has a failing fixture at `tests/content/bad/rNN-*.{yaml,md}` that proves it fires, run with every rule and switch on.
 - When a content bug teaches something new, the fix extends a rule and adds a fixture.
 - The report (`pnpm content:report`) carries the soft checks: counts, coverage by task, `concepts.md` drift, `--needs-dani`, and the correct-longest share per module.
@@ -578,6 +579,7 @@ level(xp)     = floor((1 + sqrt(1 + xp / 12.5)) / 2)
 - A day qualifies when any one of these happens:
   - The due queue reaches 0, or the catch-up plan in 3.7 is finished.
   - A lesson, lab, incident, boss or mock is completed.
+  - NOTE: only a lab's first completion qualifies the day, so a rerun cannot hold a streak (Phase 4).
 - Lightning rounds and rereading never qualify.
 - Every 7 consecutive qualifying days earn 1 freeze, up to 2 banked.
 - A freeze is spent automatically on a missed day, which then neither breaks nor extends the streak.
@@ -674,7 +676,7 @@ Readiness = Mock ? 0.5*Memory + 0.5*Mock : min(Memory, 0.70)
 | Changed My Mind | 5 distinct misconceptions cleared, each by the rule in 3.1 (a correct Sure answer on a different question at least 1 study day later) |
 | Long Memory | 50 concepts with stability of 21 days or more |
 | Well Calibrated | Over the last 150 counted answers, with at least 40 Sure and 40 Not sure: Sure accuracy at least 85% and Not sure accuracy at most 75% |
-| Hands On | Every core lab in 5 modules completed |
+| Hands On | Every core lab in 5 modules completed, where a module counts once it lists at least 2 shipped core labs and all are done |
 | Lab Complete | All 26 core labs completed |
 | Leave No Trace | 3 missions closed, each with cleanup and the next-day usage check confirmed (the kept Mission 1 does not count) |
 | Full Dress Rehearsal | All 65 questions of an unseen form answered before the timer ran out |
@@ -811,6 +813,12 @@ debrief: { lines: [ ... ], questions: [q-4m2x8c, q-9tq3vd] }
 - Hints are free, and a lab completed without hints earns the +10 XP.
 - Labs do not update FSRS directly, but each debrief ends with 2 to 3 verified practice questions, and those are counted answers (3.1).
 - Lab concepts must be registered concepts (rule 6), and card sets use the exam's current names (2.3).
+- NOTE: the engine contract has no `schema` member, because the zod spec and action schemas live in `schemas/lab.ts` so zod stays out of the app, and every check runs through the engine registry in `src/labs/engines.ts`, whose `settle` actions run before any check and whose `complete` says a board is finished (Phase 4).
+- NOTE: a lab file also carries a `title`, the `notes` it is grounded in, a `status` of `live` or `retired`, and a `mistake` on each wrong path naming the learner error it models (Phase 4).
+- NOTE: a lab's id is `lab-mNN-<file slug>`, so the example above would be `lab-m05-two-tiers-two-zones` (Phase 4).
+- NOTE: Sort places cards into buckets only, with up to two allowed alternative buckets per card, because no core or stretch Sort lab orders anything (Phase 4).
+- NOTE: goals are checked on demand, when Dani presses Check or `Enter`, and show `Not checked` until then, so a Sort lab is never a guessing game against a live checklist (Phase 4).
+- NOTE: debrief answers use their own mode, `debrief`, labelled `Lab debrief`, which counts like a check answer but writes no lesson check score (Phase 4).
 
 | Engine | Interaction | Checker semantics |
 |---|---|---|
@@ -1069,7 +1077,7 @@ IndexedDB database `ccp-study`:
 | Store | Content | Source of truth |
 |---|---|---|
 | `events` | append-only facts keyed by ULID | yes |
-| `kv` | ADR drafts, lab working state, `examSession` (the open boss or mock draft: picks, flags, changes, time per item and the current position; the seed, item order and `deadline` live on the `session` start event), `rankSeen` (the id of the rank whose promotion line was last dismissed), mission ticks, `plan` (`{ plan, credits, endsOn, services: Record<string, boolean>, recordedAt }`, from Mission 0), `examAsk`, `lastExportAt`, `currentLesson` (the lesson last opened, for Next), `engineVersion` (the engine whose "Rules updated" line was dismissed), `schemaVersion` (the storage version of the local log) and `preMigration` (the log and `kv` as they were before the last local migration); each value has `updatedAt` | yes |
+| `kv` | ADR drafts, `labDrafts` (each unfinished lab's `rev`, its actions and the goals whose hints were opened, replayed through the reducer on load), `examSession` (the open boss or mock draft: picks, flags, changes, time per item and the current position; the seed, item order and `deadline` live on the `session` start event), `rankSeen` (the id of the rank whose promotion line was last dismissed), mission ticks, `plan` (`{ plan, credits, endsOn, services: Record<string, boolean>, recordedAt }`, from Mission 0), `examAsk`, `lastExportAt`, `currentLesson` (the lesson last opened, for Next), `engineVersion` (the engine whose "Rules updated" line was dismissed), `schemaVersion` (the storage version of the local log) and `preMigration` (the log and `kv` as they were before the last local migration); each value has `updatedAt` | yes |
 | `cache` | derived snapshot keyed by `lastEventId:ENGINE_VERSION:contentVersion` | no |
 
 ```ts

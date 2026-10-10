@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { LAB_SCHEMAS, LabFile, SortSpec } from '../../schemas/lab.ts';
+import {
+  ConfigureAction,
+  ConfigureSpec,
+  LAB_SCHEMAS,
+  LabFile,
+  SimulateAction,
+  SortSpec,
+} from '../../schemas/lab.ts';
+import { bakeryConfigureLab } from '../fixtures/lab-specs.ts';
 import { bakeryLab } from '../fixtures/labs.ts';
 
 /** Each issue as `path: message`, for exact assertions on the custom messages. */
@@ -79,5 +87,51 @@ describe('Sort spec schema (spec 5.1)', () => {
     expect(issues(SortSpec.safeParse({ ...s, cards: [a, { ...b, id: a.id }, c, d] }))).toEqual([
       'cards.1.id: card saturday-ovens is used twice',
     ]);
+  });
+});
+
+describe('ConfigureSpec', () => {
+  const spec = ConfigureSpec.parse(bakeryConfigureLab().spec);
+  const messages = (value: unknown): string[] => {
+    const r = ConfigureSpec.safeParse(value);
+    return r.success ? [] : r.error.issues.map((i) => i.message);
+  };
+
+  it('accepts the bakery lab', () => {
+    expect(spec.fields.map((f) => f.id)).toEqual(['oven', 'rental', 'door']);
+  });
+
+  it('rejects a rule on an unknown field and a value of the wrong kind', () => {
+    expect(messages({ ...spec, rules: [{ goal: 'g1', field: 'chimney', in: ['tall'] }] })).toEqual([
+      "rule names unknown field 'chimney'",
+    ]);
+    expect(messages({ ...spec, rules: [{ goal: 'g1', field: 'door', in: ['deck-oven'] }] })).toEqual([
+      "'deck-oven' is not a value of field door",
+    ]);
+  });
+
+  it('rejects an initial that is not an option, and repeated field or option ids', () => {
+    const [oven, rental, door] = spec.fields;
+    expect(messages({ ...spec, fields: [{ ...oven, initial: 'brick-oven' }, rental, door] })).toEqual([
+      "initial 'brick-oven' is not an option of oven",
+    ]);
+    expect(messages({ ...spec, fields: [oven, rental, door, { ...door, label: 'Door again' }] })).toEqual([
+      "duplicate field id 'door'",
+    ]);
+  });
+
+  it('parses set and reset actions only', () => {
+    expect(ConfigureAction.safeParse({ t: 'set', field: 'door', value: false }).success).toBe(true);
+    expect(ConfigureAction.safeParse({ t: 'set', field: 'door', value: 2 }).success).toBe(false);
+    expect(ConfigureAction.safeParse({ t: 'run' }).success).toBe(false);
+  });
+});
+
+describe('SimulateAction', () => {
+  it('parses set, run and reset', () => {
+    expect(SimulateAction.safeParse({ t: 'set', param: 'max', value: 3 }).success).toBe(true);
+    expect(SimulateAction.safeParse({ t: 'set', param: 'mode', value: 'predictive' }).success).toBe(true);
+    expect(SimulateAction.safeParse({ t: 'run' }).success).toBe(true);
+    expect(SimulateAction.safeParse({ t: 'run', now: true }).success).toBe(false);
   });
 });
