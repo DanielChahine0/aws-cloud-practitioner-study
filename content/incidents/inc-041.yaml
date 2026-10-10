@@ -1,0 +1,152 @@
+id: inc-041
+title: New shops bring old servers
+modules: [12]
+concepts: [migration-evaluator, aws-application-discovery-service, migration-strategy-rehost, aws-application-migration-service]
+brief: The cafe chain has bought a handful of small coffee shops, each with its own aging servers in a back room. The owner wants them all running on AWS before the holiday rush, but the bank wants to see the numbers first.
+steps:
+  - id: q-mt69wa
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: migration-evaluator
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      Before it lends the cafe chain money for the move, the bank asks for projected monthly AWS costs and a comparison of the shops' current setup with the planned one.
+      Which service produces this?
+    options:
+      - id: a
+        text: AWS Migration Hub
+        why: Migration Hub tracks the tasks and progress of a move, and it does not build the cost-backed case the bank wants.
+      - id: b
+        text: Migration Evaluator
+        correct: true
+        why: Migration Evaluator builds a data-driven business case that compares current and target state and projects cloud costs.
+      - id: c
+        text: AWS Application Discovery Service
+        why: Discovery Service lists the shops' servers and their links for the plan, but it does not project the costs.
+      - id: d
+        text: AWS Application Migration Service
+        why: This service moves the apps once the plan is ready, long after the bank needs its numbers.
+    evidence:
+      - "A data-driven business case: current versus target state, a readiness plan, projected cloud costs"
+      - "Finance wants projected AWS costs before approving: Migration Evaluator."
+    takeaway: When a lender or finance team needs projected AWS costs and a current versus target view, Migration Evaluator builds that case.
+    history: []
+    verified:
+      keyHash: 44accad92d4c
+      fullHash: 27b00806bf78
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-e6abea
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-application-discovery-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe chain's planner wants to group the new shops' servers into move waves, so that no app ever moves without the database and servers it relies on.
+      Which service gives the planner the data to build those groups?
+    options:
+      - id: a
+        text: Migration Evaluator
+        why: Evaluator prices the move as a business case, and it does not record which servers each app relies on.
+      - id: b
+        text: AWS Application Migration Service
+        why: This service carries the apps across once the waves exist, so it cannot supply the data to form them.
+      - id: c
+        text: AWS Database Migration Service (AWS DMS)
+        why: AWS DMS copies database data into AWS, and it does not trace which servers an app depends on.
+      - id: d
+        text: AWS Application Discovery Service
+        correct: true
+        why: Discovery Service inventories the servers, databases and the links between them, which is what the wave plan needs.
+    evidence:
+      - An automatic inventory of on-premises servers, databases and links, feeding a detailed migration plan
+      - "Nobody knows which servers an app relies on: AWS Application Discovery Service."
+    takeaway: To plan moves around app dependencies, AWS Application Discovery Service inventories servers, databases and the links between them.
+    history: []
+    verified:
+      keyHash: 2679248b1031
+      fullHash: d2d03c4f242f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-89gg5w
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: migration-strategy-rehost
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The new shops run their apps directly on physical servers.
+      The team will turn each server into a virtual machine on AWS and leave the apps unchanged for now.
+      Which strategy is this?
+    options:
+      - id: a
+        text: Relocate
+        why: Relocate moves VMs or containers that already exist on premises, and these shops run physical servers.
+      - id: b
+        text: Replatform
+        why: Replatform adds a few cloud optimizations, but this team is changing nothing in the apps yet.
+      - id: c
+        text: Rehost
+        correct: true
+        why: Rehost moves apps as they are, often by turning servers into VMs, with no changes at first.
+      - id: d
+        text: Refactor
+        why: Refactor writes new code with cloud-built features, the opposite of leaving the apps as they are.
+    evidence:
+      - Apps move as they are, often servers turned into VMs, with no changes at first
+      - "**Relocate**: Moving existing VMs or containers to the cloud."
+    takeaway: Turning physical servers into VMs on AWS with no app changes is rehost, while relocate moves VMs or containers that already exist.
+    history: []
+    verified:
+      keyHash: 462428e76a78
+      fullHash: 4013b75d706b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rkkhxn
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-application-migration-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      With the plan approved, the team must now copy the servers that run the shops' stock and scheduling software into AWS, keeping downtime short and perhaps modernizing along the way.
+      The databases and file shares are being moved by other tools.
+      Which service should carry those servers across?
+    options:
+      - id: a
+        text: AWS Database Migration Service (AWS DMS)
+        why: AWS DMS moves and replicates databases, which the team is already handling apart from the apps.
+      - id: b
+        text: AWS Application Migration Service
+        correct: true
+        why: This service replicates the servers and their apps to AWS with minimal downtime and can modernize them along the way.
+      - id: c
+        text: AWS DataSync
+        why: DataSync moves stored data such as file shares into AWS storage, not the running apps themselves.
+      - id: d
+        text: AWS Application Discovery Service
+        why: Discovery Service inventories the servers and their links to feed the plan, but it does not copy them into AWS.
+    evidence:
+      - Apps replicated to AWS faster, for less and with minimal downtime, optionally modernized
+      - You are ready to move the apps themselves
+    takeaway: Copying the servers that run the apps into AWS, with optional modernizing, is AWS Application Migration Service, while DMS and DataSync move data.
+    history: []
+    verified:
+      keyHash: b07b8c5ba4c4
+      fullHash: abf04a274228
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
