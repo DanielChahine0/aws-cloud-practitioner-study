@@ -1,0 +1,116 @@
+id: inc-033
+title: The lunch rush that slowed the ordering app
+modules: [10]
+concepts: [cloudwatch-metrics, cloudwatch-alarms, cloudwatch-logs]
+brief: On Saturday the cafe's online ordering app slowed to a crawl in the middle of the lunch rush, and the owner wants to know what went wrong and how to keep it from happening next weekend.
+steps:
+  - id: q-ktnyf3
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: cloudwatch-metrics
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's ordering app runs on Amazon EC2 instances, and the team wants to see whether their CPU use climbed during the lunch rush.
+      Nobody has set up anything custom in Amazon CloudWatch yet.
+      Which CloudWatch feature already tracks that value over time?
+    options:
+      - id: a
+        text: CloudWatch alarms
+        why: An alarm reacts when a value crosses a threshold, and it needs a tracked value to watch in the first place.
+      - id: b
+        text: CloudWatch metrics
+        correct: true
+        why: A metric tracks a value over time for a resource, and EC2 CPU use is one CloudWatch tracks out of the box.
+      - id: c
+        text: CloudWatch Logs
+        why: Logs collects and searches log files, while the CPU figure over time is kept as a metric.
+      - id: d
+        text: CloudWatch dashboards
+        why: A dashboard only displays values on one page, and the CPU figure it would show is tracked as a metric.
+    evidence:
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+    takeaway: A value CloudWatch tracks over time for a resource, such as EC2 CPU use, is a CloudWatch metric.
+    history: []
+    verified:
+      keyHash: af1ea9db2a0b
+      fullHash: 184748a544ca
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yftg5c
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: cloudwatch-alarms
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      CPU use on the cafe's ordering servers stays high for most of every lunch rush.
+      The owner wants another EC2 instance added on its own as soon as CPU passes a set level, with no one watching a screen.
+      Which Amazon CloudWatch feature should set that off?
+    options:
+      - id: a
+        text: A CloudWatch dashboard
+        why: A dashboard shows the CPU figures on one page, but someone still has to watch it and act.
+      - id: b
+        text: A CloudWatch Logs query
+        why: A Logs query searches stored log files on request, and it does not act when CPU crosses a level.
+      - id: c
+        text: A CloudWatch alarm
+        correct: true
+        why: An alarm acts when its metric crosses a threshold, and that action can scale EC2 without anyone stepping in.
+      - id: d
+        text: A CloudWatch metric
+        why: The metric tracks the CPU value, but on its own it never triggers an action when the value runs high.
+    evidence:
+      - "**CloudWatch alarm**: a metric threshold that triggers an action."
+      - An alarm can notify through SNS or scale EC2 automatically.
+    takeaway: To act on its own when a metric crosses a threshold, such as adding EC2 capacity, use a CloudWatch alarm.
+    history: []
+    verified:
+      keyHash: 18d7236fd63c
+      fullHash: edc0a01a2efc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4grrdw
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: cloudwatch-logs
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 3
+    stem: >-
+      During the lunch rush, some orders failed, and the cafe's ordering app wrote an error message for each one.
+      The developers want to collect those messages in one place and filter them down to the lunch hour.
+      Which should they use?
+    options:
+      - id: a
+        text: CloudWatch metrics
+        why: A metric tracks a numeric value over time, so it could count failed orders but cannot hold the text of each error message.
+      - id: b
+        text: CloudTrail Insights
+        why: Insights flags unusual API activity in the account, which says nothing about the app's own failed orders.
+      - id: c
+        text: CloudWatch Logs
+        correct: true
+        why: CloudWatch Logs gathers an app's log files centrally, where the team can view, search and filter them.
+      - id: d
+        text: CloudTrail logs
+        why: CloudTrail logs hold records of API calls in the account, not the internal errors the ordering app reports.
+    evidence:
+      - "**CloudWatch Logs**: central log storage and search."
+      - Choose it for performance numbers and thresholds, not for who called an API.
+    takeaway: An app's own error messages, gathered centrally and filtered by time, belong in CloudWatch Logs, not in metrics or CloudTrail.
+    history: []
+    verified:
+      keyHash: b08577c97c15
+      fullHash: 1930eb52d50f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

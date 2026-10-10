@@ -1,0 +1,115 @@
+id: inc-005
+title: Kitchen tickets that never printed
+modules: [3]
+concepts: [lambda-triggers, aws-lambda, lambda-pricing]
+brief: >-
+  Web pre-orders kept arriving all night, yet the kitchen printer stayed silent until dawn.
+  The cafe's developer has the ticket code on AWS Lambda and must get it working before the morning rush.
+steps:
+  - id: q-k733rj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: lambda-triggers
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The developer uploaded the ticket code to AWS Lambda last week, yet it has never once run, even as web orders poured in all night.
+      What is the function still missing?
+    options:
+      - id: a
+        text: An event trigger
+        correct: true
+        why: A trigger is the event that invokes a function, so one tied to web orders makes the code run for each order.
+      - id: b
+        text: A custom runtime
+        why: A runtime only passes events and replies for one language; it does not decide when the function runs.
+      - id: c
+        text: A larger memory size
+        why: Memory sets the speed and price of each run, but a function with no event source still never runs.
+      - id: d
+        text: A function blueprint
+        why: A blueprint is a ready-made template for writing a function, not the event that starts the uploaded one.
+    evidence:
+      - Instead, you deploy a function holding your code, and it runs whenever its trigger fires.
+    takeaway: A Lambda function sits idle until a trigger, such as a new web order, fires and invokes it.
+    history: []
+    verified:
+      keyHash: eb42caef5215
+      fullHash: 3c75ae74e823
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-pxsqqf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-lambda
+    note: m03/aws-lambda
+    task: "2.1"
+    level: 2
+    stem: >-
+      The ticket function now runs for each order, but every run fails with an access error when it reads order data held in another AWS service.
+      Under the shared responsibility model, who fixes this, and where?
+    options:
+      - id: a
+        text: The cafe, in the function's IAM role
+        correct: true
+        why: The cafe owns the IAM roles and permissions its function uses to reach other services, so the fix is the cafe's.
+      - id: b
+        text: The cafe, in the function's memory setting
+        why: Memory sets the speed and price of each run; it grants no access, so a bigger setting leaves the error in place.
+      - id: c
+        text: AWS, in the function's runtime environment
+        why: AWS patches and secures the environment the code runs in, but it does not grant the function access to the cafe's data.
+      - id: d
+        text: AWS, in the servers the function runs on
+        why: AWS manages and allocates the underlying servers, while the permissions a function carries stay with the cafe.
+    evidence:
+      - You own the code and the IAM roles and permissions the function uses to reach other services.
+    takeaway: With Lambda, AWS runs the environment, but the cafe still owns its code and the IAM permissions the function uses.
+    history: []
+    verified:
+      keyHash: c196bdc4deb4
+      fullHash: 6b2750008246
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-pw89fj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: lambda-pricing
+    note: m03/aws-lambda
+    task: "4.1"
+    level: 2
+    stem: >-
+      Tickets now print, but each one takes too long during the morning rush.
+      The developer plans to give the function more memory.
+      How does that change what the cafe pays?
+    options:
+      - id: a
+        text: Each millisecond of run time costs more
+        correct: true
+        why: Lambda prices each millisecond by the memory allocated, so more memory raises the cost of each moment of run time.
+      - id: b
+        text: The idle hours overnight start to be billed
+        why: Lambda bills only for compute time while code runs, so quiet hours with no orders still cost nothing.
+      - id: c
+        text: A flat monthly fee replaces per-use billing
+        why: Raising memory does not change the billing model; Lambda still charges per millisecond of compute.
+      - id: d
+        text: The bill stays the same as it was before
+        why: Memory is part of the price of each millisecond, so a larger setting does change the bill.
+    evidence:
+      - You pay per millisecond of compute, priced by memory.
+      - Memory size is also how you tune performance.
+    takeaway: In Lambda, memory sets both performance and the price of each millisecond, so a larger setting costs more per unit of run time.
+    history: []
+    verified:
+      keyHash: 6c0e8326725a
+      fullHash: fa734a882446
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

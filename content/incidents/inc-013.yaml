@@ -1,0 +1,124 @@
+id: inc-013
+title: Ordering site dark after the rebuild
+modules:
+  - 5
+concepts:
+  - public-subnets
+  - network-acls
+  - security-groups
+brief: >-
+  The cafe rebuilt its online ordering site in a fresh VPC over the weekend.
+  On Monday morning no customer can open it, and the manager wants it back before the lunch orders start.
+steps:
+  - id: q-hsr4q4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: public-subnets
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe put its ordering servers in a subnet it named public-orders, yet no request from the internet reaches them.
+      A teammate says the name alone already makes the subnet public.
+      Which fact about a subnet is what actually makes it public?
+    options:
+      - id: a
+        text: Its route table sends 0.0.0.0/0 traffic to an attached internet gateway
+        correct: true
+        why: Traffic leaves a subnet by its routes, so a 0.0.0.0/0 route to an attached internet gateway is what opens it to the internet.
+      - id: b
+        text: Its auto-assign setting gives each new server a public IPv4 address
+        why: Public subnets do switch this on, but a public address alone gets no request through without a route to an internet gateway.
+      - id: c
+        text: Its route table keeps traffic inside the VPC with a local route
+        why: Every route table starts with this local route, and it only carries traffic within the VPC, never to the internet.
+      - id: d
+        text: A NAT gateway lets its servers start connections to the outside
+        why: A NAT gateway lets servers call out but blocks connections started outside, so customers still cannot reach them.
+    evidence:
+      - 'Naming a subnet "public" does not make it public, because it still needs an attached internet gateway and a route to it.'
+      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+    takeaway: A subnet turns public through its route to an attached internet gateway, never through its name.
+    history: []
+    verified:
+      keyHash: 7e4ba8b17571
+      fullHash: f409189c454c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qezetx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: network-acls
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's ordering servers now sit in a subnet with a working route to the internet, but customers' requests still fail.
+      The subnet is still on the network ACL that AWS gave the account at the start, untouched since then.
+      Which fact settles whether that network ACL is what turns the customers away?
+    options:
+      - id: a
+        text: The default network ACL lets all traffic in and out until edited
+        correct: true
+        why: An unedited default network ACL allows every request in and every reply out, so it is not what turns the customers away.
+      - id: b
+        text: A custom network ACL blocks all traffic until allow rules are added
+        why: This is true of a custom network ACL, but the ACL an account starts with is the default one, so it does not apply here.
+      - id: c
+        text: Every network ACL ends in an explicit deny rule for unmatched packets
+        why: The default network ACL's allow rules match every packet first, so its final deny rule never reaches the customers' requests.
+      - id: d
+        text: A network ACL rechecks each reply with no memory of the request
+        why: Being stateless means replies are checked again, yet the default network ACL allows them out, so this blocks nothing.
+    evidence:
+      - Every AWS account comes with a default network ACL that lets everything through until you edit its rules.
+      - "A custom network ACL starts the other way round: nothing passes until you add allow rules."
+      - Each network ACL also ends in an explicit deny rule that rejects any packet no other rule matched.
+    takeaway: An unedited default network ACL allows all traffic both ways, while a custom one denies everything until you add rules.
+    history: []
+    verified:
+      keyHash: 32e6ae4d517f
+      fullHash: 4b179dbe841a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2493gh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-groups
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's ordering servers have a working route and an open subnet, yet they still turn every customer away.
+      Their security group still has exactly the settings it was given at launch.
+      Which behavior of that security group turns the customers away?
+    options:
+      - id: a
+        text: It denies all inbound traffic until allow rules are added
+        correct: true
+        why: A new security group blocks every inbound port and sender until the cafe opens it with allow rules, such as one for HTTPS.
+      - id: b
+        text: It lets all outbound traffic leave without an allow rule
+        why: Open outbound traffic is true of a new security group, but it lets traffic leave and turns no customer away.
+      - id: c
+        text: It lets replies back in for requests the server sent out
+        why: Being stateful passes replies to the server's own requests, which helps traffic through rather than blocking customers.
+      - id: d
+        text: It filters traffic for one instance, not the whole subnet
+        why: Working at the instance level is true of a security group, but its scope alone says nothing about what it blocks.
+    evidence:
+      - Out of the box it blocks every inbound port and sender address and lets all outbound traffic go.
+      - You open it with allow rules, such as accepting only HTTPS on a web server, with separate inbound and outbound rules, and anything not allowed stays blocked.
+    takeaway: A new security group denies all inbound and allows all outbound traffic, so a web server needs an inbound allow rule.
+    history: []
+    verified:
+      keyHash: b122eccd229e
+      fullHash: b51b05c88b8e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

@@ -1,0 +1,115 @@
+id: inc-009
+title: The ordering app goes dark on Saturday
+modules: [ 4 ]
+concepts: [ multi-az-deployment, multi-region-architecture ]
+brief: >-
+  The cafe's ordering app went dark for most of Saturday morning when the one Availability Zone hosting it lost power.
+  Orders piled up on paper, and the owner wants a setup that keeps the app running through the next outage.
+steps:
+  - id: q-7q5gxq
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: multi-az-deployment
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's ordering app runs in a single Availability Zone, which lost power while the rest of its Region kept running.
+      Which change would let the app keep taking orders the next time one zone goes down?
+    options:
+      - id: a
+        text: Caching its pages at edge locations
+        why: Edge locations speed up delivery to customers, but the ordering app itself still runs only in the failed zone.
+      - id: b
+        text: Running a copy in another Availability Zone
+        correct: true
+        why: A backup in another Availability Zone of the same Region takes over when the first zone fails.
+      - id: c
+        text: Routing customers to it with Amazon Route 53
+        why: Route 53 turns the app's address into an IP address, but with one copy there is nothing left to send orders to.
+      - id: d
+        text: Moving it to a larger EC2 instance
+        why: A larger instance handles more orders at once, but it sits in the same zone and loses power with it.
+    evidence:
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+    takeaway: To ride out one Availability Zone failing, keep a backup of the app in another zone of the same Region.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 2 is the only option that repeats the stem's 'Availability Zone', which points at the key."
+  - id: q-2g21rq
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: multi-az-deployment
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 1
+    stem: >-
+      While planning the backup zone, the manager asks what else a multi-AZ deployment brings besides surviving one zone failing.
+      Which benefits come with it?
+    options:
+      - id: a
+        text: Quicker disaster recovery
+        correct: true
+        why: With a backup zone already set up, the app recovers from a zone failure faster.
+      - id: b
+        text: Freedom from capacity planning
+        why: Scaling with demand is a general cloud benefit, not something a backup zone adds.
+      - id: c
+        text: Lower overall spending
+        why: A backup zone means running more copies of the app, so it adds cost rather than cutting it.
+      - id: d
+        text: Business continuity
+        correct: true
+        why: The backup zone keeps the ordering app serving customers, so the cafe keeps trading.
+      - id: e
+        text: Less operational effort
+        why: Managed services can cut effort, but a second zone gives the team more copies to look after.
+    evidence:
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+    takeaway: Multi-AZ adds quicker disaster recovery and business continuity on top of surviving a single zone failure.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 4 are the only two about surviving outages, so they read as the matched pair.)"
+  - id: q-r1gzza
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-region-architecture
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      Once the ordering app is spread across Availability Zones in one Region, the owner asks which outage that setup still cannot ride out.
+      Which failure would call for a multi-Region architecture?
+    options:
+      - id: a
+        text: Losing a single server in one zone
+        why: The other servers and zones in the Region already cover one server failing.
+      - id: b
+        text: Losing all of its zones at once
+        correct: true
+        why: When the Region goes down, every zone in it goes too, so only a second Region keeps the app up.
+      - id: c
+        text: Losing power in one zone
+        why: The multi-AZ setup the cafe already has rides out one zone losing power.
+      - id: d
+        text: Losing speed for distant users
+        why: Slow loading for far-away users is a delivery problem, not an outage that a second Region must cover.
+    evidence:
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+    takeaway: Multi-AZ survives a zone failing, but only a multi-Region design survives a whole Region going down.
+    history: []
+    verified:
+      keyHash: e4acbd4a7919
+      fullHash: "13e824027636"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

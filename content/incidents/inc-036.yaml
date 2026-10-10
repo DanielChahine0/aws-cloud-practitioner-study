@@ -1,0 +1,116 @@
+id: inc-036
+title: Bringing the airport kiosk into the fold
+modules: [10]
+concepts: [aws-organizations, service-control-policies, aws-trusted-advisor]
+brief: The cafe's new airport kiosk has run on its own AWS account since a trial last spring, and the owner wants it held to the same standards as the cafe's other accounts before the holiday travel rush.
+steps:
+  - id: q-9136v2
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-organizations
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's airport kiosk runs on a standalone AWS account, apart from the cafe's other accounts.
+      The owner wants its bill rolled up with theirs and its access, security and compliance run from the same central place, and she wants it able to use resources the other accounts share.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Service Catalog
+        why: Service Catalog offers a curated list of approved resources, and it does not combine bills or run accounts centrally.
+      - id: b
+        text: AWS Artifact
+        why: Artifact serves AWS's audit reports and agreements, and it does not group accounts or roll up their bills.
+      - id: c
+        text: AWS License Manager
+        why: License Manager tracks and controls software licenses, not the billing and access of whole accounts.
+      - id: d
+        text: AWS Organizations
+        correct: true
+        why: Organizations runs billing, access, security and compliance for many accounts in one place and lets them share resources.
+    evidence:
+      - One place to run billing, access, security and compliance for all accounts, and to share resources between them.
+      - "**Consolidated billing**: child bills roll up to the parent account, where discounts apply."
+    takeaway: Bringing many accounts under one bill, one set of central controls and shared resources points to AWS Organizations.
+    history: []
+    verified:
+      keyHash: c4b06d7413ca
+      fullHash: f9da245ec8dd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kwqjgb
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: service-control-policies
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The airport kiosk account has joined the cafe's organization and sits directly under the root, while the shop accounts sit in a shops OU and the office accounts in a back-office OU.
+      The owner wants only the kiosk account capped to the few services it needs, even for its own admins, with every other account left as it is.
+      Where should she attach the service control policy?
+    options:
+      - id: a
+        text: To the organization root above every account
+        why: An SCP on the root reaches every account in the organization, and the owner wants the other accounts left as they are.
+      - id: b
+        text: To the kiosk's member account where it sits now
+        correct: true
+        why: An SCP can attach to one member account, so it caps that account's users and roles, admins included, and no other account.
+      - id: c
+        text: To the shops OU, after moving the kiosk into it
+        why: An SCP on the shops OU would cap the kiosk, but it would cap every shop account in that OU along with it.
+      - id: d
+        text: To the back-office OU, after moving the kiosk into it
+        why: An SCP on the back-office OU would cap the kiosk, but it would cap every office account in that OU along with it.
+    evidence:
+      - SCPs cap permissions and attach only to OUs or member accounts.
+      - "An account that fits no OU: directly under the root."
+    takeaway: To cap one account and no other, attach the SCP to that member account, since an SCP on the root or an OU reaches every account beneath it.
+    history: []
+    verified:
+      keyHash: c2d10645a456
+      fullHash: 3f19dd812db0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5g3r3e
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-trusted-advisor
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 2
+    stem: >-
+      Before the holiday travel rush, the cafe's owner opens AWS Trusted Advisor for the airport kiosk's account.
+      One of its checks shows an orange status.
+      What does that status tell her?
+    options:
+      - id: a
+        text: Action is recommended
+        why: Trusted Advisor marks a check red when it recommends action, so orange is one step short of that.
+      - id: b
+        text: The check needs a higher support plan
+        why: The support plan sets how many checks an account gets, while a status color reports what a check found.
+      - id: c
+        text: Investigation is recommended
+        correct: true
+        why: Orange is the status Trusted Advisor gives when it recommends looking into a finding before acting.
+      - id: d
+        text: No problem was found
+        why: A check with no problem found shows green, not orange.
+    evidence:
+      - "Status colors: red for action recommended, orange for investigation recommended, green for no problem found."
+    takeaway: In Trusted Advisor, red means action recommended, orange means investigation recommended and green means no problem found.
+    history: []
+    verified:
+      keyHash: a9f9969b1ded
+      fullHash: 354bf51885c5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

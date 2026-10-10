@@ -1,0 +1,119 @@
+id: inc-038
+title: Opening the harbor shop
+modules: [11]
+concepts: [aws-pricing-calculator, consolidated-billing, cost-allocation-tags]
+brief: The cafe is opening a second shop by the harbor, with its own ordering system on AWS. The owner wants to know what the system will cost, how its charges will reach her, and how to see the shop's share of the spend once it runs.
+steps:
+  - id: q-848ve9
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-pricing-calculator
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      Nothing for the harbor shop has been built yet.
+      The owner wants an itemized monthly figure for its ordering system, worked out from the server sizes, storage and data volumes the developer has planned.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        why: Cost Explorer analyzes cost and usage that has already happened, and the harbor system has none yet.
+      - id: b
+        text: AWS Pricing Calculator
+        correct: true
+        why: The Pricing Calculator builds an itemized estimate from planned instance types, storage and transfer before deploying.
+      - id: c
+        text: AWS Cost and Usage Report
+        why: The report details charges already incurred, so it has nothing to show for a system that does not exist.
+      - id: d
+        text: AWS Budgets
+        why: Budgets warns about actual spend against a limit, and it does not price a design that is still on paper.
+    evidence:
+      - An itemized estimate from the instance types, storage and transfer volumes you enter
+      - The Pricing Calculator estimates costs before deployment.
+    takeaway: Estimating the cost of a planned design before it is deployed points to the AWS Pricing Calculator.
+    history: []
+    verified:
+      keyHash: a7e1ec61a1d9
+      fullHash: 2e4d0c69d1bf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-459s48
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: consolidated-billing
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The harbor shop gets its own AWS account, which is linked to the cafe's main account through consolidated billing.
+      The owner wants to know which account the monthly bill for the harbor shop's charges goes to from now on.
+      Which statement answers her?
+    options:
+      - id: a
+        text: An account that is not linked gets a monthly bill of its own.
+        why: True of a standalone account, but the harbor account is linked, so its charges no longer arrive as a bill of its own.
+      - id: b
+        text: AWS Organizations can set security policies for both accounts.
+        why: True, but account-level security policies govern what the accounts may do and say nothing about where the bill goes.
+      - id: c
+        text: The main account alone gets one bill that covers both accounts.
+        correct: true
+        why: With consolidated billing, the primary account, here the main one, alone receives the bill and sees all spend.
+      - id: d
+        text: The billing dashboard shows each month's forecast and its invoices.
+        why: True, but the dashboard is where charges are viewed and paid, and it does not decide which account receives the bill.
+    evidence:
+      - With consolidated billing, subaccounts (by team, project, department or any split) link to a primary account that alone receives the bill and sees all spend.
+      - A standalone account gets its own monthly bill.
+    takeaway: With consolidated billing, linked accounts' charges go on one bill that only the primary account receives.
+    history: []
+    verified:
+      keyHash: dca710722977
+      fullHash: b2e015ef17b9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-te915s
+    version: 1
+    status: draft
+    pool: practice
+    type: multi
+    select: 2
+    concept: cost-allocation-tags
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 1
+    stem: >-
+      Before tagging the harbor shop's resources, the owner reads up on AWS cost allocation tags.
+      She wants to know which kinds exist and what step must come first before a tag can split the spend in the billing tools.
+      Which statements answer her?
+    options:
+      - id: a
+        text: They can narrow an AWS Budgets budget down to one shop.
+        why: True, Budgets can track spend by tag, but that is a use of tags, not their kinds or the step before they work.
+      - id: b
+        text: They come in two types, AWS-generated and user-defined.
+        correct: true
+        why: Cost allocation tags are either created by AWS or defined by the customer, which answers which kinds exist.
+      - id: c
+        text: They let one search find every resource with the same label.
+        why: True of tags in general, but finding related resources says nothing about the kinds of cost allocation tags or activation.
+      - id: d
+        text: Each one must be activated before Cost Explorer shows it.
+        correct: true
+        why: Every cost allocation tag needs activating before it appears in Cost Explorer, which is the step the owner asked about.
+      - id: e
+        text: They can break the Cost and Usage Report down by shop.
+        why: True, the report can split costs by tag, but that is what tags do once ready, not what must happen first.
+    evidence:
+      - AWS cost allocation tags come in two types, AWS-generated and user-defined, and you must activate each before it appears in Cost Explorer or on a cost allocation report.
+    takeaway: Cost allocation tags are AWS-generated or user-defined, and each must be activated before Cost Explorer shows it.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Options 3 and 4 map one-to-one onto the stem's two sub-questions (which kinds, what step first), and option 3 echoes the stem's 'before', so a reader can pick them by phrasing alone. The stem is set in a harbor shop, but a practice-pool item belongs in the cafe."

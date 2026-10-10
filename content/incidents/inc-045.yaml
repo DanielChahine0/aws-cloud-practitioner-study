@@ -1,0 +1,117 @@
+id: inc-045
+title: Friday orders that failed at random
+modules: [13]
+concepts: [aws-x-ray, aws-codepipeline, operational-excellence-pillar]
+brief: >-
+  On Friday evening, some orders in the cafe's loyalty app started failing at random, and a hurried fix copied to the
+  servers by hand made things worse. The developers want to find the fault and make sure the next fix goes out safely.
+steps:
+  - id: q-65xc3k
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-x-ray
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      Each loyalty app order passes through several backend services before it is saved, and some orders now fail at random.
+      The developers want to follow single requests through the app and see where they stall or break.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS CodeBuild
+        why: CodeBuild compiles, tests and packages code, and it does not follow live requests through the running app.
+      - id: b
+        text: AWS X-Ray
+        correct: true
+        why: X-Ray traces each request across the app's services, so the developers can see where orders stall or fail.
+      - id: c
+        text: AWS AppSync
+        why: AppSync builds a GraphQL API over data sources, and it gives no view of how requests behave inside the app.
+      - id: d
+        text: AWS CodePipeline
+        why: CodePipeline runs the release stages for code changes, and it does not trace requests in the running app.
+    evidence:
+      - "**AWS X-Ray**: monitors and traces requests so developers can visualize app behavior, find bottlenecks, debug faster and tune efficiency and reliability."
+    takeaway: To follow requests through an app and find where they stall or fail, use AWS X-Ray.
+    history: []
+    verified:
+      keyHash: fa259d8b1711
+      fullHash: 3c4f33142dd7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-etrk8t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-codepipeline
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      The cafe's developers use AWS CodeBuild to compile and test each change to the loyalty app, but someone still copies
+      each build to the servers by hand, and that copy step is where Friday's fix went wrong.
+      Which service takes a change from the repository all the way to a deployed release with no manual step?
+    options:
+      - id: a
+        text: AWS CodeBuild
+        why: CodeBuild is what the team already has, and it covers the build and tests but not the deploy stage.
+      - id: b
+        text: AWS X-Ray
+        why: X-Ray traces requests in a running app, and it does not move code changes into production.
+      - id: c
+        text: AWS CodePipeline
+        correct: true
+        why: CodePipeline spots each repository change and runs the build, test and deploy stages, removing the hand copy.
+      - id: d
+        text: AWS AppSync
+        why: AppSync creates a GraphQL API for frontends, and it has no part in building or deploying releases.
+    evidence:
+      - "**AWS CodePipeline**: managed CI/CD that spots repository changes and runs build, test and deploy stages, shipping fixes reliably with no servers to provision."
+      - CodeBuild does CI builds and CodePipeline the whole release, but only X-Ray visualizes and debugs app behavior.
+    takeaway: CodeBuild handles builds and tests, while CodePipeline automates the whole release, deploy stage included.
+    history: []
+    verified:
+      keyHash: 21f11580ae73
+      fullHash: cf3e3a074c02
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-tt04pm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: operational-excellence-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      Once the loyalty app is stable again, the team meets to go over how they spotted and handled Friday's failures,
+      and they rewrite their response steps for the next event.
+      Which Well-Architected pillar does this practice belong to?
+    options:
+      - id: a
+        text: Security
+        why: Security is about least-privilege access and protected data, and these failures were not a security matter.
+      - id: b
+        text: Performance Efficiency
+        why: Performance Efficiency sizes resources to the workload, while this review changes how the team works.
+      - id: c
+        text: Operational Excellence
+        correct: true
+        why: This pillar covers running systems, improving processes and responding well to events, as the review does.
+      - id: d
+        text: Sustainability
+        why: Sustainability aims at energy-efficient designs, and this review is about the team's event process.
+    evidence:
+      - "**Operational Excellence**: running and monitoring systems for business value, improving processes, pipeline-automated releases and good event response."
+    takeaway: Learning from how a team handled an event and improving its process belongs to Operational Excellence.
+    history: []
+    verified:
+      keyHash: 542537c2dab5
+      fullHash: 3d2aba653f1b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

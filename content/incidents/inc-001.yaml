@@ -1,0 +1,126 @@
+id: inc-001
+title: Lunch rush on the ordering site
+modules:
+  - 2
+concepts:
+  - load-balancing-routing-methods
+  - amazon-ec2-auto-scaling
+  - elastic-load-balancing-with-auto-scaling
+brief: >-
+  Every weekday lunch, the cafe's ordering site slows down. Some customers wait while one server is swamped and the
+  others barely work, and the manager wants the site steady before next week's promotion.
+steps:
+  - id: q-2c05h9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: load-balancing-routing-methods
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe puts Elastic Load Balancing in front of its ordering servers.
+      Some customers keep a session open far longer than others, so the cafe wants each new request to go to the server
+      holding the smallest number of open sessions right now.
+      Which routing method fits?
+    options:
+      - id: a
+        text: Round Robin
+        why: Round Robin cycles through the servers in order, so a server tied up by long sessions still gets its turn.
+      - id: b
+        text: Least Connections
+        correct: true
+        why: Least Connections sends each request to the server with the fewest open connections, which is the cafe's goal.
+      - id: c
+        text: IP Hash
+        why: IP Hash pins each customer's IP address to one server, whatever that server's current load is.
+      - id: d
+        text: Least Response Time
+        why: Least Response Time picks the fastest-responding server, which need not be the one with the fewest open sessions.
+    evidence:
+      - "**Least Connections**: routing toward the server with the fewest open connections."
+      - It handles internal and external traffic and routes by Round Robin, Least Connections, IP Hash or Least Response Time (see Terms).
+    takeaway: When long sessions pile up unevenly, Least Connections steers each new request to the server holding the fewest.
+    history: []
+    verified:
+      keyHash: 66474970ea8c
+      fullHash: c8134dd0ba7d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1jxafy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ec2-auto-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe moves its ordering servers into an Auto Scaling group.
+      The manager wants a set number of instances running at all times, even overnight when nobody orders, so the first
+      lunch customers never meet an empty fleet.
+      Which group setting holds that floor?
+    options:
+      - id: a
+        text: Desired capacity
+        why: Desired capacity is the count the group aims to hold for the current load, so it is a target rather than a floor.
+      - id: b
+        text: Minimum capacity
+        correct: true
+        why: Minimum capacity is the floor, launched as soon as the group exists, so that many instances stay running overnight.
+      - id: c
+        text: Maximum capacity
+        why: Maximum capacity is the ceiling that caps cost during a surge, so it cannot keep instances running overnight.
+      - id: d
+        text: Predictive scaling
+        why: Predictive scaling adds capacity ahead of an expected rise, but it sets no lower limit the group never drops below.
+    evidence:
+      - "**Minimum capacity**: the floor, launched as soon as the group is created (4 in the example)."
+      - "**Desired capacity**: the count it aims to hold for the current load, defaulting to the minimum if unset (6)."
+    takeaway: An Auto Scaling group's minimum capacity is the floor of instances it always keeps running, whatever the demand.
+    history: []
+    verified:
+      keyHash: c2e8f651fecb
+      fullHash: 639804d4ffde
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-dc10bg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elastic-load-balancing-with-auto-scaling
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      A staff member suggests removing the cafe's Auto Scaling group, since Elastic Load Balancing already sits in front
+      of the ordering servers and can add servers at lunch by itself.
+      Why would that change leave the site short of servers?
+    options:
+      - id: a
+        text: ELB spreads requests but never adds or removes instances
+        correct: true
+        why: ELB only routes traffic across the instances that exist, so without Auto Scaling nothing adds servers at lunch.
+      - id: b
+        text: ELB grows and shrinks its own capacity as traffic changes
+        why: This is true, but ELB scaling itself only lets it pass more requests, and it still adds no ordering servers.
+      - id: c
+        text: ELB is a Regional service that front ends reach by one URL
+        why: This is true, but a single entry point can only route to the servers that exist, so it leaves the count short.
+      - id: d
+        text: ELB has its upgrades, patches and failover handled by AWS
+        why: This is true, but AWS running the load balancer's upkeep says nothing about how many ordering servers run at lunch.
+    evidence:
+      - ELB never adds, removes or resizes instances itself.
+      - "They are separate services with complementary jobs: Auto Scaling sets how many instances run, and ELB spreads traffic across them."
+      - "\"Elastic\" means it grows and shrinks with traffic at no extra hourly cost."
+    takeaway: Auto Scaling sets how many instances run and ELB only spreads traffic across them, so a site needs both.
+    history: []
+    verified:
+      keyHash: 6c5b8923fe2f
+      fullHash: c77af0c3b45b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

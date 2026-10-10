@@ -1,0 +1,120 @@
+id: inc-040
+title: Trimming the ordering system's bill
+modules: [11]
+concepts: [aws-compute-optimizer, rightsizing, vpc-endpoints]
+brief: The cafe's ordering system costs more every month even though the number of orders has stayed flat. The owner asks the developer to cut the bill without slowing service during the morning rush.
+steps:
+  - id: q-z3e2p0
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-compute-optimizer
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 3
+    stem: >-
+      The developer suspects some of the ordering system's EC2 instances are too large.
+      Rather than study usage graphs one instance at a time, she wants an AWS service that reviews them and names the overprovisioned ones.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon CloudWatch
+        why: CloudWatch shows the usage metrics, but it leaves her to judge each instance's size by hand.
+      - id: b
+        text: AWS Budgets
+        why: Budgets warns when spend nears a limit, and it does not judge whether an instance is too large.
+      - id: c
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates planned designs, and it does not review instances that are already running.
+      - id: d
+        text: AWS Compute Optimizer
+        correct: true
+        why: Compute Optimizer reviews running compute and flags the instances that are overprovisioned.
+    evidence:
+      - AWS Compute Optimizer, a cost-minded sidekick, flags overprovisioned instances.
+      - "**AWS Compute Optimizer**: A service that flags overprovisioned compute."
+    takeaway: A service that reviews running instances and flags the overprovisioned ones is AWS Compute Optimizer.
+    history: []
+    verified:
+      keyHash: 17eb0c29d85b
+      fullHash: 946a6f8a7f91
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-cpqej0
+    version: 1
+    status: draft
+    pool: practice
+    type: multi
+    select: 2
+    concept: rightsizing
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      One of the ordering system's EC2 instances turns out to be far larger than its work needs, even at the morning rush.
+      The developer decides to rightsize it.
+      Which actions does that involve?
+    options:
+      - id: a
+        text: Check its CPU and memory use over a week
+        correct: true
+        why: Rightsizing starts from the workload's real needs, so she first measures what the instance actually uses.
+      - id: b
+        text: Set an AWS Budgets alert on its monthly spend
+        why: A Budgets alert warns when spend nears a limit, but it says nothing about the size the work needs and changes nothing.
+      - id: c
+        text: Move it to a smaller instance type
+        correct: true
+        why: Once the real use is known, rightsizing moves the instance to a size that matches it.
+      - id: d
+        text: Delete the old EBS snapshots it left behind
+        why: Deleting unused snapshots stops storage waste, but the instance itself stays as oversized as before.
+      - id: e
+        text: Cover its current type with a Savings Plan
+        why: A Savings Plan only discounts the oversized capacity it already runs, so the mismatch with its work stays.
+    evidence:
+      - "Rightsizing: measure real workload needs and resize to fit."
+      - "**Rightsizing**: Matching resources to real workload needs."
+    takeaway: Rightsizing means measuring what a workload really uses and then resizing the resource to match.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 sets a one-week measuring window that the cited note does not state (Numbers rule)."
+  - id: q-yj6axx
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: vpc-endpoints
+    note: m11/cost-optimization
+    task: "4.1"
+    level: 2
+    stem: >-
+      The month's bill shows data transfer charges for the order archives that the ordering system's EC2 instances upload to Amazon S3 over the public internet.
+      The developer wants to cut those charges by giving the uploads a private path instead.
+      Which component fits?
+    options:
+      - id: a
+        text: An internet gateway
+        why: An internet gateway is the public internet path the uploads already take, so it is neither private nor cheaper.
+      - id: b
+        text: A VPC endpoint
+        correct: true
+        why: A VPC endpoint links the VPC privately to S3, off the public internet, and trims the transfer charges.
+      - id: c
+        text: A NAT gateway
+        why: A NAT gateway still sends the uploads out toward the internet, so it gives no private path to S3.
+      - id: d
+        text: An AWS Direct Connect link
+        why: Direct Connect links an on-premises data center to AWS, and these uploads never leave AWS.
+    evidence:
+      - VPC endpoints connect a VPC privately to supported services, and one used for S3 trims transfer costs, notably out-of-Region.
+      - "**VPC endpoint**: A private VPC link to AWS services, off the public internet."
+    takeaway: A VPC endpoint for S3 keeps a VPC's traffic to S3 off the public internet and can trim transfer costs.
+    history: []
+    verified:
+      keyHash: 3c87309007a8
+      fullHash: 1ec463f62f67
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

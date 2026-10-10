@@ -1,0 +1,121 @@
+id: inc-023
+title: The order database nobody can patch
+modules: [7]
+concepts:
+  - ec2-hosted-vs-managed-databases
+  - amazon-rds
+  - amazon-aurora
+brief: >-
+  The cafe's order database runs as MySQL on a single Amazon EC2 instance, and the one employee who knew how to look after it has left.
+  The owner wants a plan for the database before the next round of security updates and the busy holiday season.
+steps:
+  - id: q-ye3025
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: ec2-hosted-vs-managed-databases
+    note: m07/introduction-to-databases
+    task: "3.4"
+    level: 2
+    stem: >-
+      The owner lists the chores the cafe's staff handle themselves today and asks which of them would move to AWS if the database left the EC2 instance for an AWS managed database such as Amazon RDS.
+      Which chores would AWS take over?
+    options:
+      - id: a
+        text: Patching the database and its operating system
+        correct: true
+        why: On EC2 the cafe patches the database and its operating system itself, while a managed database hands patching to AWS.
+      - id: b
+        text: Backing up the database on a regular schedule
+        correct: true
+        why: On EC2 the cafe runs its own database backups, while a managed database such as RDS takes them over.
+      - id: c
+        text: Tuning the slow queries the order app sends
+        why: Query tuning stays with the customer on a managed database like RDS, so the cafe keeps this chore after the move.
+      - id: d
+        text: Choosing which staff can read the order records
+        why: Deciding who may access the data stays with the cafe on a managed database, so AWS does not take it over.
+      - id: e
+        text: Updating the order app's own code and features
+        why: A managed database leaves the application code to the customer, so the cafe's staff still own the app.
+    evidence:
+      - "With EC2 hosted databases you still install, patch, back up and scale the database and its operating system yourself, while AWS managed databases such as Amazon RDS hand those tasks to AWS."
+      - "Managed services ease scaling and licensing, but leave app code to you."
+    takeaway: Moving a database from EC2 to a managed service hands patching and backups to AWS, while query tuning, access and app code stay with you.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 4 are the only tasks AWS handles for a managed database; the other three are plainly the customer's.)"
+  - id: q-4kvbbm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-rds
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A month after the order database moves to Amazon RDS for MySQL, a security review finds that the app sends order data to the database without encryption.
+      What should happen next?
+    options:
+      - id: a
+        text: The cafe sets up encryption for the app's connections
+        correct: true
+        why: On RDS the customer owns security measures, including encryption in transit, so the cafe must set it up.
+      - id: b
+        text: AWS sets up encryption for the app's connections
+        why: RDS leaves encryption in transit to the customer, so AWS does not set it up on the cafe's behalf.
+      - id: c
+        text: AWS applies the latest patches to the database engine
+        why: Patching is AWS's job on RDS, but a patch does not encrypt the traffic that the review flagged.
+      - id: d
+        text: The cafe applies the latest patches to the operating system
+        why: AWS patches the operating system under RDS, and patching would not encrypt the flagged traffic anyway.
+    evidence:
+      - "AWS runs infrastructure, OS, patching and backups, while you own security measures and encryption at rest and in transit."
+    takeaway: On Amazon RDS, AWS patches the OS and engine, but encrypting data at rest and in transit stays the customer's job.
+    history: []
+    verified:
+      keyHash: 9614a5e4b3d6
+      fullHash: 2d24a5c96d76
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-e2dqx9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-aurora
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      Holiday forecasts show order traffic peaking far above what the cafe's MySQL database handles today, so the team looks at Amazon Aurora.
+      Where does Aurora's higher throughput than standard MySQL mainly come from?
+    options:
+      - id: a
+        text: A distributed storage layer that trims I/O
+        correct: true
+        why: Aurora's distributed storage, built to cut needless I/O, is what lifts its throughput well above standard MySQL.
+      - id: b
+        text: Storage that grows on its own as data is added
+        why: Aurora's storage does grow by itself, but more room for data does not make each query run faster.
+      - id: c
+        text: Continuous backups of the data to Amazon S3
+        why: Aurora does back up to Amazon S3 continuously, which protects the orders but does not raise throughput.
+      - id: d
+        text: Copies of the data across several Availability Zones
+        why: Aurora's copies across Availability Zones protect availability during a failure and are not the source of its speed.
+    evidence:
+      - "MySQL- and PostgreSQL-compatible, built to cut needless I/O (the video also lists distributed SQL, DSQL)."
+      - "Up to 5x MySQL and 3x PostgreSQL throughput comes from distributed storage, not automatic CPU scaling."
+    takeaway: Aurora's throughput edge over MySQL comes from distributed storage built to cut I/O, not from its growth, backups or copies.
+    history: []
+    verified:
+      keyHash: f0c2e77ccf42
+      fullHash: 871c6af5e742
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

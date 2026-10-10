@@ -1,0 +1,162 @@
+id: inc-002
+title: The AWS bill that kept creeping up
+modules:
+  - 2
+concepts:
+  - amazon-ec2
+  - ec2-instance-sizing
+  - savings-plans
+  - spot-instances
+brief: >-
+  The cafe's monthly AWS bill has crept up since spring. The owner asks the IT lead to walk through every workload,
+  from a forgotten test server to the nightly jobs, and trim what can be trimmed without hurting the shop.
+steps:
+  - id: q-67qbt5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ec2
+    note: m02/introduction-to-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      The IT lead finds a test instance that sits unused until a menu trial next month.
+      The lead wants its compute off the bill now without losing the instance before the trial.
+      Which fact about EC2 shows the lead how to do both?
+    options:
+      - id: a
+        text: A stopped instance ends compute charges and can be restarted later
+        correct: true
+        why: Only running instances are billed, and a stopped one can be restarted, so stopping it covers both the bill and the trial.
+      - id: b
+        text: A terminated instance ends compute charges and is deleted for good
+        why: Terminating does end the charges, but the instance is deleted, so nothing would be left to start for the trial.
+      - id: c
+        text: A running instance keeps compute charges going and stays ready to use
+        why: Keeping it running leaves it ready, but it bills for every idle hour, so the server stays on the bill until the trial.
+      - id: d
+        text: A smaller size lowers compute charges and can be changed later
+        why: A smaller size still bills for every hour it runs, so the idle month before the trial would still be charged.
+    evidence:
+      - Only running instances are billed.
+      - A stopped instance can be restarted later, a terminated one is deleted, and neither restarts by itself unless configured to.
+    takeaway: Stopping an idle instance ends its compute charges and keeps it restartable, while terminating it deletes it.
+    history: []
+    verified:
+      keyHash: 57b54553e763
+      fullHash: 35293dd94edb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qg7cz3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-sizing
+    note: m02/amazon-ec2-instance-types
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe's inventory server runs on a large size within its instance family, yet its CPU and memory sit mostly idle
+      all day.
+      How can the IT lead cut its cost while keeping the inventory app working well?
+    options:
+      - id: a
+        text: Move it to a bigger size in the same family
+        why: A bigger size costs more and adds even more of the capacity the server already leaves idle.
+      - id: b
+        text: Move it to a smaller size in the same family
+        correct: true
+        why: Bigger sizes cost more, so dropping to the smallest size that still performs well cuts the bill, and it can change later.
+      - id: c
+        text: Move it to a Dedicated Host of its own
+        why: A Dedicated Host is a whole physical server that costs more than reservations, which raises the bill instead.
+      - id: d
+        text: Add more instances of the same size behind ELB
+        why: More instances of the same size multiply the cost of capacity that already sits idle.
+    evidence:
+      - Bigger sizes cost more, so pick the smallest that performs well and switch later if needed.
+      - Size trades performance for cost, and nothing is permanent.
+    takeaway: Right-size by picking the smallest instance size that still performs well, since the size can change later.
+    history: []
+    verified:
+      keyHash: 82c0c33cc255
+      fullHash: 8c1472d4caec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-007x99
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: savings-plans
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 3
+    stem: >-
+      The cafe's point-of-sale servers run around the clock all year and need dependable capacity and a predictable bill.
+      The IT lead also expects to move them to a newer instance family, and maybe to another Region, during the
+      commitment.
+      Which pricing option keeps its discount through those moves?
+    options:
+      - id: a
+        text: Reserved Instances
+        why: A Reserved Instance discount stays within one instance family and Region, so the planned moves would leave it behind.
+      - id: b
+        text: AWS Savings Plans
+        correct: true
+        why: A Savings Plan applies whatever the Region, family or size, and it fits critical, always-on use with a predictable bill.
+      - id: c
+        text: Spot Instances
+        why: AWS can reclaim Spot capacity, which rules it out for always-on point-of-sale servers that need dependable capacity.
+      - id: d
+        text: Dedicated Hosts
+        why: Dedicated Hosts cost more than reservations and serve needs for server control, not a discount that follows moves.
+    evidence:
+      - A Savings Plan applies whatever the Region, tenancy, OS, family or size, while an RI stays within its family and Region.
+      - Critical, always-on workloads that want dependable capacity and a predictable bill fit Savings Plans.
+    takeaway: For steady use that may change instance family or Region, Savings Plans keep the discount where Reserved Instances cannot.
+    history: []
+    verified:
+      keyHash: c4dcec57e09d
+      fullHash: 294c569d473e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-mjd8br
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: spot-instances
+    note: m02/amazon-ec2-pricing
+    task: "4.1"
+    level: 2
+    stem: >-
+      To save money, the IT lead moves the cafe's nightly sales report job to Spot Instances.
+      One night a warning arrives, and two minutes later the job stops partway through.
+      Which fact about Spot Instances explains the stop?
+    options:
+      - id: a
+        text: AWS can reclaim the spare capacity Spot runs on
+        correct: true
+        why: Spot Instances run on spare capacity that AWS can take back after a warning, which is exactly what stopped the job.
+      - id: b
+        text: Spot capacity is billed at a discount from On-Demand
+        why: The discount is why the lead chose Spot, but a lower price does not stop a job that is already running.
+      - id: c
+        text: A Spot job can save its progress and resume later
+        why: Saving progress is what the job can do with the warning, but it is the response to the stop, not its cause.
+      - id: d
+        text: Spot suits batch work and other interruptible jobs
+        why: This says which jobs belong on Spot, which explains the lead's choice, not why the job stopped that night.
+    evidence:
+      - AWS warns two minutes before reclaiming a Spot Instance, so the job can save progress and resume later.
+      - "**Spot Instances**: discounted spare capacity that AWS can reclaim."
+    takeaway: Spot Instances are discounted spare capacity that AWS can reclaim after a warning, so jobs on them must be able to stop and resume.
+    history: []
+    verified:
+      keyHash: 513d3e54184f
+      fullHash: c155d50164d4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

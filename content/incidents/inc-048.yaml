@@ -1,0 +1,123 @@
+id: inc-048
+title: Reviewing the site after the holiday rush
+modules: [13]
+concepts: [aws-well-architected-tool, reliability-pillar, performance-efficiency-pillar]
+brief: >-
+  The cafe's ordering site made it through the holiday rush, but only just. One web server crashed mid-afternoon and
+  pages crawled at the peak. Before next year, the owner wants a structured review of the design and a clear list of
+  what to improve.
+steps:
+  - id: q-y0bxb2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-well-architected-tool
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 3
+    stem: >-
+      For the review, the cafe's architect wants to define the ordering site as a workload, work through design questions
+      about it pillar by pillar, flag the ones that are irrelevant to the cafe and get back a list of issues, each
+      paired with a suggested fix.
+      Which AWS offering fits this review?
+    options:
+      - id: a
+        text: AWS Trusted Advisor
+        why: Trusted Advisor runs automated best-practice checks on the account, but it asks no design questions about a workload.
+      - id: b
+        text: AWS Compute Optimizer
+        why: Compute Optimizer flags compute that is too large or too small, and it runs no question-led review of the whole design.
+      - id: c
+        text: AWS Well-Architected Tool
+        correct: true
+        why: The WA Tool lets the architect define the site as a workload, answer and skip questions, and get issues with fixes.
+      - id: d
+        text: AWS Well-Architected Framework
+        why: The Framework is the six-pillar method itself, with no place to define the site as a workload and record answers.
+    evidence:
+      - You define a workload, run the review on your account and get a report of issues, each with a best-practice fix.
+      - Questions can be marked not applicable and advice overridden.
+    takeaway: A question-led review of one workload that returns issues with best-practice fixes is the WA Tool, not an automated checker.
+    history: []
+    verified:
+      keyHash: 395a3052443f
+      fullHash: 1355eb3653fc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-cyfj4g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: reliability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The review notes that when one web server crashed during the rush, the site stayed broken until a staff member
+      noticed and restarted it by hand.
+      The proposed fix adds health monitoring and automated recovery.
+      Which Well-Architected pillar does this finding fall under?
+    options:
+      - id: a
+        text: Reliability
+        correct: true
+        why: Reliability plans how a workload recovers from failures, and automated recovery after a crash is exactly that.
+      - id: b
+        text: Security
+        why: Security covers least privilege and protecting data, and a crashed server with no attacker is not that issue.
+      - id: c
+        text: Cost Optimization
+        why: Cost Optimization lowers spend, while this fix is about bringing the site back after a failure.
+      - id: d
+        text: Sustainability
+        why: Sustainability cuts energy use and waste, and it does not plan how the site recovers from a crash.
+    evidence:
+      - "**Reliability**: planning recovery from failures and adapting as business and customer needs grow."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Planning how a workload recovers from failures, such as automated recovery after a crash, is the Reliability pillar.
+    history: []
+    verified:
+      keyHash: 734245ab59ca
+      fullHash: 0f977b4cd369
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yn16te
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: performance-efficiency-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 3
+    stem: >-
+      To deal with the slow pages, the review recommends checking whether each EC2 instance, the database and the Lambda
+      functions are sized to their real workloads, then checking again as demand moves.
+      The goal is faster pages, and the cafe keeps the same purchase options.
+      Which pillar does this recommendation follow?
+    options:
+      - id: a
+        text: Cost Optimization
+        why: Cost Optimization cuts spend through purchase options, budgets or deprovisioning, which this fix leaves alone.
+      - id: b
+        text: Reliability
+        why: Reliability plans recovery from failures, and here nothing fails, since resources are only the wrong size.
+      - id: c
+        text: Performance Efficiency
+        correct: true
+        why: Fitting each resource to its real workload and revisiting the fit as needs move is Performance Efficiency.
+      - id: d
+        text: Security
+        why: Security protects access and data, and resource sizing for speed does not touch either one.
+    evidence:
+      - "**Performance Efficiency**: sizing resources, such as an EC2 instance, to workload and memory needs, and revisiting that as needs move."
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+    takeaway: Fitting each resource's capacity to its real workload is Performance Efficiency, while cutting spend through purchase options is Cost Optimization.
+    history: []
+    verified:
+      keyHash: 6be8d5b189b5
+      fullHash: 1040d7f07227
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

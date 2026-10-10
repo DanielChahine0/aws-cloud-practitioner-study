@@ -1,0 +1,121 @@
+id: inc-016
+title: Stock counts stop flowing in the new VPC
+modules:
+  - 5
+concepts:
+  - route-tables
+  - cidr-blocks
+  - security-groups
+brief: >-
+  The cafe built a separate VPC for its new inventory system, with order servers in a public subnet and inventory servers in a private one.
+  Stock counts have stopped updating, and the kitchen lead wants them flowing again before the next delivery.
+steps:
+  - id: q-0mm8a3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: route-tables
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's order servers in a public subnet send stock updates to its inventory servers in a private subnet of the same VPC.
+      Which route in the private subnet's route table carries that traffic?
+    options:
+      - id: a
+        text: A local route for the VPC's own range
+        correct: true
+        why: Every route table starts with a local route that keeps traffic inside the VPC, so it carries updates between two subnets of one VPC.
+      - id: b
+        text: A 0.0.0.0/0 route to the internet gateway
+        why: A route to the internet gateway sends traffic out to the internet, and it would also make the inventory subnet public.
+      - id: c
+        text: A 0.0.0.0/0 route to a NAT gateway
+        why: A NAT gateway lets private instances call out to the internet, not receive updates from another subnet of the VPC.
+      - id: d
+        text: A route to the order subnet via a transit gateway
+        why: Transit Gateway links whole VPCs and on-premises networks, and two subnets of one VPC already reach each other without it.
+    evidence:
+      - Its Routes tab starts with a single local route that keeps traffic inside the VPC.
+      - A route table holds rules, called routes, that decide where network traffic is sent, and every subnet must be associated with one.
+    takeaway: A route table's local route keeps traffic inside the VPC, so its subnets reach each other with no extra routes.
+    history: []
+    verified:
+      keyHash: 633516ee6d30
+      fullHash: 310b6dea6570
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5zn11g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cidr-blocks
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's new VPC uses 10.0.0.0/16, and its order servers sit in a public subnet with 10.0.3.0/24.
+      The security group on the inventory servers must admit stock updates from that subnet only.
+      Which source should the security group rule name?
+    options:
+      - id: a
+        text: 10.0.3.0/24
+        correct: true
+        why: Security groups use CIDR notation for a traffic source, and 10.0.3.0/24 is exactly the order subnet's address range.
+      - id: b
+        text: 10.0.0.0/16
+        why: This range covers the whole VPC, so the rule would admit traffic from every subnet, not only the order subnet.
+      - id: c
+        text: 0.0.0.0/0
+        why: This range matches every address, so the rule would admit traffic from anywhere, including the internet.
+      - id: d
+        text: 10.0.1.0/24
+        why: This range belongs to a different subnet of the VPC, so it would miss the order servers entirely.
+    evidence:
+      - Next comes traffic filtering through security groups and network ACLs, and security groups reuse CIDR notation to define where traffic may come from or go to.
+      - Public-subnet-1 goes in us-east-1a with 10.0.3.0/24, and the second public subnet uses another AZ and 10.0.4.0/24.
+      - The demo uses the IPv4 range 10.0.0.0/16, so every resource gets a unique private address beginning with 10.0.
+    takeaway: Security group rules reuse CIDR notation to name the address ranges that traffic may come from or go to.
+    history: []
+    verified:
+      keyHash: 8fe0ff2a72e0
+      fullHash: 248b5291379e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-11dp77
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-groups
+    note: m05/subnets-security-groups-and-network-access-control-lists
+    task: "3.5"
+    level: 2
+    stem: >-
+      With stock counts flowing again, the cafe adds more inventory servers beside the first one, and each needs exactly the rules its security group already holds.
+      Which fact about security groups lets the cafe do this without writing the rules again?
+    options:
+      - id: a
+        text: A security group can be shared by several instances
+        correct: true
+        why: Several instances can use one security group, so the new servers can be given the group the first server already uses.
+      - id: b
+        text: A security group lets all outbound traffic go by default
+        why: This is true of a new security group, but it says nothing about giving several servers the same rules.
+      - id: c
+        text: A security group remembers requests and admits their replies
+        why: This stateful behavior is true, but it only handles replies and does not copy rules to the new servers.
+      - id: d
+        text: A security group holds allow rules only, with no deny rules
+        why: This is true of security groups, but the kind of rule they hold does not spread those rules to other servers.
+    evidence:
+      - Instances in one VPC can share a security group or each use their own.
+    takeaway: Several instances can share one security group, so identical rules need not be rebuilt for each new server.
+    history: []
+    verified:
+      keyHash: 726d1a2ab13d
+      fullHash: 2ef69140bee4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

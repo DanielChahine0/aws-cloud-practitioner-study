@@ -1,0 +1,116 @@
+id: inc-035
+title: The bank's review before the coffee bar contract
+modules: [10]
+concepts: [regulatory-compliance, aws-compliance-resources, aws-audit-manager]
+brief: A bank offers the cafe a contract to run the coffee bar in its head office, but the bank's risk team first wants to review how the cafe keeps its cloud apps in line with the rules that bind it.
+steps:
+  - id: q-hehmqe
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: regulatory-compliance
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The bank's risk team notices that the cafe's compliance checklist covers only its own apps and data, with no items for the servers, networks or buildings underneath.
+      What explains the gap?
+    options:
+      - id: a
+        text: AWS leaves data in the Region the cafe picks
+        why: AWS does keep data in the chosen Region, but where data sits says nothing about who answers for the servers and buildings.
+      - id: b
+        text: The cafe inherits AWS's audited infrastructure
+        correct: true
+        why: The cafe inherits AWS's audited data centers, networks and controls, so its own checklist only needs its workloads and data.
+      - id: c
+        text: AWS CloudTrail logs the API calls in the account
+        why: CloudTrail does record API calls, but a log of calls does not take the servers and buildings off the cafe's checklist.
+      - id: d
+        text: Many AWS services let the cafe turn on encryption
+        why: Built-in encryption protects the cafe's data, yet it is one of the cafe's own tasks and does not explain the missing infrastructure items.
+    evidence:
+      - You inherit AWS's best-practice data centers, networks, policies, processes and newest security controls.
+      - So you focus on your own workloads, helped by automated compliance and on-demand reports.
+    takeaway: On AWS a business inherits compliant infrastructure, so its own compliance work centers on its own workloads and data.
+    history: []
+    verified:
+      keyHash: 60d730bde988
+      fullHash: 49ffc40093a9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-wyn4sw
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-compliance-resources
+    note: m10/compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      To get ready for the bank's review, the cafe's operations lead wants AWS whitepapers that answer common regulatory questions, along with a checklist for auditing security.
+      Where should she look?
+    options:
+      - id: a
+        text: AWS Artifact Reports
+        why: Artifact Reports holds outside audit reports on AWS itself, not whitepapers with an auditing checklist.
+      - id: b
+        text: AWS Audit Manager
+        why: Audit Manager gathers evidence about the cafe's own controls, and it is no library of compliance whitepapers.
+      - id: c
+        text: AWS Artifact Agreements
+        why: Artifact Agreements is where the cafe reads and signs its agreements with AWS, not where whitepapers live.
+      - id: d
+        text: AWS Compliance Center
+        correct: true
+        why: The AWS Compliance Center, also called the Customer Compliance Center, holds whitepapers on key compliance questions and a checklist for auditing security.
+    evidence:
+      - Its whitepapers cover key compliance questions, a risk and compliance overview, and an auditing security checklist.
+      - Stories, key answers and the audit checklist live in the Customer Compliance Center, not Artifact.
+      - "The AWS Compliance portal (the video's AWS Compliance Center, the assessment's Customer Compliance Center) shows compliance-enabling services in one place."
+    takeaway: Compliance whitepapers and the auditing security checklist live in the Customer Compliance Center, not in AWS Artifact.
+    history: []
+    verified:
+      keyHash: bafb98df83ff
+      fullHash: 5a49273ecd78
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-s8pevp
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-audit-manager
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe uses AWS Audit Manager to gather proof for the bank's review.
+      The bank's auditors worry that the tool itself might change the resources it inspects and spoil the audit.
+      What answers their worry?
+    options:
+      - id: a
+        text: It collects evidence automatically across teams
+        why: Automated evidence collection is true of Audit Manager, but it says nothing about whether the tool changes what it inspects.
+      - id: b
+        text: It maps resources to prebuilt standard frameworks
+        why: Prebuilt frameworks are a real Audit Manager feature, yet mapping resources to a standard does not show the tool leaves them unchanged.
+      - id: c
+        text: It builds reports that are ready for auditors
+        why: Audit Manager does build audit-ready reports, but a report says nothing about whether gathering it altered the resources.
+      - id: d
+        text: It uses read-only access to what it audits
+        correct: true
+        why: Audit Manager reads the resources without changing them, and that read-only access protects the audit's integrity.
+    evidence:
+      - Read-only access protects audit integrity, and it supports internal risk assessments.
+      - Audit Manager is fully managed, audits usage continually and automates evidence collection across teams.
+    takeaway: AWS Audit Manager works with read-only access, so gathering audit evidence never changes the resources it checks.
+    history: []
+    verified:
+      keyHash: 09e74d87fb67
+      fullHash: b59f3e1c7235
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

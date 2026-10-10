@@ -1,0 +1,124 @@
+id: inc-029
+title: The developer's missing laptop
+modules:
+  - 9
+concepts:
+  - access-keys
+  - aws-secrets-manager
+  - iam-access-reports
+brief: >-
+  A developer's laptop went missing from the cafe's back office overnight. It held the scripts he runs against the
+  cafe's AWS account and a config file for the order database, and the manager wants the account locked down before the
+  morning rush.
+steps:
+  - id: q-gn3m0s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: access-keys
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The scripts on the missing laptop signed their AWS CLI requests with an access key pair for the developer's IAM
+      user.
+      The manager asks whether she can leave the pair alone and let it lapse by itself.
+      Which fact means she must act on it now?
+    options:
+      - id: a
+        text: Access keys are long-term credentials with no built-in expiry.
+        correct: true
+        why: Because the pair is long-term, a copy on the lost laptop keeps signing requests until the manager removes it.
+      - id: b
+        text: An access key pair is an access key ID plus a secret access key.
+        why: This describes what makes up the pair, but it says nothing about whether the pair stops working by itself.
+      - id: c
+        text: AWS advises never creating access keys for the root user.
+        why: This advice is about the root user, while the lost pair belongs to the developer's IAM user.
+      - id: d
+        text: An IAM role grants temporary permissions to whoever assumes it.
+        why: This is true of roles, but the scripts used an access key pair on an IAM user, not a role they assumed.
+    evidence:
+      - Access keys are long-term credentials, an access key ID plus a secret access key, that sign programmatic requests to the AWS CLI or API, and AWS advises temporary credentials from roles instead and never creating them for the root user.
+    takeaway: Access keys are long-term credentials, so a leaked pair keeps working until someone removes it.
+    history: []
+    verified:
+      keyHash: 9227d99a3432
+      fullHash: fc5477098943
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-w1veee
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-secrets-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: >-
+      A config file on the cafe's laptop held the order database password in plain text.
+      The manager wants scripts to fetch that password from one central store each time they run, and wants the
+      password changed on a regular schedule.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Key Management Service (AWS KMS)
+        why: AWS KMS creates and controls the cryptographic keys that lock data, not a store the scripts fetch a password from.
+      - id: b
+        text: AWS Systems Manager
+        why: Systems Manager gives one view of nodes and automates patching and user management, not storing and rotating the password.
+      - id: c
+        text: AWS Secrets Manager
+        correct: true
+        why: Secrets Manager stores, fetches and rotates secrets such as database credentials in one central place, as the manager wants.
+      - id: d
+        text: AWS IAM Identity Center
+        why: IAM Identity Center gives staff one sign-in across accounts and apps, and it does not hold or rotate database passwords.
+    evidence:
+      - "**AWS Secrets Manager** is the central place to store, fetch and rotate secrets such as passwords, database credentials and API keys."
+    takeaway: A database password that scripts fetch at run time and that must change on a schedule belongs in AWS Secrets Manager.
+    history: []
+    verified:
+      keyHash: 9e883f2dc8e9
+      fullHash: ebe9a1d1cf0c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-gdqzn6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-access-reports
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      Over the years, the developer's IAM user picked up far more permissions than his scripts ever called.
+      Before the user is switched back on, the manager wants to trim it down to the services and actions it has
+      really used.
+      What shows her which permissions to keep?
+    options:
+      - id: a
+        text: An IAM password policy
+        why: A password policy sets rules for IAM user passwords, such as length and reuse, and shows nothing about permission use.
+      - id: b
+        text: An AWS managed policy
+        why: An AWS managed policy is a prebuilt permission set that AWS maintains, and it records nothing about what a user called.
+      - id: c
+        text: An IAM permission boundary
+        why: A permission boundary caps the most permissions an identity can hold, but it does not show which ones were used.
+      - id: d
+        text: An IAM access report
+        correct: true
+        why: An access report shows last accessed information for the user, so she sees what it used and can remove the rest.
+    evidence:
+      - IAM access reports show last accessed information, meaning which services and actions each user, role or policy actually tried to use, so you can remove unused permissions and keep least privilege.
+    takeaway: IAM access reports show which services and actions an identity actually used, so its unused permissions can be removed.
+    history: []
+    verified:
+      keyHash: c60bcca2e2c9
+      fullHash: 2cc6f3a6d80c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

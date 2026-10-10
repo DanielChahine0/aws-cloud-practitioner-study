@@ -1,0 +1,115 @@
+id: inc-027
+title: The autumn app feature
+modules: [8]
+concepts: [amazon-bedrock, multimodal-generative-ai, amazon-q-developer]
+brief: The autumn menu launches soon, and the cafe's only programmer has been asked to add a feature to the ordering app that describes each new drink to customers before release day.
+steps:
+  - id: q-6hbp9t
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: amazon-bedrock
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's developer wants the ordering app to call a foundation model that writes drink descriptions for customers.
+      She wants a secure, private service built for production apps, with AWS managing the models.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Q Business
+        why: Q Business is an assistant for the cafe's staff, not a model service to build into a customer app.
+      - id: b
+        text: Amazon Personalize
+        why: Personalize recommends items from past activity, and it does not write new descriptions.
+      - id: c
+        text: Amazon Bedrock
+        correct: true
+        why: Bedrock offers managed foundation models through one API for secure, private production apps.
+      - id: d
+        text: Amazon Lex
+        why: Lex builds chat interfaces that understand requests, but it does not supply models that write text.
+    evidence:
+      - Managed FMs from Amazon and startups (Claude, Stable Diffusion) via one API; test, tune, integrate
+      - Secure, private, scalable production apps; text and image output; agents on company data
+    takeaway: Building a secure production app on managed foundation models points to Amazon Bedrock.
+    history: []
+    verified:
+      keyHash: a27444c135ef
+      fullHash: d98884fa69c8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6pwnvp
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: multimodal-generative-ai
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      A feature in the cafe's app uses a generative AI model to write drink descriptions.
+      Marketing wants that one model to also create a matching picture of each drink.
+      What kind of model does the feature need?
+    options:
+      - id: a
+        text: A fine-tuned model
+        why: Fine-tuning adapts a model with the cafe's own data, but it does not add the ability to make images.
+      - id: b
+        text: A multimodal model
+        correct: true
+        why: A multimodal model generates several content types, so one model can return both text and images.
+      - id: c
+        text: A large language model
+        why: An LLM is trained on text for human language, so it writes descriptions but does not draw pictures.
+      - id: d
+        text: A classic ML model
+        why: A classic ML model handles one narrow job, such as a forecast, and does not create images.
+    evidence:
+      - "**Multimodal**: Generating several content types."
+    takeaway: A model that creates more than one type of content, such as text and images, is multimodal.
+    history: []
+    verified:
+      keyHash: 719117d361bc
+      fullHash: 5b1c00b66cbb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qmty87
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: amazon-q-developer
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      Before release day, the programmer who builds the cafe's app wants an assistant inside her code editor that reviews her Python code for security problems and suggests fixes.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SageMaker JumpStart
+        why: JumpStart is a hub of models to fine-tune and deploy, not an assistant that reviews code.
+      - id: b
+        text: Amazon Q Business
+        why: Q Business answers staff questions from company repositories, and it is not a coding assistant.
+      - id: c
+        text: Amazon Bedrock
+        why: Bedrock offers foundation models to build apps with, not a ready assistant inside her editor.
+      - id: d
+        text: Amazon Q Developer
+        correct: true
+        why: Q Developer works inside IDEs, suggesting code and helping with security and code reviews.
+    evidence:
+      - Suggests code, even whole functions and logical blocks, in multiple IDEs; languages include C#, Java, JavaScript, Python, TypeScript
+      - Faster coding, reliability, security, code reviews
+    takeaway: A coding assistant in the IDE that helps with security and code reviews points to Amazon Q Developer.
+    history: []
+    verified:
+      keyHash: 2b0b2e288cd4
+      fullHash: fe316d8b9955
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

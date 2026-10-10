@@ -1,0 +1,120 @@
+id: inc-046
+title: Catering orders swamp the shop phone
+modules: [13]
+concepts: [aws-amplify, amazon-connect, amazon-ses]
+brief: >-
+  The cafe's new catering service is a hit. Customers ring the one shop phone all day, orders get scribbled on paper,
+  and nobody remembers to confirm them. The owner wants the whole catering flow online before the party season.
+steps:
+  - id: q-2rbzkr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-amplify
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      A freelance developer will build the cafe's catering order site.
+      Customers will sign in, browse platters and place orders, so the site needs a frontend, a backend API, storage and
+      hosting, all set up with little infrastructure work.
+      Which service fits the whole build?
+    options:
+      - id: a
+        text: AWS AppSync
+        why: AppSync builds a GraphQL API over data sources, which covers only one piece of this full-stack site.
+      - id: b
+        text: AWS Amplify
+        correct: true
+        why: Amplify builds, deploys and runs full-stack web apps, adding sign-in, APIs, storage and hosting with little setup.
+      - id: c
+        text: AWS CodeBuild
+        why: CodeBuild compiles and tests code, and it gives the site no sign-in, storage or hosting of its own.
+      - id: d
+        text: AWS X-Ray
+        why: X-Ray traces requests in an app that already runs, and it does not help build the site in the first place.
+    evidence:
+      - "**AWS Amplify**: speeds up building, deploying and running secure, scalable full-stack (frontend plus backend) web and mobile apps, adding sign-in, APIs, storage and hosting with little infrastructure work."
+      - AppSync just builds GraphQL data APIs, whereas Amplify is the broad full-stack web and mobile toolkit.
+    takeaway: For a whole full-stack web or mobile app built with little setup, choose Amplify, since AppSync covers only the API.
+    history: []
+    verified:
+      keyHash: ac2489b973ed
+      fullHash: 5b9f6ed77814
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-xzq99c
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-connect
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      On busy days, callers to the catering line wait on hold while one person answers and the other staff never hear the phone.
+      The owner wants the line run in the cloud, each call sent to whichever staff member is free, and reports on call
+      volume to plan shifts.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SES
+        why: SES sends email from applications, and it cannot answer phone calls or route them to free staff.
+      - id: b
+        text: Amazon WorkSpaces
+        why: WorkSpaces gives staff a cloud desktop, and it does not take customer calls or report on them.
+      - id: c
+        text: Amazon Simple Notification Service (Amazon SNS)
+        why: SNS pushes messages out to subscribers, and it does not queue incoming calls or route them to staff.
+      - id: d
+        text: Amazon Connect
+        correct: true
+        why: Connect is a cloud contact center that routes each call to a free agent and gives analytics on call activity.
+    evidence:
+      - "**Amazon Connect**: AI-powered cloud contact center for calls and chats, with call routing, recording, analytics and AWS integrations."
+      - Calls, routing and analytics mean Amazon Connect; SES is email only and WorkSpaces is a desktop.
+    takeaway: Incoming calls that must reach a free staff member, with reports on call volume, point to Amazon Connect.
+    history: []
+    verified:
+      keyHash: 2c985fe13637
+      fullHash: ac1377ad177d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rmbqjw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ses
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      Each catering order should make the order site send a confirmation email, plus a reminder the day before the event.
+      Order volume swings with the seasons, and the owner wants to pay only for the mail actually sent.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Connect
+        why: Connect handles calls and chats in a contact center, and it is not the way an app sends its own email.
+      - id: b
+        text: Amazon SES
+        correct: true
+        why: SES lets the site send transactional email itself, and its pay-as-you-go pricing follows the seasonal volume.
+      - id: c
+        text: AWS AppSync
+        why: AppSync gives frontends a GraphQL API over data, and it does not deliver any email to customers.
+      - id: d
+        text: Amazon WorkSpaces
+        why: WorkSpaces gives staff a cloud desktop, which would leave someone sending each email by hand.
+    evidence:
+      - Amazon Simple Email Service (Amazon SES) sends transactional, marketing and bulk email straight from your applications, with pay-as-you-go pricing.
+    takeaway: Email that an app sends on its own, such as order confirmations, at pay-as-you-go prices points to Amazon SES.
+    history: []
+    verified:
+      keyHash: d3bd46816201
+      fullHash: e6f5419c9971
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

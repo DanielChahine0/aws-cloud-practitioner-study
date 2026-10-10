@@ -1,0 +1,125 @@
+id: inc-021
+title: The menu that stalled at opening
+modules: [7]
+concepts:
+  - in-memory-caching
+  - caching-layer
+  - amazon-elasticache
+brief: >-
+  Every morning at opening, the cafe's online menu takes several seconds to load, and the Amazon RDS database behind it is straining.
+  The manager wants the menu quick again before the weekend promotion.
+steps:
+  - id: q-fkn8j3
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: in-memory-caching
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The team plans to put an in-memory cache in front of the Amazon RDS database that serves the menu.
+      Which facts explain why this will make the menu load faster?
+    options:
+      - id: a
+        text: RAM answers reads hundreds to thousands of times faster than disk
+        correct: true
+        why: Serving the menu data from RAM removes the slow disk reads behind each request, which is the speed gain the team wants.
+      - id: b
+        text: Query results asked for again and again are typical cache contents
+        correct: true
+        why: The menu query repeats all morning, and repeated query results are exactly what a cache serves from fast memory.
+      - id: c
+        text: A cache lacks lasting storage, so it works beside the database
+        why: This is true, but it explains why the database stays in place, not why the menu loads faster.
+      - id: d
+        text: ElastiCache encrypts data in transit between the app and the cache
+        why: Encryption in transit protects the data on the network, but it does nothing to make the menu load faster.
+      - id: e
+        text: ElastiCache can promote a replica node when the primary node fails
+        why: Promoting a replica keeps the cache available after a failure, which is not what slows the menu at opening.
+    evidence:
+      - "A cache keeps hot data in RAM, which reads hundreds to thousands of times faster than disk."
+      - "Typical contents: sessions, API responses, query results, anything requested repeatedly."
+      - "Lacking a database's lasting storage and rich queries, a cache complements the database, never replaces it."
+    takeaway: An in-memory cache speeds reads because RAM beats disk, and it holds repeatedly requested data such as query results.
+    history: []
+    verified:
+      keyHash: 9e4df34c50f6
+      fullHash: b03b46ca757e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-v669rw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: caching-layer
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      With a cache now sitting next to the database, a customer asks for the brunch menu.
+      The app looks in the cache and finds no copy, since nobody has asked for it since the cache was cleared.
+      What does the app do next?
+    options:
+      - id: a
+        text: Read the brunch menu from Amazon RDS
+        correct: true
+        why: On a miss the app falls back to the database, so reading the menu from RDS is the first thing it does once the cache comes up empty.
+      - id: b
+        text: Return a cached copy of the menu at once
+        why: Returning a copy at once is what happens on a hit, and here the cache holds no copy of the brunch menu.
+      - id: c
+        text: Store the brunch menu in the cache
+        why: The app stores the menu in the cache only after it has read the menu from RDS, so this step comes later.
+      - id: d
+        text: Send the brunch menu to the customer
+        why: The reply goes out last, once the menu has been read from RDS and placed in the cache.
+    evidence:
+      - "The app tries the cache first and returns any hit at once."
+      - "On a miss, it reads RDS, caches the result and replies, so the next request hits."
+    takeaway: On a cache miss the app reads the database, stores the result in the cache and replies, so later requests hit.
+    history: []
+    verified:
+      keyHash: 2c389f6cbb19
+      fullHash: 8deb2232b2f6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-9fekp6
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-elasticache
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The team runs the menu cache on Amazon ElastiCache with nodes it chose itself, and the promotion is expected to bring far more menu reads.
+      Which step lets the cache keep up with the extra reads?
+    options:
+      - id: a
+        text: Turn on TLS between the app and the cache
+        why: TLS protects the menu data as it crosses the network, but it adds no capacity for the extra reads.
+      - id: b
+        text: Add more nodes to the existing cache
+        correct: true
+        why: With a node-based ElastiCache cache, the team grows capacity by adding nodes as demand rises, which is how it keeps up with the promotion.
+      - id: c
+        text: Switch the cache engine to Memcached
+        why: Engine choice keeps existing tools working, but changing engines adds no capacity for the extra reads.
+      - id: d
+        text: Move Amazon RDS to a smaller instance
+        why: A cache can let the database run on a smaller instance to save money, but shrinking RDS does nothing to grow the cache.
+    evidence:
+      - "You resize the cache with demand, or let the serverless option scale itself, while AWS runs the infrastructure."
+      - "Fully managed caching compatible with Redis OSS, Valkey and Memcached, so existing tools keep working."
+      - "Reading from the cache can let you run smaller, cheaper database instances."
+    takeaway: A node-based ElastiCache cache keeps up with rising demand when you add nodes, while AWS runs the infrastructure underneath.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 is the only option that repeats the stem's 'nodes' (and 'more'), which points at the key. Option 2 acts on Amazon RDS rather than the cache, so it is outside the key's category and easy to rule out."

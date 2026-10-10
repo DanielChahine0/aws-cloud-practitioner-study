@@ -1,0 +1,122 @@
+id: inc-020
+title: Video files go missing in the training kitchen
+modules:
+  - 6
+concepts:
+  - ec2-instance-store
+  - efs-storage-classes
+  - efs-lifecycle-management
+brief: >-
+  The cafe's new training kitchen films recipe videos, and a small fleet of Linux EC2 instances edits them.
+  Editors complain that a file saved on one instance never shows up on the others, and the manager wants it sorted before the next course starts.
+steps:
+  - id: q-2cpknb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-store
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      Each editing instance saves its work to its own EC2 instance store.
+      Why can't the other instances open those files?
+    options:
+      - id: a
+        text: Instance store serves only the instance on its host
+        correct: true
+        why: Instance store is disk attached to one instance's host, so no other instance can reach the files on it.
+      - id: b
+        text: Instance store is erased whenever its instance stops
+        why: This is true, but the editing instances are running, so it does not explain why the others cannot open the files now.
+      - id: c
+        text: Instance store comes free with many instance types
+        why: This is true, but the price of the disk has nothing to do with which instances can reach the files on it.
+      - id: d
+        text: Instance store gives very low latency and high I/O
+        why: This is true, but speed on the host does not decide whether another instance can open the files.
+    evidence:
+      - It serves one instance only and cannot be shared the way Amazon EFS can.
+      - Instance store is disk physically attached to the instance's host, not a stand-alone service, and is the default storage on some instance types.
+      - "Benefits: included with many instance types at no extra cost, with very low latency and high I/O because it sits on the host."
+    takeaway: Instance store is attached to one instance's host, so its files cannot be shared with other instances.
+    history: []
+    verified:
+      keyHash: 029f19647a19
+      fullHash: c5c44355bbb8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7d3b3z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: efs-storage-classes
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe moves the video files to Amazon EFS, and the editing instances are spread across Availability Zones.
+      Editors open the files all day, and the manager wants them reachable even if one zone fails.
+      Which EFS storage class fits?
+    options:
+      - id: a
+        text: EFS Standard
+        correct: true
+        why: It replicates files across Availability Zones and suits files opened all day, so one zone failing does not cut access.
+      - id: b
+        text: EFS One Zone
+        why: It keeps files in a single Availability Zone, so losing that zone could cut the editors off.
+      - id: c
+        text: EFS One Zone-IA
+        why: It sits in a single zone and is priced for rare reads, which fails both of the manager's needs.
+      - id: d
+        text: EFS Archive
+        why: It is meant for cold data read a few times a year or less, not files edited every day.
+    evidence:
+      - "EFS Standard and Standard-IA: Multi-AZ, with top durability and availability, at a higher price."
+      - Standard classes replicate across Availability Zones in a Region, so one zone failing does not cut access.
+    takeaway: Files used all day that must survive a zone failure belong in EFS Standard, which spans Availability Zones.
+    history: []
+    verified:
+      keyHash: 0f478f234f06
+      fullHash: 25daec865628
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yxxktf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: efs-lifecycle-management
+    note: m06/amazon-elastic-file-system-amazon-efs
+    task: "3.6"
+    level: 2
+    stem: >-
+      Under the default lifecycle policy, last year's recipe videos have moved out of EFS Standard into cheaper classes.
+      The kitchen now reuses some of them, and the manager wants any video that someone opens to sit in EFS Standard again.
+      What should the cafe do?
+    options:
+      - id: a
+        text: Add the rule that acts on a file's first access
+        correct: true
+        why: This optional rule returns a file to Standard once it is read in IA or Archive, which is what the manager wants.
+      - id: b
+        text: Leave the default policy, which does this already
+        why: By default a file read in IA or Archive stays where it is, so the default policy alone will not move it back.
+      - id: c
+        text: Shorten the idle period before files move to IA
+        why: A shorter idle period only moves files out of Standard sooner and never brings an opened one back.
+      - id: d
+        text: Switch the file system to an EFS One Zone class
+        why: One Zone classes change how resilient and cheap storage is, not whether opened files return to Standard.
+    evidence:
+      - An optional rule returns files to Standard when read in IA or Archive, but by default they stay put.
+    takeaway: EFS lifecycle management can return files to Standard when they are read, but only once the optional rule is turned on.
+    history: []
+    verified:
+      keyHash: 58fc725b1cca
+      fullHash: b0c68f1493ca
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

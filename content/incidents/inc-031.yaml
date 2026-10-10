@@ -1,0 +1,121 @@
+id: inc-031
+title: Loyalty data in a forgotten bucket
+modules:
+  - 9
+concepts:
+  - amazon-macie
+  - encryption-at-rest
+  - aws-kms
+brief: >-
+  A former analyst exported loyalty data to Amazon S3 for a one-off report and then left the cafe. Nobody knows which
+  buckets the files landed in or what they hold, and the owner wants the data found and locked down before an auditor
+  visits.
+steps:
+  - id: q-ny2rn2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-macie
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      Before the auditor visits, the cafe's cloud team turns on Amazon Macie for the cafe's S3 buckets.
+      What does Macie's work give the owner for the compliance review?
+    options:
+      - id: a
+        text: A ranked list of software flaws in the cafe's workloads
+        why: Ranking software flaws in workloads is the job of Amazon Inspector, while Macie looks at the data stored in S3.
+      - id: b
+        text: Monitored findings on where sensitive data is stored
+        correct: true
+        why: Macie finds and monitors sensitive data in S3, and those findings support security posture reviews and compliance.
+      - id: c
+        text: A history of resource settings checked against rules
+        why: Recording resource settings and checking them against rules is the job of AWS Config, not of Macie.
+      - id: d
+        text: Alerts on threats seen in account and network activity
+        why: Watching account and network activity for threats is the job of Amazon GuardDuty, not of Macie.
+    evidence:
+      - "**Amazon Macie**: uses machine learning (ML) and automation to find and monitor sensitive data at rest in S3, aiding security posture reviews and compliance."
+    takeaway: Amazon Macie's findings on sensitive data in S3 feed the security posture and compliance reviews an auditor looks at.
+    history: []
+    verified:
+      keyHash: 3155002988a2
+      fullHash: 651447f0b9ce
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-g79wgz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: encryption-at-rest
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The analyst created a new S3 bucket for the export and never changed its encryption settings.
+      What protects the files while they sit in that bucket?
+    options:
+      - id: a
+        text: Encryption in transit over an SSL/TLS link
+        why: SSL/TLS protects the files only while they move to or from the bucket, not while they sit in it.
+      - id: b
+        text: MFA on the accounts that sign in
+        why: MFA guards who can sign in, and it does nothing to make the stored files themselves unreadable.
+      - id: c
+        text: Encryption at rest applied by default
+        correct: true
+        why: New S3 buckets have encryption configured, so the uploaded files are encrypted at rest with no setup.
+      - id: d
+        text: Hashing and salting, which are one-way
+        why: Hashing is a one-way step used for stored passwords, and S3 does not apply it to uploads, which must stay readable.
+    evidence:
+      - "**Amazon S3**: new buckets have encryption configured, and uploads are encrypted at rest automatically."
+    takeaway: Files uploaded to a new S3 bucket are encrypted at rest automatically, with no setup needed.
+    history: []
+    verified:
+      keyHash: 147691db240d
+      fullHash: 83f56ca12862
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-byfvhr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-kms
+    note: m09/protecting-data
+    task: "2.2"
+    level: 3
+    stem: >-
+      The owner wants the cafe to control the cryptographic material that locks the loyalty files.
+      Only the finance team's IAM role may use it, it must never leave the service that holds it,
+      and the cafe must be able to switch it off for a while.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Certificate Manager
+        why: ACM manages SSL/TLS certificates for encrypted connections, not the keys that lock stored files.
+      - id: b
+        text: AWS Key Management Service
+        correct: true
+        why: AWS KMS creates and controls keys, lets the cafe choose which IAM roles use them, keeps them inside, and can disable one for a while.
+      - id: c
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates secrets such as passwords, and it does not create and control encryption keys.
+      - id: d
+        text: Amazon Macie
+        why: Macie finds and monitors sensitive data in S3, and it does not create or control the keys that lock it.
+    evidence:
+      - "**AWS Key Management Service (AWS KMS)**: creates and controls cryptographic keys, the random digit strings that lock and unlock data."
+      - You set which IAM users and roles may manage keys and where they are used, keys never leave KMS, and a key can be disabled temporarily.
+    takeaway: AWS KMS creates and controls encryption keys, limits which IAM roles use them, never lets them leave and can disable them for a while.
+    history: []
+    verified:
+      keyHash: 018a5cac893f
+      fullHash: 37454977ca89
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

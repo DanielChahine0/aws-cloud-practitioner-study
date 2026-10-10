@@ -1,0 +1,152 @@
+id: inc-044
+title: The move plan stalls
+modules: [12]
+concepts: [aws-caf-people-perspective, migration-strategy-replatform, migration-strategy-repurchase, migration-strategy-retain]
+brief: Halfway through planning its move to AWS, the cafe chain hits trouble. Baristas are uneasy about new systems, and the team still has not settled what to do with the loyalty database, the staff rota software and the payroll app.
+steps:
+  - id: q-z0k592
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-caf-people-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 2
+    stem: >-
+      Shop managers report that their baristas fear the new cloud tools, and no one has planned training or decided which roles will change.
+      Which AWS CAF perspective should lead this work?
+    options:
+      - id: a
+        text: Business
+        why: Business ties IT spending to business results and builds the business case, not staff training plans.
+      - id: b
+        text: Governance
+        why: Governance aligns IT with business strategy and measures cloud investments, not how staff take the change.
+      - id: c
+        text: People
+        correct: true
+        why: People owns change management across the organization and reviews roles, skills and gaps to set training.
+      - id: d
+        text: Platform
+        why: Platform designs the target architecture for workloads, and it does not plan staff training or role changes.
+    evidence:
+      - Organization-wide change management; review structures, roles, skills and gaps to set training, staffing and org priorities
+      - People owns change management; Platform owns architecture and moving workloads.
+    takeaway: Staff fears, training and role changes during a cloud move belong to the AWS CAF People perspective and its change management.
+    history: []
+    verified:
+      keyHash: dba6bb5ae3c1
+      fullHash: d8d9a34f5e7b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-pe0b3q
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: migration-strategy-replatform
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe's loyalty database runs on MySQL on its own server.
+      The database team wants to move it onto Amazon Aurora for better performance, without writing new code or changing the app's design.
+      Which strategy is this?
+    options:
+      - id: a
+        text: Rehost
+        why: Rehost moves the database exactly as it is, while switching to Aurora is a cloud optimization.
+      - id: b
+        text: Refactor
+        why: Refactor writes new code with cloud-built features, which this team is avoiding.
+      - id: c
+        text: Relocate
+        why: Relocate shifts existing VMs or containers to a cloud host, with no move onto a managed database.
+      - id: d
+        text: Replatform
+        correct: true
+        why: Replatform makes a few cloud optimizations for a real gain, such as MySQL onto Aurora, with no new code.
+    evidence:
+      - A few cloud optimizations for a tangible gain, without new code or architecture changes
+      - MySQL to Amazon RDS unchanged, or to Amazon Aurora, helping the database team and performance
+    takeaway: Moving a MySQL database onto Aurora for a gain, with no new code, is replatform, also called lift, tinker and shift.
+    history: []
+    verified:
+      keyHash: e1faf9c08ef3
+      fullHash: 9c94f7fa2ec6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-q46mea
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: migration-strategy-repurchase
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe will drop the licensed staff rota software it hosts itself and sign up for a SaaS rota tool from a new vendor.
+      What should the owner expect from this choice?
+    options:
+      - id: a
+        text: It may have the team rewrite the rota code for cloud-built features
+        why: Rewriting code for cloud features is refactor, and a bought SaaS tool asks no code from the cafe.
+      - id: b
+        text: It may keep paying for the old license and server for now
+        why: Keeping the old software and its license in place is retain, but this cafe is dropping that license.
+      - id: c
+        text: It may take staff a while to adopt and cost more at the start
+        correct: true
+        why: A new SaaS package from a new vendor can take staff a while to adopt and can cost more upfront.
+      - id: d
+        text: It may carry the old software and its license over to AWS unchanged
+        why: Moving the same software over unchanged is rehost, while this cafe swaps it for a different product.
+    evidence:
+      - A database license dropped for cloud databases, or a CRM replaced by new sales force software; the new package can be slow to adopt and cost more upfront
+      - "**Repurchase**: Replacing licensed software with SaaS."
+    takeaway: Repurchase swaps licensed software for SaaS, often from a new vendor, and the new package can be slow to adopt and cost more upfront.
+    history: []
+    verified:
+      keyHash: 6fc1404976da
+      fullHash: c926900f5fdf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-9fqp6x
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: migration-strategy-retain
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe's payroll app is still used every week, but it will be shut down a few months from now when its replacement arrives.
+      The team sees no business sense in moving it first.
+      Which strategy fits the app for now?
+    options:
+      - id: a
+        text: Retire
+        why: Retire switches off apps no longer needed, but payroll still runs every week until its replacement arrives.
+      - id: b
+        text: Retain
+        correct: true
+        why: Retain keeps an app in place for now, which suits one that is months from being shut down.
+      - id: c
+        text: Rehost
+        why: Rehost moves the app to AWS unchanged, effort the team sees no business sense in spending here.
+      - id: d
+        text: Relocate
+        why: Relocate moves existing VMs or containers to a cloud host, but the team does not want to move this app.
+    evidence:
+      - "Business-critical apps stay in the source environment for now: those needing major refactoring, work that can wait, or apps months from deprecation"
+      - Migrate only what makes business sense; retire these in place later
+    takeaway: An app months from being shut down stays where it is under retain and is retired in place later.
+    history: []
+    verified:
+      keyHash: 4fbd6defac5e
+      fullHash: ec864d9732ed
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

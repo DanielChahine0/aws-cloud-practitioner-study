@@ -1,0 +1,121 @@
+id: inc-043
+title: Files, a flour supplier and a far roastery
+modules: [12]
+concepts: [aws-datasync, aws-transfer-family, offline-data-transfer]
+brief: The cafe is moving its file data to AWS. The head office has a big file share, the flour supplier still trades files the old-fashioned way, and years of roasting records sit at a roastery in the hills.
+steps:
+  - id: q-hwgazv
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-datasync
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe has just added an AWS Direct Connect link from its head office to AWS.
+      The IT lead expects the link alone to copy the office file share into Amazon S3 on a schedule and report on each run.
+      Which service does the cafe still need to manage the move?
+    options:
+      - id: a
+        text: AWS Transfer Family
+        why: Transfer Family runs protocol-based file exchange such as SFTP, not scheduled bulk copies with run reports.
+      - id: b
+        text: AWS Snow Family
+        why: Snow Family ships data on a device, which a site with a fast private link to AWS does not need.
+      - id: c
+        text: AWS Database Migration Service (AWS DMS)
+        why: AWS DMS moves databases, and this job is a file share headed for Amazon S3.
+      - id: d
+        text: AWS DataSync
+        correct: true
+        why: Direct Connect is only the path, and DataSync schedules, runs and reports on the copy over it.
+    evidence:
+      - It is only the path; DataSync still manages the move.
+      - It handles instances, encryption and network tuning, and lets you throttle, schedule, filter and report on tasks.
+    takeaway: Direct Connect only supplies the path, and AWS DataSync still schedules, runs and reports on the data move.
+    history: []
+    verified:
+      keyHash: 603213c04589
+      fullHash: b492dc6fb5ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ffrj9r
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-transfer-family
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's flour supplier sends delivery notes over FTPS and wants to pick up the weekly order files that the cafe keeps in Amazon EFS.
+      The cafe would rather avoid running its own file server for this.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS DataSync
+        why: DataSync moves the cafe's own storage into AWS, and it gives the supplier no FTPS endpoint to use.
+      - id: b
+        text: AWS Transfer Family
+        correct: true
+        why: Transfer Family runs managed FTPS transfers in and out of Amazon EFS, so no file server is needed.
+      - id: c
+        text: AWS Direct Connect
+        why: Direct Connect is a private link for the cafe's network, not a managed file exchange for a supplier.
+      - id: d
+        text: AWS Snow Family
+        why: Snow Family ships data on a device, which does not suit a weekly file exchange with a supplier.
+    evidence:
+      - Fully managed file transfer in and out of Amazon S3 and Amazon EFS over FTP, SFTP, FTPS and other transfer protocols.
+      - It adds encryption and authentication with less infrastructure to manage.
+    takeaway: Partners that trade files with Amazon S3 or Amazon EFS over FTP, SFTP or FTPS point to AWS Transfer Family.
+    history: []
+    verified:
+      keyHash: 8afb2939a6b8
+      fullHash: ab92c9793727
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5kaafn
+    version: 1
+    status: live
+    pool: practice
+    type: multi
+    select: 2
+    concept: offline-data-transfer
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe checks each of its sites before moving data to AWS.
+      Which findings point to shipping the data on a physical device instead of sending it over the network?
+    options:
+      - id: a
+        text: The head office reaches AWS over a private Direct Connect line
+        why: A private link gives the head office a network path to AWS, so its data can move online.
+      - id: b
+        text: The roastery has neither internet service nor a Direct Connect line
+        correct: true
+        why: With no network path at all, the roastery's records can only reach AWS on a device.
+      - id: c
+        text: The flour supplier sends its delivery notes to the cafe only over FTPS
+        why: A transfer protocol is an online need that a managed file exchange serves, not a reason to ship a device.
+      - id: d
+        text: The back office photo archive would take months over its thin line
+        correct: true
+        why: When a thin line would take months, a device delivers the archive to AWS sooner.
+      - id: e
+        text: The sales files must reach AWS every night, with no end date planned
+        why: A nightly copy that never ends is an ongoing online need, which a device does not fit.
+    evidence:
+      - "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
+      - Being offline, they do not fit online transfer needs.
+    takeaway: No connectivity, thin bandwidth or petabytes that ship faster than they upload point to offline transfer on a device.
+    history: []
+    verified:
+      keyHash: 7bfd44d4af4b
+      fullHash: 724f3711b809
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

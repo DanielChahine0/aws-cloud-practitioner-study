@@ -1,0 +1,124 @@
+id: inc-047
+title: Opening the central bakery
+modules: [13]
+concepts: [amazon-workspaces, amazon-appstream-2-0, aws-iot-core]
+brief: >-
+  The cafe opens a central bakery across town to bake for every location. The new team needs its computers and
+  software sorted out before the first shift, and the head baker wants to keep an eye on the ovens without standing
+  next to them all night.
+steps:
+  - id: q-czg016
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-workspaces
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 3
+    stem: >-
+      Instead of buying new office PCs for the bakery's planners, the owner wants virtual desktops that AWS manages.
+      The planners should use them just like an office PC, reach them securely from anywhere, and the setup should be cheap
+      and easy to run.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon AppStream 2.0
+        why: AppStream 2.0 streams single applications to a browser, not a complete desktop to work in all day.
+      - id: b
+        text: Amazon WorkSpaces
+        correct: true
+        why: WorkSpaces delivers managed, persistent cloud desktops that the planners use like office PCs from anywhere.
+      - id: c
+        text: Amazon WorkSpaces Secure Browser
+        why: Secure Browser is a managed browser for web-only work, not a full desktop that runs desktop programs.
+      - id: d
+        text: Amazon Connect
+        why: Connect runs a cloud contact center for calls and chats, and it gives the planners no desktop at all.
+    evidence:
+      - "**Amazon WorkSpaces**: fully managed virtual desktop infrastructure, a complete persistent desktop staff reach securely from anywhere and use like an office PC, cost-efficient and easy to run."
+      - WorkSpaces gives a full desktop, AppStream 2.0 streams apps (the course's pick for staff SaaS access) and Secure Browser suits web-only work.
+    takeaway: Managed cloud desktops that staff use like office PCs from anywhere point to Amazon WorkSpaces.
+    history: []
+    verified:
+      keyHash: 81159d3cd06e
+      fullHash: af44f12226e4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-seebgj
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-appstream-2-0
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe will use Amazon AppStream 2.0 to bring a heavy desktop recipe-scaling program to the bakers at its new
+      central bakery, who work on low-powered shared tablets in the kitchen.
+      Which outcomes can the owner expect?
+    options:
+      - id: a
+        text: Bakers open the program in a browser on the tablets
+        correct: true
+        why: AppStream 2.0 streams the desktop program to a browser, so the bakers open it right on the tablets.
+      - id: b
+        text: Each baker gets a full desktop that keeps their files
+        why: A full persistent desktop is what WorkSpaces gives, while AppStream 2.0 streams just the program.
+      - id: c
+        text: The program is rebuilt as a web app before launch
+        why: AppStream 2.0 can deliver a desktop app as SaaS with no code changes, so no rebuild is needed.
+      - id: d
+        text: Nothing is installed on the shared tablets
+        correct: true
+        why: The program runs in AWS and reaches the tablets as a stream, so nothing is installed on them.
+      - id: e
+        text: Bakers get a browser built for web-only tools
+        why: A web-only browser is what WorkSpaces Secure Browser gives, while AppStream 2.0 streams the desktop program itself.
+    evidence:
+      - "**Amazon AppStream 2.0**: streams desktop and SaaS apps (even desktop apps made SaaS with no code changes) to a browser on any device, so nothing is installed and modest hardware suffices."
+      - WorkSpaces gives a full desktop, AppStream 2.0 streams apps (the course's pick for staff SaaS access) and Secure Browser suits web-only work.
+    takeaway: AppStream 2.0 streams a desktop app to a browser on any device, with nothing installed and no code changes.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 4 are the only two that name the tablets, which marks them as the pair.)"
+  - id: q-ahz7ex
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-iot-core
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The bakery's new ovens carry temperature sensors and software that can send readings online and accept setting changes.
+      The head baker wants to watch and adjust them from the office, and the owner insists that each oven and the cloud
+      prove who they are to each other and that the data stays encrypted end to end.
+      Which service links the ovens to the cafe's cloud apps?
+    options:
+      - id: a
+        text: AWS AppSync
+        why: AppSync merges data sources behind a GraphQL API for frontends, and it does not connect or authenticate devices.
+      - id: b
+        text: Amazon Simple Notification Service (Amazon SNS)
+        why: SNS pushes messages to subscribers, and it does not register physical devices or authenticate them mutually.
+      - id: c
+        text: AWS IoT Core
+        correct: true
+        why: IoT Core securely links sensor-fitted devices to cloud apps, with mutual authentication and end-to-end encryption.
+      - id: d
+        text: Amazon Connect
+        why: Connect runs a contact center for calls and chats, and it has no role in linking ovens to cloud apps.
+    evidence:
+      - "**AWS IoT Core**: managed service that securely links devices to cloud apps and simplifies ingesting, processing and acting on their data, using mutual authentication, end-to-end encryption and a choice of protocols."
+    takeaway: Sensor-fitted devices that must connect securely to cloud apps, with mutual authentication and encryption, point to AWS IoT Core.
+    history: []
+    verified:
+      keyHash: 94765351d409
+      fullHash: 14e74abe0678
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

@@ -1,0 +1,114 @@
+id: inc-010
+title: Launching the EU bean shop
+modules: [ 4 ]
+concepts: [ region-selection, regional-pricing, gdpr ]
+brief: >-
+  The cafe plans an online shop selling its roasted beans to shoppers across the EU.
+  Before launch, the owner has to pick a Region for the shop, set a hosting budget and make sure the sign-up form follows the law.
+steps:
+  - id: q-46yx6k
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: region-selection
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 2
+    stem: >-
+      Most of the bean shop's buyers live near one EU Region, but a service the shop needs is still missing from that Region.
+      Which Region selection factor rules that Region out?
+    options:
+      - id: a
+        text: Compliance with data protection law
+        why: Nothing in the scenario says a law bars that Region, so compliance is not what rules it out.
+      - id: b
+        text: Proximity to most buyers
+        why: Being near most buyers counts in that Region's favor, so it cannot be what rules it out.
+      - id: c
+        text: Feature availability
+        correct: true
+        why: Services roll out to Regions gradually, and a Region that lacks a needed service cannot host the shop.
+      - id: d
+        text: Pricing of local resources
+        why: The problem is a missing service, not what that Region charges for the ones it has.
+    evidence:
+      - The four factors are compliance, proximity, feature availability and pricing.
+      - Regions are isolated, follow local law, and differ in services and prices.
+    takeaway: A Region that lacks a service the workload needs fails the feature availability factor, however close it is.
+    history: []
+    verified:
+      keyHash: dd5b85bc94fa
+      fullHash: d45aab0245b9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-8mxgcp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: regional-pricing
+    note: m04/choosing-aws-regions
+    task: "4.1"
+    level: 2
+    stem: >-
+      The owner drafts the bean shop's hosting budget by reusing the server costs the cafe already pays in its US Region.
+      Why might that budget be wrong for an EU Region?
+    options:
+      - id: a
+        text: AWS lists every charge openly
+        why: Openly listed charges let the owner look up the EU figures, but they do not explain why the US figures would differ.
+      - id: b
+        text: Uptime is broadly equal across Regions
+        why: Equal uptime is about reliability, not cost, so it gives no reason for the budget to be off.
+      - id: c
+        text: Each Region has its own rates
+        correct: true
+        why: The same service can cost a different amount in each Region, so US prices may not match an EU Region.
+      - id: d
+        text: Regions are walled off from each other
+        why: Isolation keeps data apart between Regions, but it says nothing about what each one charges.
+    evidence:
+      - AWS pricing is transparent and granular, yet each Region has its own rates.
+    takeaway: AWS prices are published openly but differ by Region, so budget with the rates of the Region you will use.
+    history: []
+    verified:
+      keyHash: f51204012754
+      fullHash: c71da6251f7f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-38nmn4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: gdpr
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 2
+    stem: >-
+      The shop's developer is building the sign-up form that collects each EU shopper's name and email address.
+      Which GDPR rule must the form meet before it stores those details?
+    options:
+      - id: a
+        text: Data in a Region follows that country's law
+        why: This is true of every Region, but it is not a GDPR step the form takes before storing a sign-up.
+      - id: b
+        text: The shopper must give consent up front
+        correct: true
+        why: GDPR requires an EU online shop to get consent before it collects personal data, so the form must ask first.
+      - id: c
+        text: Shoppers can later view or erase their own data
+        why: GDPR does give this right, but it applies once the details are stored, not before the form saves them.
+      - id: d
+        text: Data leaves its Region only with your permission
+        why: Region isolation is an AWS security feature, not a GDPR rule the form must meet before storing details.
+    evidence:
+      - Under GDPR, the EU privacy law, an EU online shop must get consent before collecting personal data and let people see or erase it.
+    takeaway: Under GDPR, an EU online shop asks for consent before it collects anyone's personal data.
+    history: []
+    verified:
+      keyHash: 6ffab529abee
+      fullHash: 59e71264300d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

@@ -1,0 +1,153 @@
+id: inc-011
+title: Rebuilding the cafe's setup in a new Region
+modules: [ 4 ]
+concepts: [ infrastructure-as-code, aws-cloudformation, cloudformation-templates, programmatic-access ]
+brief: >-
+  The cafe's ordering system took many days of console clicks to build in its home Region.
+  Now the chain is opening in another country, and the team wants the same setup there without another round of manual work.
+steps:
+  - id: q-was4sa
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: infrastructure-as-code
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      Part of the team wants to rebuild the setup in the new Region by clicking through the console, while others want to patch together old scripts as they go.
+      What problem does mixing these methods tend to cause?
+    options:
+      - id: a
+        text: Higher latency for distant customers
+        why: Latency comes from the distance between customers and a Region, and the build method does not change that distance.
+      - id: b
+        text: Services not yet in the new Region
+        why: Features reach Regions gradually, so a missing service is a fact of the Region, not a result of mixing build methods.
+      - id: c
+        text: Drift between the Regions' setups
+        correct: true
+        why: Each method builds things a little differently, so the two Regions slowly stop matching.
+      - id: d
+        text: Laws on where customer data lives
+        why: Data laws come with the new country and apply however the setup is built, so mixing methods does not cause them.
+    evidence:
+      - For consistent multi-Region rollouts, the console fits only small one-off jobs, scripts automate partly but get hard to maintain, and mixing methods causes drift.
+      - Infrastructure as code (IaC) stores the architecture as a source-controlled blueprint that tools rebuild anywhere, identically and easily.
+    takeaway: Mixing console clicks and ad hoc scripts lets Regions drift apart, which a single IaC blueprint avoids.
+    history: []
+    verified:
+      keyHash: 495b071a2e1a
+      fullHash: cd5bbf3dca1d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-854md7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudformation
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      The team settles on AWS CloudFormation and plans to run the same template in the home Region and the new one.
+      What does using that one template, rather than building by hand, give the team?
+    options:
+      - id: a
+        text: Rates set separately by each Region
+        why: Each Region charges its own rates whatever tool builds the resources, so the template does not bring this.
+      - id: b
+        text: Content cached at edge locations
+        why: Caching content near customers is the job of edge locations, and CloudFormation is not a content cache.
+      - id: c
+        text: Data that stays within its Region
+        why: Regions keep data apart unless the cafe allows it to cross, with or without a template, so this is not what the template adds.
+      - id: d
+        text: Matching setups with fewer errors
+        correct: true
+        why: Running one template in each Region builds matching environments without the slips of manual work.
+    evidence:
+      - One template across accounts or Regions gives identical environments from one command, with fewer errors and more resilience.
+      - It is not a click-by-click visual tool, a content cache (edge locations do that) or a cost optimizer.
+    takeaway: One CloudFormation template run in each Region builds identical environments with fewer errors.
+    history: []
+    verified:
+      keyHash: 2a53c2bc3b21
+      fullHash: 6ed7ac57cc43
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-scnbfy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudformation-templates
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      Later, the cafe adds a cache cluster to its ordering system in both Regions.
+      Before the change runs, the manager wants a teammate to read exactly what will change in the setup and sign off on it.
+      Which property of the CloudFormation template makes that review practical?
+    options:
+      - id: a
+        text: It builds everything through AWS APIs
+        why: CloudFormation does build through AWS APIs, but that is how resources get made, not what lets a person read the change.
+      - id: b
+        text: It is text that declares resources
+        correct: true
+        why: A teammate can read the changed lines of a text declaration, so the new cache shows up plainly before anything is built.
+      - id: c
+        text: It runs the same in every Region
+        why: Matching Regions is a benefit of one template, but it does not help a person see what this change adds.
+      - id: d
+        text: It handles complex dependencies
+        why: CloudFormation can manage resources that depend on each other, but that does not make a change easier to read.
+    evidence:
+      - "**CloudFormation template**: A text document declaring the resources to build."
+      - IaC is declarative, so teams can version, review and automate deployments.
+    takeaway: A CloudFormation template is text declaring resources, so a change to it can be read and reviewed before it is built.
+    history: []
+    verified:
+      keyHash: 0f915180d800
+      fullHash: f190c9f96a7b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-c3135a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: programmatic-access
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      Separately, the cafe's developer wants a nightly job that backs up the new Region's Amazon EBS volumes from a script, with no browser involved.
+      Which way of reaching AWS fits this job best?
+    options:
+      - id: a
+        text: Management Console access
+        why: The console is a browser tool for newcomers and simple workflows, not for a scripted nightly job.
+      - id: b
+        text: Infrastructure as code
+        why: IaC declares the architecture for repeatable rollouts, while a routine backup job is a scripted task.
+      - id: c
+        text: CloudShell access
+        why: AWS CloudShell is a terminal opened in the browser, so it needs the browser this job is meant to avoid.
+      - id: d
+        text: Programmatic access
+        correct: true
+        why: Using AWS through code, such as AWS CLI commands in a script, suits a routine scheduled backup.
+    evidence:
+      - "**Programmatic access**: Using AWS through code, with the AWS CLI or SDKs."
+      - Programmatic access suits developers, the console newcomers, and IaC repeatable work at scale.
+    takeaway: Scripted routine jobs run by developers, such as backups, use programmatic access through the AWS CLI or SDKs.
+    history: []
+    verified:
+      keyHash: f0d353ec875d
+      fullHash: c0177a0a4a2b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

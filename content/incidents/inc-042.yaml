@@ -1,0 +1,125 @@
+id: inc-042
+title: Leaving the old order database engine
+modules: [12]
+concepts: [heterogeneous-database-migration, aws-schema-conversion-tool, aws-database-migration-service]
+brief: The cafe's order database runs on a costly commercial engine, and the owner wants it on Amazon Aurora to drop the license. The registers ring up orders all day, and years of custom database code live inside the old engine.
+steps:
+  - id: q-czzx59
+    version: 1
+    status: live
+    pool: practice
+    type: multi
+    select: 2
+    concept: heterogeneous-database-migration
+    note: m12/database-migrations
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe plans to move its order database from a commercial engine to Amazon Aurora.
+      Which extra tasks does this change of engine add to the move?
+    options:
+      - id: a
+        text: Recreating the database schema on Aurora
+        correct: true
+        why: A new engine means the tables, field types and relationships must be rebuilt for it, which is slow by hand.
+      - id: b
+        text: Copying the existing order rows to Aurora
+        why: Every database move copies the data, even one between the same engine, so the switch of engine does not add it.
+      - id: c
+        text: Changing parts of the app that use the data
+        correct: true
+        why: Switching to a different engine can require app changes, which a same-engine move usually avoids.
+      - id: d
+        text: Naming the source and the target databases
+        why: Any move with AWS DMS starts by naming the source and target, whether or not the engine changes.
+      - id: e
+        text: Choosing when the registers switch over
+        why: Every move needs a moment when the registers start using the new database, so this is not extra work from the new engine.
+    evidence:
+      - "Heterogeneous: a new engine, such as legacy commercial to Amazon Aurora, which is harder and may need app changes."
+      - A heterogeneous move must recreate the schema, the database's blueprint (tables, field types, relationships), which is slow by hand.
+    takeaway: Changing engines makes a migration heterogeneous, so the schema must be recreated and the app may need changes.
+    history: []
+    verified:
+      keyHash: d6923f9380c8
+      fullHash: 3110752b6fe8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-pq5x8g
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-schema-conversion-tool
+    note: m12/database-migrations
+    task: "3.4"
+    level: 3
+    stem: >-
+      Before moving the order database to Amazon Aurora, the cafe's team wants to know how much of its stored procedures, views and functions will need manual work, with an estimate of the effort.
+      Which AWS offering fits?
+    options:
+      - id: a
+        text: AWS Database Migration Service (AWS DMS)
+        why: AWS DMS moves and replicates the data, while sizing up the code objects for a new engine is a conversion task.
+      - id: b
+        text: Migration Evaluator
+        why: Evaluator projects the cost of the whole move, not the effort to convert stored procedures and views.
+      - id: c
+        text: AWS Schema Conversion Tool (AWS SCT)
+        correct: true
+        why: AWS SCT converts code objects to the new engine and flags and estimates the work it cannot do on its own.
+      - id: d
+        text: AWS Application Discovery Service
+        why: Discovery Service inventories servers and their links, and it does not inspect stored procedures for conversion.
+    evidence:
+      - Converts schemas and code objects (stored procedures, views, functions) to a new engine
+      - Flags manual work, estimates effort, automates analysis at scale, works with popular engines
+    takeaway: AWS SCT converts schemas and code objects to a new engine and flags and estimates the manual work that remains.
+    history: []
+    verified:
+      keyHash: daf93307bb34
+      fullHash: c807e2af813e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-vnn77f
+    version: 1
+    status: live
+    pool: practice
+    type: multi
+    select: 2
+    concept: aws-database-migration-service
+    note: m12/database-migrations
+    task: "3.4"
+    level: 2
+    stem: >-
+      With the schema converted, the cafe will use AWS DMS to move its order data to Amazon Aurora.
+      The registers must keep taking orders during the copy, and Aurora must hold every order placed until the cutover.
+      Which AWS DMS capabilities meet these two needs?
+    options:
+      - id: a
+        text: Moves relational and NoSQL databases alike
+        why: Support for both database kinds is true of AWS DMS, but it neither keeps the registers running nor captures new orders.
+      - id: b
+        text: Copies the data while the source stays live
+        correct: true
+        why: The replication task copies the order rows while the old database keeps taking orders from the registers.
+      - id: c
+        text: Can place a replica in another AWS Region
+        why: Replicating into another Region is a real option, but it does not keep orders flowing or bring new ones to Aurora.
+      - id: d
+        text: Keeps sending new changes to the target
+        correct: true
+        why: Ongoing replication carries each order placed during the copy into Aurora, so the two databases match at cutover.
+      - id: e
+        text: Handles both same-engine and new-engine moves
+        why: Covering both migration types is true of AWS DMS, but it says nothing about live registers or orders placed mid-copy.
+    evidence:
+      - You name the source and target, and a scheduled task on a replication VM copies the data while the source stays live.
+      - With database replication, AWS DMS goes beyond a one-time copy and keeps replicating ongoing changes from the source database to the target so the two stay in sync.
+    takeaway: AWS DMS copies data while the source stays live and keeps replicating changes so the source and target stay in sync.
+    history: []
+    verified:
+      keyHash: 1ec171de5781
+      fullHash: d8732451233b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

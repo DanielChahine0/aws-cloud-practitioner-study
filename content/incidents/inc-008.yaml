@@ -1,0 +1,118 @@
+id: inc-008
+title: A loyalty launch that slipped
+modules: [3]
+concepts: [aws-elastic-beanstalk, amazon-lightsail, aws-outposts]
+brief: >-
+  The chain's new loyalty programme launched a week late because the developer set up all of its hosting by hand.
+  Before the next phase, the IT lead wants the right AWS compute service for each remaining piece.
+steps:
+  - id: q-28nt8c
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-elastic-beanstalk
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 2
+    stem: >-
+      For the loyalty site's next release, the developer moves from hand-built EC2 instances to AWS Elastic Beanstalk.
+      Which work does Elastic Beanstalk take off the developer's hands?
+    options:
+      - id: a
+        text: Setting up load balancing and scaling
+        correct: true
+        why: Given the code and settings, Elastic Beanstalk builds the EC2 setup, scaling, load balancing and health checks itself.
+      - id: b
+        text: Scheduling batch jobs across a fleet
+        why: That is AWS Batch's work for heavy parallel jobs; Elastic Beanstalk runs the loyalty site as a web environment instead.
+      - id: c
+        text: Running code only when an event arrives
+        why: That describes AWS Lambda's on-demand functions; Elastic Beanstalk keeps the loyalty site running on EC2 instances.
+      - id: d
+        text: Orchestrating containers on Kubernetes
+        why: That is what Amazon EKS manages; Elastic Beanstalk builds an EC2 environment for the site rather than a Kubernetes cluster.
+    evidence:
+      - Give this fully managed service code and settings, and it builds the EC2 setup, scaling, load balancing and health checks.
+      - Raw EC2, by contrast, leaves deployment and scaling to you.
+    takeaway: Elastic Beanstalk turns code and settings into a scaled, load-balanced environment, work that raw EC2 leaves to the developer.
+    history: []
+    verified:
+      keyHash: 72593ea148b7
+      fullHash: 175fb0a10b36
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-aae5qh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-lightsail
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 3
+    stem: >-
+      One franchise wants a small, low-traffic site where it can test the loyalty pages before they go live.
+      It wants a predictable monthly bill and a setup simpler than traditional hosting.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Lightsail
+        correct: true
+        why: Lightsail bundles a virtual private server with storage and networking for a predictable monthly price, suited to dev and test.
+      - id: b
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk builds a scaled EC2 environment and bills for those resources, more than a small test site calls for.
+      - id: c
+        text: AWS Batch
+        why: AWS Batch schedules large compute jobs across a fleet; it does not host a small website.
+      - id: d
+        text: AWS Outposts
+        why: Outposts brings AWS racks into a data center, far more than a small test site calls for.
+    evidence:
+      - "A cost-effective bundle: virtual private servers (VPSs) plus storage, databases and networking, for a predictable monthly price."
+      - It fits blogs, small or low-traffic sites, and dev and test.
+    takeaway: For a small, low-traffic site or a test site at a predictable monthly price, Lightsail is the simple pick.
+    history: []
+    verified:
+      keyHash: 99a9264f3939
+      fullHash: 8013d81dbc39
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-fva75f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-outposts
+    note: m03/additional-compute-services
+    task: "3.1"
+    level: 3
+    stem: >-
+      The loyalty system must work with an old till system in the chain's own data center, which cannot move yet.
+      The IT lead wants AWS compute running right beside it, managed with the same tools and APIs as in the cloud.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Outposts
+        correct: true
+        why: Outposts brings AWS compute, storage and networking into the chain's own data center, run with the same tools and APIs.
+      - id: b
+        text: Amazon Lightsail
+        why: Lightsail hosts small sites from AWS, not inside the chain's own data center beside the tills.
+      - id: c
+        text: AWS Batch
+        why: AWS Batch schedules large compute jobs on a fleet in AWS and does not place any hardware on premises.
+      - id: d
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk deploys web apps onto EC2 in AWS, not onto hardware in the chain's own building.
+    evidence:
+      - A fully managed hybrid cloud offering that brings AWS compute, storage and networking into your data center.
+      - It fits compliance, data residency, low latency, remote sites and legacy app modernization.
+    takeaway: When AWS compute must run in a company's own data center beside systems that cannot move yet, Outposts is the fit.
+    history: []
+    verified:
+      keyHash: c0aa78d9c781
+      fullHash: 6fad74aca635
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

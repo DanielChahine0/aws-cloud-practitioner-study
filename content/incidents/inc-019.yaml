@@ -1,0 +1,121 @@
+id: inc-019
+title: The flooded back office
+modules:
+  - 6
+concepts:
+  - aws-elastic-disaster-recovery
+  - tape-gateway
+  - volume-gateway
+brief: >-
+  A burst pipe flooded the cafe's back office overnight.
+  The ordering servers, the inventory server and the drive used for weekly backups all sat under the water.
+  The owner wants a plan that makes the next flood far less painful.
+steps:
+  - id: q-267jqq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-elastic-disaster-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      To protect the ordering servers, the owner first thinks about renting a second back office across town to hold standby servers.
+      Why would AWS Elastic Disaster Recovery cost the cafe less than that plan?
+    options:
+      - id: a
+        text: Replicas sit on storage with minimal compute
+        correct: true
+        why: Replicas wait on low-cost storage with minimal compute until a recovery, so the cafe pays for no standby site or idle servers.
+      - id: b
+        text: Agents copy block-level changes to AWS nonstop
+        why: This is true of the service, but nonstop copying is how it keeps replicas current, not what makes it cheaper than a second office.
+      - id: c
+        text: Recovery drills leave the live servers untouched
+        why: This is true of the service, but safe drills protect the morning orders rather than cutting the cost of standby servers.
+      - id: d
+        text: Servers can be restored as of an earlier moment
+        why: This is true of the service, but point-in-time recovery limits data loss and does nothing to lower the cost of standby servers.
+    evidence:
+      - "No secondary data center: low-cost storage, minimal compute and pay-per-use pricing."
+      - Lightweight agents on source servers replicate block-level data to AWS nonstop, without Storage Gateway.
+    takeaway: Elastic Disaster Recovery replaces a standby data center with low-cost storage, minimal compute and pay-per-use pricing.
+    history: []
+    verified:
+      keyHash: 1369fbf9ce8c
+      fullHash: 23ef86b629d7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yc81kb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: tape-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe replaces its flooded tape drive with Tape Gateway and keeps the same backup software.
+      Where are the virtual tapes that the software writes kept?
+    options:
+      - id: a
+        text: In Amazon S3
+        correct: true
+        why: Tape Gateway stores its virtual tapes in Amazon S3, safely away from the cafe's back office.
+      - id: b
+        text: On Amazon EBS volumes
+        why: EBS snapshots back up Volume Gateway in stored mode, while virtual tapes are kept somewhere else.
+      - id: c
+        text: In an Amazon EFS file system
+        why: EFS is a shared Linux file system for running workloads, not the store behind virtual tapes.
+      - id: d
+        text: On the gateway's local disk only
+        why: Keeping tapes only on site would leave them exposed to the next flood, and Tape Gateway puts them in AWS.
+    evidence:
+      - "Tape Gateway: virtual tapes in Amazon S3 that backup software treats as tape hardware, with rarely used data movable to a cheaper class."
+    takeaway: Tape Gateway lets existing backup software write virtual tapes that AWS keeps in Amazon S3.
+    history: []
+    verified:
+      keyHash: 2b79d3b7377d
+      fullHash: f5fd4272815e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0fwda0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: volume-gateway
+    note: m06/aws-storage-gateway
+    task: "3.6"
+    level: 3
+    stem: >-
+      The rebuilt inventory server mounts its storage as iSCSI volumes, and its app needs every piece of data on site for fast reads.
+      The owner also wants a copy in AWS in case of another flood.
+      Which option fits?
+    options:
+      - id: a
+        text: Volume Gateway in stored volume mode
+        correct: true
+        why: Stored mode keeps all of the data local and backs it up to AWS as EBS snapshots, matching both needs.
+      - id: b
+        text: Volume Gateway in cached volume mode
+        why: Cached mode keeps the main dataset in AWS and only hot data on site, so not every piece of data stays local.
+      - id: c
+        text: Amazon S3 File Gateway with a local cache
+        why: It offers an NFS or SMB file share rather than the iSCSI block volumes this server mounts.
+      - id: d
+        text: Tape Gateway
+        why: It serves tape backup software for archiving and gives the app no mounted volume for daily reads.
+    evidence:
+      - Stored volume mode keeps everything local and backs it up asynchronously as EBS snapshots.
+      - Apps mounting iSCSI block volumes point to Volume Gateway, cached mode when only hot data stays local and stored mode when all of it must.
+    takeaway: An app on iSCSI volumes that needs all its data on site plus a cloud copy fits Volume Gateway in stored mode.
+    history: []
+    verified:
+      keyHash: a153e17567c8
+      fullHash: cf18f5ac7a1c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

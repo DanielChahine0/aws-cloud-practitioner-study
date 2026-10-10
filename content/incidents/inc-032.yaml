@@ -1,0 +1,131 @@
+id: inc-032
+title: Strange traffic from the till server
+modules:
+  - 9
+concepts:
+  - amazon-guardduty
+  - amazon-detective
+  - amazon-inspector
+brief: >-
+  Late one night the cafe's till server, an EC2 instance, began sending data to an unfamiliar address. The security
+  lead wants to know how it was spotted, trace how it started and close the gap before the staff arrive.
+steps:
+  - id: q-e3jhe5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-guardduty
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 3
+    stem: >-
+      Until last month, the cafe's only security check was a service that scans its EC2 instances for vulnerable software.
+      The cafe then added a service that keeps watching account metadata and network activity, and that service flagged
+      the till server for talking to a known malicious IP address.
+      Which service raised the alert?
+    options:
+      - id: a
+        text: Amazon Inspector
+        why: Inspector is the scanner the cafe already ran, and it looks for vulnerabilities rather than watching live traffic.
+      - id: b
+        text: Amazon Macie
+        why: Macie finds sensitive data in S3, and it does not analyze network activity for threats.
+      - id: c
+        text: Amazon GuardDuty
+        correct: true
+        why: GuardDuty continuously analyzes account and network activity and uses lists of known malicious IP addresses.
+      - id: d
+        text: AWS Security Hub
+        why: Security Hub gathers findings that other services raise into one view, and it does not watch network activity itself.
+    evidence:
+      - Continuously analyzes account metadata and network activity for threats.
+      - Mixes threat intelligence, like known malicious IP addresses, with anomaly detection and ML for accuracy.
+    takeaway: Amazon GuardDuty keeps watching account and network activity for threats, unlike Inspector's vulnerability scans.
+    history: []
+    verified:
+      keyHash: 31fe8225a2cf
+      fullHash: cc84e253acfe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-1h2yj2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-detective
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 3
+    stem: >-
+      AWS Security Hub already lists the alert about the till server next to the cafe's other findings.
+      The security lead now needs deeper forensics: interactive views of the server's and users' activity over a time
+      window she picks, to trace the attack back to its root cause.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Security Hub
+        why: Security Hub shows findings for posture and compliance, not deep forensics over time, which is why she needs more.
+      - id: b
+        text: Amazon GuardDuty
+        why: GuardDuty detects threats, but it lacks the interactive investigation views the lead wants.
+      - id: c
+        text: Amazon Inspector
+        why: Inspector focuses on scanning for vulnerabilities, not on charting how an attack unfolded over time.
+      - id: d
+        text: Amazon Detective
+        correct: true
+        why: Detective uses ML and graph analytics to chart resource and user activity over a chosen window to find the root cause.
+    evidence:
+      - It gathers logs itself, then uses ML and graph analytics to chart resource and user activity over a time window you set, plus fixes.
+      - Security Hub also shows security data, but for posture and compliance, not deep forensics over time.
+    takeaway: To trace an alert to its root cause over a chosen time window, use Amazon Detective rather than Security Hub's summary view.
+    history: []
+    verified:
+      keyHash: 48fa08d65668
+      fullHash: 2f04e9382014
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-h7gps7
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: amazon-inspector
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 1
+    stem: >-
+      The attacker got in through outdated software on the till server, so the cafe now wants Amazon Inspector checking
+      all its workloads for flaws like that.
+      Which resources can Inspector scan automatically?
+    options:
+      - id: a
+        text: Amazon EC2 instances
+        correct: true
+        why: Inspector scans EC2 instances for vulnerable software and gaps such as open access, like the till server's.
+      - id: b
+        text: Amazon Lightsail instances
+        why: Lightsail is a separate hosting service, and it is not among the EC2, container and Lambda workloads Inspector scans.
+      - id: c
+        text: Amazon ECR container images
+        correct: true
+        why: Container workloads are among those Inspector scans automatically, so the cafe's container images are covered too.
+      - id: d
+        text: Amazon RDS DB instances
+        why: RDS is a managed database whose engine AWS patches, and it is not among the workloads Inspector scans.
+      - id: e
+        text: AWS Lambda functions
+        correct: true
+        why: Lambda functions are among the workloads Inspector scans automatically for vulnerabilities.
+      - id: f
+        text: Amazon S3 buckets
+        why: Inspector does not scan S3 buckets, where Amazon Macie is the service that looks for sensitive data.
+    evidence:
+      - Automatically scans EC2, containers and Lambda for vulnerabilities and best-practice gaps, like open EC2 access or vulnerable software.
+    takeaway: Amazon Inspector automatically scans EC2 instances, containers and Lambda functions for vulnerabilities and best-practice gaps.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Task 2.2 covers governance and compliance; Amazon Inspector vulnerability scanning fits task 2.4 (security components and resources) better."

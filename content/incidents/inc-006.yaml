@@ -1,0 +1,113 @@
+id: inc-006
+title: Festival rush on the menu containers
+modules: [3]
+concepts: [container-orchestration, amazon-ecs, aws-fargate]
+brief: >-
+  The cafe's online menu runs as a handful of containers on one EC2 instance.
+  During the town festival, crashed containers stay down until someone spots them, and staff spend the day restarting them by hand.
+steps:
+  - id: q-r7592m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: container-orchestration
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      During the festival, a crashed menu container stays down until a staff member notices and starts it again.
+      Which job of a container orchestrator would end this manual work?
+    options:
+      - id: a
+        text: Recovering failed containers on its own
+        correct: true
+        why: An orchestrator handles recovery across the cluster, bringing failed containers back without anyone stepping in.
+      - id: b
+        text: Building a new image of the menu code
+        why: Building an image packages the code; it does nothing to bring a crashed container back.
+      - id: c
+        text: Storing each image version in a registry
+        why: Keeping image versions is a registry's job, such as Amazon ECR, not the recovery the staff now do by hand.
+      - id: d
+        text: Patching the hardware in the data center
+        why: The physical hardware is AWS's to maintain and has nothing to do with restarting a crashed container.
+    evidence:
+      - Containers do not scale themselves, so orchestrators run their lifecycle across a cluster, scale them with traffic, and handle recovery, monitoring and updates.
+    takeaway: A container orchestrator takes over recovery, so failed containers come back without staff restarting them by hand.
+    history: []
+    verified:
+      keyHash: ab4d3b2c2f8e
+      fullHash: 7df22ca58b2b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-n9mxhf
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-ecs
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      The team moves the menu containers onto Amazon ECS so that nobody restarts them by hand again.
+      What does ECS still expect the team to supply?
+    options:
+      - id: a
+        text: The images and load balancers for the menu
+        correct: true
+        why: ECS needs the team to name its images and resources such as load balancers, and it manages the rest of the container work.
+      - id: b
+        text: A script that restarts crashed containers
+        why: Recovery is one of the jobs ECS takes over, so the team no longer writes or runs its own restart script.
+      - id: c
+        text: A plan of which host runs each container
+        why: Starting and stopping containers across the cluster is lifecycle work that ECS handles, not a plan the team draws up.
+      - id: d
+        text: A timetable for rolling out each update
+        why: Rolling updates out to the running containers is orchestration work that ECS manages instead of the team.
+    evidence:
+      - You set images plus resources like instance types and load balancers, and ECS manages the rest.
+    takeaway: With Amazon ECS, the team names its images and resources, and ECS manages the rest of the container work.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one tied to the scenario ('the menu'); the others are generic.)"
+  - id: q-956nc7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-fargate
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 3
+    stem: >-
+      The menu's traffic swings from almost nothing on weekdays to a crowd at festivals.
+      The small team cannot spare anyone to run servers.
+      Which compute option should run its ECS containers?
+    options:
+      - id: a
+        text: AWS Fargate
+        correct: true
+        why: Fargate is serverless hosting for ECS, so AWS runs the servers and the cafe pays only for resources used as traffic swings.
+      - id: b
+        text: Amazon EC2
+        why: With the EC2 launch type, the team manages the virtual machines under its containers, the upkeep it cannot staff.
+      - id: c
+        text: AWS Batch
+        why: AWS Batch schedules large parallel compute jobs; it is not a launch type for a web menu's ECS containers.
+      - id: d
+        text: Amazon Lightsail
+        why: Lightsail sells a virtual private server for a set monthly price and is not a launch type under ECS.
+    evidence:
+      - "Fargate: serverless, so AWS runs the servers while ECS or EKS orchestrates, and you pay only for resources used."
+      - "Startup web app with variable traffic: ECS on Fargate."
+    takeaway: For ECS containers with swinging traffic and no one to run servers, Fargate is the serverless launch type to pick.
+    history: []
+    verified:
+      keyHash: 477e4c9da34e
+      fullHash: 353b3d4f3735
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
