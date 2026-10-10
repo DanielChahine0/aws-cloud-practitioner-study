@@ -1,0 +1,121 @@
+id: inc-015
+title: Bean shop crawls for faraway shoppers
+modules:
+  - 5
+concepts:
+  - amazon-cloudfront
+  - route-53-routing-policies
+  - amazon-route-53
+brief: >-
+  The cafe's online bean shop runs in one North American Region, and a holiday sale has drawn shoppers from Europe and Asia.
+  Faraway shoppers say the pages crawl, and the manager wants the sale to feel quick everywhere.
+steps:
+  - id: q-wnk0bk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-cloudfront
+    note: m05/global-networking
+    task: "3.5"
+    level: 3
+    stem: >-
+      The bean shop's sale pages mix fixed product photos with prices and stock counts that change all day.
+      The cafe wants both kinds of content handed to shoppers from locations near them, instead of from the one Region.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon CloudFront
+        correct: true
+        why: CloudFront is a CDN that serves both static and dynamic web content from edge locations close to each shopper.
+      - id: b
+        text: Amazon Route 53
+        why: Route 53 answers DNS lookups and routes users, but it does not hand them content from nearby locations.
+      - id: c
+        text: AWS Global Accelerator
+        why: Global Accelerator carries traffic over the AWS network to healthy endpoints, but it does not serve copies of content near users.
+      - id: d
+        text: AWS Direct Connect
+        why: Direct Connect is a private line from a data center to a VPC, and it does nothing for shoppers far from the Region.
+    evidence:
+      - CloudFront is a CDN (content delivery network) that securely serves static and dynamic web content from edge locations near customers, for faster loads, lower cost and reliability.
+    takeaway: CloudFront serves static and dynamic web content from edge locations near users, so faraway pages load faster.
+    history: []
+    verified:
+      keyHash: ef7aa6b2e9b8
+      fullHash: 5d722b3fd2e7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-exj2s2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: route-53-routing-policies
+    note: m05/global-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe adds a second copy of its bean shop in a European Region.
+      It wants Route 53 to send each shopper to whichever Region answers that shopper with the least delay, wherever the shopper lives.
+      Which routing policy fits?
+    options:
+      - id: a
+        text: Latency-based routing
+        correct: true
+        why: Latency-based routing picks the Region that gives each user the lowest delay, which is exactly the cafe's goal.
+      - id: b
+        text: Geolocation routing
+        why: Geolocation routing decides by the country or area a shopper is in, not by which Region answers faster.
+      - id: c
+        text: Weighted round robin routing
+        why: Weighted round robin splits traffic between endpoints by set shares, whatever delay each shopper sees.
+      - id: d
+        text: Geoproximity routing
+        why: Geoproximity routing works from geography, not from which Region answers each shopper with the least delay.
+    evidence:
+      - "Routing policies: weighted round robin, latency-based, geolocation and geoproximity."
+      - Geolocation routes by where the customer is, so North America goes to a North American Region and Ireland to the Dublin Region.
+    takeaway: To send each user to the Region that answers with the lowest delay, choose Route 53 latency-based routing.
+    history: []
+    verified:
+      keyHash: b2d2e3c33c59
+      fullHash: d6d6c254db59
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-b6vzn8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-route-53
+    note: m05/global-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's bean shop runs in two Regions, and during the sale one of them sometimes stops answering.
+      The cafe wants Route 53 to keep probing each copy of the shop, so that shoppers are sent only to a copy that still responds.
+      Which Route 53 feature fits?
+    options:
+      - id: a
+        text: Name resolution
+        why: Resolving the shop's name hands back an address, but on its own it never tests whether that copy still responds.
+      - id: b
+        text: Latency-based routing
+        why: Latency-based routing picks the Region with the least delay for each shopper, not whether that Region still answers.
+      - id: c
+        text: Health checks
+        correct: true
+        why: Route 53 health checks keep probing each endpoint, so its DNS answers can leave out a copy that stops responding.
+      - id: d
+        text: Geolocation routing
+        why: Geolocation routing sends shoppers by where they are, with no test of whether the chosen copy still answers.
+    evidence:
+      - It also runs health checks, registers new domains and takes over DNS records from other registrars, so all your domains live in one place.
+    takeaway: Route 53 health checks let DNS steer users away from endpoints that stop responding.
+    history: []
+    verified:
+      keyHash: cffc53d12078
+      fullHash: 60b352315b75
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

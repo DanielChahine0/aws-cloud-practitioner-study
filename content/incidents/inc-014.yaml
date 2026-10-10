@@ -1,0 +1,88 @@
+id: inc-014
+title: Payment records need a private line
+modules:
+  - 5
+concepts:
+  - aws-direct-connect
+  - direct-connect-failover
+brief: >-
+  The cafe chain sends its card payment records from its own data center to a VPC through an encrypted tunnel over the public internet.
+  A new payment audit flags the setup, and the finance lead needs a plan before the auditors return next month.
+steps:
+  - id: q-5q5qp5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-direct-connect
+    note: m05/more-ways-to-connect-to-the-aws-cloud
+    task: "3.5"
+    level: 3
+    stem: >-
+      The auditors want the chain's payment records to stop crossing the shared public internet.
+      The records must instead travel from the chain's data center to its VPC on a private line that the chain alone uses.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Direct Connect
+        correct: true
+        why: Direct Connect gives the chain its own dedicated private line into the VPC, so the records no longer share the internet.
+      - id: b
+        text: AWS Site-to-Site VPN
+        why: Site-to-Site VPN encrypts the link, but its tunnel still runs over the shared public internet the auditors want to leave.
+      - id: c
+        text: AWS Client VPN
+        why: Client VPN connects individual remote users, and their traffic still crosses the shared public internet.
+      - id: d
+        text: AWS PrivateLink
+        why: PrivateLink gives a VPC private access to services, not a dedicated physical line from the chain's data center.
+    evidence:
+      - Shared links can jam, so Direct Connect gives a dedicated private line from your network to a VPC (via a Direct Connect location and a virtual private gateway), cutting costs and raising bandwidth.
+    takeaway: A dedicated private line from a data center to a VPC, off the shared internet, points to AWS Direct Connect.
+    history: []
+    verified:
+      keyHash: bdf2b23f0637
+      fullHash: "76893e897982"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-a8zasb
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: direct-connect-failover
+    note: m05/global-architectures
+    task: "3.5"
+    level: 2
+    stem: >-
+      The chain now sends its payment records to its VPC over a single AWS Direct Connect line.
+      The auditors point out that a physical cable can be cut, and they ask for a backup path from the data center into the VPC.
+      Which options can take over if that line fails?
+    options:
+      - id: a
+        text: An AWS Site-to-Site VPN connection
+        correct: true
+        why: A Site-to-Site VPN links the data center to the VPC over the internet, so it can carry the records while the dedicated line is down.
+      - id: b
+        text: More bandwidth on the current Direct Connect line
+        why: Extra bandwidth still runs over the same physical cable, so a cut stops the records just the same.
+      - id: c
+        text: A second AWS Direct Connect line
+        correct: true
+        why: A second Direct Connect line is a separate dedicated path that keeps working if the first cable is cut.
+      - id: d
+        text: AWS Client VPN on each finance laptop
+        why: Client VPN connects individual people, so it does not carry the data center's records into the VPC.
+      - id: e
+        text: A virtual private gateway on the VPC
+        why: The virtual private gateway is the VPC's side of the current line, not a second path from the data center.
+    evidence:
+      - Direct Connect is a physical cable that can be cut, so a VPN often stands by as its failover, or a second Direct Connect line does.
+    takeaway: A cut Direct Connect line can fail over to a standby VPN connection or to a second Direct Connect line.
+    history: []
+    verified:
+      keyHash: c632949a3a98
+      fullHash: 5f7b768dbbcf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
