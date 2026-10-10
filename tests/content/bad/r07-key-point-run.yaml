@@ -1,0 +1,28 @@
+# fixture-target: content/project/key-points/01-baking-basics.yaml
+# R7: the live key point copies a 9-word run of the made-up course text.
+module: 1
+keyPoints:
+  - id: kp-01-borrow-on-busy-days
+    status: live
+    text: Bakers rent proofing cabinets by the minute and hand them back once the dough has risen.
+    concepts: [shared-kitchen]
+    evidence: Branches use ovens from one central kitchen when their queues grow.
+    verified:
+      fullHash: 54bf2496a4d7
+      checks: [critic@1]
+      on: "2026-10-10"
+  - id: kp-01-pay-only-while-proofing
+    status: draft
+    text: Proofing cabinets cost money only while the dough is rising, so an empty cabinet costs nothing.
+    concepts: [per-minute-rental]
+    evidence: Cabinets are billed only while dough proofs.
+  - id: kp-01-give-capacity-back
+    status: draft
+    text: Quiet weekday mornings hand the borrowed ovens back to the shared kitchen.
+    concepts: [shared-kitchen, per-minute-rental]
+    evidence: Borrow capacity when busy and give it back when quiet.
+  - id: kp-01-name-the-billing-term
+    status: draft
+    text: The plan uses the newer billing term that the bakery guide now prints.
+    concepts: [per-minute-rental]
+    evidence: The fixture guide names a newer billing term.

@@ -477,20 +477,32 @@ describe('badges in the memory replay (spec 3.10)', () => {
     expect(m.badges.has('even-keel')).toBe(false);
   });
 
-  it('Architect: the latest final decision of all 13 modules passes', () => {
-    const decision = (module: number, stage: 'self' | 'final', scores: [number, number, number, number]) =>
-      [at('2026-10-20', 8, module), { t: 'decision', module, stage, scores }] as const;
+  it('Architect: keeps the first final decision of each module', () => {
+    const grade = (
+      module: number,
+      stage: 'self' | 'final',
+      scores: [number, number, number, number],
+      hour: number,
+    ) => [at('2026-11-20', hour, module), { t: 'decision', module, stage, scores }] as const;
+    const selfs = Array.from({ length: 13 }, (_, i) => grade(i + 1, 'self', [1, 1, 1, 1], 8));
+    const passing = Array.from({ length: 13 }, (_, i) => grade(i + 1, 'final', [2, 2, 2, 2], 9));
     const log: Log = [
-      [at('2026-10-19', 8), { t: 'decision', module: 13, stage: 'final', scores: [3, 3, 3, 0] }],
-      ...Array.from({ length: 13 }, (_, i) => decision(i + 1, 'self', [1, 1, 1, 1])),
-      ...Array.from(
-        { length: 13 },
-        (_, i) => [at('2026-10-20', 9, i), decision(i + 1, 'final', [2, 2, 2, 2])[1]] as const,
-      ),
+      [at('2026-11-19', 8), { t: 'decision', module: 13, stage: 'final', scores: [3, 3, 3, 0] }],
+      ...selfs,
+      ...passing,
     ];
     const { before, after, last } = crossing(log, BASIC, 'architect');
     expect(before).toBeUndefined();
     expect(after?.eventId).toBe(last.id);
+    const regraded = timelineOf([...log, grade(2, 'final', [0, 0, 0, 0], 10)]);
+    expect(deriveMemory(regraded, BASIC).badges.get('architect')).toEqual(after);
+    const failedFirst = timelineOf([
+      ...selfs,
+      grade(1, 'final', [3, 3, 2, 0], 9),
+      ...passing.slice(1),
+      grade(1, 'final', [3, 3, 3, 3], 10),
+    ]);
+    expect(deriveMemory(failedFirst, BASIC).badges.has('architect')).toBe(false);
   });
 
   it('pays no XP for a badge', () => {

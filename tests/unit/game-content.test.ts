@@ -3,8 +3,12 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
+import type { ContentIndex } from '../../schemas/chunks.ts';
 import { Badges, Ranks } from '../../schemas/game.ts';
+import { buildContent } from '../../scripts/content/build.ts';
+import { loadContext } from '../../scripts/content/lib/context.ts';
 import { parseUpdateLine } from '../../scripts/content/lib/update-line.ts';
+import { CORE_LABS_PER_MODULE, HANDS_ON_MODULES } from '../../src/engine/badges.ts';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const ranksText = readFileSync(join(ROOT, 'content/game/ranks.yaml'), 'utf8');
@@ -80,6 +84,18 @@ describe('content/game/badges.yaml (spec 3.10)', () => {
       ['leave-no-trace', 'missions'],
       ['architect', 'capstone'],
     ]);
+  });
+
+  it('shows Hands On as earnable exactly when 5 modules ship both core labs', () => {
+    const built = buildContent(loadContext(ROOT));
+    const index = JSON.parse(built.files.get(built.indexFile) ?? 'null') as ContentIndex;
+    const perModule = new Map<number, number>();
+    for (const lab of index.labs) {
+      if (lab.tier === 'core') perModule.set(lab.module, (perModule.get(lab.module) ?? 0) + 1);
+    }
+    const complete = [...perModule.values()].filter((n) => n >= CORE_LABS_PER_MODULE).length;
+    const handsOn = badges.find((b) => b.id === 'hands-on');
+    expect(handsOn?.arrives === undefined).toBe(complete >= HANDS_ON_MODULES);
   });
 
   it('ends every rule with a period', () => {

@@ -71,8 +71,34 @@ describe('labKey', () => {
     expect(labKey(key('ArrowDown'), state())).toBeNull();
   });
 
-  it('keeps the Sort keys to Sort labs', () => {
-    for (const engine of ['configure', 'simulate'] as const) {
+  it('places a held piece in a Place lab with the same keys as a Sort lab', () => {
+    const place = (more: Partial<LabKeyState> = {}) => state({ engine: 'place', bucketCount: 6, ...more });
+    expect(labKey(key('6'), place({ holding: true }))).toEqual({ kind: 'place', bucket: 6 });
+    expect(labKey(key('7'), place({ holding: true }))).toBeNull();
+    expect(labKey(key('0'), place({ holding: true, bucketCount: 10 }))).toEqual({
+      kind: 'place',
+      bucket: 10,
+    });
+    expect(labKey(key('Backspace'), place({ holding: true }))).toEqual({ kind: 'unplace' });
+    expect(labKey(key('Escape'), place({ holding: true }))).toEqual({ kind: 'drop' });
+    expect(labKey(key('ArrowDown'), place({ inItems: true }))).toEqual({ kind: 'move', delta: 1 });
+  });
+
+  it('never takes Space, so the native click picks up or places', () => {
+    for (const engine of ['sort', 'place'] as const) {
+      expect(labKey(key(' '), state({ engine }))).toBeNull();
+      expect(labKey(key(' '), state({ engine, holding: true, inItems: true }))).toBeNull();
+    }
+  });
+
+  it('checks with Enter from a slot while a piece is held', () => {
+    expect(labKey(key('Enter'), state({ engine: 'place', holding: true, inItems: true }))).toEqual({
+      kind: 'check',
+    });
+  });
+
+  it('keeps the pick-up keys to Sort and Place labs', () => {
+    for (const engine of ['configure', 'simulate', 'trace', 'investigate'] as const) {
       expect(labKey(key('1'), state({ engine, holding: true }))).toBeNull();
       expect(labKey(key('Backspace'), state({ engine, holding: true }))).toBeNull();
       expect(labKey(key('ArrowDown'), state({ engine, inItems: true }))).toBeNull();
