@@ -1,0 +1,115 @@
+id: inc-007
+title: The patch nobody applied
+modules: [3]
+concepts: [unmanaged-services, managed-services, fully-managed-services]
+brief: >-
+  The cafe's ordering site went down after an old security hole on its EC2 servers was used against it, though a fix had been out for weeks.
+  The owner now wants to know who owns which jobs, and whether to hand more of them to AWS.
+steps:
+  - id: q-xkxntx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: unmanaged-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 2
+    stem: >-
+      The fix that went unapplied was an update to the operating system on the cafe's EC2 instances.
+      Under the shared responsibility model, who should have applied it?
+    options:
+      - id: a
+        text: The cafe, which owns each instance's OS
+        correct: true
+        why: The update was to the instance's OS, which on unmanaged EC2 is the cafe's to set up, secure and maintain.
+      - id: b
+        text: AWS, which owns each instance's OS
+        why: AWS does not own the OS on an EC2 instance; on an unmanaged service that layer sits with the customer.
+      - id: c
+        text: The cafe, which owns the physical hosts
+        why: The physical hosts under EC2 are AWS's, and the missed fix was in the OS, not in the hosts.
+      - id: d
+        text: AWS, which owns the physical hosts
+        why: AWS does own the physical hosts, but the missed fix was in the OS, which is the cafe's layer on EC2.
+    evidence:
+      - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
+    takeaway: On EC2, the operating system of each instance is the customer's to patch, while AWS covers the physical layer.
+    history: []
+    verified:
+      keyHash: a3509a9343f6
+      fullHash: 7f016dab8da5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-c3mh3d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: managed-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 2
+    stem: >-
+      To cut upkeep, the owner moves the site's order queue from software on EC2 to Amazon SQS, a managed service.
+      Which statement describes how the work on the queue is split after the move?
+    options:
+      - id: a
+        text: The cafe configures it, and AWS keeps it running
+        correct: true
+        why: SQS is a managed service, so once the cafe configures the queue, AWS keeps it running with no server management on the cafe's part.
+      - id: b
+        text: The cafe configures it and also keeps it running
+        why: That was the old setup with queue software on EC2; after the move to SQS, AWS keeps the queue running.
+      - id: c
+        text: AWS runs the hardware, and the cafe runs the rest
+        why: That split fits unmanaged EC2, where AWS covers only the physical layer, not a managed queue like SQS.
+      - id: d
+        text: AWS configures it, and the cafe keeps it running
+        why: The cafe still configures a managed service, and it is AWS, not the cafe, that keeps the queue running afterward.
+    evidence:
+      - After you configure one, AWS keeps it running with no server management on your part.
+      - ELB, SNS and SQS are earlier examples.
+    takeaway: A managed service is configured once, and then AWS keeps it running with no server work for the customer.
+    history: []
+    verified:
+      keyHash: 211b9e34ae33
+      fullHash: 64a832b1b2ca
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-f064wb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: fully-managed-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 2
+    stem: >-
+      The owner then moves the order-checking logic from EC2 to AWS Lambda, a fully managed service.
+      Which job that was the cafe's on EC2 does AWS take over?
+    options:
+      - id: a
+        text: Keeping the function's code secure
+        why: Under Lambda, the application code and keeping it secure still stay with the cafe, so this job does not move.
+      - id: b
+        text: Adding capacity for the lunch rush
+        correct: true
+        why: Scaling was the cafe's job on EC2, and under a fully managed service like Lambda, AWS covers scaling instead.
+      - id: c
+        text: Powering the data center's hardware
+        why: AWS already ran the hardware under the cafe's EC2 servers, so this job was never the cafe's to hand over.
+      - id: d
+        text: Deciding which rules the code checks
+        why: The checking rules live in the cafe's application code, which stays with the cafe under Lambda.
+    evidence:
+      - You get fine control, but patching, scaling and the OS are yours while AWS runs the hardware.
+      - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
+    takeaway: Moving from EC2 to Lambda hands scaling to AWS, while the code and its security stay with the cafe.
+    history: []
+    verified:
+      keyHash: ec242cab9cf1
+      fullHash: 3c6ffc16ebe8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
