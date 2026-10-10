@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ConceptId, IsoDate, ModuleNumber, Slug } from './common.ts';
+import { CRITERION_ORDER } from './project-view.ts';
 import { Review } from './question.ts';
 
 /**
@@ -9,9 +10,6 @@ import { Review } from './question.ts';
 
 /** A key point id: `kp-`, the two-digit module of its file and a kebab-case slug, like kp-06-lifecycle-to-deep-archive. */
 export const KEY_POINT_ID = /^kp-(0[1-9]|1[0-3])-[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-/** Rubric criterion ids in score order; a decision's `scores` tuple follows this order. */
-export const CRITERION_IDS = ['fit', 'grounding', 'tradeoffs', 'cost'] as const;
 
 const Level = z.string().min(1).max(120);
 
@@ -27,7 +25,7 @@ export const BriefDecision = z.strictObject({
 export type BriefDecision = z.infer<typeof BriefDecision>;
 
 export const Criterion = z.strictObject({
-  id: z.enum(CRITERION_IDS),
+  id: z.enum(CRITERION_ORDER),
   name: z.string().min(1),
   levels: z.tuple([Level, Level, Level, Level]),
 });
@@ -38,8 +36,8 @@ export const Rubric = z
     passTotal: z.literal(8),
     criteria: z.tuple([Criterion, Criterion, Criterion, Criterion]),
   })
-  .refine((r) => r.criteria.map((c) => c.id).join() === CRITERION_IDS.join(), {
-    message: `criteria must be ${CRITERION_IDS.join(', ')} in that order`,
+  .refine((r) => r.criteria.map((c) => c.id).join() === CRITERION_ORDER.join(), {
+    message: `criteria must be ${CRITERION_ORDER.join(', ')} in that order`,
     path: ['criteria'],
   });
 export type Rubric = z.infer<typeof Rubric>;

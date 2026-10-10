@@ -62,10 +62,16 @@ export function styleProblems(q: Question, note: LessonNote | undefined): string
   return problems;
 }
 
-/** Lab text that names a retired Support plan, one problem per text, so labs use the exam's current names (spec 5). */
-export function labStyleProblems(texts: readonly string[]): string[] {
+/**
+ * Text that names a retired Support plan, one problem per text, so labs, key points, the brief and mission pages use
+ * the exam's current names (spec 1.2, 5).
+ */
+export function retiredPlanProblems(texts: readonly string[]): string[] {
   return texts.filter((text) => OLD_PLANS.test(text)).map((text) => `retired Support plan name in '${text}'`);
 }
+
+/** Lab text that names a retired Support plan (R11); the same matcher as `retiredPlanProblems`. */
+export const labStyleProblems = retiredPlanProblems;
 
 export interface ModuleStyle {
   singles: number;

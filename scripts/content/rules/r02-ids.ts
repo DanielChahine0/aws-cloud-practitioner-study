@@ -12,6 +12,7 @@ import {
   type QuestionEntry,
 } from '../lib/context.ts';
 import { correctKey } from '../lib/hashes.ts';
+import { KEY_POINT_FILE, projectOf } from '../lib/project.ts';
 import { finding, type Rule } from './rule.ts';
 
 /** The entries of a concepts.yaml text, or null when it is missing, does not parse or is not a list (R1 reports those). */
@@ -135,6 +136,28 @@ function incidentIn(yamlText: string | null): { id: string; shipped: boolean } |
   return { id, shipped };
 }
 
+/**
+ * The id and status of every key point in a key point file text, tolerating items that fail the schema; null when the
+ * file does not parse or has no `keyPoints` list (R1 reports both).
+ */
+function keyPointsIn(yamlText: string | null): { id: string; status: unknown }[] | null {
+  if (yamlText === null) return null;
+  let data: unknown;
+  try {
+    data = parseYaml(yamlText);
+  } catch {
+    return null;
+  }
+  const items =
+    typeof data === 'object' && data !== null ? (data as Record<string, unknown>).keyPoints : undefined;
+  if (!Array.isArray(items)) return null;
+  return items.flatMap((item: unknown) => {
+    if (typeof item !== 'object' || item === null) return [];
+    const { id, status } = item as { id?: unknown; status?: unknown };
+    return typeof id === 'string' ? [{ id, status }] : [];
+  });
+}
+
 /** The forms of a forms.yaml text that pass the schema; [] when it is missing or does not parse. */
 function formsIn(yamlText: string | null): Forms['forms'] {
   if (yamlText === null) return [];
@@ -151,7 +174,8 @@ function formsIn(yamlText: string | null): Forms['forms'] {
  * steps; no concept id in HEAD disappears; a live or retired question, or step of a shipped incident, in HEAD stays,
  * and a live one whose answer changes takes a key-fix version; a lab in HEAD stays, and any edit to it raises its
  * `rev`; an incident that shipped in HEAD stays; a form frozen in HEAD keeps its qids, their order and
- * `frozen: true` (spec 2.9, 4.3, 4.5, 5.1).
+ * `frozen: true`; key point ids join the unique ids, and a live or retired key point in HEAD stays; concept display
+ * names are unique, so the ADR editor maps a name back to one id (spec 2.9, 4.3, 4.5, 5.1, 6).
  */
 export const r02: Rule = {
   id: 'R2',
@@ -173,6 +197,39 @@ export const r02: Rule = {
       claim(entry.q.id, entry.incident === null ? 'question' : `step of ${entry.incident}`, entry.path);
     }
     for (const entry of ctx.labs) claim(entry.lab.id, 'lab', entry.path);
+    for (const entry of projectOf(ctx).keyPoints) claim(entry.kp.id, 'key point', entry.path);
+
+    // The ADR editor shows citations by name and stores ids, so two concepts may not share a name, whatever its case.
+    const named = new Map<string, string>();
+    for (const c of ctx.concepts) {
+      const first = named.get(c.name.toLowerCase());
+      if (first === undefined) named.set(c.name.toLowerCase(), c.id);
+      else out.push(finding('R2', CONCEPTS_FILE, `concept name '${c.name}' is used by ${first} and ${c.id}`));
+    }
+
+    // A live or retired key point in HEAD stays, retired in place: decision events keep the ids Dani ticked.
+    const keyPointIds = new Set<string>();
+    const unreadableKeyPoints = new Set<string>();
+    for (const path of ctx.files) {
+      if (!KEY_POINT_FILE.test(path)) continue;
+      const now = keyPointsIn(ctx.read(path));
+      if (now === null) unreadableKeyPoints.add(path);
+      for (const { id } of now ?? []) keyPointIds.add(id);
+    }
+    for (const path of ctx.headPaths('content/project/key-points/')) {
+      if (unreadableKeyPoints.has(path)) continue;
+      for (const { id, status } of keyPointsIn(ctx.head(path)) ?? []) {
+        if ((status === 'live' || status === 'retired') && !keyPointIds.has(id)) {
+          out.push(
+            finding(
+              'R2',
+              path,
+              `key point '${id}' is live or retired in HEAD but is gone; retire it in place with status: retired`,
+            ),
+          );
+        }
+      }
+    }
 
     // A working tree that does not parse is R1's finding; comparing it with HEAD would only bury that one error.
     const before = conceptIdsIn(ctx.head(CONCEPTS_FILE));

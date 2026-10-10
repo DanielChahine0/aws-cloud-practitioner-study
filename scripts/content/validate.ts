@@ -3,11 +3,13 @@
  * or every implemented rule with --all (spec 2.9).
  *   --draft <file>  checks one question or incident file as if its drafts were live, plus the style and coverage
  *                   checks, or one lab file under content/labs/ with the lab rules and its replay (R11)
- *   --demote        sets live questions whose evidence left their note back to draft, then validates as usual
+ *   --demote        sets live questions and key points whose evidence left their note back to draft, then validates
+ *                   as usual
  */
 import { resolve } from 'node:path';
 import { isIncidentFile, LABS_DIR, loadContext } from './lib/context.ts';
 import { demote, draftCheck, labDraftCheck } from './lib/draft.ts';
+import { demoteKeyPoints } from './lib/key-point-checks.ts';
 import { formatFinding, RULES, redact, runRules } from './rules/index.ts';
 
 const root = resolve(import.meta.dirname, '..', '..');
@@ -35,6 +37,7 @@ if (draftAt >= 0) {
 
 if (args.includes('--demote')) {
   for (const line of demote(loadContext(root))) console.log(line);
+  for (const line of demoteKeyPoints(loadContext(root))) console.log(line);
 }
 
 const ctx = loadContext(root);
