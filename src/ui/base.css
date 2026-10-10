@@ -2145,5 +2145,8 @@ dialog.confirm .button {
 /* Labs: Simulate */
 
 /* Incident */
+.incident-paid {
+  font-weight: 600;
+}
 
 /* Lightning */

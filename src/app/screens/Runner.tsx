@@ -20,12 +20,13 @@ import { useTitle } from '../../ui/useTitle.ts';
 import { now } from '../clock.ts';
 import { ensureExamForm, ensureModule, examForms, modules } from '../content.ts';
 import { nothingDueLine } from '../home.ts';
+import { firstTryOf, incidentPaidLine } from '../incident.ts';
 import { isControl, isTyping } from '../keyboard.ts';
 import { formsToLoad, learnPoolNow, practicePoolOf } from '../learn-pool.ts';
 import { learnForms, memory, memoryContent, queue } from '../memory.ts';
 import { weakestConcepts } from '../module.ts';
 import { neighbors } from '../nav.ts';
-import { events, newSessionSeed, progress, record, storeReady } from '../progress.ts';
+import { events, newSessionSeed, progress, record, recordAll, storeReady } from '../progress.ts';
 import { badgeEarnedLine, badgesIn } from '../results.ts';
 import { pad2, toHash } from '../router.ts';
 import {
@@ -46,12 +47,13 @@ import { highlight, navigate, overlay } from '../state.ts';
 import { NotFound } from './NotFound.tsx';
 
 /** The modes a `Session` runs; a lab debrief (spec 5.1) runs inside the lab screen, never at a runner route. */
-export type RunnerMode = 'check' | 'quiz' | 'focus' | 'review' | 'debrief';
+export type RunnerMode = 'check' | 'quiz' | 'focus' | 'review' | 'debrief' | 'incident';
 type FlagReason = Extract<StudyEvent, { t: 'flag' }>['reason'];
 
 interface Props {
   idx: ContentIndex;
-  mode: Exclude<RunnerMode, 'debrief'>;
+  /** The routed modes; an incident runs its Session from its own screen. */
+  mode: Exclude<RunnerMode, 'debrief' | 'incident'>;
   /** `m03/aws-lambda` for a lesson check, `m03` for a module quiz, `2.3` or `m03` for a focus quiz, `review` for a review. */
   scope: string;
 }
@@ -486,7 +488,16 @@ export function Session({ idx, shipped, pool, session, mode, module, slug }: Ses
   const finish = (): void => {
     if (submitted.current) return;
     submitted.current = true;
-    void record({ t: 'session', sid: session.sid, mode, phase: 'submit', seed: session.seed });
+    const submit = { t: 'session', sid: session.sid, mode, phase: 'submit', seed: session.seed } as const;
+    if (mode === 'incident') {
+      // One transaction, so a reload never keeps the submit without the solve that pays it.
+      void recordAll([
+        submit,
+        { t: 'incident.done', incident: session.scope, firstTry: firstTryOf(session) },
+      ]);
+      return;
+    }
+    void record(submit);
     if (mode === 'check' && !progress.peek().lessonsDone.has(session.scope)) {
       void record({ t: 'lesson.done', note: session.scope });
     }
@@ -537,6 +548,24 @@ function EndLine({
     m === null || content === null
       ? ''
       : endSummaryLine(sessionSummary(session, m, content, at, tzOffset(at)));
+  if (mode === 'incident') {
+    const done = events.value.find((e) => e.t === 'incident.done' && e.incident === session.scope);
+    const xp = done === undefined ? 0 : (m?.xpByEvent.get(done.id) ?? 0);
+    return (
+      <>
+        <p class="end-line" aria-live="polite">
+          {line}
+        </p>
+        <p class="incident-paid">{incidentPaidLine(xp)}</p>
+        <BadgeLine idx={idx} session={session} />
+        <ul class="end-links">
+          <li>
+            <a href="#/">Back to Home</a>
+          </li>
+        </ul>
+      </>
+    );
+  }
   if (mode === 'review') {
     const more = (queue.value?.items.length ?? 0) > 0;
     return (

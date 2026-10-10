@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import type { ContentIndex } from '../../../schemas/chunks.ts';
 import { studyDay } from '../../engine/day.ts';
 import { hexBand } from '../../engine/mastery.ts';
@@ -51,6 +51,19 @@ const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
  */
 export function Home({ idx }: { idx: ContentIndex }) {
   useTitle('Home');
+  const ready = storeReady.value;
+  const at = now.value;
+  // Today's incident is picked on the first render of a study day and kept as an event (spec 4.5).
+  // A load that fails (a reload while it is in flight, or offline without the chunk) offers nothing; the next render
+  // tries again.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome takes a signal's value for a constant import; it changes, so it is a dependency
+  useEffect(() => {
+    if (!ready) return;
+    void import('../incident-offer.ts').then(
+      (m) => m.offerIncident(at),
+      () => undefined,
+    );
+  }, [ready, at]);
   const byModule = mastery.value;
   const statuses = storeReady.value ? bosses.value : null;
   const hexes = idx.modules.map((m) => {

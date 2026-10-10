@@ -84,6 +84,10 @@ describe('up', () => {
     expect(up({ kind: 'review' })).toEqual({ kind: 'home' });
   });
 
+  it('goes from the daily incident to Home', () => {
+    expect(up({ kind: 'incident' })).toEqual({ kind: 'home' });
+  });
+
   it('goes from a boss or a module focus quiz to its module, from a mock to the mock list, else Home', () => {
     expect(up({ kind: 'boss', module: 5 })).toEqual({ kind: 'module', module: 5 });
     expect(up({ kind: 'focus', scope: 'm05' })).toEqual({ kind: 'module', module: 5 });

@@ -15,6 +15,7 @@ const MocksScreen = lazyScreen(() => import('./Mocks.tsx').then((m) => m.Mocks))
 const ResultsScreen = lazyScreen(() => import('./Results.tsx').then((m) => m.Results));
 // The lab screen, its engine views and their copy load on first use too.
 const LabScreen = lazyScreen(() => import('./Lab.tsx').then((m) => m.Lab));
+const IncidentScreen = lazyScreen(() => import('./Incident.tsx').then((m) => m.Incident));
 
 /** The screen for a route; the content index is always loaded by the time this renders. */
 export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
@@ -48,6 +49,8 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
       return <ResultsScreen key={route} idx={idx} sid={route.sid} />;
     case 'lab':
       return <LabScreen key={route} idx={idx} route={route} />;
+    case 'incident':
+      return <IncidentScreen key={route} idx={idx} />;
     case 'not-found':
       return <NotFound hash={route.hash} />;
   }

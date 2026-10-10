@@ -25,6 +25,12 @@ describe('parseHash', () => {
     expect(parseHash('#/s/review')).toEqual({ kind: 'review' });
   });
 
+  it('reads the daily incident route, and nothing under it', () => {
+    expect(parseHash('#/s/incident')).toEqual({ kind: 'incident' });
+    expect(toHash({ kind: 'incident' })).toBe('#/s/incident');
+    expect(parseHash('#/s/incident/inc-001')).toEqual({ kind: 'not-found', hash: '#/s/incident/inc-001' });
+  });
+
   it('reads the boss, mock, focus and results routes', () => {
     expect(parseHash('#/s/boss/m05')).toEqual({ kind: 'boss', module: 5 });
     expect(parseHash('#/s/mock')).toEqual({ kind: 'mocks' });
@@ -112,6 +118,7 @@ describe('toHash', () => {
     { kind: 'focus', scope: '2.3' },
     { kind: 'focus', scope: 'm05' },
     { kind: 'results', sid: '01JA0000000000000000000000' },
+    { kind: 'incident' },
     { kind: 'not-found', hash: '#/nowhere' },
   ];
 
