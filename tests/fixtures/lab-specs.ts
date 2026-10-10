@@ -96,3 +96,90 @@ export function bakeryConfigureLab(over: Partial<LabFile> = {}): LabFile {
     ...over,
   };
 }
+
+/** Orders per hour for the bakery's oven rush, hours 0 to 23 (lab values). */
+export const OVEN_RUSH_ORDERS = [
+  0, 0, 0, 0, 0, 10, 40, 90, 120, 60, 30, 20, 40, 30, 20, 10, 10, 20, 10, 0, 0, 0, 0, 0,
+];
+
+/** A complete Simulate lab on the `scaling` model: enough ovens for the morning, none wasted. */
+export function bakerySimulateLab(over: Partial<LabFile> = {}): LabFile {
+  return {
+    id: 'lab-m01-oven-rush',
+    module: 1,
+    title: 'Oven rush',
+    engine: 'simulate',
+    tier: 'core',
+    status: 'live',
+    rev: 1,
+    concepts: ['shared-kitchen', 'per-minute-rental'],
+    notes: ['m01/what-a-bakery-cloud-is'],
+    minutes: 6,
+    brief:
+      'Bread orders peak at 08:00. Set how many ovens the bakery rents each hour so no order waits, within a budget of 40 lab credits a day. Every figure here is a lab value.',
+    spec: {
+      model: 'scaling',
+      constants: { orders: OVEN_RUSH_ORDERS, perInstance: 40, credits: 1 },
+      params: [
+        {
+          kind: 'choice',
+          id: 'mode',
+          label: 'When ovens are added',
+          options: [
+            { id: 'dynamic', label: 'Once the orders arrive' },
+            { id: 'predictive', label: 'Ahead of the forecast' },
+          ],
+          initial: 'dynamic',
+        },
+        { kind: 'int', id: 'min', label: 'Fewest ovens', min: 0, max: 4, step: 1, initial: 1 },
+        { kind: 'int', id: 'desired', label: 'Ovens at opening', min: 0, max: 4, step: 1, initial: 1 },
+        { kind: 'int', id: 'max', label: 'Most ovens', min: 1, max: 6, step: 1, initial: 1 },
+        { kind: 'toggle', id: 'balancer', label: 'Share orders across ovens', initial: false },
+      ],
+      thresholds: [
+        { goal: 'g1', metric: 'droppedShare', max: 1 },
+        { goal: 'g2', metric: 'cost', max: 40 },
+      ],
+    },
+    goals: [
+      {
+        id: 'g1',
+        label: 'Almost no order waits',
+        hint: 'Orders rise before 08:00, and one oven bakes 40 an hour.',
+      },
+      {
+        id: 'g2',
+        label: 'Stay within 40 lab credits a day',
+        hint: 'Each oven costs 1 lab credit an hour, busy or idle.',
+      },
+    ],
+    solution: [
+      { t: 'set', param: 'mode', value: 'predictive' },
+      { t: 'set', param: 'max', value: 3 },
+      { t: 'set', param: 'balancer', value: true },
+    ],
+    wrongPaths: [
+      {
+        actions: [
+          { t: 'set', param: 'mode', value: 'predictive' },
+          { t: 'set', param: 'max', value: 3 },
+        ],
+        failsGoal: 'g1',
+        mistake: 'Adds ovens but sends every order to the first one',
+      },
+      {
+        actions: [
+          { t: 'set', param: 'mode', value: 'predictive' },
+          { t: 'set', param: 'max', value: 3 },
+          { t: 'set', param: 'balancer', value: true },
+          { t: 'set', param: 'min', value: 3 },
+          { t: 'set', param: 'desired', value: 3 },
+        ],
+        failsGoal: 'g2',
+        mistake: 'Keeps three ovens hot all day for a two-hour peak',
+      },
+    ],
+    debrief: DEBRIEF,
+    ...over,
+  };
+}

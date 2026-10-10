@@ -4,6 +4,7 @@ import type { ContentIndex, LabMeta, LabView, ModuleChunk, QuestionView } from '
 import { SCHEMA_VERSION } from '../../schemas/version.ts';
 import { DB_NAME, STORES } from '../../src/store/idb.ts';
 import { KV_KEYS } from '../../src/store/kv.ts';
+import { bakerySimulateLab } from '../fixtures/lab-specs.ts';
 
 export const SYNTHETIC_SORT_LAB_ID = 'lab-m01-bakery-sort';
 export const SYNTHETIC_SORT_TITLE = 'Sort the bakery jobs';
@@ -214,6 +215,29 @@ export function syntheticConfigureLab(questions: QuestionView[]): LabView {
       lines: ['Residency rules come first, then the services you need.', 'Price breaks a tie last.'],
       questions: questions.slice(0, 2),
     },
+    credits: true,
+  };
+}
+
+export const SYNTHETIC_SIMULATE_LAB_ID = 'lab-m01-bakery-rush';
+
+/** The bakery Oven rush lab of `tests/fixtures/lab-specs.ts` as the build ships it. */
+export function syntheticSimulateLab(questions: QuestionView[]): LabView {
+  const lab = bakerySimulateLab();
+  return {
+    id: SYNTHETIC_SIMULATE_LAB_ID,
+    module: 1,
+    engine: 'simulate',
+    tier: 'core',
+    rev: 1,
+    title: 'Bakery morning rush',
+    minutes: lab.minutes,
+    concepts: lab.concepts,
+    brief: lab.brief,
+    spec: lab.spec,
+    goals: lab.goals,
+    notes: notesOf(questions),
+    debrief: { lines: lab.debrief.lines, questions: questions.slice(0, 2) },
     credits: true,
   };
 }

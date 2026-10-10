@@ -1,11 +1,12 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { ConfigureSpec, type SortSpec } from '../../schemas/lab.ts';
+import { ConfigureSpec, SimulateSpec, type SortSpec } from '../../schemas/lab.ts';
 import { toPlain } from '../../src/engine/replay.ts';
 import { CONFIGURE } from '../../src/labs/configure/model.ts';
 import { replayLab } from '../../src/labs/contract.ts';
+import { SIMULATE } from '../../src/labs/simulate/model.ts';
 import { SORT } from '../../src/labs/sort/model.ts';
-import { bakeryConfigureLab } from '../fixtures/lab-specs.ts';
+import { bakeryConfigureLab, bakerySimulateLab } from '../fixtures/lab-specs.ts';
 import { bakeryLab } from '../fixtures/labs.ts';
 
 /** Lab reducers (spec 5.1, 9): any action sequence, known ids or not, never throws, replays the same and checks purely. */
@@ -64,6 +65,44 @@ describe('the Configure reducer', () => {
         expect(toPlain(a)).toEqual(toPlain(b));
         expect(CONFIGURE.check(CONFIGURE_SPEC, a)).toEqual(CONFIGURE.check(CONFIGURE_SPEC, b));
         for (const value of Object.values(a.values)) expect(['string', 'boolean']).toContain(typeof value);
+      }),
+      RUNS,
+    );
+  });
+});
+
+const SIMULATE_SPEC = SimulateSpec.parse(bakerySimulateLab().spec);
+const simulateActionArb = fc.oneof(
+  fc.record({
+    t: fc.constant('set'),
+    param: fc.constantFrom('mode', 'min', 'desired', 'max', 'balancer', 'oven'),
+    value: fc.oneof(
+      fc.constantFrom('dynamic', 'predictive', 'reactive'),
+      fc.boolean(),
+      fc.integer({ min: -2, max: 12 }),
+      fc.double(),
+    ),
+  }),
+  fc.constant({ t: 'run' }),
+  fc.constant({ t: 'reset' }),
+  fc.anything(),
+);
+
+describe('the Simulate reducer', () => {
+  it('never throws, is deterministic, checks purely and keeps every value in range', () => {
+    fc.assert(
+      fc.property(fc.array(simulateActionArb, { maxLength: 30 }), (actions) => {
+        const a = replayLab(SIMULATE, SIMULATE_SPEC, actions as never[]);
+        const b = replayLab(SIMULATE, SIMULATE_SPEC, actions as never[]);
+        expect(toPlain(a)).toEqual(toPlain(b));
+        expect(SIMULATE.check(SIMULATE_SPEC, a)).toEqual(SIMULATE.check(SIMULATE_SPEC, b));
+        const ran = SIMULATE.reduce(a, { t: 'run' });
+        for (const p of SIMULATE_SPEC.params) {
+          const v = ran.values[p.id];
+          if (p.kind === 'int') expect(typeof v === 'number' && v >= p.min && v <= p.max).toBe(true);
+        }
+        for (const value of Object.values(ran.result?.metrics ?? {}))
+          expect(Number.isFinite(value)).toBe(true);
       }),
       RUNS,
     );

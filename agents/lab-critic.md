@@ -41,3 +41,11 @@ Each rule matches what the brief and the cited note say, and you name the note l
 Every price is in lab credits, and every figure the notes do not state is called a lab value in the brief or the option detail.
 Each wrong path fails its `failsGoal` because of the setting its `mistake` names, not because a field was left at its initial value by accident.
 Option labels name the choice and never the verdict; details state facts, never hints.
+
+## Simulate criteria
+
+Run `pnpm vitest run tests/content/sim-labs.test.ts` and report any failure for this lab as a `wrongPath` issue: the numbers must match `SIM_LABS` exactly.
+Each threshold fails each wrong path for the mistake that path names, not by accident; a wrong path that also fails other goals is fine when its own goal fails for its own reason.
+Every constant is called a lab value, and every price is in lab credits.
+The debrief explains the ordering the lesson rests on; for Bursty or steady, the instance wins for the order worker because it is never idle, and Lambda wins for the weekly export because it is idle almost all month.
+Parameter labels name the lever, units are always shown, and no label hints at the right value.
