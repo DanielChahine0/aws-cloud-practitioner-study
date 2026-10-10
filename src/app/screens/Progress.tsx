@@ -119,30 +119,32 @@ export function Progress() {
           <button class="button" type="button" onClick={() => void exportBackup()}>
             Export a backup
           </button>
+          {/* The label is the visible control; the native file widget, wider than a phone sheet, stays hidden. */}
+          <label class="button button-quiet file-button">
+            Import a backup
+            <input
+              class="visually-hidden"
+              type="file"
+              accept="application/json,.json"
+              onChange={(event) => {
+                const input = event.currentTarget;
+                const file = input.files?.[0];
+                input.value = '';
+                if (file === undefined) return;
+                void file
+                  .text()
+                  .then(parseBackup)
+                  .then((result) =>
+                    setState(
+                      result.ok
+                        ? { step: 'preview', data: result.data, confirmReplace: false }
+                        : { step: 'error', message: result.error },
+                    ),
+                  );
+              }}
+            />
+          </label>
         </p>
-        <label class="file-label">
-          Import a backup
-          <input
-            type="file"
-            accept="application/json,.json"
-            onChange={(event) => {
-              const input = event.currentTarget;
-              const file = input.files?.[0];
-              input.value = '';
-              if (file === undefined) return;
-              void file
-                .text()
-                .then(parseBackup)
-                .then((result) =>
-                  setState(
-                    result.ok
-                      ? { step: 'preview', data: result.data, confirmReplace: false }
-                      : { step: 'error', message: result.error },
-                  ),
-                );
-            }}
-          />
-        </label>
         {state.step === 'error' && (
           <p class="import-error" role="alert">
             {state.message}

@@ -1133,16 +1133,16 @@ tr.evidence > :first-child {
   border: 1px solid var(--active);
 }
 
-.file-label {
-  display: grid;
-  gap: 4px;
-  margin-bottom: 12px;
+/* A label styled as a button stands in for the native file widget, which keeps the focus inside it. */
+.file-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
-.file-label input {
-  max-width: 100%;
-  font: inherit;
-  font-size: 0.875rem;
+.file-button:has(input:focus-visible) {
+  outline: 2px solid var(--active);
+  outline-offset: 2px;
 }
 
 .import-preview {
