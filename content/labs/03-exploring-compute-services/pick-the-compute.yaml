@@ -1,0 +1,197 @@
+id: lab-m03-pick-the-compute
+module: 3
+title: Pick the compute
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts:
+  - amazon-ec2
+  - aws-lambda
+  - amazon-ecr
+  - amazon-ecs
+  - amazon-eks
+  - aws-fargate
+  - aws-elastic-beanstalk
+  - aws-batch
+  - amazon-lightsail
+  - aws-outposts
+notes:
+  - m03/introduction-to-serverless-computing
+  - m03/aws-lambda
+  - m03/containers-and-orchestration-on-aws
+  - m03/additional-compute-services
+minutes: 6
+brief: >-
+  The cafe chain has a long list of computing jobs, from photo uploads to a recipe blog, and each one has a different shape.
+  Sort each job under the AWS compute service that fits it best.
+spec:
+  buckets:
+    - id: ec2
+      label: Amazon EC2
+    - id: lambda
+      label: AWS Lambda
+    - id: ecr
+      label: Amazon ECR
+    - id: ecs
+      label: Amazon ECS
+    - id: eks
+      label: Amazon EKS
+    - id: fargate
+      label: AWS Fargate
+    - id: beanstalk
+      label: AWS Elastic Beanstalk
+    - id: batch
+      label: AWS Batch
+    - id: lightsail
+      label: Amazon Lightsail
+    - id: outposts
+      label: AWS Outposts
+  cards:
+    - id: tuned-loyalty-server
+      text: A loyalty server where the cafe picks the OS, applies every patch and sets up the network itself
+      bucket: ec2
+      goal: g1
+    - id: menu-photo-resize
+      text: Code that resizes each new menu photo into several sizes the moment a barista uploads it
+      bucket: lambda
+      goal: g1
+    - id: till-close-report
+      text: A short job that writes the expense report each time the evening till closes
+      bucket: lambda
+      goal: g1
+    - id: image-home
+      text: A secure, versioned home for the ordering app's container images that orchestrators pull from
+      bucket: ecr
+      goal: g2
+    - id: streamlined-orchestrator
+      text: Streamlined, AWS-integrated orchestration that scales and restarts the ordering app's Docker containers across a cluster
+      bucket: ecs
+      goal: g2
+    - id: roastery-kubernetes
+      text: Orchestration for the roastery team, which already knows Kubernetes and wants to keep using it
+      bucket: eks
+      goal: g2
+    - id: serverless-containers
+      text: Somewhere to run the loyalty app's containers with no servers for the cafe to manage or size
+      bucket: fargate
+      goal: g2
+    - id: hand-over-code
+      text: A web app whose code and settings the cafe hands over, wanting scaling, load balancing and health checks built for it
+      bucket: beanstalk
+      goal: g3
+    - id: recipe-blog
+      text: A simple site for seasonal recipes, bundled with its server and storage at a steady monthly price
+      bucket: lightsail
+      goal: g3
+    - id: recipe-simulations
+      text: A huge set of long recipe simulations, run in parallel and scheduled across a fleet of instances
+      bucket: batch
+      goal: g4
+    - id: server-room-compute
+      text: Low-latency AWS compute for the till system, running inside the chain's own server room
+      bucket: outposts
+      goal: g4
+goals:
+  - id: g1
+    label: Server and function jobs sit under EC2 and Lambda
+    hint: Ask whether the cafe wants to own the OS and patching, or only hand over short code that runs when an event fires.
+  - id: g2
+    label: Each container job sits with its registry, orchestrator or host
+    hint: Ask which part of the container story the job is, storing images, orchestrating them or running them, and whether Kubernetes is in play.
+  - id: g3
+    label: Ready-made hosting jobs sit under Elastic Beanstalk and Lightsail
+    hint: Ask whether the cafe hands over code and wants the environment built and scaled, or wants a small all-in-one bundle at a predictable price.
+  - id: g4
+    label: Large parallel work and on-site compute sit under Batch and Outposts
+    hint: Ask whether the job is heavy compute to schedule across a fleet, or AWS compute that must run in the cafe's own building.
+solution:
+  - { t: place, card: tuned-loyalty-server, bucket: ec2 }
+  - { t: place, card: menu-photo-resize, bucket: lambda }
+  - { t: place, card: till-close-report, bucket: lambda }
+  - { t: place, card: image-home, bucket: ecr }
+  - { t: place, card: streamlined-orchestrator, bucket: ecs }
+  - { t: place, card: roastery-kubernetes, bucket: eks }
+  - { t: place, card: serverless-containers, bucket: fargate }
+  - { t: place, card: hand-over-code, bucket: beanstalk }
+  - { t: place, card: recipe-blog, bucket: lightsail }
+  - { t: place, card: recipe-simulations, bucket: batch }
+  - { t: place, card: server-room-compute, bucket: outposts }
+wrongPaths:
+  - mistake: Thinks a short event-driven job needs its own EC2 server to run on
+    failsGoal: g1
+    actions:
+      - { t: place, card: tuned-loyalty-server, bucket: ec2 }
+      - { t: place, card: menu-photo-resize, bucket: lambda }
+      - { t: place, card: till-close-report, bucket: ec2 }
+      - { t: place, card: image-home, bucket: ecr }
+      - { t: place, card: streamlined-orchestrator, bucket: ecs }
+      - { t: place, card: roastery-kubernetes, bucket: eks }
+      - { t: place, card: serverless-containers, bucket: fargate }
+      - { t: place, card: hand-over-code, bucket: beanstalk }
+      - { t: place, card: recipe-blog, bucket: lightsail }
+      - { t: place, card: recipe-simulations, bucket: batch }
+      - { t: place, card: server-room-compute, bucket: outposts }
+  - mistake: Mixes up the image registry with the orchestrator that pulls from it
+    failsGoal: g2
+    actions:
+      - { t: place, card: tuned-loyalty-server, bucket: ec2 }
+      - { t: place, card: menu-photo-resize, bucket: lambda }
+      - { t: place, card: till-close-report, bucket: lambda }
+      - { t: place, card: image-home, bucket: ecs }
+      - { t: place, card: streamlined-orchestrator, bucket: ecs }
+      - { t: place, card: roastery-kubernetes, bucket: eks }
+      - { t: place, card: serverless-containers, bucket: fargate }
+      - { t: place, card: hand-over-code, bucket: beanstalk }
+      - { t: place, card: recipe-blog, bucket: lightsail }
+      - { t: place, card: recipe-simulations, bucket: batch }
+      - { t: place, card: server-room-compute, bucket: outposts }
+  - mistake: Treats Fargate as an orchestrator for Kubernetes instead of a place containers run
+    failsGoal: g2
+    actions:
+      - { t: place, card: tuned-loyalty-server, bucket: ec2 }
+      - { t: place, card: menu-photo-resize, bucket: lambda }
+      - { t: place, card: till-close-report, bucket: lambda }
+      - { t: place, card: image-home, bucket: ecr }
+      - { t: place, card: streamlined-orchestrator, bucket: ecs }
+      - { t: place, card: roastery-kubernetes, bucket: fargate }
+      - { t: place, card: serverless-containers, bucket: fargate }
+      - { t: place, card: hand-over-code, bucket: beanstalk }
+      - { t: place, card: recipe-blog, bucket: lightsail }
+      - { t: place, card: recipe-simulations, bucket: batch }
+      - { t: place, card: server-room-compute, bucket: outposts }
+  - mistake: Picks the simple Lightsail bundle for an app that needs scaling and load balancing built for it
+    failsGoal: g3
+    actions:
+      - { t: place, card: tuned-loyalty-server, bucket: ec2 }
+      - { t: place, card: menu-photo-resize, bucket: lambda }
+      - { t: place, card: till-close-report, bucket: lambda }
+      - { t: place, card: image-home, bucket: ecr }
+      - { t: place, card: streamlined-orchestrator, bucket: ecs }
+      - { t: place, card: roastery-kubernetes, bucket: eks }
+      - { t: place, card: serverless-containers, bucket: fargate }
+      - { t: place, card: hand-over-code, bucket: lightsail }
+      - { t: place, card: recipe-blog, bucket: lightsail }
+      - { t: place, card: recipe-simulations, bucket: batch }
+      - { t: place, card: server-room-compute, bucket: outposts }
+  - mistake: Sends long, heavy simulations to Lambda despite its cap on how long one run lasts
+    failsGoal: g4
+    actions:
+      - { t: place, card: tuned-loyalty-server, bucket: ec2 }
+      - { t: place, card: menu-photo-resize, bucket: lambda }
+      - { t: place, card: till-close-report, bucket: lambda }
+      - { t: place, card: image-home, bucket: ecr }
+      - { t: place, card: streamlined-orchestrator, bucket: ecs }
+      - { t: place, card: roastery-kubernetes, bucket: eks }
+      - { t: place, card: serverless-containers, bucket: fargate }
+      - { t: place, card: hand-over-code, bucket: beanstalk }
+      - { t: place, card: recipe-blog, bucket: lightsail }
+      - { t: place, card: recipe-simulations, bucket: lambda }
+      - { t: place, card: server-room-compute, bucket: outposts }
+debrief:
+  lines:
+    - EC2 leaves the OS, patching and network setup with the cafe, while Lambda runs short code only when an event fires.
+    - Containers pass through three roles, with ECR storing the images, ECS or EKS orchestrating them, and EC2 or Fargate running them.
+    - Elastic Beanstalk builds and scales an environment from the cafe's code, while Lightsail bundles a simple server at a predictable monthly price.
+    - AWS Batch schedules large parallel jobs across a fleet, while Outposts brings AWS compute, storage and networking into the cafe's own building.
+  questions: [q-096x8d, q-a3pe53, q-a16vhy]
