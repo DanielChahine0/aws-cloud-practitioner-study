@@ -7,7 +7,7 @@ import { ulid } from '../../store/ulid.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { ensureModule, modules } from '../content.ts';
-import { isTyping } from '../keyboard.ts';
+import { isControl, isTyping } from '../keyboard.ts';
 import { neighbors } from '../nav.ts';
 import { newSessionSeed, progress, record, storeReady } from '../progress.ts';
 import { pad2 } from '../router.ts';
@@ -399,6 +399,7 @@ function Question({ q, session, mode, position, total, feedback, onAnswered, onN
           alt: event.altKey,
           shift: event.shiftKey,
           typing: isTyping(target),
+          control: isControl(target),
           select: target instanceof HTMLSelectElement,
           at: event.timeStamp,
         },

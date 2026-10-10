@@ -1,6 +1,8 @@
 import { useEffect } from 'preact/hooks';
 import { index } from './content.ts';
+import { nextLabel } from './home.ts';
 import { keyStep } from './keys.ts';
+import { nextUp } from './memory.ts';
 import { closeTerm, navigate, openTerm, overlay, route } from './state.ts';
 
 /** Input types that take no typed text, so single-letter shortcuts stay on while one has focus. */
@@ -14,6 +16,29 @@ export const isTyping = (target: EventTarget | null): boolean =>
     target.tagName === 'SELECT' ||
     (target instanceof HTMLInputElement && !NON_TEXT_INPUTS.has(target.type)));
 
+/** True when focus is on an element that answers Enter itself: a link, a button, a form field or a summary. */
+export const isControl = (target: EventTarget | null): boolean =>
+  target instanceof Element && target.closest('a, button, input, select, textarea, summary') !== null;
+
+/** Follows the Next button, when it has somewhere to go. */
+function followNext(): void {
+  const idx = index.value;
+  const action = nextUp.value;
+  if (idx === null || action === null) return;
+  const { href } = nextLabel(action, idx);
+  if (href !== null) navigate(href);
+}
+
+/** Focuses the next or previous `[data-nav-item]`, clamped at both ends; with none focused, the first. */
+function moveFocus(delta: 1 | -1): void {
+  const items = [...document.querySelectorAll<HTMLElement>('[data-nav-item]')];
+  if (items.length === 0) return;
+  const active = document.activeElement;
+  const at = active instanceof HTMLElement ? items.indexOf(active) : -1;
+  const target = at === -1 ? 0 : Math.min(items.length - 1, Math.max(0, at + delta));
+  items[target]?.focus();
+}
+
 /** The one window keydown listener for the global shortcuts (spec 7.4); dialogs handle their own keys. */
 export function useKeyboard(): void {
   useEffect(() => {
@@ -26,6 +51,7 @@ export function useKeyboard(): void {
           ctrl: event.ctrlKey,
           alt: event.altKey,
           typing: isTyping(event.target),
+          control: isControl(event.target),
           at: event.timeStamp,
         },
         {
@@ -55,6 +81,12 @@ export function useKeyboard(): void {
           break;
         case 'navigate':
           navigate(command.hash);
+          break;
+        case 'next':
+          followNext();
+          break;
+        case 'move':
+          moveFocus(command.delta);
           break;
         case 'g':
           break;

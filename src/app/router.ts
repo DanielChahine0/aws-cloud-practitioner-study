@@ -7,6 +7,7 @@ export type Route =
   | { kind: 'mission'; id: string }
   | { kind: 'check'; module: number; slug: string }
   | { kind: 'quiz'; module: number }
+  | { kind: 'review' }
   | { kind: 'not-found'; hash: string };
 
 const MODULE = '(0[1-9]|1[0-3])';
@@ -26,6 +27,7 @@ export function parseHash(hash: string): Route {
   const path = hash.startsWith('#') ? hash.slice(1) : hash;
   if (path === '' || path === '/') return { kind: 'home' };
   if (path === '/missions') return { kind: 'missions' };
+  if (path === '/s/review') return { kind: 'review' };
   const module = MODULE_PATH.exec(path);
   if (module) return { kind: 'module', module: Number(module[1]) };
   const lesson = LESSON_PATH.exec(path);
@@ -57,6 +59,8 @@ export function toHash(route: Route): string {
       return `#/s/check/m${pad2(route.module)}/${route.slug}`;
     case 'quiz':
       return `#/s/quiz/m${pad2(route.module)}`;
+    case 'review':
+      return '#/s/review';
     case 'not-found':
       return route.hash;
   }

@@ -36,6 +36,7 @@ const key = (k: string, more: Partial<KeyInput> = {}): KeyInput => ({
   ctrl: false,
   alt: false,
   typing: false,
+  control: false,
   at: 10_000,
   ...more,
 });
@@ -124,5 +125,36 @@ describe('keyCommand', () => {
     });
     expect(keyCommand(key('c'), ctx({ route: { kind: 'module', module: 1 } }))).toBeNull();
     expect(keyCommand(key('c', { typing: true }), ctx({ route: LESSON_A }))).toBeNull();
+  });
+
+  it('opens Review with g then r, in either case', () => {
+    expect(keyCommand(key('r'), ctx({ gAt: 9_500 }))).toEqual({ kind: 'navigate', hash: '#/s/review' });
+    expect(keyCommand(key('R'), ctx({ gAt: 9_500, route: LESSON_A }))).toEqual({
+      kind: 'navigate',
+      hash: '#/s/review',
+    });
+    expect(keyCommand(key('r'), ctx({ gAt: 8_000 }))).toBeNull();
+    expect(keyCommand(key('r'), ctx())).toBeNull();
+  });
+
+  it('follows Next with Enter on Home, unless a link, button or field has focus', () => {
+    expect(keyCommand(key('Enter'), ctx())).toEqual({ kind: 'next' });
+    expect(keyCommand(key('Enter', { control: true }), ctx())).toBeNull();
+    expect(keyCommand(key('Enter', { typing: true, control: true }), ctx())).toBeNull();
+    expect(keyCommand(key('Enter'), ctx({ route: { kind: 'module', module: 1 } }))).toBeNull();
+    expect(keyCommand(key('Enter'), ctx({ route: LESSON_A }))).toBeNull();
+  });
+
+  it('moves with j and k on Home and module pages, even from a focused link', () => {
+    expect(keyCommand(key('j'), ctx())).toEqual({ kind: 'move', delta: 1 });
+    expect(keyCommand(key('K'), ctx())).toEqual({ kind: 'move', delta: -1 });
+    expect(keyCommand(key('j', { control: true }), ctx({ route: { kind: 'module', module: 2 } }))).toEqual({
+      kind: 'move',
+      delta: 1,
+    });
+    expect(keyCommand(key('k'), ctx({ route: LESSON_A }))).toBeNull();
+    expect(keyCommand(key('j'), ctx({ route: { kind: 'review' } }))).toBeNull();
+    expect(keyCommand(key('j', { typing: true }), ctx())).toBeNull();
+    expect(keyCommand(key('j'), ctx({ overlayOpen: true }))).toBeNull();
   });
 });

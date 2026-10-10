@@ -8,6 +8,7 @@ const key = (k: string, more: Partial<RunnerKeyInput> = {}): RunnerKeyInput => (
   alt: false,
   shift: false,
   typing: false,
+  control: false,
   at: 0,
   ...more,
 });

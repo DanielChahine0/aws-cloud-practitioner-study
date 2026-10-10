@@ -22,6 +22,7 @@ describe('parseHash', () => {
     expect(parseHash('#/missions/mission-00')).toEqual({ kind: 'mission', id: 'mission-00' });
     expect(parseHash('#/s/check/m03/aws-lambda')).toEqual({ kind: 'check', module: 3, slug: 'aws-lambda' });
     expect(parseHash('#/s/quiz/m13')).toEqual({ kind: 'quiz', module: 13 });
+    expect(parseHash('#/s/review')).toEqual({ kind: 'review' });
   });
 
   it('sends anything else to not-found with the hash it got', () => {
@@ -39,6 +40,8 @@ describe('parseHash', () => {
       '#/s/quiz/m00',
       '#/s/quiz/03',
       '#/s/lightning/m03',
+      '#/s/review/m03',
+      '#/s/reviews',
     ]) {
       expect(parseHash(hash)).toEqual({ kind: 'not-found', hash });
     }
@@ -55,6 +58,7 @@ describe('toHash', () => {
     { kind: 'mission', id: 'mission-01' },
     { kind: 'check', module: 3, slug: 'aws-lambda' },
     { kind: 'quiz', module: 3 },
+    { kind: 'review' },
     { kind: 'not-found', hash: '#/nowhere' },
   ];
 
@@ -65,6 +69,7 @@ describe('toHash', () => {
   it('writes the practice routes with the module as mNN', () => {
     expect(toHash({ kind: 'check', module: 3, slug: 'aws-lambda' })).toBe('#/s/check/m03/aws-lambda');
     expect(toHash({ kind: 'quiz', module: 3 })).toBe('#/s/quiz/m03');
+    expect(toHash({ kind: 'review' })).toBe('#/s/review');
   });
 
   it('pads module numbers to two digits', () => {

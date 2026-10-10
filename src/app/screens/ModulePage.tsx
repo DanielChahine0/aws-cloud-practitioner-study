@@ -41,7 +41,7 @@ export function ModulePage({ idx, module }: { idx: ContentIndex; module: number 
           const score = checkScores.get(noteId(l.slug));
           return (
             <li key={l.slug}>
-              <a class="row" href={`#/m/${pad2(module)}/l/${l.slug}`}>
+              <a class="row" href={`#/m/${pad2(module)}/l/${l.slug}`} data-nav-item>
                 <span class="row-n">{l.n}</span>
                 <span class="row-title">{l.title}</span>
                 {(read || score !== undefined) && (
