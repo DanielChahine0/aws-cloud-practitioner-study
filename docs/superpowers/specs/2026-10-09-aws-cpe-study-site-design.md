@@ -822,6 +822,7 @@ debrief: { lines: [ ... ], questions: [q-4m2x8c, q-9tq3vd] }
 - Every interaction works by tap-to-select then tap-to-place, which the keyboard mirrors, so dragging is never required (WCAG 2.5.7).
 - Hints are free, and a lab completed without hints earns the +10 XP.
 - Labs do not update FSRS directly, but each debrief ends with 2 to 3 verified practice questions, and those are counted answers (3.1).
+- NOTE: each debrief question, like each step of a shipped incident, is on a concept no other question of it is on, since only one counted answer per concept a day pays; R6 reports a repeat (Phase 4).
 - Lab concepts must be registered concepts (rule 6), and card sets use the exam's current names (2.3).
 - NOTE: the engine contract has no `schema` member, because the zod spec and action schemas live in `schemas/lab.ts` so zod stays out of the app, and every check runs through the engine registry in `src/labs/engines.ts`, whose `settle` actions run before any check and whose `complete` says a board is finished (Phase 4).
 - NOTE: a lab file also carries a `title`, the `notes` it is grounded in, a `status` of `live` or `retired`, and a `mistake` on each wrong path naming the learner error it models (Phase 4).

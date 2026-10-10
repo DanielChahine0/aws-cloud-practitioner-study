@@ -4,7 +4,7 @@ title: Choose the Region
 engine: configure
 tier: core
 status: live
-rev: 1
+rev: 2
 concepts: [region-selection, regional-pricing]
 notes: [m04/choosing-aws-regions]
 minutes: 4
@@ -69,4 +69,4 @@ debrief:
     - The nearest lawful Region could not host the app, since services arrive in each Region over time and it lacked the one the app needs.
     - After compliance no factor has a fixed rank, so the cafe's own needs set the order, and here the app cannot run without its service and the owner puts speed ahead of price.
     - Each Region has its own rates, so the nearest lawful Region with the service cost more than a slower one, a trade the owner chose to make.
-  questions: [q-b3he22, q-vs9t9x, q-d8nb9v]
+  questions: [q-b3he22, q-d8nb9v]

@@ -1,5 +1,11 @@
 import { posix } from 'node:path';
-import { CONCEPTS_FILE, type Finding, type LessonNote, questionFileOf } from '../lib/context.ts';
+import {
+  CONCEPTS_FILE,
+  type Finding,
+  incidentShips,
+  type LessonNote,
+  questionFileOf,
+} from '../lib/context.ts';
 import { notesAnchors } from '../lib/markdown.ts';
 import { projectOf } from '../lib/project.ts';
 import { fencedLines } from '../lib/text.ts';
@@ -7,6 +13,8 @@ import { finding, type Rule } from './rule.ts';
 
 const LINK = /\]\(([^)#\s]+)(?:#[^)]*)?\)/g;
 const EXTERNAL = /^(?:https?:|mailto:)/;
+/** Why a lab debrief or an incident asks each concept once: a debrief answer or step is a counted answer (spec 3.1). */
+const ONE_A_DAY = 'and only one counted answer per concept a day pays';
 
 /**
  * R6 References: note identity, relative links, concept tags, homes, anchors, confusables, mission ids, question
@@ -138,7 +146,8 @@ export const r06: Rule = {
     }
 
     // Labs: concepts and notes resolve, and the debrief asks live practice questions on the lab's own concepts,
-    // never an incident step, named by id only so no exam item text can reach a finding (spec 5.1).
+    // never an incident step, named by id only so no exam item text can reach a finding (spec 5.1). Each is on a
+    // concept no other debrief question of the lab is on, since a debrief answer is a counted answer (spec 3.1).
     const resolve = (id: string): string =>
       ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id))?.id ?? id;
     for (const { path, lab } of ctx.labs) {
@@ -153,6 +162,7 @@ export const r06: Rule = {
       }
       for (const id of lab.notes) if (!lessons.has(id)) report(`note ${id} is not a note`);
       const concepts = new Set(lab.concepts.map(resolve));
+      const askedBy = new Map<string, string>();
       for (const qid of lab.debrief.questions) {
         const entry = ctx.questions.find(
           (e) => e.q.id === qid && e.incident === null && e.q.pool === 'practice' && e.q.status === 'live',
@@ -160,14 +170,21 @@ export const r06: Rule = {
         if (entry === undefined) report(`debrief question ${qid} is not a live practice question`);
         else if (!concepts.has(resolve(entry.q.concept))) {
           report(`debrief question ${qid} is on ${entry.q.concept}, which the lab does not list`);
+        } else {
+          const first = askedBy.get(resolve(entry.q.concept));
+          if (first === undefined) askedBy.set(resolve(entry.q.concept), qid);
+          else report(`debrief question ${qid} is on ${entry.q.concept}, like ${first}, ${ONE_A_DAY}`);
         }
       }
     }
 
     const canonical = (id: string): string | undefined =>
       ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id))?.id;
-    for (const { path, incident, steps } of ctx.incidents) {
+    for (const entry of ctx.incidents) {
+      const { path, incident, steps } = entry;
       if (incident.status === 'retired') continue;
+      // A shipped incident asks each concept in one step only, since each step is a counted answer (spec 3.1).
+      const ships = incidentShips(entry);
       const listed = new Set<string>();
       for (const id of incident.concepts) {
         const concept = ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id));
@@ -180,9 +197,16 @@ export const r06: Rule = {
         }
         listed.add(concept.id);
       }
+      const askedBy = new Map<string, string>();
       for (const step of steps) {
         if (step.q.status === 'retired') continue;
         const id = canonical(step.q.concept);
+        const first = id === undefined ? undefined : askedBy.get(id);
+        if (id !== undefined && first === undefined) askedBy.set(id, step.q.id);
+        if (ships && first !== undefined) {
+          const message = `${incident.id}: step ${step.q.id} is on ${step.q.concept}, like ${first}, ${ONE_A_DAY}`;
+          out.push(finding('R6', path, message, step.line));
+        }
         if (id === undefined || listed.has(id)) continue;
         out.push(
           finding(
