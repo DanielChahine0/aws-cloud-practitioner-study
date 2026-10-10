@@ -70,6 +70,8 @@ test('offline, the app replays a seeded log', async ({ page, context }) => {
   await seedEvents(page, eventsOf({ t: 'lesson.done', note: `m07/${lesson.slug}` }));
 
   await context.setOffline(true);
+  // A hash-only goto would keep the running page, so reload to boot the app and replay the log offline.
   await page.goto('/#/m/07');
+  await page.reload();
   await expect(page.locator('a.row', { hasText: lesson.title })).toContainText('Read');
 });
