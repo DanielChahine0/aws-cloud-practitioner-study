@@ -1,0 +1,360 @@
+questions:
+  - id: q-egbm80
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: region-selection
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 2
+    stem: >-
+      A payroll software firm in Germany is comparing AWS Regions for a new deployment.
+      Most of its customers sit in neighboring countries, it wants a low monthly bill, it relies on a recently launched service, and its salary records must stay inside Germany.
+      Which factor should the firm settle before any other?
+    options:
+      - id: a
+        text: Distance to its customers
+        why: Nearness to customers matters for speed, but a Region outside Germany is ruled out whatever its distance, so it comes later.
+      - id: b
+        text: Rules on where data is stored
+        correct: true
+        why: The bar on salary records leaving Germany can decide the Region by itself, so it is checked before every other factor.
+      - id: c
+        text: Services offered in each Region
+        why: The new service is only compared among Regions that already keep the records in Germany, so it cannot come first.
+      - id: d
+        text: Rates charged in each Region
+        why: A cheaper Region outside Germany would break the storage rule, so price is weighed only after that check.
+    evidence:
+      - Check compliance first, since a legal rule can settle the Region alone, but most businesses have none and move on to the rest.
+      - Data sovereignty laws may force data to stay in the country, which touches both compliance and cost.
+    takeaway: When a rule limits where data may be stored, compliance settles the Region before proximity, services or price.
+    history: []
+    verified:
+      keyHash: 1d78bd71bbd8
+      fullHash: b21185201cbd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-69pq32
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-govcloud-regions
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 2
+    stem: >-
+      A US federal agency and the outside contractors that run its systems need to host sensitive workloads under stricter physical, operational and staffing controls than standard AWS locations apply.
+      Which AWS offering fits?
+    options:
+      - id: a
+        text: AWS Outposts
+        why: Outposts runs AWS services in the agency's own building, leaving the stricter staffing and operational controls it needs to the agency.
+      - id: b
+        text: Amazon EC2 Dedicated Hosts
+        why: A Dedicated Host gives one customer a whole physical server, but it does not add stricter controls over the people and sites behind it.
+      - id: c
+        text: AWS GovCloud Regions
+        correct: true
+        why: These Regions serve US federal and other public bodies and their contractors, with stricter physical, operational and personnel controls.
+      - id: d
+        text: AWS Artifact
+        why: Artifact hands out compliance reports and agreements; it does not host the agency's sensitive workloads anywhere.
+    evidence:
+      - AWS GovCloud Regions carry strict physical, operational and personnel controls for US government bodies and contractors.
+    takeaway: US government agencies and their contractors that need stricter facility and staff controls run in AWS GovCloud Regions.
+    history: []
+    verified:
+      keyHash: 42d59013879e
+      fullHash: 52b5ba32f01d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0k4bkh
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: gdpr
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 3
+    stem: >-
+      An online pharmacy based in Spain takes card payments from shoppers across the European Union and keeps their names, emails and order history.
+      It must get each shopper's permission before collecting these details and let shoppers view or erase them on request.
+      Which rules set these duties?
+    options:
+      - id: a
+        text: HIPAA rules
+        why: HIPAA is a US law on health information, so it does not set consent and erasure duties for a pharmacy serving EU shoppers.
+      - id: b
+        text: PCI rules
+        why: PCI rules protect the card data the pharmacy takes at checkout, but they do not cover consent or erasing personal details.
+      - id: c
+        text: GDPR rules
+        correct: true
+        why: GDPR is the EU privacy law that requires consent before collecting personal details and lets people see or erase them.
+      - id: d
+        text: Data sovereignty rules
+        why: These rules decide where data must be stored, not consent or a shopper's right to view and erase their details.
+    evidence:
+      - Under GDPR, the EU privacy law, an EU online shop must get consent before collecting personal data and let people see or erase it.
+    takeaway: An EU business that must get consent and let people view or erase their personal data is meeting GDPR.
+    history: []
+    verified:
+      keyHash: 3c7d882779d2
+      fullHash: 7eab15740dc8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-67nwgr
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: infrastructure-as-code
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 1
+    stem: >-
+      Which approach declares what an entire environment should contain in files kept under source control, so tools can rebuild that environment identically in any Region?
+    options:
+      - id: a
+        text: Command-line scripting
+        why: Command-line scripts run commands step by step for routine jobs and grow hard to maintain, rather than declaring a whole environment.
+      - id: b
+        text: Infrastructure as code
+        correct: true
+        why: Infrastructure as code declares the environment in source-controlled files that tools can rebuild identically anywhere.
+      - id: c
+        text: Programmatic access
+        why: Programmatic access calls AWS through code one step at a time, such as saving user data, not keeping a blueprint of a whole environment.
+      - id: d
+        text: Manual console workflows
+        why: Console workflows suit newcomers and small one-off jobs, and they leave no declared definition that rebuilds the same way.
+    evidence:
+      - Infrastructure as code (IaC) stores the architecture as a source-controlled blueprint that tools rebuild anywhere, identically and easily.
+      - IaC is declarative, so teams can version, review and automate deployments.
+      - Programmatic access suits developers, the console newcomers, and IaC repeatable work at scale.
+    takeaway: Infrastructure as code keeps an environment as a versioned blueprint, so it can be rebuilt identically in any Region.
+    history: []
+    verified:
+      keyHash: f811f8aea28a
+      fullHash: 267327d3f822
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-45b5x0
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-cloudformation
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 3
+    stem: >-
+      A logistics company wants its network, servers and databases described in text files that reviewers approve before each release.
+      The same files must then create matching environments in each of its AWS accounts.
+      Which AWS service fits?
+    options:
+      - id: a
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk deploys and runs an application for you, rather than building any set of resources from files the team writes.
+      - id: b
+        text: AWS Config
+        why: AWS Config records and evaluates how existing resources are set up; it does not create them from a template.
+      - id: c
+        text: AWS CloudFormation
+        correct: true
+        why: CloudFormation reads declarative templates and provisions the resources they describe, giving matching environments in every account.
+      - id: d
+        text: AWS Systems Manager
+        why: Systems Manager helps operate and patch resources that already exist, not build whole environments from reviewed templates.
+    evidence:
+      - Its templates are text files declaring what to build, not how, and it provisions and configures it all through AWS APIs.
+      - One template across accounts or Regions gives identical environments from one command, with fewer errors and more resilience.
+    takeaway: Reviewed text templates that build matching resource stacks across accounts point to AWS CloudFormation.
+    history: []
+    verified:
+      keyHash: 17108f8b3c42
+      fullHash: 16a47a354cc5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-fwx2k9
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: multi-az-deployment
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 3
+    stem: >-
+      A regional clinic runs its appointment booking app in one AWS Region.
+      The app must keep working if one isolated location in that Region fails, but leadership accepts the risk of a full Region outage to hold down cost.
+      Which design fits?
+    options:
+      - id: a
+        text: Copy it into a second AWS Region
+        why: A second Region guards against a whole Region failing, a risk the clinic chose to accept, so it adds cost beyond the need.
+      - id: b
+        text: Spread it across several AZs in the Region
+        correct: true
+        why: Running in more than one Availability Zone lets the app fail over to a backup AZ when one location goes down.
+      - id: c
+        text: Serve it from Amazon CloudFront edge locations
+        why: Edge locations cache content near users and are not where the booking app and its data run.
+      - id: d
+        text: Move it to one larger EC2 instance
+        why: One bigger instance still sits in a single location, so that location failing takes the app down.
+    evidence:
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+    takeaway: To survive one Availability Zone failing without paying for a second Region, run across several AZs in the same Region.
+    history: []
+    verified:
+      keyHash: bee11b5b7552
+      fullHash: 602d27fc3bfa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2c5c21
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: multi-region-architecture
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 1
+    stem: >-
+      Which deployment design keeps a workload available even when every Availability Zone in its home Region becomes unreachable?
+    options:
+      - id: a
+        text: Running copies in more than one Region
+        correct: true
+        why: Copies in another Region keep serving when the whole home Region is down, which is the failure the stem describes.
+      - id: b
+        text: Running copies in several AZs of one Region
+        why: Several AZs in one Region protect against a single AZ failing, not against all of that Region's AZs failing together.
+      - id: c
+        text: Caching content at edge locations
+        why: Edge locations cache content for speed and are not built to run the workload or its databases.
+      - id: d
+        text: Adding instances with Auto Scaling
+        why: Auto Scaling adds capacity inside the Region, so the new instances fail along with the Region.
+    evidence:
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+    takeaway: Only a multi-Region design keeps a workload running when an entire Region goes down.
+    history: []
+    verified:
+      keyHash: 87bf10a9371b
+      fullHash: c3073b45338f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-7nfyb7
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: edge-locations
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      A fitness company streams workout videos from a single AWS Region to members on several continents.
+      Members far from that Region report long buffering before each video starts.
+      Which part of the AWS global infrastructure should hold cached copies of the videos closer to those members?
+    options:
+      - id: a
+        text: Availability Zones
+        why: Availability Zones sit inside the Region and add resilience there, so they do not bring videos nearer to distant members.
+      - id: b
+        text: Edge locations
+        correct: true
+        why: Edge locations sit outside Regions near users and cache video, cutting latency and speeding up delivery to far-off members.
+      - id: c
+        text: AWS Outposts racks
+        why: Outposts runs AWS services in a customer's own facility, not at caching sites spread out near members around the world.
+      - id: d
+        text: AWS GovCloud Regions
+        why: GovCloud Regions add strict controls for US government workloads and do not cache content near members.
+    evidence:
+      - Edge locations sit apart from Regions, in spots like Atlanta and Shanghai, and cache data, video and apps for higher transfer speeds and lower latency.
+    takeaway: Cached copies near distant users come from edge locations, which sit outside Regions and cut latency.
+    history: []
+    verified:
+      keyHash: a8945b86941c
+      fullHash: eb9589fc64f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-35szgn
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: regional-pricing
+    note: m04/choosing-aws-regions
+    task: "4.1"
+    level: 2
+    stem: >-
+      A game studio faces no legal limits on where its data is stored, and its players are spread evenly across the world.
+      Two AWS Regions both offer every service it needs.
+      What should guide its choice between those two Regions?
+    options:
+      - id: a
+        text: The distance to its players
+        why: Distance does vary by Region, but with players spread evenly across the world, neither Region is nearer to most of them.
+      - id: b
+        text: The rates charged in each Region
+        correct: true
+        why: Each Region sets its own prices, so with compliance, proximity and services equal, cost is what remains to compare.
+      - id: c
+        text: The services each Region offers
+        why: Services do differ between Regions, but both of these already offer everything the studio needs, so this cannot decide.
+      - id: d
+        text: The data laws each Region follows
+        why: Each Region follows local law, but the studio has no legal limits on where its data lives, so law does not separate them.
+    evidence:
+      - AWS pricing is transparent and granular, yet each Region has its own rates.
+      - Regions are isolated, follow local law, and differ in services and prices.
+    takeaway: When compliance, proximity and services are equal, the different rates each Region charges decide the choice.
+    history: []
+    verified:
+      keyHash: 32aabbe77070
+      fullHash: f493b82a5ca3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-kdm0v5
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: regional-pricing
+    note: m04/choosing-aws-regions
+    task: "4.1"
+    level: 1
+    stem: >-
+      Which statement explains why the same AWS service can carry a higher price in one Region than in another?
+    options:
+      - id: a
+        text: Each Region is walled off from every other AWS Region.
+        why: Isolation is true of every Region and protects data, but it is a security trait and does not set a service's price.
+      - id: b
+        text: New features roll out to each Region at a different time.
+        why: Gradual rollout explains why a service may be missing in a Region, not why the same service costs more there.
+      - id: c
+        text: Each Region has its own operating, energy and tax costs.
+        correct: true
+        why: Each Region's rates reflect its local operating and energy costs, taxes and tax incentives, so prices vary by Region.
+      - id: d
+        text: Edge locations cache content in places apart from Regions.
+        why: Edge locations do sit apart from Regions to cut latency, but where they sit does not set what a Region charges.
+    evidence:
+      - AWS pricing is transparent and granular, yet each Region has its own rates.
+      - Operating and energy costs, local taxes and tax incentives
+    takeaway: Region prices differ because each Region carries its own local operating, energy and tax costs.
+    history: []
+    verified:
+      keyHash: c11566328b70
+      fullHash: a0629098d7aa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
