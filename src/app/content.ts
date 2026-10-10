@@ -1,6 +1,7 @@
 import { computed, signal } from '@preact/signals';
 import type {
   ContentIndex,
+  ExamChunk,
   GlossaryItem,
   ModuleChunk,
   SearchChunk,
@@ -13,6 +14,8 @@ export const index = signal<ContentIndex | null>(null);
 export const loadError = signal<string | null>(null);
 /** Module chunks loaded so far, by module number. */
 export const modules = signal<ReadonlyMap<number, ModuleChunk>>(new Map());
+/** Mock form chunks loaded so far, by form id (`A` to `D`). */
+export const examForms = signal<ReadonlyMap<string, ExamChunk>>(new Map());
 /** The search entries, once the palette has asked for them. */
 export const searchEntries = signal<readonly SearchEntry[] | null>(null);
 /** Glossary items by id, for the term popovers. */
@@ -67,4 +70,33 @@ export function ensureSearch(): void {
   load<SearchChunk>(name, (chunk) => {
     searchEntries.value = chunk.entries;
   });
+}
+
+const examLoads = new Map<string, Promise<ExamChunk | null>>();
+
+/**
+ * Loads one mock form's chunk at most once (spec 4.3); only its mock, and once the form is taken the learn screens
+ * and results, ask for it. It resolves to the chunk, or to null for an unknown form or a failed fetch, which a later
+ * call retries; it never sets `loadError`, so a mock start that cannot load its form records nothing and says so.
+ */
+export function ensureExamForm(id: string): Promise<ExamChunk | null> {
+  const loaded = examForms.value.get(id);
+  if (loaded !== undefined) return Promise.resolve(loaded);
+  const meta = index.value?.exam.forms.find((f) => f.id === id);
+  if (meta === undefined) return Promise.resolve(null);
+  const pending = examLoads.get(id);
+  if (pending !== undefined) return pending;
+  const load = fetch(meta.chunk)
+    .then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json() as Promise<ExamChunk>;
+    })
+    .then((chunk) => {
+      examForms.value = new Map(examForms.value).set(id, chunk);
+      return chunk;
+    })
+    .catch(() => null)
+    .finally(() => examLoads.delete(id));
+  examLoads.set(id, load);
+  return load;
 }

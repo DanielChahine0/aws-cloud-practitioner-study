@@ -1,0 +1,347 @@
+{
+  "answers": [
+    [
+      "q-boss-1",
+      [
+        {
+          "at": "2026-10-14T07:12:00.000Z",
+          "changes": [
+            [
+              "a"
+            ]
+          ],
+          "concept": "shared-kitchen",
+          "correct": true,
+          "day": "2026-10-14",
+          "flagged": true,
+          "id": "01JB3E0000EXAMEXAMEXAM0002",
+          "mode": "boss",
+          "picked": [
+            "b"
+          ],
+          "qid": "q-boss-1",
+          "qv": 1,
+          "relearn": false,
+          "sid": "01JB3E0000EXAMEXAMEXAMS001",
+          "sure": false
+        }
+      ]
+    ],
+    [
+      "q-boss-2",
+      [
+        {
+          "at": "2026-10-14T07:12:00.001Z",
+          "changes": [],
+          "concept": "per-minute-rental",
+          "correct": false,
+          "day": "2026-10-14",
+          "flagged": false,
+          "id": "01JB3E0000EXAMEXAMEXAM0003",
+          "mode": "boss",
+          "picked": [],
+          "qid": "q-boss-2",
+          "qv": 1,
+          "relearn": false,
+          "sid": "01JB3E0000EXAMEXAMEXAMS001",
+          "sure": false
+        }
+      ]
+    ],
+    [
+      "q-exam-1",
+      [
+        {
+          "at": "2026-10-15T08:30:00.000Z",
+          "changes": [
+            [
+              "b",
+              "c"
+            ]
+          ],
+          "concept": "shared-kitchen",
+          "correct": false,
+          "day": "2026-10-15",
+          "flagged": false,
+          "id": "01JB3E0000EXAMEXAMEXAM0007",
+          "mode": "mock",
+          "picked": [
+            "a",
+            "c"
+          ],
+          "qid": "q-exam-1",
+          "qv": 1,
+          "relearn": false,
+          "sid": "01JB3E0000EXAMEXAMEXAMS002",
+          "sure": false
+        }
+      ]
+    ],
+    [
+      "q-exam-2",
+      [
+        {
+          "at": "2026-10-15T08:30:00.001Z",
+          "changes": [],
+          "concept": "per-minute-rental",
+          "correct": true,
+          "day": "2026-10-15",
+          "flagged": true,
+          "id": "01JB3E0000EXAMEXAMEXAM0008",
+          "mode": "mock",
+          "picked": [
+            "d"
+          ],
+          "qid": "q-exam-2",
+          "qv": 1,
+          "relearn": false,
+          "sid": "01JB3E0000EXAMEXAMEXAMS002",
+          "sure": false
+        }
+      ]
+    ],
+    [
+      "q-exam-3",
+      [
+        {
+          "at": "2026-10-15T08:30:00.002Z",
+          "changes": [],
+          "concept": "shared-kitchen",
+          "correct": false,
+          "day": "2026-10-15",
+          "flagged": false,
+          "id": "01JB3E0000EXAMEXAMEXAM0009",
+          "mode": "mock",
+          "picked": [],
+          "qid": "q-exam-3",
+          "qv": 1,
+          "relearn": false,
+          "sid": "01JB3E0000EXAMEXAMEXAMS002",
+          "sure": false
+        }
+      ]
+    ]
+  ],
+  "causes": [
+    [
+      "01JB3E0000EXAMEXAMEXAMS001 q-boss-2",
+      "unknown"
+    ],
+    [
+      "01JB3E0000EXAMEXAMEXAMS002 q-exam-1",
+      "confused"
+    ]
+  ],
+  "checkScores": [],
+  "eventCount": 12,
+  "exams": [
+    [
+      "01JB3E0000EXAMEXAMEXAMS001",
+      {
+        "answered": 1,
+        "correct": 1,
+        "day": "2026-10-14",
+        "deadline": "2026-10-14T07:21:00.000Z",
+        "form": null,
+        "mode": "boss",
+        "scope": "m01",
+        "sid": "01JB3E0000EXAMEXAMEXAMS001",
+        "startedAt": "2026-10-14T07:00:00.000Z",
+        "submitId": "01JB3E0000EXAMEXAMEXAM0004",
+        "submittedAt": "2026-10-14T07:12:00.002Z",
+        "timedOut": false,
+        "total": 2
+      }
+    ],
+    [
+      "01JB3E0000EXAMEXAMEXAMS002",
+      {
+        "answered": 2,
+        "correct": 1,
+        "day": "2026-10-15",
+        "deadline": "2026-10-15T08:30:00.000Z",
+        "form": "A",
+        "mode": "mock",
+        "scope": "a",
+        "sid": "01JB3E0000EXAMEXAMEXAMS002",
+        "startedAt": "2026-10-15T07:00:00.000Z",
+        "submitId": "01JB3E0000EXAMEXAMEXAM0010",
+        "submittedAt": "2026-10-15T08:30:00.003Z",
+        "timedOut": true,
+        "total": 3
+      }
+    ]
+  ],
+  "flags": 0,
+  "lastShown": [
+    [
+      "per-minute-rental",
+      "q-exam-2"
+    ],
+    [
+      "shared-kitchen",
+      "q-exam-3"
+    ]
+  ],
+  "lessonsDone": [],
+  "ranks": [
+    "business-support-plus"
+  ],
+  "sessions": [
+    [
+      "01JB3E0000EXAMEXAMEXAMS001",
+      {
+        "abandoned": false,
+        "answers": [
+          [
+            "q-boss-1",
+            {
+              "at": "2026-10-14T07:12:00.000Z",
+              "changes": [
+                [
+                  "a"
+                ]
+              ],
+              "concept": "shared-kitchen",
+              "correct": true,
+              "day": "2026-10-14",
+              "flagged": true,
+              "id": "01JB3E0000EXAMEXAMEXAM0002",
+              "mode": "boss",
+              "picked": [
+                "b"
+              ],
+              "qid": "q-boss-1",
+              "qv": 1,
+              "relearn": false,
+              "sid": "01JB3E0000EXAMEXAMEXAMS001",
+              "sure": false
+            }
+          ],
+          [
+            "q-boss-2",
+            {
+              "at": "2026-10-14T07:12:00.001Z",
+              "changes": [],
+              "concept": "per-minute-rental",
+              "correct": false,
+              "day": "2026-10-14",
+              "flagged": false,
+              "id": "01JB3E0000EXAMEXAMEXAM0003",
+              "mode": "boss",
+              "picked": [],
+              "qid": "q-boss-2",
+              "qv": 1,
+              "relearn": false,
+              "sid": "01JB3E0000EXAMEXAMEXAMS001",
+              "sure": false
+            }
+          ]
+        ],
+        "deadline": "2026-10-14T07:21:00.000Z",
+        "form": null,
+        "mode": "boss",
+        "qids": [
+          "q-boss-1",
+          "q-boss-2"
+        ],
+        "scope": "m01",
+        "seed": 314159265,
+        "sid": "01JB3E0000EXAMEXAMEXAMS001",
+        "startedAt": "2026-10-14T07:00:00.000Z",
+        "submitId": "01JB3E0000EXAMEXAMEXAM0004",
+        "submittedAt": "2026-10-14T07:12:00.002Z"
+      }
+    ],
+    [
+      "01JB3E0000EXAMEXAMEXAMS002",
+      {
+        "abandoned": false,
+        "answers": [
+          [
+            "q-exam-1",
+            {
+              "at": "2026-10-15T08:30:00.000Z",
+              "changes": [
+                [
+                  "b",
+                  "c"
+                ]
+              ],
+              "concept": "shared-kitchen",
+              "correct": false,
+              "day": "2026-10-15",
+              "flagged": false,
+              "id": "01JB3E0000EXAMEXAMEXAM0007",
+              "mode": "mock",
+              "picked": [
+                "a",
+                "c"
+              ],
+              "qid": "q-exam-1",
+              "qv": 1,
+              "relearn": false,
+              "sid": "01JB3E0000EXAMEXAMEXAMS002",
+              "sure": false
+            }
+          ],
+          [
+            "q-exam-2",
+            {
+              "at": "2026-10-15T08:30:00.001Z",
+              "changes": [],
+              "concept": "per-minute-rental",
+              "correct": true,
+              "day": "2026-10-15",
+              "flagged": true,
+              "id": "01JB3E0000EXAMEXAMEXAM0008",
+              "mode": "mock",
+              "picked": [
+                "d"
+              ],
+              "qid": "q-exam-2",
+              "qv": 1,
+              "relearn": false,
+              "sid": "01JB3E0000EXAMEXAMEXAMS002",
+              "sure": false
+            }
+          ],
+          [
+            "q-exam-3",
+            {
+              "at": "2026-10-15T08:30:00.002Z",
+              "changes": [],
+              "concept": "shared-kitchen",
+              "correct": false,
+              "day": "2026-10-15",
+              "flagged": false,
+              "id": "01JB3E0000EXAMEXAMEXAM0009",
+              "mode": "mock",
+              "picked": [],
+              "qid": "q-exam-3",
+              "qv": 1,
+              "relearn": false,
+              "sid": "01JB3E0000EXAMEXAMEXAMS002",
+              "sure": false
+            }
+          ]
+        ],
+        "deadline": "2026-10-15T08:30:00.000Z",
+        "form": "A",
+        "mode": "mock",
+        "qids": [
+          "q-exam-1",
+          "q-exam-2",
+          "q-exam-3"
+        ],
+        "scope": "a",
+        "seed": 271828182,
+        "sid": "01JB3E0000EXAMEXAMEXAMS002",
+        "startedAt": "2026-10-15T07:00:00.000Z",
+        "submitId": "01JB3E0000EXAMEXAMEXAM0010",
+        "submittedAt": "2026-10-15T08:30:00.003Z"
+      }
+    ]
+  ],
+  "unknownEvents": 0
+}

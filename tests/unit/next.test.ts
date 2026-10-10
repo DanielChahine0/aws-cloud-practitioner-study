@@ -1,10 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import type { NewEvent } from '../../schemas/events.ts';
-import { type LessonRef, type NextInput, nextAction, nextMinutes } from '../../src/engine/next.ts';
+import type { BossStatus } from '../../src/engine/boss.ts';
+import { mockDeadline } from '../../src/engine/mock.ts';
+import {
+  extras,
+  type LessonRef,
+  MOCK_AFTER_BOSSES,
+  MOCK_GAP_DAYS,
+  type NextInput,
+  nextAction,
+  nextMinutes,
+} from '../../src/engine/next.ts';
 import type { ReviewQueue } from '../../src/engine/queue.ts';
 import { derive } from '../../src/engine/replay.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, startOf, submitOf } from '../fixtures/memory.ts';
+import { answerOf, at, examStartOf, startOf, submitOf } from '../fixtures/memory.ts';
 
 const lesson = (module: number, slug: string, first: boolean, checkConcepts: number): LessonRef => ({
   note: `m${String(module).padStart(2, '0')}/${slug}`,
@@ -171,6 +181,123 @@ describe('nextAction', () => {
       kind: 'continue',
       lesson: OVENS,
     });
+  });
+});
+
+describe('resuming an exam (spec 4.6 item 1)', () => {
+  it('resumes an open boss and an open mock, whose answers wait for the submit', () => {
+    const start = at('2026-10-10', 9);
+    const bossLog = [
+      [
+        start,
+        examStartOf(SID2, 'boss', ['q-a', 'q-b'], { scope: 'm01', deadline: mockDeadline(new Date(start)) }),
+      ],
+    ] as const;
+    const resumeBoss = nextAction(inputOf(bossLog, { queue: queueOf(['b']) }));
+    expect(resumeBoss).toMatchObject({
+      kind: 'resume',
+      left: 2,
+      session: { sid: SID2, mode: 'boss', scope: 'm01' },
+    });
+    const mockLog = [
+      [
+        start,
+        examStartOf(SID2, 'mock', ['q-a', 'q-b', 'q-c'], {
+          form: 'A',
+          deadline: mockDeadline(new Date(start)),
+        }),
+      ],
+    ] as const;
+    expect(nextAction(inputOf(mockLog))).toMatchObject({
+      kind: 'resume',
+      left: 3,
+      session: { mode: 'mock', form: 'A' },
+    });
+    expect(nextAction(inputOf([...mockLog, [at('2026-10-10', 10), submitOf(SID2, 'mock')]])).kind).toBe(
+      'lesson',
+    );
+  });
+
+  it('resumes an open focus quiz', () => {
+    const log = [[at('2026-10-10', 9), startOf(SID2, 'focus', ['q-a', 'q-b'], '2.3')]] as const;
+    expect(nextAction(inputOf(log))).toMatchObject({ kind: 'resume', left: 2, session: { mode: 'focus' } });
+  });
+});
+
+describe('extras (spec 4.6)', () => {
+  const status = (over: Partial<BossStatus> = {}): BossStatus => ({
+    unlocked: true,
+    passed: false,
+    passedAt: null,
+    ready: false,
+    cooldownUntil: null,
+    open: null,
+    attempts: 0,
+    ...over,
+  });
+  const NOW = new Date(at('2026-10-10', 12));
+  const passedUpTo = (n: number): [number, BossStatus][] =>
+    Array.from({ length: n }, (_, i) => [i + 1, status({ passed: true, passedAt: at('2026-10-09') })]);
+  const extrasOf = (
+    bosses: [number, BossStatus][],
+    log: readonly (readonly [string, NewEvent])[] = [],
+    today = '2026-10-10',
+  ) => extras({ bosses: new Map(bosses), progress: derive(timelineOf(log), null), today, now: NOW });
+  const mockOn = (sid: string, form: string, day: string) => {
+    const start = at(day, 9);
+    return [
+      [start, examStartOf(sid, 'mock', ['q-a'], { form, deadline: mockDeadline(new Date(start)) })],
+      [at(day, 10), submitOf(sid, 'mock')],
+    ] as const;
+  };
+
+  it('offers the lowest ready boss first, then the next mock', () => {
+    expect(MOCK_AFTER_BOSSES).toBe(7);
+    expect(MOCK_GAP_DAYS).toBe(3);
+    const bosses = [...passedUpTo(7), [9, status({ ready: true })], [8, status({ ready: true })]] as [
+      number,
+      BossStatus,
+    ][];
+    expect(extrasOf(bosses)).toEqual([
+      { kind: 'boss', module: 8 },
+      { kind: 'mock', form: 'A' },
+    ]);
+  });
+
+  it('skips a boss in its cooldown and offers the next ready one', () => {
+    const cooling = status({ ready: true, cooldownUntil: at('2026-10-10', 20) });
+    const over = status({ ready: true, cooldownUntil: at('2026-10-10', 11) });
+    expect(
+      extrasOf([
+        [2, cooling],
+        [3, status({ ready: true })],
+      ]),
+    ).toEqual([{ kind: 'boss', module: 3 }]);
+    expect(extrasOf([[2, over]])).toEqual([{ kind: 'boss', module: 2 }]);
+    expect(extrasOf([[2, cooling]])).toEqual([]);
+  });
+
+  it('offers a mock only after 7 passed bosses', () => {
+    expect(extrasOf(passedUpTo(6))).toEqual([]);
+    expect(extrasOf(passedUpTo(7))).toEqual([{ kind: 'mock', form: 'A' }]);
+  });
+
+  it('waits 3 days after the latest mock, a remix included', () => {
+    const afterA = mockOn('01JA00000000000000000000MA', 'A', '2026-10-08');
+    expect(extrasOf(passedUpTo(7), afterA, '2026-10-10')).toEqual([]);
+    expect(extrasOf(passedUpTo(7), afterA, '2026-10-11')).toEqual([{ kind: 'mock', form: 'B' }]);
+    const remix = mockOn('01JA00000000000000000000MR', 'remix', '2026-10-10');
+    expect(extrasOf(passedUpTo(7), [...afterA, ...remix], '2026-10-11')).toEqual([]);
+  });
+
+  it('offers no mock once forms A to D are taken', () => {
+    const all = [
+      ...mockOn('01JA00000000000000000000M1', 'A', '2026-09-20'),
+      ...mockOn('01JA00000000000000000000M2', 'B', '2026-09-24'),
+      ...mockOn('01JA00000000000000000000M3', 'C', '2026-09-28'),
+      ...mockOn('01JA00000000000000000000M4', 'D', '2026-10-02'),
+    ];
+    expect(extrasOf(passedUpTo(13), all)).toEqual([]);
   });
 });
 

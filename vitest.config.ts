@@ -8,7 +8,12 @@ const { version } = JSON.parse(readFileSync(new URL('./package.json', import.met
 export default defineConfig({
   define: { __APP_VERSION__: JSON.stringify(version) },
   test: {
-    include: ['tests/unit/**/*.test.ts', 'tests/content/**/*.test.ts', 'tests/property/**/*.test.ts'],
+    include: [
+      'tests/unit/**/*.test.ts',
+      'tests/content/**/*.test.ts',
+      'tests/property/**/*.test.ts',
+      'tests/regressions/**/*.test.ts',
+    ],
     environment: 'node',
   },
 });

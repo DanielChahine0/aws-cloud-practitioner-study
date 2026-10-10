@@ -1,11 +1,13 @@
 import type { Mode, StudyEvent } from '../../schemas/events.ts';
+import { FORM_IDS } from '../../schemas/ids.ts';
 
 /**
  * The pure replay (spec 8): every bit of progress is derived from the event log, never stored.
  * Changing what `derive` or `deriveMemory` computes from the same events bumps `ENGINE_VERSION`.
  * Version 2 adds XP and FSRS (`src/engine/memory.ts`) and the answer's id, concept and relearn flag.
+ * Version 3 applies boss and mock answers on submit, pays exam XP and qualifies exam days.
  */
-export const ENGINE_VERSION = 2;
+export const ENGINE_VERSION = 3;
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;
@@ -31,6 +33,10 @@ export interface AnswerRecord {
   /** The concept id as written, before any alias is resolved. */
   concept: string;
   relearn: boolean;
+  /** Flagged in a boss or mock, where the flag stands in for Not sure. */
+  flagged: boolean;
+  /** Every earlier pick of an exam item, oldest first, for error review. */
+  changes: readonly string[][];
 }
 
 export interface SessionState {
@@ -44,12 +50,40 @@ export interface SessionState {
   startedAt: string;
   submittedAt: string | null;
   abandoned: boolean;
+  /** A mock's form (`A` to `D` or `remix`), else null. */
+  form: string | null;
+  /** A boss or mock deadline, else null. */
+  deadline: string | null;
+  /** The id of the submit event that closed the session, which keys its exam XP. */
+  submitId: string | null;
 }
 
 export interface CheckScore {
   correct: number;
   total: number;
   at: string;
+}
+
+export type Cause = 'unknown' | 'confused' | 'misread';
+
+/** A submitted boss or mock; unanswered items count in `total` and never in `correct` (spec 4.3). */
+export interface ExamResult {
+  sid: string;
+  mode: 'boss' | 'mock';
+  /** The module (`m03`) of a boss; the session scope of a mock. */
+  scope: string;
+  form: string | null;
+  correct: number;
+  /** Items with a non-empty pick. */
+  answered: number;
+  total: number;
+  startedAt: string;
+  submittedAt: string;
+  /** The study day of the submit event, which the mock window, readiness and ranks count in. */
+  day: string;
+  deadline: string | null;
+  timedOut: boolean;
+  submitId: string;
 }
 
 export interface Progress {
@@ -64,6 +98,12 @@ export interface Progress {
   /** Lesson check scope (`m03/aws-lambda`) to its latest submitted score. */
   checkScores: ReadonlyMap<string, CheckScore>;
   flags: number;
+  /** Submitted boss and mock sessions by session id, in submit order. */
+  exams: ReadonlyMap<string, ExamResult>;
+  /** Error-review causes keyed `${sid} ${qid}`; the latest cause event wins. */
+  causes: ReadonlyMap<string, Cause>;
+  /** Rank ids recorded by `rank` events. */
+  ranks: ReadonlySet<string>;
   /** Events that refer to a question or note the shipped content does not have. */
   unknownEvents: number;
 }
@@ -88,6 +128,35 @@ function recordOf(e: AnswerEvent): AnswerRecord {
     picked: e.picked,
     concept: e.concept,
     relearn: e.relearn === true,
+    flagged: e.flagged === true,
+    changes: e.changes ?? [],
+  };
+}
+
+const isExamMode = (mode: Mode): mode is 'boss' | 'mock' => mode === 'boss' || mode === 'mock';
+
+function examResultOf(session: MutableSession, mode: 'boss' | 'mock', e: SessionEvent): ExamResult {
+  let correct = 0;
+  let answered = 0;
+  for (const qid of session.qids) {
+    const a = session.answers.get(qid);
+    if (a?.correct === true) correct++;
+    if (a !== undefined && a.picked.length > 0) answered++;
+  }
+  return {
+    sid: session.sid,
+    mode,
+    scope: session.scope,
+    form: session.form,
+    correct,
+    answered,
+    total: session.qids.length,
+    startedAt: session.startedAt,
+    submittedAt: e.at,
+    day: e.day,
+    deadline: session.deadline,
+    timedOut: session.deadline !== null && Date.parse(e.at) >= Date.parse(session.deadline),
+    submitId: e.id,
   };
 }
 
@@ -95,6 +164,7 @@ function applySession(
   e: SessionEvent,
   sessions: Map<string, MutableSession>,
   scores: Map<string, CheckScore>,
+  exams: Map<string, ExamResult>,
 ) {
   if (e.phase === 'start') {
     sessions.set(e.sid, {
@@ -107,16 +177,21 @@ function applySession(
       startedAt: e.at,
       submittedAt: null,
       abandoned: false,
+      form: e.form ?? null,
+      deadline: e.deadline ?? null,
+      submitId: null,
     });
     return;
   }
   const session = sessions.get(e.sid);
-  if (!session) return;
+  if (!session || session.submittedAt !== null || session.abandoned) return;
   if (e.phase === 'abandon') {
     session.abandoned = true;
     return;
   }
   session.submittedAt = e.at;
+  session.submitId = e.id;
+  if (isExamMode(session.mode)) exams.set(session.sid, examResultOf(session, session.mode, e));
   if (session.mode === 'check') {
     let correct = 0;
     for (const qid of session.qids) if (session.answers.get(qid)?.correct === true) correct++;
@@ -131,6 +206,9 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
   const lastShown = new Map<string, string>();
   const sessions = new Map<string, MutableSession>();
   const checkScores = new Map<string, CheckScore>();
+  const exams = new Map<string, ExamResult>();
+  const causes = new Map<string, Cause>();
+  const ranks = new Set<string>();
   let flags = 0;
   let unknownEvents = 0;
 
@@ -148,7 +226,7 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
         break;
       }
       case 'session':
-        applySession(e, sessions, checkScores);
+        applySession(e, sessions, checkScores, exams);
         break;
       case 'lesson.done':
         if (refs && !refs.notes.has(e.note)) unknownEvents++;
@@ -156,6 +234,12 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
         break;
       case 'flag':
         flags++;
+        break;
+      case 'cause':
+        causes.set(`${e.sid} ${e.qid}`, e.cause);
+        break;
+      case 'rank':
+        ranks.add(e.rank);
         break;
       default:
         break;
@@ -170,8 +254,27 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
     sessions,
     checkScores,
     flags,
+    exams,
+    causes,
+    ranks,
     unknownEvents,
   };
+}
+
+const FORMS: ReadonlySet<string> = new Set(FORM_IDS);
+
+/** The forms `A` to `D` of every started mock, submitted or not; a remix is never a form (spec 4.3). */
+export function takenForms(p: Progress): ReadonlySet<string> {
+  const taken = new Set<string>();
+  for (const s of p.sessions.values()) {
+    if (s.mode === 'mock' && s.form !== null && FORMS.has(s.form)) taken.add(s.form);
+  }
+  return taken;
+}
+
+/** The submitted exams of one mode, and of one scope when given, in submit order. */
+export function examsOf(p: Progress, mode: 'boss' | 'mock', scope?: string): ExamResult[] {
+  return [...p.exams.values()].filter((r) => r.mode === mode && (scope === undefined || r.scope === scope));
 }
 
 /** Plain JSON of any derived state: maps become sorted entry arrays, sets sorted arrays, keys sorted. */
