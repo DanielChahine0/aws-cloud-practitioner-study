@@ -1,0 +1,126 @@
+id: inc-024
+title: The recipe library that outgrew its plan
+modules: [7]
+concepts:
+  - amazon-documentdb
+  - graph-databases
+  - amazon-neptune
+brief: >-
+  The cafe is building a recipe library for its baristas, who often adapt each other's recipes.
+  The first shops are already using it, and the tech lead must sort out slow reads and settle a few design arguments before the app opens to every shop.
+steps:
+  - id: q-t34mrx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-documentdb
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The recipe library runs on Amazon DocumentDB.
+      At every shift change, baristas across the shops open recipes at the same moment, and reads start to queue.
+      Which DocumentDB feature spreads those reads?
+    options:
+      - id: a
+        text: Up to 15 replicas that share its storage
+        correct: true
+        why: DocumentDB scales read throughput with up to 15 replicas that share the cluster's storage.
+      - id: b
+        text: A DAX cache built into the document store
+        why: DAX is the built-in cache of Amazon DynamoDB, not a feature of DocumentDB.
+      - id: c
+        text: Copies of each recipe kept at edge locations
+        why: Edge locations cache content for delivery near users and do not host database reads.
+      - id: d
+        text: Storage that grows by itself in 10 GB steps
+        why: Automatic storage growth adds space as data grows but does nothing to share read traffic.
+    evidence:
+      - "**Read throughput**: up to 15 replicas share storage."
+      - "**Scaling**: storage grows on its own in 10 GB steps to 64 TB, compute scales either way, and it serves millions of requests per second."
+    takeaway: DocumentDB scales read throughput with up to 15 replicas that share the cluster's storage.
+    history: []
+    verified:
+      keyHash: 49723151070a
+      fullHash: d526a7c50b41
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ckjqeb
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: graph-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The tech lead lists the features planned for the recipe library, each one about the baristas and their recipes.
+      Which features are a natural fit for a graph database?
+    options:
+      - id: a
+        text: Saving each barista's notes on a recipe as one flexible record
+        why: Notes whose fields vary from barista to barista fit a document database, not one built around links.
+      - id: b
+        text: Tracing a recipe back through every barista who adapted it
+        correct: true
+        why: A chain of adaptations is a web of connections, which a graph database follows hop by hop.
+      - id: c
+        text: Keeping the recipe pages opened most often in fast memory
+        why: Serving popular pages from memory is the work of an in-memory cache, not a database built around links.
+      - id: d
+        text: Holding each barista's login session in memory between visits
+        why: Short-lived session data kept in memory suits an in-memory store, since it involves no web of connections.
+      - id: e
+        text: Suggesting recipes liked by the baristas a person works with
+        correct: true
+        why: Recommendations drawn from the links between colleagues are a classic graph use case.
+      - id: f
+        text: Storing each recipe as one record with its own mix of fields
+        why: Recipes that each carry different fields fit a document database rather than one built around relationships.
+    evidence:
+      - "A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables."
+      - "Use cases: social network mapping, fraud detection, search and recommendations."
+    takeaway: Graph databases fit data defined by its links, such as who adapted whose recipe or recommendations from colleagues.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The distractors come in look-alike pairs (options 1 and 5 both 'in memory', options 4 and 6 both 'one ... record'), so the two unpaired options 2 and 3 stand out as the key."
+  - id: q-jvbjyq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-neptune
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A developer proposes using the recipe graph in Amazon Neptune to find every recipe whose written method mentions cinnamon.
+      Why does the tech lead push back?
+    options:
+      - id: a
+        text: Neptune is not built for document text search
+        correct: true
+        why: Finding a word inside written recipes is document text search, which Neptune is not meant for.
+      - id: b
+        text: Neptune is not built for general streaming analytics
+        why: This limit is true, but the proposal is a word search over recipes, not analytics on a stream of events.
+      - id: c
+        text: Neptune is not built to replace every SQL database
+        why: This limit is true, but nobody proposed moving the cafe's SQL databases, so it does not explain the pushback.
+      - id: d
+        text: Neptune is not built to hold more than 64 TB
+        why: This limit is true, but a word search over recipes is about the kind of query, not the size of the data.
+    evidence:
+      - "Not for general streaming analytics, replacing all SQL databases, or document text search."
+      - "**Scale**: billions of relationships in milliseconds as complexity grows, storage up to 64 TB, and a traversal-tuned engine."
+    takeaway: Neptune is for traversing connected data in real time, not for searching the words inside documents.
+    history: []
+    verified:
+      keyHash: 6d2fbfd132ea
+      fullHash: c26ca19bbaf2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

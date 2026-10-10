@@ -1,0 +1,121 @@
+id: inc-022
+title: The promotion that slowed the order lookup
+modules: [7]
+concepts:
+  - flexible-schema
+  - amazon-dynamodb-partition-key
+  - amazon-dynamodb-query
+brief: >-
+  The cafe's ordering app keeps every order in an Amazon DynamoDB table, and a weekend promotion launches on Friday.
+  The team has a short list: record promo details, fix a save that keeps failing and speed up the staff screen that finds one order.
+steps:
+  - id: q-zb0wen
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: flexible-schema
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      Starting Friday, promo orders will also record the promo code used, which ordinary orders never had.
+      Why can the app save its first promo order without any change to the table beforehand?
+    options:
+      - id: a
+        text: Items in one table can hold different attributes
+        correct: true
+        why: Each DynamoDB item carries its own set of attributes, so promo orders simply include the code and older orders stay as they are.
+      - id: b
+        text: No servers need patching, since DynamoDB is serverless
+        why: Being serverless removes patching and maintenance, but it says nothing about items gaining a field that older items lack.
+      - id: c
+        text: Data is encrypted at rest and in transit automatically
+        why: Automatic encryption protects the stored orders, but it does not explain how a new field can appear on some items only.
+      - id: d
+        text: Throughput follows real traffic through auto scaling
+        why: Auto scaling helps with the promotion's extra traffic, but it does not let items hold a field the others lack.
+    evidence:
+      - "Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday)."
+      - "The core difference is flexible versus rigid schema, not speed or scaling, and NoSQL still indexes the primary key by default."
+    takeaway: A flexible schema lets new items add attributes that older items lack, with no table-wide change made first.
+    history: []
+    verified:
+      keyHash: 603185cd956c
+      fullHash: 3db7c96fc342
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6g8dv2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-partition-key
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 2
+    stem: >-
+      The orders table identifies each order by its order number.
+      A test promo order keeps failing to save: the item holds a drink name, a price and a promo code, but no order number.
+      Why is the item rejected?
+    options:
+      - id: a
+        text: Every item must hold a value for the partition key
+        correct: true
+        why: Each DynamoDB item must carry a value for the partition key, here the order number, so an item without one is refused.
+      - id: b
+        text: Tables stand alone, with no foreign keys to others
+        why: It is true that DynamoDB tables have no foreign keys, but nothing here tries to link the item to another table.
+      - id: c
+        text: Apps call the DynamoDB APIs through the AWS SDK
+        why: The SDK is how the app sends the item, but the way it is sent does not decide whether the item is accepted.
+      - id: d
+        text: A new table is usable once its status is active
+        why: The orders table is already in use for ordinary orders, so its status is not what blocks this one item.
+    evidence:
+      - "Each item must carry a partition key value, while its other attributes can vary."
+      - "A table needs only a name (orders) and a partition key (order number, type Number), and is usable once active."
+    takeaway: Every DynamoDB item must include the partition key value, while all of its other attributes are optional.
+    history: []
+    verified:
+      keyHash: 049c75f611d0
+      fullHash: 6ca9c8ad0b76
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-k4q9an
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-query
+    note: m07/aws-databases-demonstration
+    task: "3.4"
+    level: 3
+    stem: >-
+      Each order item holds its order number, which is the table's partition key, and a receipt number printed on the customer's slip.
+      The staff screen finds one order by reading every item in the table and picking out the match, and now that the table has grown it is slow.
+      Which read should the screen use instead?
+    options:
+      - id: a
+        text: A scan for the receipt number
+        why: A scan reads every item in the table whatever value it looks for, which is the slow behavior the screen already has.
+      - id: b
+        text: A query for the order number
+        correct: true
+        why: A query fetches only the items matching a partition key value, and the order number is that key, so the lookup stays quick.
+      - id: c
+        text: A query for the receipt number
+        why: A query looks items up by the partition key value, and the receipt number is an ordinary attribute rather than that key.
+      - id: d
+        text: A scan for the order number
+        why: Even with the right value to match, a scan still reads every item before picking one out, so the screen stays slow.
+    evidence:
+      - "A query for order number 5 returned that single item, the better tool as tables grow."
+      - "A scan returns the whole table, while a query fetches items by partition key."
+    takeaway: A query fetches items by their partition key value, so finding one order in a growing table means querying that key, not scanning.
+    history: []
+    verified:
+      keyHash: cf30a85dfb2b
+      fullHash: 565cd5213489
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
