@@ -4,7 +4,10 @@ import { betXp, expectedXp, SURE_BREAKEVEN } from '../../src/engine/bets.ts';
 import { BOSS_COOLDOWN_MS, bossDraw, bossStatus } from '../../src/engine/boss.ts';
 import { moduleMastery } from '../../src/engine/mastery.ts';
 import { deriveMemory } from '../../src/engine/memory.ts';
+import { firstAttempts, mockDeadline, mockHistory } from '../../src/engine/mock.ts';
 import { reviewQueue } from '../../src/engine/queue.ts';
+import { meets, type RankDef, rankFacts } from '../../src/engine/ranks.ts';
+import { readiness } from '../../src/engine/readiness.ts';
 import { derive } from '../../src/engine/replay.ts';
 import type { PoolQuestion } from '../../src/engine/select.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
@@ -195,5 +198,52 @@ describe('anti-grind audit (spec 3.11)', () => {
       ...examOf('2026-10-16', SID3, 'mock', all, 'remix'),
     ]);
     expect(memory.xp).toBe(150);
+  });
+
+  it('Peeking at mocks: a remix never counts toward Ready or a rank', () => {
+    const sid = '01JA00000000000000000000RX';
+    const start = at('2026-10-27', 9);
+    const picks = [
+      ['q-oven-1', 'oven'],
+      ['q-proofing-1', 'proofing'],
+    ] as const;
+    const log: Log = [
+      [
+        start,
+        examStartOf(
+          sid,
+          'mock',
+          picks.map(([qid]) => qid),
+          { form: 'remix', deadline: mockDeadline(new Date(start)) },
+        ),
+      ],
+      ...picks.map(
+        ([qid, concept], i) =>
+          [
+            at('2026-10-27', 9, i + 1),
+            answerOf({ concept, qid, mode: 'mock', sid, correct: true, sure: true }),
+          ] as const,
+      ),
+      [at('2026-10-27', 10), submitOf(sid, 'mock')],
+    ];
+    const events = timelineOf(log);
+    const progress = derive(events, null);
+    expect(mockHistory(progress).map((a) => a.percent)).toEqual([1]);
+    expect(firstAttempts(progress)).toEqual([]);
+    const now = new Date(at('2026-10-27', 12));
+    const memory = deriveMemory(events, CONTENT);
+    const r = readiness({ memory, content: CONTENT, attempts: firstAttempts(progress), now, tz: 0 });
+    expect(r.mock).toBeNull();
+    expect(r.capped).toBe(true);
+    const unified: RankDef = {
+      id: 'unified-operations',
+      name: 'Unified Operations',
+      short: 'Unified Ops',
+      requires: { unseenMocksAt80: 2, latestMockWithinDays: 14, ready: true },
+      facts: [],
+    };
+    expect(
+      meets(unified, rankFacts({ progress, mastery: new Map(), ready: true, today: '2026-10-27' })),
+    ).toBe(false);
   });
 });
