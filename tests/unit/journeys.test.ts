@@ -10,7 +10,13 @@ import { reviewQueue } from '../../src/engine/queue.ts';
 import { toPlain } from '../../src/engine/replay.ts';
 import { streakOf } from '../../src/engine/streak.ts';
 import { JOURNEY_CONTENT, type JourneyName, journeyNow } from '../fixtures/journeys/content.ts';
-import { comebackTenDays, examCrunch, firstWeek, handsOnWeek } from '../fixtures/journeys/journeys.ts';
+import {
+  comebackTenDays,
+  examCrunch,
+  firstWeek,
+  handsOnWeek,
+  missionsAndCapstone,
+} from '../fixtures/journeys/journeys.ts';
 
 /**
  * Golden journeys (spec 9): each builder's log is committed as `<name>.jsonl`, and its replay at `journeyNow`
@@ -23,6 +29,7 @@ const JOURNEYS: Record<JourneyName, () => StudyEvent[]> = {
   'exam-crunch': examCrunch,
   'comeback-10-days': comebackTenDays,
   'hands-on-week': handsOnWeek,
+  'missions-and-capstone': missionsAndCapstone,
 };
 
 function replay(name: JourneyName) {
@@ -104,5 +111,11 @@ describe('golden journeys', () => {
     expect(memory.concepts.get('bake-02-07')?.card).not.toBeNull();
     expect(memory.badges.has('hands-on')).toBe(false);
     expect(streak.current).toBe(4);
+  });
+
+  it('missions-and-capstone pays each mission and decision once and qualifies only the reading day', () => {
+    const { memory } = replay('missions-and-capstone');
+    expect(memory.xp).toBe(10 + 50 + 75 + 75 + 30 + 20);
+    expect([...memory.qualifyingDays]).toEqual(['2026-10-10']);
   });
 });

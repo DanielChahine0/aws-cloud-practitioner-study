@@ -19,10 +19,20 @@ import {
 
 describe('lab copy', () => {
   it('names the engines and says how long a lab takes', () => {
-    expect(ENGINE_LABEL).toEqual({ sort: 'Sort', configure: 'Configure', simulate: 'Simulate' });
+    expect(ENGINE_LABEL).toEqual({
+      sort: 'Sort',
+      configure: 'Configure',
+      simulate: 'Simulate',
+      place: 'Place',
+      trace: 'Trace',
+      investigate: 'Investigate',
+    });
     expect(labLede('sort', 6)).toBe('Sort lab, about 6 minutes');
     expect(labLede('configure', 8)).toBe('Configure lab, about 8 minutes');
     expect(labLede('simulate', 1)).toBe('Simulate lab, about 1 minute');
+    expect(labLede('place', 8)).toBe('Place lab, about 8 minutes');
+    expect(labLede('trace', 10)).toBe('Trace lab, about 10 minutes');
+    expect(labLede('investigate', 1)).toBe('Investigate lab, about 1 minute');
   });
 
   it('labels prices and asks before a reset', () => {
@@ -65,6 +75,9 @@ describe('the check button', () => {
     expect(checkLabel('sort')).toBe('Check');
     expect(checkLabel('configure')).toBe('Check');
     expect(checkLabel('simulate')).toBe('Run and check');
+    expect(checkLabel('place')).toBe('Check');
+    expect(checkLabel('trace')).toBe('Check');
+    expect(checkLabel('investigate')).toBe('Check');
   });
 });
 

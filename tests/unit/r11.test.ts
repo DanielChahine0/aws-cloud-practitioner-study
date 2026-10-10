@@ -1,12 +1,17 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { LabFile, SortAction, SortSpec } from '../../schemas/lab.ts';
+import type { NetworkTraceSpec } from '../../schemas/lab-trace.ts';
 import { type LabEntry, loadContext } from '../../scripts/content/lib/context.ts';
 import { labProblems, r11 } from '../../scripts/content/rules/r11-labs.ts';
 import { replayLab } from '../../src/labs/contract.ts';
 import type { AnyLabEngine, EngineEntry } from '../../src/labs/engines.ts';
 import { SORT, type SortState } from '../../src/labs/sort/model.ts';
+import { TRACE } from '../../src/labs/trace/model.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { bakeryInvestigateLab } from '../fixtures/lab-investigate.ts';
+import { bakeryPlaceLab, PLACE_SOLUTION } from '../fixtures/lab-place.ts';
 import { bakeryConfigureLab, bakerySimulateLab } from '../fixtures/lab-specs.ts';
+import { bakeryPolicyLab, bakeryTraceLab } from '../fixtures/lab-trace.ts';
 import { bakeryLab, dropFixtureLab, writeLab } from '../fixtures/labs.ts';
 
 /** The engine `engineOf` hands R11: the real registry while `entry` is undefined, else this stub (null: none). */
@@ -207,5 +212,85 @@ describe('R11 on Simulate labs', () => {
     expect(labProblems(labEntryOf({ ...lab, spec }))[0]).toMatch(
       /^lab-m01-oven-rush: spec: constants\.orders: /,
     );
+  });
+});
+
+describe('R11 for Place, Trace and Investigate (spec 2.9)', () => {
+  it('replays the four bakery labs of the new engines without a problem', () => {
+    for (const lab of [bakeryPlaceLab(), bakeryTraceLab(), bakeryPolicyLab(), bakeryInvestigateLab()])
+      expect(labProblems(labEntryOf(lab))).toEqual([]);
+  });
+
+  it('reports a Place wrong path that leaves a piece in the tray', () => {
+    const lab = bakeryPlaceLab();
+    const [first, ...rest] = lab.wrongPaths;
+    if (first === undefined) throw new Error('the Place lab has wrong paths');
+    const wrongPaths = [{ ...first, actions: PLACE_SOLUTION.slice(1) }, ...rest];
+    expect(labProblems(labEntryOf({ ...lab, wrongPaths }))).toEqual([
+      `lab-m01-bakery-ovens: wrongPaths[0] (${first.mistake}) leaves the board unfinished`,
+    ]);
+  });
+
+  it('reports a Trace spec whose rules already meet every goal at the start', () => {
+    const lab = bakeryTraceLab();
+    const spec = lab.spec as NetworkTraceSpec;
+    const solved = replayLab(TRACE, spec, lab.solution as Parameters<typeof TRACE.reduce>[1][]).on;
+    const on = <R extends { id: string; on: boolean }>(r: R): R => ({ ...r, on: solved[r.id] ?? r.on });
+    const start = {
+      ...spec,
+      sg: { ...spec.sg, rules: spec.sg.rules.map(on) },
+      nacl: { ...spec.nacl, rules: spec.nacl.rules.map(on) },
+    };
+    expect(labProblems(labEntryOf({ ...lab, spec: start }))).toContain(
+      'lab-m01-bakery-door: the starting state already meets every goal',
+    );
+  });
+
+  it('reports an Investigate wrong path that leaves a question unanswered', () => {
+    const lab = bakeryInvestigateLab();
+    const [first, ...rest] = lab.wrongPaths;
+    if (first === undefined) throw new Error('the Investigate lab has wrong paths');
+    const wrongPaths = [{ ...first, actions: first.actions.slice(0, -1) }, ...rest];
+    expect(labProblems(labEntryOf({ ...lab, wrongPaths }))).toEqual([
+      `lab-m01-bakery-ledger: wrongPaths[0] (${first.mistake}) leaves the board unfinished`,
+    ]);
+  });
+
+  it('reports a bad spec of each new engine at its path', () => {
+    const place = bakeryPlaceLab();
+    const placeSpec = place.spec as { pieces: { id: string }[] };
+    const pieces = placeSpec.pieces.map((p, i) => (i === 1 ? { ...p, id: placeSpec.pieces[0]?.id } : p));
+    expect(labProblems(labEntryOf({ ...place, spec: { ...placeSpec, pieces } }))[0]).toBe(
+      `lab-m01-bakery-ovens: spec: pieces.1.id: piece ${placeSpec.pieces[0]?.id} is used twice`,
+    );
+    const trace = bakeryTraceLab();
+    const traceSpec = trace.spec as NetworkTraceSpec;
+    const cases = traceSpec.cases.map((c, i) => (i === 1 ? { ...c, id: traceSpec.cases[0]?.id } : c));
+    expect(labProblems(labEntryOf({ ...trace, spec: { ...traceSpec, cases } }))[0]).toBe(
+      `lab-m01-bakery-door: spec: cases.1.id: case ${traceSpec.cases[0]?.id} is used twice`,
+    );
+    const ledger = bakeryInvestigateLab();
+    const ledgerSpec = ledger.spec as { questions: { id: string; answer: string }[] };
+    const questions = ledgerSpec.questions.map((q, i) => (i === 0 ? { ...q, answer: 'nobody' } : q));
+    expect(labProblems(labEntryOf({ ...ledger, spec: { ...ledgerSpec, questions } }))[0]).toBe(
+      'lab-m01-bakery-ledger: spec: questions.0.answer: names no option: nobody',
+    );
+  });
+
+  it('reports a bad action of each new engine at its path', () => {
+    const place = bakeryPlaceLab();
+    expect(
+      labProblems(
+        labEntryOf({ ...place, solution: [{ t: 'place', piece: 'Gateway', slot: 'bakery-edge' }] }),
+      ),
+    ).toEqual(['lab-m01-bakery-ovens: solution[0].piece: must be kebab-case']);
+    const trace = bakeryTraceLab();
+    expect(
+      labProblems(labEntryOf({ ...trace, solution: [{ t: 'toggle', rule: 'Web Rule', on: true }] })),
+    ).toEqual(['lab-m01-bakery-door: solution[0].rule: must be kebab-case']);
+    const ledger = bakeryInvestigateLab();
+    expect(
+      labProblems(labEntryOf({ ...ledger, solution: [{ t: 'answer', question: 'who', option: 'Ines' }] })),
+    ).toEqual(['lab-m01-bakery-ledger: solution[0].option: must be kebab-case']);
   });
 });
