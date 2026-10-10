@@ -9,10 +9,10 @@ import { ModulePage } from './ModulePage.tsx';
 import { NotFound } from './NotFound.tsx';
 import { Runner } from './Runner.tsx';
 
-// Exam screens load on first use; Tasks 19 and 21 replace the placeholders that are left.
+// Exam screens load on first use; Task 21 replaces the focus quiz placeholder with the runner.
 const ExamScreen = lazyScreen(() => import('./Exam.tsx').then((m) => m.Exam));
-const MocksScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
-const ResultsScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
+const MocksScreen = lazyScreen(() => import('./Mocks.tsx').then((m) => m.Mocks));
+const ResultsScreen = lazyScreen(() => import('./Results.tsx').then((m) => m.Results));
 const FocusScreen = lazyScreen(() => import('./Pending.tsx').then((m) => m.Pending));
 
 /** The screen for a route; the content index is always loaded by the time this renders. */
@@ -38,13 +38,13 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
     case 'boss':
       return <ExamScreen key={route} idx={idx} route={route} />;
     case 'mocks':
-      return <MocksScreen title="Mock exams" />;
+      return <MocksScreen idx={idx} />;
     case 'mock':
       return <ExamScreen key={route} idx={idx} route={route} />;
     case 'focus':
       return <FocusScreen key={route} title="Focus quiz" />;
     case 'results':
-      return <ResultsScreen key={route} title="Results" />;
+      return <ResultsScreen key={route} idx={idx} sid={route.sid} />;
     case 'not-found':
       return <NotFound hash={route.hash} />;
   }
