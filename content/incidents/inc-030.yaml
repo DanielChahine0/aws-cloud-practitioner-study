@@ -1,0 +1,123 @@
+id: inc-030
+title: The ordering site knocked offline
+modules:
+  - 9
+concepts:
+  - ddos-attacks
+  - aws-shield-standard
+  - aws-waf
+brief: >-
+  On Saturday morning the cafe's ordering site stopped answering customers. Junk requests poured in from a swarm of
+  hijacked home computers, and the manager wants the site back up and much harder to knock over next time.
+steps:
+  - id: q-sw8a6f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ddos-attacks
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 2
+    stem: >-
+      The cafe's ordering site takes every request directly on one EC2 instance, so a flood of requests from many
+      machines swamped that single server.
+      Which change makes the site far harder to flood?
+    options:
+      - id: a
+        text: Switch the instance to a larger type
+        why: A larger instance still offers the capacity of one server, which a swarm of bots can still use up.
+      - id: b
+        text: Move the instance to another Availability Zone
+        why: In a new zone, the one instance still takes every request on its own, so the flood can swamp it again.
+      - id: c
+        text: Put Elastic Load Balancing in front of it
+        correct: true
+        why: ELB meets traffic before the server at Region level, so a flood hits AWS-scale capacity instead of one instance.
+      - id: d
+        text: Open more ports in its security group
+        why: Opening ports admits more unexpected traffic, while a security group helps by letting in only expected requests.
+    evidence:
+      - "Using AWS managed services helps: an ELB front door, not an EC2 instance, blunts attacks."
+      - "**Elastic Load Balancing (ELB)**: meets traffic before your frontend server, also at Region level, so it is not swamped."
+    takeaway: Against a DDoS flood, a managed ELB front door with Region-scale capacity holds up far better than a lone EC2 instance.
+    history: []
+    verified:
+      keyHash: 55220d708eb1
+      fullHash: 69fae6aab7d0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5pwmh8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-shield-standard
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe's ordering site now sits behind Elastic Load Balancing.
+      The cafe skipped every optional protection plan and pays nothing extra for security.
+      Which service is already defending the site against common DDoS attacks?
+    options:
+      - id: a
+        text: AWS Shield Advanced
+        why: Shield Advanced is a paid service the cafe would have to buy, so it is not guarding the site for nothing.
+      - id: b
+        text: AWS Shield Standard
+        correct: true
+        why: Shield Standard is free, automatic and built into ELB, so it already defends the site against common DDoS attacks.
+      - id: c
+        text: AWS WAF
+        why: AWS WAF filters requests only by the rules someone sets up in its web ACL, and the cafe set up no extra protection.
+      - id: d
+        text: AWS Firewall Manager
+        why: Firewall Manager applies firewall rules that someone configures across an organization's accounts, which the cafe never did.
+    evidence:
+      - "**AWS Shield Standard**: free, automatic, real-time defense against common DDoS attacks, built into ELB, CloudFront and Route 53."
+    takeaway: A site behind ELB, CloudFront or Route 53 gets AWS Shield Standard's DDoS defense automatically and at no extra cost.
+    history: []
+    verified:
+      keyHash: cd6a01035335
+      fullHash: aceb47c070f0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-f4gcb0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-waf
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      Some harmful requests still reach the cafe's web app.
+      A few come from IP addresses the cafe has already flagged, and others carry the signatures of known bad actors.
+      The manager wants a filter in front of the app that refuses these requests.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon GuardDuty
+        why: GuardDuty analyzes account and network activity to detect threats, but it does not sit in front of the app refusing requests.
+      - id: b
+        text: Amazon Inspector
+        why: Inspector scans EC2, containers and Lambda for vulnerabilities, and it does not filter incoming web requests.
+      - id: c
+        text: AWS Shield Standard
+        why: Shield Standard automatically absorbs common DDoS floods, but it does not refuse requests by flagged addresses or signatures.
+      - id: d
+        text: AWS WAF
+        correct: true
+        why: AWS WAF refuses requests from IP addresses blocked in its web ACL and spots bad actors' signatures, as the manager wants.
+    evidence:
+      - "**AWS WAF**: a web application firewall that refuses requests from IP addresses blocked in its web ACL (web access control list)."
+      - It also spots bad actors' signatures and uses machine learning to catch new threats.
+    takeaway: AWS WAF turns away web requests from IP addresses in its web ACL and from bad actors it recognizes by signature.
+    history: []
+    verified:
+      keyHash: 2e415f756341
+      fullHash: b6fc67978dda
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
