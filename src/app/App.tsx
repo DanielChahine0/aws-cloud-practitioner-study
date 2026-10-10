@@ -5,7 +5,7 @@ import { KV_KEYS } from '../store/kv.ts';
 import { closeOnBackdrop } from '../ui/backdrop.ts';
 import { startClock } from './clock.ts';
 import { index, loadError, loadIndex } from './content.ts';
-import { examTick, openExam, settleExam } from './exam-settle.ts';
+import { examTick, openExam } from './exam-clock.ts';
 import { useKeyboard } from './keyboard.ts';
 import { rankUp, watchRanks } from './memory.ts';
 import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
@@ -67,7 +67,7 @@ function useExamTicker(): void {
         const tick = (): void => {
           const at = Date.now();
           examTick.value = at;
-          if (at >= deadline) void settleExam(sid, new Date(at));
+          if (at >= deadline) void settle(sid, new Date(at));
         };
         tick();
         const timer = setInterval(tick, 1000);
@@ -76,6 +76,13 @@ function useExamTicker(): void {
     [],
   );
 }
+
+/** Settles an exam past its deadline; the settle's code loads on first use, and a failed load retries next tick. */
+const settle = (sid: string, at: Date): Promise<unknown> =>
+  import('./exam-settle.ts').then(
+    (m) => m.settleExam(sid, at),
+    () => false,
+  );
 
 const openProgress = (): void => {
   overlay.value = 'progress';

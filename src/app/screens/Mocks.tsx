@@ -1,7 +1,7 @@
 import type { ContentIndex } from '../../../schemas/chunks.ts';
 import { FORM_IDS } from '../../../schemas/ids.ts';
 import { useTitle } from '../../ui/useTitle.ts';
-import { openExam } from '../exam-settle.ts';
+import { openExam } from '../exam-clock.ts';
 import { attempts, taken } from '../memory.ts';
 import { progress, storeReady } from '../progress.ts';
 import { MOCKS_EMPTY, takenLine } from '../results.ts';

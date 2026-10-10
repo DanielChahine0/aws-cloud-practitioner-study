@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { levelProgress } from '../../engine/level.ts';
 import { BAR_GAP, formatClock } from '../exam.ts';
-import { examControls, examTick } from '../exam-settle.ts';
+import { examControls, examTick } from '../exam-clock.ts';
 import { memory, queue, rank, ranks, streak } from '../memory.ts';
 import { storeReady } from '../progress.ts';
 import { toHash } from '../router.ts';

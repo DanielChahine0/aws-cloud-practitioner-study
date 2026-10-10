@@ -1,36 +1,16 @@
 /**
  * Settling an exam: the single writer that turns the kv draft of a boss or mock into answer events and the submit,
  * whether the Submit button, the deadline or a later visit asks first (spec 4.3).
+ * The exam screens and the App's exam clock load it on demand, so it stays out of the initial bundle (spec 2.10).
  */
-import { effect, signal } from '@preact/signals';
+import { effect } from '@preact/signals';
 import type { ModuleChunk, QuestionView } from '../../schemas/chunks.ts';
 import type { StudyEvent } from '../../schemas/events.ts';
-import type { Progress, SessionState } from '../engine/replay.ts';
+import type { SessionState } from '../engine/replay.ts';
 import { KV_KEYS } from '../store/kv.ts';
 import { ensureExamForm, ensureModule, index, loadError, modules } from './content.ts';
 import { examDraftOf, newDraft, submitEvents } from './exam-session.ts';
 import { events, kvRecords, progress, recordAll, writeKv } from './progress.ts';
-
-/** The wall clock in milliseconds, ticked every second by App while an exam is open; the focus bar reads it. */
-export const examTick = signal(Date.now());
-
-/** What the focus bar's Flag and Grid buttons do, set by the exam shell while it shows a question. */
-export const examControls = signal<{
-  flag: () => void;
-  grid: () => void;
-  flagged: boolean;
-  gridOpen: boolean;
-} | null>(null);
-
-/** The open boss or mock, if any; only one may be open at a time. */
-export function openExam(p: Progress): SessionState | null {
-  let best: SessionState | null = null;
-  for (const s of p.sessions.values()) {
-    if ((s.mode !== 'boss' && s.mode !== 'mock') || s.submittedAt !== null || s.abandoned) continue;
-    if (best === null || s.startedAt > best.startedAt) best = s;
-  }
-  return best;
-}
 
 /** Resolves once every module chunk asked for has loaded, or with null when a load fails. */
 export function loadModules(ns: readonly number[]): Promise<ModuleChunk[] | null> {

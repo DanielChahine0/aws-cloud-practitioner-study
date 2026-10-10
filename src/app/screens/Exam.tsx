@@ -20,6 +20,7 @@ import {
   examPickable,
   REMIX_FORM,
 } from '../exam.ts';
+import { examControls, examTick, openExam } from '../exam-clock.ts';
 import {
   addTime,
   countsLine,
@@ -32,7 +33,7 @@ import {
   remixTargets,
   toggleFlag,
 } from '../exam-session.ts';
-import { examControls, examQuestions, examTick, loadModules, openExam, settleExam } from '../exam-settle.ts';
+import { examQuestions, loadModules, settleExam } from '../exam-settle.ts';
 import { isControl, isTyping } from '../keyboard.ts';
 import { learnPoolNow, practicePoolOf } from '../learn-pool.ts';
 import { bosses, learnForms, memory, memoryContent, taken } from '../memory.ts';
