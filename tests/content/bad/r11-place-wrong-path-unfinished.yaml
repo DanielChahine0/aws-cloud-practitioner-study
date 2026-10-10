@@ -1,0 +1,209 @@
+# fixture-target: content/labs/01-baking-basics/sort-the-bakes.yaml
+# The first wrong path never places the internet gateway, so it fails only by leaving a piece in the tray.
+id: lab-m01-sort-the-bakes
+module: 1
+title: Keep the ovens baking
+engine: place
+tier: core
+status: live
+rev: 1
+concepts:
+  - shared-kitchen
+  - per-minute-rental
+notes:
+  - m01/what-a-bakery-cloud-is
+minutes: 8
+brief: The bakery runs two shop fronts and a recipe store in its own network.
+  Customers reach a piece only through a public route in its subnet and a
+  gateway on the network edge, and either oven row can go dark at any time.
+spec:
+  containers:
+    - id: flourtown
+      label: Flourtown
+      kind: region
+    - id: bakery-network
+      label: Bakery network
+      kind: vpc
+      parent: flourtown
+    - id: bakery-edge
+      label: Network edge
+      kind: edge
+      parent: bakery-network
+      detail: Where the bakery network meets the street.
+    - id: oven-row-a
+      label: Oven Row A
+      kind: az
+      parent: bakery-network
+    - id: public-a
+      label: Public subnet A
+      kind: subnet
+      parent: oven-row-a
+    - id: private-a
+      label: Private subnet A
+      kind: subnet
+      parent: oven-row-a
+    - id: oven-row-b
+      label: Oven Row B
+      kind: az
+      parent: bakery-network
+    - id: public-b
+      label: Public subnet B
+      kind: subnet
+      parent: oven-row-b
+    - id: private-b
+      label: Private subnet B
+      kind: subnet
+      parent: oven-row-b
+    - id: not-used
+      label: Not used
+      kind: bench
+  pieces:
+    - id: front-one
+      label: First shop front
+      detail: Takes the online cake orders.
+    - id: front-two
+      label: Second shop front
+      detail: Takes the same orders as the first.
+    - id: recipes-one
+      label: Recipe store
+      detail: Holds the secret recipes.
+    - id: recipes-two
+      label: Recipe store copy
+      detail: A standby copy of the recipe store.
+    - id: gateway
+      label: Internet gateway
+      role: internet-gateway
+    - id: route-a
+      label: Public route A
+      role: public-route
+    - id: route-b
+      label: Public route B
+      role: public-route
+    - id: mixer
+      label: Spare mixer
+      detail: Nothing on the board needs it.
+  failures:
+    - oven-row-a
+    - oven-row-b
+  constraints:
+    - kind: public
+      goal: g1
+      pieces:
+        - front-one
+        - front-two
+    - kind: private
+      goal: g2
+      pieces:
+        - recipes-one
+        - recipes-two
+    - kind: survive
+      goal: g3
+      pieces:
+        - front-one
+        - front-two
+      min: 1
+    - kind: survive
+      goal: g3
+      pieces:
+        - recipes-one
+        - recipes-two
+      min: 1
+    - kind: in
+      goal: g3
+      pieces:
+        - mixer
+      within:
+        - not-used
+goals:
+  - id: g1
+    label: Customers reach both shop fronts
+    hint: A shop front needs a public route in its own subnet and a gateway on the
+      network edge.
+  - id: g2
+    label: The recipes stay private
+    hint: A recipe store belongs in a subnet that has no public route.
+  - id: g3
+    label: One oven row can go dark
+    hint: Spread each pair over both oven rows, and leave what nobody needs on the
+      bench.
+solution:
+  - &a8
+    t: place
+    piece: gateway
+    slot: bakery-edge
+  - &a1
+    t: place
+    piece: route-a
+    slot: public-a
+  - &a2
+    t: place
+    piece: front-one
+    slot: public-a
+  - &a3
+    t: place
+    piece: recipes-one
+    slot: private-a
+  - &a4
+    t: place
+    piece: route-b
+    slot: public-b
+  - &a5
+    t: place
+    piece: front-two
+    slot: public-b
+  - &a6
+    t: place
+    piece: recipes-two
+    slot: private-b
+  - &a7
+    t: place
+    piece: mixer
+    slot: not-used
+wrongPaths:
+  - actions:
+      - *a1
+      - *a2
+      - *a3
+      - *a4
+      - *a5
+      - *a6
+      - *a7
+    failsGoal: g1
+    mistake: Leaves the internet gateway on the bench
+  - actions:
+      - *a8
+      - *a1
+      - *a2
+      - *a3
+      - *a4
+      - *a5
+      - *a6
+      - *a7
+      - t: place
+        piece: recipes-one
+        slot: public-a
+    failsGoal: g2
+    mistake: Puts the recipe store in a public subnet
+  - actions:
+      - *a8
+      - *a1
+      - *a2
+      - *a3
+      - *a4
+      - *a5
+      - *a6
+      - *a7
+      - t: place
+        piece: front-two
+        slot: public-a
+    failsGoal: g3
+    mistake: Runs both shop fronts in Oven Row A
+debrief:
+  lines:
+    - A shop front in each oven row keeps the orders coming when one row goes
+      dark.
+    - A recipe store with no public route in its subnet stays out of reach from
+      the street.
+  questions:
+    - q-b4k7m2
+    - q-d9p4r6

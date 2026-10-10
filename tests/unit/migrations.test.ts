@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { KV_KEYS } from '../../src/store/kv.ts';
+import { ADR_KEY_PREFIX, adrKey, KV_KEYS } from '../../src/store/kv.ts';
 import {
   type LocalData,
   MIGRATIONS,
@@ -100,6 +100,13 @@ describe('KV_KEYS', () => {
       rankSeen: 'rankSeen',
       examSession: 'examSession',
       labDrafts: 'labDrafts',
+      plan: 'plan',
+      missionTicks: 'missionTicks',
     });
+  });
+
+  it('gives each module its own ADR draft key', () => {
+    expect(ADR_KEY_PREFIX).toBe('adr-');
+    expect([1, 3, 13].map(adrKey)).toEqual(['adr-01', 'adr-03', 'adr-13']);
   });
 });

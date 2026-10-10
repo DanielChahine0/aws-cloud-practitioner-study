@@ -1,11 +1,15 @@
 import { z } from 'zod';
-import { metricInfo, modelParams, type SimModel } from '../src/labs/simulate/models.ts';
+import { metricInfo, modelParams, type PurchaseOption, type SimModel } from '../src/labs/simulate/models.ts';
 import { ConceptId, ModuleNumber, NoteId, Slug } from './common.ts';
 import { LAB_ENGINES, LAB_ID, type LabEngineId } from './ids.ts';
+import { InvestigateAction, InvestigateSpec } from './lab-investigate.ts';
+import { PlaceAction, PlaceSpec } from './lab-place.ts';
+import { TraceAction, TraceSpec } from './lab-trace.ts';
 import { Qid } from './question.ts';
 
 /**
- * Lab files (spec 5.1): the envelope every engine shares, and each engine's spec and actions. This is the only home of
+ * Lab files (spec 5.1): the envelope every engine shares, and each engine's spec and actions. This file and its
+ * per-engine siblings (schemas/lab-place.ts, schemas/lab-trace.ts, schemas/lab-investigate.ts) are the only home of
  * lab zod schemas; `src/labs` models import the inferred types with `import type`, so zod never reaches the app bundle.
  */
 export const LabId = z.string().regex(LAB_ID, 'must look like lab-m03-pick-the-compute');
@@ -251,6 +255,8 @@ export const SIM_MODELS = [
   'cache',
   'bill',
   'transfer',
+  'purchase',
+  'data-loss',
 ] as const satisfies readonly SimModel[];
 
 const Label = z.string().min(2).max(40);
@@ -280,6 +286,8 @@ const Tiers = z
     });
   });
 const Named = { id: Slug, label: Label };
+/** A purchase option's lab credits per hour. */
+const Rate = z.number().positive();
 
 /** The constants each model reads; every figure is a lab value, every price is in lab credits. */
 export const SIM_CONSTANTS: { readonly [M in SimModel]: z.ZodType } = {
@@ -397,6 +405,43 @@ export const SIM_CONSTANTS: { readonly [M in SimModel]: z.ZodType } = {
       deviceTb: z.number().positive(),
     })
     .superRefine((c, ctx) => uniqueIds(c.jobs, ctx, ['jobs'])),
+  purchase: z
+    .strictObject({
+      workloads: z
+        .array(
+          z.strictObject({
+            ...Named,
+            hours: z.int().min(1).max(744),
+            months: z.int().min(1).max(12),
+            interruptible: z.boolean(),
+            needs: z.enum(['none', 'dedicated-instance', 'dedicated-host']),
+          }),
+        )
+        .min(2)
+        .max(6),
+      rates: z.strictObject({
+        'on-demand': Rate,
+        reserved: Rate,
+        'savings-plan': Rate,
+        spot: Rate,
+        'dedicated-instance': Rate,
+        'dedicated-host': Rate,
+      } satisfies Record<PurchaseOption, z.ZodNumber>),
+      termMonths: z.int().min(1).max(36),
+    })
+    .superRefine((c, ctx) => uniqueIds(c.workloads, ctx, ['workloads'])),
+  'data-loss': z
+    .strictObject({
+      hours: z.int().min(24).max(168),
+      perHour: z.int().min(1).max(1000),
+      stopAt: z.int(),
+      zoneLossAt: z.int(),
+      fullSnapshot: z.number().min(0),
+      incrementalSnapshot: z.number().min(0),
+    })
+    .refine((c) => 0 < c.stopAt && c.stopAt < c.zoneLossAt && c.zoneLossAt < c.hours, {
+      message: 'stopAt and zoneLossAt must fall in order inside hours',
+    }),
 };
 
 const IntParam = z.strictObject({
@@ -542,4 +587,7 @@ export const LAB_SCHEMAS: {
   sort: { spec: SortSpec, action: SortAction },
   configure: { spec: ConfigureSpec, action: ConfigureAction },
   simulate: { spec: SimulateSpec, action: SimulateAction },
+  place: { spec: PlaceSpec, action: PlaceAction },
+  trace: { spec: TraceSpec, action: TraceAction },
+  investigate: { spec: InvestigateSpec, action: InvestigateAction },
 };

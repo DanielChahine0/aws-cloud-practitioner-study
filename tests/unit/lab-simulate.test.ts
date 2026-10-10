@@ -6,10 +6,15 @@ import { checkLab, ENGINES } from '../../src/labs/engines.ts';
 import { SIMULATE, type SimulateState } from '../../src/labs/simulate/model.ts';
 import {
   type BillConstants,
+  type DataLossConstants,
   fmt,
   type LifecycleConstants,
+  metricInfo,
+  modelParams,
   NEVER,
   onlineDays,
+  PURCHASE_OPTIONS,
+  type PurchaseConstants,
   runModel,
   type SimValues,
   tiered,
@@ -419,5 +424,197 @@ describe('the Simulate texts R7 checks', () => {
     };
     expect(simulateTexts(cost)).toEqual(['Where it runs', 'AWS Lambda', 'An instance', 'Bread export']);
     expect(simulateTexts({ model: 'scaling' })).toEqual([]);
+  });
+});
+
+/** Four made-up bakery jobs: two all year, one for a month, one that may stop; one needs its own hardware. */
+const BAKES: PurchaseConstants = {
+  workloads: [
+    {
+      id: 'oven',
+      label: 'Oven controller',
+      hours: 100,
+      months: 12,
+      interruptible: false,
+      needs: 'dedicated-instance',
+    },
+    { id: 'batch', label: 'Batch planner', hours: 10, months: 2, interruptible: true, needs: 'none' },
+    {
+      id: 'vault',
+      label: 'Recipe vault',
+      hours: 100,
+      months: 1,
+      interruptible: false,
+      needs: 'dedicated-host',
+    },
+    { id: 'promo', label: 'Promo page', hours: 100, months: 1, interruptible: false, needs: 'none' },
+  ],
+  rates: {
+    'on-demand': 1,
+    reserved: 0.5,
+    'savings-plan': 0.6,
+    spot: 0.2,
+    'dedicated-instance': 1.5,
+    'dedicated-host': 2,
+  },
+  termMonths: 12,
+};
+const everyWorkload = (option: string): SimValues =>
+  Object.fromEntries(BAKES.workloads.map((w) => [w.id, option]));
+
+describe('the purchase model', () => {
+  it.each([
+    ['on-demand', 1200, 20, 100, 1420, 0, 2],
+    ['reserved', 600, 60, 600, 1860, 0, 2],
+    ['savings-plan', 720, 72, 720, 2232, 0, 2],
+    ['spot', 240, 4, 20, 284, 3, 2],
+    ['dedicated-instance', 1800, 30, 150, 2130, 0, 1],
+    ['dedicated-host', 2400, 40, 200, 2840, 0, 0],
+  ] as const)(
+    'prices every workload on %s, where a commitment bills the whole term',
+    (option, oven, batch, month, total, interrupted, unmet) => {
+      expect(runModel('purchase', BAKES, everyWorkload(option))).toEqual({
+        metrics: {
+          'cost.oven': oven,
+          'cost.batch': batch,
+          'cost.vault': month,
+          'cost.promo': month,
+          total,
+          interrupted,
+          unmet,
+        },
+        series: [],
+      });
+    },
+  );
+
+  it('counts an unknown or missing option as On-Demand', () => {
+    const onDemand = runModel('purchase', BAKES, everyWorkload('on-demand'));
+    expect(runModel('purchase', BAKES, {})).toEqual(onDemand);
+    expect(runModel('purchase', BAKES, everyWorkload('cheapest'))).toEqual(onDemand);
+  });
+
+  it('counts Spot only on a job that cannot stop, and a hardware need only when the option misses it', () => {
+    const mixed = { oven: 'dedicated-host', batch: 'spot', vault: 'dedicated-host', promo: 'spot' };
+    expect(runModel('purchase', BAKES, mixed).metrics).toMatchObject({ interrupted: 1, unmet: 0 });
+    expect(runModel('purchase', BAKES, { ...mixed, vault: 'dedicated-instance' }).metrics.unmet).toBe(1);
+  });
+});
+
+/** Two days of orders on one instance: it stops at hour 10 and its zone fails at hour 30. */
+const SHOP: DataLossConstants = {
+  hours: 48,
+  perHour: 10,
+  stopAt: 10,
+  zoneLossAt: 30,
+  fullSnapshot: 5,
+  incrementalSnapshot: 0.5,
+};
+
+describe('the data-loss model', () => {
+  it.each([
+    [0, 0, 0, 300],
+    [1, 47, 28, 0],
+    [6, 7, 8, 0],
+    [12, 3, 6, 60],
+    [24, 1, 5, 60],
+  ] as const)(
+    'on EBS every %i hours takes snapshots that keep the orders up to the last one before the zone fails',
+    (every, snapshots, cost, zoneLost) => {
+      expect(runModel('data-loss', SHOP, { store: 'ebs', snapshotEvery: every })).toEqual({
+        metrics: { stopLost: 0, zoneLost, snapshots, cost },
+        series: [],
+      });
+    },
+  );
+
+  it.each([0, 1, 6, 12, 24])(
+    'on the instance store every %i hours loses the orders at the stop and after it, with no snapshot',
+    (every) => {
+      expect(runModel('data-loss', SHOP, { store: 'instance-store', snapshotEvery: every })).toEqual({
+        metrics: { stopLost: 100, zoneLost: 200, snapshots: 0, cost: 0 },
+        series: [],
+      });
+    },
+  );
+});
+
+describe('the purchase and data-loss shapes', () => {
+  it('gives one purchase choice per workload, and a store and a snapshot interval for data loss', () => {
+    expect(modelParams('purchase', BAKES)).toEqual(
+      ['oven', 'batch', 'vault', 'promo'].map((id) => ({
+        id,
+        kind: 'choice',
+        options: [...PURCHASE_OPTIONS],
+      })),
+    );
+    expect(PURCHASE_OPTIONS).toEqual([
+      'on-demand',
+      'reserved',
+      'savings-plan',
+      'spot',
+      'dedicated-instance',
+      'dedicated-host',
+    ]);
+    expect(modelParams('data-loss', SHOP)).toEqual([
+      { id: 'store', kind: 'choice', options: ['instance-store', 'ebs'] },
+      { id: 'snapshotEvery', kind: 'int', min: 0, max: 24 },
+    ]);
+  });
+
+  it('labels every purchase and data-loss metric', () => {
+    expect(metricInfo('purchase', 'total', BAKES)).toEqual({ label: 'Yearly cost', unit: 'lab credits' });
+    expect(metricInfo('purchase', 'cost.vault', BAKES)).toEqual({
+      label: 'Cost: Recipe vault',
+      unit: 'lab credits',
+    });
+    expect(metricInfo('purchase', 'interrupted', BAKES)).toEqual({ label: 'Jobs Spot may stop', unit: '' });
+    expect(metricInfo('purchase', 'unmet', BAKES)).toEqual({ label: 'Hardware needs not met', unit: '' });
+    expect(metricInfo('purchase', 'cost.nothing', BAKES)).toBeNull();
+    expect(metricInfo('data-loss', 'stopLost', SHOP)).toEqual({ label: 'Orders lost at the stop', unit: '' });
+    expect(metricInfo('data-loss', 'zoneLost', SHOP)).toEqual({
+      label: 'Orders lost with the zone',
+      unit: '',
+    });
+    expect(metricInfo('data-loss', 'snapshots', SHOP)).toEqual({ label: 'Snapshots taken', unit: '' });
+    expect(metricInfo('data-loss', 'cost', SHOP)).toEqual({ label: 'Snapshot cost', unit: 'lab credits' });
+    expect(metricInfo('data-loss', 'cost.oven', SHOP)).toBeNull();
+  });
+
+  it('rejects a repeated workload id, a missing rate and a stop or zone loss out of order', () => {
+    const issues = (model: 'purchase' | 'data-loss', c: unknown) =>
+      SIM_CONSTANTS[model].safeParse(c).error?.issues.map((i) => `${i.path.join('.')}: ${i.message}`) ?? [];
+    expect(SIM_CONSTANTS.purchase.safeParse(BAKES).success).toBe(true);
+    expect(issues('purchase', { ...BAKES, workloads: [BAKES.workloads[0], BAKES.workloads[0]] })).toEqual([
+      "workloads.1.id: duplicate id 'oven'",
+    ]);
+    const { spot: _, ...noSpot } = BAKES.rates;
+    expect(issues('purchase', { ...BAKES, rates: noSpot })).toHaveLength(1);
+    expect(SIM_CONSTANTS['data-loss'].safeParse(SHOP).success).toBe(true);
+    expect(issues('data-loss', { ...SHOP, stopAt: 30 })).toEqual([
+      ': stopAt and zoneLossAt must fall in order inside hours',
+    ]);
+    expect(issues('data-loss', { ...SHOP, zoneLossAt: 48 })).toEqual([
+      ': stopAt and zoneLossAt must fall in order inside hours',
+    ]);
+  });
+
+  it('gives R7 every workload label of a purchase spec', () => {
+    const beans = {
+      model: 'purchase',
+      constants: BAKES,
+      params: BAKES.workloads.map((w) => ({
+        kind: 'choice',
+        id: w.id,
+        label: `Buy ${w.label}`,
+        options: PURCHASE_OPTIONS.map((o) => ({ id: o, label: o })),
+        initial: 'on-demand',
+      })),
+      thresholds: [{ goal: 'g1', metric: 'total', max: 1000 }],
+    };
+    expect(SimulateSpec.safeParse(beans).success).toBe(true);
+    expect(simulateTexts(beans)).toEqual(
+      expect.arrayContaining(['Oven controller', 'Batch planner', 'Recipe vault', 'Promo page']),
+    );
   });
 });
