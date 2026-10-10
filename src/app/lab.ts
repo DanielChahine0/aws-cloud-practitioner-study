@@ -3,7 +3,14 @@ import type { LabEngineId } from '../../schemas/ids.ts';
 import type { GoalResult } from '../labs/contract.ts';
 import { shortDate } from './dates.ts';
 
-export const ENGINE_LABEL = { sort: 'Sort', configure: 'Configure', simulate: 'Simulate' } as const;
+export const ENGINE_LABEL = {
+  sort: 'Sort',
+  configure: 'Configure',
+  simulate: 'Simulate',
+  place: 'Place',
+  trace: 'Trace',
+  investigate: 'Investigate',
+} as const satisfies Record<LabEngineId, string>;
 
 /** Shown on every lab that prices anything (spec 5): prices are never real AWS prices. */
 export const CREDITS_NOTE = 'Prices are in lab credits, a made-up unit, not AWS prices.';

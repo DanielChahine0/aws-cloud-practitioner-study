@@ -28,8 +28,8 @@ export const BADGE_IDS = [
 ] as const;
 export type BadgeIdValue = (typeof BADGE_IDS)[number];
 
-/** The lab engines Phase 4 ships (spec 5.1); Place, Trace and Investigate arrive in Phase 5. */
-export const LAB_ENGINES = ['sort', 'configure', 'simulate'] as const;
+/** The lab engines (spec 5.1): Sort, Configure and Simulate since Phase 4; Place, Trace and Investigate since Phase 5. */
+export const LAB_ENGINES = ['sort', 'configure', 'simulate', 'place', 'trace', 'investigate'] as const;
 export type LabEngineId = (typeof LAB_ENGINES)[number];
 
 /** A lab id: `lab-mNN-<slug>`, where NN is the lab's module (spec 1.2). */

@@ -2270,6 +2270,12 @@ dialog.confirm .button {
   background: var(--muted);
 }
 
+/* Labs: Place */
+
+/* Labs: Trace */
+
+/* Labs: Investigate */
+
 /* Incident */
 .incident-paid {
   font-weight: 600;

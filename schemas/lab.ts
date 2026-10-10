@@ -2,10 +2,14 @@ import { z } from 'zod';
 import { metricInfo, modelParams, type PurchaseOption, type SimModel } from '../src/labs/simulate/models.ts';
 import { ConceptId, ModuleNumber, NoteId, Slug } from './common.ts';
 import { LAB_ENGINES, LAB_ID, type LabEngineId } from './ids.ts';
+import { InvestigateAction, InvestigateSpec } from './lab-investigate.ts';
+import { PlaceAction, PlaceSpec } from './lab-place.ts';
+import { TraceAction, TraceSpec } from './lab-trace.ts';
 import { Qid } from './question.ts';
 
 /**
- * Lab files (spec 5.1): the envelope every engine shares, and each engine's spec and actions. This is the only home of
+ * Lab files (spec 5.1): the envelope every engine shares, and each engine's spec and actions. This file and its
+ * per-engine siblings (schemas/lab-place.ts, schemas/lab-trace.ts, schemas/lab-investigate.ts) are the only home of
  * lab zod schemas; `src/labs` models import the inferred types with `import type`, so zod never reaches the app bundle.
  */
 export const LabId = z.string().regex(LAB_ID, 'must look like lab-m03-pick-the-compute');
@@ -583,4 +587,7 @@ export const LAB_SCHEMAS: {
   sort: { spec: SortSpec, action: SortAction },
   configure: { spec: ConfigureSpec, action: ConfigureAction },
   simulate: { spec: SimulateSpec, action: SimulateAction },
+  place: { spec: PlaceSpec, action: PlaceAction },
+  trace: { spec: TraceSpec, action: TraceAction },
+  investigate: { spec: InvestigateSpec, action: InvestigateAction },
 };
