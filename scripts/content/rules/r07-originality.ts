@@ -9,6 +9,7 @@ import {
   shingleWindows,
 } from '../lib/fingerprint.ts';
 import { labTexts } from '../lib/labs.ts';
+import { BRIEF_FILE, projectOf } from '../lib/project.ts';
 import { mask, stripMarkdown, words } from '../lib/text.ts';
 import { finding, type Rule } from './rule.ts';
 
@@ -151,6 +152,20 @@ export const r07: Rule = {
       if (lab.status !== 'live') continue;
       for (const run of new Set(labTexts(lab).map(tokensOf).flatMap(courseRuns))) {
         out.push(finding('R7', path, `${lab.id} copies a 9-word run from the course: "${run}"`));
+      }
+    }
+    // Live key points and the brief get the no-run check too (spec 2.9 R7); a key point's line is its list item.
+    const project = projectOf(ctx);
+    for (const { path, line, kp } of project.keyPoints) {
+      if (kp.status !== 'live') continue;
+      for (const run of new Set(courseRuns(tokensOf(kp.text)))) {
+        out.push(finding('R7', path, `${kp.id} copies a 9-word run from the course: "${run}"`, line));
+      }
+    }
+    for (const s of project.strings) {
+      if (s.path !== BRIEF_FILE) continue;
+      for (const run of new Set(courseRuns(tokensOf(s.text)))) {
+        out.push(finding('R7', s.path, `${s.field} copies a 9-word run from the course: "${run}"`, s.line));
       }
     }
     return out;

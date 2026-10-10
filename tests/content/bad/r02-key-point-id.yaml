@@ -1,0 +1,13 @@
+# fixture-target: content/concepts.yaml
+# R2: a concept alias takes the id of the live fixture key point.
+- id: shared-kitchen
+  name: Shared kitchen
+  home: m01/what-a-bakery-cloud-is
+  anchor: shared-kitchen
+  tasks: ["1.1"]
+- id: per-minute-rental
+  name: Per-minute rental
+  home: m01/what-a-bakery-cloud-is
+  anchor: paying-by-the-minute
+  tasks: ["4.1"]
+  aliases: [kp-01-borrow-on-busy-days]

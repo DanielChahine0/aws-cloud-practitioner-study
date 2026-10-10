@@ -1,5 +1,6 @@
 import type { Finding, Note } from '../lib/context.ts';
 import { projectOf } from '../lib/project.ts';
+import { retiredPlanProblems } from '../lib/style.ts';
 import { emDashLines, multiSentenceLines } from '../lib/text.ts';
 import { finding, type Rule } from './rule.ts';
 
@@ -19,7 +20,7 @@ const BINARY = /\.(?:png|jpe?g|gif|ico|webp|woff2?|pdf|zip)$/i;
 
 /**
  * R8 Markdown style: no em dash anywhere, one sentence per line in Markdown, one sentence per brief string and key point
- * text, and the note structure of lint_notes.py.
+ * text, no retired Support plan name in the brief, a key point or a mission page, and the note structure of lint_notes.py.
  */
 export const r08: Rule = {
   id: 'R8',
@@ -39,6 +40,14 @@ export const r08: Rule = {
     for (const s of projectOf(ctx).strings) {
       if (multiSentenceLines(s.text.replaceAll('\n', ' ')).length > 0)
         out.push(finding('R8', s.path, `${s.field}: one sentence per string`, s.line));
+      for (const problem of retiredPlanProblems([s.text]))
+        out.push(finding('R8', s.path, `${s.field}: ${problem}`, s.line));
+    }
+    for (const mission of ctx.missions) {
+      mission.body.split('\n').forEach((line, i) => {
+        for (const problem of retiredPlanProblems([line]))
+          out.push(finding('R8', mission.path, problem, mission.bodyLine + i));
+      });
     }
     for (const note of ctx.notes) out.push(...structure(note));
     return out;

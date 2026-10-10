@@ -58,7 +58,7 @@ describe('buildContent on the fixture tree', () => {
     expect(index.modules[0]?.chunk).toMatch(/^content\/m01\.[0-9a-f]{8}\.json$/);
     expect(index.search).toMatch(/^content\/search\.[0-9a-f]{8}\.json$/);
     expect([...built.files.keys()].sort()).toEqual(
-      [built.indexFile, index.modules[0]?.chunk, index.search].sort(),
+      [built.indexFile, index.modules[0]?.chunk, index.search, index.project].sort(),
     );
   });
 

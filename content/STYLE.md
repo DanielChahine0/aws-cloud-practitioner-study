@@ -174,6 +174,38 @@ Label each parameter by the lever it moves, and always show its unit.
 Name every constant a lab value in the brief, and every price in lab credits.
 Thresholds read as the cafe's needs, such as a daily budget or a deadline, never as the answer.
 
+### Place containers and pieces
+
+Label a container by the place it stands for and a piece by the thing it runs, never by the verdict.
+
+- Good: `Harbour Zone B`, `Order database copy`.
+- Bad: `Safe zone` names the verdict, and `Database (private)` gives the slot away.
+- Name the bench `Not used`, and give every Region and zone a made-up name, never a real code.
+
+### Trace rules and cases
+
+A case label says who asks for what, and the expected result lives only in `expect`.
+
+- Good: `A customer orders over HTTPS`.
+- Bad: `Customer HTTPS should pass` gives the result away.
+- Offer rules a learner could really choose, the tempting wrong fix included.
+
+### Investigate records and questions
+
+Records read like a real log or report, with made-up names and every time in UTC with the `UTC` suffix.
+
+- Good: `09:42 UTC`, `barista-sam`, `203.0.113.24`.
+- Bad: `9:42 in the morning`, a colleague's real name, or an address outside the documentation ranges.
+- Write each question so the evidence leaves exactly one option right.
+
+### Engine rules beyond the notes
+
+When a lab relies on an engine rule the cited notes do not state, the brief states it as how this lab works, and no note is edited.
+
+- Good: `In this lab, the network ACL tries its rules from the lowest number up.`
+- Bad: a hint that says the lesson teaches rule numbers when no cited note does.
+- This covers network ACL rule order, reply ports, explicit deny over allow, SCPs intersecting identity policies, CloudFormation type names and CloudTrail management events.
+
 ## Incidents
 
 A daily incident is a short cafe story told over 2 to 4 steps in `content/incidents/inc-NNN.yaml` (spec 4.5).

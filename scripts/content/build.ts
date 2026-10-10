@@ -26,6 +26,7 @@ import type {
 } from '../../schemas/chunks.ts';
 import type { Concept } from '../../schemas/concept.ts';
 import { LAB_SCHEMAS } from '../../schemas/lab.ts';
+import type { KeyPointView, ProjectChunk } from '../../schemas/project-view.ts';
 import { normalize } from '../../src/app/search.ts';
 import {
   CONCEPTS_FILE,
@@ -41,6 +42,7 @@ import {
 import { evidenceForm, noteLines, sectionAt } from './lib/evidence.ts';
 import { parseGlossary, termMatcher } from './lib/glossary.ts';
 import { labTexts } from './lib/labs.ts';
+import { type KeyPointEntry, projectOf } from './lib/project.ts';
 import { renderDoc, renderInline, routeOf } from './lib/render.ts';
 import { stripMarkdown, words } from './lib/text.ts';
 
@@ -111,6 +113,48 @@ export function confusableLinks(concepts: readonly Concept[]): Map<string, strin
     links.set(c.id, unique.slice(0, MAX_CONFUSABLE));
   }
   return links;
+}
+
+/**
+ * The lazy project chunk (spec 6): the brief, the rubric and each decision's live key points with the note line that
+ * grounds them, or null while there is no brief. Only the Project screen loads it, so no other screen shows a key point.
+ */
+function projectChunk(ctx: Context, notesById: ReadonlyMap<string, Note>): ProjectChunk | null {
+  const { brief, keyPoints } = projectOf(ctx);
+  if (brief === null) return null;
+  const conceptOf = (id: string) => ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id));
+  const view = ({ kp }: KeyPointEntry): KeyPointView => {
+    const evidence = evidenceForm(kp.evidence);
+    for (const id of kp.concepts) {
+      const note = notesById.get(conceptOf(id)?.home ?? '');
+      const line = note === undefined ? undefined : noteLines(note).get(evidence);
+      const section = note === undefined || line === undefined ? null : sectionAt(note, line);
+      if (note === undefined || section === null) continue;
+      const concepts = kp.concepts.map((c) => conceptOf(c)?.id ?? c);
+      return {
+        id: kp.id,
+        text: kp.text,
+        concepts,
+        read: { route: `${routeOf(note)}/${section.slug}`, text: evidence },
+      };
+    }
+    throw new Error(`${kp.id} cites a line no home note of its concepts has; run pnpm content:validate`);
+  };
+  return {
+    title: brief.title,
+    facts: brief.facts.map((f) => f.text),
+    rubric: {
+      passTotal: brief.rubric.passTotal,
+      criteria: brief.rubric.criteria.map((c) => ({ id: c.id, name: c.name, levels: c.levels })),
+    },
+    decisions: brief.decisions.map((d) => ({
+      module: d.module,
+      title: d.title,
+      prompt: d.prompt,
+      context: d.context,
+      keyPoints: keyPoints.filter((e) => e.module === d.module && e.kp.status === 'live').map(view),
+    })),
+  };
 }
 
 /**
@@ -477,6 +521,7 @@ export function buildContent(ctx: Context): BuiltContent {
     rule: badge.rule,
     arrives: badge.arrives ?? null,
   }));
+  const project = projectChunk(ctx, notesById);
   const body = {
     modules,
     concepts,
@@ -490,6 +535,7 @@ export function buildContent(ctx: Context): BuiltContent {
     exam: formChunks(ctx, notesById, emit),
     labs: liveLabs.map(labMeta),
     incidents,
+    project: project === null ? null : emit('project', project),
   };
   const contentVersion = `c-${sha256(JSON.stringify(body)).slice(0, 6)}`;
   const index: ContentIndex = { contentVersion, ...body };

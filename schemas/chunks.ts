@@ -265,4 +265,6 @@ export interface ContentIndex {
   labs: LabMeta[];
   /** Every shipped incident, in id order, so Home can pick today's without loading a chunk. */
   incidents: IncidentMeta[];
+  /** Path of the lazy project chunk (spec 6) from the site root, or null while there is no brief. */
+  project: string | null;
 }
