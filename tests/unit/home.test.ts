@@ -102,6 +102,13 @@ const session = (mode: SessionState['mode'], scope: string): SessionState => ({
   submitId: null,
 });
 
+const examSession = (
+  mode: 'boss' | 'mock',
+  scope: string,
+  form: string | null,
+  deadline: string,
+): SessionState => ({ ...session(mode, scope), form, deadline });
+
 const QUEUE: ReviewQueue = {
   items: [],
   due: 0,
@@ -114,6 +121,20 @@ const QUEUE: ReviewQueue = {
 const NOW = new Date('2026-10-10T18:00:00.000Z');
 
 describe('memoryContentOf', () => {
+  it('maps each exam item to its task and adds its version, so stale exam answers are caught', () => {
+    const content = memoryContentOf({
+      ...IDX,
+      exam: {
+        forms: [{ id: 'A', chunk: 'content/exam-a.0000aaaa.json', frozen: true, size: 1 }],
+        items: { 'x-aaaaaa': { version: 3, concept: 'shared-oven', task: '1.2', form: 'A', type: 'single' } },
+      },
+    });
+    expect(content.examTasks).toEqual(new Map([['x-aaaaaa', '1.2']]));
+    expect(content.questionVersions.get('x-aaaaaa')).toBe(3);
+    expect(content.questionVersions.get('q-bbbbbb')).toBe(2);
+    expect(memoryContentOf(IDX).examTasks.size).toBe(0);
+  });
+
   it('reads each concept module from its home note and inverts the aliases', () => {
     const content = memoryContentOf(IDX);
     expect(content.concepts.get('shared-oven')).toEqual({
@@ -198,18 +219,18 @@ describe('lessonRefs', () => {
 describe('nextLabel', () => {
   it('resumes a lesson check, a module quiz or a review with the questions left', () => {
     expect(
-      nextLabel({ kind: 'resume', session: session('check', 'm01/shared-ovens'), left: 3 }, IDX),
+      nextLabel({ kind: 'resume', session: session('check', 'm01/shared-ovens'), left: 3 }, IDX, NOW),
     ).toEqual({
       label: 'Resume: Lesson check: Shared Ovens (3 left)',
       href: '#/s/check/m01/shared-ovens',
       minutes: 2,
     });
-    expect(nextLabel({ kind: 'resume', session: session('quiz', 'm02'), left: 3 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'resume', session: session('quiz', 'm02'), left: 3 }, IDX, NOW)).toEqual({
       label: 'Resume: Module quiz: Proofing (3 left)',
       href: '#/s/quiz/m02',
       minutes: 2,
     });
-    expect(nextLabel({ kind: 'resume', session: session('review', 'review'), left: 3 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'resume', session: session('review', 'review'), left: 3 }, IDX, NOW)).toEqual({
       label: 'Resume: Review (3 left)',
       href: '#/s/review',
       minutes: 2,
@@ -217,12 +238,12 @@ describe('nextLabel', () => {
   });
 
   it('counts the concepts of a review, in the singular for one', () => {
-    expect(nextLabel({ kind: 'review', count: 18 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'review', count: 18 }, IDX, NOW)).toEqual({
       label: 'Review 18 concepts',
       href: '#/s/review',
       minutes: 9,
     });
-    expect(nextLabel({ kind: 'review', count: 1 }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'review', count: 1 }, IDX, NOW)).toEqual({
       label: 'Review 1 concept',
       href: '#/s/review',
       minutes: 1,
@@ -230,7 +251,7 @@ describe('nextLabel', () => {
   });
 
   it('continues the current lesson with its reading time', () => {
-    expect(nextLabel({ kind: 'continue', lesson: ref('m01/shared-ovens') }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'continue', lesson: ref('m01/shared-ovens') }, IDX, NOW)).toEqual({
       label: 'Continue: Shared Ovens',
       href: '#/m/01/l/shared-ovens',
       minutes: 6,
@@ -239,32 +260,80 @@ describe('nextLabel', () => {
 
   it('offers Check yourself for a module, opening its first unchecked lesson', () => {
     expect(
-      nextLabel({ kind: 'check', module: 2, concepts: 6, lesson: ref('m02/proofing-cabinets') }, IDX),
+      nextLabel({ kind: 'check', module: 2, concepts: 6, lesson: ref('m02/proofing-cabinets') }, IDX, NOW),
     ).toEqual({
       label: 'Check yourself: Module 2 (6 concepts)',
       href: '#/s/check/m02/proofing-cabinets',
       minutes: 3,
     });
     expect(
-      nextLabel({ kind: 'check', module: 2, concepts: 1, lesson: ref('m02/proofing-cabinets') }, IDX).label,
+      nextLabel({ kind: 'check', module: 2, concepts: 1, lesson: ref('m02/proofing-cabinets') }, IDX, NOW)
+        .label,
     ).toBe('Check yourself: Module 2 (1 concept)');
   });
 
   it('starts a module at its first lesson and otherwise names the next lesson', () => {
-    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/welcome') }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/welcome') }, IDX, NOW)).toEqual({
       label: 'Start Module 1: Welcome to the Bakery',
       href: '#/m/01/l/welcome',
       minutes: 3,
     });
-    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/shared-ovens') }, IDX)).toEqual({
+    expect(nextLabel({ kind: 'lesson', lesson: ref('m01/shared-ovens') }, IDX, NOW)).toEqual({
       label: 'Next lesson: Shared Ovens',
       href: '#/m/01/l/shared-ovens',
       minutes: 6,
     });
   });
 
+  it('resumes a boss or a mock with the whole minutes left, rounded up', () => {
+    const deadline = '2026-10-10T19:01:00.000Z';
+    expect(
+      nextLabel({ kind: 'resume', session: examSession('mock', '', 'A', deadline), left: 65 }, IDX, NOW),
+    ).toEqual({
+      label: 'Resume: Mock exam A (61 min left)',
+      href: '#/s/mock/a',
+      minutes: 61,
+    });
+    expect(
+      nextLabel({ kind: 'resume', session: examSession('mock', '', 'remix', deadline), left: 65 }, IDX, NOW),
+    ).toEqual({
+      label: 'Resume: Remix mock (61 min left)',
+      href: '#/s/mock/remix',
+      minutes: 61,
+    });
+    expect(
+      nextLabel(
+        { kind: 'resume', session: examSession('boss', 'm01', null, '2026-10-10T18:00:30.000Z'), left: 15 },
+        IDX,
+        NOW,
+      ),
+    ).toEqual({ label: 'Resume: Boss: Baking Basics (1 min left)', href: '#/s/boss/m01', minutes: 1 });
+    expect(
+      nextLabel(
+        { kind: 'resume', session: examSession('boss', 'm02', null, '2026-10-10T17:59:00.000Z'), left: 15 },
+        IDX,
+        NOW,
+      ).label,
+    ).toBe('Resume: Boss: Proofing (0 min left)');
+  });
+
+  it('resumes a focus quiz with the questions left', () => {
+    expect(nextLabel({ kind: 'resume', session: session('focus', '2.3'), left: 4 }, IDX, NOW)).toEqual({
+      label: 'Resume: Focus quiz (4 left)',
+      href: '#/s/focus/2.3',
+      minutes: 2,
+    });
+    expect(nextLabel({ kind: 'resume', session: session('focus', 'm02'), left: 4 }, IDX, NOW).href).toBe(
+      '#/s/focus/m02',
+    );
+  });
+
   it('has no link and no time when done for today', () => {
-    expect(nextLabel({ kind: 'done' }, IDX)).toEqual({ label: 'Done for today', href: null, minutes: null });
+    expect(nextLabel({ kind: 'done' }, IDX, NOW)).toEqual({
+      label: 'Done for today',
+      href: null,
+      minutes: null,
+    });
   });
 });
 

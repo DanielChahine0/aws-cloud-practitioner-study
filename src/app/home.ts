@@ -5,7 +5,7 @@ import type { ConceptInfo, MemoryContent } from '../engine/memory.ts';
 import { type LessonRef, type NextAction, nextMinutes } from '../engine/next.ts';
 import type { ReviewQueue } from '../engine/queue.ts';
 import type { StreakState } from '../engine/streak.ts';
-import { pad2, toHash } from './router.ts';
+import { type MockRoute, pad2, toHash } from './router.ts';
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
@@ -17,8 +17,8 @@ const plural = (n: number, one: string, many: string): string => `${n} ${n === 1
 const moduleOf = (noteId: string): number => Number(noteId.slice(1, 3));
 
 /**
- * What the memory replay needs from the index: concepts with their module and tasks, aliases, question
- * versions and kept missions; exam tasks arrive with the exam index (Task 17) and core labs in Phase 4.
+ * What the memory replay needs from the index: concepts with their module and tasks, aliases, question versions
+ * (practice and exam, so a stale exam answer is caught too), and each exam item's task.
  */
 export function memoryContentOf(idx: ContentIndex): MemoryContent {
   const concepts = new Map<string, ConceptInfo>();
@@ -33,11 +33,17 @@ export function memoryContentOf(idx: ContentIndex): MemoryContent {
     });
     for (const alias of c.aliases) aliases.set(alias, c.id);
   }
+  const questionVersions = new Map(Object.entries(idx.questionVersions));
+  const examTasks = new Map<string, string>();
+  for (const [qid, item] of Object.entries(idx.exam.items)) {
+    questionVersions.set(qid, item.version);
+    examTasks.set(qid, item.task);
+  }
   return {
     concepts,
     aliases,
-    questionVersions: new Map(Object.entries(idx.questionVersions)),
-    examTasks: new Map(),
+    questionVersions,
+    examTasks,
     coreLabs: new Map(),
     keptMissions: new Set(idx.missions.filter((m) => m.keep).map((m) => m.id)),
   };
@@ -71,7 +77,7 @@ function lessonTitle(idx: ContentIndex, scope: string): string {
 
 /** Where a session in progress lives, and what it is called. */
 function resumeOf(action: Extract<NextAction, { kind: 'resume' }>, idx: ContentIndex): [string, string] {
-  const { mode, scope } = action.session;
+  const { mode, scope, form } = action.session;
   if (mode === 'review') return ['Review', toHash({ kind: 'review' })];
   if (mode === 'check') {
     const [module = '', slug = ''] = scope.split('/');
@@ -80,22 +86,37 @@ function resumeOf(action: Extract<NextAction, { kind: 'resume' }>, idx: ContentI
       toHash({ kind: 'check', module: Number(module.slice(1)), slug }),
     ];
   }
+  if (mode === 'mock') {
+    const remix = form === null || form === 'remix';
+    const route = remix ? 'remix' : (form.toLowerCase() as MockRoute);
+    return [remix ? 'Remix mock' : `Mock exam ${form}`, toHash({ kind: 'mock', form: route })];
+  }
+  if (mode === 'focus') return ['Focus quiz', toHash({ kind: 'focus', scope })];
   const module = Number(scope.slice(1));
-  return [
-    `Module quiz: ${idx.modules.find((m) => m.n === module)?.short ?? ''}`,
-    toHash({ kind: 'quiz', module }),
-  ];
+  const short = idx.modules.find((m) => m.n === module)?.short ?? '';
+  if (mode === 'boss') return [`Boss: ${short}`, toHash({ kind: 'boss', module })];
+  return [`Module quiz: ${short}`, toHash({ kind: 'quiz', module })];
 }
+
+/** Whole minutes until an exam's deadline, rounded up and never below 0. */
+const minutesLeft = (deadline: string, now: Date): number =>
+  Math.max(0, Math.ceil((Date.parse(deadline) - now.getTime()) / MINUTE_MS));
 
 /** The Next button's words, link and time estimate (spec 4.6); `done` has neither link nor time. */
 export function nextLabel(
   action: NextAction,
   idx: ContentIndex,
+  now: Date,
 ): { label: string; href: string | null; minutes: number | null } {
   const minutes = nextMinutes(action);
   switch (action.kind) {
     case 'resume': {
       const [what, href] = resumeOf(action, idx);
+      const { deadline } = action.session;
+      if (deadline !== null) {
+        const left = minutesLeft(deadline, now);
+        return { label: `Resume: ${what} (${left} min left)`, href, minutes: left };
+      }
       return { label: `Resume: ${what} (${action.left} left)`, href, minutes };
     }
     case 'review':

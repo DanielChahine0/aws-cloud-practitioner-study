@@ -43,7 +43,7 @@ function NextBlock({ idx }: { idx: ContentIndex }) {
   // nextUp waits for the stored log, so a returning reader never sees the first-run lesson flash past.
   const action = nextUp.value;
   if (action === null) return <div class="next-block" />;
-  const { label, href, minutes } = nextLabel(action, idx);
+  const { label, href, minutes } = nextLabel(action, idx, now.value);
   if (href === null) {
     const q = queue.value;
     return (

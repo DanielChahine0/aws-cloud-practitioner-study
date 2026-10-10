@@ -1,9 +1,10 @@
 import { useEffect } from 'preact/hooks';
+import { now } from './clock.ts';
 import { index } from './content.ts';
 import { nextLabel } from './home.ts';
 import { keyStep } from './keys.ts';
 import { nextUp } from './memory.ts';
-import { closeTerm, navigate, openTerm, overlay, route } from './state.ts';
+import { closeTerm, exam, navigate, openTerm, overlay, route } from './state.ts';
 
 /** Input types that take no typed text, so single-letter shortcuts stay on while one has focus. */
 const NON_TEXT_INPUTS = new Set(['radio', 'checkbox', 'button', 'submit', 'reset', 'file', 'range', 'color']);
@@ -25,7 +26,7 @@ function followNext(): void {
   const idx = index.value;
   const action = nextUp.value;
   if (idx === null || action === null) return;
-  const { href } = nextLabel(action, idx);
+  const { href } = nextLabel(action, idx, now.value);
   if (href !== null) navigate(href);
 }
 
@@ -60,7 +61,7 @@ export function useKeyboard(): void {
           overlayOpen: overlay.value !== null,
           termOpen: openTerm.value !== null,
           gAt,
-          exam: route.value.kind === 'boss' || route.value.kind === 'mock',
+          exam: exam.value !== null,
         },
       );
       gAt = step.gAt;

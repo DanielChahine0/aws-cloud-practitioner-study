@@ -16,6 +16,10 @@ export const overlay = signal<Overlay | null>(null);
 export const highlight = signal<string | null>(null);
 /** The glossary popover and the term button that opened it. */
 export const openTerm = signal<OpenTerm | null>(null);
+/** The open boss or mock while its shell is on screen: the focus bar reads it, and global keys turn off. */
+export const exam = signal<{ sid: string; label: string; total: number; deadline: string } | null>(null);
+/** The 1-based position of the exam question on screen, for the focus bar's `23/65`. */
+export const examPosition = signal(1);
 
 /** Closes the glossary popover and gives focus back to its term button. */
 export function closeTerm(): void {
