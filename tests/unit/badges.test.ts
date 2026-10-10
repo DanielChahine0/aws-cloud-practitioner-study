@@ -139,7 +139,11 @@ describe('badges in the memory replay (spec 3.10)', () => {
 
   it('never counts a day with 9 reviews toward Clean Queue', () => {
     const days = Array.from({ length: 8 }, (_, i) => addDays('2026-10-01', i));
-    const log = days.flatMap((d, i) => reviewDay(d, i === 3 ? 9 : 10));
+    // Every card falls due on 2026-10-04, so 2026-10-02 ends clear and only its 9 reviews keep it from counting.
+    const log = days.flatMap((d, i) => reviewDay(d, i === 1 ? 9 : 10));
+    const secondDay = deriveMemory(timelineOf(log.slice(0, 19)), BASIC);
+    const end = dayStartAt('2026-10-03', 0).toISOString();
+    for (const c of TEN) expect((secondDay.concepts.get(c)?.card?.due ?? '') >= end).toBe(true);
     expect(deriveMemory(timelineOf(log), BASIC).badges.get('clean-queue')?.day).toBe('2026-10-08');
   });
 
