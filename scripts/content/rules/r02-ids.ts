@@ -1,6 +1,6 @@
 import { parse as parseYaml } from 'yaml';
 import { Forms } from '../../../schemas/exam.ts';
-import { Question, QuestionFile } from '../../../schemas/question.ts';
+import { Question } from '../../../schemas/question.ts';
 import {
   CONCEPTS_FILE,
   type Finding,
@@ -54,28 +54,12 @@ export function survivingIdsIn(yamlText: string | null): Set<string> | null {
   );
 }
 
-/** The questions of a HEAD question file that still parse; a file or item that does not parse is skipped. */
-function headQuestions(yamlText: string | null): Question[] {
-  if (yamlText === null) return [];
-  let data: unknown;
-  try {
-    data = parseYaml(yamlText);
-  } catch {
-    return [];
-  }
-  const file = QuestionFile.safeParse(data);
-  if (!file.success) return [];
-  return file.data.questions.flatMap((item) => {
-    const parsed = Question.safeParse(item);
-    return parsed.success ? [parsed.data] : [];
-  });
-}
+/** The key that holds a question file's items: `steps` in an incident file, `questions` everywhere else. */
+const listKeyOf = (path: string): 'steps' | 'questions' =>
+  path.startsWith(`${INCIDENTS_DIR}/`) ? 'steps' : 'questions';
 
-/**
- * The id of every item in a working-tree question file that has a string id, whether or not it passes the schema;
- * null when the file does not parse as a list of questions (R1 reports both).
- */
-function idsIn(yamlText: string | null): string[] | null {
+/** The items under `listKey` of a question or incident file text, or null when it does not parse or has no such list. */
+function itemsIn(yamlText: string | null, listKey: 'steps' | 'questions'): unknown[] | null {
   if (yamlText === null) return null;
   let data: unknown;
   try {
@@ -83,11 +67,28 @@ function idsIn(yamlText: string | null): string[] | null {
   } catch {
     return null;
   }
-  const questions =
-    typeof data === 'object' && data !== null ? (data as { questions?: unknown }).questions : undefined;
-  if (!Array.isArray(questions)) return null;
-  return questions.flatMap((item: unknown) =>
-    typeof item === 'object' && item !== null ? strings((item as { id?: unknown }).id) : [],
+  const items =
+    typeof data === 'object' && data !== null ? (data as Record<string, unknown>)[listKey] : undefined;
+  return Array.isArray(items) ? items : null;
+}
+
+/** The questions (or incident steps) of a HEAD file that still parse; a file or item that does not parse is skipped. */
+function headQuestions(yamlText: string | null, listKey: 'steps' | 'questions'): Question[] {
+  return (itemsIn(yamlText, listKey) ?? []).flatMap((item) => {
+    const parsed = Question.safeParse(item);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
+/**
+ * The id of every item in a working-tree question or incident file that has a string id, whether or not it passes the
+ * schema; null when the file does not parse as a list of questions or steps (R1 reports both).
+ */
+function idsIn(yamlText: string | null, listKey: 'steps' | 'questions'): string[] | null {
+  return (
+    itemsIn(yamlText, listKey)?.flatMap((item: unknown) =>
+      typeof item === 'object' && item !== null ? strings((item as { id?: unknown }).id) : [],
+    ) ?? null
   );
 }
 
@@ -147,9 +148,10 @@ function formsIn(yamlText: string | null): Forms['forms'] {
 
 /**
  * R2 Ids: ids are unique across concepts, aliases, missions, questions of both pools, labs, incidents and incident
- * steps; no concept id in HEAD disappears; a live or retired question in HEAD stays, and a live question whose answer
- * changes takes a key-fix version; a lab in HEAD stays, and any edit to it raises its `rev`; an incident that shipped
- * in HEAD stays; a form frozen in HEAD keeps its qids, their order and `frozen: true` (spec 4.3, 4.5, 5.1).
+ * steps; no concept id in HEAD disappears; a live or retired question, or step of a shipped incident, in HEAD stays,
+ * and a live one whose answer changes takes a key-fix version; a lab in HEAD stays, and any edit to it raises its
+ * `rev`; an incident that shipped in HEAD stays; a form frozen in HEAD keeps its qids, their order and
+ * `frozen: true` (spec 2.9, 4.3, 4.5, 5.1).
  */
 export const r02: Rule = {
   id: 'R2',
@@ -189,22 +191,51 @@ export const r02: Rule = {
       }
     }
 
+    // An incident shipped once every step in HEAD was live or retired; then it leaves only with status: retired.
+    const incidentsNow = new Set<string>();
+    const incidentsUnreadable = new Set<string>();
+    for (const path of ctx.files) {
+      if (!path.startsWith(`${INCIDENTS_DIR}/`) || !path.endsWith('.yaml')) continue;
+      const now = incidentIn(ctx.read(path));
+      if (now === null) incidentsUnreadable.add(path);
+      else incidentsNow.add(now.id);
+    }
+    for (const path of ctx.headPaths(`${INCIDENTS_DIR}/`)) {
+      const head = incidentIn(ctx.head(path));
+      if (head === null || !head.shipped || incidentsUnreadable.has(path) || incidentsNow.has(head.id))
+        continue;
+      out.push(
+        finding(
+          'R2',
+          path,
+          `incident ${head.id} was in HEAD and is gone; retire it with status: retired instead`,
+        ),
+      );
+    }
+
     // The first entry of a repeated id stands for it; the repeat is the uniqueness finding above.
     const current = new Map<string, QuestionEntry>();
     for (const entry of ctx.questions) if (!current.has(entry.q.id)) current.set(entry.q.id, entry);
     // An item that fails the schema, or a file that does not parse, is R1's finding, not a question that is gone.
     const present = new Set<string>();
     const unreadable = new Set<string>();
-    const questionDirs = [`${QUESTIONS_DIR}/`, `${POOL_DIR}/`];
+    // Incident steps are questions too: once their incident shipped, each step stays and a key change takes a key-fix.
+    const questionDirs = [`${QUESTIONS_DIR}/`, `${POOL_DIR}/`, `${INCIDENTS_DIR}/`];
     for (const path of ctx.files) {
       if (!questionDirs.some((dir) => path.startsWith(dir)) || !path.endsWith('.yaml')) continue;
-      const ids = idsIn(ctx.read(path));
+      const ids = idsIn(ctx.read(path), listKeyOf(path));
       if (ids === null) unreadable.add(path);
       for (const id of ids ?? []) present.add(id);
     }
     for (const path of questionDirs.flatMap((dir) => ctx.headPaths(dir))) {
       if (unreadable.has(path)) continue;
-      for (const head of headQuestions(ctx.head(path))) {
+      const listKey = listKeyOf(path);
+      if (listKey === 'steps') {
+        // Steps of an incident that never shipped may still change; a shipped incident that is gone is reported above.
+        const incident = incidentIn(ctx.head(path));
+        if (incident === null || !incident.shipped || !incidentsNow.has(incident.id)) continue;
+      }
+      for (const head of headQuestions(ctx.head(path), listKey)) {
         if (head.status === 'draft') continue;
         const now = current.get(head.id);
         if (!present.has(head.id)) {
@@ -259,28 +290,6 @@ export const r02: Rule = {
       if (after !== null && withoutRev(after) !== withoutRev(before) && now <= was) {
         out.push(finding('R2', path, `lab ${id} changed since HEAD, so it needs rev ${was + 1}`));
       }
-    }
-
-    // An incident shipped once every step in HEAD was live or retired; then it leaves only with status: retired.
-    const incidentsNow = new Set<string>();
-    const incidentsUnreadable = new Set<string>();
-    for (const path of ctx.files) {
-      if (!path.startsWith(`${INCIDENTS_DIR}/`) || !path.endsWith('.yaml')) continue;
-      const now = incidentIn(ctx.read(path));
-      if (now === null) incidentsUnreadable.add(path);
-      else incidentsNow.add(now.id);
-    }
-    for (const path of ctx.headPaths(`${INCIDENTS_DIR}/`)) {
-      const head = incidentIn(ctx.head(path));
-      if (head === null || !head.shipped || incidentsUnreadable.has(path) || incidentsNow.has(head.id))
-        continue;
-      out.push(
-        finding(
-          'R2',
-          path,
-          `incident ${head.id} was in HEAD and is gone; retire it with status: retired instead`,
-        ),
-      );
     }
 
     // A forms.yaml that does not parse is R1's finding; a missing one breaks every form frozen in HEAD.
