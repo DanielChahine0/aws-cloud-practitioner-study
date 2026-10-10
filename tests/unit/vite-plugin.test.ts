@@ -53,7 +53,7 @@ describe('contentPlugin during vite build', () => {
   it('emits every content file and injects the index name into index.html', () => {
     const { emitted, tags } = build(makeFixtureRoot());
     const index = emitted.find((file) => file.fileName.startsWith('content/index.'));
-    expect(emitted.map((file) => file.type)).toEqual(['asset', 'asset', 'asset']);
+    expect(emitted.map((file) => file.type)).toEqual(['asset', 'asset', 'asset', 'asset']);
     expect(index?.fileName).toMatch(/^content\/index\.[0-9a-f]{8}\.json$/);
     expect(tags).toEqual([
       { tag: 'meta', attrs: { name: 'ccp-content', content: index?.fileName }, injectTo: 'head' },

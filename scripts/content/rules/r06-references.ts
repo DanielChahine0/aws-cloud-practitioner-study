@@ -1,13 +1,17 @@
 import { posix } from 'node:path';
 import { CONCEPTS_FILE, type Finding, type LessonNote, questionFileOf } from '../lib/context.ts';
 import { notesAnchors } from '../lib/markdown.ts';
+import { projectOf } from '../lib/project.ts';
 import { fencedLines } from '../lib/text.ts';
 import { finding, type Rule } from './rule.ts';
 
 const LINK = /\]\(([^)#\s]+)(?:#[^)]*)?\)/g;
 const EXTERNAL = /^(?:https?:|mailto:)/;
 
-/** R6 References: note identity, relative links, concept tags, homes, anchors, confusables, mission ids and question references all resolve. */
+/**
+ * R6 References: note identity, relative links, concept tags, homes, anchors, confusables, mission ids, question
+ * references and key point concepts all resolve.
+ */
 export const r06: Rule = {
   id: 'R6',
   title: 'References',
@@ -188,6 +192,17 @@ export const r06: Rule = {
             step.line,
           ),
         );
+      }
+    }
+    // Key points cite registered, tested concepts, each found by id or alias (spec 2.9 R6).
+    for (const { path, line, kp } of projectOf(ctx).keyPoints) {
+      if (kp.status === 'retired') continue;
+      for (const id of kp.concepts) {
+        const concept = ctx.concepts.find((c) => c.id === id || (c.aliases ?? []).includes(id));
+        if (concept === undefined)
+          out.push(finding('R6', path, `${kp.id}: concept '${id}' is not registered`, line));
+        else if (concept.tested === false)
+          out.push(finding('R6', path, `${kp.id}: concept '${id}' is marked tested: false`, line));
       }
     }
     return out;

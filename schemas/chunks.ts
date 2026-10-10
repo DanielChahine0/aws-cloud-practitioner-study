@@ -1,4 +1,5 @@
 /** Types of the JSON chunks that scripts/content/build.ts writes and the app reads (spec 2.10). */
+import type { LabEngineId } from './ids.ts';
 
 export interface LessonMeta {
   n: number;
@@ -120,7 +121,7 @@ export interface QuestionView {
 export interface LabMeta {
   id: string;
   module: number;
-  engine: 'sort' | 'configure' | 'simulate';
+  engine: LabEngineId;
   tier: 'core' | 'stretch';
   rev: number;
   title: string;
@@ -261,4 +262,6 @@ export interface ContentIndex {
   labs: LabMeta[];
   /** Every shipped incident, in id order, so Home can pick today's without loading a chunk. */
   incidents: IncidentMeta[];
+  /** Path of the lazy project chunk (spec 6) from the site root, or null while there is no brief. */
+  project: string | null;
 }

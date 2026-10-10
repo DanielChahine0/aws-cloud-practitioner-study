@@ -14,6 +14,7 @@ const CHUNK_BUDGET = 120 * KB;
 const SW_BUDGET = 4 * KB;
 const MODULE_CHUNK = /^m\d{2}\.[0-9a-f]{8}\.json$/;
 const EXAM_CHUNK = /^exam-[a-d]\.[0-9a-f]{8}\.json$/;
+const PROJECT_CHUNK = /^project\.[0-9a-f]{8}\.json$/;
 
 const dist = resolve(import.meta.dirname, '..', 'dist');
 const gzipped = (file: string): number => gzipSync(readFileSync(join(dist, file)), { level: 9 }).length;
@@ -56,13 +57,19 @@ if (examChunks.length !== 0 && examChunks.length !== 4) {
   breaches.push(`dist/content holds ${examChunks.length} exam chunks, not 0 or 4`);
 }
 const largestExam = budgeted(examChunks);
+const projectChunks = contentFiles
+  .filter((name) => PROJECT_CHUNK.test(name))
+  .map((name) => `content/${name}`);
+if (projectChunks.length > 1)
+  breaches.push(`dist/content holds ${projectChunks.length} project chunks, not 0 or 1`);
+const largestProject = budgeted(projectChunks);
 
 let worker = 0;
 if (existsSync(join(dist, 'sw.js'))) {
   const code = readFileSync(join(dist, 'sw.js'), 'utf8');
   worker = gzipped('sw.js');
   if (code.includes(SW_PLACEHOLDER)) breaches.push('dist/sw.js still holds the manifest placeholder');
-  for (const file of ['index.html', ...chunks, ...examChunks]) {
+  for (const file of ['index.html', ...chunks, ...examChunks, ...projectChunks]) {
     if (!code.includes(`"/${file}"`)) breaches.push(`dist/sw.js does not precache /${file}`);
   }
   if (worker > SW_BUDGET) breaches.push(`sw.js is ${kb(worker)} gzipped, over ${kb(SW_BUDGET)}`);
@@ -75,6 +82,7 @@ console.log(
     `largest lazy JS ${largestLazy.name} ${kb(largestLazy.size)} of ${kb(CHUNK_BUDGET)} across ${lazyJs.length} chunks; ` +
     `largest module chunk ${largest.name} ${kb(largest.size)} of ${kb(CHUNK_BUDGET)} across ${chunks.length} chunks; ` +
     `largest exam chunk ${largestExam.name} ${kb(largestExam.size)} of ${kb(CHUNK_BUDGET)} across ${examChunks.length} chunks; ` +
+    `project chunk ${largestProject.name} ${kb(largestProject.size)} of ${kb(CHUNK_BUDGET)} across ${projectChunks.length}; ` +
     `sw.js ${kb(worker)} of ${kb(SW_BUDGET)}`,
 );
 for (const breach of breaches) console.error(`budget breach: ${breach}`);

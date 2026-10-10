@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vitest/config';
+import { workersNow } from './scripts/lib/workers.ts';
 
 const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as {
   version: string;
@@ -19,5 +20,7 @@ export default defineConfig({
     // takes half a second alone can pass Vitest's 5 s default; 30 s (60 s for hooks) still fails a real hang.
     testTimeout: 30_000,
     hookTimeout: 60_000,
+    // VITEST_MAX_WORKERS still overrides this.
+    maxWorkers: workersNow(),
   },
 });

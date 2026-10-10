@@ -1,0 +1,138 @@
+{
+  "format": "ccp-study-backup",
+  "schemaVersion": 1,
+  "appVersion": "0.7.0",
+  "contentVersion": "c-1b2c3d",
+  "exportedAt": "2026-11-15T10:00:00.000Z",
+  "events": [
+    {
+      "id": "01JD0000000000000000000001",
+      "at": "2026-10-10T08:00:00.000Z",
+      "tz": 60,
+      "day": "2026-10-10",
+      "t": "mission",
+      "mission": "mission-00",
+      "step": "start"
+    },
+    {
+      "id": "01JD0000000000000000000002",
+      "at": "2026-10-10T08:40:00.000Z",
+      "tz": 60,
+      "day": "2026-10-10",
+      "t": "mission",
+      "mission": "mission-00",
+      "step": "verified"
+    },
+    {
+      "id": "01JD0000000000000000000003",
+      "at": "2026-10-12T09:00:00.000Z",
+      "tz": 60,
+      "day": "2026-10-12",
+      "t": "mission",
+      "mission": "mission-03",
+      "step": "start"
+    },
+    {
+      "id": "01JD0000000000000000000004",
+      "at": "2026-10-12T09:50:00.000Z",
+      "tz": 60,
+      "day": "2026-10-12",
+      "t": "mission",
+      "mission": "mission-03",
+      "step": "verified"
+    },
+    {
+      "id": "01JD0000000000000000000005",
+      "at": "2026-10-12T10:10:00.000Z",
+      "tz": 60,
+      "day": "2026-10-12",
+      "t": "mission",
+      "mission": "mission-03",
+      "step": "cleaned"
+    },
+    {
+      "id": "01JD0000000000000000000006",
+      "at": "2026-10-13T08:00:00.000Z",
+      "tz": 60,
+      "day": "2026-10-13",
+      "t": "mission",
+      "mission": "mission-03",
+      "step": "usage-ok",
+      "credits": 137.5
+    },
+    {
+      "id": "01JD0000000000000000000007",
+      "at": "2026-11-15T09:00:00.000Z",
+      "tz": 60,
+      "day": "2026-11-15",
+      "t": "decision",
+      "module": 1,
+      "stage": "self",
+      "scores": [2, 2, 1, 2]
+    },
+    {
+      "id": "01JD0000000000000000000008",
+      "at": "2026-11-15T09:20:00.000Z",
+      "tz": 60,
+      "day": "2026-11-15",
+      "t": "decision",
+      "module": 1,
+      "stage": "final",
+      "scores": [3, 2, 2, 2],
+      "keyPoints": ["kp-01-shared-kitchen", "kp-01-retired-one"]
+    }
+  ],
+  "kv": {
+    "lastExportAt": {
+      "value": "2026-11-15T10:00:00.000Z",
+      "updatedAt": "2026-11-15T10:00:00.000Z"
+    },
+    "plan": {
+      "value": {
+        "plan": "free",
+        "credits": 140,
+        "endsOn": "2027-04-10",
+        "services": {
+          "Amazon S3": true,
+          "AWS Lambda": true,
+          "Amazon CloudWatch Logs": true,
+          "Amazon VPC": false
+        },
+        "recordedAt": "2026-10-10T08:30:00.000Z"
+      },
+      "updatedAt": "2026-10-10T08:30:00.000Z"
+    },
+    "missionTicks": {
+      "value": {
+        "mission-03": ["create-bucket", "upload-receipt"]
+      },
+      "updatedAt": "2026-10-12T09:40:00.000Z"
+    },
+    "adr-01": {
+      "value": {
+        "v": 1,
+        "context": "The cafe has 3 shops.\nMornings are busy.",
+        "options": "Rent shared compute.\nBuy servers.",
+        "decision": "Rent shared compute.",
+        "why": "[[cloud-computing]] and [[pay-as-you-go-pricing]] fit the brief.",
+        "tradeoffs": "Less control; we read the shared responsibility model.",
+        "cost": "We pay for what we use.",
+        "ticks": ["kp-01-shared-kitchen"]
+      },
+      "updatedAt": "2026-11-15T09:25:00.000Z"
+    },
+    "adr-02": {
+      "value": {
+        "v": 1,
+        "context": "Orders peak at 07:00.",
+        "options": "",
+        "decision": "",
+        "why": "",
+        "tradeoffs": "",
+        "cost": "",
+        "ticks": []
+      },
+      "updatedAt": "2026-11-15T09:40:00.000Z"
+    }
+  }
+}

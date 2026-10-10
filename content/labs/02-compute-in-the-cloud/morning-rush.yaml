@@ -1,0 +1,121 @@
+id: lab-m02-morning-rush
+module: 2
+title: Morning rush
+engine: simulate
+tier: core
+status: live
+rev: 1
+concepts:
+  - amazon-ec2-auto-scaling
+  - dynamic-scaling
+  - predictive-scaling
+  - elastic-load-balancing-with-auto-scaling
+  - horizontal-scaling
+notes:
+  - m02/scaling-amazon-ec2
+  - m02/directing-traffic-with-elastic-load-balancing
+minutes: 8
+brief: >-
+  The cafe's ordering site is quiet at night, then orders climb fast toward a breakfast peak and taper off by evening, and the breakfast climb starts at the same hour every morning.
+  Set the Auto Scaling group's limits, how it scales and whether a load balancer spreads the orders, so almost no order drops and the day stays within 120 lab credits.
+  The hourly orders, the 50 orders one instance takes an hour and its price of 2 lab credits an hour are all lab values.
+spec:
+  model: scaling
+  constants:
+    orders: [0, 0, 0, 0, 5, 20, 60, 180, 220, 150, 90, 80, 120, 110, 70, 60, 70, 90, 60, 40, 20, 10, 5, 0]
+    perInstance: 50
+    credits: 2
+  params:
+    - kind: choice
+      id: mode
+      label: How the group scales
+      options:
+        - id: dynamic
+          label: Dynamic, after demand changes
+        - id: predictive
+          label: Predictive, ahead of expected demand
+      initial: dynamic
+    - kind: int
+      id: min
+      label: Minimum capacity
+      min: 0
+      max: 6
+      step: 1
+      initial: 1
+      unit: instances
+    - kind: int
+      id: desired
+      label: Desired capacity at midnight
+      min: 0
+      max: 6
+      step: 1
+      initial: 1
+      unit: instances
+    - kind: int
+      id: max
+      label: Maximum capacity
+      min: 1
+      max: 8
+      step: 1
+      initial: 2
+      unit: instances
+    - kind: toggle
+      id: balancer
+      label: Put a load balancer in front of the group
+      initial: false
+  thresholds:
+    - { goal: g1, metric: droppedShare, max: 1 }
+    - { goal: g2, metric: cost, max: 120 }
+    - { goal: g3, metric: fewest, min: 1 }
+goals:
+  - id: g1
+    label: At most 1% of the day's orders are dropped
+    hint: Capacity must already be there when the breakfast climb starts, reach the peak, and be shared, since a group with no single entry point leaves one instance taking every order.
+  - id: g2
+    label: The day costs at most 120 lab credits
+    hint: Every running instance is billed each hour whether busy or idle, so capacity sized for the peak should scale back in once the rush is over.
+  - id: g3
+    label: At least one instance is ready every hour of the day
+    hint: The minimum is the floor the group never drops below, however quiet the hour, so the site always has something serving it.
+solution:
+  - { t: set, param: mode, value: predictive }
+  - { t: set, param: max, value: 5 }
+  - { t: set, param: balancer, value: true }
+wrongPaths:
+  - mistake: Lets the group grow but forgets the load balancer, so every order still reaches one instance
+    failsGoal: g1
+    actions:
+      - { t: set, param: mode, value: predictive }
+      - { t: set, param: max, value: 5 }
+  - mistake: Relies on dynamic scaling for a rush that climbs at the same hour every morning
+    failsGoal: g1
+    actions:
+      - { t: set, param: max, value: 5 }
+      - { t: set, param: balancer, value: true }
+  - mistake: Leaves the maximum capacity too low to cover the breakfast peak
+    failsGoal: g1
+    actions:
+      - { t: set, param: mode, value: predictive }
+      - { t: set, param: balancer, value: true }
+  - mistake: Keeps five instances running all day so the peak is always covered
+    failsGoal: g2
+    actions:
+      - { t: set, param: mode, value: predictive }
+      - { t: set, param: balancer, value: true }
+      - { t: set, param: min, value: 5 }
+      - { t: set, param: desired, value: 5 }
+      - { t: set, param: max, value: 5 }
+  - mistake: Sets the minimum to zero to save credits on the quiet night hours
+    failsGoal: g3
+    actions:
+      - { t: set, param: mode, value: predictive }
+      - { t: set, param: max, value: 5 }
+      - { t: set, param: balancer, value: true }
+      - { t: set, param: min, value: 0 }
+debrief:
+  lines:
+    - Predictive scaling adds instances ahead of a rush the cafe expects, while dynamic scaling reacts after demand has already climbed.
+    - The group never runs fewer instances than its minimum or more than its maximum, so the maximum must reach the breakfast peak and the minimum keeps the site up overnight.
+    - Auto Scaling sets how many instances run, and the load balancer spreads orders across them; scaling out without it still overloads one instance.
+    - Scaling in once the rush passes stops the bill for instances the cafe no longer needs.
+  questions: [q-hjv0ax, q-r3t870, q-bk419k]

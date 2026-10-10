@@ -440,6 +440,7 @@ export const Question = z.discriminatedUnion('type', [
 - Each rule has a failing fixture at `tests/content/bad/rNN-*.{yaml,md}` that proves it fires, run with every rule and switch on.
 - When a content bug teaches something new, the fix extends a rule and adds a fixture.
 - The report (`pnpm content:report`) carries the soft checks: counts, coverage by task, `concepts.md` drift, `--needs-dani`, and the correct-longest share per module.
+- NOTE: once an incident has shipped (every step in HEAD is live or retired), R2 keeps its id from disappearing and it leaves with `status: retired`; an incident whose HEAD version still has a draft step may be deleted (Phase 4).
 
 ### 2.10 Build outputs
 
@@ -451,6 +452,7 @@ export const Question = z.discriminatedUnion('type', [
 - The index lists form item ids, concepts, tasks and versions (`exam.items`), never their text.
 - `dist/content/search.<hash>.json` is a prebuilt token index over notes, concepts and the glossary.
 - A Vite plugin runs the content build and validation at start and on every file change, and shows errors in the Vite overlay.
+- NOTE: the Help sheet, the incident screen, the lightning screen, the daily incident offer and the lightning settle load through `import()`, so the initial bundle stays under its 50 KB budget (Phase 4).
 
 ## 3 Gamification mechanics
 
@@ -615,6 +617,7 @@ export const recall = (card: Card, at: Date) => f.get_retrievability(card, at, f
   - A date set or moved during a study day also rebuilds that day's catch-up plan from the new due dates.
 - **Lightning:** lightning answers never update FSRS, and a miss writes `review.now`, which makes the concept due today.
 - **Untested concepts** (`tested: false`) never enter FSRS.
+- NOTE: `review.now` is a step on the concept's card track that makes the card due at the start of its study day with no review, so a later exam date keeps it; it is ignored for an unknown or never studied concept and for one already answered that study day, whose one update of the day is spent (Phase 4).
 
 ### 3.7 Queue and daily load
 
@@ -719,6 +722,10 @@ Mocks match CLF-C02: 65 questions in 90 minutes, a 16/19/22/8 domain split, all 
 | Module boss | practice pool, unseen variants | 15 questions in 21 min | at the end, then error review | on submit, 0 XP per item (3.1) | all lessons of the module read |
 | Full mock | exam pool, forms A to D | 65 questions in 90 min | at the end, then error review | on submit, 0 XP per item (3.1) | always; suggested on Home after 7 bosses |
 
+- NOTE: lightning runs at `#/s/lightning`, linked from Home under `Mock exams`, with no bet: digits pick, `Enter` answers with Not sure, and the summary's end line counts the answers given (Phase 4).
+- NOTE: only the first lightning round started on a study day pays, and a round left open past its 90 seconds is settled when the app next starts, with its submit and one `review.now` per missed concept (Phase 4).
+- NOTE: lightning draws from the practice pool only (`practicePoolOf`), never from a taken form (Phase 4).
+
 ### 4.2 Module boss
 
 - A boss draws 12 items from the module (at least 1 per lesson, weighted toward low R) and 3 from earlier modules' lowest-R concepts.
@@ -758,6 +765,8 @@ Mocks match CLF-C02: 65 questions in 90 minutes, a 16/19/22/8 domain split, all 
 - Eligible incidents are the unsolved ones whose required modules all have their lessons read.
 - The pick maximizes `sum over required modules of (100 - Mastery_m)`, and ties are broken by `fnv1a(day)`.
 - Missed days do not pile up into a backlog.
+- NOTE: incidents are files `content/incidents/inc-NNN.yaml` with `id`, `title`, `status` (`live` or `retired`), `modules` (the first is the home module), `concepts`, `brief` and 2 to 4 `steps` in the question schema, and an incident ships only when it and all its steps are live (Phase 4).
+- NOTE: an incident runs at `#/s/incident` in its own lazy screen around the runner session, and Home offers it on the extras line, never as Next (Phase 4).
 
 ### 4.6 Next button, "Done for today" and Home lines
 
@@ -848,6 +857,9 @@ debrief: { lines: [ ... ], questions: [q-4m2x8c, q-9tq3vd] }
 | 13 | Investigate: Well-Architected review of the cafe (findings to the six pillars, then a fix) - Sort: Specialized service per use case | |
 
 Core labs by engine: Sort 11, Simulate 6, Place 3, Configure 2, Trace 2 and Investigate 2.
+
+- NOTE: Simulate runs six fixed model functions (`scaling`, `compute-cost`, `s3-lifecycle`, `cache`, `bill`, `transfer`), and each Simulate lab's constants, parameters, solution, thresholds and wrong paths come from a fixed table, so lab writers write only the text (Phase 4).
+- NOTE: every Simulate lab and every lab whose text names lab credits carries `credits`, which shows `Prices are in lab credits, a made-up unit, not AWS prices.` (Phase 4).
 
 ### 5.3 Real-AWS missions (optional, free plan)
 

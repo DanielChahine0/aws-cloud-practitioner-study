@@ -1,0 +1,212 @@
+# fixture-target: content/labs/01-baking-basics/sort-the-bakes.yaml
+# Every rule starts as the solution leaves it, so the starting state already meets every goal.
+id: lab-m01-sort-the-bakes
+module: 1
+title: Open the order window
+engine: trace
+tier: core
+status: live
+rev: 1
+concepts:
+  - shared-kitchen
+  - per-minute-rental
+notes:
+  - m01/what-a-bakery-cloud-is
+minutes: 6
+brief: Customers cannot reach the order window. Switch rules on and off until
+  every test case gives its expected result. In this lab the network ACL checks
+  its rules from the lowest number up, and a reply leaves on a port from 1024 to
+  65535.
+spec:
+  kind: network
+  target: Order window
+  sg:
+    label: window-sg
+    rules:
+      - id: sg-https-all
+        dir: in
+        proto: tcp
+        from: 443
+        to: 443
+        cidr: 0.0.0.0/0
+        on: true
+      - id: sg-ssh-all
+        dir: in
+        proto: tcp
+        from: 22
+        to: 22
+        cidr: 0.0.0.0/0
+        on: false
+      - id: sg-ssh-office
+        dir: in
+        proto: tcp
+        from: 22
+        to: 22
+        cidr: 192.0.2.0/24
+        on: true
+      - id: sg-out-https
+        dir: out
+        proto: tcp
+        from: 443
+        to: 443
+        cidr: 0.0.0.0/0
+        on: true
+      - id: sg-out-replies
+        dir: out
+        proto: tcp
+        from: 1024
+        to: 65535
+        cidr: 0.0.0.0/0
+        on: false
+  nacl:
+    label: front-acl
+    rules:
+      - id: acl-deny-blocked
+        n: 90
+        dir: in
+        proto: all
+        from: 0
+        to: 65535
+        cidr: 198.51.100.0/24
+        action: deny
+        on: true
+      - id: acl-https-in
+        n: 100
+        dir: in
+        proto: tcp
+        from: 443
+        to: 443
+        cidr: 0.0.0.0/0
+        action: allow
+        on: true
+      - id: acl-ssh-in
+        n: 110
+        dir: in
+        proto: tcp
+        from: 22
+        to: 22
+        cidr: 0.0.0.0/0
+        action: allow
+        on: true
+      - id: acl-replies-in
+        n: 120
+        dir: in
+        proto: tcp
+        from: 1024
+        to: 65535
+        cidr: 0.0.0.0/0
+        action: allow
+        on: true
+      - id: acl-replies-out
+        n: 100
+        dir: out
+        proto: tcp
+        from: 1024
+        to: 65535
+        cidr: 0.0.0.0/0
+        action: allow
+        on: true
+      - id: acl-https-out
+        n: 110
+        dir: out
+        proto: tcp
+        from: 443
+        to: 443
+        cidr: 0.0.0.0/0
+        action: allow
+        on: true
+  cases:
+    - id: customer-order
+      goal: g1
+      label: A customer opens the order page
+      dir: in
+      proto: tcp
+      ip: 203.0.113.10
+      port: 443
+      reply: 49152
+      expect: allow
+    - id: blocked-order
+      goal: g1
+      label: A blocked address opens the order page
+      dir: in
+      proto: tcp
+      ip: 198.51.100.7
+      port: 443
+      reply: 49152
+      expect: deny
+    - id: daily-menu
+      goal: g1
+      label: The window fetches the daily menu
+      dir: out
+      proto: tcp
+      ip: 203.0.113.50
+      port: 443
+      reply: 51000
+      expect: allow
+    - id: stranger-ssh
+      goal: g2
+      label: A stranger tries to log in over SSH
+      dir: in
+      proto: tcp
+      ip: 203.0.113.10
+      port: 22
+      reply: 50000
+      expect: deny
+    - id: office-ssh
+      goal: g2
+      label: The bakery office logs in over SSH
+      dir: in
+      proto: tcp
+      ip: 192.0.2.15
+      port: 22
+      reply: 50000
+      expect: allow
+goals:
+  - id: g1
+    label: Customers can order through the window
+    hint: Follow the reply of an order on its way back out, past both the guard and
+      the gate list.
+  - id: g2
+    label: Only the office logs in
+    hint: SSH is for the bakery office, and the rest of the internet must stay out.
+solution:
+  - t: toggle
+    rule: sg-https-all
+    on: true
+  - t: toggle
+    rule: acl-replies-out
+    on: true
+  - t: toggle
+    rule: sg-ssh-office
+    on: true
+wrongPaths:
+  - actions:
+      - t: toggle
+        rule: sg-https-all
+        on: true
+      - t: toggle
+        rule: sg-ssh-office
+        on: true
+    failsGoal: g1
+    mistake: Opened the window but left the replies no way out
+  - actions:
+      - t: toggle
+        rule: sg-https-all
+        on: true
+      - t: toggle
+        rule: acl-replies-out
+        on: true
+      - t: toggle
+        rule: sg-ssh-all
+        on: true
+    failsGoal: g2
+    mistake: Opened SSH to the whole internet
+debrief:
+  lines:
+    - A guard at the door remembers who came in, so the answer goes back out
+      without a rule of its own.
+    - A gate list checks every crossing both ways, so the answer needs a rule of
+      its own on the way out.
+  questions:
+    - q-b4k7m2
+    - q-d9p4r6

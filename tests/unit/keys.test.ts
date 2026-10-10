@@ -217,8 +217,8 @@ describe('the Help sheet', () => {
     expect(rows.slice(-8)).toEqual([
       'Tab: Lab: next region',
       '↑ and ↓: Lab: move within a region',
-      'Space: Lab: pick up a card',
-      '1 to 0: Lab: place it in that bucket (0 is the tenth)',
+      'Space: Lab: pick up a card or a piece',
+      '1 to 0: Lab: place it in that bucket or slot (0 is the tenth)',
       'Backspace: Lab: send it back to the tray',
       'Enter: Lab: check the goals',
       'h: Lab: show a hint',
