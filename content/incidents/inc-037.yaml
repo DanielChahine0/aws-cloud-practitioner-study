@@ -1,0 +1,115 @@
+id: inc-037
+title: The bill after the viral pastry video
+modules: [11]
+concepts: [outbound-data-transfer, aws-cost-explorer, aws-budgets]
+brief: A video of the cafe's new pastries spread fast online, and this month's AWS bill came in far higher than usual. The owner wants to find the cause and make sure the next surprise is caught early.
+steps:
+  - id: q-yt78bb
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: outbound-data-transfer
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 2
+    stem: >-
+      The pastry video is served from the cafe's website in one AWS Region, and thousands of visitors played it this month, while staff uploaded only a few new photos.
+      Which fact explains why the data transfer charge grew?
+    options:
+      - id: a
+        text: Photos sent in from the internet carry no transfer charge.
+        why: This is true, but free inbound data adds nothing to the bill, so the staff uploads cannot explain the growth.
+      - id: b
+        text: Video sent out to the internet is billed per gigabyte.
+        correct: true
+        why: Each play sends video out of AWS to a visitor, and that outbound data is billed per gigabyte, so the charge grew with the plays.
+      - id: c
+        text: Data sent to another Region is billed per gigabyte.
+        why: This is true, but the site runs in one Region and the plays go to the internet, so no cross-Region transfer drove the charge.
+      - id: d
+        text: Outbound rates per gigabyte fall as volume grows.
+        why: This is true, but falling rates make each extra gigabyte cheaper, so they slow the rise rather than cause it.
+    evidence:
+      - "Data transfer: inbound and most same-Region traffic is free, with exceptions, while outbound data is pooled across services and billed per gigabyte at falling rates."
+      - Incoming data transfer costs are nothing for data coming from the internet into AWS, while outgoing data transfer costs apply to data leaving for the internet or for another Region.
+    takeaway: Data leaving AWS for the internet is billed per gigabyte, while data coming in from the internet is free.
+    history: []
+    verified:
+      keyHash: a114d756ab82
+      fullHash: 63ae8069ac1f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-04exja
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-cost-explorer
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      To confirm the cause of a jump in the bill, the cafe's owner wants a chart of the last few months of AWS costs, split by service, that shows which service's spend climbed and when.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Budgets
+        why: Budgets warns when spend nears or passes a limit, but it is not the tool for charting which service drove past spend.
+      - id: b
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates a design before it is deployed, so it holds none of the cafe's actual charges.
+      - id: c
+        text: AWS Cost Explorer
+        correct: true
+        why: Cost Explorer charts cost and usage over time by service, with trends, so the owner can see which service rose.
+      - id: d
+        text: AWS Organizations
+        why: Organizations groups and governs accounts under one bill, and it does not chart spend by service over time.
+    evidence:
+      - Charts of cost and usage over time by service, linked account or tag, with trends and Reserved Instance advice
+      - Cost Explorer analyzes and forecasts spend, including by tag.
+    takeaway: Charting past cost and usage over time by service, to see what drives spend, points to AWS Cost Explorer.
+    history: []
+    verified:
+      keyHash: 34461b59db7b
+      fullHash: a15250e368f1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-89zk2a
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-budgets
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe's owner has tagged every resource behind a new marketing campaign.
+      She wants an email whenever that campaign's spend for the month gets close to a figure she sets.
+      Which tool sends that warning?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        why: Cost Explorer can chart and forecast spend by tag, but it sends no alert when spend reaches a set figure.
+      - id: b
+        text: AWS Cost and Usage Report
+        why: The report delivers detailed cost files to an S3 bucket, and it does not warn anyone about a limit.
+      - id: c
+        text: AWS Billing and Cost Management dashboard
+        why: The dashboard gives a first look at charges and payments, but the threshold warning itself comes from a budget.
+      - id: d
+        text: AWS Budgets
+        correct: true
+        why: Budgets sets a custom budget for a tag and sends a warning as spend nears or passes the limit.
+    evidence:
+      - Custom budgets by service, cost category or tag, including Savings Plans and Reserved Instance utilization or coverage
+      - Budgets and Cost Explorer both forecast, but only Budgets sends threshold alerts.
+    takeaway: A warning when spend for a service, cost category or tag nears a set limit points to AWS Budgets.
+    history: []
+    verified:
+      keyHash: cd55858a3606
+      fullHash: 266807a776fd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10

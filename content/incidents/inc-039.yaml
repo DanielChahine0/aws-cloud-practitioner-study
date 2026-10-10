@@ -1,0 +1,113 @@
+id: inc-039
+title: The ordering outage on market day
+modules: [11]
+concepts: [aws-support-center, aws-business-support-plus, aws-prescriptive-guidance]
+brief: On the busiest market day of the year, the cafe's online ordering system stops taking orders. The owner needs help from AWS quickly, and afterward wants the cafe better prepared for the next busy day.
+steps:
+  - id: q-hbq9q8
+    version: 1
+    status: draft
+    pool: practice
+    type: single
+    concept: aws-support-center
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe is on Basic Support.
+      During the outage, its developer goes to the AWS Support Center to ask AWS engineers why the ordering system stopped, but the console refuses that request.
+      Which statement explains what stops the developer?
+    options:
+      - id: a
+        text: Basic Support gives every customer 24/7 customer service for account and billing questions.
+        why: This is true, but it describes billing help, so it does not explain why the request about the outage is blocked.
+      - id: b
+        text: Basic Support points customers to AWS re:Post for community answers to their questions.
+        why: This is true, but re:Post is a community site outside the Support Center and does not explain the blocked request.
+      - id: c
+        text: Basic Support does not include opening technical cases in the Support Center.
+        correct: true
+        why: Asking AWS engineers about a fault is a technical case, and those need a plan above Basic Support, so the request is blocked.
+      - id: d
+        text: Basic Support does not include a designated technical account manager.
+        why: This is true, but a missing account manager does not stop anyone from opening a case in the Support Center.
+    evidence:
+      - In the AWS Support Center every customer can open account and billing cases, while technical support cases need a plan above Basic Support.
+    takeaway: Any customer can open billing cases in the AWS Support Center, but technical cases need a plan above Basic Support.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 3 is the only option that repeats the stem's 'Support Center', which points at the key."
+  - id: q-d4mdrt
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-business-support-plus
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe's owner wants the lowest-tier Support plan that AWS recommends for production workloads, with a response in under 30 minutes when a business-critical system is down.
+      A designated technical account manager and round-the-clock workload monitoring are more than she needs.
+      Which plan fits?
+    options:
+      - id: a
+        text: AWS Enterprise Support
+        why: Enterprise Support answers faster and adds a designated technical account manager, which is more than she needs.
+      - id: b
+        text: Basic Support
+        why: Basic Support gives no incident response and is not the plan AWS recommends for production.
+      - id: c
+        text: AWS Unified Operations
+        why: Unified Operations is the top plan and the only one with 24/7 workload monitoring, which she does not need.
+      - id: d
+        text: AWS Business Support+
+        correct: true
+        why: Business Support+ is the minimum AWS recommends for production and answers a down critical system in under 30 minutes.
+    evidence:
+      - AWS calls Business Support+ the minimum plan it recommends for production workloads.
+      - With Business Support+, a business-critical or mission-critical system that is down gets a response in under 30 minutes.
+    takeaway: AWS Business Support+ is the minimum plan for production, with a response in under 30 minutes when a critical system is down.
+    history: []
+    verified:
+      keyHash: 4cfefac23494
+      fullHash: a4d1f5becbcf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zqts8y
+    version: 1
+    status: live
+    pool: practice
+    type: single
+    concept: aws-prescriptive-guidance
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      After the outage, the cafe's own small team plans to modernize the ordering system without hiring outside help.
+      They want ready-made patterns from AWS experts, including step-by-step instructions, architectures and sample code they can follow.
+      Which resource fits?
+    options:
+      - id: a
+        text: AWS re:Post
+        why: re:Post holds community answers to posted questions, not expert-written patterns with steps and code.
+      - id: b
+        text: AWS Prescriptive Guidance
+        correct: true
+        why: Prescriptive Guidance publishes expert guides and patterns, with steps, architectures, tools and code, for modernization work.
+      - id: c
+        text: AWS Professional Services
+        why: Professional Services is paid consulting that does the project for the cafe, while this team wants to do it alone.
+      - id: d
+        text: AWS Trust and Safety Center
+        why: The Trust and Safety Center takes reports of suspected abuse, and it offers no modernization patterns.
+    evidence:
+      - AWS Prescriptive Guidance offers guides and patterns from AWS technology experts, with steps, architectures, tools and code for common migration, optimization and modernization work.
+    takeaway: Expert-written patterns with steps, architectures and code for a team doing its own modernization point to AWS Prescriptive Guidance.
+    history: []
+    verified:
+      keyHash: 18b0b7806e24
+      fullHash: 31b7890dad4a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
