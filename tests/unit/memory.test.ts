@@ -14,7 +14,7 @@ import {
   resolveConcept,
   sessionSummary,
 } from '../../src/engine/memory.ts';
-import { derive } from '../../src/engine/replay.ts';
+import { derive, toPlain } from '../../src/engine/replay.ts';
 import { fnv1a } from '../../src/engine/rng.ts';
 import { recall, review, type SrsCard } from '../../src/engine/srs.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
@@ -28,6 +28,7 @@ import {
   incidentDoneOf,
   incidentOfferedOf,
   labDoneOf,
+  reviewNowOf,
   submitOf,
 } from '../fixtures/memory.ts';
 
@@ -840,5 +841,67 @@ describe('deriveMemory: the daily incident (spec 3.2, 3.5, 4.5)', () => {
   it('never throws on an unknown incident id and still pays it', () => {
     const events = timelineOf([['2026-10-09T10:00:00Z', incidentDoneOf('inc-999', true)]]);
     expect(deriveMemory(events, CONTENT).xp).toBe(15);
+  });
+});
+
+describe('deriveMemory: review.now (spec 3.6)', () => {
+  const content = contentOf([
+    { id: 'oven', module: 1 },
+    { id: 'proofing', module: 1 },
+    { id: 'menu', module: 1, tested: false },
+  ]);
+  /** Two right Sure answers three days apart: stability about 14 days, due on 2026-10-18. */
+  const studied: (readonly [string, NewEvent])[] = [
+    [at('2026-10-01'), answerOf({ concept: 'oven', qid: 'q-oven-1', correct: true, sure: true })],
+    [
+      at('2026-10-04'),
+      answerOf({ concept: 'oven', qid: 'q-oven-2', correct: true, sure: true, mode: 'review' }),
+    ],
+  ];
+  const cardOf = (log: readonly (readonly [string, NewEvent])[]) =>
+    deriveMemory(timelineOf(log), content).concepts.get('oven')?.card ?? null;
+
+  it('makes a settled concept due at the start of the study day of the event, with no review', () => {
+    const before = cardOf(studied);
+    expect(before?.due).toBe('2026-10-18T10:00:00.000Z');
+    const after = cardOf([...studied, [at('2026-10-10', 12), reviewNowOf('oven')]]);
+    expect(after?.due).toBe(dayStartAt('2026-10-10', 0).toISOString());
+    expect(after?.stability).toBe(before?.stability);
+    expect(after?.reps).toBe(before?.reps);
+    expect(after?.lastReview).toBe(before?.lastReview);
+  });
+
+  it('keeps the concept due after an exam date set later that day reschedules its card', () => {
+    const now = [at('2026-10-10', 12), reviewNowOf('oven')] as const;
+    for (const examDate of ['2026-10-12', '2026-11-14']) {
+      const card = cardOf([...studied, now, [at('2026-10-10', 13), { t: 'settings', patch: { examDate } }]]);
+      expect(Date.parse(card?.due ?? '')).toBeLessThanOrEqual(dayStartAt('2026-10-10', 0).getTime());
+      expect(isDue(card as SrsCard, new Date(at('2026-10-10', 14)), 0)).toBe(true);
+    }
+  });
+
+  it('ignores an unknown concept, an untested one and one never studied', () => {
+    const log = [
+      ...studied,
+      [at('2026-10-10', 12), reviewNowOf('ghost')] as const,
+      [at('2026-10-10', 12, 1), reviewNowOf('menu')] as const,
+      [at('2026-10-10', 12, 2), reviewNowOf('proofing')] as const,
+    ];
+    expect(toPlain(deriveMemory(timelineOf(log), content))).toEqual(
+      toPlain(deriveMemory(timelineOf(studied), content)),
+    );
+  });
+
+  it('leaves a concept already answered today as it is, so a review can never loop on it', () => {
+    const today = [
+      ...studied,
+      [
+        at('2026-10-10', 9),
+        answerOf({ concept: 'oven', qid: 'q-oven-3', correct: true, sure: true, mode: 'quiz' }),
+      ] as const,
+    ];
+    const card = cardOf([...today, [at('2026-10-10', 12), reviewNowOf('oven')]]);
+    expect(card).toEqual(cardOf(today));
+    expect(isDue(card as SrsCard, new Date(at('2026-10-10', 14)), 0)).toBe(false);
   });
 });

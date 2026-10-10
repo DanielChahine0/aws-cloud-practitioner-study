@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { bossDraw } from '../../src/engine/boss.ts';
+import { selectLightning } from '../../src/engine/lightning.ts';
 import { derive, type Progress, practiceForms, takenForms } from '../../src/engine/replay.ts';
 import {
   type ExamPoolQuestion,
@@ -111,5 +112,25 @@ describe('leakage (spec 4.3)', () => {
       examStartOf(SID, 'mock', ['xb-bake-01-01'], { form: 'remix', deadline: '2026-10-27T11:30:00.000Z' }),
     );
     expect([...takenForms(derive(remix, null))]).toEqual([]);
+  });
+});
+
+describe('leakage of the lightning round (spec 4.1)', () => {
+  /** The same forms with single items, which the round's type filter alone would let through. */
+  const SINGLE_EXAM = EXAM.map((q) => ({ ...q, type: 'single' as const }));
+
+  // `learnPool` drops the `form` field of the taken forms it lets in, so the round takes the practice pool
+  // (`practicePoolOf`) only; here exam items of every form sit beside it with their form, taken or not.
+  it('never returns an untaken-form or a taken-form exam item, for any seed', () => {
+    const logs = [[], eventsOf(MOCK_A), eventsOf(MOCK_A, submitOf(SID, 'mock'))];
+    for (const log of logs) {
+      const progress = derive(log, null);
+      const pool = [...SINGLE_EXAM, ...PRACTICE];
+      for (let seed = 0; seed < 25; seed++) {
+        const picked = selectLightning({ pool, concepts: ALL_CONCEPTS, progress, seed });
+        expect(picked.length).toBeGreaterThan(0);
+        expect(picked.filter((id) => formOf(id) !== null)).toEqual([]);
+      }
+    }
   });
 });

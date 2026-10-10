@@ -29,6 +29,55 @@ const MODES: Mode[] = [
   'boss',
   'mock',
 ];
+
+/** The session id of the lightning rounds on day `n`, so a day's starts and answers share it. */
+const roundSid = (n: number): string => `01JD${String(n).padStart(22, '0')}`;
+
+/**
+ * Lightning events (spec 4.1): a round start with its 90 second deadline, an answer in that day's round, or the
+ * `review.now` of a miss; a day may start several rounds.
+ */
+const lightningItemArb = (days: { min: number; max: number }): fc.Arbitrary<Item> =>
+  fc
+    .record({
+      day: fc.integer(days),
+      minute: fc.integer({ min: 0, max: 1_400 }),
+      kind: fc.constantFrom('start', 'answer', 'answer', 'answer', 'answer', 'review.now'),
+      concept: fc.constantFrom(...CONCEPTS),
+      variant: fc.integer({ min: 1, max: 20 }),
+      correct: fc.boolean(),
+    })
+    .map((s): Item => {
+      const sid = roundSid(s.day);
+      if (s.kind === 'start') {
+        return [
+          timeOf(s.day, s.minute),
+          {
+            t: 'session',
+            sid,
+            mode: 'lightning',
+            phase: 'start',
+            seed: 7,
+            scope: 'lightning',
+            qids: [],
+            deadline: timeOf(s.day, s.minute + 1.5),
+          },
+        ];
+      }
+      if (s.kind === 'review.now') return [timeOf(s.day, s.minute), { t: 'review.now', concept: s.concept }];
+      return [
+        timeOf(s.day, s.minute),
+        answerOf({
+          concept: s.concept,
+          qid: `ql-${s.concept}-${s.variant}`,
+          correct: s.correct,
+          sure: false,
+          mode: 'lightning',
+          sid,
+        }),
+      ];
+    });
+
 const itemArb = (days: { min: number; max: number }): fc.Arbitrary<Item> =>
   fc.oneof(
     {
@@ -99,6 +148,7 @@ const itemArb = (days: { min: number; max: number }): fc.Arbitrary<Item> =>
         .record({ day: fc.integer(days), date: fc.constantFrom('2026-10-20', '2026-11-14', null) })
         .map((s): Item => [timeOf(s.day, 5), { t: 'settings', patch: { examDate: s.date } }]),
     },
+    { weight: 3, arbitrary: lightningItemArb(days) },
   );
 
 const sortItems = (items: readonly Item[]): Item[] =>
@@ -230,6 +280,25 @@ describe('grind invariance', () => {
         expect(() => deriveMemory(timelineOf(items), CONTENT)).not.toThrow();
         expect(() => deriveMemory(timelineOf(items), JOURNEY_CONTENT)).not.toThrow();
       }),
+    );
+  });
+
+  it('pays at most 10 XP for the lightning rounds started on one study day', () => {
+    fc.assert(
+      fc.property(
+        fc.array(lightningItemArb({ min: 0, max: 3 }), { maxLength: 80 }).map(sortItems),
+        (items) => {
+          const events = timelineOf(items);
+          const memory = deriveMemory(events, CONTENT);
+          const paid = new Map<string, number>();
+          for (const e of events) {
+            if (e.t !== 'answer') continue;
+            paid.set(e.sid, (paid.get(e.sid) ?? 0) + (memory.xpByEvent.get(e.id) ?? 0));
+          }
+          for (const xp of paid.values()) expect(xp).toBeLessThanOrEqual(10);
+          expect(memory.qualifyingDays.size).toBe(0);
+        },
+      ),
     );
   });
 
