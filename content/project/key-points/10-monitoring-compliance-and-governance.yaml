@@ -1,0 +1,48 @@
+# Reference key points for decision 10: Monitoring, audit and governance.
+module: 10
+keyPoints:
+  - id: kp-10-alarms-warn-it-person
+    status: live
+    text: CloudWatch alarms on order errors and server load text the part-time IT person through Amazon SNS the moment a threshold is crossed, so a fault is caught before customers notice it.
+    concepts: [cloudwatch-alarms, amazon-cloudwatch]
+    evidence: An alarm can notify through SNS or scale EC2 automatically.
+    verified:
+      fullHash: 413363fce7d5
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-10-cloudtrail-logs-in-s3
+    status: live
+    text: A CloudTrail trail delivers every API call to log files in Amazon S3, giving the cafe a lasting record of who changed what and when, well past the short free event history.
+    concepts: [cloudtrail-logs, aws-cloudtrail]
+    evidence: Event history is free for 90 days, while S3 logs serve long audits.
+    verified:
+      fullHash: a176f39e1481
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-10-organizations-ou-per-rule-set
+    status: live
+    text: AWS Organizations gives each shop its own member account, grouped into OUs, and the shop abroad sits in an OU whose SCP caps the services its accounts may use under local data rules.
+    concepts: [aws-organizations, organizational-units, service-control-policies]
+    evidence: Base OUs on each department's business, security and regulatory needs.
+    verified:
+      fullHash: e05eb8dd40af
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-10-config-rules-catch-drift
+    status: live
+    text: AWS Config rules keep checking each shop's resources against the cafe's settings and flag or fix any that drift, so new shops stay compliant without the IT person inspecting them by hand.
+    concepts: [aws-config, config-rules]
+    evidence: It alerts you to noncompliant resources and can fix them automatically.
+    verified:
+      fullHash: 6133a76dc379
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-10-audit-evidence-collected
+    status: live
+    text: AWS Audit Manager gathers proof of the cafe's controls on its own, and AWS Artifact Reports supply AWS's audits, so the regulator abroad gets ready evidence instead of a hand-built pile.
+    concepts: [aws-audit-manager, automated-evidence-collection, aws-artifact-reports]
+    evidence: Audit Manager is fully managed, audits usage continually and automates evidence collection across teams.
+    verified:
+      fullHash: 7384d922c1ec
+      checks: [ critic@1 ]
+      on: 2026-10-10
