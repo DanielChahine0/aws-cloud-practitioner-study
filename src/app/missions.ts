@@ -1,17 +1,20 @@
 /**
- * Mission state in signals (spec 5.3): each mission's stage from the log, the plan record and the minute clock, and
- * the top bar's live chip.
- * The top bar loads this module after first paint, and the lazy mission screens import it, so it stays out of the
- * initial bundle; the screens' copy and helpers live in `mission-copy.ts`, which only the lazy mission screens load.
+ * Mission state in signals (spec 5.3): each mission's stage from the log, the plan record and the minute clock, the
+ * top bar's live chip and Next's safety entry.
+ * `mission-state.ts` loads this module as the app starts, and the lazy mission screens import it, so it stays out of
+ * the initial bundle; the screens' copy and helpers live in `mission-copy.ts`, which only the lazy mission screens
+ * load.
  */
 import { computed } from '@preact/signals';
 import type { MissionMeta } from '../../schemas/chunks.ts';
-import { tzOffset } from '../engine/day.ts';
+import { studyDay, tzOffset } from '../engine/day.ts';
 import {
   liveMission,
   type MissionRef,
+  type MissionSafety,
   type MissionStatus,
   missionLogOf,
+  missionSafety,
   missionStatuses,
   type PlanRecord,
 } from '../engine/missions.ts';
@@ -53,6 +56,11 @@ export const statuses = computed<MissionStatus[]>(() => {
     tz: tzOffset(at),
   });
 });
+
+/** Next's mission entry (spec 4.6) at the minute clock. */
+export const safety = computed<MissionSafety | null>(() =>
+  missionSafety(statuses.value, studyDay(now.value)),
+);
 
 /** The amber top-bar chip while a cleaned-up mission is live (spec 5.3 rule 10); it links to the mission. */
 export const liveChip = computed<{ label: string; href: string; aria: string } | null>(() => {

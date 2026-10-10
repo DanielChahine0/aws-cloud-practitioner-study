@@ -3,36 +3,15 @@ import { levelProgress } from '../../engine/level.ts';
 import { BAR_GAP, formatClock } from '../exam.ts';
 import { examControls, examTick } from '../exam-clock.ts';
 import { memory, queue, rank, ranks, streak } from '../memory.ts';
+import { missionState } from '../mission-state.ts';
 import { storeReady } from '../progress.ts';
 import { toHash } from '../router.ts';
 import { exam, examPosition, navigate, overlay } from '../state.ts';
 import { dueLabel, FLASH_MS, RANK_ACTION, streakLabel, xpGain } from '../topbar.ts';
-import { lazyLoader } from './Lazy.tsx';
 
 const openProgress = (): void => {
   overlay.value = 'progress';
 };
-
-/**
- * The live chip's mission state loads after first paint through `import()`, so it stays out of the initial bundle (the
- * 50 KB budget of spec 2.10); the plain Missions link shows until it loads, and stays when the load fails.
- */
-const chipLoader = lazyLoader(() => import('../missions.ts').then((m) => m.liveChip));
-
-/** The live chip once its code has loaded, else null. */
-function useLiveChip(): { label: string; href: string; aria: string } | null {
-  const [, setReady] = useState(0);
-  // Preact runs effects after paint, so the load can resolve between the first render and its effect.
-  const shown = useRef(chipLoader.current());
-  useEffect(
-    () =>
-      chipLoader.attach(shown.current, (failed) => {
-        if (!failed) setReady((n) => n + 1);
-      }),
-    [],
-  );
-  return chipLoader.current()?.value ?? null;
-}
 
 /** Shows each XP gain for 600 ms; the first value after the log loads never flashes. */
 function useXpFlash(xp: number | null): { gain: number; key: number } | null {
@@ -109,7 +88,8 @@ function SiteBar() {
   const shown = ready && ranks.value.length > 0 ? rank.value : null;
   const xp = ready ? (memory.value?.xp ?? null) : null;
   const flash = useXpFlash(xp);
-  const chip = useLiveChip();
+  // The plain Missions link shows until the mission state loads, and stays when the load fails.
+  const chip = missionState.value?.liveChip.value ?? null;
   return (
     <header class="topbar">
       <nav class="topbar-inner" aria-label="Site">
