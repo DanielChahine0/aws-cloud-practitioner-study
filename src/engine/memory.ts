@@ -412,7 +412,8 @@ export function deriveMemory(events: readonly StudyEvent[], content: MemoryConte
         laterAnswer(cm, key, e, false);
       }
     }
-    cm.lastAnswerDay = e.day;
+    // No `lastAnswerDay`: an exam answer is not a counted answer (spec 3.1), so a practice answer later the same day
+    // is still that day's first, with its bet XP and success day.
   };
 
   /** Full Dress Rehearsal, Pass Mark and Even Keel, judged at the submit of a form's first attempt. */

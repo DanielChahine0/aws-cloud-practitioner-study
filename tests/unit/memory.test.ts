@@ -570,7 +570,7 @@ describe('deriveMemory: boss and mock answers (spec 3.1, 3.2, 4.1)', () => {
     const log = [...before, ...exam('2026-10-11', SID, 'boss', [{ concept: 'oven', correct: true }])];
     const m = memoryOf(log);
     expect(m.concepts.get('oven')?.card).toEqual(card(before, 'oven'));
-    expect(m.concepts.get('oven')?.lastAnswerDay).toBe('2026-10-11');
+    expect(m.concepts.get('oven')?.lastAnswerDay).toBe('2026-10-10');
     expect(m.concepts.get('oven')?.fsrsDay).toBe('2026-10-10');
   });
 
