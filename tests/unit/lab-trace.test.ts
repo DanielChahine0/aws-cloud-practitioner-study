@@ -161,6 +161,13 @@ describe('Trace spec schema (spec 5.1)', () => {
       'group bakers is used twice',
     ],
     [
+      'a principal id that is also a group id',
+      (s: PolicyTraceSpec) => {
+        (s.principals[1] as { id: string }).id = 'bakers';
+      },
+      'principal or group bakers is used twice',
+    ],
+    [
       'a node id used twice',
       (s: PolicyTraceSpec) => {
         s.org.push({ id: 'shops', label: 'Shops again', parent: 'bakery-org' });

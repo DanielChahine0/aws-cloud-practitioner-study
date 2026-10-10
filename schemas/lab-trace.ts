@@ -175,6 +175,11 @@ function checkPolicy(spec: Policies, say: Issue): void {
   const nodes = new Map(spec.org.map((n) => [n.id, n]));
   const parents = new Set(spec.org.flatMap((n) => (n.parent === undefined ? [] : [n.parent])));
 
+  // An identity policy attaches to a principal or a group by the same id, so the two must not share one.
+  spec.groups.forEach((g, i) => {
+    if (principals.has(g.id)) say(`principal or group ${g.id} is used twice`, ['groups', i, 'id']);
+  });
+
   spec.principals.forEach((p, i) => {
     p.groups.forEach((g, j) => {
       if (!groups.has(g)) say(`names no group: ${g}`, ['principals', i, 'groups', j]);
