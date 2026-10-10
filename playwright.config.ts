@@ -1,4 +1,6 @@
+import { availableParallelism } from 'node:os';
 import { defineConfig, devices } from '@playwright/test';
+import { workersNow } from './scripts/lib/workers.ts';
 
 /**
  * The tests' own port, so a `pnpm preview` left running on 4173 never blocks `pnpm verify` or `pnpm site:deploy`.
@@ -16,6 +18,8 @@ export default defineConfig({
   // Browser-only regression tests sit beside the Vitest ones as `.spec.ts` (tests/regressions/README.md).
   testMatch: ['e2e/**/*.spec.ts', 'regressions/**/*.spec.ts'],
   forbidOnly: true,
+  // Half the cores at most, as Playwright's default, and fewer while other builds load the machine.
+  workers: workersNow(Math.max(1, Math.floor(availableParallelism() / 2))),
   retries: 0,
   reporter: 'list',
   use: {
