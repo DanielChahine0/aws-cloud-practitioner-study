@@ -5,6 +5,7 @@ import type { ConceptInfo, MemoryContent } from '../engine/memory.ts';
 import { type Extra, type LessonRef, type NextAction, nextMinutes } from '../engine/next.ts';
 import type { ReviewQueue } from '../engine/queue.ts';
 import type { Readiness, ReadinessLabel } from '../engine/readiness.ts';
+import type { Progress, SessionState } from '../engine/replay.ts';
 import type { StreakState } from '../engine/streak.ts';
 import { incidentLabel } from './incident.ts';
 import { type MockRoute, pad2, toHash } from './router.ts';
@@ -271,4 +272,14 @@ const REMINDERS: readonly Reminder[] = ['go-no-go', 'exam-ask', 'backup', 'first
 /** The one reminder line to show, or null when none is due. */
 export function reminderOf(due: Readonly<Record<Reminder, boolean>>): Reminder | null {
   return REMINDERS.find((r) => due[r]) ?? null;
+}
+
+/** The lightning rounds still open after their deadline at `at` (spec 4.1), which the app settles when it starts. */
+export function overdueLightning(progress: Progress, at: Date): SessionState[] {
+  const out: SessionState[] = [];
+  for (const s of progress.sessions.values()) {
+    if (s.mode !== 'lightning' || s.submittedAt !== null || s.abandoned || s.deadline === null) continue;
+    if (Date.parse(s.deadline) <= at.getTime()) out.push(s);
+  }
+  return out;
 }

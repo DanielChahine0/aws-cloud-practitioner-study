@@ -84,6 +84,10 @@ describe('up', () => {
     expect(up({ kind: 'review' })).toEqual({ kind: 'home' });
   });
 
+  it('goes from the lightning round to Home', () => {
+    expect(up({ kind: 'lightning' })).toEqual({ kind: 'home' });
+  });
+
   it('goes from the daily incident to Home', () => {
     expect(up({ kind: 'incident' })).toEqual({ kind: 'home' });
   });

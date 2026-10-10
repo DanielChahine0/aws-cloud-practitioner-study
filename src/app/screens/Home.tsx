@@ -1,3 +1,4 @@
+import { effect } from '@preact/signals';
 import { useEffect, useState } from 'preact/hooks';
 import type { ContentIndex } from '../../../schemas/chunks.ts';
 import { studyDay } from '../../engine/day.ts';
@@ -19,6 +20,7 @@ import {
   goNoGoLine,
   nextLabel,
   nothingDueLine,
+  overdueLightning,
   readinessLine,
   reminderOf,
   streakLine,
@@ -51,6 +53,7 @@ const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
  */
 export function Home({ idx }: { idx: ContentIndex }) {
   useTitle('Home');
+  useLightningSettle();
   const ready = storeReady.value;
   const at = now.value;
   // Today's incident is picked on the first render of a study day and kept as an event (spec 4.5).
@@ -94,7 +97,27 @@ export function Home({ idx }: { idx: ContentIndex }) {
       <p>
         <a href="#/s/mock">Mock exams</a>
       </p>
+      <p>
+        <a href="#/s/lightning">Lightning round</a>
+      </p>
     </>
+  );
+}
+
+/**
+ * Settles a lightning round left open past its deadline (spec 4.1) once the store is ready, so a tab closed
+ * mid-round still closes its session and queues its misses; the settle code loads only when one is found.
+ */
+function useLightningSettle(): void {
+  useEffect(
+    () =>
+      effect(() => {
+        if (!storeReady.value) return;
+        const at = now.value;
+        if (overdueLightning(progress.value, at).length === 0) return;
+        void import('../lightning-settle.ts').then((m) => m.settleLightning(at));
+      }),
+    [],
   );
 }
 
