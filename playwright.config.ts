@@ -12,6 +12,8 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: 'retain-on-failure',
+    // The production build registers a cache-first service worker; only tests/e2e/offline.spec.ts allows it.
+    serviceWorkers: 'block',
   },
   webServer: {
     command: 'pnpm exec vite preview --port 4317 --strictPort',
