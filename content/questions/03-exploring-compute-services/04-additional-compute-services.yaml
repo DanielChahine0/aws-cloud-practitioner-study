@@ -379,3 +379,76 @@ questions:
       fullHash: 7cc59fa8fa4f
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+
+  - id: q-k4kqkq
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: batch-computing
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe chain lists four computing tasks it plans to move to AWS this year.
+      Which task is an example of batch computing?
+    options:
+      - id: a
+        text: Adding web servers as the lunch rush builds
+        why: Adding servers as live traffic climbs is scaling a site to demand, not running large compute-heavy jobs in bulk.
+      - id: b
+        text: Approving each card payment the moment a guest taps
+        why: Approving one payment at a time with a fast reply is low-latency transaction work, not heavy parallel processing.
+      - id: c
+        text: Training a forecast model on the full order history
+        correct: true
+        why: Training a model on a huge history of orders is heavy compute that can be split into parallel jobs, which is batch computing.
+      - id: d
+        text: Keeping old receipts on file for later audits
+        why: Keeping old receipts is a storage need, since the records sit unread rather than feeding heavy compute jobs.
+    evidence:
+      - It fits parallel work like genomics, media transcoding and ML training.
+      - "**Batch computing**: running large, compute-heavy jobs, often in parallel."
+    takeaway: Batch computing covers large, compute-heavy jobs such as ML training, unlike live scaling, quick transactions or plain storage.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The stem says 'four computing tasks', a number the cited note does not state."
+
+  - id: q-x5mkbz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: batch-computing
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 1
+    stem: >-
+      Every weekend, the cafe's finance team runs thousands of pricing simulations over years of sales data.
+      Nobody waits on the answers live, and the math runs as many separate jobs at once.
+      What is this style of workload called?
+    options:
+      - id: a
+        text: Hybrid cloud computing
+        why: Hybrid cloud means running on-premises infrastructure alongside AWS, which says where work runs, not that it is a heavy bulk job.
+      - id: b
+        text: Batch computing
+        correct: true
+        why: Large simulations over a huge dataset, split into many jobs that run side by side, are exactly batch computing.
+      - id: c
+        text: Edge computing
+        why: Edge computing processes data close to where it is made, while these simulations are a big scheduled run of heavy math.
+      - id: d
+        text: Serverless computing
+        why: Serverless computing is about not managing servers, and it does not name a large, compute-heavy workload run in parallel.
+    evidence:
+      - A fully managed service for heavy compute such as huge datasets, simulations and complex math.
+      - "**Batch computing**: running large, compute-heavy jobs, often in parallel."
+    takeaway: Heavy simulations over huge datasets, run as many parallel jobs rather than live requests, are batch computing.
+    history: []
+    verified:
+      keyHash: 472cf27475c7
+      fullHash: 82baad362846
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
