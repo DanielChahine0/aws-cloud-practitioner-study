@@ -1,0 +1,139 @@
+id: lab-m11-which-support-plan
+module: 11
+title: Which Support plan?
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts: [aws-support-plans, aws-business-support-plus, aws-enterprise-support, aws-unified-operations, technical-account-manager, aws-support-center]
+notes: [m11/aws-support-plans]
+minutes: 5
+brief: >-
+  The cafe chain is writing down what it needs from AWS Support before it picks a plan, and the owner wants to pay for no more than each need calls for.
+  Sort each need under the lowest Support plan that covers it.
+spec:
+  buckets:
+    - id: basic
+      label: Basic Support
+    - id: business-plus
+      label: AWS Business Support+
+    - id: enterprise
+      label: AWS Enterprise Support
+    - id: unified-ops
+      label: AWS Unified Operations
+  cards:
+    - id: invoice-case
+      text: A case in the Support Center about a charge on last month's bill
+      bucket: basic
+      goal: g1
+    - id: outage-alert
+      text: An alert when an AWS service problem may reach the cafe's own resources
+      bucket: basic
+      goal: g1
+    - id: timeout-case
+      text: A technical case about the order app's database timing out every lunch rush
+      bucket: business-plus
+      goal: g2
+    - id: production-floor
+      text: Support at the level AWS recommends as the minimum once the order site serves real customers
+      bucket: business-plus
+      goal: g2
+    - id: thirty-minutes
+      text: A response in under 30 minutes when the business-critical order site is down
+      bucket: business-plus
+      goal: g2
+    - id: named-contact
+      text: A designated technical account manager who knows the chain's setup
+      bucket: enterprise
+      goal: g3
+    - id: fifteen-minutes
+      text: A response in under 15 minutes when the mission-critical till system is down
+      bucket: enterprise
+      goal: g3
+    - id: watch-all-night
+      text: AWS watching the chain's workloads 24/7, even while every branch is closed
+      bucket: unified-ops
+      goal: g4
+    - id: five-minutes
+      text: An incident engineer responding in under 5 minutes when the mission-critical till system is down
+      bucket: unified-ops
+      goal: g4
+goals:
+  - id: g1
+    label: Billing cases and health alerts sit under Basic Support
+    hint: Ask whether every AWS customer gets this for free, with no paid plan at all.
+  - id: g2
+    label: Technical cases and the production minimum sit under AWS Business Support+
+    hint: "Ask which paid plan is the first step above the free one: it is the least AWS suggests for live customer traffic, and it answers a critical outage fast, but not as fast as the plans above it."
+  - id: g3
+    label: A designated TAM and 15-minute response sit under AWS Enterprise Support
+    hint: Ask which need calls for one named AWS contact, or a reply faster than the first paid plan but not the fastest any plan offers.
+  - id: g4
+    label: Round-the-clock monitoring sits under AWS Unified Operations
+    hint: Ask whether AWS itself must watch the workloads around the clock, or answer an outage faster than every other plan.
+solution:
+  - { t: place, card: invoice-case, bucket: basic }
+  - { t: place, card: outage-alert, bucket: basic }
+  - { t: place, card: timeout-case, bucket: business-plus }
+  - { t: place, card: production-floor, bucket: business-plus }
+  - { t: place, card: thirty-minutes, bucket: business-plus }
+  - { t: place, card: named-contact, bucket: enterprise }
+  - { t: place, card: fifteen-minutes, bucket: enterprise }
+  - { t: place, card: watch-all-night, bucket: unified-ops }
+  - { t: place, card: five-minutes, bucket: unified-ops }
+wrongPaths:
+  - mistake: Thinks a billing case needs a paid plan, the same as a technical case
+    failsGoal: g1
+    actions:
+      - { t: place, card: invoice-case, bucket: business-plus }
+      - { t: place, card: outage-alert, bucket: basic }
+      - { t: place, card: timeout-case, bucket: business-plus }
+      - { t: place, card: production-floor, bucket: business-plus }
+      - { t: place, card: thirty-minutes, bucket: business-plus }
+      - { t: place, card: named-contact, bucket: enterprise }
+      - { t: place, card: fifteen-minutes, bucket: enterprise }
+      - { t: place, card: watch-all-night, bucket: unified-ops }
+      - { t: place, card: five-minutes, bucket: unified-ops }
+  - mistake: Thinks Basic Support lets the cafe open technical support cases
+    failsGoal: g2
+    actions:
+      - { t: place, card: invoice-case, bucket: basic }
+      - { t: place, card: outage-alert, bucket: basic }
+      - { t: place, card: timeout-case, bucket: basic }
+      - { t: place, card: production-floor, bucket: business-plus }
+      - { t: place, card: thirty-minutes, bucket: business-plus }
+      - { t: place, card: named-contact, bucket: enterprise }
+      - { t: place, card: fifteen-minutes, bucket: enterprise }
+      - { t: place, card: watch-all-night, bucket: unified-ops }
+      - { t: place, card: five-minutes, bucket: unified-ops }
+  - mistake: Thinks AWS Business Support+ already includes a designated technical account manager
+    failsGoal: g3
+    actions:
+      - { t: place, card: invoice-case, bucket: basic }
+      - { t: place, card: outage-alert, bucket: basic }
+      - { t: place, card: timeout-case, bucket: business-plus }
+      - { t: place, card: production-floor, bucket: business-plus }
+      - { t: place, card: thirty-minutes, bucket: business-plus }
+      - { t: place, card: named-contact, bucket: business-plus }
+      - { t: place, card: fifteen-minutes, bucket: enterprise }
+      - { t: place, card: watch-all-night, bucket: unified-ops }
+      - { t: place, card: five-minutes, bucket: unified-ops }
+  - mistake: Thinks AWS Enterprise Support includes 24/7 workload monitoring
+    failsGoal: g4
+    actions:
+      - { t: place, card: invoice-case, bucket: basic }
+      - { t: place, card: outage-alert, bucket: basic }
+      - { t: place, card: timeout-case, bucket: business-plus }
+      - { t: place, card: production-floor, bucket: business-plus }
+      - { t: place, card: thirty-minutes, bucket: business-plus }
+      - { t: place, card: named-contact, bucket: enterprise }
+      - { t: place, card: fifteen-minutes, bucket: enterprise }
+      - { t: place, card: watch-all-night, bucket: enterprise }
+      - { t: place, card: five-minutes, bucket: unified-ops }
+debrief:
+  lines:
+    - Basic Support is free for every customer and covers billing cases, re:Post and health alerts, but technical cases need a paid plan.
+    - AWS Business Support+ is the least AWS recommends for production, with a response in under 30 minutes when a critical system is down.
+    - AWS Enterprise Support adds a designated technical account manager and a response in under 15 minutes.
+    - AWS Unified Operations is the only plan with 24/7 workload monitoring, and an incident engineer responds in under 5 minutes.
+  questions: [q-4s55hg, q-xq88g8, q-8de0jm]

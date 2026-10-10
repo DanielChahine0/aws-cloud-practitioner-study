@@ -1,0 +1,166 @@
+id: lab-m08-ai-service-per-task
+module: 8
+title: AI service per cafe task
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts: [aws-ai-services, amazon-comprehend, amazon-polly, amazon-translate, amazon-lex, amazon-personalize]
+notes: [m08/aws-ai-ml-solutions, m08/ai-ml-on-aws]
+minutes: 6
+brief: >-
+  The cafe has a list of jobs it wants AI to help with this season, but it has no data scientists and wants ready-made models.
+  Sort each task under the pre-built AWS AI service that does it.
+spec:
+  buckets:
+    - id: comprehend
+      label: Amazon Comprehend
+    - id: polly
+      label: Amazon Polly
+    - id: translate
+      label: Amazon Translate
+    - id: lex
+      label: Amazon Lex
+    - id: personalize
+      label: Amazon Personalize
+  cards:
+    - id: review-moods
+      text: A year of written reviews to tag as pleased, neutral or annoyed
+      bucket: comprehend
+      goal: g1
+    - id: comment-phrases
+      text: Comments typed into the app's feedback box, checked for the phrases guests mention most
+      bucket: comprehend
+      goal: g1
+    - id: drive-speaker
+      text: The day's specials spoken in a natural voice at the drive-through
+      bucket: polly
+      goal: g2
+    - id: training-audio
+      text: An audio version of the barista training guide, made without a studio
+      bucket: polly
+      goal: g2
+    - id: tourist-menu
+      text: The online menu shown in the language each visiting tourist reads
+      bucket: translate
+      goal: g3
+    - id: supplier-letters
+      text: Letters from a bean supplier abroad turned into the staff's own language
+      bucket: translate
+      goal: g3
+    - id: order-helper
+      text: A helper in the app that guests type or speak to and that answers about their order
+      bucket: lex
+      goal: g4
+    - id: hours-line
+      text: A phone line where callers ask about opening hours and the system understands and replies
+      bucket: lex
+      goal: g4
+    - id: member-picks
+      text: Drink suggestions for each loyalty member drawn from what they ordered before
+      bucket: personalize
+      goal: g5
+    - id: trending-row
+      text: A row on the order screen showing what is trending with customers this week
+      bucket: personalize
+      goal: g5
+goals:
+  - id: g1
+    label: Both feedback jobs sit under Amazon Comprehend
+    hint: Ask whether the job pulls meaning, such as mood or key phrases, out of text that guests already wrote.
+  - id: g2
+    label: Both spoken-word jobs sit under Amazon Polly
+    hint: Ask whether written words must come out as lifelike speech, with nobody talking back.
+  - id: g3
+    label: Both language jobs sit under Amazon Translate
+    hint: Ask whether the words must end up in a different language from the one they arrived in.
+  - id: g4
+    label: Both conversation jobs sit under Amazon Lex
+    hint: Ask whether a guest holds a two-way exchange, by voice or text, that the system must understand before it replies.
+  - id: g5
+    label: Both suggestion jobs sit under Amazon Personalize
+    hint: Ask whether the result is a pick for the customer, drawn from the history of past orders.
+solution:
+  - { t: place, card: review-moods, bucket: comprehend }
+  - { t: place, card: comment-phrases, bucket: comprehend }
+  - { t: place, card: drive-speaker, bucket: polly }
+  - { t: place, card: training-audio, bucket: polly }
+  - { t: place, card: tourist-menu, bucket: translate }
+  - { t: place, card: supplier-letters, bucket: translate }
+  - { t: place, card: order-helper, bucket: lex }
+  - { t: place, card: hours-line, bucket: lex }
+  - { t: place, card: member-picks, bucket: personalize }
+  - { t: place, card: trending-row, bucket: personalize }
+wrongPaths:
+  - mistake: Thinks a chat bot built in Lex is what reads the mood of written reviews
+    failsGoal: g1
+    actions:
+      - { t: place, card: review-moods, bucket: lex }
+      - { t: place, card: comment-phrases, bucket: comprehend }
+      - { t: place, card: drive-speaker, bucket: polly }
+      - { t: place, card: training-audio, bucket: polly }
+      - { t: place, card: tourist-menu, bucket: translate }
+      - { t: place, card: supplier-letters, bucket: translate }
+      - { t: place, card: order-helper, bucket: lex }
+      - { t: place, card: hours-line, bucket: lex }
+      - { t: place, card: member-picks, bucket: personalize }
+      - { t: place, card: trending-row, bucket: personalize }
+  - mistake: Treats reading text aloud as building a voice bot, so sends the specials to Lex
+    failsGoal: g2
+    actions:
+      - { t: place, card: review-moods, bucket: comprehend }
+      - { t: place, card: comment-phrases, bucket: comprehend }
+      - { t: place, card: drive-speaker, bucket: lex }
+      - { t: place, card: training-audio, bucket: polly }
+      - { t: place, card: tourist-menu, bucket: translate }
+      - { t: place, card: supplier-letters, bucket: translate }
+      - { t: place, card: order-helper, bucket: lex }
+      - { t: place, card: hours-line, bucket: lex }
+      - { t: place, card: member-picks, bucket: personalize }
+      - { t: place, card: trending-row, bucket: personalize }
+  - mistake: Thinks Comprehend, because it detects a text's language, also translates it
+    failsGoal: g3
+    actions:
+      - { t: place, card: review-moods, bucket: comprehend }
+      - { t: place, card: comment-phrases, bucket: comprehend }
+      - { t: place, card: drive-speaker, bucket: polly }
+      - { t: place, card: training-audio, bucket: polly }
+      - { t: place, card: tourist-menu, bucket: translate }
+      - { t: place, card: supplier-letters, bucket: comprehend }
+      - { t: place, card: order-helper, bucket: lex }
+      - { t: place, card: hours-line, bucket: lex }
+      - { t: place, card: member-picks, bucket: personalize }
+      - { t: place, card: trending-row, bucket: personalize }
+  - mistake: Thinks Polly's lifelike speech can also understand callers and answer them
+    failsGoal: g4
+    actions:
+      - { t: place, card: review-moods, bucket: comprehend }
+      - { t: place, card: comment-phrases, bucket: comprehend }
+      - { t: place, card: drive-speaker, bucket: polly }
+      - { t: place, card: training-audio, bucket: polly }
+      - { t: place, card: tourist-menu, bucket: translate }
+      - { t: place, card: supplier-letters, bucket: translate }
+      - { t: place, card: order-helper, bucket: lex }
+      - { t: place, card: hours-line, bucket: polly }
+      - { t: place, card: member-picks, bucket: personalize }
+      - { t: place, card: trending-row, bucket: personalize }
+  - mistake: Thinks text insights from Comprehend are what pick drinks for each member
+    failsGoal: g5
+    actions:
+      - { t: place, card: review-moods, bucket: comprehend }
+      - { t: place, card: comment-phrases, bucket: comprehend }
+      - { t: place, card: drive-speaker, bucket: polly }
+      - { t: place, card: training-audio, bucket: polly }
+      - { t: place, card: tourist-menu, bucket: translate }
+      - { t: place, card: supplier-letters, bucket: translate }
+      - { t: place, card: order-helper, bucket: lex }
+      - { t: place, card: hours-line, bucket: lex }
+      - { t: place, card: member-picks, bucket: comprehend }
+      - { t: place, card: trending-row, bucket: personalize }
+debrief:
+  lines:
+    - Pre-built AI services hand the cafe trained models for set jobs, so it can start fast without data scientists.
+    - Comprehend pulls sentiment and key phrases out of text, while Translate turns that text into another language.
+    - Polly only turns written text into lifelike speech, while Lex understands a guest's voice or text and holds the conversation.
+    - Personalize draws on past orders to give each customer picks of their own.
+  questions: [q-nmx60t, q-jrynbv, q-0m2gyc]
