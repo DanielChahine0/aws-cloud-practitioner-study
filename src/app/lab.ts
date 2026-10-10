@@ -48,14 +48,38 @@ export function labDoneLine(day: string): string {
   return `Done on ${shortDate(day)}; a rerun pays no XP.`;
 }
 
-/** Announced when a card lands in a bucket. */
+/** Announced when a card lands in a bucket or a piece in a slot. */
 export function placedLine(card: string, bucket: string): string {
   return `Placed ${card} in ${bucket}.`;
 }
 
-/** Announced when a card goes back to the tray. */
+/** Announced when a card or a piece goes back to the tray. */
 export function returnedLine(card: string): string {
   return `${card} is back in the tray.`;
+}
+
+/** The Place tray once every piece is in a slot or on the bench. */
+export const PIECES_EMPTY = 'Every piece is placed.';
+/** The Place tray's legend, read by screen readers. */
+export const PIECES_LEGEND = 'Pieces';
+/** The legend over the Place failure buttons. */
+export const FAILURE_LEGEND = 'Try a failure';
+/** The word on a failed container and on each piece below it, so colour is never the only signal (spec 7.6). */
+export const DOWN_MARK = 'Down';
+
+/** A Place failure button: `Oven Row A fails`. */
+export function failureButton(label: string): string {
+  return `${label} fails`;
+}
+
+/** Announced when a failure preview starts. */
+export function downLine(label: string): string {
+  return `${label} is down.`;
+}
+
+/** Announced when a failure preview ends. */
+export function backLine(label: string): string {
+  return `${label} is back.`;
 }
 
 /** The check button's words: Simulate runs the model before it checks (Task 13). */

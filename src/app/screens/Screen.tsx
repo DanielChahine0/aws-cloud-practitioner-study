@@ -3,8 +3,6 @@ import { pad2, type Route } from '../router.ts';
 import { Home } from './Home.tsx';
 import { lazyScreen } from './Lazy.tsx';
 import { LessonPage } from './LessonPage.tsx';
-import { MissionPage } from './MissionPage.tsx';
-import { MissionsPage } from './MissionsPage.tsx';
 import { ModulePage } from './ModulePage.tsx';
 import { NotFound } from './NotFound.tsx';
 import { Runner } from './Runner.tsx';
@@ -16,6 +14,9 @@ const ResultsScreen = lazyScreen(() => import('./Results.tsx').then((m) => m.Res
 const LightningScreen = lazyScreen(() => import('./Lightning.tsx').then((m) => m.Lightning));
 // The lab screen, its engine views and their copy load on first use too.
 const LabScreen = lazyScreen(() => import('./Lab.tsx').then((m) => m.Lab));
+// The mission screens and their flow load on first use too; the top bar's live chip is all missions add up front.
+const MissionsScreen = lazyScreen(() => import('./MissionsPage.tsx').then((m) => m.MissionsPage));
+const MissionScreen = lazyScreen(() => import('./MissionPage.tsx').then((m) => m.MissionPage));
 const IncidentScreen = lazyScreen(() => import('./Incident.tsx').then((m) => m.Incident));
 
 /** The screen for a route; the content index is always loaded by the time this renders. */
@@ -28,9 +29,9 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
     case 'lesson':
       return <LessonPage idx={idx} module={route.module} slug={route.slug} anchor={route.anchor} />;
     case 'missions':
-      return <MissionsPage idx={idx} />;
+      return <MissionsScreen idx={idx} />;
     case 'mission':
-      return <MissionPage idx={idx} id={route.id} />;
+      return <MissionScreen idx={idx} id={route.id} />;
     // Keyed by the route object, which every arrival replaces, so "Another quiz" on the quiz route starts afresh.
     case 'check':
       return <Runner key={route} idx={idx} mode="check" scope={`m${pad2(route.module)}/${route.slug}`} />;

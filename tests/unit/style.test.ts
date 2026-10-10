@@ -3,7 +3,14 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { LessonNote } from '../../scripts/content/lib/context.ts';
 import { loadContext } from '../../scripts/content/lib/context.ts';
-import { coverageProblems, isOpen, moduleStyle, styleProblems } from '../../scripts/content/lib/style.ts';
+import {
+  coverageProblems,
+  isOpen,
+  labStyleProblems,
+  moduleStyle,
+  retiredPlanProblems,
+  styleProblems,
+} from '../../scripts/content/lib/style.ts';
 import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
 import { matchQuestion, multiQuestion, singleQuestion, writeQuestions } from '../fixtures/questions.ts';
 
@@ -162,5 +169,23 @@ describe('coverageProblems', () => {
     expect(coverageProblems(FILE, loadContext(root, { today: FIXTURE_TODAY }))).toEqual([
       'concept shared-kitchen has 1 question that can still go live; it needs 2',
     ]);
+  });
+});
+
+describe('retiredPlanProblems', () => {
+  it('names each text with a retired Support plan, and labStyleProblems is the same matcher', () => {
+    const texts = [
+      'Pick Developer Support for tests.',
+      'Business Support+ answers in an hour.',
+      'Business Support answers in a day.',
+      'Enterprise On-Ramp adds a pool of managers.',
+      'Enterprise Support adds a TAM.',
+    ];
+    expect(retiredPlanProblems(texts)).toEqual([
+      "retired Support plan name in 'Pick Developer Support for tests.'",
+      "retired Support plan name in 'Business Support answers in a day.'",
+      "retired Support plan name in 'Enterprise On-Ramp adds a pool of managers.'",
+    ]);
+    expect(labStyleProblems(texts)).toEqual(retiredPlanProblems(texts));
   });
 });

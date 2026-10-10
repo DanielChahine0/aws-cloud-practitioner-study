@@ -92,6 +92,21 @@ Hints are free, but a lab finished without one pays 10 XP more; only a lab's fir
 Unfinished work stays in the browser, so a lab resumes after a reload, and labs work offline like the rest of the site.
 `pnpm content:validate --draft <lab file>` checks one lab, and rule R11 replays every lab's solution and wrong paths on each commit.
 
+## Configure and Simulate labs
+
+Configure labs walk a short wizard of choices, and Check judges the finished setup against the goals.
+Simulate labs set a few parameters, and `Enter` (or `Run and check`) runs the lab's fixed model before it checks the goals, so the goals always read the parameters on screen.
+Every price in a lab is in lab credits, a made-up unit, never an AWS price.
+The six Simulate labs take their constants, solutions and wrong paths from fixed tables, and `tests/content/sim-labs.test.ts` pins the outcome each lesson rests on.
+
+## Incidents and lightning
+
+Once every Module 2 lesson is read, Home offers one incident a day on the extras line, picked from the weakest read modules, and it stays the day's incident until 04:00.
+An incident runs at `#/s/incident` as 2 to 4 practice steps with the bet buttons; solving it pays 15 XP when every step is right, else 8, once a day, and the day counts toward the streak.
+Incidents live in `content/incidents/inc-NNN.yaml`; `pnpm --silent content:report --incident-targets` lists what each module still needs, and the check rounds run over their steps with `--pool incident`.
+The lightning round at `#/s/lightning` opens once 20 concepts have settled (an FSRS stability of at least 3 days) and asks single practice items for 90 seconds, with a summary at the end.
+Only the first round of a study day pays, 1 XP per right answer up to 10; lightning never moves a card or the streak, and every miss comes back in today's review.
+
 ## Course text stays out
 
 The course text lives only in `~/Library/Application Support/ccp-study/`, outside this repository.

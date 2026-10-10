@@ -1,0 +1,138 @@
+id: lab-m02-launch-the-order-server
+module: 2
+title: Launch the order server
+engine: configure
+tier: core
+status: live
+rev: 1
+concepts:
+  - ec2-instance-families
+  - general-purpose-instances
+  - compute-optimized-instances
+  - on-demand-instances
+  - savings-plans
+  - reserved-instances
+  - spot-instances
+  - launching-ec2-instances
+  - security-groups
+notes:
+  - m02/amazon-ec2-instance-types
+  - m02/amazon-ec2-pricing
+  - m02/introduction-to-amazon-ec2
+  - m02/how-to-provision-aws-resources
+  - m02/demo-launching-an-amazon-ec2-instance
+  - m05/subnets-security-groups-and-network-access-control-lists
+minutes: 5
+brief: >-
+  The cafe's online ordering site needs one EC2 instance that takes orders day and night, all year, and an order lost to a stopped server is a lost sale.
+  The site uses CPU, memory and network about evenly, the owner wants a discount for use she can predict all year, and staff update the site by logging in over SSH from the cafe's own network.
+  Pick the instance family and how to pay for it, then set which traffic the security group lets in.
+spec:
+  fields:
+    - kind: select
+      id: instance-family
+      label: Instance family
+      options:
+        - id: general-purpose
+          label: General purpose
+          detail: A balanced mix of CPU, memory, storage and networking.
+        - id: compute-optimized
+          label: Compute optimized
+          detail: Built for CPU-heavy work such as game servers and scientific modeling.
+        - id: memory-optimized
+          label: Memory optimized
+          detail: Built for fast in-memory processing of large datasets.
+        - id: accelerated-computing
+          label: Accelerated computing
+          detail: Adds hardware accelerators such as GPUs.
+        - id: storage-optimized
+          label: Storage optimized
+          detail: Built for fast access to large data on local disks.
+      initial: memory-optimized
+    - kind: select
+      id: purchase
+      label: Purchase option
+      options:
+        - id: on-demand
+          label: On-Demand Instances
+          detail: No commitment, billed per hour or second while it runs.
+        - id: savings-plans
+          label: Savings Plans
+          detail: Commit to an hourly compute spend for 1 or 3 years.
+        - id: reserved-instances
+          label: Reserved Instances
+          detail: Commit for 1 or 3 years to one family and Region.
+        - id: spot-instances
+          label: Spot Instances
+          detail: Spare capacity that AWS can reclaim after a two-minute warning.
+        - id: dedicated-hosts
+          label: Dedicated Hosts
+          detail: A whole physical server for the cafe alone.
+        - id: dedicated-instances
+          label: Dedicated Instances
+          detail: Hardware used only by the cafe's account, on a server AWS picks.
+      initial: on-demand
+    - kind: toggle
+      id: https-anywhere
+      label: Allow HTTPS in from anywhere
+      initial: false
+    - kind: toggle
+      id: ssh-anywhere
+      label: Allow SSH in from anywhere
+      initial: false
+    - kind: toggle
+      id: ssh-cafe
+      label: Allow SSH in from the cafe's network only
+      initial: false
+  rules:
+    - { goal: g1, field: instance-family, in: [general-purpose] }
+    - { goal: g2, field: purchase, in: [savings-plans, reserved-instances] }
+    - { goal: g3, field: https-anywhere, in: [true] }
+    - { goal: g3, field: ssh-anywhere, in: [false] }
+    - { goal: g3, field: ssh-cafe, in: [true] }
+goals:
+  - id: g1
+    label: The family fits a balanced web order server
+    hint: A web server that leans on no single resource wants a family that mixes CPU, memory and networking evenly.
+  - id: g2
+    label: The purchase option earns a commitment discount for steady, uninterrupted use
+    hint: Ask whether a steady, predictable workload that must never be interrupted earns a discount in return for a 1 or 3 year commitment.
+  - id: g3
+    label: Customers reach the site over HTTPS and only the cafe can log in
+    hint: A security group blocks every inbound sender until a rule allows it, so open only what each kind of visitor needs.
+solution:
+  - { t: set, field: instance-family, value: general-purpose }
+  - { t: set, field: purchase, value: savings-plans }
+  - { t: set, field: https-anywhere, value: true }
+  - { t: set, field: ssh-cafe, value: true }
+wrongPaths:
+  - mistake: Picks Spot Instances for the order server because they carry the deepest discount
+    failsGoal: g2
+    actions:
+      - { t: set, field: instance-family, value: general-purpose }
+      - { t: set, field: purchase, value: spot-instances }
+      - { t: set, field: https-anywhere, value: true }
+      - { t: set, field: ssh-anywhere, value: false }
+      - { t: set, field: ssh-cafe, value: true }
+  - mistake: Picks compute optimized for a balanced web load, thinking more CPU is always safer
+    failsGoal: g1
+    actions:
+      - { t: set, field: instance-family, value: compute-optimized }
+      - { t: set, field: purchase, value: savings-plans }
+      - { t: set, field: https-anywhere, value: true }
+      - { t: set, field: ssh-anywhere, value: false }
+      - { t: set, field: ssh-cafe, value: true }
+  - mistake: Opens SSH to anyone on the internet so staff can log in from home
+    failsGoal: g3
+    actions:
+      - { t: set, field: instance-family, value: general-purpose }
+      - { t: set, field: purchase, value: reserved-instances }
+      - { t: set, field: https-anywhere, value: true }
+      - { t: set, field: ssh-anywhere, value: true }
+      - { t: set, field: ssh-cafe, value: true }
+debrief:
+  lines:
+    - General purpose instances mix CPU, memory and networking evenly, so they suit a web server that leans on no single resource.
+    - A server that runs steadily all year earns a Savings Plan or Reserved Instance discount, while Spot fits only work that can be interrupted.
+    - A security group lets in only the traffic its rules allow, so customers get HTTPS and only the cafe gets SSH.
+  questions: [q-7ft11h, q-kc0z3b, q-jgx1ne]

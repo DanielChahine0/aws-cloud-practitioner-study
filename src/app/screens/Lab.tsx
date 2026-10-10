@@ -2,11 +2,14 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/ho
 import type { ContentIndex, LabView, QuestionView } from '../../../schemas/chunks.ts';
 import type { NewEvent } from '../../../schemas/events.ts';
 import type { ConfigureSpec, SimulateSpec, SortAction, SortSpec } from '../../../schemas/lab.ts';
+import type { PlaceAction, PlaceSpec } from '../../../schemas/lab-place.ts';
 import { openSession } from '../../engine/replay.ts';
 import type { ConfigureState } from '../../labs/configure/model.ts';
 import { ConfigureView } from '../../labs/configure/View.tsx';
 import { allPass, type GoalResult, replayLab } from '../../labs/contract.ts';
 import { checkLab, type EngineEntry, engineOf } from '../../labs/engines.ts';
+import { type PlaceState, placeSlots } from '../../labs/place/model.ts';
+import { PlaceView } from '../../labs/place/View.tsx';
 import type { SimulateState } from '../../labs/simulate/model.ts';
 import { SimulateView } from '../../labs/simulate/View.tsx';
 import type { SortState } from '../../labs/sort/model.ts';
@@ -18,8 +21,10 @@ import { useTitle } from '../../ui/useTitle.ts';
 import { ensureModule, modules } from '../content.ts';
 import { gPending, isControl, isTyping } from '../keyboard.ts';
 import {
+  backLine,
   CREDITS_NOTE,
   checkLabel,
+  downLine,
   goalWord,
   hintLine,
   labCheckLine,
@@ -193,18 +198,34 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
     return () => el.removeEventListener('focusin', rove);
   }, []);
 
-  const sort = lab.engine === 'sort' ? (lab.spec as SortSpec) : null;
+  const hold = useMemo(() => holdBoard(lab), [lab]);
 
-  const place = (card: string, bucket: string): void => {
-    if (sort === null) return;
-    dispatch({ t: 'place', card, bucket } satisfies SortAction);
+  const place = (item: string, target: string): void => {
+    if (hold === null) return;
+    dispatch(hold.place(item, target));
     setHeld(null);
-    const text = sort.cards.find((c) => c.id === card)?.text ?? '';
-    const label = sort.buckets.find((b) => b.id === bucket)?.label ?? '';
-    setAnnounce(placedLine(text, label));
+    setAnnounce(placedLine(hold.itemLabel(item), hold.targetLabel(target)));
   };
   const onSortAction = (action: SortAction): void => {
     if (action.t === 'place') place(action.card, action.bucket);
+    else dispatch(action);
+  };
+  // A failure preview changes no check, so it is announced at once: which container went down or came back.
+  const onPlaceAction = (action: PlaceAction): void => {
+    if (action.t === 'place') {
+      place(action.piece, action.slot);
+      return;
+    }
+    const spec = lab.spec as PlaceSpec;
+    const labelOf = (id: string | null): string => spec.containers.find((c) => c.id === id)?.label ?? '';
+    const was = (replayLab(engine, lab.spec, live.current.draft.actions) as PlaceState).failed;
+    dispatch(action);
+    if (action.t === 'fail') setAnnounce(downLine(labelOf(action.container)));
+    if (action.t === 'restore') setAnnounce(backLine(labelOf(was)));
+  };
+  const onBoardAction = (action: unknown): void => {
+    if (lab.engine === 'sort') onSortAction(action as SortAction);
+    else if (lab.engine === 'place') onPlaceAction(action as PlaceAction);
     else dispatch(action);
   };
 
@@ -226,28 +247,26 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
         setAsking(true);
         break;
       case 'place': {
-        const bucket = sort?.buckets[command.bucket - 1];
-        const card = live.current.held;
-        if (card === null || bucket === undefined) break;
-        place(card, bucket.id);
-        // Sorting goes on from the tray's first card, or from the bucket once the tray is empty.
+        const target = hold?.targets[command.bucket - 1];
+        const item = live.current.held;
+        if (hold === null || item === null || target === undefined) break;
+        place(item, target);
+        // Placing goes on from the tray's first item, or from the target once the tray is empty.
         requestAnimationFrame(() => {
           const next =
-            board.current?.querySelector<HTMLElement>('.sort-tray [data-lab-item]') ??
-            document.getElementById(`bucket-${bucket.id}`);
+            board.current?.querySelector<HTMLElement>(hold.trayItem()) ??
+            document.getElementById(hold.targetId(target));
           next?.focus();
         });
         break;
       }
       case 'unplace': {
-        const card = live.current.held;
-        if (card === null || sort === null) break;
-        dispatch({ t: 'unplace', card } satisfies SortAction);
+        const item = live.current.held;
+        if (item === null || hold === null) break;
+        dispatch(hold.unplace(item));
         setHeld(null);
-        setAnnounce(returnedLine(sort.cards.find((c) => c.id === card)?.text ?? ''));
-        requestAnimationFrame(() =>
-          board.current?.querySelector<HTMLElement>(`.sort-tray [data-card="${card}"]`)?.focus(),
-        );
+        setAnnounce(returnedLine(hold.itemLabel(item)));
+        requestAnimationFrame(() => board.current?.querySelector<HTMLElement>(hold.trayItem(item))?.focus());
         break;
       }
       case 'drop':
@@ -266,7 +285,7 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
   };
   const runRef = useRef(run);
   runRef.current = run;
-  const shape = { engine: lab.engine, buckets: sort?.buckets.length ?? 0 };
+  const shape = { engine: lab.engine, buckets: Math.min(10, hold?.targets.length ?? 0) };
   const boardKeys = useRef(shape);
   boardKeys.current = shape;
 
@@ -295,12 +314,12 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
           holding: live.current.held !== null,
           bucketCount: boardKeys.current.buckets,
           inItems: element?.closest('[data-lab-item]') != null,
-          // A button, link or summary keeps Enter for its own action; a card, a bucket target, a select or a
-          // checkbox does not, so Enter checks from them.
+          // A button, link or summary keeps Enter for its own action; a card, a piece, a bucket or slot target, a
+          // select or a checkbox does not, so Enter checks from them.
           onControl:
             element !== null &&
             element.closest('a, button, summary') !== null &&
-            element.closest('.card, .bucket-target') === null,
+            element.closest('.card, .bucket-target, .piece, .slot-target') === null,
           gPending: gPending(event.timeStamp),
           confirmOpen: live.current.asking,
           done: live.current.done,
@@ -340,13 +359,7 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
       {lab.credits && <p class="muted credits-note">{CREDITS_NOTE}</p>}
       {!done && (
         <section class="lab-board" aria-label="Workspace" ref={board}>
-          <Board
-            lab={lab}
-            state={state}
-            held={held}
-            onHold={setHeld}
-            onAction={lab.engine === 'sort' ? onSortAction : dispatch}
-          />
+          <Board lab={lab} state={state} held={held} onHold={setHeld} onAction={onBoardAction} />
         </section>
       )}
       <section class="lab-goals" aria-labelledby="lab-goals-title">
@@ -489,6 +502,64 @@ function Board(props: {
       return (
         <SimulateView spec={lab.spec as SimulateSpec} state={state as SimulateState} onAction={onAction} />
       );
+    case 'place':
+      return (
+        <PlaceView
+          spec={lab.spec as PlaceSpec}
+          state={state as PlaceState}
+          held={held}
+          onHold={onHold}
+          onAction={onAction}
+        />
+      );
+  }
+}
+
+/** A board where a held item goes into a target (Sort's cards and buckets, Place's pieces and slots). */
+interface HoldBoard {
+  /** The target ids in the order the digit keys number them. */
+  readonly targets: readonly string[];
+  itemLabel(item: string): string;
+  targetLabel(target: string): string;
+  place(item: string, target: string): unknown;
+  unplace(item: string): unknown;
+  /** The selector of an item in the tray, or of the tray's first item. */
+  trayItem(item?: string): string;
+  /** The element id of a target's button. */
+  targetId(target: string): string;
+}
+
+/** The pick-up-and-place shape of a Sort or Place lab, or null for an engine without one. */
+function holdBoard(lab: LabView): HoldBoard | null {
+  switch (lab.engine) {
+    case 'sort': {
+      const spec = lab.spec as SortSpec;
+      return {
+        targets: spec.buckets.map((b) => b.id),
+        itemLabel: (card) => spec.cards.find((c) => c.id === card)?.text ?? '',
+        targetLabel: (bucket) => spec.buckets.find((b) => b.id === bucket)?.label ?? '',
+        place: (card, bucket) => ({ t: 'place', card, bucket }) satisfies SortAction,
+        unplace: (card) => ({ t: 'unplace', card }) satisfies SortAction,
+        trayItem: (card) =>
+          card === undefined ? '.sort-tray [data-lab-item]' : `.sort-tray [data-card="${card}"]`,
+        targetId: (bucket) => `bucket-${bucket}`,
+      };
+    }
+    case 'place': {
+      const spec = lab.spec as PlaceSpec;
+      return {
+        targets: placeSlots(spec),
+        itemLabel: (piece) => spec.pieces.find((p) => p.id === piece)?.label ?? '',
+        targetLabel: (slot) => spec.containers.find((c) => c.id === slot)?.label ?? '',
+        place: (piece, slot) => ({ t: 'place', piece, slot }) satisfies PlaceAction,
+        unplace: (piece) => ({ t: 'unplace', piece }) satisfies PlaceAction,
+        trayItem: (piece) =>
+          piece === undefined ? '.place-tray [data-lab-item]' : `.place-tray [data-piece="${piece}"]`,
+        targetId: (slot) => `place-${slot}`,
+      };
+    }
+    default:
+      return null;
   }
 }
 
