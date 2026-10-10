@@ -64,6 +64,8 @@ export interface SessionState {
   /** The first answer per question in this session; later answers to the same question never count. */
   answers: ReadonlyMap<string, AnswerRecord>;
   startedAt: string;
+  /** The study day stamped on the start event, which a lightning round's pay counts in (spec 3.2). */
+  startDay: string;
   submittedAt: string | null;
   abandoned: boolean;
   /** A mock's form (`A` to `D` or `remix`), else null. */
@@ -200,6 +202,7 @@ function applySession(
       qids: e.qids ?? [],
       answers: new Map(),
       startedAt: e.at,
+      startDay: e.day,
       submittedAt: null,
       abandoned: false,
       form: e.form ?? null,

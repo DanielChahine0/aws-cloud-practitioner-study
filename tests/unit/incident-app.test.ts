@@ -40,6 +40,7 @@ const session = (answers: readonly AnswerRecord[], qids = ['q-aaa', 'q-bbb']): S
   qids,
   answers: new Map(answers.map((a) => [a.qid, a])),
   startedAt: '2026-10-20T09:59:00.000Z',
+  startDay: '2026-10-20',
   submittedAt: null,
   abandoned: false,
   form: null,
