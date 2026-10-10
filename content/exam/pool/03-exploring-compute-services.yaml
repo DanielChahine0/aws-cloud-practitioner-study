@@ -1,0 +1,690 @@
+questions:
+  - id: q-7fs3wp
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: managed-services
+    note: m03/introduction-to-serverless-computing
+    task: "1.4"
+    level: 3
+    stem: >-
+      An online bookstore spends many staff hours patching and restarting the message queue servers it runs itself.
+      It wants to cut that recurring operations cost while its systems keep pulling orders from a queue as they do today.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SQS
+        correct: true
+        why: SQS is a managed queue that AWS keeps running once configured, so the staff hours go away and orders still wait in a queue.
+      - id: b
+        text: Amazon SNS
+        why: SNS is managed too, but it pushes messages to subscribers instead of holding them in a queue, so the order flow would change.
+      - id: c
+        text: Amazon EC2
+        why: Moving the queue servers to EC2 instances leaves the bookstore patching and restarting them, so the operations cost stays.
+      - id: d
+        text: Amazon Lightsail
+        why: A Lightsail server bundle is still a server the bookstore looks after, so the patching hours do not shrink.
+    evidence:
+      - After you configure one, AWS keeps it running with no server management on your part.
+      - ELB, SNS and SQS are earlier examples.
+    takeaway: A managed service takes day-to-day server upkeep off the payroll once it is configured.
+    history: []
+    verified:
+      keyHash: 6d396568fe74
+      fullHash: 8940203d3be3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-km0d87
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: fully-managed-services
+    note: m03/introduction-to-serverless-computing
+    task: "1.4"
+    level: 1
+    stem: >-
+      Which service model removes the most infrastructure labor from a company's operating costs, leaving its staff to look after only the application code and its security?
+    options:
+      - id: a
+        text: Fully managed services
+        correct: true
+        why: AWS provisions, scales and runs every server, so the only work left in-house is the code and its security.
+      - id: b
+        text: Managed services
+        why: AWS runs these day to day, but some provisioning or configuration can still fall to the company's staff.
+      - id: c
+        text: Unmanaged services
+        why: The company still patches, scales and secures each instance, so the infrastructure labor stays on its books.
+      - id: d
+        text: Self-hosted servers on premises
+        why: Owning the hardware keeps every layer of infrastructure work, and its cost, with the company.
+    evidence:
+      - "Fully managed, like serverless Lambda: there are no servers for you to provision or manage, and AWS also covers scaling and availability."
+      - What stays with you under Lambda is the application code and keeping it secure.
+    takeaway: Fully managed services shrink a customer's infrastructure work, and its cost, down to its own code.
+    history: []
+    verified:
+      keyHash: 37b8f2881e02
+      fullHash: e5e515455a54
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6b8kt1
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: unmanaged-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 3
+    stem: >-
+      A bike rental shop runs its booking app on Amazon EC2 instances.
+      Under the AWS shared responsibility model, which task falls to the shop on EC2 that a fully managed service such as AWS Lambda would take off its hands?
+    options:
+      - id: a
+        text: Patching the guest operating system on each instance
+        correct: true
+        why: On EC2 each instance's OS belongs to the shop, while under Lambda AWS patches that environment instead.
+      - id: b
+        text: Writing and securing the booking app's own code
+        why: The app code and its security stay with the shop on EC2 and on Lambda alike, so nothing moves.
+      - id: c
+        text: Replacing failed hardware in the host servers
+        why: AWS already runs the physical servers under EC2, so this task is not the shop's in either model.
+      - id: d
+        text: Guarding the facilities that house the host servers
+        why: Physical security of the data centers is AWS's share under EC2 as well, so the shop never held it.
+    evidence:
+      - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
+      - What stays with you under Lambda is the application code and keeping it secure.
+    takeaway: With unmanaged compute like EC2, AWS keeps the hardware and the customer keeps each instance's OS.
+    history: []
+    verified:
+      keyHash: 5cd119075687
+      fullHash: 65b30f06278e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-s73f69
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: serverless-computing
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 3
+    stem: >-
+      A veterinary practice moves its appointment reminder app from Amazon EC2 instances it manages itself to serverless compute.
+      Which task moves from the practice to AWS because of this change?
+    options:
+      - id: a
+        text: Provisioning and scaling the servers that run the code
+        correct: true
+        why: On EC2 the practice sized and scaled its instances, and with serverless compute AWS provisions and scales the hidden servers.
+      - id: b
+        text: Guarding the data centers where the servers are housed
+        why: AWS already secured the facilities while the app ran on EC2, so this task does not move with the change.
+      - id: c
+        text: Writing and securing the reminder app's own code
+        why: The app's code and its security stay with the practice under serverless compute as well.
+      - id: d
+        text: Deciding which staff accounts may change the app
+        why: Who may change the app is an access choice that the practice still makes after the move.
+    evidence:
+      - The servers hosting your app are hidden and out of reach.
+      - AWS handles provisioning, maintenance, scaling and high availability.
+    takeaway: Serverless compute hands server provisioning and scaling to AWS while the customer keeps its code and data duties.
+    history: []
+    verified:
+      keyHash: 65c6512a0189
+      fullHash: 06067aa7b203
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zk21m1
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-lambda
+    note: m03/aws-lambda
+    task: "2.1"
+    level: 2
+    stem: >-
+      A travel agency's fare alert feature runs as AWS Lambda functions.
+      After a change, the functions are refused each time they try to read messages from an Amazon SQS queue.
+      Which task must the agency carry out to fix this?
+    options:
+      - id: a
+        text: Updating the IAM role the functions run with
+        correct: true
+        why: The agency owns the IAM role and permissions its functions use to reach other services, so it grants the queue read.
+      - id: b
+        text: Reviewing the security of the function code itself
+        why: The code is the agency's to secure, but a refused read of another service comes from missing permissions.
+      - id: c
+        text: Patching the environment the functions run in
+        why: AWS patches and secures the Lambda environment, and patches would not grant the functions the queue read.
+      - id: d
+        text: Adding capacity for the functions as alerts grow
+        why: Lambda scales on its own, and more capacity would not let the functions read a queue they are refused.
+    evidence:
+      - You own the code and the IAM roles and permissions the function uses to reach other services.
+      - AWS patches, updates and secures the underlying environment and allocates its resources.
+    takeaway: With Lambda, AWS runs and patches the environment, while the customer owns its code and IAM permissions.
+    history: []
+    verified:
+      keyHash: 0a6541443f0b
+      fullHash: c7c7ac7fec42
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-dnjtcr
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: managed-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 3
+    stem: >-
+      Which split of the work describes a managed service, such as Amazon SQS, as opposed to on-premises servers, unmanaged compute or fully managed compute?
+    options:
+      - id: a
+        text: AWS operates it day to day, and the customer handles some of its configuration
+        correct: true
+        why: A managed service such as SQS lifts most of the operating work, yet some provisioning or configuration can stay with the customer.
+      - id: b
+        text: AWS operates only its hardware, and the customer handles each instance's OS
+        why: Owning each instance's OS is the unmanaged EC2 split from the stem, which a managed service takes away.
+      - id: c
+        text: AWS operates every server under it, and the customer handles just its code
+        why: Leaving only the code is the fully managed serverless split from the stem, while a managed service can still need setup.
+      - id: d
+        text: AWS operates none of it, and the customer handles every layer of its own hardware
+        why: Running every layer in-house is the on-premises split from the stem, not a service that AWS runs day to day.
+    evidence:
+      - "Managed: AWS absorbs much of the operational overhead, though some provisioning or configuration may remain yours depending on the service."
+    takeaway: Managed services sit between unmanaged and serverless, with AWS running them and some setup left to the customer.
+    history: []
+    verified:
+      keyHash: 18822b66a8d2
+      fullHash: 1bab8b699588
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-y3v5vb
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-elastic-beanstalk
+    note: m03/additional-compute-services
+    task: "3.1"
+    level: 3
+    stem: >-
+      A county library's small IT team wants to deploy its web catalog by handing AWS its code and settings.
+      AWS should then build the load balancing, scaling and health checks, while the team keeps control of every resource.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Elastic Beanstalk
+        correct: true
+        why: Elastic Beanstalk takes code and settings and builds the scaling, load balancing and health checks, while the team keeps control.
+      - id: b
+        text: AWS CloudFormation
+        why: CloudFormation builds resources from templates the team writes, rather than taking app code and deploying it.
+      - id: c
+        text: Amazon Lightsail
+        why: Lightsail sells simple server bundles at a set price, and it does not build an auto-scaled environment from code.
+      - id: d
+        text: Amazon EC2 Auto Scaling
+        why: Auto Scaling adjusts instance counts but leaves the deployment, load balancing and health checks to the team.
+    evidence:
+      - Give this fully managed service code and settings, and it builds the EC2 setup, scaling, load balancing and health checks.
+      - You can save configurations to redeploy and still control every resource.
+    takeaway: Elastic Beanstalk turns uploaded code into a scaled, load-balanced environment that the customer still controls.
+    history: []
+    verified:
+      keyHash: 59299eb62235
+      fullHash: 019a0e29ec65
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-heggdz
+    version: 1
+    status: retired
+    type: multi
+    select: 2
+    pool: exam
+    concept: aws-outposts
+    note: m03/additional-compute-services
+    task: "3.1"
+    level: 2
+    stem: >-
+      A hospital network is weighing AWS Outposts for some of its clinical workloads.
+      Which needs are reasons to choose Outposts?
+    options:
+      - id: a
+        text: Keeping patient records in its own facility for residency rules
+        correct: true
+        why: Outposts runs AWS services inside the network's own facility, so the records can stay where the residency rules require.
+      - id: b
+        text: Cutting the delay between AWS compute and its local devices
+        correct: true
+        why: Outposts places AWS compute next to the hospital's on-site devices, which keeps the latency between them low.
+      - id: c
+        text: Closing its data center to stop paying for the floor space
+        why: Outposts racks sit in the network's own data center, so choosing Outposts keeps that space rather than closing it.
+      - id: d
+        text: Serving its users from AWS Regions on several continents
+        why: Reaching users through Regions abroad is a choice of Regions in the cloud, not a reason to bring AWS into the hospital.
+      - id: e
+        text: Paying one predictable monthly price for a small website
+        why: A set monthly price for a small site is what Lightsail offers, not a reason to place AWS racks in the hospital.
+    evidence:
+      - A fully managed hybrid cloud offering that brings AWS compute, storage and networking into your data center.
+      - It fits compliance, data residency, low latency, remote sites and legacy app modernization.
+    takeaway: Outposts brings AWS on premises for hybrid needs such as data residency and low latency to local systems.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 5 are the only two that need on-premises presence, forming the one pair.)"
+  - id: q-ekr8z5
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-fargate
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 3
+    stem: >-
+      An event ticketing company runs its web app in containers orchestrated by Amazon ECS.
+      Its traffic swings sharply, and the team would rather leave the virtual machines under the containers to AWS.
+      Which compute option should run the containers?
+    options:
+      - id: a
+        text: AWS Fargate
+        correct: true
+        why: Fargate runs ECS containers on servers AWS manages, and the company pays only for the resources used.
+      - id: b
+        text: Amazon EC2 instances
+        why: The EC2 launch type leaves the virtual machines under the containers for the team to manage.
+      - id: c
+        text: AWS Lambda
+        why: Lambda runs functions on events, and it is not a launch type for containers orchestrated by ECS.
+      - id: d
+        text: Amazon Lightsail
+        why: Lightsail sells fixed server bundles, so the team would still run machines and not get an ECS launch type.
+    evidence:
+      - "Fargate: serverless, so AWS runs the servers while ECS or EKS orchestrates, and you pay only for resources used."
+      - "EC2: you manage the VMs under your containers, for full control plus upkeep."
+    takeaway: Fargate is the serverless launch type for ECS or EKS when a team wants no virtual machines to manage.
+    history: []
+    verified:
+      keyHash: b8ffc5178594
+      fullHash: ef5505ed7e9d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-fq6vbz
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-ecs
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which AWS service is a streamlined container orchestrator built by AWS, which deploys and scales containers once a team sets the images and resources such as load balancers?
+    options:
+      - id: a
+        text: Amazon ECS
+        correct: true
+        why: ECS is AWS's own integrated orchestrator, and it manages containers once the images and resources are set.
+      - id: b
+        text: Amazon EKS
+        why: EKS orchestrates containers by running Kubernetes, the open source platform, rather than AWS's own orchestrator.
+      - id: c
+        text: Amazon ECR
+        why: ECR is a registry that stores container images, and it does not deploy or scale containers.
+      - id: d
+        text: AWS Fargate
+        why: Fargate is serverless compute that containers run on, while an orchestrator decides what runs there.
+    evidence:
+      - ECS is the streamlined, integrated orchestrator, for Docker containers and others.
+      - You set images plus resources like instance types and load balancers, and ECS manages the rest.
+    takeaway: Amazon ECS is AWS's own streamlined container orchestrator, distinct from Kubernetes-based EKS.
+    history: []
+    verified:
+      keyHash: 39b8699fd776
+      fullHash: 7f3a3dae12e8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-vxxc1a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-eks
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 3
+    stem: >-
+      A logistics company already runs its container workloads on open source Kubernetes in its own data center.
+      It wants AWS to operate the Kubernetes control plane while its engineers keep their familiar Kubernetes tools.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EKS
+        correct: true
+        why: EKS runs Kubernetes with AWS operating each cluster's control plane, so the engineers keep their tools.
+      - id: b
+        text: Amazon ECS
+        why: ECS is AWS's own orchestrator rather than Kubernetes, so the familiar Kubernetes tools would not carry over.
+      - id: c
+        text: Amazon ECR
+        why: ECR only stores container images, and it has no Kubernetes control plane to operate.
+      - id: d
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk deploys apps from code and settings, and it does not run a Kubernetes control plane.
+    evidence:
+      - With Amazon Elastic Kubernetes Service (Amazon EKS), AWS operates the Kubernetes control plane of each cluster for you.
+      - EKS suits large-scale or hybrid setups that want extra control and flexibility.
+    takeaway: Choose Amazon EKS when a team wants Kubernetes on AWS with AWS operating the control plane.
+    history: []
+    verified:
+      keyHash: 201be5963483
+      fullHash: ef34d84643c3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-xzpdx4
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-lightsail
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 2
+    stem: >-
+      A family-owned florist wants to host a small marketing site and blog for a predictable monthly price, without learning the full AWS Management Console.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Lightsail
+        correct: true
+        why: Lightsail bundles a virtual private server with storage and networking at a set monthly price, with no need for the full console.
+      - id: b
+        text: Amazon EC2
+        why: Raw EC2 leaves the florist to choose and size each resource in the full console, with bills that vary by use.
+      - id: c
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk builds and scales EC2 resources that bill by use, so the florist gets no set monthly price.
+      - id: d
+        text: AWS Outposts
+        why: Outposts places AWS hardware in a customer's own data center, which gives neither a set small-site price nor a simpler console.
+    evidence:
+      - "A cost-effective bundle: virtual private servers (VPSs) plus storage, databases and networking, for a predictable monthly price."
+      - It skips the complexity of traditional hosting and the full AWS Management Console.
+    takeaway: Lightsail is the simple, predictably priced choice for a small site or blog.
+    history: []
+    verified:
+      keyHash: 8466732f94d9
+      fullHash: 90846223b640
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-14r2hn
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-batch
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 3
+    stem: >-
+      A university genomics lab must run a large number of parallel analysis jobs, many of which take hours each.
+      It wants AWS to schedule the jobs and scale a fleet of instances to fit the work.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Batch
+        correct: true
+        why: AWS Batch schedules jobs and scales compute across instances, which suits long, parallel genomics work.
+      - id: b
+        text: AWS Lambda
+        why: Lambda runs short, event-driven tasks, and its run time cap is too brief for hours-long jobs.
+      - id: c
+        text: Amazon Lightsail
+        why: Lightsail sells fixed server bundles for small sites, and it does not schedule or scale a job fleet.
+      - id: d
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk deploys and scales web apps, not queues of heavy compute jobs.
+    evidence:
+      - It schedules jobs and scales resources to fit them across a fleet such as EC2 instances.
+      - It fits parallel work like genomics, media transcoding and ML training.
+    takeaway: AWS Batch schedules and scales large parallel jobs that are too heavy for event-driven functions.
+    history: []
+    verified:
+      keyHash: 5586853910d9
+      fullHash: 8a756733f971
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ahkg2a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: amazon-ecr
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 1
+    stem: >-
+      Which AWS service stores container images in secure repositories, so that container orchestrators can pull them when they deploy?
+    options:
+      - id: a
+        text: Amazon ECR
+        correct: true
+        why: ECR is the managed image registry that orchestrators pull container images from.
+      - id: b
+        text: Amazon EFS
+        why: EFS is a shared file system for instances, not a registry built for container images.
+      - id: c
+        text: AWS Fargate
+        why: Fargate is the serverless compute that containers run on, and it does not keep image repositories.
+      - id: d
+        text: Amazon EKS
+        why: EKS orchestrates containers with Kubernetes, and it pulls images from a registry rather than storing them.
+    evidence:
+      - A fully managed registry to keep, manage and deploy images, stored securely in repositories.
+      - Orchestrators pull images from it, and you push and pull with standard tools and CLIs.
+    takeaway: Amazon ECR is the registry that holds container images for ECS or EKS to pull.
+    history: []
+    verified:
+      keyHash: 3b9907824b59
+      fullHash: 43d62a61fb9b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-qc8sxc
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: exam
+    concept: containers-vs-virtual-machines
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      A media startup needs new copies of its service to come up quickly when traffic jumps, and it is weighing containers against virtual machines.
+      Which statements explain why containers suit this need?
+    options:
+      - id: a
+        text: Containers share the operating system of the host machine they run on
+        correct: true
+        why: With no OS of their own to boot, new containers come up sooner than virtual machines, which suits sudden traffic jumps.
+      - id: b
+        text: Containers are lighter because they leave out a full operating system
+        correct: true
+        why: A lighter unit is quicker to start, while a virtual machine must first boot its full OS on a hypervisor.
+      - id: c
+        text: Containers bundle code and dependencies so they run the same anywhere
+        why: Portability across environments is true of containers, but it does not make new copies come up any faster.
+      - id: d
+        text: Containers each boot a full operating system on top of a hypervisor
+        why: Booting a full OS on a hypervisor describes a virtual machine, and it is what makes new copies slower to start.
+      - id: e
+        text: Container images sit in a registry such as Amazon ECR for later pulls
+        why: ECR does hold container images, but where images are kept does not explain why containers start sooner than VMs.
+    evidence:
+      - Containers share the host's OS, so they are lighter, start faster and use resources better.
+      - A VM runs its own full OS on a hypervisor, making it heavier and slower to start.
+    takeaway: Sharing the host's OS makes containers lighter and quicker to start than full virtual machines.
+    history: []
+    verified:
+      keyHash: 92a2ee1834d6
+      fullHash: f86298ee5573
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-r159np
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: unmanaged-services
+    note: m03/introduction-to-serverless-computing
+    task: "3.4"
+    level: 3
+    stem: >-
+      An insurance broker installs and runs its own relational database engine on Amazon EC2 instances instead of using Amazon RDS.
+      Which work does this choice add for the broker that Amazon RDS would have handled?
+    options:
+      - id: a
+        text: Patching the operating system and the database engine
+        correct: true
+        why: On self-run EC2 the broker owns the OS and the engine installed on it, while RDS automates those patches.
+      - id: b
+        text: Deciding which staff accounts may read the stored data
+        why: Who may read the data is the broker's choice with RDS as well, so this work is not added by EC2.
+      - id: c
+        text: Maintaining the physical servers that host the database
+        why: AWS runs the hardware under EC2 just as it does under RDS, so the broker gains no hardware work.
+      - id: d
+        text: Securing the data centers where the database runs
+        why: Physical security of the facilities is AWS's share whichever database option the broker picks.
+    evidence:
+      - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
+      - You get fine control, but patching, scaling and the OS are yours while AWS runs the hardware.
+    takeaway: A database hosted on EC2 leaves the OS and engine upkeep with the customer, unlike a managed database.
+    history: []
+    verified:
+      keyHash: 6ed391fa88c9
+      fullHash: bb315a306c42
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4csz2k
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: unmanaged-services
+    note: m03/introduction-to-serverless-computing
+    task: "3.4"
+    level: 1
+    stem: >-
+      What does a customer gain by hosting a database on Amazon EC2 instead of on a managed database service?
+    options:
+      - id: a
+        text: Full control of the OS and engine settings
+        correct: true
+        why: Running the engine on EC2 gives the customer fine control over the OS and setup, in exchange for the upkeep.
+      - id: b
+        text: Automatic patching of the database engine
+        why: Engine patching is something a managed service handles, while on EC2 the customer applies patches itself.
+      - id: c
+        text: Freedom from provisioning any servers
+        why: Hosting on EC2 means the customer provisions and sizes its own instances for the database.
+      - id: d
+        text: AWS ownership of who can read the data
+        why: Access to stored data stays the customer's choice under any hosting model, so AWS never owns it.
+    evidence:
+      - You get fine control, but patching, scaling and the OS are yours while AWS runs the hardware.
+    takeaway: An EC2-hosted database trades AWS-run upkeep for fine control over the OS and engine.
+    history: []
+    verified:
+      keyHash: c99852837005
+      fullHash: 500697e132a1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-er34na
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: lambda-pricing
+    note: m03/aws-lambda
+    task: "4.1"
+    level: 2
+    stem: >-
+      A photo printing website runs an AWS Lambda function each time a customer uploads an image, and it sits idle between uploads.
+      How is the website charged for this function?
+    options:
+      - id: a
+        text: By the compute time of each run, priced by memory
+        correct: true
+        why: Lambda bills only for the time code runs, at a rate set by the memory given to the function, so idle gaps cost nothing.
+      - id: b
+        text: By the time each instance runs, busy or idle
+        why: Billing for running instances whether busy or idle is how EC2 On-Demand works, not how Lambda charges for runs.
+      - id: c
+        text: By a set monthly price for a server bundle
+        why: A predictable monthly bundle price is Lightsail's model, while Lambda has no server bundle to rent.
+      - id: d
+        text: By the resources each container task uses
+        why: Paying for the resources containers use is Fargate's model, while Lambda bills each function run instead.
+    evidence:
+      - You pay for compute time only, per millisecond, priced by allocated memory.
+    takeaway: Lambda charges only for the compute time runs use, priced by allocated memory, so idle gaps cost nothing.
+    history: []
+    verified:
+      keyHash: 28b2499f8131
+      fullHash: 82bfeea05c20
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-c1z9m1
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: lambda-pricing
+    note: m03/aws-lambda
+    task: "4.1"
+    level: 1
+    stem: >-
+      Besides how long the code runs, which setting determines the price of an AWS Lambda function run?
+    options:
+      - id: a
+        text: The memory allocated to the function
+        correct: true
+        why: Lambda prices each run's compute time by the memory the function is given.
+      - id: b
+        text: The runtime the function's code uses
+        why: The runtime passes events to the code in its language, but it does not set the price of a run.
+      - id: c
+        text: The event source that invokes it
+        why: The trigger decides when the function runs, while the price comes from run time and allocated memory.
+      - id: d
+        text: The execution role it runs with
+        why: The execution role grants the function access to other services, and it plays no part in the bill.
+    evidence:
+      - You pay for compute time only, per millisecond, priced by allocated memory.
+      - Memory size is also how you tune performance.
+    takeaway: Lambda bills by compute time and allocated memory, and memory also tunes the function's performance.
+    history: []
+    verified:
+      keyHash: 3d87ddef1d8e
+      fullHash: d9a34078aa0e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
