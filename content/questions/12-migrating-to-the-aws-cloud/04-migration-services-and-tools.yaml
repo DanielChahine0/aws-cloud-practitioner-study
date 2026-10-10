@@ -1,0 +1,394 @@
+questions:
+  - id: q-mva2k2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-evaluator
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe's owners plan to run Migration Evaluator against the servers in their back closet.
+      What will it hand them?
+    options:
+      - id: a
+        text: An automatic inventory of servers, databases and their links
+        why: Mapping servers and their links is the work of Application Discovery Service, not Migration Evaluator.
+      - id: b
+        text: A business case with projected costs for the target state
+        correct: true
+        why: Migration Evaluator compares the current and target states and projects the cloud costs the owners would pay.
+      - id: c
+        text: A single view of every migration task and its progress
+        why: One view of tasks and progress comes from Migration Hub, which tracks the move rather than pricing it.
+      - id: d
+        text: Replicated copies of the apps, running on AWS with little downtime
+        why: Replicating the apps onto AWS is what Application Migration Service does once the move begins.
+    evidence:
+      - "Finance wants projected AWS costs before approving: Migration Evaluator."
+      - "A data-driven business case: current versus target state, a readiness plan, projected cloud costs"
+    takeaway: When a move must be justified with projected costs before approval, Migration Evaluator builds that business case.
+    history: []
+    verified:
+      keyHash: 5b8de61e76dc
+      fullHash: d0f4adc4fcd8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xjpy4m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-evaluator
+    note: m12/migration-services-and-tools
+    task: "3.8"
+    level: 1
+    stem: >-
+      Migration Evaluator is the tool of the assess phase.
+      What does it do that fits this phase?
+    options:
+      - id: a
+        text: It maps on-premises servers and their links
+        why: Mapping servers and links feeds the mobilize plan and is Application Discovery Service's job.
+      - id: b
+        text: It replicates apps to AWS with little downtime
+        why: Replicating apps is the move itself, done by Application Migration Service in the last phase.
+      - id: c
+        text: It prices the move so the spend can be approved
+        correct: true
+        why: Migration Evaluator projects cloud costs into a business case, which is what assess must produce.
+      - id: d
+        text: It tracks every migration task in one view
+        why: Tracking every task and its progress is Migration Hub's job, from mobilize onward.
+    evidence:
+      - Assess
+      - "A data-driven business case: current versus target state, a readiness plan, projected cloud costs"
+    takeaway: Migration Evaluator belongs to the assess phase, where readiness is checked and the cost case is made.
+    history: []
+    verified:
+      keyHash: fd0a8505f7b3
+      fullHash: 1ba62ec96684
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jtbkqe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-application-discovery-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's ordering app has run on the same back-room machines for years, and no one remembers which servers and databases it talks to.
+      Before planning the move, which service maps those servers and their connections automatically?
+    options:
+      - id: a
+        text: AWS Application Discovery Service
+        correct: true
+        why: Discovery Service inventories on-premises servers, databases and links, which is exactly the missing map.
+      - id: b
+        text: AWS Migration Hub
+        why: Migration Hub gives one view of migration tasks and progress, but this gap is an unknown inventory.
+      - id: c
+        text: Migration Evaluator
+        why: Migration Evaluator prices the move for a business case rather than mapping what the app depends on.
+      - id: d
+        text: AWS Application Migration Service
+        why: Application Migration Service replicates apps to AWS, which is premature while dependencies are unknown.
+    evidence:
+      - "Nobody knows which servers an app relies on: AWS Application Discovery Service."
+      - An automatic inventory of on-premises servers, databases and links, feeding a detailed migration plan
+    takeaway: Unknown servers and dependencies before a move point to Application Discovery Service, which inventories them automatically.
+    history: []
+    verified:
+      keyHash: 0e68e98558c6
+      fullHash: a7d9d22483f6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-y7p244
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-application-discovery-service
+    note: m12/migration-services-and-tools
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which items does AWS Application Discovery Service gather about an on-premises environment?
+    options:
+      - id: a
+        text: The connections between servers and databases
+        correct: true
+        why: Discovery Service records the links between systems so dependencies can move together.
+      - id: b
+        text: Projected monthly costs for the target state
+        why: Projecting costs for a business case is the work of Migration Evaluator, not Discovery Service.
+      - id: c
+        text: An inventory of the servers that are running
+        correct: true
+        why: Discovery Service automatically builds an inventory of on-premises servers to feed the plan.
+      - id: d
+        text: Live completion status for each workstream
+        why: Tracking the progress of every task in one view is what Migration Hub provides.
+      - id: e
+        text: Replicated copies of apps running on AWS
+        why: Replicating apps to AWS is the job of Application Migration Service during the move.
+    evidence:
+      - "**AWS Application Discovery Service**: A service that inventories on-premises servers and their connections."
+    takeaway: Application Discovery Service inventories on-premises servers and maps their connections to feed the migration plan.
+    history: []
+    verified:
+      keyHash: d1e405d9eca9
+      fullHash: 9ab34cff5524
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hqrbcw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-migration-hub
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      Midway through the cafe's move to AWS, the owners want one place that lists every workstream and how far along each one is.
+      Which service should they open?
+    options:
+      - id: a
+        text: Migration Evaluator
+        why: Migration Evaluator prices the move for a business case up front; it does not track workstreams midway.
+      - id: b
+        text: AWS Application Discovery Service
+        why: Discovery Service inventories servers and their links, not the live status of each workstream.
+      - id: c
+        text: AWS Application Migration Service
+        why: Application Migration Service replicates the apps themselves, while another service tracks overall progress.
+      - id: d
+        text: AWS Migration Hub
+        correct: true
+        why: Migration Hub is the central place to plan, run and track every workstream and its progress.
+    evidence:
+      - "Leaders want live status for every workstream: AWS Migration Hub."
+      - The team needs every task and its progress in one view
+    takeaway: To see every migration task and its progress in one place, use AWS Migration Hub.
+    history: []
+    verified:
+      keyHash: 2695c2ca8b0a
+      fullHash: 97ea517cfa3f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-24bbtb
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-migration-hub
+    note: m12/migration-services-and-tools
+    task: "3.8"
+    level: 1
+    stem: >-
+      The cafe worries that tracking its migration in AWS Migration Hub will add to its AWS bill.
+      What does Migration Hub itself charge?
+    options:
+      - id: a
+        text: A charge for each server it tracks
+        why: Migration Hub has no per-server fee; the hub itself is free.
+      - id: b
+        text: A charge for each task it tracks
+        why: Migration Hub has no per-task fee; tracking any number of tasks there is free.
+      - id: c
+        text: A flat monthly charge
+        why: Migration Hub carries no subscription; the hub itself costs nothing.
+      - id: d
+        text: No charge for the hub
+        correct: true
+        why: Migration Hub is free, so tracking the move there adds no charge of its own.
+    evidence:
+      - Migration Hub is free and spans mobilize through migrate and modernize.
+    takeaway: AWS Migration Hub itself is free, so tracking a migration there adds no charge of its own.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement, since AWS Migration Hub has no charge of its own.)"
+  - id: q-zqy286
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-application-migration-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's plan is approved, and it now wants its point-of-sale servers running in AWS with as little downtime as possible.
+      Which service replicates them there?
+    options:
+      - id: a
+        text: AWS Database Migration Service (AWS DMS)
+        why: AWS DMS replicates databases, but the task here is getting the point-of-sale servers themselves onto AWS.
+      - id: b
+        text: AWS Application Migration Service
+        correct: true
+        why: Application Migration Service replicates apps to AWS with minimal downtime once a team is ready to move.
+      - id: c
+        text: AWS Elastic Disaster Recovery
+        why: Elastic Disaster Recovery replicates servers for recovery after a failure, not for a planned move.
+      - id: d
+        text: AWS Migration Hub
+        why: Migration Hub tracks the migration's tasks and progress, while another service does the replication.
+    evidence:
+      - Apps replicated to AWS faster, for less and with minimal downtime, optionally modernized
+      - You are ready to move the apps themselves
+    takeaway: When the team is ready to move the apps themselves with minimal downtime, AWS Application Migration Service does the moving.
+    history: []
+    verified:
+      keyHash: 13e93dc5344d
+      fullHash: f40e29298eb6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b34vr8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-application-migration-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which description fits AWS Application Migration Service?
+    options:
+      - id: a
+        text: It converts database schemas from one engine to another.
+        why: Converting schemas between engines is the job of the AWS Schema Conversion Tool, not this service.
+      - id: b
+        text: It projects cloud costs to build a business case.
+        why: A cost-backed business case comes from Migration Evaluator in the assess phase.
+      - id: c
+        text: It replicates workloads to AWS with minimal downtime.
+        correct: true
+        why: Application Migration Service replicates apps to AWS with minimal downtime and can optionally modernize them.
+      - id: d
+        text: It inventories on-premises servers and their links.
+        why: Inventorying servers and their connections is what Application Discovery Service does.
+    evidence:
+      - Apps replicated to AWS faster, for less and with minimal downtime, optionally modernized
+    takeaway: AWS Application Migration Service replicates workloads to AWS with minimal downtime and can modernize them on the way.
+    history: []
+    verified:
+      keyHash: 07db2d796c95
+      fullHash: 7116a433a004
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8va125
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-migration-and-modernization-competency-partners
+    note: m12/migration-services-and-tools
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe has no staff with migration experience and wants to hire an outside firm that AWS has vetted for help in the mobilize phase.
+      Where should the owners look?
+    options:
+      - id: a
+        text: AWS Professional Services migration consultants
+        why: Professional Services is consulting from AWS itself, not a list of outside firms vetted by phase.
+      - id: b
+        text: AWS Trusted Advisor best-practice checks
+        why: Trusted Advisor checks an account against best practices; it does not point to outside migration firms.
+      - id: c
+        text: AWS Marketplace listings of third-party software and data products
+        why: Marketplace is a catalog of third-party software and data, not a list of migration specialists by phase.
+      - id: d
+        text: AWS Migration and Modernization Competency Partners
+        correct: true
+        why: These partners are listed by migration phase or kind of help, so the cafe can find one for mobilize.
+    evidence:
+      - "The AWS Competency Partner Program lists migration partners by phase or kind of help: see [AWS Migration and Modernization Competency Partners](https://aws.amazon.com/migration/partner-solutions/)."
+      - Competency partners fill expertise gaps.
+    takeaway: To hire an outside firm for a migration phase you lack skills for, look to the Migration and Modernization Competency Partners.
+    history: []
+    verified:
+      keyHash: f66236780f06
+      fullHash: fd55096407d6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-x4th39
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-migration-and-modernization-competency-partners
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 1
+    stem: >-
+      What gap do AWS Migration and Modernization Competency Partners fill for a company moving to AWS?
+    options:
+      - id: a
+        text: Missing in-house migration expertise
+        correct: true
+        why: These partners specialize in migration phases or needs, covering skills the company lacks.
+      - id: b
+        text: Missing inventory of on-premises servers
+        why: An inventory of servers comes from Application Discovery Service, not from a partner listing.
+      - id: c
+        text: Missing tracking of migration progress
+        why: Tracking every migration task in one view is the job of Migration Hub.
+      - id: d
+        text: Missing projection of future cloud costs
+        why: Projected cloud costs for a business case come from Migration Evaluator.
+    evidence:
+      - Competency partners fill expertise gaps.
+      - "**AWS Migration and Modernization Competency Partners**: AWS partners specializing in migration phases or needs."
+    takeaway: Migration and Modernization Competency Partners supply migration expertise that a company lacks in-house.
+    history: []
+    verified:
+      keyHash: efa2f7df66cc
+      fullHash: d16a3d71deab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rrzmx7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-migration-hub
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's contractor is planning which apps to move and wants guidance and automated recommendations in a free tool.
+      The same tool should later follow the move itself.
+      Which service fits?
+    options:
+      - id: a
+        text: Migration Evaluator
+        why: Migration Evaluator builds a cost-backed business case before the move, not a place to plan and follow it.
+      - id: b
+        text: AWS Migration Hub
+        correct: true
+        why: Migration Hub is a free central place that offers guidance and recommendations and spans planning through the move.
+      - id: c
+        text: AWS Application Discovery Service
+        why: Discovery Service inventories on-premises servers and links, but it does not follow the move once it starts.
+      - id: d
+        text: AWS Application Migration Service
+        why: Application Migration Service does the moving of the apps, rather than guiding the plan and tracking it.
+    evidence:
+      - Migration Hub is free and spans mobilize through migrate and modernize.
+    takeaway: Migration Hub is the free tool that guides planning and then follows the migration through to the end.
+    history: []
+    verified:
+      keyHash: 7cb199edf727
+      fullHash: 063c34afe611
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09

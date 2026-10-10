@@ -1,0 +1,601 @@
+questions:
+  - id: q-t1n5be
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: seven-migration-strategies
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Match each migration strategy to what happens to an application under it.
+    pairs:
+      - left: Rehost
+        right: The app moves to AWS as it is, with no changes at first
+        why: Rehost carries the app across untouched, often by turning its servers into VMs.
+      - left: Replatform
+        right: The app gets a few cloud optimizations but keeps its code
+        why: Replatform adds small tweaks for a real gain without new code or a new architecture.
+      - left: Refactor
+        right: The app is rebuilt with new code and cloud-built features
+        why: Refactor rewrites the app to unlock features, scale or performance it lacks today.
+      - left: Repurchase
+        right: The app's licensed software is swapped for a SaaS product
+        why: Repurchase drops the traditional license and buys a SaaS package, often from a new vendor.
+    evidence:
+      - Rehost changes nothing, replatform adds small optimizations, and refactor writes new code at the highest upfront cost.
+      - Repurchase trades licensed software for SaaS, often from a new vendor.
+    takeaway: The seven Rs differ by how much each app changes, from none for rehost to new code for refactor.
+    history: []
+    verified:
+      keyHash: 18916a72d104
+      fullHash: 58513912fd09
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hqj9aq
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: seven-migration-strategies
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe runs a point-of-sale system, a loyalty app, an old reporting tool and a staff rota site, and they differ widely.
+      The owner assumes they must all move to AWS with one shared strategy.
+      Which idea corrects this assumption?
+    options:
+      - id: a
+        text: Rehost moves an app as it is, with no changes at first
+        why: This is true of rehost, but it describes one strategy rather than whether apps can use different ones.
+      - id: b
+        text: Retire switches off apps that are no longer needed
+        why: This is true of retire, but it does not say whether the other apps must share one strategy.
+      - id: c
+        text: Each app gets its own path, and the paths form one plan
+        correct: true
+        why: Strategies are chosen per app by goals and complexity, then combined into a tailored plan with less risk.
+      - id: d
+        text: Refactor carries the highest upfront planning and staff effort
+        why: This is true of refactor, but it compares effort and does not address using one strategy for every app.
+    evidence:
+      - Each app gets one of seven paths, chosen by complexity, goals, time, resources, starting point and future plans.
+      - Organizations often combine them into a tailored plan with less risk and disruption.
+    takeaway: Each app gets its own migration strategy, and the strategies combine into one tailored plan.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only broad summary statement; options 1 to 3 each describe one single strategy.)"
+  - id: q-hamxsz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-relocate
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which migration strategy moves virtual machines or containers that already run on premises over to a cloud host?
+    options:
+      - id: a
+        text: Replatform
+        why: Replatform adds cloud optimizations to an app, which is more than shifting existing VMs to a new host.
+      - id: b
+        text: Relocate
+        correct: true
+        why: Relocate takes VMs or containers that already run on premises and moves them onto a cloud host.
+      - id: c
+        text: Retain
+        why: Retain keeps the app in its current environment, so nothing moves to a cloud host.
+      - id: d
+        text: Refactor
+        why: Refactor rebuilds the app with new code, while this stem only moves existing VMs or containers.
+    evidence:
+      - "**Relocate**: Moving existing VMs or containers to the cloud."
+    takeaway: Relocate moves VMs or containers that already exist on premises onto a cloud host.
+    history: []
+    verified:
+      keyHash: a6385b7ea9fc
+      fullHash: ee073f4caa98
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-z7a5je
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-relocate
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe already runs its ordering system in containers on its own servers.
+      It wants those same containers running on a cloud host instead.
+      Which strategy describes this move?
+    options:
+      - id: a
+        text: Relocate
+        correct: true
+        why: The containers already exist on premises, so moving them to a cloud host is a relocation.
+      - id: b
+        text: Repurchase
+        why: Repurchase replaces licensed software with SaaS, but the cafe keeps its own ordering system.
+      - id: c
+        text: Retire
+        why: Retire switches an app off, yet the cafe wants its ordering system to keep running.
+      - id: d
+        text: Refactor
+        why: Refactor writes new code, while the cafe only wants its existing containers on a new host.
+    evidence:
+      - "**Relocate**: Moving existing VMs or containers to the cloud."
+    takeaway: When VMs or containers already exist on premises and simply move to a cloud host, the strategy is relocate.
+    history: []
+    verified:
+      keyHash: 88e2a1589650
+      fullHash: 37f6ab0563a9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6gkne0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-rehost
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe chain is buying several new shops and must get its whole set of legacy apps onto AWS quickly so it can scale.
+      Which strategy fits most of those apps?
+    options:
+      - id: a
+        text: Refactor
+        why: Rebuilding with new code takes the most planning and staff effort, which slows a move that must be fast.
+      - id: b
+        text: Repurchase
+        why: Shopping for SaaS replacements for every legacy app is slow to adopt and does not suit a fast move.
+      - id: c
+        text: Retain
+        why: Keeping the apps in place would not get them onto AWS, which the chain needs to scale.
+      - id: d
+        text: Rehost
+        correct: true
+        why: Moving the apps as they are is the quickest path for a large legacy estate that must scale fast.
+    evidence:
+      - "Legacy estate that must scale fast: rehost."
+    takeaway: A large legacy estate that must move and scale fast mostly uses rehost, lift and shift.
+    history: []
+    verified:
+      keyHash: be8580b130bd
+      fullHash: d90d20a082f0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-e2fb0s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-rehost
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which statement about the rehost strategy is accurate?
+    options:
+      - id: a
+        text: It rewrites the app with new code to use cloud-built features
+        why: That describes refactor, while rehost makes no changes to the app at first.
+      - id: b
+        text: It moves the app to AWS as it is, without changing the app
+        correct: true
+        why: Rehost is lift and shift, carrying the app to AWS unchanged.
+      - id: c
+        text: It swaps the app's traditional license for a SaaS product
+        why: Trading a license for SaaS is repurchase, not moving the existing app to AWS.
+      - id: d
+        text: It adds small cloud optimizations such as a managed database
+        why: Small optimizations like a managed database are replatform, while rehost keeps the app as it is.
+    evidence:
+      - "**Rehost**: Moving apps to AWS unchanged."
+    takeaway: Rehost moves apps to AWS unchanged, without new code or optimizations.
+    history: []
+    verified:
+      keyHash: 4149d66f81d1
+      fullHash: 3665bb34f481
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-y70695
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-replatform
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe runs its own MySQL database for orders.
+      It plans to move that database onto Amazon RDS so AWS takes over the upkeep, with no changes to the order app's code.
+      Which strategy is this?
+    options:
+      - id: a
+        text: Rehost
+        why: Rehost moves the server unchanged, while switching to a managed database is a cloud optimization.
+      - id: b
+        text: Repurchase
+        why: Repurchase buys a SaaS product in place of licensed software, but the cafe keeps MySQL.
+      - id: c
+        text: Replatform
+        correct: true
+        why: Moving MySQL to Amazon RDS unchanged is a small cloud optimization with no new code.
+      - id: d
+        text: Refactor
+        why: Refactor writes new code, yet the cafe's order app must stay exactly as it is.
+    evidence:
+      - "MySQL to Amazon RDS with no code changes: replatform."
+    takeaway: Moving a self-run MySQL database to Amazon RDS without code changes is replatform.
+    history: []
+    verified:
+      keyHash: 3b9852b2405d
+      fullHash: 5b40715a48e1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-m9megd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-replatform
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which migration strategy moves an app with a few small cloud optimizations but keeps its code?
+    options:
+      - id: a
+        text: Relocate
+        why: Relocate shifts existing VMs or containers to a cloud host and adds no optimizations.
+      - id: b
+        text: Replatform
+        correct: true
+        why: Replatform moves the app and makes small cloud optimizations without writing new code.
+      - id: c
+        text: Rehost
+        why: Rehost moves the app with no changes at all, so it skips the optimizations.
+      - id: d
+        text: Repurchase
+        why: Repurchase replaces the app's licensed software with a SaaS product instead of keeping its code.
+    evidence:
+      - "**Replatform**: Moving apps with small cloud optimizations."
+    takeaway: Replatform moves an app with a few small cloud optimizations and no new code.
+    history: []
+    verified:
+      keyHash: 6ee8b700f6d0
+      fullHash: b6475b7ba8f3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-mdd6sc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-refactor
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's loyalty app cannot add the features or reach the scale the business now needs.
+      The cafe accepts a large upfront effort to rebuild the app with new code and cloud-built features.
+      Which strategy fits?
+    options:
+      - id: a
+        text: Rehost
+        why: Rehost moves the app unchanged, so the missing features and scale would still be missing.
+      - id: b
+        text: Refactor
+        correct: true
+        why: Refactor rebuilds the app with new code and cloud features, driven by a strong need for features and scale.
+      - id: c
+        text: Replatform
+        why: Replatform adds only small optimizations and avoids new code, which cannot deliver the new features.
+      - id: d
+        text: Relocate
+        why: Relocate shifts existing VMs or containers to a cloud host without changing what the app can do.
+    evidence:
+      - "**Refactor**: Rebuilding an app with new code and cloud-built features."
+    takeaway: A strong need for new features, scale or performance that requires new code points to refactor.
+    history: []
+    verified:
+      keyHash: 47106c7eb4c2
+      fullHash: f7f68c0947da
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-n8ncgb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-refactor
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which migration strategy carries the highest upfront cost?
+    options:
+      - id: a
+        text: Replatform
+        why: Replatform makes a few optimizations without new code, so its upfront effort stays modest.
+      - id: b
+        text: Retain
+        why: Retain leaves the app where it is, so it needs no migration effort now.
+      - id: c
+        text: Rehost
+        why: Rehost moves the app with no changes at first, which keeps upfront work low.
+      - id: d
+        text: Refactor
+        correct: true
+        why: Refactor writes new code and re-architects the app, which makes it the costliest strategy up front.
+    evidence:
+      - Rehost changes nothing, replatform adds small optimizations, and refactor writes new code at the highest upfront cost.
+    takeaway: Refactor writes new code, which gives it the highest upfront cost of the migration strategies.
+    history: []
+    verified:
+      keyHash: 4e6bb753a3be
+      fullHash: 27c78790c87b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-aq8xb9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-repurchase
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe pays for a licensed customer management system that it hosts itself.
+      During the migration it drops that license and signs up for a SaaS sales tool from a different vendor.
+      Which strategy is this?
+    options:
+      - id: a
+        text: Replatform
+        why: Replatform keeps the same software and tweaks it, while the cafe is replacing its software entirely.
+      - id: b
+        text: Rehost
+        why: Rehost moves the existing system unchanged, but the cafe is giving that system up.
+      - id: c
+        text: Repurchase
+        correct: true
+        why: Dropping a traditional license for a SaaS product from a new vendor is repurchase.
+      - id: d
+        text: Retire
+        why: Retire switches an app off with no replacement, while the cafe still needs a sales tool.
+    evidence:
+      - "**Repurchase**: Replacing licensed software with SaaS."
+    takeaway: Swapping licensed software for a SaaS product, often from a new vendor, is repurchase.
+    history: []
+    verified:
+      keyHash: 76dbc0240685
+      fullHash: 50886ca410ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-bzz0py
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-repurchase
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which statement about the repurchase strategy is accurate?
+    options:
+      - id: a
+        text: The app's licensed software is replaced by a SaaS product
+        correct: true
+        why: Repurchase trades a traditional license for SaaS, often from a new vendor.
+      - id: b
+        text: The app keeps running in the source environment for now
+        why: Staying in the source environment describes retain, which involves no new purchase.
+      - id: c
+        text: The app's servers become VMs but gain no cloud features
+        why: Turning servers into VMs without changes describes rehost, not buying a SaaS product.
+      - id: d
+        text: The rebuild needs the most planning of all the strategies
+        why: The heaviest planning effort belongs to refactor, which writes new code for the app.
+    evidence:
+      - Repurchase trades licensed software for SaaS, often from a new vendor.
+    takeaway: Repurchase replaces licensed software with a SaaS product, often from a new vendor.
+    history: []
+    verified:
+      keyHash: 8f0d6ff79bb5
+      fullHash: 479928db9ec2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-28swmy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-retain
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's gift card app is critical to the business, and the team decides it should stay on the cafe's own servers for now.
+      The app keeps running and is left out of this migration wave.
+      Which strategy fits the app?
+    options:
+      - id: a
+        text: Retire
+        why: Retire switches off apps no one needs, but this critical app keeps running.
+      - id: b
+        text: Rehost
+        why: Rehost moves the app to AWS, yet the cafe is keeping it on its own servers.
+      - id: c
+        text: Refactor
+        why: Refactor rebuilds the app with new code for the cloud, which is not part of this plan.
+      - id: d
+        text: Retain
+        correct: true
+        why: A business-critical app that stays in its current environment for now is retained.
+    evidence:
+      - "**Retain**: Keeping business-critical apps where they are for now."
+      - Retain and retire involve no migration.
+    takeaway: A business-critical app kept in its current environment for now, with no migration, is retained.
+    history: []
+    verified:
+      keyHash: 381363e6710c
+      fullHash: 38e0759a476c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-trn36t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-retain
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which migration strategy keeps business-critical apps where they are for now?
+    options:
+      - id: a
+        text: Relocate
+        why: Relocate moves VMs or containers to a cloud host, so the app does not stay put.
+      - id: b
+        text: Retain
+        correct: true
+        why: Retain leaves business-critical apps in their current environment for now.
+      - id: c
+        text: Rehost
+        why: Rehost is lift and shift, which moves the app to AWS unchanged.
+      - id: d
+        text: Replatform
+        why: Replatform is lift, tinker and shift, which moves the app with small optimizations.
+    evidence:
+      - "**Retain**: Keeping business-critical apps where they are for now."
+    takeaway: Retain keeps business-critical apps in their current environment for now.
+    history: []
+    verified:
+      keyHash: 4bc81d028e0e
+      fullHash: b69119789216
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4v6fwd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-retire
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      While listing its apps before the move, the cafe finds an old catering site and a coupon tool that nobody has used in a year.
+      What should it do with them?
+    options:
+      - id: a
+        text: Retain them in the source environment
+        why: Retain is for business-critical apps, but these apps are no longer used at all.
+      - id: b
+        text: Rehost them to AWS with no changes
+        why: Moving unused apps to AWS adds cost and effort for no business value.
+      - id: c
+        text: Retire them by switching them off
+        correct: true
+        why: Apps no one needs are switched off, which saves the cost and effort of keeping or moving them.
+      - id: d
+        text: Repurchase them as SaaS products
+        why: Buying SaaS replacements makes no sense for apps the cafe has stopped using.
+    evidence:
+      - "**Retire**: Shutting down apps no longer needed."
+    takeaway: Apps that nobody uses are retired, switched off rather than migrated.
+    history: []
+    verified:
+      keyHash: 90cb2beb42f9
+      fullHash: 89cc0d8d2910
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-42x530
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-retire
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      What happens to an app under the retire strategy?
+    options:
+      - id: a
+        text: It is rebuilt with new cloud-built code
+        why: Rebuilding with new code is refactor, while retire shuts the app down.
+      - id: b
+        text: It is shut down and is not migrated
+        correct: true
+        why: Retire switches off an app that is no longer needed, so it never moves to AWS.
+      - id: c
+        text: It is moved to AWS with no changes
+        why: Moving an app unchanged is rehost, while a retired app is not moved at all.
+      - id: d
+        text: It keeps running where it is for now
+        why: Keeping an app running in place is retain, while retire ends the app.
+    evidence:
+      - "**Retire**: Shutting down apps no longer needed."
+      - Retain and retire involve no migration.
+    takeaway: Retire shuts down apps that are no longer needed, so they are never migrated.
+    history: []
+    verified:
+      keyHash: 84ce00cab3dc
+      fullHash: eb0bb8b85b44
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-thtb4c
+    version: 1
+    status: draft
+    type: multi
+    pool: practice
+    concept: seven-migration-strategies
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    select: 2
+    stem: >-
+      The cafe sorts its apps into the seven Rs before moving to AWS.
+      Which two strategies involve no migration of the app at all?
+    options:
+      - id: a
+        text: Relocate
+        why: Relocate carries existing VMs or containers over to a cloud host, so the app does move.
+      - id: b
+        text: Retain
+        correct: true
+        why: Retain keeps a business-critical app in its current environment for now, so nothing migrates.
+      - id: c
+        text: Replatform
+        why: Replatform moves the app to AWS while adding a few cloud optimizations along the way.
+      - id: d
+        text: Retire
+        correct: true
+        why: Retire switches an unneeded app off, so it is never moved to AWS.
+      - id: e
+        text: Rehost
+        why: Rehost moves the app to AWS as it is, so it is part of the migration.
+      - id: f
+        text: Refactor
+        why: Refactor rebuilds the app with new code and cloud-built features, so it moves as part of the migration.
+    evidence:
+      - Retain and retire involve no migration.
+    takeaway: Of the seven Rs, retain and retire are the two that move nothing to AWS.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: The stem writes 'Which two strategies', repeating the count the app already adds as (Select TWO.)."
