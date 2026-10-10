@@ -1,6 +1,6 @@
 import { useEffect } from 'preact/hooks';
 import type { ContentIndex } from '../../../schemas/chunks.ts';
-import { studyDay } from '../../engine/day.ts';
+import { studyDay, tzOffset } from '../../engine/day.ts';
 import { hexBand } from '../../engine/mastery.ts';
 import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { Html } from '../../ui/Html.tsx';
@@ -104,7 +104,7 @@ export function ModulePage({ idx, module }: { idx: ContentIndex; module: number 
         <p class="muted">Loading</p>
       ) : (
         <>
-          <p class="muted boss-line">{bossLineOf(boss, now.value)}</p>
+          <p class="muted boss-line">{bossLineOf(boss, now.value, tzOffset(now.value))}</p>
           {boss.unlocked && (boss.open !== null || boss.cooldownUntil === null) && (
             <p>
               <a class="button-link" href={`#/s/boss/m${pad2(module)}`}>
@@ -138,6 +138,7 @@ function Concepts({ idx, module }: { idx: ContentIndex; module: number }) {
     new Map(tested.map((c) => [c.id, c.name] as const)),
     m,
     at,
+    tzOffset(at),
   );
   const today = studyDay(at);
   return (

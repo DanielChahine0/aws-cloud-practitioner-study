@@ -170,7 +170,8 @@ function focusConcepts(idx: ContentIndex, scope: string): string[] {
     const ids = idx.concepts.filter((c) => c.tested && c.home.startsWith(`${scope}/`)).map((c) => c.id);
     const m = memory.peek();
     if (m === null) return ids.slice(0, FOCUS_SIZE);
-    return weakestConcepts(ids, new Map(), m, now.peek())
+    const at = now.peek();
+    return weakestConcepts(ids, new Map(), m, at, tzOffset(at))
       .slice(0, FOCUS_SIZE)
       .map((row) => row.id);
   }

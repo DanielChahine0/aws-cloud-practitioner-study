@@ -69,7 +69,7 @@ describe('weakestConcepts', () => {
       ['c-b-new', 'New b'],
       ['c-a-new', 'New a'],
     ]);
-    const rows = weakestConcepts(['c-strong', 'c-weak', 'c-b-new', 'c-a-new'], names, memory, NOW);
+    const rows = weakestConcepts(['c-strong', 'c-weak', 'c-b-new', 'c-a-new'], names, memory, NOW, 0);
     expect(rows.map((r) => r.id)).toEqual(['c-a-new', 'c-b-new', 'c-weak', 'c-strong']);
     expect(rows[0]).toEqual({ id: 'c-a-new', name: 'New a', mastery: 0, due: null });
     expect(rows[2]?.due).toBe('2026-10-14');
@@ -95,18 +95,22 @@ describe('conceptMeta', () => {
 
 describe('bossLineOf', () => {
   it('says what opens the boss', () => {
-    expect(bossLineOf(status({ unlocked: false }), NOW)).toBe(
+    expect(bossLineOf(status({ unlocked: false }), NOW, 0)).toBe(
       'Opens after you read every lesson of this module.',
     );
   });
 
   it('rounds the cooldown up to whole hours', () => {
-    expect(bossLineOf(status({ cooldownUntil: '2026-10-14T14:01:00.000Z' }), NOW)).toBe('Next try in 5 h.');
-    expect(bossLineOf(status({ cooldownUntil: '2026-10-15T06:00:00.000Z' }), NOW)).toBe('Next try in 20 h.');
+    expect(bossLineOf(status({ cooldownUntil: '2026-10-14T14:01:00.000Z' }), NOW, 0)).toBe(
+      'Next try in 5 h.',
+    );
+    expect(bossLineOf(status({ cooldownUntil: '2026-10-15T06:00:00.000Z' }), NOW, 0)).toBe(
+      'Next try in 20 h.',
+    );
   });
 
   it('names the day of the pass', () => {
-    expect(bossLineOf(status({ passed: true, passedAt: '2026-10-12T14:00:00.000Z' }), NOW)).toBe(
+    expect(bossLineOf(status({ passed: true, passedAt: '2026-10-12T14:00:00.000Z' }), NOW, 0)).toBe(
       'Passed on Oct 12.',
     );
   });
@@ -120,12 +124,13 @@ describe('bossLineOf', () => {
           cooldownUntil: '2026-10-15T04:00:00.000Z',
         }),
         NOW,
+        0,
       ),
     ).toBe('Passed on Oct 13. Next try in 18 h.');
   });
 
   it('gives the size, time and pass mark of an open boss', () => {
-    expect(bossLineOf(status({ ready: true }), NOW)).toBe('15 questions in 21 minutes; 12 right to pass.');
+    expect(bossLineOf(status({ ready: true }), NOW, 0)).toBe('15 questions in 21 minutes; 12 right to pass.');
   });
 });
 

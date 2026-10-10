@@ -1,6 +1,6 @@
 /** Pure helpers for the module page and the lesson recall dots (spec 7.3), so the tests run without a browser. */
 import { BOSS_MINUTES, BOSS_SIZE, type BossStatus } from '../engine/boss.ts';
-import { studyDayAt, tzOffset } from '../engine/day.ts';
+import { studyDayAt } from '../engine/day.ts';
 import { BAND_LABEL, conceptMastery, type HexBand } from '../engine/mastery.ts';
 import { bossPassMark, type MemoryState } from '../engine/memory.ts';
 import { shortDate } from './dates.ts';
@@ -16,14 +16,14 @@ export interface ConceptRow {
   due: string | null;
 }
 
-/** Tested concepts weakest first, then by id, each with its next-due study day in the reader's zone. */
+/** Tested concepts weakest first, then by id, each with its next-due study day in the zone `tz` (minutes east of UTC). */
 export function weakestConcepts(
   ids: readonly string[],
   names: ReadonlyMap<string, string>,
   memory: MemoryState,
   now: Date,
+  tz: number,
 ): ConceptRow[] {
-  const tz = tzOffset(now);
   return ids
     .map((id) => {
       const cm = memory.concepts.get(id);
@@ -44,13 +44,11 @@ export function conceptMeta(row: ConceptRow, today: string): string {
   return `mastery ${row.mastery} · due ${row.due <= today ? 'today' : shortDate(row.due)}`;
 }
 
-/** The Boss section's line (spec 3.11 and 4.2): locked, passed, cooling down, or open. */
-export function bossLineOf(s: BossStatus, now: Date): string {
+/** The Boss section's line (spec 3.11 and 4.2): locked, passed, cooling down, or open; the pass day is in the zone `tz`. */
+export function bossLineOf(s: BossStatus, now: Date, tz: number): string {
   if (!s.unlocked) return 'Opens after you read every lesson of this module.';
   const passed =
-    s.passed && s.passedAt !== null
-      ? `Passed on ${shortDate(studyDayAt(new Date(s.passedAt), tzOffset(now)))}.`
-      : null;
+    s.passed && s.passedAt !== null ? `Passed on ${shortDate(studyDayAt(new Date(s.passedAt), tz))}.` : null;
   const cooling =
     s.cooldownUntil === null
       ? null
