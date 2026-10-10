@@ -1,0 +1,48 @@
+# Reference key points for decision 3: Serverless and containers.
+module: 3
+keyPoints:
+  - id: kp-03-lambda-for-burst-traffic
+    status: live
+    text: The loyalty app and order-ahead requests run as Lambda functions fired by each request, so capacity grows for the sharp bursts and shrinks again when the shop is quiet.
+    concepts: [aws-lambda, lambda-triggers]
+    evidence: It is highly available and scales up or down by itself, from one trigger to thousands.
+    verified:
+      fullHash: a746f12a6b27
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-03-pay-only-while-running
+    status: live
+    text: Because Lambda bills only for the compute time code actually uses, the idle hours between bursts cost the cafe next to nothing, which keeps the monthly bill under its cap.
+    concepts: [lambda-pricing]
+    evidence: You pay per millisecond of compute, priced by memory.
+    verified:
+      fullHash: d7aafa05348b
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-03-serverless-cuts-patching
+    status: live
+    text: Choosing serverless over self-run EC2 servers hands patching, scaling and availability to AWS, so the part-time IT person only looks after the app code and keeping it safe.
+    concepts: [serverless-computing, fully-managed-services, unmanaged-services]
+    evidence: What stays with you under Lambda is the application code and keeping it secure.
+    verified:
+      fullHash: 7479934f132d
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-03-fargate-runs-containers
+    status: live
+    text: Any part the cafe ships as a container, such as the ordering service, runs on Amazon ECS with Fargate, so AWS runs the hosts and the cafe pays only for what the containers use.
+    concepts: [aws-fargate, amazon-ecs, containers]
+    evidence: "Fargate: serverless, so AWS runs the servers while ECS or EKS orchestrates, and you pay only for resources used."
+    verified:
+      fullHash: bd8f46a737ac
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-03-mind-the-run-limit
+    status: live
+    text: Long jobs such as building the end-of-day sales report stay out of Lambda unless they split into short pieces, since each function run is capped at 15 minutes.
+    concepts: [aws-lambda]
+    evidence: A run lasts 15 minutes at most, so work that cannot be split into such chunks may fit elsewhere.
+    verified:
+      fullHash: e7240ca71ee1
+      checks: [ critic@1 ]
+      on: 2026-10-10
