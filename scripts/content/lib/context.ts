@@ -7,6 +7,7 @@ import { Concept } from '../../../schemas/concept.ts';
 import { Forms, Quotas } from '../../../schemas/exam.ts';
 import { FingerprintFile } from '../../../schemas/fingerprint.ts';
 import { type Badge, Badges, type Rank, Ranks } from '../../../schemas/game.ts';
+import { IncidentFile } from '../../../schemas/incident.ts';
 import { LabFile } from '../../../schemas/lab.ts';
 import { MissionFrontmatter } from '../../../schemas/mission.ts';
 import { LessonFrontmatter, ModuleFrontmatter } from '../../../schemas/note.ts';
@@ -65,9 +66,28 @@ export interface QuestionEntry {
   index: number;
   /** The module of the file, from its NN: a lesson file's module, or an exam-pool file's module. */
   module: number;
-  /** The note the item belongs to: a lesson file's note from its path, an exam-pool item's `note`. */
+  /** The note the item belongs to: a lesson file's note from its path, an exam-pool item's or incident step's `note`. */
   noteId: string;
   q: Question;
+  /** The incident a step belongs to; null for lesson and exam-pool files, which every count keeps to. */
+  incident: string | null;
+}
+
+/** One incident file that passed its schema; its steps also sit in `Context.questions` (spec 2.6, 4.5). */
+export interface IncidentEntry {
+  path: string;
+  incident: Omit<IncidentFile, 'steps'>;
+  /** The steps that passed the question schema, in file order. */
+  steps: readonly QuestionEntry[];
+}
+
+/** An incident ships, in its home module's chunk, only while it is live and every step of it is live. */
+export function incidentShips(entry: IncidentEntry): boolean {
+  return (
+    entry.incident.status === 'live' &&
+    entry.steps.length > 0 &&
+    entry.steps.every((step) => step.q.status === 'live')
+  );
 }
 
 /** One lab file that passed the schema, its folder module and its file slug (spec 5.1). */
@@ -99,8 +119,10 @@ export interface Context {
   concepts: readonly Concept[];
   blueprint: Blueprint | null;
   missions: readonly Mission[];
-  /** Questions that passed the schema, practice files and exam-pool files alike, in file then item order. */
+  /** Questions that passed the schema, practice files, exam-pool files and incident steps alike, in file then item order. */
   questions: readonly QuestionEntry[];
+  /** Incident files that passed the schema, in file order. */
+  incidents: readonly IncidentEntry[];
   /** Labs that passed the schema and sit in their module folder under their own id, in file order. */
   labs: readonly LabEntry[];
   /** content/exam/quotas.yaml, or null when it is absent or invalid. */
@@ -124,6 +146,7 @@ export const BLUEPRINT_FILE = 'content/exam/blueprint.yaml';
 export const ALLOW_FILE = 'content/fingerprints/allow.txt';
 export const QUESTIONS_DIR = 'content/questions';
 export const POOL_DIR = 'content/exam/pool';
+export const INCIDENTS_DIR = 'content/incidents';
 export const QUOTAS_FILE = 'content/exam/quotas.yaml';
 export const FORMS_FILE = 'content/exam/forms.yaml';
 export const RANKS_FILE = 'content/game/ranks.yaml';
@@ -141,6 +164,12 @@ const MISSION = /^content\/missions\/(mission-\d{2})-[a-z0-9-]+\.md$/;
 const PRINTS = /^content\/fingerprints\/m(\d{2})\.json$/;
 const POOL = /^content\/exam\/pool\/(\d{2})-[a-z0-9-]+\.yaml$/;
 const LAB = /^content\/labs\/(\d{2})-[a-z0-9-]+\/([a-z0-9-]+)\.yaml$/;
+const INCIDENT = /^content\/incidents\/(inc-\d{3})\.yaml$/;
+
+/** Whether a path is an incident file, `content/incidents/inc-NNN.yaml`. */
+export function isIncidentFile(path: string): boolean {
+  return INCIDENT.test(path);
+}
 const SKIP_DIRS = new Set([
   '.git',
   'node_modules',
@@ -370,8 +399,75 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
         });
         continue;
       }
-      questions.push({ path, line: at, index, module, noteId: lessonNote ?? q.note, q });
+      questions.push({ path, line: at, index, module, noteId: lessonNote ?? q.note, q, incident: null });
     }
+  };
+
+  const incidents: IncidentEntry[] = [];
+  /** Loads one incident file; each step parses with the question schema and joins `questions` with its incident id. */
+  const loadIncident = (path: string, fileId: string): void => {
+    const lineCounter = new LineCounter();
+    const doc = parseDocument(read(path) ?? '', { lineCounter });
+    const [yamlError] = doc.errors;
+    if (yamlError !== undefined) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        line: lineCounter.linePos(yamlError.pos[0]).line,
+        message: `YAML: ${yamlError.message}`,
+      });
+      return;
+    }
+    const parsed = IncidentFile.safeParse(doc.toJS());
+    if (!parsed.success) {
+      schemaErrors(path, parsed.error.issues);
+      return;
+    }
+    const { steps: rawSteps, ...incident } = parsed.data;
+    if (incident.id !== fileId) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message: `id ${incident.id} must match the file name ${fileId}.yaml`,
+      });
+    }
+    const [home = 1] = incident.modules;
+    const seq = doc.get('steps', true);
+    const items = isSeq(seq) ? seq.items : [];
+    const steps: QuestionEntry[] = [];
+    for (const [index, item] of rawSteps.entries()) {
+      const node = items[index];
+      const start = isNode(node) ? node.range?.[0] : undefined;
+      const line = start === undefined ? 1 : lineCounter.linePos(start).line;
+      const result = Question.safeParse(item);
+      if (!result.success) {
+        const label = isRecord(item) && typeof item.id === 'string' ? item.id : `#${index + 1}`;
+        schemaErrors(path, result.error.issues, `steps[${index}] (${label})`, line);
+        continue;
+      }
+      const q = result.data;
+      if (q.type === 'match' || q.pool !== 'practice') {
+        errors.push({
+          rule: 'R1',
+          file: path,
+          line,
+          message: `steps[${index}]: incident steps are single or multi practice items`,
+        });
+        continue;
+      }
+      const entry: QuestionEntry = {
+        path,
+        line,
+        index,
+        module: home,
+        noteId: q.note,
+        q,
+        incident: incident.id,
+      };
+      steps.push(entry);
+      questions.push(entry);
+    }
+    incidents.push({ path, incident, steps });
   };
 
   const labs: LabEntry[] = [];
@@ -503,6 +599,19 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
       });
       continue;
     }
+    const incidentFile = INCIDENT.exec(path);
+    if (incidentFile) {
+      loadIncident(path, incidentFile[1] ?? '');
+      continue;
+    }
+    if (path.startsWith(`${INCIDENTS_DIR}/`)) {
+      errors.push({
+        rule: 'R1',
+        file: path,
+        message: `not an incident file path; use ${INCIDENTS_DIR}/inc-NNN.yaml`,
+      });
+      continue;
+    }
     if (path.startsWith(`${POOL_DIR}/`)) {
       errors.push({
         rule: 'R1',
@@ -557,6 +666,7 @@ export function loadContext(root: string, options: { today?: string } = {}): Con
     missions,
     questions,
     labs,
+    incidents,
     quotas,
     forms,
     ranks,

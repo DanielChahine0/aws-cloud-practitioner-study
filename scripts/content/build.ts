@@ -8,6 +8,8 @@ import type {
   ExamFormMeta,
   ExamItemRef,
   GlossaryItem,
+  IncidentMeta,
+  IncidentView,
   LabMeta,
   LabView,
   LessonChunk,
@@ -27,6 +29,7 @@ import { normalize } from '../../src/app/search.ts';
 import {
   CONCEPTS_FILE,
   type Context,
+  incidentShips,
   type LabEntry,
   type LessonNote,
   type ModuleNote,
@@ -183,7 +186,7 @@ export function buildContent(ctx: Context): BuiltContent {
   const search: SearchEntry[] = [];
   const noteOrder = new Map(ctx.notes.map((note, i) => [note.id, i] as const));
   const live = ctx.questions
-    .filter(({ q }) => q.status === 'live' && q.pool === 'practice')
+    .filter(({ q, incident }) => incident === null && q.status === 'live' && q.pool === 'practice')
     .sort(
       (a, b) =>
         (noteOrder.get(a.noteId) ?? 0) - (noteOrder.get(b.noteId) ?? 0) ||
@@ -256,6 +259,15 @@ export function buildContent(ctx: Context): BuiltContent {
     }
   }
 
+  const shipped = ctx.incidents
+    .filter(incidentShips)
+    .sort((a, b) => (a.incident.id < b.incident.id ? -1 : a.incident.id > b.incident.id ? 1 : 0));
+  const incidents: IncidentMeta[] = shipped.map(({ incident }) => ({
+    id: incident.id,
+    title: incident.title,
+    modules: [...incident.modules],
+  }));
+
   const modules: ModuleMeta[] = [];
   for (const n of [...new Set(ctx.notes.map((note) => note.module))].sort((a, b) => a - b)) {
     const readme = ctx.notes.find((note): note is ModuleNote => note.kind === 'module' && note.module === n);
@@ -311,7 +323,28 @@ export function buildContent(ctx: Context): BuiltContent {
         return questionView(entry, note);
       });
     const labs = liveLabs.filter((e) => e.lab.module === n).map(labView);
-    const chunk: ModuleChunk = { module: n, readme: readmeSections, lessons: chunkLessons, questions, labs };
+    const moduleIncidents: IncidentView[] = shipped
+      .filter(({ incident }) => incident.modules[0] === n)
+      .map(({ incident, steps }) => ({
+        id: incident.id,
+        title: incident.title,
+        modules: [...incident.modules],
+        brief: incident.brief,
+        steps: steps.map((step) => {
+          const note = notesById.get(step.noteId);
+          if (note === undefined) throw new Error(`${step.path}: ${step.noteId} is not a note`);
+          questionVersions[step.q.id] = step.q.version;
+          return questionView(step, note);
+        }),
+      }));
+    const chunk: ModuleChunk = {
+      module: n,
+      readme: readmeSections,
+      lessons: chunkLessons,
+      questions,
+      labs,
+      incidents: moduleIncidents,
+    };
     modules.push({
       n,
       slug: readme.fm.slug,
@@ -443,6 +476,7 @@ export function buildContent(ctx: Context): BuiltContent {
     badges,
     exam: formChunks(ctx, notesById, emit),
     labs: liveLabs.map(labMeta),
+    incidents,
   };
   const contentVersion = `c-${sha256(JSON.stringify(body)).slice(0, 6)}`;
   const index: ContentIndex = { contentVersion, ...body };

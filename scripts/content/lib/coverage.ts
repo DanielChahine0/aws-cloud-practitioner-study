@@ -61,8 +61,8 @@ function conceptCounts(
     for (const alias of c.aliases ?? []) target.set(alias, c.id);
   }
   const counts = new Map<string, number>();
-  for (const { q } of ctx.questions) {
-    if (q.pool !== pool || !keep(q)) continue;
+  for (const { q, incident } of ctx.questions) {
+    if (incident !== null || q.pool !== pool || !keep(q)) continue;
     const id = target.get(q.concept) ?? q.concept;
     counts.set(id, (counts.get(id) ?? 0) + 1);
   }
@@ -118,7 +118,7 @@ export function coverage(ctx: Context): TaskCoverage[] {
     text: task.text,
     concepts: ctx.concepts.filter((c) => c.tested !== false && c.tasks.includes(task.id)).length,
     live: ctx.questions.filter(
-      (e) => e.q.status === 'live' && e.q.pool === 'practice' && e.q.task === task.id,
+      (e) => e.incident === null && e.q.status === 'live' && e.q.pool === 'practice' && e.q.task === task.id,
     ).length,
     exam: ctx.questions.filter((e) => e.q.status === 'live' && e.q.pool === 'exam' && e.q.task === task.id)
       .length,

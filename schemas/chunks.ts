@@ -143,6 +143,19 @@ export interface LabView extends LabMeta {
   credits: boolean;
 }
 
+/** A shipped daily incident in the index: its id, title and required modules, the first being its home (spec 4.5). */
+export interface IncidentMeta {
+  id: string;
+  title: string;
+  modules: number[];
+}
+
+/** A shipped incident in its home module's chunk: the brief and its steps as the runner shows them. */
+export interface IncidentView extends IncidentMeta {
+  brief: string;
+  steps: QuestionView[];
+}
+
 /** content/mNN.<hash>.json */
 export interface ModuleChunk {
   module: number;
@@ -152,6 +165,8 @@ export interface ModuleChunk {
   questions: QuestionView[];
   /** The module's live labs, core before stretch, then by id. */
   labs: LabView[];
+  /** Shipped incidents whose home module is this one, in id order. */
+  incidents: IncidentView[];
 }
 
 export interface SearchEntry {
@@ -233,7 +248,7 @@ export interface ContentIndex {
   concepts: ConceptMeta[];
   glossary: GlossaryItem[];
   missions: MissionMeta[];
-  /** Every live practice question id to its version, so replay can count events about unknown questions. */
+  /** Every live practice question and shipped incident step id to its version, so replay can count unknown ones. */
   questionVersions: Record<string, number>;
   /** Path of the search chunk from the site root. */
   search: string;
@@ -244,4 +259,6 @@ export interface ContentIndex {
   exam: { forms: ExamFormMeta[]; items: Record<string, ExamItemRef> };
   /** Every live lab, in module order, core before stretch, then by id. */
   labs: LabMeta[];
+  /** Every shipped incident, in id order, so Home can pick today's without loading a chunk. */
+  incidents: IncidentMeta[];
 }

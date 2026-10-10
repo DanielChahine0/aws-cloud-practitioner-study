@@ -1,12 +1,12 @@
 /**
  * pnpm content:validate [--all | --draft <file> | --demote]: runs the rules switched on in content/validate.yaml,
  * or every implemented rule with --all (spec 2.9).
- *   --draft <file>  checks one question file as if its drafts were live, plus the style and coverage checks, or one
- *                   lab file under content/labs/ with the lab rules and its replay (R11)
+ *   --draft <file>  checks one question or incident file as if its drafts were live, plus the style and coverage
+ *                   checks, or one lab file under content/labs/ with the lab rules and its replay (R11)
  *   --demote        sets live questions whose evidence left their note back to draft, then validates as usual
  */
 import { resolve } from 'node:path';
-import { LABS_DIR, loadContext } from './lib/context.ts';
+import { isIncidentFile, LABS_DIR, loadContext } from './lib/context.ts';
 import { demote, draftCheck, labDraftCheck } from './lib/draft.ts';
 import { formatFinding, RULES, redact, runRules } from './rules/index.ts';
 
@@ -28,7 +28,8 @@ if (draftAt >= 0) {
   }
   const { questions, problems } = draftCheck(loadContext(root), file);
   for (const problem of problems) console.error(problem);
-  console.log(`draft check ${file}: ${questions} questions, ${problems.length} problems`);
+  const noun = isIncidentFile(file) ? 'steps' : 'questions';
+  console.log(`draft check ${file}: ${questions} ${noun}, ${problems.length} problems`);
   process.exit(problems.length > 0 ? 1 : 0);
 }
 

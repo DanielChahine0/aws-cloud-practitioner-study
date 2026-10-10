@@ -126,6 +126,7 @@ describe('makeBatches', () => {
       module: 1,
       noteId: note,
       q: singleQuestion({ id: `q-${String(i).padStart(6, '0')}`, concept, note }),
+      incident: null,
     },
     keyHash: '000000000000',
     fullHash: '000000000000',
@@ -374,7 +375,7 @@ describe('stampQuestions', () => {
     );
     grade(root, FIXTURE_TODAY);
     const first = stampQuestions(load(root), FIXTURE_TODAY);
-    expect(first.summary).toBe('stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired');
+    expect(first.summary).toBe('stamp: 4 live, 1 drafts to revise, 0 need Dani, 0 retired');
     expect(first.revise).toEqual(['content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml']);
     const ctx = load(root);
     expect(r09.run(ctx)).toEqual([]);
@@ -388,7 +389,7 @@ describe('stampQuestions', () => {
       lastFailure: 'critic: The right column repeats the left.',
     });
     expect(stampQuestions(load(root), FIXTURE_TODAY).summary).toBe(
-      'stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired',
+      'stamp: 4 live, 1 drafts to revise, 0 need Dani, 0 retired',
     );
     expect(load(root).questions.find((e) => e.q.id === 'q-3h8r2t')?.q.review?.attempts).toBe(1);
 
@@ -413,7 +414,7 @@ describe('stampQuestions', () => {
     const review = load(root).questions.find((e) => e.q.id === 'q-3h8r2t')?.q.review;
     expect(review).toEqual({ attempts: 3, lastFailure: 'critic: the task does not fit' });
     expect(stampQuestions(load(root), FIXTURE_TODAY).summary).toBe(
-      'stamp: 2 live, 0 drafts to revise, 1 need Dani, 0 retired',
+      'stamp: 4 live, 0 drafts to revise, 1 need Dani, 0 retired',
     );
   });
 });
@@ -553,14 +554,51 @@ describe('the exam pool', () => {
       ['retire q-e1a2b3'],
     ]);
     expect(summaries).toEqual([
-      'stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired',
-      'stamp: 2 live, 1 drafts to revise, 0 need Dani, 0 retired',
-      'stamp: 2 live, 0 drafts to revise, 0 need Dani, 1 retired',
+      'stamp: 4 live, 1 drafts to revise, 0 need Dani, 0 retired',
+      'stamp: 4 live, 1 drafts to revise, 0 need Dani, 0 retired',
+      'stamp: 4 live, 0 drafts to revise, 0 need Dani, 1 retired',
     ]);
     const retired = load(root).questions.find((e) => e.q.id === 'q-e1a2b3')?.q;
     expect(retired?.status).toBe('retired');
     expect(retired?.review).toEqual({ attempts: 3, lastFailure: 'critic: The stem names the oven.' });
     expect(stampQuestions(load(root), FIXTURE_TODAY).revise).toEqual([]);
     expect(prepare(load(root), [1], 4, 'exam').questions).toBe(0);
+  });
+});
+
+describe('checks over incident steps (--pool incident)', () => {
+  const INCIDENT = 'content/incidents/inc-001.yaml';
+  const OLD_WHY = 'why: Turning people away loses the sales that borrowed capacity would have kept.';
+  const NEW_WHY = 'why: Turning people away loses the sales that the borrowed ovens would have kept.';
+
+  it('batches incident steps only under --pool incident, and never under practice', () => {
+    const root = setup();
+    replaceIn(root, INCIDENT, OLD_WHY, NEW_WHY);
+    const ctx = load(root);
+    expect(candidates(ctx, [1], {}, [], 'incident').map((c) => c.entry.q.id)).toEqual(['q-d2f6h8']);
+    expect(candidates(ctx, [1], {}).map((c) => c.entry.q.id)).not.toContain('q-d2f6h8');
+    const { questions } = prepare(ctx, [1], 1, 'incident');
+    expect(questions).toBe(1);
+    expect(batchFiles(root).flatMap((b) => b.questions.map((q) => q.id))).toEqual(
+      expect.arrayContaining(['q-d2f6h8']),
+    );
+    expect(new Set(batchFiles(root).flatMap((b) => b.questions.map((q) => q.id)))).toEqual(
+      new Set(['q-d2f6h8']),
+    );
+  });
+
+  it("stamps a step through the incident file's steps list, so R9 accepts it again", () => {
+    const root = setup();
+    replaceIn(root, INCIDENT, OLD_WHY, NEW_WHY);
+    prepare(load(root), [1], 1, 'incident');
+    answerAll(root);
+    grade(root, FIXTURE_TODAY);
+    const stamped = stampQuestions(load(root), FIXTURE_TODAY);
+    expect(stamped.log).toEqual([`live q-d2f6h8 (${INCIDENT})`]);
+    const ctx = load(root);
+    expect(ctx.loadErrors).toEqual([]);
+    const step = ctx.incidents[0]?.steps[0]?.q;
+    expect(step?.verified?.checks).toEqual(['solve-closed@1', 'solve-notes@2', 'critic@4']);
+    expect(r09.run(ctx).filter((f) => f.file === INCIDENT)).toEqual([]);
   });
 });
