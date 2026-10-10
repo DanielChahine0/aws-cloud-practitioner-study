@@ -1,0 +1,1160 @@
+questions:
+  - id: q-s8v4v8
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloud-computing-definition
+    note: m01/what-is-cloud-computing
+    task: "1.1"
+    level: 2
+    stem: >-
+      A city library's staff open its catalog servers and file storage from any branch, or from home, through a web browser, with no equipment kept in each building.
+      Which part of the AWS definition of cloud computing does this way of reaching the resources reflect?
+    options:
+      - id: a
+        text: On-demand delivery
+        why: On-demand delivery is about getting resources within seconds, while the library's need is reaching them from any place.
+      - id: b
+        text: IT resources
+        why: IT resources names what is delivered, such as servers and storage, rather than the way staff reach them.
+      - id: c
+        text: Over the internet
+        correct: true
+        why: Using servers and storage remotely through web-based access, from any location, is the over the internet part.
+      - id: d
+        text: Pay-as-you-go pricing
+        why: Pay-as-you-go pricing covers how the library is billed, which says nothing about how staff reach the resources.
+    evidence:
+      - "Cloud computing: IT resources, on demand, over the internet, billed pay-as-you-go."
+      - "Over the internet: remote use through web-based services, not local hardware, from anywhere."
+    takeaway: In the cloud computing definition, over the internet means resources are used remotely through web services rather than local hardware.
+    history: []
+    verified:
+      keyHash: c88b61e07e0b
+      fullHash: 90550ccf1360
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-2hqq6r
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: on-demand-delivery
+    note: m01/what-is-cloud-computing
+    task: "1.1"
+    level: 2
+    stem: >-
+      An online bookstore needs extra storage for a holiday promotion.
+      It wants the storage ready within seconds of asking, with no hardware order to place or wait for.
+      Which characteristic of cloud computing does this rely on?
+    options:
+      - id: a
+        text: On-demand delivery
+        correct: true
+        why: Getting resources within seconds, whenever they are asked for, is exactly what on-demand delivery provides.
+      - id: b
+        text: Economies of scale
+        why: Economies of scale lower prices through bulk buying, which says nothing about how fast storage arrives.
+      - id: c
+        text: Fault tolerance
+        why: Fault tolerance keeps a system running through failures, which is unrelated to getting storage quickly.
+      - id: d
+        text: Co-location hosting
+        why: Co-location means placing your own servers in a shared facility, which still needs a hardware order.
+    evidence:
+      - "On-demand delivery: resources within seconds, whenever needed."
+      - "On-demand delivery: resources in seconds, scaled up or down without long setup, the idea AWS began with."
+    takeaway: On-demand delivery means IT resources arrive within seconds of a request, with no hardware buying cycle.
+    history: []
+    verified:
+      keyHash: 9f23db5efbd8
+      fullHash: acaca1f65e7e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-rrfr87
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: data-center
+    note: m01/what-is-cloud-computing
+    task: "1.1"
+    level: 2
+    stem: >-
+      A small engineering startup needs its servers in a building with redundant power, cooling and security.
+      It has no staff to build such a facility or keep it running.
+      How does the AWS Cloud meet this need?
+    options:
+      - id: a
+        text: It lets the startup cache copies of popular content at sites close to its users
+        why: Edge locations speed up delivery to users, but they give the startup no facility to house its servers.
+      - id: b
+        text: It lets the startup pick the geographic area where its customers are concentrated
+        why: Choosing a Region near customers cuts delay, but on its own it says nothing about who runs the facility.
+      - id: c
+        text: It lets the startup use AWS data centers that it neither owns nor maintains
+        correct: true
+        why: AWS runs the server buildings with their power, cooling and security, so the startup uses them without upkeep.
+      - id: d
+        text: It lets the startup define a private virtual network inside its own account
+        why: A virtual network organizes resources in software, but it does not supply or run the physical facility.
+    evidence:
+      - "Data center: a server building with redundant power, cooling and security."
+      - "Firms once ran their own or co-located, but AWS lets them use data centers they do not own, trading upkeep and repetitive chores for innovation."
+    takeaway: A benefit of the AWS Cloud is using data centers with redundant power, cooling and security without owning or maintaining them.
+    history: []
+    verified:
+      keyHash: 3f38dd4230b6
+      fullHash: f23590df3914
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-h8ep9a
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: benefits-of-the-aws-cloud
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 2
+    select: 2
+    stem: >-
+      A meal-kit delivery startup wants to avoid a large upfront hardware purchase, and it has no reliable way to tell how many orders it will get next year.
+      Which benefits of the AWS Cloud address these two concerns?
+    options:
+      - id: a
+        text: Trade fixed expense for variable expense
+        correct: true
+        why: Paying each month for what is used, instead of buying hardware upfront, is the trade fixed expense for variable expense benefit.
+      - id: b
+        text: Benefit from massive economies of scale
+        why: Economies of scale lower unit prices through bulk buying, which neither removes the upfront purchase nor answers the unknown order volume.
+      - id: c
+        text: Stop guessing capacity
+        correct: true
+        why: Provisioning for today and scaling with real demand means the startup need not predict next year's order volume.
+      - id: d
+        text: Increase speed and agility
+        why: Speed and agility is about quick, disposable test environments, which addresses neither the upfront purchase nor the unknown demand.
+      - id: e
+        text: Go global in minutes
+        why: Going global is about deploying near users in other countries, which touches neither the upfront cost nor the order forecast.
+    evidence:
+      - "On AWS, spending follows usage and capacity follows demand."
+      - "On AWS the bill follows monthly usage, so you start small, spending matches consumption for more financial flexibility, and billing and budgeting tools help you save."
+      - "On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning."
+    takeaway: Avoiding upfront hardware spend and coping with unknown demand point to the variable expense and stop guessing capacity benefits.
+    history: []
+    verified:
+      keyHash: 9bb5360e805b
+      fullHash: 70240af24a2d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-akh72y
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: increase-speed-and-agility
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 3
+    stem: >-
+      A video game studio wants its developers to launch a test environment for each new feature idea in minutes and delete it once the experiment ends.
+      Which benefit of the AWS Cloud does this reflect?
+    options:
+      - id: a
+        text: Go global in minutes
+        why: Going global is about deploying near users in other parts of the world, while these environments stay internal.
+      - id: b
+        text: Increase speed and agility
+        correct: true
+        why: Spinning up throwaway environments quickly and deleting failed experiments is the speed and agility benefit.
+      - id: c
+        text: Stop guessing capacity
+        why: Stop guessing capacity is about matching production capacity to real demand, rather than fast experiments.
+      - id: d
+        text: Benefit from massive economies of scale
+        why: Economies of scale lower prices through bulk buying, which does nothing to speed up experiments.
+    evidence:
+      - "Teams spin up test environments, try ideas and delete failures so costs stop, shifting time from provisioning and deprovisioning to innovating and optimizing."
+      - "Faster deployment shortens time to market and quickens responses to change."
+    takeaway: Quick, disposable environments for trying ideas are the increase speed and agility benefit, which shortens time to market.
+    history: []
+    verified:
+      keyHash: 1da42f82001b
+      fullHash: a9f55fc4c9cc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-dpzn0s
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: go-global-in-minutes
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 2
+    stem: >-
+      A language-learning app based in Canada is launching in Japan.
+      It wants its service running close to Japanese learners right away, without building any facilities there.
+      Which benefit of the AWS Cloud applies?
+    options:
+      - id: a
+        text: Trade fixed expense for variable expense
+        why: This benefit is about how the bill is shaped, while the need here is to reach a new country quickly.
+      - id: b
+        text: Increase speed and agility
+        why: Speed and agility covers fast experiments by teams, while the need here is a presence in another country.
+      - id: c
+        text: Go global in minutes
+        correct: true
+        why: Deploying into an existing AWS Region abroad, instead of building there, is the go global in minutes benefit.
+      - id: d
+        text: Stop guessing capacity
+        why: Stop guessing capacity is about sizing resources to demand, while the need here is a location near learners.
+    evidence:
+      - "A US company expanding to India can deploy to an AWS-managed Region there instead of building its own data centers, in minutes rather than months or years."
+    takeaway: Deploying into an existing AWS Region in a new country, rather than building facilities, is the go global in minutes benefit.
+    history: []
+    verified:
+      keyHash: 29c0ab99fe1f
+      fullHash: adf5b37b8992
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-pb4c07
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: aws-global-infrastructure
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "1.1"
+    level: 2
+    select: 2
+    stem: >-
+      A streaming service with subscribers on several continents is reviewing what AWS offers it.
+      Which advantages come from the way the AWS global infrastructure is laid out?
+    options:
+      - id: a
+        text: Applications can be hosted near the users they serve
+        correct: true
+        why: Regions in many places let the service host its applications near its subscribers, which cuts delay.
+      - id: b
+        text: Spending can follow monthly usage with nothing paid upfront
+        why: This is a real AWS advantage, but it comes from pay-as-you-go billing rather than from where AWS sites sit.
+      - id: c
+        text: Test environments can be created for an idea and deleted after
+        why: Quick, disposable environments are the agility benefit, which does not depend on sites around the world.
+      - id: d
+        text: Workloads can keep running when one location has an outage
+        correct: true
+        why: Spreading resources across separate AZs and Regions lets the rest carry on when one location fails.
+      - id: e
+        text: Access to stored data can be limited to chosen users only
+        why: Access controls are a real AWS feature, but they protect data rather than come from the spread of sites.
+    evidence:
+      - "Nearby users get low-latency, fault-tolerant access to services, and advanced components come later."
+      - "AWS Global Infrastructure: AWS's Regions, AZs and data centers worldwide."
+    takeaway: AWS's worldwide Regions, AZs and data centers let workloads sit near users and keep running through a local outage.
+    history: []
+    verified:
+      keyHash: 242f2cb1a9bc
+      fullHash: 3b80ac6853b9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-127xhr
+    version: 1
+    status: retired
+    type: multi
+    pool: exam
+    concept: high-availability
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "1.1"
+    level: 2
+    select: 2
+    stem: >-
+      A regional clinic's appointment system must keep working with little downtime when a server or a whole data center fails.
+      Which actions support high availability for this system?
+    options:
+      - id: a
+        text: Keep the system in one data center with strong physical security
+        why: However secure one data center is, its outage would still stop the system, so it gives no protection from that failure.
+      - id: b
+        text: Run the application in more than one Availability Zone
+        correct: true
+        why: Copies in other AZs can take over when one fails, so patients see little or no downtime.
+      - id: c
+        text: Restore the system by hand from a nightly backup after an outage
+        why: A manual restore leaves patients without the system until it finishes, which is long downtime rather than minimal downtime.
+      - id: d
+        text: Keep a standby copy ready to take over if the main one fails
+        correct: true
+        why: A standby that takes over when the main component fails is what keeps downtime minimal.
+      - id: e
+        text: Host the system in the Region nearest to most of its patients
+        why: A nearby Region cuts delay for patients, but on its own it does not keep the system up when a data center fails.
+    evidence:
+      - "Spread resources and replicate data across several AZs so one AZ's outage does not stop applications."
+      - "High availability: minimal downtime, because a standby takes over when one component fails."
+    takeaway: High availability comes from spreading resources and data across several AZs so one failure causes little downtime.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 4 and 5 are the only two about redundancy and failover, forming the one coherent pair.)"
+  - id: q-ehjg6a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: trade-fixed-expense-for-variable-expense
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 3
+    stem: >-
+      A furniture retailer would otherwise pay a large sum upfront for servers and floor space, then carry that cost through its slow months.
+      On AWS, its bill instead rises and falls with what it uses each month.
+      Which benefit of the AWS Cloud is this?
+    options:
+      - id: a
+        text: Benefit from massive economies of scale
+        why: Economies of scale lower unit prices through bulk buying, while the change here is in how the bill is shaped.
+      - id: b
+        text: Trade fixed expense for variable expense
+        correct: true
+        why: Swapping a big upfront outlay for a bill that tracks monthly use is trading fixed expense for variable expense.
+      - id: c
+        text: Stop spending on data center upkeep
+        why: This benefit is about the ongoing upkeep of a facility, while the retailer's point is the upfront purchase.
+      - id: d
+        text: Stop guessing capacity
+        why: Stop guessing capacity is about sizing resources to demand, while the retailer's point is how it pays.
+    evidence:
+      - "On AWS the bill follows monthly usage, so you start small, spending matches consumption for more financial flexibility, and billing and budgeting tools help you save."
+      - "Fixed costs are paid up front for data centers and servers whether or not you use them, while variable costs on AWS follow only what you actually consume."
+    takeaway: Replacing a large upfront hardware cost with a bill that follows monthly use is trading fixed expense for variable expense.
+    history: []
+    verified:
+      keyHash: 4db53d571f31
+      fullHash: a5532613a8f8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-hqffgj
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: stop-guessing-capacity
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 2
+    stem: >-
+      A concert ticket seller has no reliable forecast of how many buyers its new site will attract.
+      It wants to start with modest resources and add more as real traffic arrives.
+      Which benefit of the AWS Cloud addresses this?
+    options:
+      - id: a
+        text: Go global in minutes
+        why: Going global is about reaching other countries quickly, while the seller's problem is an unknown amount of traffic.
+      - id: b
+        text: Benefit from massive economies of scale
+        why: Economies of scale lower prices through bulk buying, which leaves the sizing problem unsolved.
+      - id: c
+        text: Increase speed and agility
+        why: Speed and agility covers fast experiments by teams, while the seller needs capacity that tracks real demand.
+      - id: d
+        text: Stop guessing capacity
+        correct: true
+        why: Starting with what is needed today and scaling with actual demand removes the need for a forecast.
+    evidence:
+      - "On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning."
+    takeaway: Provisioning for today and scaling with real demand, instead of a forecast, is the stop guessing capacity benefit.
+    history: []
+    verified:
+      keyHash: 4b63eb780ef6
+      fullHash: ce07b04a1bcd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-91jh3p
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: economies-of-scale
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 2
+    stem: >-
+      A small startup that sells handmade candles runs on the same kind of advanced infrastructure as large enterprises, at prices it can afford.
+      This is possible because AWS buys hardware in enormous volumes and passes the savings on.
+      Which benefit of the AWS Cloud is this?
+    options:
+      - id: a
+        text: Trade fixed expense for variable expense
+        why: This benefit is about paying for use instead of upfront, while the startup's gain comes from AWS's bulk buying.
+      - id: b
+        text: Benefit from massive economies of scale
+        correct: true
+        why: Lower prices that come from AWS buying hardware in bulk for all customers are the economies of scale benefit.
+      - id: c
+        text: Stop spending on data center upkeep
+        why: This benefit is about handing off facility upkeep, while the startup's gain is a lower price per resource.
+      - id: d
+        text: Go global in minutes
+        why: Going global is about deploying in other countries quickly, which has nothing to do with the price paid.
+    evidence:
+      - "AWS buys hardware in bulk for its worldwide data centers and passes the lower prices on."
+      - "So startups, not only big enterprises, can afford advanced technology."
+    takeaway: AWS's bulk hardware buying lowers prices for every customer, so even small startups can afford advanced technology.
+    history: []
+    verified:
+      keyHash: 15e80b06bd73
+      fullHash: 41bcdfdf5a11
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-vxdrsz
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: resource-provisioning
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "1.4"
+    level: 2
+    stem: >-
+      A tax preparation firm adds many servers on AWS as filing season starts and removes them as soon as it ends.
+      Why does this pattern keep the firm's costs low for the rest of the year?
+    options:
+      - id: a
+        text: AWS buys hardware in bulk and passes the lower unit prices on
+        why: Bulk buying lowers the price per server, but it does not explain why the quiet months cost the firm little.
+      - id: b
+        text: AWS stops billing for a server as soon as it is deprovisioned
+        correct: true
+        why: Billing stops as soon as a server is deprovisioned, so the firm pays nothing for servers it no longer runs.
+      - id: c
+        text: AWS takes over the racking, powering and cooling of the servers
+        why: AWS does run the physical layer, but that is true whether the firm keeps its servers or releases them.
+      - id: d
+        text: AWS lets the firm run its servers in a Region close to its clients
+        why: A nearby Region cuts delay for clients, but it has no effect on what the firm pays in the quiet months.
+    evidence:
+      - "You provision resources when demand appears and deprovision them as fast when it fades, by hand or automatically through configuration."
+      - "Billing for a resource ends the moment it is deprovisioned."
+    takeaway: Provisioning for a peak and deprovisioning afterwards keeps costs low, because billing stops as soon as a resource is released.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 alone repeats the stem's phrase 'as soon as', which points at the key."
+  - id: q-80yvyy
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: trade-fixed-expense-for-variable-expense
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 1
+    stem: >-
+      In cloud economics, which description fits a variable expense?
+    options:
+      - id: a
+        text: A cost paid once upfront for hardware, whatever the later usage
+        why: A one-time upfront hardware payment is a fixed expense, since it stays the same however little is used.
+      - id: b
+        text: A cost that stays the same each month regardless of activity
+        why: A cost that never changes with activity is the definition of a fixed expense.
+      - id: c
+        text: A cost that rises and falls with the resources consumed
+        correct: true
+        why: A variable expense follows consumption, which is how an AWS bill behaves from month to month.
+      - id: d
+        text: A cost agreed in exchange for committing to a long term
+        why: A long-term commitment locks in spending ahead of time, rather than letting it follow actual use.
+    evidence:
+      - "Fixed costs are paid up front for data centers and servers whether or not you use them, while variable costs on AWS follow only what you actually consume."
+      - "Variable expense: a cost that follows consumption, like an AWS bill."
+    takeaway: A variable expense follows consumption, as an AWS bill does, while a fixed expense stays the same whatever the usage.
+    history: []
+    verified:
+      keyHash: ea4b1ac877df
+      fullHash: 589bb6ab8d6b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-6tv98h
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: economies-of-scale
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 1
+    stem: >-
+      Which explanation matches the economies of scale benefit of the AWS Cloud?
+    options:
+      - id: a
+        text: AWS bills each month for only the resources a customer actually used
+        why: A bill that follows usage is the variable expense benefit, which is about billing rather than AWS's buying power.
+      - id: b
+        text: AWS buys hardware in huge volumes and passes the lower costs on
+        correct: true
+        why: Huge purchase volumes lower AWS's unit costs, and those savings reach customers as lower prices.
+      - id: c
+        text: AWS lets customers scale capacity with real demand instead of a forecast
+        why: Scaling with real demand is the stop guessing capacity benefit, which says nothing about AWS's purchase volumes.
+      - id: d
+        text: AWS handles the racking, powering and cooling of its own data centers
+        why: Running the physical layer is the data center upkeep benefit, rather than lower prices from buying in bulk.
+    evidence:
+      - "Economies of scale: lower unit prices from huge purchase volumes."
+      - "AWS buys hardware in bulk for its worldwide data centers and passes the lower prices on."
+    takeaway: AWS's huge purchasing volume cuts unit costs, and customers see those savings as lower prices.
+    history: []
+    verified:
+      keyHash: ed4874f72abc
+      fullHash: 3bdb9cebae5f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-xy6c0c
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: stop-guessing-capacity
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 2
+    stem: >-
+      A school district bought servers sized for a projected surge in students that never came, and it still pays to power and maintain the idle hardware.
+      On AWS, which approach would have kept it from paying for this unused capacity?
+    options:
+      - id: a
+        text: Paying lower unit prices because AWS buys its hardware in bulk
+        why: Bulk buying cuts the price of each server, but servers sized to a wrong forecast would still be paid for while idle.
+      - id: b
+        text: Provisioning for current needs and scaling as usage changes
+        correct: true
+        why: Sizing to present needs and scaling as usage changes avoids paying for capacity bought for a forecast that never came.
+      - id: c
+        text: Running the district's portal from a Region in another country
+        why: A Region abroad changes where the portal runs, but the district would still pay for capacity it does not use.
+      - id: d
+        text: Creating test environments for new ideas and deleting the failures
+        why: Throwaway test environments speed up experiments, but they do not size production capacity to real enrollment.
+    evidence:
+      - "On premises you buy hardware for a forecast: plan for 10 million users over three years and get about 500,000, and the excess sits idle, while underestimating means a scramble for servers, degraded service and lost customers."
+      - "On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning."
+    takeaway: Buying hardware to a forecast risks idle excess or shortfalls, and scaling with actual demand is the stop guessing capacity benefit.
+    history: []
+    verified:
+      keyHash: a66c1867a62a
+      fullHash: b1143f3f2aab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-yzynqd
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: stop-spending-money-on-data-centers
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 2
+    stem: >-
+      An architecture firm's IT staff spend much of each week racking servers, replacing failed power supplies and paying cooling bills.
+      The firm wants that time and money spent on client projects instead.
+      On AWS, which change removes these ongoing costs?
+    options:
+      - id: a
+        text: Lower unit prices that come from AWS buying hardware in bulk
+        why: Bulk buying lowers the price of each resource, but the firm's cost is the ongoing work of running its facility.
+      - id: b
+        text: A bill that follows usage in place of an upfront hardware purchase
+        why: A usage-based bill replaces the upfront purchase, while the firm's issue is the daily upkeep of its servers.
+      - id: c
+        text: Deploying the firm's applications to other countries in a few clicks
+        why: Reaching other countries quickly does nothing about the racking, repairs and cooling the firm pays for.
+      - id: d
+        text: AWS taking over the physical running of the server facilities
+        correct: true
+        why: AWS takes over racking, powering and cooling servers, which frees the firm's staff and budget for clients.
+    evidence:
+      - "A data center keeps costing money after it is built, for utilities, maintenance, and racking, stacking and powering servers."
+      - "AWS runs that physical layer, freeing time and money for customers and strategy."
+    takeaway: Letting AWS run the physical work of a data center frees money and staff time for the business itself.
+    history: []
+    verified:
+      keyHash: 8db217e8a5f7
+      fullHash: abd81faa0b60
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-0p14me
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: pay-as-you-go-pricing
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "4.1"
+    level: 3
+    stem: >-
+      A photo-printing service runs its order site on AWS.
+      Its bill rises in the holiday season and falls in quiet months, at the same rate per resource throughout, with nothing prepaid and no contract signed.
+      Which pricing approach does this bill reflect?
+    options:
+      - id: a
+        text: Save when you commit
+        why: Commitment discounts need a usage commitment over a term, and the service has signed no contract.
+      - id: b
+        text: Pay less by using more
+        why: Volume discounts lower the rate as usage grows, while this service pays the same rate in its busy months.
+      - id: c
+        text: Pay-as-you-go pricing
+        correct: true
+        why: Paying only for what is consumed, with nothing upfront and no contract, is pay-as-you-go pricing.
+      - id: d
+        text: Reserved Instance pricing
+        why: Reserved Instances trade a term commitment for a discount, which the service has not made.
+    evidence:
+      - "You pay only for the AWS resources you consume, just as staff earn wages only for hours on shift."
+      - "On AWS there is no prepayment, and you need not worry about capacity constraints."
+    takeaway: Pay-as-you-go pricing charges only for the resources consumed, with nothing paid upfront and no long-term contract.
+    history: []
+    verified:
+      keyHash: cd06c6c58127
+      fullHash: c1b979ae4ed1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-22dg10
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: pay-as-you-go-pricing
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "4.1"
+    level: 2
+    stem: >-
+      A museum runs an online exhibit on AWS for a few weeks and then shuts it down.
+      Under pay-as-you-go pricing, why does the museum pay nothing for the exhibit after it closes?
+    options:
+      - id: a
+        text: Prices are lower because AWS buys hardware in bulk
+        why: Bulk buying lowers unit prices, but lower prices still add up while resources run, so it does not explain a zero bill.
+      - id: b
+        text: Charges stop as soon as its resources are deprovisioned
+        correct: true
+        why: Billing for a resource ends the moment it is released, so the exhibit costs nothing once its resources are gone.
+      - id: c
+        text: Resources arrive within seconds whenever they are needed
+        why: Fast delivery explains how the exhibit could start quickly, not why the bill drops to zero after it closes.
+      - id: d
+        text: Physical security of the data centers is handled by AWS
+        why: AWS does guard its data centers, but that security duty has no bearing on what the museum is billed.
+    evidence:
+      - "Billing for a resource ends the moment it is deprovisioned."
+      - "AWS charges only for what you consume, with nothing paid upfront."
+    takeaway: With pay-as-you-go pricing, charges end the moment a resource is deprovisioned, so a short-lived workload costs only its run time.
+    history: []
+    verified:
+      keyHash: 36dad335488f
+      fullHash: 042d974b52a2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-s2s52k
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: shared-responsibility-model
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 1
+    stem: >-
+      A craft brewery moving to AWS asks which security tasks AWS takes on and which stay with the brewery.
+      Which AWS concept sets out this division?
+    options:
+      - id: a
+        text: AWS Well-Architected Framework
+        why: The Well-Architected Framework guides how to design sound workloads, rather than dividing security tasks between AWS and the brewery.
+      - id: b
+        text: AWS Shared Responsibility Model
+        correct: true
+        why: The shared responsibility model splits security into AWS's share, of the cloud, and the brewery's share, in the cloud.
+      - id: c
+        text: AWS Cloud Adoption Framework (AWS CAF)
+        why: AWS CAF organizes guidance for migrating to AWS, rather than assigning security tasks to AWS or to the brewery.
+      - id: d
+        text: AWS Global Infrastructure
+        why: The global infrastructure is the Regions, AZs and data centers AWS runs, not a split of security duties.
+    evidence:
+      - "AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud."
+      - "AWS Shared Responsibility Model: AWS and customers dividing security for an environment both can trust."
+    takeaway: The AWS shared responsibility model divides security work, with AWS securing the cloud and customers securing what they run in it.
+    history: []
+    verified:
+      keyHash: 7a0c0750d78b
+      fullHash: 27838fee6565
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-pqz9wj
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: security-of-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    select: 3
+    stem: >-
+      A credit union is moving its online banking application to AWS.
+      Which security tasks are AWS's responsibility?
+    options:
+      - id: a
+        text: Controlling physical entry to the data centers
+        correct: true
+        why: Physical security of the facilities belongs wholly to AWS and is never shared with customers.
+      - id: b
+        text: Applying patches to the guest operating system
+        why: The credit union applies patches to the operating system it runs, since AWS cannot sign in to it.
+      - id: c
+        text: Keeping customers isolated at the hypervisor layer
+        correct: true
+        why: AWS secures the hypervisor layer that separates one customer's workloads from another's.
+      - id: d
+        text: Deciding which staff members can reach member data
+        why: Choosing who can reach its data is the credit union's own access duty in the cloud.
+      - id: e
+        text: Maintaining the server hardware behind the services
+        correct: true
+        why: Upkeep of the hardware that runs AWS services is part of security of the cloud, which AWS owns.
+      - id: f
+        text: Encrypting member records before they leave the office
+        why: Encrypting data before it is sent is client-side encryption, which the credit union handles itself.
+    evidence:
+      - "AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud."
+      - "Hypervisor layer: a virtualization layer that AWS secures."
+    takeaway: Security of the cloud is AWS's share, covering physical facilities, hardware and the hypervisor isolation between customers.
+    history: []
+    verified:
+      keyHash: 5fe1cd90386a
+      fullHash: 0bce8bc44244
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-k7rwr5
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: security-in-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    select: 3
+    stem: >-
+      A law firm runs a document portal on Amazon EC2 instances.
+      Which tasks fall to the law firm under the AWS shared responsibility model?
+    options:
+      - id: a
+        text: Guarding the doors of the data center buildings
+        why: Physical security of the buildings belongs to AWS and is never handed to customers.
+      - id: b
+        text: Setting which users may open each stored file
+        correct: true
+        why: Access to its own data is the firm's decision, made through the controls AWS provides.
+      - id: c
+        text: Maintaining the physical network hardware
+        why: AWS maintains the hardware and networking behind its services, which is security of the cloud.
+      - id: d
+        text: Securing the application code it deploys
+        correct: true
+        why: Applications a customer runs on AWS are the customer's to secure, as part of security in the cloud.
+      - id: e
+        text: Isolating the hypervisor from other tenants
+        why: Hypervisor isolation between customers is AWS's job, so the firm never handles it.
+      - id: f
+        text: Installing patches on the instance OS
+        correct: true
+        why: The firm runs the operating system on its instances, so applying the vendor's patches is its job alone.
+    evidence:
+      - "Customers patch their OS and secure applications, data, access and client-side encryption."
+      - "Security in the cloud: the customer's share."
+    takeaway: Security in the cloud is the customer's share, covering its data, who can access it, its applications and its operating system.
+    history: []
+    verified:
+      keyHash: 5b0df0e0851c
+      fullHash: ad4be00603da
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-68p9jw
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: operating-system-patching
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      A logistics company runs its routing software on Amazon EC2 instances.
+      A security patch is released for the operating system on those instances, and the company must apply it itself.
+      Which fact explains why applying the patch falls to the company rather than to AWS?
+    options:
+      - id: a
+        text: AWS maintains the physical servers that run under the instances
+        why: AWS does maintain that hardware, but its upkeep stops below the operating system the company runs.
+      - id: b
+        text: The OS vendor publishes the patches for the systems it supplies
+        why: The vendor does publish patches, but that says who writes them rather than why the company must apply them.
+      - id: c
+        text: AWS cannot sign in to the operating systems that customers run
+        correct: true
+        why: Only the customer can sign in to its operating system, since AWS has no back door, so patching falls to it.
+      - id: d
+        text: AWS isolates each customer's instances at the hypervisor layer
+        why: AWS does secure the hypervisor, but that isolation protects tenants from each other rather than patching an OS.
+    evidence:
+      - "The vendor supplies OS patches, but applying them is yours alone."
+      - "Only you can sign in to your OS or add users, since AWS has no back door."
+    takeaway: On Amazon EC2 the customer applies operating system patches, because AWS has no access to the operating system it runs.
+    history: []
+    verified:
+      keyHash: 7e2d26d3e954
+      fullHash: a6c82b7f3a3d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-4wmrvm
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: client-side-encryption
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 3
+    stem: >-
+      A hotel group protects the guest records it keeps on AWS in several ways.
+      Which of these measures is client-side encryption?
+    options:
+      - id: a
+        text: Having the storage service encrypt the records after they arrive
+        why: Encryption done by the service after the records arrive is server-side encryption, whose owner varies by service.
+      - id: b
+        text: Encrypting the records on its own servers before upload
+        correct: true
+        why: Encrypting on the group's own systems before AWS receives the records is client-side encryption, a customer duty.
+      - id: c
+        text: Limiting which staff accounts can open the records once stored
+        why: Controlling who can open the records is access control, which protects them without encrypting anything.
+      - id: d
+        text: Applying vendor patches to the operating system on its servers
+        why: Patching the OS closes software flaws, but it does not encrypt the guest records at all.
+    evidence:
+      - "Client-side encryption: encrypting data on the client before the server gets it."
+      - "Customers patch their OS and secure applications, data, access and client-side encryption."
+    takeaway: Client-side encryption happens on the customer's own systems before data reaches AWS, unlike server-side encryption done by the service.
+    history: []
+    verified:
+      keyHash: e403dcdb5da3
+      fullHash: 5030609f905a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-9q6r6a
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: client-side-encryption
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which description fits client-side encryption?
+    options:
+      - id: a
+        text: Data is encrypted by the storage service after it arrives
+        why: Encryption performed by the service once data arrives is server-side encryption.
+      - id: b
+        text: Data is encrypted only while it crosses the network
+        why: Protecting data only during its trip across the network describes encryption in transit.
+      - id: c
+        text: Data is encrypted by the sender before a server receives it
+        correct: true
+        why: Client-side encryption scrambles data on the client, so it is already encrypted when the server gets it.
+      - id: d
+        text: Data is hidden by limiting which users are allowed to list it
+        why: Limiting who can list data is access control, which leaves the data itself readable.
+    evidence:
+      - "Client-side encryption: encrypting data on the client before the server gets it."
+      - "Server-side encryption: encryption by the service, owner varying by service."
+    takeaway: Client-side encryption scrambles data before it leaves the client, unlike server-side encryption, which the service performs.
+    history: []
+    verified:
+      keyHash: c89b95fba810
+      fullHash: 3f9ba96985ab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-w57zay
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: client-side-encryption
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.2"
+    level: 2
+    stem: >-
+      A pharmacy chain worries that a misconfigured permission could one day expose prescription files it stores on AWS.
+      Which measure keeps the files unreadable even if access is opened by mistake?
+    options:
+      - id: a
+        text: Compressing the files into one archive before each upload
+        why: Compressed files are smaller, but anyone who reaches them through a bad permission can still unpack and read them.
+      - id: b
+        text: Copying the files across several Availability Zones
+        why: Copies across AZs protect against an outage, but each copy would be just as readable if exposed.
+      - id: c
+        text: Scanning the files for malware on its own systems first
+        why: A malware scan checks the files are safe to store, but it leaves them readable to anyone who reaches them.
+      - id: d
+        text: Encrypting the files on its own systems before upload
+        correct: true
+        why: Files encrypted before upload stay unreadable to anyone without the key, even if access is left open.
+    evidence:
+      - "Encrypted data stays unreadable even if access is left open."
+      - "Client-side encryption: encrypting data on the client before the server gets it."
+    takeaway: Data encrypted on the client before upload stays unreadable even when access controls are set wrong.
+    history: []
+    verified:
+      keyHash: fb6dbc7fc42c
+      fullHash: fc45a3a0fe3a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-ah8t0e
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: client-server-model
+    note: m01/welcome-to-aws-cloud-practitioner-essentials
+    task: "3.1"
+    level: 2
+    stem: >-
+      A parcel-tracking startup is deploying the backend of its mobile app on virtual servers in AWS, which the app reaches over the internet.
+      In the client-server model, which part does the AWS deployment take on?
+    options:
+      - id: a
+        text: Sending requests from each phone and showing the replies on screen
+        why: Sending requests and showing the replies is the client's role, which the app on each phone keeps.
+      - id: b
+        text: Validating each request, processing the data and returning a result
+        correct: true
+        why: Cloud computing supplies the server side, so the virtual servers on AWS validate, process and answer requests.
+      - id: c
+        text: Replacing the client-server exchange with direct links between phones
+        why: The cloud does not replace the client-server model, which the app still uses with AWS as the server side.
+      - id: d
+        text: Acting as both the client and the server for every single request
+        why: The phones still send the requests, so the AWS deployment plays only the server side of the exchange.
+    evidence:
+      - "Server: the side that validates requests, stores and processes data, and returns responses."
+      - "Cloud computing is one version of it, supplying the server side as scalable servers that clients reach over the internet."
+    takeaway: In the client-server model the client asks and the server validates, processes and replies, and cloud computing supplies that server side.
+    history: []
+    verified:
+      keyHash: 56d2dd2fabd4
+      fullHash: ea7ee5e882ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-5scvqc
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: cloud-based-deployment
+    note: m01/what-is-cloud-computing
+    task: "3.1"
+    level: 2
+    stem: >-
+      A new recipe-sharing website has no existing servers.
+      It plans to build its application, database and networking entirely on AWS.
+      Which deployment model is this?
+    options:
+      - id: a
+        text: Hybrid deployment
+        why: Hybrid mixes in-house systems with cloud ones, but the website has no in-house systems at all.
+      - id: b
+        text: On-premises deployment
+        why: On-premises keeps resources in the company's own facility, while the website puts everything on AWS.
+      - id: c
+        text: Co-located deployment
+        why: Co-location places the company's own servers in a shared facility, while the website owns no servers.
+      - id: d
+        text: Cloud-based deployment
+        correct: true
+        why: Running every part of the application in the cloud, whether migrated or built new, is a cloud-based deployment.
+    evidence:
+      - "Cloud-based deployment: everything in the cloud, also called public cloud."
+    takeaway: Running every part of an application in the cloud, whether migrated or newly built, is a cloud-based deployment.
+    history: []
+    verified:
+      keyHash: b7570308f3ed
+      fullHash: b716a69e2e89
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-zty4r3
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: hybrid-deployment
+    note: m01/what-is-cloud-computing
+    task: "3.1"
+    level: 3
+    select: 2
+    stem: >-
+      An insurance broker is weighing several plans for where its systems will run.
+      Which plans are hybrid deployments?
+    options:
+      - id: a
+        text: Keep regulated policy records in its office and run new analytics on AWS
+        correct: true
+        why: Regulated records stay in-house while analytics run in the cloud, so in-house and cloud resources work together.
+      - id: b
+        text: Move its records to AWS and build each new application there as well
+        why: With its records and new applications on AWS and nothing kept in-house, this plan is a cloud-based deployment.
+      - id: c
+        text: Run its systems on virtualized servers in its own data center
+        why: Virtualized servers in its own data center keep everything in-house, which is an on-premises deployment.
+      - id: d
+        text: Run its website on AWS while a legacy claims system stays on site
+        correct: true
+        why: A legacy system kept on site next to a cloud-hosted website is the typical case for a hybrid deployment.
+      - id: e
+        text: Rebuild its legacy claims system on AWS and close its server room
+        why: Closing the server room after rebuilding on AWS leaves nothing in-house, so this plan is cloud-based.
+      - id: f
+        text: Keep its legacy servers in house and add tools to raise their utilization
+        why: Adding management tools to get more use from in-house legacy servers is still an on-premises deployment.
+    evidence:
+      - "Hybrid: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
+      - "Cloud-based is all cloud and on-premises all in-house, while hybrid mixes them when some systems must stay on premises."
+    takeaway: A hybrid deployment runs some systems in-house, such as regulated or legacy ones, alongside others in the cloud.
+    history: []
+    verified:
+      keyHash: c2c441b995fd
+      fullHash: 871bcdac1083
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-b4h6dq
+    version: 1
+    status: live
+    type: single
+    pool: exam
+    concept: aws-regions
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "3.2"
+    level: 1
+    stem: >-
+      Which component of the AWS global infrastructure is a geographic area, chosen near customers, that groups several isolated locations?
+    options:
+      - id: a
+        text: An edge location
+        why: An edge location is a small site that caches content near users, and it holds no Availability Zones.
+      - id: b
+        text: A data center
+        why: A data center is a single facility inside an Availability Zone, so it sits below the AZ rather than above it.
+      - id: c
+        text: An AWS Region
+        correct: true
+        why: A Region is a geographic area near customers made up of three or more isolated Availability Zones.
+      - id: d
+        text: An Availability Zone
+        why: An Availability Zone is one of the isolated locations inside a Region, rather than the area that groups them.
+    evidence:
+      - "AWS Region: a geographic area with three or more AZs."
+    takeaway: An AWS Region is a geographic area chosen near customers, and each one contains three or more Availability Zones.
+    history: []
+    verified:
+      keyHash: 7142b03f7a99
+      fullHash: aa99a48dc2ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-mce5q9
+    version: 1
+    status: live
+    type: multi
+    pool: exam
+    concept: availability-zones
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "3.2"
+    level: 1
+    select: 2
+    stem: >-
+      Which statements about Availability Zones are accurate?
+    options:
+      - id: a
+        text: Each one is a small site that caches content close to end users
+        why: Caching content near users is the role of edge locations, which are separate from Availability Zones.
+      - id: b
+        text: Each one sits inside a single Region and never spans two
+        correct: true
+        why: An Availability Zone always belongs to exactly one Region and never stretches across Regions.
+      - id: c
+        text: Each one is a geographic area that is chosen near customers
+        why: A geographic area chosen near customers describes a Region, which is the level that holds the AZs.
+      - id: d
+        text: Each one has its own power, networking and connectivity
+        correct: true
+        why: Separate power and networking keep a problem in one Availability Zone from spreading to the others.
+      - id: e
+        text: Each one groups three or more physically separate locations
+        why: Grouping three or more separate AZs is true of a Region, while an AZ itself holds one or more data centers.
+    evidence:
+      - "Availability Zone (AZ): an isolated location in a Region, with one or more data centers."
+      - "Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ"
+      - "AWS Region: a geographic area with three or more AZs."
+    takeaway: An Availability Zone is an isolated part of one Region, with its own power and networking, holding one or more data centers.
+    history: []
+    verified:
+      keyHash: e837aea9a936
+      fullHash: 9a23b846f3f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-10
+  - id: q-byhcj2
+    version: 1
+    status: retired
+    type: single
+    pool: exam
+    concept: latency
+    note: m01/applying-cloud-concepts-to-real-life-use-cases
+    task: "3.2"
+    level: 2
+    stem: >-
+      A fitness app hosted in a single Region in North America sees slow response times for its fast-growing user base in Australia.
+      Which change most directly reduces the delay for those users?
+    options:
+      - id: a
+        text: Add a second Availability Zone within the app's current Region
+        why: An extra AZ in the same Region improves availability, but the Australian users are still just as far away.
+      - id: b
+        text: Serve those users from a Region closer to where they live
+        correct: true
+        why: Latency grows with distance, so serving the Australian users from a nearby Region cuts the delay they see.
+      - id: c
+        text: Encrypt all traffic between the app and those users
+        why: Encryption protects the data, but it adds no speed and leaves the distance to the servers unchanged.
+      - id: d
+        text: Move the app onto larger servers within its current Region
+        why: Larger servers add processing power, but the time spent crossing the distance stays the same.
+    evidence:
+      - "Latency: delay in answering requests, growing with distance from the infrastructure."
+      - "Hosting in Regions near customers cuts latency."
+    takeaway: Latency grows with distance, so hosting in a Region near a group of users cuts the response delay they see.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the only one tied to where 'those users' live; the rest are generic upgrades.)"
