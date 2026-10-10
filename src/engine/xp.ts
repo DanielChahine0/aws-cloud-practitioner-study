@@ -1,6 +1,6 @@
 /**
- * The XP table (spec 3.2). Lessons, the bet, the effort bonus, bosses, mocks and labs pay today;
- * the other rows wait for the tasks and phases that add lightning rounds, incidents, capstone decisions and missions.
+ * The XP table (spec 3.2). Every row pays: lessons, the bet, the effort bonus, lightning rounds, incidents, labs,
+ * bosses, mocks, capstone decisions (on the first final grade) and missions (when they close), each once as spec 3.2 says.
  */
 export const XP = {
   lesson: 10,

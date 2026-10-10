@@ -21,7 +21,9 @@ import {
   wellCalibrated,
 } from './badges.ts';
 import { betXp } from './bets.ts';
+import { scoreTotal } from './capstone.ts';
 import { addDays, dayStartAt, nextDayStart, studyDayAt } from './day.ts';
+import { GATE_MISSION, type MissionRef, type OpenMissionLog, stepMission } from './missions.ts';
 import type { SessionState } from './replay.ts';
 import { capDue, capDueOn, rate, recall, review, type SrsCard, type SrsRating } from './srs.ts';
 import { effortBonus, XP } from './xp.ts';
@@ -103,7 +105,7 @@ export interface ConceptMemory {
 export interface MemoryState {
   concepts: ReadonlyMap<string, ConceptMemory>;
   xp: number;
-  /** Answer, lesson, lab, incident and exam events that earned XP, by event id; events that earned 0 are absent. */
+  /** Answer, lesson, lab, incident, exam, mission and decision events that earned XP, by event id; 0 is absent. */
   xpByEvent: ReadonlyMap<string, number>;
   xpByDay: ReadonlyMap<string, number>;
   /** Every question id answered in any mode. */
@@ -436,6 +438,11 @@ function replay(
   const incidentPaidDays = new Set<string>();
   const missionCleaned = new Map<string, string>();
   const missionsClosed = new Set<string>();
+  /** Each mission's attempts, read by the same rules as `src/engine/missions.ts`, so XP pays when the page closes. */
+  const missionLogs = new Map<string, OpenMissionLog>();
+  /** Modules with a counted self-grade; only a final after it counts (spec 6). */
+  const selfDecisions = new Set<number>();
+  /** The first final grade of each module, which pays XP and decides Architect. */
   const finalDecisions = new Map<number, readonly number[]>();
   const cleanDays = new Set<string>();
   /** Non-relearn review answers per study day, kept per day so a day left and entered again keeps its count. */
@@ -789,6 +796,19 @@ function replay(
   };
 
   const applyMission = (e: Extract<StudyEvent, { t: 'mission' }>) => {
+    const log = missionLogs.get(e.mission) ?? { attempts: [], closed: null };
+    missionLogs.set(e.mission, log);
+    const ref: MissionRef = {
+      id: e.mission,
+      n: 0,
+      keep: content.keptMissions.has(e.mission),
+      gate: e.mission === GATE_MISSION,
+      maxLiveHours: null,
+      services: [],
+    };
+    const wasOpen = log.closed === null;
+    stepMission(ref, log, e);
+    if (wasOpen && log.closed !== null) earn(e, ref.gate ? XP.mission0 : XP.mission);
     if (e.step === 'cleaned' && !missionCleaned.has(e.mission)) missionCleaned.set(e.mission, e.day);
     if (e.step !== 'usage-ok' || content.keptMissions.has(e.mission)) return;
     const cleaned = missionCleaned.get(e.mission);
@@ -798,8 +818,13 @@ function replay(
   };
 
   const applyDecision = (e: Extract<StudyEvent, { t: 'decision' }>) => {
-    if (e.stage !== 'final') return;
+    if (e.stage === 'self') {
+      selfDecisions.add(e.module);
+      return;
+    }
+    if (!selfDecisions.has(e.module) || finalDecisions.has(e.module)) return;
     finalDecisions.set(e.module, e.scores);
+    earn(e, XP.decision + (scoreTotal(e.scores) >= ARCHITECT.minTotal ? XP.decisionGood : 0));
     const all = [...finalDecisions.values()];
     if (all.length >= ARCHITECT.decisions && all.every(decisionPasses)) grant('architect', e);
   };
