@@ -8,16 +8,28 @@ import { FORM_IDS } from '../../schemas/ids.ts';
  * Version 3 applies boss and mock answers on submit, pays exam XP and qualifies exam days.
  * Version 4 judges past days with the exam date in force when they happened, keeps the schedule of the current
  * exam date, and counts the inherited card of a split concept not yet answered as due.
+ * Version 5 pays lab XP, counts lab debriefs and gives Hands On per complete module.
  */
-export const ENGINE_VERSION = 4;
+export const ENGINE_VERSION = 5;
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;
 
-/** What the shipped content knows: live question ids with their versions, and the lesson note ids. */
+/** What the shipped content knows: live question ids with their versions, the lesson note ids, and the lab and incident ids. */
 export interface ContentRefs {
   questions: ReadonlyMap<string, number>;
   notes: ReadonlySet<string>;
+  labs: ReadonlySet<string>;
+  incidents: ReadonlySet<string>;
+}
+
+/** A lab's first completion; a later `lab.done` of the same lab never replaces or revokes it (spec 8.4). */
+export interface LabDone {
+  at: string;
+  day: string;
+  rev: number;
+  hints: number;
+  eventId: string;
 }
 
 export interface AnswerRecord {
@@ -106,7 +118,9 @@ export interface Progress {
   causes: ReadonlyMap<string, Cause>;
   /** Rank ids recorded by `rank` events. */
   ranks: ReadonlySet<string>;
-  /** Events that refer to a question or note the shipped content does not have. */
+  /** Lab id to its first completion. */
+  labsDone: ReadonlyMap<string, LabDone>;
+  /** Events that refer to a question, note or lab the shipped content does not have. */
   unknownEvents: number;
 }
 
@@ -211,6 +225,7 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
   const exams = new Map<string, ExamResult>();
   const causes = new Map<string, Cause>();
   const ranks = new Set<string>();
+  const labsDone = new Map<string, LabDone>();
   let flags = 0;
   let unknownEvents = 0;
 
@@ -243,6 +258,11 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
       case 'rank':
         ranks.add(e.rank);
         break;
+      case 'lab.done':
+        if (refs && !refs.labs.has(e.lab)) unknownEvents++;
+        if (!labsDone.has(e.lab))
+          labsDone.set(e.lab, { at: e.at, day: e.day, rev: e.rev, hints: e.hints, eventId: e.id });
+        break;
       default:
         break;
     }
@@ -259,6 +279,7 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
     exams,
     causes,
     ranks,
+    labsDone,
     unknownEvents,
   };
 }

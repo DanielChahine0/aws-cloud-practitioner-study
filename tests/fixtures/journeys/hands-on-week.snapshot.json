@@ -1,0 +1,790 @@
+{
+  "mastery": [
+    [
+      1,
+      26
+    ],
+    [
+      10,
+      0
+    ],
+    [
+      11,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      13,
+      0
+    ],
+    [
+      2,
+      27
+    ],
+    [
+      3,
+      20
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      6,
+      0
+    ],
+    [
+      7,
+      0
+    ],
+    [
+      8,
+      0
+    ],
+    [
+      9,
+      0
+    ]
+  ],
+  "memory": {
+    "answered": [
+      "q-bake-01-01-a",
+      "q-bake-01-02-a",
+      "q-bake-01-03-a",
+      "q-bake-01-04-a",
+      "q-bake-01-05-a",
+      "q-bake-01-06-a",
+      "q-bake-01-07-a",
+      "q-bake-02-01-a",
+      "q-bake-02-02-a",
+      "q-bake-02-03-a",
+      "q-bake-02-04-a",
+      "q-bake-02-05-a",
+      "q-bake-02-06-a",
+      "q-bake-02-07-a",
+      "q-bake-03-01-a",
+      "q-bake-03-02-a",
+      "q-bake-03-03-a",
+      "q-bake-03-04-a",
+      "q-bake-03-05-a"
+    ],
+    "badges": [
+      [
+        "first-brew",
+        {
+          "day": "2026-10-19",
+          "eventId": "01M59NDKA00000000000000000"
+        }
+      ]
+    ],
+    "calibration": {
+      "notSure": {
+        "right": 1,
+        "total": 1
+      },
+      "sure": {
+        "right": 18,
+        "total": 19
+      }
+    },
+    "catchUpPlans": [],
+    "concepts": [
+      [
+        "bake-01-01",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-22T08:41:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-19T08:41:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-19",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-19",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-20",
+          "misconception": null,
+          "successDays": [
+            "2026-10-19"
+          ]
+        }
+      ],
+      [
+        "bake-01-02",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-22T08:42:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-19T08:42:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-19",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-19",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-20",
+          "misconception": null,
+          "successDays": [
+            "2026-10-19"
+          ]
+        }
+      ],
+      [
+        "bake-01-03",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-22T08:43:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-19T08:43:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-19",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-19",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-19",
+          "misconception": null,
+          "successDays": [
+            "2026-10-19"
+          ]
+        }
+      ],
+      [
+        "bake-01-04",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-22T08:44:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-19T08:44:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-19",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-19",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-19",
+          "misconception": null,
+          "successDays": [
+            "2026-10-19"
+          ]
+        }
+      ],
+      [
+        "bake-01-05",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-22T08:45:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-19T08:45:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-19",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-19",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-19",
+          "misconception": null,
+          "successDays": [
+            "2026-10-19"
+          ]
+        }
+      ],
+      [
+        "bake-01-06",
+        {
+          "card": {
+            "difficulty": 6.40211507,
+            "due": "2026-10-23T11:03:00.000Z",
+            "elapsedDays": 1,
+            "lapses": 0,
+            "lastReview": "2026-10-20T11:03:00.000Z",
+            "learningSteps": 0,
+            "reps": 2,
+            "scheduledDays": 3,
+            "stability": 1.88678762,
+            "state": 2
+          },
+          "enteredOn": "2026-10-19",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-20",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-20",
+          "misconception": {
+            "day": "2026-10-19",
+            "qid": "q-bake-01-06-a"
+          },
+          "successDays": [
+            "2026-10-20"
+          ]
+        }
+      ],
+      [
+        "bake-01-07",
+        {
+          "card": {
+            "difficulty": 5.11217071,
+            "due": "2026-10-22T10:03:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-20T10:03:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 2,
+            "stability": 1.2931,
+            "state": 2
+          },
+          "enteredOn": "2026-10-20",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-20",
+          "fsrsRating": "hard",
+          "lastAnswerDay": "2026-10-20",
+          "misconception": null,
+          "successDays": [
+            "2026-10-20"
+          ]
+        }
+      ],
+      [
+        "bake-02-01",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-23T08:41:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-20T08:41:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-20",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-20",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-20"
+          ]
+        }
+      ],
+      [
+        "bake-02-02",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-23T08:42:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-20T08:42:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-20",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-20",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-20"
+          ]
+        }
+      ],
+      [
+        "bake-02-03",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-23T08:43:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-20T08:43:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-20",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-20",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-20",
+          "misconception": null,
+          "successDays": [
+            "2026-10-20"
+          ]
+        }
+      ],
+      [
+        "bake-02-04",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-23T08:44:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-20T08:44:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-20",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-20",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-20",
+          "misconception": null,
+          "successDays": [
+            "2026-10-20"
+          ]
+        }
+      ],
+      [
+        "bake-02-05",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-23T08:45:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-20T08:45:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-20",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-20",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-20",
+          "misconception": null,
+          "successDays": [
+            "2026-10-20"
+          ]
+        }
+      ],
+      [
+        "bake-02-06",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T10:03:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T10:03:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ],
+      [
+        "bake-02-07",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T11:03:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T11:03:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ],
+      [
+        "bake-03-01",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T08:41:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T08:41:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ],
+      [
+        "bake-03-02",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T08:42:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T08:42:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ],
+      [
+        "bake-03-03",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T08:43:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T08:43:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ],
+      [
+        "bake-03-04",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T08:44:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T08:44:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ],
+      [
+        "bake-03-05",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T08:45:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T08:45:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ]
+    ],
+    "examDate": null,
+    "examsDone": [],
+    "newByDay": [
+      [
+        "2026-10-19",
+        6
+      ],
+      [
+        "2026-10-20",
+        6
+      ],
+      [
+        "2026-10-21",
+        7
+      ]
+    ],
+    "qualifyingDays": [
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22"
+    ],
+    "staleAnswers": 0,
+    "xp": 430,
+    "xpByDay": [
+      [
+        "2026-10-19",
+        110
+      ],
+      [
+        "2026-10-20",
+        120
+      ],
+      [
+        "2026-10-21",
+        170
+      ],
+      [
+        "2026-10-22",
+        30
+      ]
+    ],
+    "xpByEvent": [
+      [
+        "01M59JSC000000000000000000",
+        10
+      ],
+      [
+        "01M59KXZW00000000000000000",
+        10
+      ],
+      [
+        "01M59N4EB00000000000000000",
+        10
+      ],
+      [
+        "01M59N68Y00000000000000000",
+        10
+      ],
+      [
+        "01M59N83H00000000000000000",
+        10
+      ],
+      [
+        "01M59N9Y400000000000000000",
+        10
+      ],
+      [
+        "01M59NBRQ00000000000000000",
+        10
+      ],
+      [
+        "01M59SN3800000000000000000",
+        40
+      ],
+      [
+        "01M5C563000000000000000000",
+        10
+      ],
+      [
+        "01M5C6APW00000000000000000",
+        10
+      ],
+      [
+        "01M5C7H5B00000000000000000",
+        10
+      ],
+      [
+        "01M5C7JZY00000000000000000",
+        10
+      ],
+      [
+        "01M5C7MTH00000000000000000",
+        10
+      ],
+      [
+        "01M5C7PN400000000000000000",
+        10
+      ],
+      [
+        "01M5C7RFQ00000000000000000",
+        10
+      ],
+      [
+        "01M5CC1T800000000000000000",
+        30
+      ],
+      [
+        "01M5CC7A100000000000000000",
+        8
+      ],
+      [
+        "01M5CFN5N00000000000000000",
+        12
+      ],
+      [
+        "01M5EQJT000000000000000000",
+        10
+      ],
+      [
+        "01M5ERQDW00000000000000000",
+        10
+      ],
+      [
+        "01M5ESXWB00000000000000000",
+        10
+      ],
+      [
+        "01M5ESZPY00000000000000000",
+        10
+      ],
+      [
+        "01M5ET1HH00000000000000000",
+        10
+      ],
+      [
+        "01M5ET3C400000000000000000",
+        10
+      ],
+      [
+        "01M5ET56Q00000000000000000",
+        10
+      ],
+      [
+        "01M5EYEH800000000000000000",
+        40
+      ],
+      [
+        "01M5EYM1100000000000000000",
+        10
+      ],
+      [
+        "01M5F1WCW00000000000000000",
+        40
+      ],
+      [
+        "01M5F21WN00000000000000000",
+        10
+      ],
+      [
+        "01M5HGV8800000000000000000",
+        30
+      ]
+    ]
+  },
+  "queue": {
+    "catchUp": false,
+    "due": 12,
+    "items": [
+      "bake-01-06",
+      "bake-01-07",
+      "bake-01-01",
+      "bake-02-01",
+      "bake-01-02",
+      "bake-02-02",
+      "bake-01-03",
+      "bake-02-03",
+      "bake-01-04",
+      "bake-02-04",
+      "bake-01-05",
+      "bake-02-05"
+    ],
+    "lessonsAllowed": true,
+    "misconceptions": 1,
+    "newToday": 0,
+    "next": null
+  },
+  "streak": {
+    "current": 4,
+    "freezes": 0,
+    "frozenDays": [],
+    "longest": 4
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "format": "ccp-study-backup",
+  "schemaVersion": 1,
+  "appVersion": "0.5.0",
+  "contentVersion": "c-1b2c3d",
+  "exportedAt": "2026-10-20T09:00:00.000Z",
+  "events": [
+    {
+      "id": "01JAB00000AAAAAAAAAAAAAAA1",
+      "at": "2026-10-19T08:00:00.000Z",
+      "tz": 120,
+      "day": "2026-10-19",
+      "t": "lab.done",
+      "lab": "lab-m01-sort-the-bakes",
+      "rev": 1,
+      "hints": 1
+    },
+    {
+      "id": "01JAB00000AAAAAAAAAAAAAAA2",
+      "at": "2026-10-19T08:00:00.000Z",
+      "tz": 120,
+      "day": "2026-10-19",
+      "t": "session",
+      "sid": "01JAB00000AAAAAAAAAAAAAAS1",
+      "mode": "debrief",
+      "phase": "start",
+      "seed": 2718281828,
+      "scope": "lab-m01-sort-the-bakes",
+      "qids": ["q-b4k7m2", "q-d9p4r6"]
+    },
+    {
+      "id": "01JAB00000AAAAAAAAAAAAAAA3",
+      "at": "2026-10-19T08:01:00.000Z",
+      "tz": 120,
+      "day": "2026-10-19",
+      "t": "answer",
+      "sid": "01JAB00000AAAAAAAAAAAAAAS1",
+      "mode": "debrief",
+      "qid": "q-b4k7m2",
+      "qv": 1,
+      "concept": "shared-kitchen",
+      "picked": ["a"],
+      "correct": true,
+      "sure": true,
+      "ms": 9100
+    },
+    {
+      "id": "01JAB00000AAAAAAAAAAAAAAA4",
+      "at": "2026-10-19T08:02:00.000Z",
+      "tz": 120,
+      "day": "2026-10-19",
+      "t": "answer",
+      "sid": "01JAB00000AAAAAAAAAAAAAAS1",
+      "mode": "debrief",
+      "qid": "q-d9p4r6",
+      "qv": 1,
+      "concept": "per-minute-rental",
+      "picked": ["c"],
+      "correct": false,
+      "sure": false,
+      "ms": 12800
+    },
+    {
+      "id": "01JAB00000AAAAAAAAAAAAAAA5",
+      "at": "2026-10-19T08:03:00.000Z",
+      "tz": 120,
+      "day": "2026-10-19",
+      "t": "session",
+      "sid": "01JAB00000AAAAAAAAAAAAAAS1",
+      "mode": "debrief",
+      "phase": "submit",
+      "seed": 2718281828
+    },
+    {
+      "id": "01JAB00000AAAAAAAAAAAAAAA6",
+      "at": "2026-10-20T07:30:00.000Z",
+      "tz": 120,
+      "day": "2026-10-20",
+      "t": "lab.done",
+      "lab": "lab-m01-sort-the-bakes",
+      "rev": 2,
+      "hints": 0
+    }
+  ],
+  "kv": {
+    "lastExportAt": { "value": "2026-10-20T09:00:00.000Z", "updatedAt": "2026-10-20T09:00:00.000Z" }
+  }
+}

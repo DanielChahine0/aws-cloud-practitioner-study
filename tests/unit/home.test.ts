@@ -494,6 +494,14 @@ describe('Home lines', () => {
     });
     expect(extraLink({ kind: 'mock', form: 'B' }, modules)).toEqual({ label: 'Mock B', href: '#/s/mock/b' });
   });
+
+  it('links a lab extra to its lab, titled from the index', () => {
+    const labs = [{ id: 'lab-m05-two-tiers', title: 'Two tiers, two zones' }];
+    expect(extraLink({ kind: 'lab', lab: 'lab-m05-two-tiers', module: 5 }, [], labs)).toEqual({
+      label: 'Lab: Two tiers, two zones',
+      href: '#/m/05/lab/lab-m05-two-tiers',
+    });
+  });
 });
 
 describe('reminderOf', () => {

@@ -10,7 +10,7 @@ import { reviewQueue } from '../../src/engine/queue.ts';
 import { toPlain } from '../../src/engine/replay.ts';
 import { streakOf } from '../../src/engine/streak.ts';
 import { JOURNEY_CONTENT, type JourneyName, journeyNow } from '../fixtures/journeys/content.ts';
-import { comebackTenDays, examCrunch, firstWeek } from '../fixtures/journeys/journeys.ts';
+import { comebackTenDays, examCrunch, firstWeek, handsOnWeek } from '../fixtures/journeys/journeys.ts';
 
 /**
  * Golden journeys (spec 9): each builder's log is committed as `<name>.jsonl`, and its replay at `journeyNow`
@@ -22,6 +22,7 @@ const JOURNEYS: Record<JourneyName, () => StudyEvent[]> = {
   'first-week': firstWeek,
   'exam-crunch': examCrunch,
   'comeback-10-days': comebackTenDays,
+  'hands-on-week': handsOnWeek,
 };
 
 function replay(name: JourneyName) {
@@ -92,5 +93,16 @@ describe('golden journeys', () => {
     expect(memory.catchUpPlans.get('2026-10-27')).toHaveLength(60);
     expect(streak.current).toBe(0);
     expect(streak.longest).toBe(5);
+  });
+
+  it('hands-on-week pays each lab once, qualifies a lab-only day and counts its debriefs', () => {
+    const { memory, events, streak } = replay('hands-on-week');
+    const labs = events.filter((e) => e.t === 'lab.done');
+    expect(labs.map((e) => memory.xpByEvent.get(e.id) ?? 0)).toEqual([40, 30, 0, 40, 40, 30, 0]);
+    expect(memory.qualifyingDays.has('2026-10-22')).toBe(true);
+    expect(memory.qualifyingDays.has('2026-10-23')).toBe(false);
+    expect(memory.concepts.get('bake-02-07')?.card).not.toBeNull();
+    expect(memory.badges.has('hands-on')).toBe(false);
+    expect(streak.current).toBe(4);
   });
 });

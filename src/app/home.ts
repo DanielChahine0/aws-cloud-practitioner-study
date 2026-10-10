@@ -230,14 +230,19 @@ export function extrasLine(items: readonly { label: string }[]): string {
   return `${EXTRAS_LEAD}${items.map((item) => item.label).join(EXTRAS_JOIN)}`;
 }
 
-/** The label and link of one extra: a ready boss or the next unseen mock form. */
+/** The label and link of one extra: a ready boss, the next unseen mock form or a core lab. */
 export function extraLink(
   extra: Extra,
   modules: readonly { n: number; short: string }[],
+  labs: readonly { id: string; title: string }[] = [],
 ): { label: string; href: string } {
   if (extra.kind === 'boss') {
     const short = modules.find((m) => m.n === extra.module)?.short ?? '';
     return { label: `Boss: ${short}`, href: `#/s/boss/m${pad2(extra.module)}` };
+  }
+  if (extra.kind === 'lab') {
+    const title = labs.find((lab) => lab.id === extra.lab)?.title ?? `Module ${extra.module} lab`;
+    return { label: `Lab: ${title}`, href: `#/m/${pad2(extra.module)}/lab/${extra.lab}` };
   }
   return { label: `Mock ${extra.form}`, href: `#/s/mock/${extra.form.toLowerCase()}` };
 }

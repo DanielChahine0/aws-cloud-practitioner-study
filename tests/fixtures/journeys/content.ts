@@ -87,19 +87,24 @@ function build(): MemoryContent {
     aliases: new Map(),
     questionVersions,
     examTasks,
-    coreLabs: new Map(),
+    coreLabs: new Map([
+      [1, ['lab-m01-a', 'lab-m01-b']],
+      [2, ['lab-m02-a', 'lab-m02-b']],
+      [3, ['lab-m03-a', 'lab-m03-b']],
+    ]),
     keptMissions: new Set(),
   };
 }
 
 export const JOURNEY_CONTENT: MemoryContent = build();
 
-export type JourneyName = 'first-week' | 'exam-crunch' | 'comeback-10-days';
+export type JourneyName = 'first-week' | 'exam-crunch' | 'comeback-10-days' | 'hands-on-week';
 
 const NOW: Record<JourneyName, string> = {
   'first-week': '2026-10-18T20:00:00.000Z',
   'exam-crunch': '2026-11-12T20:00:00.000Z',
   'comeback-10-days': '2026-10-27T12:00:00.000Z',
+  'hands-on-week': '2026-10-23T20:00:00.000Z',
 };
 
 /** The moment each journey is read at, in offset 0. */

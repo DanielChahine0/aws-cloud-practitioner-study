@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { addDays } from '../../src/engine/day.ts';
+import { deriveMemory } from '../../src/engine/memory.ts';
 import { FREEZE_CAP, FREEZE_EVERY, streakOf } from '../../src/engine/streak.ts';
+import { timelineOf } from '../fixtures/events.ts';
+import { at, contentOf, labDoneOf } from '../fixtures/memory.ts';
 
 /** `count` consecutive study days starting at `from`. */
 const run = (from: string, count: number): string[] =>
@@ -70,5 +73,14 @@ describe('streakOf (spec 3.5)', () => {
 
   it('treats days stamped in different offsets as plain strings', () => {
     expect(streakOf(new Set(['2026-10-10', '2026-10-11']), '2026-10-11')).toMatchObject({ current: 2 });
+  });
+
+  it('extends the streak on a day whose only completion is a first lab completion', () => {
+    const content = contentOf([{ id: 'oven', module: 1 }]);
+    const log = timelineOf([
+      [at('2026-10-09'), { t: 'lesson.done', note: 'm01/a' }],
+      [at('2026-10-10'), labDoneOf('lab-m01-a', 1)],
+    ]);
+    expect(streakOf(deriveMemory(log, content).qualifyingDays, '2026-10-10').current).toBe(2);
   });
 });

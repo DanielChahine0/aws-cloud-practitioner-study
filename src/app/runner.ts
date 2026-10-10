@@ -94,6 +94,7 @@ const MODE_LABELS: Record<Mode, string> = {
   incident: 'Incident',
   boss: 'Boss',
   mock: 'Mock exam',
+  debrief: 'Lab debrief',
 };
 
 export function modeLabel(mode: Mode): string {
