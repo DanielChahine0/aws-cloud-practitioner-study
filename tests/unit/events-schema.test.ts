@@ -94,6 +94,12 @@ describe('StudyEvent', () => {
     expect(StudyEvent.safeParse({ ...base, t: 'party', note: 'm03/aws-lambda' }).success).toBe(false);
   });
 
+  it('accepts the relearn flag on an answer and rejects a flag that is not a boolean', () => {
+    expect(StudyEvent.safeParse({ ...base, ...VARIANTS.answer, relearn: true }).success).toBe(true);
+    expect(StudyEvent.safeParse({ ...base, ...VARIANTS.answer, relearn: false }).success).toBe(true);
+    expect(StudyEvent.safeParse({ ...base, ...VARIANTS.answer, relearn: 'yes' }).success).toBe(false);
+  });
+
   it('rejects a time with an offset instead of Z, and an unknown mode', () => {
     const at = '2026-10-09T10:00:00+02:00';
     expect(StudyEvent.safeParse({ ...base, at, t: 'lesson.done', note: 'm03/aws-lambda' }).success).toBe(

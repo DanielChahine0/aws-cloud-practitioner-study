@@ -31,6 +31,7 @@
   "dependencies": {
     "@preact/signals": "2.11.3",
     "preact": "10.29.8",
+    "ts-fsrs": "5.4.2",
     "zod": "4.6.5"
   },
   "devDependencies": {

@@ -23,8 +23,26 @@ const answer = (qid: string, correct: boolean, sid = SID, concept = 'shared-kitc
 });
 
 describe('derive', () => {
-  it('has engine version 1', () => {
-    expect(ENGINE_VERSION).toBe(1);
+  it('has engine version 2', () => {
+    expect(ENGINE_VERSION).toBe(2);
+  });
+
+  it('records the event id, the concept and the relearn flag of each answer', () => {
+    const events = eventsOf(answer('q1', false, SID, 'shared-kitchen'), {
+      ...answer('q2', true, SID, 'shared-kitchen'),
+      relearn: true,
+    } as NewEvent);
+    const p = derive(events, null);
+    expect(p.answers.get('q1')?.[0]).toMatchObject({
+      id: events[0]?.id,
+      concept: 'shared-kitchen',
+      relearn: false,
+    });
+    expect(p.answers.get('q2')?.[0]).toMatchObject({
+      id: events[1]?.id,
+      concept: 'shared-kitchen',
+      relearn: true,
+    });
   });
 
   it('scores a check session of 3 with 2 correct as 2/3', () => {

@@ -71,7 +71,7 @@ function startOrResume(
           progress: progress.peek(),
           seed,
         })
-      : selectQuiz({ pool, progress: progress.peek(), seed });
+      : selectQuiz({ pool, progress: progress.peek(), seed, recall: () => 0 });
   if (qids.length === 0) return null;
   const sid = ulid();
   void record({ t: 'session', sid, mode, phase: 'start', scope, seed, qids });

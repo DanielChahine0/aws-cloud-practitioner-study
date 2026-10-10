@@ -2,9 +2,10 @@ import type { Mode, StudyEvent } from '../../schemas/events.ts';
 
 /**
  * The pure replay (spec 8): every bit of progress is derived from the event log, never stored.
- * Changing what `derive` computes from the same events bumps `ENGINE_VERSION`.
+ * Changing what `derive` or `deriveMemory` computes from the same events bumps `ENGINE_VERSION`.
+ * Version 2 adds XP and FSRS (`src/engine/memory.ts`) and the answer's id, concept and relearn flag.
  */
-export const ENGINE_VERSION = 1;
+export const ENGINE_VERSION = 2;
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;
@@ -16,6 +17,8 @@ export interface ContentRefs {
 }
 
 export interface AnswerRecord {
+  /** The answer event's id, which keys its XP in `MemoryState.xpByEvent`. */
+  id: string;
   qid: string;
   qv: number;
   sid: string;
@@ -25,6 +28,9 @@ export interface AnswerRecord {
   correct: boolean;
   sure: boolean;
   picked: AnswerEvent['picked'];
+  /** The concept id as written, before any alias is resolved. */
+  concept: string;
+  relearn: boolean;
 }
 
 export interface SessionState {
@@ -70,6 +76,7 @@ const byId = (a: StudyEvent, b: StudyEvent): number => (a.id < b.id ? -1 : a.id 
 
 function recordOf(e: AnswerEvent): AnswerRecord {
   return {
+    id: e.id,
     qid: e.qid,
     qv: e.qv,
     sid: e.sid,
@@ -79,6 +86,8 @@ function recordOf(e: AnswerEvent): AnswerRecord {
     correct: e.correct,
     sure: e.sure,
     picked: e.picked,
+    concept: e.concept,
+    relearn: e.relearn === true,
   };
 }
 
@@ -165,17 +174,18 @@ export function derive(events: readonly StudyEvent[], refs: ContentRefs | null):
   };
 }
 
-function plain(value: unknown): unknown {
+/** Plain JSON of any derived state: maps become sorted entry arrays, sets sorted arrays, keys sorted. */
+export function toPlain(value: unknown): unknown {
   if (value instanceof Map) {
     return [...value.entries()]
       .sort(([a], [b]) => (String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0))
-      .map(([key, inner]) => [key, plain(inner)]);
+      .map(([key, inner]) => [key, toPlain(inner)]);
   }
-  if (value instanceof Set) return [...value].sort().map(plain);
-  if (Array.isArray(value)) return value.map(plain);
+  if (value instanceof Set) return [...value].sort().map(toPlain);
+  if (Array.isArray(value)) return value.map(toPlain);
   if (value !== null && typeof value === 'object') {
     const out: Record<string, unknown> = {};
-    for (const key of Object.keys(value).sort()) out[key] = plain((value as Record<string, unknown>)[key]);
+    for (const key of Object.keys(value).sort()) out[key] = toPlain((value as Record<string, unknown>)[key]);
     return out;
   }
   return value;
@@ -183,7 +193,7 @@ function plain(value: unknown): unknown {
 
 /** Plain JSON of a progress state, with maps as sorted entry arrays, for golden snapshot files. */
 export function snapshotOf(p: Progress): unknown {
-  return plain(p);
+  return toPlain(p);
 }
 
 /** The newest session of that mode and scope that was neither submitted nor abandoned. */

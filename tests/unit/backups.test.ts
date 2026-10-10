@@ -10,7 +10,7 @@ import { parseBackup } from '../../src/store/backup.ts';
  * to its committed `vN.snapshot.json`. A missing snapshot is written once by this helper, then committed.
  */
 const dir = fileURLToPath(new URL('../fixtures/backups/', import.meta.url));
-const files = readdirSync(dir).filter((f) => /^v\d+\.json$/.test(f));
+const files = readdirSync(dir).filter((f) => /^v\d+(?:-[a-z0-9-]+)?\.json$/.test(f));
 
 describe('backup fixtures', () => {
   it('include schema 1', () => {
