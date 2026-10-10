@@ -158,9 +158,95 @@ export const SortAction = z.discriminatedUnion('t', [
 export type SortSpec = z.infer<typeof SortSpec>;
 export type SortAction = z.infer<typeof SortAction>;
 
+const ConfigureOption = z.strictObject({
+  id: Slug,
+  label: z.string().min(2).max(60),
+  detail: z.string().max(120).optional(),
+});
+const SelectField = z.strictObject({
+  kind: z.literal('select'),
+  id: Slug,
+  label: z.string().min(2).max(40),
+  options: z.array(ConfigureOption).min(2).max(8),
+  initial: Slug,
+});
+const ToggleField = z.strictObject({
+  kind: z.literal('toggle'),
+  id: Slug,
+  label: z.string().min(2).max(60),
+  initial: z.boolean(),
+});
+const ConfigureRule = z.strictObject({
+  goal: GoalId,
+  field: Slug,
+  in: z.array(z.union([Slug, z.boolean()])).min(1),
+});
+export const ConfigureSpec = z
+  .strictObject({
+    fields: z
+      .array(z.discriminatedUnion('kind', [SelectField, ToggleField]))
+      .min(1)
+      .max(8),
+    rules: z.array(ConfigureRule).min(1),
+  })
+  .superRefine((spec, ctx) => {
+    const fields = new Map<string, (typeof spec.fields)[number]>();
+    spec.fields.forEach((f, i) => {
+      if (fields.has(f.id))
+        ctx.addIssue({ code: 'custom', path: ['fields', i, 'id'], message: `duplicate field id '${f.id}'` });
+      fields.set(f.id, f);
+      if (f.kind !== 'select') return;
+      const ids = f.options.map((o) => o.id);
+      ids.forEach((id, j) => {
+        if (ids.indexOf(id) !== j)
+          ctx.addIssue({
+            code: 'custom',
+            path: ['fields', i, 'options', j, 'id'],
+            message: `duplicate option id '${id}'`,
+          });
+      });
+      if (!ids.includes(f.initial))
+        ctx.addIssue({
+          code: 'custom',
+          path: ['fields', i, 'initial'],
+          message: `initial '${f.initial}' is not an option of ${f.id}`,
+        });
+    });
+    spec.rules.forEach((r, i) => {
+      const f = fields.get(r.field);
+      if (f === undefined) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['rules', i, 'field'],
+          message: `rule names unknown field '${r.field}'`,
+        });
+        return;
+      }
+      r.in.forEach((v, j) => {
+        const ok =
+          f.kind === 'toggle'
+            ? typeof v === 'boolean'
+            : typeof v === 'string' && f.options.some((o) => o.id === v);
+        if (!ok)
+          ctx.addIssue({
+            code: 'custom',
+            path: ['rules', i, 'in', j],
+            message: `'${String(v)}' is not a value of field ${f.id}`,
+          });
+      });
+    });
+  });
+export type ConfigureSpec = z.infer<typeof ConfigureSpec>;
+export const ConfigureAction = z.discriminatedUnion('t', [
+  z.strictObject({ t: z.literal('set'), field: Slug, value: z.union([Slug, z.boolean()]) }),
+  z.strictObject({ t: z.literal('reset') }),
+]);
+export type ConfigureAction = z.infer<typeof ConfigureAction>;
+
 /** Each shipped engine's spec and action schemas; R11 and the build parse with these, the app never imports them. */
 export const LAB_SCHEMAS: {
   readonly [E in LabEngineId]?: { readonly spec: z.ZodType; readonly action: z.ZodType };
 } = {
   sort: { spec: SortSpec, action: SortAction },
+  configure: { spec: ConfigureSpec, action: ConfigureAction },
 };

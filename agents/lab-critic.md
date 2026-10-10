@@ -33,3 +33,11 @@ Never read `~/Library/Application Support/ccp-study/`, the course source text, `
 
 Return only this JSON: `{ "lab": "<id>", "approved": <true or false>, "issues": [{ "kind": "grounding" | "wrongPath" | "alternatives" | "originality" | "style" | "debrief", "where": "<field or card id>", "fix": "<what to change>" }] }`.
 Approve only with no issues.
+
+## Configure criteria
+
+No select offers two options a learner could defend for the same goal; when one would, the rule's `in` must list both.
+Each rule matches what the brief and the cited note say, and you name the note line for every rule.
+Every price is in lab credits, and every figure the notes do not state is called a lab value in the brief or the option detail.
+Each wrong path fails its `failsGoal` because of the setting its `mistake` names, not because a field was left at its initial value by accident.
+Option labels name the choice and never the verdict; details state facts, never hints.

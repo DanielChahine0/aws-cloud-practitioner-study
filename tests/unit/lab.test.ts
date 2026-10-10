@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   CREDITS_NOTE,
+  checkLabel,
   ENGINE_LABEL,
   goalWord,
   hintLine,
@@ -53,5 +54,13 @@ describe('lab copy', () => {
       'Placed Rye for the market in Shared kitchen.',
     );
     expect(returnedLine('Rye for the market')).toBe('Rye for the market is back in the tray.');
+  });
+});
+
+describe('the check button', () => {
+  it('names the check button by engine', () => {
+    expect(checkLabel('sort')).toBe('Check');
+    expect(checkLabel('configure')).toBe('Check');
+    expect(checkLabel('simulate')).toBe('Run and check');
   });
 });

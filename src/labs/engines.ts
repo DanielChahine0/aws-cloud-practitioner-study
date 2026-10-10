@@ -1,5 +1,6 @@
 import type { LabEngineId } from '../../schemas/ids.ts';
 import type { SortSpec } from '../../schemas/lab.ts';
+import { CONFIGURE } from './configure/model.ts';
 import type { GoalResult, LabEngine } from './contract.ts';
 import { SORT, type SortState, sortComplete } from './sort/model.ts';
 
@@ -22,6 +23,7 @@ export const ENGINES: Readonly<Partial<Record<LabEngineId, EngineEntry>>> = {
     settle: [],
     complete: (spec, state) => sortComplete(spec as SortSpec, state as SortState),
   },
+  configure: { engine: CONFIGURE as unknown as AnyLabEngine, settle: [], complete: () => true },
 };
 
 /** The registry entry of an engine id, or null when this build does not ship that engine. */

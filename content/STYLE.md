@@ -162,6 +162,12 @@ Any figure the cited notes do not state is called a lab value.
 Every card placement, goal, hint and debrief line rests on a line of a note the lab lists in `notes`.
 Support plans appear only by their four current names: Basic Support, AWS Business Support+, AWS Enterprise Support and AWS Unified Operations.
 
+### Configure fields
+
+Give each field one decision, labelled by the setting it changes.
+Option labels name the choice and never the verdict, so no option reads "Recommended" or "Cheapest".
+Option details state facts from the cited note or named lab values, never hints.
+
 ## Incidents
 
 A daily incident is a short cafe story told over 2 to 4 steps in `content/incidents/inc-NNN.yaml` (spec 4.5).

@@ -1,9 +1,11 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import type { SortSpec } from '../../schemas/lab.ts';
+import { ConfigureSpec, type SortSpec } from '../../schemas/lab.ts';
 import { toPlain } from '../../src/engine/replay.ts';
+import { CONFIGURE } from '../../src/labs/configure/model.ts';
 import { replayLab } from '../../src/labs/contract.ts';
 import { SORT } from '../../src/labs/sort/model.ts';
+import { bakeryConfigureLab } from '../fixtures/lab-specs.ts';
 import { bakeryLab } from '../fixtures/labs.ts';
 
 /** Lab reducers (spec 5.1, 9): any action sequence, known ids or not, never throws, replays the same and checks purely. */
@@ -31,6 +33,37 @@ describe('Sort reducer properties', () => {
         expect(SORT.check(SORT_SPEC, once)).toEqual(first);
         expect(toPlain(once)).toEqual(before);
         expect(first.map((r) => r.goalId)).toEqual(['g1', 'g2']);
+      }),
+      RUNS,
+    );
+  });
+});
+
+const CONFIGURE_SPEC = ConfigureSpec.parse(bakeryConfigureLab().spec);
+/** Known and unknown fields with right, wrong and junk values, plus junk actions. */
+const configureActionArb = fc.oneof(
+  fc.record({
+    t: fc.constant('set'),
+    field: fc.constantFrom('oven', 'rental', 'door', 'chimney'),
+    value: fc.oneof(
+      fc.constantFrom('small-oven', 'deck-oven', 'tunnel-oven', 'per-minute', 'monthly', 'brick-oven'),
+      fc.boolean(),
+      fc.integer(),
+    ),
+  }),
+  fc.constant({ t: 'reset' }),
+  fc.anything(),
+);
+
+describe('the Configure reducer', () => {
+  it('never throws, is deterministic and checks purely', () => {
+    fc.assert(
+      fc.property(fc.array(configureActionArb, { maxLength: 30 }), (actions) => {
+        const a = replayLab(CONFIGURE, CONFIGURE_SPEC, actions as never[]);
+        const b = replayLab(CONFIGURE, CONFIGURE_SPEC, actions as never[]);
+        expect(toPlain(a)).toEqual(toPlain(b));
+        expect(CONFIGURE.check(CONFIGURE_SPEC, a)).toEqual(CONFIGURE.check(CONFIGURE_SPEC, b));
+        for (const value of Object.values(a.values)) expect(['string', 'boolean']).toContain(typeof value);
       }),
       RUNS,
     );

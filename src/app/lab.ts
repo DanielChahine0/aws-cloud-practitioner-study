@@ -50,3 +50,8 @@ export function placedLine(card: string, bucket: string): string {
 export function returnedLine(card: string): string {
   return `${card} is back in the tray.`;
 }
+
+/** The check button's words: Simulate runs the model before it checks (Task 13). */
+export function checkLabel(engine: LabEngineId): string {
+  return engine === 'simulate' ? 'Run and check' : 'Check';
+}

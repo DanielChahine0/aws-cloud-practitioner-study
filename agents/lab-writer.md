@@ -133,3 +133,28 @@ Loop on `pnpm --silent content:validate --draft <file>` until it ends with `0 pr
 ## Return
 
 Return only this JSON: `{ "module": <n>, "files": [<paths>], "labs": [<ids>], "problems": [<anything you could not fix>] }`.
+
+## Configure labs
+
+A Configure spec is `fields` and `rules`; `ConfigureSpec` in `schemas/lab.ts` is the shape and `bakeryConfigureLab` in `tests/fixtures/lab-specs.ts` is a complete example.
+Each field is one decision: a `select` of 2 to 8 options with ids, labels and an optional `detail`, or a `toggle` with an `initial` boolean.
+Each rule is `{ goal, field, in }`: the goal passes when every one of its rules finds the field's value in `in`.
+Actions are `{ t: set, field: <field id>, value: <option id or boolean> }` and `{ t: reset }`, and every field starts at its `initial`.
+Set `initial` so the start fails at least one goal, and so no goal passes by leaving a field untouched unless another goal of the lab needs that field changed.
+Write `minutes` from 4 to 6.
+
+### Launch the order server (Module 2)
+
+Use the id `lab-m02-launch-the-order-server` in `content/labs/02-compute-in-the-cloud/launch-the-order-server.yaml`.
+Declare a select `instance-family` of the five families the instance types note names, a select `purchase` of the purchase options the pricing note names, and inbound rules as toggles, such as HTTPS from anywhere, SSH from anywhere and SSH from the cafe only.
+Goals: the family fits a balanced web order server; the purchase option suits a server that runs all year and must never be interrupted; the inbound rules open HTTPS to customers and SSH to the cafe only.
+Wrong paths: Spot for the order server, a compute optimized family for a balanced load, and SSH open to anyone, each failing the goal it breaks.
+
+### Choose the Region (Module 4)
+
+Use the id `lab-m04-choose-the-region` in `content/labs/04-going-global/choose-the-region.yaml`.
+Declare one select `region` of three or four fictional Regions with made-up names, never real Region codes; each option's `detail` states the data residency, the latency to the cafe's customers in ms, whether the needed service runs there, and a price index in lab credits.
+Rank the four factors the Region note teaches: compliance first, then the services, then proximity, then price.
+Goal g1 lists the Regions that keep the data where the law requires, g2 the Regions that also run the service, and g3 only the closest Region left after g1 and g2, so a cheaper or nearer Region never beats a compliant one.
+Wrong paths: the cheapest Region abroad (fails g1) and the nearest Region without the service (fails g2).
+Call every latency and price a lab value in the brief, and write prices only as lab credits.
