@@ -1,0 +1,127 @@
+# Fixture capstone brief: a made-up bakery, for the content-check tests.
+title: Move the bakery to the shared kitchen
+facts:
+  - id: growth
+    text: The bakery runs one branch today and plans four branches by next spring.
+  - id: peak
+    text: Saturday queues are three times longer than weekday queues.
+  - id: loyalty
+    text: A stamp card gives regulars a free loaf after nine loaves.
+  - id: archive
+    text: Recipe cards and receipts fill two filing cabinets in the back room.
+  - id: pos
+    text: A till in the first branch records every sale on paper rolls.
+  - id: staff
+    text: One baker also looks after the ovens and the till.
+  - id: budget
+    text: Oven rental may not cost more than the flour bill.
+decisions:
+  - module: 1
+    title: Ovens for the first branch
+    prompt: Choose how the first branch borrows ovens from the shared kitchen.
+    context:
+      - The bakery runs one branch today.
+      - Saturday queues are three times longer than weekday queues.
+  - module: 2
+    title: Proofing cabinets
+    prompt: Choose how the bakery rents proofing cabinets for its dough.
+    context:
+      - Dough proofs for about an hour.
+      - Oven rental may not cost more than the flour bill.
+  - module: 3
+    title: Delivery bikes
+    prompt: Decide which deliveries the bakery hands to a courier service.
+    context:
+      - Regulars order loaves for the morning.
+      - One baker also looks after the ovens and the till.
+  - module: 4
+    title: Second town
+    prompt: Choose where the branch in the second town buys its flour.
+    context:
+      - The bakery plans four branches by next spring.
+      - The second town sits across the river.
+  - module: 5
+    title: Kitchen doors
+    prompt: Decide which doors of the shared kitchen stay locked at night.
+    context:
+      - Bakers arrive before dawn.
+      - The back room holds the filing cabinets.
+  - module: 6
+    title: Filing cabinets
+    prompt: Choose where old recipe cards and receipts are kept.
+    context:
+      - Recipe cards and receipts fill two filing cabinets.
+      - Old receipts are rarely read.
+  - module: 7
+    title: Order book
+    prompt: Choose how the bakery keeps its book of standing orders.
+    context:
+      - Regulars order the same loaves every week.
+      - The till records every sale on paper rolls.
+  - module: 8
+    title: Sales tally
+    prompt: Decide how the bakery counts which loaves sell on which day.
+    context:
+      - Saturday queues are three times longer than weekday queues.
+      - The owner wants fewer unsold loaves.
+  - module: 9
+    title: Kitchen keys
+    prompt: Decide who holds a key to the shared kitchen and the till.
+    context:
+      - One baker also looks after the ovens and the till.
+      - New branches bring new bakers.
+  - module: 10
+    title: Oven log
+    prompt: Choose how the bakery notices an oven that runs too hot.
+    context:
+      - Bakers arrive before dawn.
+      - A burnt batch wastes a morning of flour.
+  - module: 11
+    title: Flour budget
+    prompt: Decide how the bakery keeps oven rental under the flour bill.
+    context:
+      - Oven rental may not cost more than the flour bill.
+      - Saturday rentals cost the most.
+  - module: 12
+    title: Moving the till
+    prompt: Choose how the paper till rolls move into the shared kitchen ledger.
+    context:
+      - A till in the first branch records every sale on paper rolls.
+      - The branch cannot close on a Saturday.
+  - module: 13
+    title: Bakery review
+    prompt: Review the bakery plan and name the three changes that matter most.
+    context:
+      - The earlier choices describe the whole bakery.
+      - One baker must be able to run it.
+rubric:
+  passTotal: 8
+  criteria:
+    - id: fit
+      name: Fit
+      levels:
+        - Ignores the brief
+        - Meets some constraints
+        - Meets every main constraint
+        - Also meets edge constraints and names the course-taught reason
+    - id: grounding
+      name: Grounding
+      levels:
+        - No course concepts, or wrong ones
+        - 1 concept used correctly
+        - 2 or more used correctly
+        - Also compared against the rejected option
+    - id: tradeoffs
+      name: Trade-offs
+      levels:
+        - None
+        - Names a cost or a limit
+        - Adds a mitigation
+        - Adds the cost or responsibility impact
+    - id: cost
+      name: Cost and responsibility
+      levels:
+        - Missing
+        - Mentioned vaguely
+        - Pricing model or responsibility split stated
+        - Both stated, and they match earlier ADRs

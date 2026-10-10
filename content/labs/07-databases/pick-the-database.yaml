@@ -1,0 +1,248 @@
+id: lab-m07-pick-the-database
+module: 7
+title: Pick the database
+engine: sort
+tier: core
+status: live
+rev: 1
+concepts:
+  - purpose-built-databases
+  - relational-databases
+  - amazon-rds
+  - amazon-aurora
+  - flexible-schema
+  - amazon-dynamodb
+  - amazon-documentdb
+  - caching-layer
+  - amazon-elasticache
+  - amazon-neptune
+  - amazon-managed-blockchain
+  - aws-backup
+notes:
+  - m07/relational-database-services
+  - m07/nosql-database-services
+  - m07/in-memory-caching-services
+  - m07/additional-database-services
+minutes: 7
+brief: >-
+  The cafe is moving every data job off one overloaded server, and the owner wants each job on the AWS service built for it.
+  Sort each data need under the service that fits it best.
+spec:
+  buckets:
+    - id: amazon-rds
+      label: Amazon RDS
+    - id: amazon-aurora
+      label: Amazon Aurora
+    - id: amazon-dynamodb
+      label: Amazon DynamoDB
+    - id: amazon-documentdb
+      label: Amazon DocumentDB
+    - id: amazon-elasticache
+      label: Amazon ElastiCache
+    - id: amazon-neptune
+      label: Amazon Neptune
+    - id: amazon-managed-blockchain
+      label: Amazon Managed Blockchain
+    - id: aws-backup
+      label: AWS Backup
+  cards:
+    - id: repeat-buyers
+      text: Orders and loyalty points in linked tables, so one SQL query finds guests who keep buying the same drink
+      bucket: amazon-rds
+      also: [amazon-aurora]
+      goal: g1
+    - id: bean-shop-stock
+      text: Stock levels for the online bean shop on a familiar PostgreSQL engine, with patching and backups automated
+      bucket: amazon-rds
+      also: [amazon-aurora]
+      goal: g1
+    - id: costly-engine
+      text: Swap head office's expensive commercial database for a MySQL-compatible one with similar speed at a fraction of the cost
+      bucket: amazon-aurora
+      goal: g1
+    - id: order-ahead-app
+      text: An order-ahead app used in several countries that fetches each guest by a unique key in single-digit milliseconds
+      bucket: amazon-dynamodb
+      goal: g2
+    - id: guest-extras
+      text: Guest records where one holds a favorite drink and another a birthday, with new attributes added at any time
+      bucket: amazon-dynamodb
+      also: [amazon-documentdb]
+      goal: g2
+    - id: seasonal-catalog
+      text: A seasonal menu catalog kept as nested JSON-like documents by a team whose code already uses MongoDB drivers
+      bucket: amazon-documentdb
+      goal: g2
+    - id: morning-menu
+      text: The menu page that crowds of guests open every morning, repeating the same query against the order database
+      bucket: amazon-elasticache
+      goal: g3
+    - id: signed-in-sessions
+      text: Session data for signed-in guests that must come back in under a millisecond on every tap
+      bucket: amazon-elasticache
+      goal: g3
+    - id: points-contest
+      text: A loyalty-points leaderboard that every guest keeps refreshing during a weekend contest
+      bucket: amazon-elasticache
+      goal: g3
+    - id: referral-web
+      text: Who referred whom among the regulars, traced several links deep to suggest a next drink
+      bucket: amazon-neptune
+      goal: g4
+    - id: fraud-ring
+      text: Loyalty accounts tied together through shared cards and phones, checked for signs of a fraud ring
+      bucket: amazon-neptune
+      goal: g4
+    - id: bean-shipments
+      text: Food-safety tracking of each coffee bean shipment on its way from the farm to the cafe
+      bucket: amazon-managed-blockchain
+      goal: g4
+    - id: one-backup-view
+      text: One dashboard for the backups of the order tables, the guest tables and the cafe's shared file systems
+      bucket: aws-backup
+      goal: g5
+    - id: backup-policies
+      text: The same backup schedules and compliance reports applied across every cafe account, with copies in a second Region
+      bucket: aws-backup
+      goal: g5
+goals:
+  - id: g1
+    label: Linked-table needs sit under the relational service that fits each one
+    hint: Ask whether the data lives in tables of rows and columns under a fixed schema that SQL queries join together, and whether the job is replacing a costly commercial engine with similar speed for far less.
+  - id: g2
+    label: Flexible-schema needs sit under DynamoDB or DocumentDB
+    hint: Ask whether items carry different attributes, and whether the job is fast key lookups or JSON documents built with MongoDB tools.
+  - id: g3
+    label: Repeated hot reads sit under Amazon ElastiCache
+    hint: Ask whether the same data is read over and over and should come from memory before the database is touched.
+  - id: g4
+    label: Connected and shipment-tracking needs sit under their specialists
+    hint: Ask whether the value lies in the relationships between items, or in a network that tracks goods along a supply chain.
+  - id: g5
+    label: Cross-service backup needs sit under AWS Backup
+    hint: Ask whether the need is a database at all, or one place to manage backups that span many services and accounts.
+solution:
+  - { t: place, card: repeat-buyers, bucket: amazon-rds }
+  - { t: place, card: bean-shop-stock, bucket: amazon-rds }
+  - { t: place, card: costly-engine, bucket: amazon-aurora }
+  - { t: place, card: order-ahead-app, bucket: amazon-dynamodb }
+  - { t: place, card: guest-extras, bucket: amazon-dynamodb }
+  - { t: place, card: seasonal-catalog, bucket: amazon-documentdb }
+  - { t: place, card: morning-menu, bucket: amazon-elasticache }
+  - { t: place, card: signed-in-sessions, bucket: amazon-elasticache }
+  - { t: place, card: points-contest, bucket: amazon-elasticache }
+  - { t: place, card: referral-web, bucket: amazon-neptune }
+  - { t: place, card: fraud-ring, bucket: amazon-neptune }
+  - { t: place, card: bean-shipments, bucket: amazon-managed-blockchain }
+  - { t: place, card: one-backup-view, bucket: aws-backup }
+  - { t: place, card: backup-policies, bucket: aws-backup }
+wrongPaths:
+  - mistake: Puts linked order tables queried with SQL into the NoSQL DynamoDB
+    failsGoal: g1
+    actions:
+      - { t: place, card: repeat-buyers, bucket: amazon-dynamodb }
+      - { t: place, card: bean-shop-stock, bucket: amazon-rds }
+      - { t: place, card: costly-engine, bucket: amazon-aurora }
+      - { t: place, card: order-ahead-app, bucket: amazon-dynamodb }
+      - { t: place, card: guest-extras, bucket: amazon-dynamodb }
+      - { t: place, card: seasonal-catalog, bucket: amazon-documentdb }
+      - { t: place, card: morning-menu, bucket: amazon-elasticache }
+      - { t: place, card: signed-in-sessions, bucket: amazon-elasticache }
+      - { t: place, card: points-contest, bucket: amazon-elasticache }
+      - { t: place, card: referral-web, bucket: amazon-neptune }
+      - { t: place, card: fraud-ring, bucket: amazon-neptune }
+      - { t: place, card: bean-shipments, bucket: amazon-managed-blockchain }
+      - { t: place, card: one-backup-view, bucket: aws-backup }
+      - { t: place, card: backup-policies, bucket: aws-backup }
+  - mistake: Picks DynamoDB for a MongoDB team's document catalog, missing DocumentDB's MongoDB compatibility
+    failsGoal: g2
+    actions:
+      - { t: place, card: repeat-buyers, bucket: amazon-rds }
+      - { t: place, card: bean-shop-stock, bucket: amazon-rds }
+      - { t: place, card: costly-engine, bucket: amazon-aurora }
+      - { t: place, card: order-ahead-app, bucket: amazon-dynamodb }
+      - { t: place, card: guest-extras, bucket: amazon-dynamodb }
+      - { t: place, card: seasonal-catalog, bucket: amazon-dynamodb }
+      - { t: place, card: morning-menu, bucket: amazon-elasticache }
+      - { t: place, card: signed-in-sessions, bucket: amazon-elasticache }
+      - { t: place, card: points-contest, bucket: amazon-elasticache }
+      - { t: place, card: referral-web, bucket: amazon-neptune }
+      - { t: place, card: fraud-ring, bucket: amazon-neptune }
+      - { t: place, card: bean-shipments, bucket: amazon-managed-blockchain }
+      - { t: place, card: one-backup-view, bucket: aws-backup }
+      - { t: place, card: backup-policies, bucket: aws-backup }
+  - mistake: Answers a flood of repeated reads with the database itself instead of a cache beside it
+    failsGoal: g3
+    actions:
+      - { t: place, card: repeat-buyers, bucket: amazon-rds }
+      - { t: place, card: bean-shop-stock, bucket: amazon-rds }
+      - { t: place, card: costly-engine, bucket: amazon-aurora }
+      - { t: place, card: order-ahead-app, bucket: amazon-dynamodb }
+      - { t: place, card: guest-extras, bucket: amazon-dynamodb }
+      - { t: place, card: seasonal-catalog, bucket: amazon-documentdb }
+      - { t: place, card: morning-menu, bucket: amazon-rds }
+      - { t: place, card: signed-in-sessions, bucket: amazon-elasticache }
+      - { t: place, card: points-contest, bucket: amazon-elasticache }
+      - { t: place, card: referral-web, bucket: amazon-neptune }
+      - { t: place, card: fraud-ring, bucket: amazon-neptune }
+      - { t: place, card: bean-shipments, bucket: amazon-managed-blockchain }
+      - { t: place, card: one-backup-view, bucket: aws-backup }
+      - { t: place, card: backup-policies, bucket: aws-backup }
+  - mistake: Keeps a dense web of referrals in relational tables instead of a graph database
+    failsGoal: g4
+    actions:
+      - { t: place, card: repeat-buyers, bucket: amazon-rds }
+      - { t: place, card: bean-shop-stock, bucket: amazon-rds }
+      - { t: place, card: costly-engine, bucket: amazon-aurora }
+      - { t: place, card: order-ahead-app, bucket: amazon-dynamodb }
+      - { t: place, card: guest-extras, bucket: amazon-dynamodb }
+      - { t: place, card: seasonal-catalog, bucket: amazon-documentdb }
+      - { t: place, card: morning-menu, bucket: amazon-elasticache }
+      - { t: place, card: signed-in-sessions, bucket: amazon-elasticache }
+      - { t: place, card: points-contest, bucket: amazon-elasticache }
+      - { t: place, card: referral-web, bucket: amazon-rds }
+      - { t: place, card: fraud-ring, bucket: amazon-neptune }
+      - { t: place, card: bean-shipments, bucket: amazon-managed-blockchain }
+      - { t: place, card: one-backup-view, bucket: aws-backup }
+      - { t: place, card: backup-policies, bucket: aws-backup }
+  - mistake: Sends supply-chain shipment tracking to the graph database instead of a blockchain network
+    failsGoal: g4
+    actions:
+      - { t: place, card: repeat-buyers, bucket: amazon-rds }
+      - { t: place, card: bean-shop-stock, bucket: amazon-rds }
+      - { t: place, card: costly-engine, bucket: amazon-aurora }
+      - { t: place, card: order-ahead-app, bucket: amazon-dynamodb }
+      - { t: place, card: guest-extras, bucket: amazon-dynamodb }
+      - { t: place, card: seasonal-catalog, bucket: amazon-documentdb }
+      - { t: place, card: morning-menu, bucket: amazon-elasticache }
+      - { t: place, card: signed-in-sessions, bucket: amazon-elasticache }
+      - { t: place, card: points-contest, bucket: amazon-elasticache }
+      - { t: place, card: referral-web, bucket: amazon-neptune }
+      - { t: place, card: fraud-ring, bucket: amazon-neptune }
+      - { t: place, card: bean-shipments, bucket: amazon-neptune }
+      - { t: place, card: one-backup-view, bucket: aws-backup }
+      - { t: place, card: backup-policies, bucket: aws-backup }
+  - mistake: Thinks the automated backups of RDS also manage backups for file systems and NoSQL tables
+    failsGoal: g5
+    actions:
+      - { t: place, card: repeat-buyers, bucket: amazon-rds }
+      - { t: place, card: bean-shop-stock, bucket: amazon-rds }
+      - { t: place, card: costly-engine, bucket: amazon-aurora }
+      - { t: place, card: order-ahead-app, bucket: amazon-dynamodb }
+      - { t: place, card: guest-extras, bucket: amazon-dynamodb }
+      - { t: place, card: seasonal-catalog, bucket: amazon-documentdb }
+      - { t: place, card: morning-menu, bucket: amazon-elasticache }
+      - { t: place, card: signed-in-sessions, bucket: amazon-elasticache }
+      - { t: place, card: points-contest, bucket: amazon-elasticache }
+      - { t: place, card: referral-web, bucket: amazon-neptune }
+      - { t: place, card: fraud-ring, bucket: amazon-neptune }
+      - { t: place, card: bean-shipments, bucket: amazon-managed-blockchain }
+      - { t: place, card: one-backup-view, bucket: amazon-rds }
+      - { t: place, card: backup-policies, bucket: aws-backup }
+debrief:
+  lines:
+    - The shape of the data picks the database, so linked tables under a rigid schema fit RDS or Aurora and records whose attributes vary fit DynamoDB or DocumentDB.
+    - ElastiCache keeps hot data in memory beside the database, so repeat reads skip the database and it carries less load.
+    - Specialist needs get purpose-built services, so Neptune answers questions about dense webs of relationships and Managed Blockchain runs blockchain networks for shipment tracking.
+    - AWS Backup is a backup service, not a database, and it manages backups across services, accounts and Regions in one place.
+  questions: [q-sw0mr3, q-vxdn07, q-4h028f]
