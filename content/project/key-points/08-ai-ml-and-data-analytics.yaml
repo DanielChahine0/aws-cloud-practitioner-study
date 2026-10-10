@@ -1,0 +1,48 @@
+# Reference key points for decision 8: Analytics and an AI feature.
+module: 8
+keyPoints:
+  - id: kp-08-pool-sales-in-lake
+    status: live
+    text: Sales from every shop's till and from the loyalty app are gathered into one S3 data lake, so the owners analyze a single shared copy instead of chasing figures spread over separate systems.
+    concepts: [data-lakes]
+    evidence: Purchases, logins and browsing leave data scattered across systems and formats, and a data lake, pictured as a huge reservoir, gathers it all.
+    verified:
+      fullHash: a331981ef7d9
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-08-scheduled-managed-pipeline
+    status: live
+    text: The ingest step uses Amazon Data Firehose, a managed service that takes in each day's sales and delivers them in near real time, so the one part-time IT person has no ingestion system of their own to run.
+    concepts: [amazon-data-firehose]
+    evidence: "**Amazon Data Firehose**: Managed near-real-time ingestion and delivery."
+    verified:
+      fullHash: a44a6ae98c06
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-08-athena-sales-by-hour
+    status: live
+    text: The AWS Glue Data Catalog records the layout of the sales files, so Amazon Athena can answer which items sell at which hour with plain SQL run on the lake in place, with no warehouse to build or look after.
+    concepts: [aws-glue-data-catalog, amazon-athena]
+    evidence: "**7 Perform data analytics**: data scientists query S3 in place with standard SQL in Amazon Athena, which reads the catalog table to recognize the structure."
+    verified:
+      fullHash: a80d2ea09a3a
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-08-quick-sight-owner-dashboard
+    status: live
+    text: Amazon Quick Sight shows the owners a dashboard of item sales by hour that they open themselves, which suits business reporting better than a search and monitoring tool.
+    concepts: [amazon-quicksight]
+    evidence: QuickSight is for BI dashboards, while OpenSearch Service is for real-time search and monitoring.
+    verified:
+      fullHash: 54898dc01719
+      checks: [ critic@1 ]
+      on: 2026-10-10
+  - id: kp-08-personalize-loyalty-picks
+    status: live
+    text: The AI feature is Amazon Personalize showing each loyalty app regular a personalized drink recommendation, which helps customers pick their order in the app.
+    concepts: [amazon-personalize]
+    evidence: "**Amazon Personalize**: Personalized recommendations."
+    verified:
+      fullHash: 1f8a2bd5d116
+      checks: [ critic@1 ]
+      on: 2026-10-10
