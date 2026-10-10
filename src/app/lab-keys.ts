@@ -13,12 +13,12 @@ export type LabCommand =
 
 export interface LabKeyState {
   engine: LabEngineId;
-  /** True while a Sort card is held. */
+  /** True while a Sort card or a Place piece is held. */
   holding: boolean;
   bucketCount: number;
   /** True when focus is on a `[data-lab-item]` of a region, where the arrow keys step through that region. */
   inItems: boolean;
-  /** True when focus is on a button, link or summary that answers Enter itself, other than a card or a bucket. */
+  /** True when focus is on a button, link or summary that answers Enter itself, other than a card, a piece or a target. */
   onControl: boolean;
   /** True when a `g` is still open, so `h` and `r` belong to the `g h` and `g r` sequences. */
   gPending: boolean;
@@ -43,7 +43,7 @@ export function labKey(input: RunnerKeyInput, state: LabKeyState): LabCommand | 
     if (state.gPending) return null;
     return key === 'h' ? { kind: 'hint' } : { kind: 'reset' };
   }
-  if (state.engine !== 'sort') return null;
+  if (state.engine !== 'sort' && state.engine !== 'place') return null;
   if (/^[0-9]$/.test(key)) {
     const bucket = key === '0' ? 10 : Number(key);
     return state.holding && bucket <= state.bucketCount ? { kind: 'place', bucket } : null;
