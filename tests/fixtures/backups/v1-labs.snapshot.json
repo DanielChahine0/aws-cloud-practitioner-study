@@ -52,6 +52,8 @@
   "eventCount": 6,
   "exams": [],
   "flags": 0,
+  "incidentsDone": [],
+  "incidentsOffered": [],
   "labsDone": [
     [
       "lab-m01-sort-the-bakes",

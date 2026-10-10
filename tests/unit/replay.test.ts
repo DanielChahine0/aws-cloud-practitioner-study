@@ -10,12 +10,15 @@ import {
   snapshotOf,
   takenForms,
 } from '../../src/engine/replay.ts';
-import { eventsOf, SID, SID2 } from '../fixtures/events.ts';
+import { eventsOf, SID, SID2, timelineOf } from '../fixtures/events.ts';
 import {
   abandonOf,
   answerOf,
+  at,
   causeOf,
   examStartOf,
+  incidentDoneOf,
+  incidentOfferedOf,
   labDoneOf,
   rankOf,
   startOf,
@@ -414,5 +417,42 @@ describe('exam sessions in replay (spec 4.1, 4.3, 4.4)', () => {
     expect(derive(events, refs).unknownEvents).toBe(1);
     expect(derive(events, null).unknownEvents).toBe(0);
     expect(derive(events, refs).exams.get(SID)).toMatchObject({ correct: 1, total: 1 });
+  });
+});
+
+describe('derive: daily incidents (spec 4.5)', () => {
+  it('keeps the first offer of each study day and the day of each first solve', () => {
+    const p = derive(
+      timelineOf([
+        [at('2026-10-10', 9), incidentOfferedOf('inc-002')],
+        [at('2026-10-10', 9, 30), incidentOfferedOf('inc-007')],
+        [at('2026-10-10', 11), incidentDoneOf('inc-002', true)],
+        [at('2026-10-11', 9), incidentOfferedOf('inc-007')],
+        [at('2026-10-12', 9), incidentDoneOf('inc-002', false)],
+      ]),
+      null,
+    );
+    expect([...p.incidentsOffered]).toEqual([
+      ['2026-10-10', 'inc-002'],
+      ['2026-10-11', 'inc-007'],
+    ]);
+    expect([...p.incidentsDone]).toEqual([['inc-002', '2026-10-10']]);
+  });
+
+  it('counts an unknown incident id in unknownEvents and keeps the event', () => {
+    const refs: ContentRefs = {
+      questions: new Map(),
+      notes: new Set(),
+      labs: new Set(),
+      incidents: new Set(['inc-001']),
+    };
+    const events = eventsOf(
+      incidentOfferedOf('inc-001'),
+      incidentOfferedOf('inc-999'),
+      incidentDoneOf('inc-999'),
+    );
+    const p = derive(events, refs);
+    expect(p.unknownEvents).toBe(2);
+    expect(p.incidentsDone.has('inc-999')).toBe(true);
   });
 });

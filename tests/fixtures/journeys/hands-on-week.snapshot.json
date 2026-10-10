@@ -22,7 +22,7 @@
     ],
     [
       2,
-      27
+      31
     ],
     [
       3,
@@ -69,6 +69,7 @@
       "q-bake-02-05-a",
       "q-bake-02-06-a",
       "q-bake-02-07-a",
+      "q-bake-02-08-a",
       "q-bake-03-01-a",
       "q-bake-03-02-a",
       "q-bake-03-03-a",
@@ -90,8 +91,8 @@
         "total": 1
       },
       "sure": {
-        "right": 18,
-        "total": 19
+        "right": 19,
+        "total": 20
       }
     },
     "catchUpPlans": [],
@@ -352,7 +353,7 @@
           "extraAgainDay": null,
           "fsrsDay": "2026-10-20",
           "fsrsRating": "good",
-          "lastAnswerDay": "2026-10-20",
+          "lastAnswerDay": "2026-10-21",
           "misconception": null,
           "successDays": [
             "2026-10-20"
@@ -446,6 +447,32 @@
             "elapsedDays": 0,
             "lapses": 0,
             "lastReview": "2026-10-21T11:03:00.000Z",
+            "learningSteps": 0,
+            "reps": 1,
+            "scheduledDays": 3,
+            "stability": 2.3065,
+            "state": 2
+          },
+          "enteredOn": "2026-10-21",
+          "extraAgainDay": null,
+          "fsrsDay": "2026-10-21",
+          "fsrsRating": "good",
+          "lastAnswerDay": "2026-10-21",
+          "misconception": null,
+          "successDays": [
+            "2026-10-21"
+          ]
+        }
+      ],
+      [
+        "bake-02-08",
+        {
+          "card": {
+            "difficulty": 2.11810397,
+            "due": "2026-10-24T12:03:00.000Z",
+            "elapsedDays": 0,
+            "lapses": 0,
+            "lastReview": "2026-10-21T12:03:00.000Z",
             "learningSteps": 0,
             "reps": 1,
             "scheduledDays": 3,
@@ -607,7 +634,7 @@
       ],
       [
         "2026-10-21",
-        7
+        8
       ]
     ],
     "qualifyingDays": [
@@ -617,7 +644,7 @@
       "2026-10-22"
     ],
     "staleAnswers": 0,
-    "xp": 430,
+    "xp": 455,
     "xpByDay": [
       [
         "2026-10-19",
@@ -629,7 +656,7 @@
       ],
       [
         "2026-10-21",
-        170
+        195
       ],
       [
         "2026-10-22",
@@ -752,6 +779,14 @@
       [
         "01M5F21WN00000000000000000",
         10
+      ],
+      [
+        "01M5F5FR900000000000000000",
+        10
+      ],
+      [
+        "01M5F5KDF00000000000000000",
+        15
       ],
       [
         "01M5HGV8800000000000000000",

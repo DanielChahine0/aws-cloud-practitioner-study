@@ -134,3 +134,13 @@ export function rankOf(rank: string): NewEvent {
 export function labDoneOf(lab: string, hints = 0, rev = 1): NewEvent {
   return { t: 'lab.done', lab, rev, hints };
 }
+
+/** Today's incident offer, as Home records it on its first render of a study day. */
+export function incidentOfferedOf(incident: string): NewEvent {
+  return { t: 'incident.offered', incident };
+}
+
+/** A solved incident; `firstTry` is true when every step was answered right. */
+export function incidentDoneOf(incident: string, firstTry?: boolean): NewEvent {
+  return { t: 'incident.done', incident, ...(firstTry === undefined ? {} : { firstTry }) };
+}

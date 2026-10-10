@@ -4,6 +4,7 @@ import type { BossStatus } from '../../src/engine/boss.ts';
 import { mockDeadline } from '../../src/engine/mock.ts';
 import {
   extras,
+  incidentToday,
   type LessonRef,
   MAX_EXTRAS,
   MOCK_AFTER_BOSSES,
@@ -16,7 +17,15 @@ import {
 import type { ReviewQueue } from '../../src/engine/queue.ts';
 import { derive } from '../../src/engine/replay.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
-import { answerOf, at, examStartOf, startOf, submitOf } from '../fixtures/memory.ts';
+import {
+  answerOf,
+  at,
+  examStartOf,
+  incidentDoneOf,
+  incidentOfferedOf,
+  startOf,
+  submitOf,
+} from '../fixtures/memory.ts';
 
 const lesson = (module: number, slug: string, first: boolean, checkConcepts: number): LessonRef => ({
   note: `m${String(module).padStart(2, '0')}/${slug}`,
@@ -245,7 +254,16 @@ describe('extras (spec 4.6)', () => {
     log: readonly (readonly [string, NewEvent])[] = [],
     today = '2026-10-10',
     lab: { lab: string; module: number } | null = null,
-  ) => extras({ bosses: new Map(bosses), progress: derive(timelineOf(log), null), today, now: NOW, lab });
+    incident: string | null = null,
+  ) =>
+    extras({
+      bosses: new Map(bosses),
+      progress: derive(timelineOf(log), null),
+      today,
+      now: NOW,
+      lab,
+      incident,
+    });
   const mockOn = (sid: string, form: string, day: string) => {
     const start = at(day, 9);
     return [
@@ -316,6 +334,42 @@ describe('extras (spec 4.6)', () => {
       ...mockOn('01JA00000000000000000000M4', 'D', '2026-10-02'),
     ];
     expect(extrasOf(passedUpTo(13), all)).toEqual([]);
+  });
+
+  it("puts today's incident first, then a ready boss or the lab, and stops at two", () => {
+    expect(MAX_EXTRAS).toBe(2);
+    const bosses = [...passedUpTo(7), [8, status({ ready: true })]] as [number, BossStatus][];
+    expect(extrasOf(bosses, [], '2026-10-10', null, 'inc-003')).toEqual([
+      { kind: 'incident', incident: 'inc-003' },
+      { kind: 'boss', module: 8 },
+    ]);
+    expect(extrasOf([], [], '2026-10-10', null, 'inc-003')).toEqual([
+      { kind: 'incident', incident: 'inc-003' },
+    ]);
+    const lab = { lab: 'lab-m02-a', module: 2 };
+    expect(extrasOf([], [], '2026-10-10', lab, 'inc-003')).toEqual([
+      { kind: 'incident', incident: 'inc-003' },
+      { kind: 'lab', lab: 'lab-m02-a', module: 2 },
+    ]);
+  });
+});
+
+describe('incidentToday', () => {
+  const progressOf = (log: readonly (readonly [string, NewEvent])[]) => derive(timelineOf(log), null);
+
+  it('reads the first offer of the study day and whether it is solved', () => {
+    const offered = [
+      [at('2026-10-10', 9), incidentOfferedOf('inc-002')],
+      [at('2026-10-10', 9, 5), incidentOfferedOf('inc-007')],
+    ] as const;
+    expect(incidentToday(progressOf(offered), '2026-10-10')).toEqual({ incident: 'inc-002', done: false });
+    const solved = [...offered, [at('2026-10-10', 11), incidentDoneOf('inc-002', true)]] as const;
+    expect(incidentToday(progressOf(solved), '2026-10-10')).toEqual({ incident: 'inc-002', done: true });
+  });
+
+  it('is null on a day with no offer, whatever came before', () => {
+    const log = [[at('2026-10-09', 9), incidentOfferedOf('inc-002')]] as const;
+    expect(incidentToday(progressOf(log), '2026-10-10')).toBeNull();
   });
 });
 

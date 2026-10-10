@@ -98,6 +98,7 @@ export function nextMinutes(action: NextAction): number | null {
 
 /** One entry of the extras line under Done for today. */
 export type Extra =
+  | { kind: 'incident'; incident: string }
   | { kind: 'boss'; module: number }
   | { kind: 'mock'; form: string }
   | { kind: 'lab'; lab: string; module: number };
@@ -132,8 +133,18 @@ export function weakestLab(args: {
 }
 
 /**
- * The extras line (spec 4.6), at most `MAX_EXTRAS` entries in this order: the lowest ready boss out of its cooldown,
- * the next mock, then the weakest module's core lab.
+ * Today's incident as recorded (spec 4.5): the first `incident.offered` of the study day and whether it is solved.
+ * It lives here, not in `incident.ts`, so Home never loads the pick to read the offer.
+ */
+export function incidentToday(progress: Progress, today: string): { incident: string; done: boolean } | null {
+  const incident = progress.incidentsOffered.get(today);
+  if (incident === undefined) return null;
+  return { incident, done: progress.incidentsDone.has(incident) };
+}
+
+/**
+ * The extras line (spec 4.6), at most `MAX_EXTRAS` entries in this order: today's unsolved incident, the lowest
+ * ready boss out of its cooldown, the next mock, then the core lab for the weakest module.
  */
 export function extras(args: {
   bosses: ReadonlyMap<number, BossStatus>;
@@ -141,8 +152,10 @@ export function extras(args: {
   today: string;
   now: Date;
   lab: { lab: string; module: number } | null;
+  incident: string | null;
 }): Extra[] {
   const out: Extra[] = [];
+  if (args.incident !== null) out.push({ kind: 'incident', incident: args.incident });
   const cooling = (status: BossStatus): boolean =>
     status.cooldownUntil !== null && Date.parse(status.cooldownUntil) > args.now.getTime();
   const [module] = [...args.bosses]

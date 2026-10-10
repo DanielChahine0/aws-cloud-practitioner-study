@@ -236,6 +236,7 @@ export function extraLink(
   modules: readonly { n: number; short: string }[],
   labs: readonly { id: string; title: string }[] = [],
 ): { label: string; href: string } {
+  if (extra.kind === 'incident') return { label: 'Incident', href: '#/s/incident' };
   if (extra.kind === 'boss') {
     const short = modules.find((m) => m.n === extra.module)?.short ?? '';
     return { label: `Boss: ${short}`, href: `#/s/boss/m${pad2(extra.module)}` };

@@ -19,7 +19,17 @@ import { fnv1a } from '../../src/engine/rng.ts';
 import { recall, review, type SrsCard } from '../../src/engine/srs.ts';
 import { effortBonus } from '../../src/engine/xp.ts';
 import { SID, SID2, timelineOf } from '../fixtures/events.ts';
-import { abandonOf, answerOf, at, contentOf, examStartOf, labDoneOf, submitOf } from '../fixtures/memory.ts';
+import {
+  abandonOf,
+  answerOf,
+  at,
+  contentOf,
+  examStartOf,
+  incidentDoneOf,
+  incidentOfferedOf,
+  labDoneOf,
+  submitOf,
+} from '../fixtures/memory.ts';
 
 const SID3 = '01JA00000000000000000000S3';
 
@@ -775,5 +785,60 @@ describe('deriveMemory: labs and debriefs (spec 3.1, 3.2, 3.5)', () => {
       qid: 'q-pb1',
       day: '2026-10-09',
     });
+  });
+});
+
+describe('deriveMemory: the daily incident (spec 3.2, 3.5, 4.5)', () => {
+  it('pays 15 XP when every step was right and 8 otherwise, on the incident.done event', () => {
+    const perfect = timelineOf([['2026-10-09T10:00:00Z', incidentDoneOf('inc-001', true)]]);
+    expect(deriveMemory(perfect, CONTENT).xp).toBe(15);
+    expect(deriveMemory(perfect, CONTENT).xpByEvent.get(idOf(perfect, 0))).toBe(15);
+    const missed = timelineOf([['2026-10-09T10:00:00Z', incidentDoneOf('inc-001', false)]]);
+    expect(deriveMemory(missed, CONTENT).xp).toBe(8);
+    const unsaid = timelineOf([['2026-10-09T10:00:00Z', incidentDoneOf('inc-001')]]);
+    expect(deriveMemory(unsaid, CONTENT).xp).toBe(8);
+  });
+
+  it('pays one incident per study day, and pays again on another day', () => {
+    const events = timelineOf([
+      ['2026-10-09T10:00:00Z', incidentDoneOf('inc-001', true)],
+      ['2026-10-09T11:00:00Z', incidentDoneOf('inc-002', true)],
+      ['2026-10-09T12:00:00Z', incidentDoneOf('inc-001', true)],
+      ['2026-10-10T10:00:00Z', incidentDoneOf('inc-003', false)],
+    ]);
+    const m = deriveMemory(events, CONTENT);
+    expect(m.xp).toBe(23);
+    expect(m.xpByEvent.has(idOf(events, 1))).toBe(false);
+    expect(m.xpByEvent.has(idOf(events, 2))).toBe(false);
+    expect(m.xpByDay.get('2026-10-10')).toBe(8);
+  });
+
+  it('qualifies the day of a solved incident, while an offer alone pays and qualifies nothing', () => {
+    const events = timelineOf([
+      ['2026-10-09T10:00:00Z', incidentOfferedOf('inc-001')],
+      ['2026-10-10T10:00:00Z', incidentOfferedOf('inc-002')],
+      ['2026-10-10T10:30:00Z', incidentDoneOf('inc-002', false)],
+    ]);
+    const m = deriveMemory(events, CONTENT);
+    expect([...m.qualifyingDays]).toEqual(['2026-10-10']);
+    expect(m.xpByEvent.has(idOf(events, 0))).toBe(false);
+  });
+
+  it('counts incident step answers like checks: bet XP, a card and a misconception on a Sure miss', () => {
+    const events = timelineOf([
+      ['2026-10-09T09:59:00Z', start(SID, 'incident')],
+      ['2026-10-09T10:00:00Z', answer('q-pb1', 'proof-box', true, true, { mode: 'incident' })],
+      ['2026-10-09T10:01:00Z', answer('q-fd1', 'flour-delivery', false, true, { mode: 'incident' })],
+      ['2026-10-09T10:02:00Z', incidentDoneOf('inc-001', false)],
+    ]);
+    const m = deriveMemory(events, CONTENT);
+    expect(m.xp).toBe(10 + 0 + 8);
+    expect(m.concepts.get('proof-box')?.card).not.toBeNull();
+    expect(m.concepts.get('flour-delivery')?.misconception).toEqual({ qid: 'q-fd1', day: '2026-10-09' });
+  });
+
+  it('never throws on an unknown incident id and still pays it', () => {
+    const events = timelineOf([['2026-10-09T10:00:00Z', incidentDoneOf('inc-999', true)]]);
+    expect(deriveMemory(events, CONTENT).xp).toBe(15);
   });
 });

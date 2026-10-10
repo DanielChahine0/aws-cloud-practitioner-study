@@ -403,6 +403,8 @@ function replay(
   const clearedMarks = new Set<string>();
   const longCards = new Set<string>();
   const labsDone = new Set<string>();
+  /** Study days whose incident XP is paid; one incident pays per day (spec 3.2). */
+  const incidentPaidDays = new Set<string>();
   const missionCleaned = new Map<string, string>();
   const missionsClosed = new Set<string>();
   const finalDecisions = new Map<number, readonly number[]>();
@@ -794,6 +796,13 @@ function replay(
         break;
       case 'lab.done':
         applyLab(e);
+        break;
+      case 'incident.done':
+        if (!incidentPaidDays.has(e.day)) {
+          incidentPaidDays.add(e.day);
+          earn(e, e.firstTry === true ? XP.incidentPerfect : XP.incident);
+        }
+        completion = true;
         break;
       case 'mission':
         applyMission(e);

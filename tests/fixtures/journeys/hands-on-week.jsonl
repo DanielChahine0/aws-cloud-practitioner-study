@@ -50,5 +50,11 @@
 {"t":"answer","sid":"01JB0000000000000000000008","mode":"debrief","qid":"q-bake-02-02-a","qv":1,"concept":"bake-02-02","picked":["a"],"correct":true,"sure":true,"ms":20000,"id":"01M5F202200000000000000000","at":"2026-10-21T11:02:00.000Z","tz":0,"day":"2026-10-21"}
 {"t":"answer","sid":"01JB0000000000000000000008","mode":"debrief","qid":"q-bake-02-07-a","qv":1,"concept":"bake-02-07","picked":["a"],"correct":true,"sure":true,"ms":20000,"id":"01M5F21WN00000000000000000","at":"2026-10-21T11:03:00.000Z","tz":0,"day":"2026-10-21"}
 {"t":"session","sid":"01JB0000000000000000000008","mode":"debrief","phase":"submit","seed":8,"id":"01M5F23Q800000000000000000","at":"2026-10-21T11:04:00.000Z","tz":0,"day":"2026-10-21"}
+{"t":"incident.offered","incident":"inc-001","id":"01M5F5A8G00000000000000000","at":"2026-10-21T12:00:00.000Z","tz":0,"day":"2026-10-21"}
+{"t":"session","sid":"01JB0000000000000000000009","mode":"incident","phase":"start","seed":9,"scope":"inc-001","qids":["q-bake-02-03-a","q-bake-02-08-a"],"id":"01M5F5C3300000000000000000","at":"2026-10-21T12:01:00.000Z","tz":0,"day":"2026-10-21"}
+{"t":"answer","sid":"01JB0000000000000000000009","mode":"incident","qid":"q-bake-02-03-a","qv":1,"concept":"bake-02-03","picked":["a"],"correct":true,"sure":true,"ms":20000,"id":"01M5F5DXP00000000000000000","at":"2026-10-21T12:02:00.000Z","tz":0,"day":"2026-10-21"}
+{"t":"answer","sid":"01JB0000000000000000000009","mode":"incident","qid":"q-bake-02-08-a","qv":1,"concept":"bake-02-08","picked":["a"],"correct":true,"sure":true,"ms":20000,"id":"01M5F5FR900000000000000000","at":"2026-10-21T12:03:00.000Z","tz":0,"day":"2026-10-21"}
+{"t":"session","sid":"01JB0000000000000000000009","mode":"incident","phase":"submit","seed":9,"id":"01M5F5HJW00000000000000000","at":"2026-10-21T12:04:00.000Z","tz":0,"day":"2026-10-21"}
+{"t":"incident.done","incident":"inc-001","firstTry":true,"id":"01M5F5KDF00000000000000000","at":"2026-10-21T12:05:00.000Z","tz":0,"day":"2026-10-21"}
 {"t":"lab.done","lab":"lab-m03-a","rev":1,"hints":2,"id":"01M5HGV8800000000000000000","at":"2026-10-22T10:00:00.000Z","tz":0,"day":"2026-10-22"}
 {"t":"lab.done","lab":"lab-m02-a","rev":1,"hints":0,"id":"01M5M37Z800000000000000000","at":"2026-10-23T10:00:00.000Z","tz":0,"day":"2026-10-23"}
