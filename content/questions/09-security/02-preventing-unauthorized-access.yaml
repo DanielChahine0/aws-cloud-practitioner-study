@@ -1,0 +1,1023 @@
+questions:
+  - id: q-ezgpvt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-account-root-user
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe owner signs in with the email address and password used to open the cafe's AWS account.
+      That identity can do anything in the account and no policy can limit it.
+      Which identity is the owner using?
+    options:
+      - id: a
+        text: IAM user
+        why: An IAM user starts with no permissions and can be limited by policies, unlike this identity.
+      - id: b
+        text: IAM role
+        why: A role is assumed for temporary permissions, not signed in to with the account's opening email.
+      - id: c
+        text: Root user
+        correct: true
+        why: The root user comes with every new account, has full access and cannot be restricted.
+      - id: d
+        text: Federated user
+        why: A federated user signs in through an outside identity source, not the email that opened the account.
+    evidence:
+      - Every new AWS account comes with a root user, the owner, who can do anything and cannot be restricted.
+    takeaway: The identity created with the account, with unlimited and unrestrictable power, is the AWS account root user.
+    history: []
+    verified:
+      keyHash: 353e0f6fb1a0
+      fullHash: df54dd8727af
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-ej90bp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-account-root-user
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      The cafe owner has already given the root user a strong password and turned on MFA.
+      What else does AWS advise for the root user from then on?
+    options:
+      - id: a
+        text: Give it a long and strong password
+        why: AWS does advise a strong password, but the owner has already set one, so it is not the further step.
+      - id: b
+        text: Turn on MFA for its sign-in
+        why: AWS does advise MFA for the root user, but the owner has already turned it on.
+      - id: c
+        text: Keep it out of daily work
+        correct: true
+        why: Even when secured, the root user stays out of everyday tasks, which IAM identities handle instead.
+      - id: d
+        text: Cover it with the password policy
+        why: An account password policy sets rules for IAM user passwords only and never applies to the root user.
+    evidence:
+      - Even then, keep the root user out of daily work and use IAM identities instead.
+      - Give it a strong password and turn on multi-factor authentication (MFA) right after the first root login.
+    takeaway: Even a secured root user stays out of daily work, while IAM identities handle routine tasks.
+    history: []
+    verified:
+      keyHash: 9392f6dbc5b7
+      fullHash: a497cd5d80fd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-y02gsw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-factor-authentication
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      A thief learned the cafe manager's AWS password yet the sign-in failed, because the login also asked for a code from the manager's phone app.
+      Which protection stopped the thief?
+    options:
+      - id: a
+        text: An account password policy
+        why: A password policy sets rules for the password itself, and the thief already had that password.
+      - id: b
+        text: Multi-factor authentication
+        correct: true
+        why: MFA demands a second kind of proof, so a stolen password alone is not enough to sign in.
+      - id: c
+        text: AWS IAM Identity Center
+        why: Identity Center gives staff one login across accounts, but a single login does not ask for a phone code.
+      - id: d
+        text: AWS Secrets Manager rotation
+        why: Rotating a stored secret changes it over time, but it adds no second check at sign-in.
+    evidence:
+      - MFA requires at least two kinds of proof, such as the password plus a one-time code from a phone app.
+    takeaway: MFA asks for a second kind of proof, so a stolen password by itself cannot open the account.
+    history: []
+    verified:
+      keyHash: 633481e3c14f
+      fullHash: 1c747a4c3a32
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-2x97cr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-factor-authentication
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      The cafe turns on multi-factor authentication for its staff IAM users.
+      What extra step do they now face at console sign-in?
+    options:
+      - id: a
+        text: Changing the password after a set time
+        why: Password expiry comes from an account password policy, not from turning on MFA.
+      - id: b
+        text: Picking an account from a single sign-on portal
+        why: A sign-on portal for many accounts comes from IAM Identity Center, not from MFA.
+      - id: c
+        text: Typing a one-time code from a phone app
+        correct: true
+        why: MFA asks for a second kind of proof, such as a one-time code from a phone app, beyond the password.
+      - id: d
+        text: Switching to a role for temporary permissions
+        why: Assuming a role swaps permissions for a while, and turning on MFA does not make users do it.
+    evidence:
+      - MFA requires at least two kinds of proof, such as the password plus a one-time code from a phone app.
+    takeaway: MFA means two different kinds of proof, such as a password and a one-time code from a device.
+    history: []
+    verified:
+      keyHash: b55f896328a7
+      fullHash: be4b2cc6491a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-hcqv80
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-password-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe wants every staff console login secret to have a minimum length, mixed character types and no reuse of old ones.
+      What should it set up?
+    options:
+      - id: a
+        text: Multi-factor authentication
+        why: MFA adds a second proof at sign-in but sets no rules for how passwords are built.
+      - id: b
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates application secrets, not the rules for staff sign-in passwords.
+      - id: c
+        text: An IAM password policy
+        correct: true
+        why: A password policy sets account-wide rules for IAM user passwords, including length, character types and reuse.
+      - id: d
+        text: An IAM role
+        why: A role grants temporary permissions with no long-term password, so it sets no password rules.
+    evidence:
+      - Password policies set account-wide rules for IAM user passwords, such as minimum length, required character types, expiration and preventing reuse, but they never apply to the root user password.
+    takeaway: Rules on IAM user password length, character types, expiry and reuse come from an account password policy.
+    history: []
+    verified:
+      keyHash: 218072c6ee93
+      fullHash: 15ef4880d670
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-rfw21n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-password-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe just set an account password policy that requires long, complex passwords.
+      Which passwords does that policy govern?
+    options:
+      - id: a
+        text: Database passwords kept in Secrets Manager
+        why: Secrets Manager holds app secrets, and the account password policy only shapes sign-in passwords.
+      - id: b
+        text: The root user password for the account
+        why: The password policy never applies to the root user password, which needs its own care.
+      - id: c
+        text: IAM user passwords throughout the account
+        correct: true
+        why: Password policies set account-wide rules for IAM user passwords.
+      - id: d
+        text: One-time codes from MFA phone apps
+        why: MFA codes are generated by a device, and a password policy sets no rules for them.
+    evidence:
+      - Password policies set account-wide rules for IAM user passwords, such as minimum length, required character types, expiration and preventing reuse, but they never apply to the root user password.
+    takeaway: An account password policy governs IAM user passwords only, so the root user password needs its own care.
+    history: []
+    verified:
+      keyHash: b08ac68d571f
+      fullHash: dc8584da18d3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-6k3ehf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-iam
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: >-
+      The cafe uses a single AWS account and wants fine-grained control over which identities exist in it and what each one may do.
+      Which service provides this?
+    options:
+      - id: a
+        text: AWS IAM Identity Center
+        why: Identity Center centralizes workforce sign-in across many accounts and apps through an outside identity source.
+      - id: b
+        text: IAM Access Analyzer
+        why: Access Analyzer reviews access that already exists rather than creating identities and their permissions.
+      - id: c
+        text: AWS Organizations
+        why: Organizations groups multiple accounts together, not the identities inside one account.
+      - id: d
+        text: AWS Identity and Access Management (IAM)
+        correct: true
+        why: IAM creates identities and controls exactly what each may do, covering both authentication and authorization.
+    evidence:
+      - AWS Identity and Access Management (IAM) gives fine-grained control over identities and what each may do, covering authentication and authorization.
+    takeaway: IAM is the service that creates identities and decides what each one may do in an account.
+    history: []
+    verified:
+      keyHash: 4f2529ed089d
+      fullHash: c8457adfb800
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-jv41dv
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-iam
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      Minutes after the cafe creates an IAM user for a new barista, the barista tries to launch an EC2 instance and is refused.
+      Why?
+    options:
+      - id: a
+        text: Each IAM user has its own sign-in credentials
+        why: This is true, and the barista did sign in, so it does not explain the refused launch.
+      - id: b
+        text: New identities hold no permissions until allowed
+        correct: true
+        why: Default deny gives a new identity zero permissions, so the launch fails until something allows it.
+      - id: c
+        text: MFA can add a second check at console sign-in
+        why: MFA guards the sign-in, which already worked, so it does not explain why the launch was refused.
+      - id: d
+        text: Roles hand out permissions for a limited time
+        why: This is true of roles, but the barista used an IAM user, so it does not explain the refusal.
+    evidence:
+      - "**Default deny** is the mechanism: a new identity has zero permissions, not even to launch an EC2 instance or create an S3 bucket, until explicitly allowed."
+    takeaway: IAM denies by default, so a new identity can do nothing until a policy grants it.
+    history: []
+    verified:
+      keyHash: 1f65ed15e2e5
+      fullHash: b27b2177edb7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1pzk2a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: principle-of-least-privilege
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      A cafe intern needs to see the names of the files in the weekly reports bucket.
+      Which grant follows the principle of least privilege?
+    options:
+      - id: a
+        text: Full access to every bucket in the account
+        why: Access to every bucket goes far beyond seeing one bucket's file names.
+      - id: b
+        text: Listing access to the reports bucket
+        correct: true
+        why: Allowing only the listing of that one bucket gives exactly what the intern needs and nothing more.
+      - id: c
+        text: Administrator access to the whole account
+        why: Admin rights trade safety for convenience and grant far more than the task needs.
+      - id: d
+        text: Read and write access to the reports bucket
+        why: Write access is more than viewing requires, so it grants extra permissions.
+    evidence:
+      - "**Least privilege** is the guiding principle: allow only what a person or system needs."
+      - "Example: Allow `s3:ListBucket` on one reports bucket lets a user view that bucket and nothing else."
+    takeaway: Least privilege means granting the narrowest access that still lets the person do the task.
+    history: []
+    verified:
+      keyHash: efc65b1a6da5
+      fullHash: 25945813b6cd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-kw6059
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: principle-of-least-privilege
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      Which idea guides access decisions by saying a person or system should be allowed only what it needs?
+    options:
+      - id: a
+        text: Default deny
+        why: Default deny is the mechanism that refuses everything until allowed, not the rule for what to allow.
+      - id: b
+        text: Permission boundary
+        why: A permission boundary caps the most an identity can hold rather than guiding what it should get.
+      - id: c
+        text: Role-based access control
+        why: Role-based access control ties access to a person's job rather than stating the need-only rule.
+      - id: d
+        text: Least privilege
+        correct: true
+        why: Least privilege is the guiding principle of granting only the access that is needed.
+    evidence:
+      - "**Least privilege** is the guiding principle: allow only what a person or system needs."
+      - "Not the same thing: a permission boundary caps the most permissions an identity can hold, and role-based access control ties access to a person's job in the organization."
+    takeaway: Least privilege is the principle of granting only needed access, while default deny is how IAM behaves.
+    history: []
+    verified:
+      keyHash: "1739287778e3"
+      fullHash: 0aa9e09f4db5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-4tgatq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: access-keys
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe's developer runs AWS CLI scripts from a laptop under an IAM user.
+      Which long-term credential signs those programmatic requests?
+    options:
+      - id: a
+        text: An Amazon EC2 key pair
+        why: A key pair is for connecting to an instance, not for signing AWS CLI or API requests.
+      - id: b
+        text: A console password with MFA
+        why: A console password signs in to the web console and does not sign CLI requests.
+      - id: c
+        text: An access key ID and secret access key
+        correct: true
+        why: Access keys are the long-term credential pair that signs programmatic CLI and API requests.
+      - id: d
+        text: A secret stored in AWS Secrets Manager
+        why: Secrets Manager can hold a credential, but the stored secret is not what signs CLI calls.
+    evidence:
+      - Access keys are long-term credentials, an access key ID plus a secret access key, that sign programmatic requests to the AWS CLI or API, and AWS advises temporary credentials from roles instead and never creating them for the root user.
+    takeaway: Programmatic AWS CLI and API calls are signed with access keys, an access key ID plus a secret access key.
+    history: []
+    verified:
+      keyHash: 34dec2d9818e
+      fullHash: 4effeb2e0d94
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-gpwbqs
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: access-keys
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe owner plans to create access keys for the root user so a nightly script can call AWS.
+      Which fact should change this plan?
+    options:
+      - id: a
+        text: Access keys sign requests to the AWS CLI or API
+        why: This is true and is why the owner wants keys, so it gives no reason to change the plan.
+      - id: b
+        text: Each access key pairs an ID with a secret key
+        why: This describes what an access key is made of, not why the root user should not get one.
+      - id: c
+        text: Roles give scripts temporary credentials instead
+        correct: true
+        why: AWS advises temporary role credentials over long-term access keys, and never keys for the root user.
+      - id: d
+        text: AWS Secrets Manager can store and rotate API keys
+        why: Storing root keys in Secrets Manager still leaves long-term root keys, which AWS advises against.
+    evidence:
+      - Access keys are long-term credentials, an access key ID plus a secret access key, that sign programmatic requests to the AWS CLI or API, and AWS advises temporary credentials from roles instead and never creating them for the root user.
+    takeaway: Avoid long-term access keys where you can, never create them for the root user, and prefer role credentials.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 2 repeats the stem's word 'script', which points at the key."
+  - id: q-yjv1nr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cross-account-iam-roles
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe keeps a development account and a production account.
+      Developers with IAM users in development sometimes need to deploy in production, and the cafe wants to avoid creating a second IAM user for each of them.
+      What fits?
+    options:
+      - id: a
+        text: An IAM group in the production account
+        why: A group only holds IAM users, so each developer would still need a user in production.
+      - id: b
+        text: An IAM role in the production account
+        correct: true
+        why: Developers assume the role from their own account and get temporary credentials in production.
+      - id: c
+        text: A managed policy in the production account
+        why: A policy must attach to an identity in production, so each developer would still need one there.
+      - id: d
+        text: A service control policy on the production account
+        why: A service control policy sets limits for accounts in an organization and grants nobody access.
+    evidence:
+      - With cross-account IAM roles, users in one AWS account assume a role in another account and get temporary credentials there, so nobody needs a separate IAM user in each account.
+    takeaway: Cross-account IAM roles let users from one account work in another without a second IAM user there.
+    history: []
+    verified:
+      keyHash: a7c225186e07
+      fullHash: 4100d569642f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-q4k5ca
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cross-account-iam-roles
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      When users in one AWS account work in another account through a cross-account role, what do they no longer need?
+    options:
+      - id: a
+        text: A permissions policy on the role
+        why: The role still needs a policy, since its permissions come from what is attached to it.
+      - id: b
+        text: An identity in their home account
+        why: Users still sign in to their own account first, and from there they assume the role.
+      - id: c
+        text: Permission to assume the role
+        why: Users must still be allowed to assume the role before they can get its credentials.
+      - id: d
+        text: A separate IAM user in each account
+        correct: true
+        why: Assuming the role gives temporary credentials in the other account, so no extra IAM user is needed there.
+    evidence:
+      - With cross-account IAM roles, users in one AWS account assume a role in another account and get temporary credentials there, so nobody needs a separate IAM user in each account.
+      - "**IAM role**: an identity someone assumes for temporary permissions, with no long-term username or password."
+    takeaway: Cross-account roles give temporary credentials in another account, so nobody needs an IAM user in each one.
+    history: []
+    verified:
+      keyHash: ceef764d48f7
+      fullHash: 751299204e8b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-33vwnc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe wrote a JSON policy that allows listing the reports bucket, yet staff still cannot list it.
+      Which fact about policies explains this?
+    options:
+      - id: a
+        text: A policy has no effect until it is attached
+        correct: true
+        why: A policy does nothing until it is attached to a user, group or role, so staff gain nothing yet.
+      - id: b
+        text: A policy can hold both Allow and Deny rules
+        why: This is true, but the policy only allows, so mixing rule types does not explain the problem.
+      - id: c
+        text: A policy can cover just a single S3 bucket
+        why: This is true, and the policy is scoped to the reports bucket, which is the one staff want to list.
+      - id: d
+        text: A policy is written as a JSON document
+        why: This is true of every policy, so it does not explain why this one grants nothing yet.
+    evidence:
+      - It only takes effect once attached to a user, group or role.
+      - A policy, written in JSON, holds allow or deny rules for AWS services and resources, scoped as wide as every S3 bucket or as narrow as one.
+    takeaway: An IAM policy grants nothing until it is attached to a user, group or role.
+    history: []
+    verified:
+      keyHash: 1e6070eeeba9
+      fullHash: f3b233a5c676
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-365mpn
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: iam-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      Match each part of an IAM policy statement to what it holds.
+    pairs:
+      - left: Effect
+        right: Allow or Deny
+        why: The Effect element can only be Allow or Deny, deciding whether the statement grants or blocks.
+      - left: Action
+        right: The API call, such as s3:ListBucket
+        why: The Action element names the AWS API calls the statement covers.
+      - left: Resource
+        right: The target of the call, such as one bucket
+        why: The Resource element names what the call acts on, from one bucket to every bucket.
+    evidence:
+      - Each statement sets an **Effect** (only Allow or Deny), an **Action** (any AWS API call) and a **Resource** (what the call targets).
+    takeaway: Every IAM policy statement pairs an Effect with the Actions it covers and the Resources they target.
+    history: []
+    verified:
+      keyHash: d6532a800c12
+      fullHash: 06bfa8f1e60d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-y25y31
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-access-reports
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: >-
+      The cafe suspects its marketing role holds permissions it never uses.
+      It wants to see which services and actions that role actually tried to use, so it can remove the rest.
+      Which feature fits?
+    options:
+      - id: a
+        text: AWS Config
+        why: Config tracks resource configurations over time, not which permissions an identity used.
+      - id: b
+        text: IAM access reports
+        correct: true
+        why: Access reports show last accessed information for each user, role or policy so unused permissions can go.
+      - id: c
+        text: AWS CloudTrail
+        why: CloudTrail records API activity event by event rather than summarizing unused permissions per role.
+      - id: d
+        text: AWS Trusted Advisor
+        why: Trusted Advisor gives broad best-practice checks, not per-role last accessed details.
+    evidence:
+      - IAM access reports show last accessed information, meaning which services and actions each user, role or policy actually tried to use, so you can remove unused permissions and keep least privilege.
+    takeaway: To trim unused permissions, check IAM access reports for what each identity actually tried to use.
+    history: []
+    verified:
+      keyHash: 16b3127c0858
+      fullHash: 00bc28c5df13
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-74ssez
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-access-reports
+    note: m09/preventing-unauthorized-access
+    task: "2.2"
+    level: 1
+    stem: >-
+      What do IAM access reports show?
+    options:
+      - id: a
+        text: How each resource's settings changed over time
+        why: Tracking setting changes over time is a configuration history task, not last accessed data.
+      - id: b
+        text: Which stored secrets are due for rotation
+        why: Secret rotation is handled by Secrets Manager, not by reports on service and action usage.
+      - id: c
+        text: When each identity last used a service
+        correct: true
+        why: Access reports give last accessed information on services and actions per user, role or policy.
+      - id: d
+        text: What each IAM user's activity cost last month
+        why: Access reports carry no cost data, which belongs to billing tools.
+    evidence:
+      - IAM access reports show last accessed information, meaning which services and actions each user, role or policy actually tried to use, so you can remove unused permissions and keep least privilege.
+    takeaway: IAM access reports reveal which services and actions identities actually used, supporting least privilege.
+    history: []
+    verified:
+      keyHash: 2b5b274d7532
+      fullHash: 527da3e36c54
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8nfs68
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: custom-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe needs a policy for its kitchen staff IAM group that allows reading only the recipes bucket.
+      No prebuilt policy fits, and the cafe wants to adjust the rules itself later.
+      Which policy type fits?
+    options:
+      - id: a
+        text: An AWS managed policy
+        why: AWS writes and maintains these, so the cafe could not edit one to fit its own rules.
+      - id: b
+        text: A service control policy
+        why: A service control policy sets limits for accounts in an organization, not grants for one IAM group.
+      - id: c
+        text: An S3 bucket policy
+        why: A bucket policy sits on the bucket itself and cannot be attached to an IAM group.
+      - id: d
+        text: A customer managed policy
+        correct: true
+        why: A customer managed policy is one the cafe writes and changes itself, then attaches to the group.
+    evidence:
+      - Custom policies are customer managed or inline policies that you write and change yourself for your own use cases, unlike AWS managed policies, which AWS creates and you cannot edit.
+      - "**AWS managed policies** are prebuilt by AWS and reusable, while **customer managed policies** are your own custom ones."
+    takeaway: When no prebuilt policy fits and you need to edit it, write a customer managed policy.
+    history: []
+    verified:
+      keyHash: 5639a5e6eb3a
+      fullHash: 508637171f04
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b1ycbd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: custom-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      What can the cafe do with a custom policy that it cannot do with an AWS managed policy?
+    options:
+      - id: a
+        text: Change its rules over time
+        correct: true
+        why: Custom policies, customer managed or inline, are yours to edit, while AWS managed ones are not.
+      - id: b
+        text: Attach it to an IAM group
+        why: AWS managed policies attach to users, groups and roles too, so this is no difference.
+      - id: c
+        text: View its rules as JSON
+        why: Every IAM policy is written in JSON, managed or custom, so both can be viewed that way.
+      - id: d
+        text: Use it to deny an action
+        why: Any policy can hold Deny rules, so denying an action is not unique to custom policies.
+    evidence:
+      - Custom policies are customer managed or inline policies that you write and change yourself for your own use cases, unlike AWS managed policies, which AWS creates and you cannot edit.
+      - A policy, written in JSON, holds allow or deny rules for AWS services and resources, scoped as wide as every S3 bucket or as narrow as one.
+    takeaway: You own and edit custom policies, while AWS creates managed policies that you cannot change.
+    history: []
+    verified:
+      keyHash: 632c2884d747
+      fullHash: 164c4ea99998
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-1cx96t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-iam-identity-center
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: >-
+      The cafe chain wants staff to reach several AWS accounts and business apps with the corporate login they already use, instead of a separate IAM user per person.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Identity and Access Management (IAM)
+        why: IAM alone lacks the federation needed to connect an outside identity source for one login.
+      - id: b
+        text: AWS IAM Identity Center
+        correct: true
+        why: Identity Center federates with the existing identity source and gives staff single sign-on.
+      - id: c
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates secrets but does not give staff a shared login.
+      - id: d
+        text: AWS Organizations
+        why: Organizations groups and governs accounts, not staff sign-in through a corporate login.
+    evidence:
+      - "Staff should reach AWS with their usual corporate login: IAM Identity Center."
+      - IAM alone lacks the federation needed to connect an outside identity source.
+    takeaway: Workforce single sign-on with an existing corporate login across accounts points to IAM Identity Center.
+    history: []
+    verified:
+      keyHash: bdbb6fd5ea36
+      fullHash: fe8b5e5355b6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-55ybjp
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-iam-identity-center
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      Which statements describe AWS IAM Identity Center?
+    options:
+      - id: a
+        text: It replaces IAM roles for staff access
+        why: Identity Center maps the corporate login to IAM roles, so it relies on roles rather than replacing them.
+      - id: b
+        text: It links to an existing identity source
+        correct: true
+        why: Identity Center connects to an identity source the organization already has, which is federation.
+      - id: c
+        text: It creates an IAM user for each employee
+        why: Identity Center avoids an IAM user per employee by letting staff use their corporate login.
+      - id: d
+        text: It gives staff one login for many accounts
+        correct: true
+        why: One login for every connected account and app is the single sign-on that Identity Center provides.
+      - id: e
+        text: It works inside only a single AWS account
+        why: Identity Center centralizes workforce access across many AWS accounts and applications.
+    evidence:
+      - Linked to an existing identity source, it gives staff one login for every connected account and service, which is SSO.
+      - "**AWS IAM Identity Center** centralizes workforce access across AWS accounts and applications."
+      - "**Federation at scale**: rather than an IAM user per employee, staff use their corporate login mapped to IAM roles, set up through AWS IAM Identity Center with single sign-on (SSO)."
+    takeaway: IAM Identity Center federates with an existing identity source to give staff one login across accounts.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are true of IAM Identity Center; 1, 2 and 3 are false for it.)"
+  - id: q-exrpf7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-secrets-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: >-
+      The cafe's ordering app has its database password written into the code.
+      The cafe wants that password kept in one central place and rotated on a schedule.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Systems Manager
+        why: Systems Manager oversees and patches nodes rather than storing and rotating app passwords.
+      - id: b
+        text: AWS IAM Identity Center
+        why: Identity Center handles staff single sign-on, not credentials that an app uses.
+      - id: c
+        text: AWS Secrets Manager
+        correct: true
+        why: Secrets Manager stores, fetches and rotates secrets such as database credentials in one place.
+      - id: d
+        text: AWS Certificate Manager (ACM)
+        why: ACM manages TLS certificates, not database passwords for an application.
+    evidence:
+      - "**AWS Secrets Manager** is the central place to store, fetch and rotate secrets such as passwords, database credentials and API keys."
+      - "Apps need passwords and keys kept and rotated centrally: AWS Secrets Manager."
+    takeaway: App credentials that must be stored centrally and rotated belong in AWS Secrets Manager.
+    history: []
+    verified:
+      keyHash: 5541eec34cfd
+      fullHash: 182550a3e8e8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-8cxdb1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-secrets-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      Which items is AWS Secrets Manager built to hold?
+    options:
+      - id: a
+        text: Security patches for servers
+        why: Patches are applied to nodes by Systems Manager, not stored as secrets.
+      - id: b
+        text: Records of each API call made
+        why: A record of API calls is an activity log, not a secret to protect.
+      - id: c
+        text: Database credentials and API keys
+        correct: true
+        why: Secrets Manager holds private items such as passwords, database credentials and API keys.
+      - id: d
+        text: Last accessed data for IAM roles
+        why: Last accessed data comes from IAM access reports and is not a secret.
+    evidence:
+      - "**AWS Secrets Manager** is the central place to store, fetch and rotate secrets such as passwords, database credentials and API keys."
+    takeaway: Secrets Manager holds private items such as passwords, database credentials and API keys.
+    history: []
+    verified:
+      keyHash: 9e32b9a6502a
+      fullHash: 6edf044f93bf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-zrcj25
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-systems-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe runs servers in its back office and EC2 instances in several Regions.
+      It wants one view of all these nodes and automated management of the user accounts on them.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates secrets, and it does not inventory nodes or manage their users.
+      - id: b
+        text: AWS Config
+        why: Config records resource configurations but does not manage users on the cafe's servers.
+      - id: c
+        text: AWS IAM Identity Center
+        why: Identity Center gives staff one login to AWS accounts and apps, not a view of nodes or their local users.
+      - id: d
+        text: AWS Systems Manager
+        correct: true
+        why: Systems Manager shows nodes across Regions and hybrid setups in one view and automates user management.
+    evidence:
+      - "**AWS Systems Manager** shows all your nodes, meaning connection points, across accounts, Regions, multi-cloud and hybrid setups in one view."
+      - It reports details like node ID and operating system and automates registry changes, user management and security patching.
+    takeaway: One view of hybrid nodes plus automated user management on them points to AWS Systems Manager.
+    history: []
+    verified:
+      keyHash: a1e609c7aca1
+      fullHash: 8f55d3167357
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-xa31th
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-systems-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      Which access-related task can AWS Systems Manager automate on nodes?
+    options:
+      - id: a
+        text: Rotating database passwords
+        why: Rotating database passwords is the job of Secrets Manager, not of Systems Manager.
+      - id: b
+        text: Managing users on nodes
+        correct: true
+        why: Systems Manager automates node work such as user management, registry changes and patching.
+      - id: c
+        text: Signing staff in with SSO
+        why: Single sign-on for staff across accounts is the job of IAM Identity Center.
+      - id: d
+        text: Reporting unused permissions
+        why: Last accessed data on unused permissions comes from IAM access reports.
+    evidence:
+      - It reports details like node ID and operating system and automates registry changes, user management and security patching.
+    takeaway: Systems Manager automates node tasks such as user management and patching across your fleet.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 (key) is the only option that repeats the stem's 'on nodes'."
+  - id: q-7gjhvq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: access-keys
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      A laptop was stolen that held the long-term credentials a cafe developer uses to run AWS CLI commands under an IAM user.
+      Which credential should the cafe deactivate and replace?
+    options:
+      - id: a
+        text: The IAM user's console password
+        why: A console password signs in to the web console, so it is not what the CLI on the laptop uses.
+      - id: b
+        text: The IAM user's MFA device
+        why: An MFA device adds a second proof at sign-in and does not sign the CLI commands themselves.
+      - id: c
+        text: The IAM user's access keys
+        correct: true
+        why: Access keys are the long-term pair that signs CLI requests, so stolen keys must be swapped.
+      - id: d
+        text: The account's password policy
+        why: A password policy sets rules for console passwords and holds no credential a thief could use.
+    evidence:
+      - Access keys are long-term credentials, an access key ID plus a secret access key, that sign programmatic requests to the AWS CLI or API, and AWS advises temporary credentials from roles instead and never creating them for the root user.
+    takeaway: Access keys are the long-term credentials behind CLI and API calls, so leaked keys must be replaced.
+    history: []
+    verified:
+      keyHash: b8aa2b73d87b
+      fullHash: 6b0e8daae87b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-60y0vx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-iam-identity-center
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: >-
+      The cafe chain wants staff to sign in to AWS through the employee directory it already runs.
+      The service it uses today for users, groups and policies cannot federate with an outside identity source.
+      Which service adds that link?
+    options:
+      - id: a
+        text: AWS Organizations
+        why: Organizations groups and governs many accounts but does not connect an outside sign-in directory.
+      - id: b
+        text: AWS IAM Identity Center
+        correct: true
+        why: Identity Center links an existing identity source and gives staff one sign-on for connected accounts.
+      - id: c
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates passwords and keys, but it does not handle staff sign-in.
+      - id: d
+        text: AWS Control Tower
+        why: Control Tower sets up governed multi-account environments rather than federating staff logins.
+    evidence:
+      - Linked to an existing identity source, it gives staff one login for every connected account and service, which is SSO.
+      - IAM alone lacks the federation needed to connect an outside identity source.
+    takeaway: When staff should use an existing directory login for AWS, IAM Identity Center supplies the federation IAM lacks.
+    history: []
+    verified:
+      keyHash: 03722594d382
+      fullHash: 8dbf197ba58e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-09
+  - id: q-b4a2c8
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-systems-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe's security lead wants a single inventory of every machine it runs, from back-office servers to EC2 instances in two Regions.
+      Each entry should show the machine's ID and operating system.
+      Which access management service fits?
+    options:
+      - id: a
+        text: AWS IAM Identity Center
+        why: Identity Center gives staff one login across accounts and apps, but it keeps no inventory of machines.
+      - id: b
+        text: AWS Secrets Manager
+        why: Secrets Manager stores and rotates passwords and API keys rather than listing the cafe's machines.
+      - id: c
+        text: AWS Systems Manager
+        correct: true
+        why: Systems Manager shows cloud and on-site nodes together and reports details such as node ID and operating system.
+      - id: d
+        text: AWS Organizations
+        why: Organizations groups and governs AWS accounts, and it does not report on the servers inside them.
+    evidence:
+      - "**AWS Systems Manager** shows all your nodes, meaning connection points, across accounts, Regions, multi-cloud and hybrid setups in one view."
+      - It reports details like node ID and operating system and automates registry changes, user management and security patching.
+    takeaway: Systems Manager lists every node, in the cloud or on site, with details such as node ID and operating system in one view.
+    history: []
+    review:
+      attempts: 2
+      lastFailure: "critic: The stem calls the key an 'access management service', but Systems Manager's node inventory is operations, not access management. Task 2.3 (access management) does not fit a question about inventorying nodes."
