@@ -1,4 +1,5 @@
 /** The lab's keys (spec 7.4), pure so the tests run without a browser. */
+import type { LabEngineId } from '../../schemas/ids.ts';
 import type { RunnerKeyInput } from './runner-keys.ts';
 
 export type LabCommand =
@@ -11,7 +12,7 @@ export type LabCommand =
   | { kind: 'drop' };
 
 export interface LabKeyState {
-  engine: 'sort' | 'configure' | 'simulate';
+  engine: LabEngineId;
   /** True while a Sort card is held. */
   holding: boolean;
   bucketCount: number;

@@ -1,0 +1,140 @@
+# The capstone brief (spec 6): our own fiction, with the 13 decision prompts, their prefilled context and the rubric.
+# Key points live in content/project/key-points/, one file per decision.
+title: Move the cafe to the cloud
+facts:
+  - id: growth
+    text: The cafe runs one shop today and plans 12 shops within 2 years, one of them abroad where customer data must stay in that country.
+  - id: peak
+    text: Online orders climb to 10 times the usual rate between 07:00 and 09:00 each morning.
+  - id: loyalty
+    text: A loyalty app lets regulars collect stamps and order ahead from their phones.
+  - id: archive
+    text: The cafe keeps 2 TB of receipts and product photos and must hold them for 7 years.
+  - id: pos
+    text: A point-of-sale server in the back office of the first shop records every sale.
+  - id: staff
+    text: One part-time IT person looks after every system the cafe runs.
+  - id: budget
+    text: The whole cloud bill must stay under a cap of $300 per month.
+decisions:
+  - module: 1
+    title: Deployment model and shared responsibility
+    prompt: Choose a deployment model for the cafe, name the 3 cloud benefits that matter most to it, and say where the shared responsibility line falls.
+    context:
+      - The cafe runs one shop today and plans 12 shops within 2 years.
+      - One part-time IT person looks after every system, so less hands-on upkeep matters.
+      - The whole cloud bill must stay under a cap of $300 per month.
+  - module: 2
+    title: Compute for online ordering
+    prompt: Pick the compute for online ordering, covering the instance family, the purchase option, scaling, load balancing and queueing.
+    context:
+      - Online orders climb to 10 times the usual rate between 07:00 and 09:00 each morning.
+      - An order that arrives during the morning rush must never be lost.
+      - The whole cloud bill must stay under a cap of $300 per month.
+  - module: 3
+    title: Serverless and containers
+    prompt: Decide which parts of the cafe's software become serverless or run in containers, and explain why.
+    context:
+      - The loyalty app and online ordering see short, sharp bursts of use.
+      - One part-time IT person has little time to patch and update servers.
+  - module: 4
+    title: Regions, edge and repeatable infrastructure
+    prompt: Choose a Region for the shop abroad, a way to deliver content from the edge, and a way to build the same infrastructure again for each new shop.
+    context:
+      - One of the 12 planned shops is abroad, and its customer data must stay in that country.
+      - Customers open the loyalty app wherever they happen to be.
+      - Each new shop should get the same setup without manual steps.
+  - module: 5
+    title: Network layout and shop connections
+    prompt: Lay out the virtual network, set the stance for security groups and network access control lists, and choose how the shops connect to it.
+    context:
+      - The point-of-sale server in the back office must reach the cloud safely.
+      - The cafe will grow from one shop to 12 shops within 2 years.
+      - The ordering servers face the internet while the databases must not.
+  - module: 6
+    title: Storage classes and lifecycle
+    prompt: Choose storage classes and lifecycle rules for receipts, product images and point-of-sale backups.
+    context:
+      - The cafe keeps 2 TB of receipts and product photos and must hold them for 7 years.
+      - Old receipts are rarely opened once a year has passed.
+      - The whole cloud bill must stay under a cap of $300 per month.
+  - module: 7
+    title: Databases and caching
+    prompt: Pick a database for each workload of the cafe and decide where caching helps.
+    context:
+      - Every sale from the point-of-sale server needs a reliable record.
+      - The loyalty app reads the same menu and stamp balances many times each morning.
+      - Online orders climb to 10 times the usual rate between 07:00 and 09:00.
+  - module: 8
+    title: Analytics and an AI feature
+    prompt: Design one analytics pipeline over the cafe's sales and add one AI feature that helps customers or staff.
+    context:
+      - Sales from every shop and from the loyalty app pile up each day.
+      - The owners want to know which items sell at which hour.
+      - One part-time IT person cannot run a large data platform.
+  - module: 9
+    title: Identity, encryption and edge protection
+    prompt: Set up identities and root user protection, choose how data is encrypted, and protect the ordering site at the edge.
+    context:
+      - The part-time IT person and every shop manager need some access, but not the same access.
+      - Receipts and loyalty records hold customer details.
+      - The ordering site faces the internet during the morning rush.
+  - module: 10
+    title: Monitoring, audit and governance
+    prompt: Choose how the cafe monitors its systems, keeps an audit trail, structures its accounts and gathers compliance evidence.
+    context:
+      - The part-time IT person must hear about a problem before customers do.
+      - The shop abroad brings its own rules for customer data.
+      - The cafe will run 12 shops within 2 years.
+  - module: 11
+    title: Cost, budgets and Support plan
+    prompt: Estimate the monthly cost, set budgets and alerts, and pick a Support plan by its current name.
+    context:
+      - The whole cloud bill must stay under a cap of $300 per month.
+      - The part-time IT person needs help quickly when something breaks.
+      - Spending grows each time the cafe opens a new shop.
+  - module: 12
+    title: Migration strategies and data transfer
+    prompt: Choose a migration strategy for each existing system and a method to move the cafe's data.
+    context:
+      - The point-of-sale server in the back office holds every sale so far.
+      - The cafe keeps 2 TB of receipts and product photos.
+      - The shops cannot close for long while their systems move.
+  - module: 13
+    title: Well-Architected review
+    prompt: Review the whole design against the six Well-Architected pillars and name the top 3 fixes.
+    context:
+      - The earlier decisions now describe the cafe's whole design.
+      - One part-time IT person must be able to run what the plan builds.
+      - The whole cloud bill must stay under a cap of $300 per month.
+rubric:
+  passTotal: 8
+  criteria:
+    - id: fit
+      name: Fit
+      levels:
+        - Ignores the brief
+        - Meets some constraints
+        - Meets every main constraint
+        - Also meets edge constraints and names the course-taught reason
+    - id: grounding
+      name: Grounding
+      levels:
+        - No course concepts, or wrong ones
+        - 1 concept used correctly
+        - 2 or more used correctly
+        - Also compared against the rejected option
+    - id: tradeoffs
+      name: Trade-offs
+      levels:
+        - None
+        - Names a cost or a limit
+        - Adds a mitigation
+        - Adds the cost or responsibility impact
+    - id: cost
+      name: Cost and responsibility
+      levels:
+        - Missing
+        - Mentioned vaguely
+        - Pricing model or responsibility split stated
+        - Both stated, and they match earlier ADRs

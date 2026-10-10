@@ -54,7 +54,12 @@ describe('lab file schema (spec 5.1)', () => {
   });
 
   it('rejects an engine that does not exist', () => {
-    expect(paths(LabFile.safeParse({ ...bakeryLab(), engine: 'place' }))).toEqual(['engine']);
+    expect(paths(LabFile.safeParse({ ...bakeryLab(), engine: 'deploy' }))).toEqual(['engine']);
+  });
+
+  it.each(['place', 'trace', 'investigate'])('accepts the %s engine and has its schemas', (engine) => {
+    expect(LabFile.safeParse({ ...bakeryLab(), engine }).success).toBe(true);
+    expect(Object.keys(LAB_SCHEMAS[engine as keyof typeof LAB_SCHEMAS] ?? {})).toEqual(['spec', 'action']);
   });
 });
 
