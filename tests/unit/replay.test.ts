@@ -39,8 +39,8 @@ const answer = (qid: string, correct: boolean, sid = SID, concept = 'shared-kitc
 });
 
 describe('derive', () => {
-  it('has engine version 6', () => {
-    expect(ENGINE_VERSION).toBe(6);
+  it('has engine version 7', () => {
+    expect(ENGINE_VERSION).toBe(7);
   });
 
   it('keeps the first completion of each lab, with its rev and hints, and never replaces it', () => {

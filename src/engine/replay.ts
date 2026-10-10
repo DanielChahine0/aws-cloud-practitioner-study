@@ -11,8 +11,9 @@ import { FORM_IDS } from '../../schemas/ids.ts';
  * Version 5 pays lab XP, counts lab debriefs and gives Hands On per complete module, pays incident XP.
  * Version 5 also pays lightning XP and makes a missed lightning concept due today through `review.now`.
  * Version 6 pays mission and capstone decision XP and keeps the first final grade per module.
+ * Version 7 judges an answer to a card that `review.now` made due as early until the card's own due.
  */
-export const ENGINE_VERSION = 6;
+export const ENGINE_VERSION = 7;
 
 type AnswerEvent = Extract<StudyEvent, { t: 'answer' }>;
 type SessionEvent = Extract<StudyEvent, { t: 'session' }>;
