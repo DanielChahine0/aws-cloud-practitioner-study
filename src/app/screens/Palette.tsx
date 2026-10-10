@@ -13,6 +13,7 @@ const KIND_LABEL: Record<SearchEntry['kind'], string> = {
   concept: 'Concept',
   term: 'Term',
   mission: 'Mission',
+  lab: 'Lab',
 };
 const optionId = (i: number): string => `palette-option-${i}`;
 

@@ -48,4 +48,17 @@ describe('rank', () => {
     expect(rank(ENTRIES, 'manag serv').map((e) => e.title)).toEqual(['Serverless computing']);
     expect(rank(ENTRIES, 'ambda')).toEqual([]);
   });
+
+  it('finds a lab by its title or by a word of its brief and concepts (spec 7.3)', () => {
+    const lab = entry(
+      'lab',
+      'Pick the compute',
+      '#/m/03/lab/lab-m03-pick-the-compute',
+      'cafe jobs aws lambda',
+    );
+    expect(rank([...ENTRIES, lab], 'pick').map((e) => e.route)).toEqual([
+      '#/m/03/lab/lab-m03-pick-the-compute',
+    ]);
+    expect(rank([...ENTRIES, lab], 'cafe jobs').map((e) => e.kind)).toEqual(['lab']);
+  });
 });

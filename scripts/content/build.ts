@@ -8,6 +8,8 @@ import type {
   ExamFormMeta,
   ExamItemRef,
   GlossaryItem,
+  LabMeta,
+  LabView,
   LessonChunk,
   LessonMeta,
   MissionMeta,
@@ -20,10 +22,12 @@ import type {
   TaskView,
 } from '../../schemas/chunks.ts';
 import type { Concept } from '../../schemas/concept.ts';
+import { LAB_SCHEMAS } from '../../schemas/lab.ts';
 import { normalize } from '../../src/app/search.ts';
 import {
   CONCEPTS_FILE,
   type Context,
+  type LabEntry,
   type LessonNote,
   type ModuleNote,
   type Note,
@@ -32,6 +36,7 @@ import {
 } from './lib/context.ts';
 import { evidenceForm, noteLines, sectionAt } from './lib/evidence.ts';
 import { parseGlossary, termMatcher } from './lib/glossary.ts';
+import { labTexts } from './lib/labs.ts';
 import { renderDoc, renderInline, routeOf } from './lib/render.ts';
 import { stripMarkdown, words } from './lib/text.ts';
 
@@ -190,6 +195,67 @@ export function buildContent(ctx: Context): BuiltContent {
   const checkConceptsOf = (noteId: string): number =>
     ctx.concepts.filter((c) => c.home === noteId && c.tested !== false && practised.has(c.id)).length;
 
+  // Live labs, by module, core before stretch, then id; each ships without its solution and wrong paths (spec 5.1).
+  const tierRank = (e: LabEntry): number => (e.lab.tier === 'core' ? 0 : 1);
+  const liveLabs = ctx.labs
+    .filter((e) => e.lab.status === 'live')
+    .sort(
+      (a, b) =>
+        a.lab.module - b.lab.module ||
+        tierRank(a) - tierRank(b) ||
+        (a.lab.id < b.lab.id ? -1 : a.lab.id > b.lab.id ? 1 : 0),
+    );
+  const livePractice = new Map(live.map((entry) => [entry.q.id, entry] as const));
+  const labMeta = ({ lab }: LabEntry): LabMeta => ({
+    id: lab.id,
+    module: lab.module,
+    engine: lab.engine,
+    tier: lab.tier,
+    rev: lab.rev,
+    title: lab.title,
+    minutes: lab.minutes,
+  });
+  const labView = (entry: LabEntry): LabView => {
+    const { lab } = entry;
+    const spec = LAB_SCHEMAS[lab.engine]?.spec.safeParse(lab.spec);
+    if (spec === undefined || !spec.success) {
+      throw new Error(`${lab.id}: its ${lab.engine} spec does not parse; run pnpm content:validate`);
+    }
+    const notes = lab.notes.map((id) => {
+      const note = notesById.get(id);
+      if (note?.kind !== 'lesson' || note.fm === null) {
+        throw new Error(`${lab.id}: note ${id} is not a note; run pnpm content:validate`);
+      }
+      return { route: routeOf(note), title: note.fm.title };
+    });
+    const questions = lab.debrief.questions.map((qid) => {
+      const question = livePractice.get(qid);
+      const note = question === undefined ? undefined : notesById.get(question.noteId);
+      if (question === undefined || note === undefined) {
+        throw new Error(
+          `${lab.id}: debrief question ${qid} is not a live practice question; run pnpm content:validate`,
+        );
+      }
+      return questionView(question, note);
+    });
+    return {
+      ...labMeta(entry),
+      concepts: [...lab.concepts],
+      brief: lab.brief,
+      spec: spec.data,
+      goals: lab.goals.map((g) => ({ id: g.id, label: g.label, hint: g.hint })),
+      notes,
+      debrief: { lines: [...lab.debrief.lines], questions },
+      credits: lab.engine === 'simulate' || labTexts(lab).some((text) => /lab credit/i.test(text)),
+    };
+  };
+  const labsOf = new Map<string, string[]>();
+  for (const { lab } of liveLabs) {
+    for (const id of new Set(lab.concepts.map((c) => aliasOf.get(c) ?? c))) {
+      labsOf.set(id, [...(labsOf.get(id) ?? []), lab.id]);
+    }
+  }
+
   const modules: ModuleMeta[] = [];
   for (const n of [...new Set(ctx.notes.map((note) => note.module))].sort((a, b) => a - b)) {
     const readme = ctx.notes.find((note): note is ModuleNote => note.kind === 'module' && note.module === n);
@@ -244,7 +310,8 @@ export function buildContent(ctx: Context): BuiltContent {
         questionVersions[entry.q.id] = entry.q.version;
         return questionView(entry, note);
       });
-    const chunk: ModuleChunk = { module: n, readme: readmeSections, lessons: chunkLessons, questions };
+    const labs = liveLabs.filter((e) => e.lab.module === n).map(labView);
+    const chunk: ModuleChunk = { module: n, readme: readmeSections, lessons: chunkLessons, questions, labs };
     modules.push({
       n,
       slug: readme.fm.slug,
@@ -276,6 +343,7 @@ export function buildContent(ctx: Context): BuiltContent {
       confusableWith: links.get(c.id) ?? [],
       aliases: [...(c.aliases ?? [])],
       splitFrom: c.splitFrom ?? null,
+      ...(labsOf.has(c.id) ? { labs: labsOf.get(c.id) ?? [] } : {}),
     };
   });
 
@@ -328,6 +396,18 @@ export function buildContent(ctx: Context): BuiltContent {
       };
     });
 
+  const conceptNames = new Map(ctx.concepts.map((c) => [c.id, c.name] as const));
+  for (const { lab } of liveLabs) {
+    const names = lab.concepts.map((c) => conceptNames.get(aliasOf.get(c) ?? c) ?? c);
+    search.push({
+      kind: 'lab',
+      title: lab.title,
+      detail: `Module ${lab.module} lab`,
+      route: `#/m/${pad2(lab.module)}/lab/${lab.id}`,
+      text: normalize([lab.brief, ...names].join(' ')),
+    });
+  }
+
   const searchChunk: SearchChunk = { entries: search };
   const domains: DomainView[] = (ctx.blueprint?.domains ?? []).map(({ id, name, weight }) => ({
     id,
@@ -362,6 +442,7 @@ export function buildContent(ctx: Context): BuiltContent {
     ranks,
     badges,
     exam: formChunks(ctx, notesById, emit),
+    labs: liveLabs.map(labMeta),
   };
   const contentVersion = `c-${sha256(JSON.stringify(body)).slice(0, 6)}`;
   const index: ContentIndex = { contentVersion, ...body };
