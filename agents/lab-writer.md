@@ -158,3 +158,21 @@ Rank the four factors the Region note teaches: compliance first, then the servic
 Goal g1 lists the Regions that keep the data where the law requires, g2 the Regions that also run the service, and g3 only the closest Region left after g1 and g2, so a cheaper or nearer Region never beats a compliant one.
 Wrong paths: the cheapest Region abroad (fails g1) and the nearest Region without the service (fails g2).
 Call every latency and price a lab value in the brief, and write prices only as lab credits.
+
+## Simulate labs
+
+A Simulate spec is `model`, `constants`, `params` and `thresholds`; `SimulateSpec` and `SIM_CONSTANTS` in `schemas/lab.ts` are the shapes, `modelParams` and `metricInfo` in `src/labs/simulate/models.ts` list each model's parameters and metrics, and `bakerySimulateLab` in `tests/fixtures/lab-specs.ts` is a complete example.
+Actions are `{ t: set, param: <id>, value: <number, option id or boolean> }`, `{ t: run }` and `{ t: reset }`; the screen and R11 run the model before every check, so a solution or wrong path never needs a `run` action.
+Your lab is one row of `SIM_LABS` in `tests/content/sim-labs.test.ts`: copy its model, constants, parameter ids, kinds, ranges, steps, initials and option ids, thresholds, solution and wrong-path actions exactly, and write only the text: the title, the brief, goal labels and hints, parameter and option labels, units, constant labels, wrong-path mistakes and the debrief.
+`pnpm vitest run tests/content/sim-labs.test.ts` fails when any number differs from the table; never retune a number to make a check pass.
+Name every constant a lab value in the brief, write every price as lab credits, and write `minutes` from 6 to 10.
+Each threshold fails each wrong path for the reason its `mistake` names: `min 0` leaves no instance ready overnight, a one-zone class for the only copy loses data, Lambda for the steady high-volume worker costs more, and so on; say that reason in the goal's hint without naming the setting.
+
+### Model notes for the brief and the debrief
+
+- `scaling` (Morning rush): `dynamic` follows the previous hour, `predictive` scales ahead of the forecast, and without a load balancer one instance takes every order.
+- `compute-cost` (Bursty or steady): Lambda charges per request and per GB-second while the code runs, and the instance costs the same flat month whether busy or idle.
+- `s3-lifecycle` (Receipts for 7 years): each class has a storage price, a retrieval price, a minimum duration charged when data leaves early, a retrieval time and its zone count; a read slower than its deadline is late, and a zone loss on day 150 destroys data held in a one-zone class.
+- `cache` (Cache the menu): the cache serves its hit share of reads, and the database slows down once its load passes its capacity.
+- `bill` (The monthly bill): consolidated billing sums usage before the tiers apply, a commitment lowers the hourly rate, inbound transfer is free, and the alert day is when spending crosses the alert share of the budget.
+- `transfer` (Online or offline transfer): online days use 80% of the link, offline jobs ship together in one lab turnaround, and the device count is the data divided by the lab device capacity, rounded up; neither Snowball figure is in the notes, so both are lab values.

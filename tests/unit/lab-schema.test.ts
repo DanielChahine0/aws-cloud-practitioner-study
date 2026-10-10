@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { ConfigureAction, ConfigureSpec, LAB_SCHEMAS, LabFile, SortSpec } from '../../schemas/lab.ts';
+import {
+  ConfigureAction,
+  ConfigureSpec,
+  LAB_SCHEMAS,
+  LabFile,
+  SimulateAction,
+  SortSpec,
+} from '../../schemas/lab.ts';
 import { bakeryConfigureLab } from '../fixtures/lab-specs.ts';
 import { bakeryLab } from '../fixtures/labs.ts';
 
@@ -117,5 +124,14 @@ describe('ConfigureSpec', () => {
     expect(ConfigureAction.safeParse({ t: 'set', field: 'door', value: false }).success).toBe(true);
     expect(ConfigureAction.safeParse({ t: 'set', field: 'door', value: 2 }).success).toBe(false);
     expect(ConfigureAction.safeParse({ t: 'run' }).success).toBe(false);
+  });
+});
+
+describe('SimulateAction', () => {
+  it('parses set, run and reset', () => {
+    expect(SimulateAction.safeParse({ t: 'set', param: 'max', value: 3 }).success).toBe(true);
+    expect(SimulateAction.safeParse({ t: 'set', param: 'mode', value: 'predictive' }).success).toBe(true);
+    expect(SimulateAction.safeParse({ t: 'run' }).success).toBe(true);
+    expect(SimulateAction.safeParse({ t: 'run', now: true }).success).toBe(false);
   });
 });

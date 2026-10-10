@@ -168,6 +168,12 @@ Give each field one decision, labelled by the setting it changes.
 Option labels name the choice and never the verdict, so no option reads "Recommended" or "Cheapest".
 Option details state facts from the cited note or named lab values, never hints.
 
+### Simulate parameters
+
+Label each parameter by the lever it moves, and always show its unit.
+Name every constant a lab value in the brief, and every price in lab credits.
+Thresholds read as the cafe's needs, such as a daily budget or a deadline, never as the answer.
+
 ## Incidents
 
 A daily incident is a short cafe story told over 2 to 4 steps in `content/incidents/inc-NNN.yaml` (spec 4.5).
