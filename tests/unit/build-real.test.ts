@@ -43,9 +43,11 @@ describe('buildContent on the real notes', () => {
     expect(html.split('<li class="update">').length - 1).toBeGreaterThanOrEqual(7);
   });
 
-  it('ships exactly the questions that questionVersions lists', () => {
+  it('ships exactly the questions and incident steps that questionVersions lists', () => {
     const shipped = [...chunks.values()].flatMap((chunk) =>
-      chunk.questions.map((q) => [q.id, q.version] as const),
+      [...chunk.questions, ...chunk.incidents.flatMap((incident) => incident.steps)].map(
+        (q) => [q.id, q.version] as const,
+      ),
     );
     expect(Object.fromEntries(shipped)).toEqual(index.questionVersions);
     expect(new Set(shipped.map(([id]) => id)).size).toBe(shipped.length);
