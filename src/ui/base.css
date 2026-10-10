@@ -2096,6 +2096,51 @@ dialog.confirm .button {
 }
 
 /* Labs: Configure */
+.config {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.config-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+/* As with the match selects, WebKit keeps a native select at its own height, so this one drops its native look. */
+.config-field select {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 44px;
+  padding: 0 36px 0 12px;
+  font: inherit;
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--pane);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.config-field select:hover {
+  border-color: var(--active);
+}
+
+.field-detail {
+  margin: 4px 0 0;
+}
 
 /* Labs: Simulate */
 

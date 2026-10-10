@@ -1,8 +1,10 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { ContentIndex, LabView, QuestionView } from '../../../schemas/chunks.ts';
 import type { NewEvent } from '../../../schemas/events.ts';
-import type { SortAction, SortSpec } from '../../../schemas/lab.ts';
+import type { ConfigureSpec, SortAction, SortSpec } from '../../../schemas/lab.ts';
 import { openSession } from '../../engine/replay.ts';
+import type { ConfigureState } from '../../labs/configure/model.ts';
+import { ConfigureView } from '../../labs/configure/View.tsx';
 import { allPass, type GoalResult, replayLab } from '../../labs/contract.ts';
 import { checkLab, type EngineEntry, engineOf } from '../../labs/engines.ts';
 import type { SortState } from '../../labs/sort/model.ts';
@@ -15,6 +17,7 @@ import { ensureModule, modules } from '../content.ts';
 import { gPending, isControl, isTyping } from '../keyboard.ts';
 import {
   CREDITS_NOTE,
+  checkLabel,
   goalWord,
   hintLine,
   labCheckLine,
@@ -189,7 +192,6 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
   }, []);
 
   const sort = lab.engine === 'sort' ? (lab.spec as SortSpec) : null;
-  const sortState = state as SortState;
 
   const place = (card: string, bucket: string): void => {
     if (sort === null) return;
@@ -336,9 +338,13 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
       {lab.credits && <p class="muted credits-note">{CREDITS_NOTE}</p>}
       {!done && (
         <section class="lab-board" aria-label="Workspace" ref={board}>
-          {sort !== null && (
-            <SortView spec={sort} state={sortState} held={held} onHold={setHeld} onAction={onSortAction} />
-          )}
+          <Board
+            lab={lab}
+            state={state}
+            held={held}
+            onHold={setHeld}
+            onAction={lab.engine === 'sort' ? onSortAction : dispatch}
+          />
         </section>
       )}
       <section class="lab-goals" aria-labelledby="lab-goals-title">
@@ -385,7 +391,7 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
       {!done && !asking && (
         <div class="lab-actions">
           <button type="button" class="button lab-button" onClick={() => void check()}>
-            Check <kbd>Enter</kbd>
+            {checkLabel(lab.engine)} <kbd>Enter</kbd>
           </button>
           <button
             type="button"
@@ -451,6 +457,35 @@ function LabBody({ idx, short, lab, entry }: BodyProps) {
       )}
     </div>
   );
+}
+
+/** The engine view for one lab; each engine's state comes from its own reducer. */
+function Board(props: {
+  lab: LabView;
+  state: unknown;
+  held: string | null;
+  onHold(card: string | null): void;
+  onAction(action: unknown): void;
+}) {
+  const { lab, state, held, onHold, onAction } = props;
+  switch (lab.engine) {
+    case 'sort':
+      return (
+        <SortView
+          spec={lab.spec as SortSpec}
+          state={state as SortState}
+          held={held}
+          onHold={onHold}
+          onAction={onAction}
+        />
+      );
+    case 'configure':
+      return (
+        <ConfigureView spec={lab.spec as ConfigureSpec} state={state as ConfigureState} onAction={onAction} />
+      );
+    default:
+      return null;
+  }
 }
 
 /** A goal's icon beside its word, so colour is never the only signal (spec 7.6). */

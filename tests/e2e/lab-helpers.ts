@@ -150,3 +150,70 @@ export async function labDoneCount(page: Page, id: string): Promise<number> {
     { name: DB_NAME, version: SCHEMA_VERSION, store: STORES.events, labId: id },
   );
 }
+
+export const SYNTHETIC_CONFIGURE_LAB_ID = 'lab-m01-bakery-region';
+
+/** "Read in notes" for a synthetic lab: the section of the first debrief question. */
+function notesOf(questions: QuestionView[]): LabView['notes'] {
+  return [{ route: questions[0]?.read.route ?? '#/m/01', title: 'The first Module 1 lesson' }];
+}
+
+/** A made-up Configure lab with a lab-credit price index, so the screen shows the credits line. */
+export function syntheticConfigureLab(questions: QuestionView[]): LabView {
+  return {
+    id: SYNTHETIC_CONFIGURE_LAB_ID,
+    module: 1,
+    engine: 'configure',
+    tier: 'core',
+    rev: 1,
+    title: 'Choose the bakery Region',
+    minutes: 4,
+    concepts: ['bakery-region'],
+    brief: 'The bakery moves its order service to the cloud. Customer data must stay in the home country.',
+    spec: {
+      fields: [
+        {
+          kind: 'select',
+          id: 'region',
+          label: 'Region',
+          options: [
+            {
+              id: 'southvale',
+              label: 'Southvale',
+              detail:
+                'Home country. 70 ms from the bakery. No order service yet. Price index 70 lab credits.',
+            },
+            {
+              id: 'northport',
+              label: 'Northport',
+              detail:
+                'Home country. 40 ms from the bakery. Runs the order service. Price index 120 lab credits.',
+            },
+            {
+              id: 'eastmere',
+              label: 'Eastmere',
+              detail: 'Abroad. 15 ms from the bakery. Runs the order service. Price index 80 lab credits.',
+            },
+          ],
+          initial: 'southvale',
+        },
+        { kind: 'toggle', id: 'spare', label: 'Keep a spare copy in a second zone', initial: false },
+      ],
+      rules: [
+        { goal: 'g1', field: 'region', in: ['southvale', 'northport'] },
+        { goal: 'g2', field: 'region', in: ['northport'] },
+        { goal: 'g2', field: 'spare', in: [true] },
+      ],
+    },
+    goals: [
+      { id: 'g1', label: 'Customer data stays home', hint: 'Check where each Region keeps its data.' },
+      { id: 'g2', label: 'Orders run, with a spare', hint: 'The order service must run there, twice over.' },
+    ],
+    notes: notesOf(questions),
+    debrief: {
+      lines: ['Residency rules come first, then the services you need.', 'Price breaks a tie last.'],
+      questions: questions.slice(0, 2),
+    },
+    credits: true,
+  };
+}

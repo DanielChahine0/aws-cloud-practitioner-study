@@ -7,9 +7,11 @@ import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1, 
 import {
   labDoneCount,
   labFor,
+  SYNTHETIC_CONFIGURE_LAB_ID,
   SYNTHETIC_SORT_LAB_ID,
   SYNTHETIC_SORT_TITLE,
   storedDraftActions,
+  syntheticConfigureLab,
   syntheticSortLab,
   useSyntheticLab,
 } from './lab-helpers.ts';
@@ -266,5 +268,68 @@ test('lab cards and buckets are at least 44 px tall and stack on a phone', async
   const goals = await page.locator('.lab-goals').boundingBox();
   if (!board || !goals) throw new Error('the board or the goals have no box');
   expect(goals.y).toBeGreaterThanOrEqual(board.y + board.height);
+  await expectNoSidewaysScroll(page);
+});
+
+const CONFIGURE_URL = `/#/m/01/lab/${SYNTHETIC_CONFIGURE_LAB_ID}`;
+
+/**
+ * Serves and opens the synthetic Configure lab: the hash change alone keeps the index the Sort setup loaded, so the
+ * page reloads to fetch the index and the chunk again through the Configure routes.
+ */
+async function useConfigureLab(page: Page): Promise<void> {
+  await useSyntheticLab(page, syntheticConfigureLab);
+  await page.goto(CONFIGURE_URL);
+  await page.reload();
+}
+
+test('a Configure lab works by keyboard alone and shows the lab credits line', async ({
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName === 'webkit',
+    'WebKit opens a native menu for letter keys on a select, so typing a letter is unreliable there',
+  );
+  await useConfigureLab(page);
+  await expect(h1(page, 'Choose the bakery Region')).toBeVisible();
+  await expect(page.getByText('Prices are in lab credits, a made-up unit, not AWS prices.')).toBeVisible();
+  const region = page.getByLabel('Region', { exact: true });
+  await region.focus();
+  await page.keyboard.press('n');
+  await expect(region).toHaveValue('northport');
+  await expect(
+    page.getByText(
+      'Home country. 40 ms from the bakery. Runs the order service. Price index 120 lab credits.',
+    ),
+  ).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await page.keyboard.press('Tab');
+  await expect(page.getByLabel('Keep a spare copy in a second zone')).toBeFocused();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('All 2 goals met. Plus 40 XP.', { exact: true })).toBeAttached();
+  await expect(page.getByRole('heading', { name: 'Debrief' })).toBeFocused();
+});
+
+test('a Configure lab has no axe violations and no sideways scroll', async ({ page }) => {
+  await useConfigureLab(page);
+  await expect(h1(page, 'Choose the bakery Region')).toBeVisible();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+  await page.getByRole('button', { name: /^Check/ }).click();
+  await expect(page.getByText('1 of 2 goals met.', { exact: true })).toBeAttached();
+  await expectNoAxeViolations(page);
+  await expectNoSidewaysScroll(page);
+});
+
+test('Configure selects and checkboxes are at least 44 px tall on a phone', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'webkit-mobile', 'the phone layout runs on webkit-mobile only');
+  await useConfigureLab(page);
+  await expect(h1(page, 'Choose the bakery Region')).toBeVisible();
+  for (const control of [page.getByLabel('Region', { exact: true }), page.locator('label.config-toggle')]) {
+    expect((await control.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
+  }
   await expectNoSidewaysScroll(page);
 });
