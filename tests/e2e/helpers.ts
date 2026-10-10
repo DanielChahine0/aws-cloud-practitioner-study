@@ -1,5 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Locator, type Page, test } from '@playwright/test';
+import type { StudyEvent } from '../../schemas/events.ts';
+import { SCHEMA_VERSION } from '../../schemas/version.ts';
+import { DB_NAME, STORES } from '../../src/store/idb.ts';
 
 const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
@@ -41,4 +44,41 @@ export async function expectNoSidewaysScroll(page: Page): Promise<void> {
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
   expect(overflow, 'pixels of horizontal overflow').toBe(0);
+}
+
+/**
+ * Writes events into the page's IndexedDB log the way the app stores them, then reloads so the app replays them.
+ * Call it after the first `page.goto`, so the database belongs to the site's origin.
+ */
+export async function seedEvents(page: Page, events: readonly StudyEvent[]): Promise<void> {
+  await page.evaluate(
+    async ({ name, version, stores, list }) => {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const open = indexedDB.open(name, version);
+        open.onupgradeneeded = () => {
+          if (!open.result.objectStoreNames.contains(stores.events)) {
+            open.result.createObjectStore(stores.events, { keyPath: 'id' });
+          }
+          if (!open.result.objectStoreNames.contains(stores.kv)) {
+            open.result.createObjectStore(stores.kv, { keyPath: 'key' });
+          }
+          if (!open.result.objectStoreNames.contains(stores.cache)) {
+            open.result.createObjectStore(stores.cache, { keyPath: 'key' });
+          }
+        };
+        open.onsuccess = () => resolve(open.result);
+        open.onerror = () => reject(open.error);
+      });
+      await new Promise<void>((resolve, reject) => {
+        const tx = db.transaction(stores.events, 'readwrite');
+        for (const e of list) tx.objectStore(stores.events).put(e);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+      });
+      db.close();
+    },
+    { name: DB_NAME, version: SCHEMA_VERSION, stores: STORES, list: [...events] },
+  );
+  await page.reload();
 }
