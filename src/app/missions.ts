@@ -1,8 +1,8 @@
 /**
  * Mission state in signals (spec 5.3): each mission's stage from the log, the plan record and the minute clock, and
  * the top bar's live chip.
- * This module is in the initial bundle, because the top bar and Next read it; the screens' copy and helpers live in
- * `mission-copy.ts`, which only the lazy mission screens load.
+ * The top bar loads this module after first paint, and the lazy mission screens import it, so it stays out of the
+ * initial bundle; the screens' copy and helpers live in `mission-copy.ts`, which only the lazy mission screens load.
  */
 import { computed } from '@preact/signals';
 import type { MissionMeta } from '../../schemas/chunks.ts';
