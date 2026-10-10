@@ -136,9 +136,9 @@ export function memoryMockLine(memory: number, mock: number | null): string {
   return `Memory ${percent(memory)} · Mock ${mock === null ? '-' : percent(mock)}`;
 }
 
-/** One domain bar's text: `Cloud Concepts 62`. */
-export function domainValueLine(name: string, value: number): string {
-  return `${name} ${percent(value)}`;
+/** One domain bar's number: `62` for 0.629, floored like every readiness figure. */
+export function domainValue(value: number): number {
+  return percent(value);
 }
 
 /** The word to type before deleting every event and setting. */

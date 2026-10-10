@@ -7,7 +7,7 @@ import {
   changeCounts,
   changeVerdict,
   dayStrip,
-  domainValueLine,
+  domainValue,
   memoryMockLine,
   mockLine,
   RESET_WORD,
@@ -151,7 +151,7 @@ describe('Progress lines', () => {
     expect(rankLine('Business Support+')).toBe('Rank Business Support+');
     expect(memoryMockLine(0.587, 0.66)).toBe('Memory 58 · Mock 66');
     expect(memoryMockLine(0.587, null)).toBe('Memory 58 · Mock -');
-    expect(domainValueLine('Cloud Concepts', 0.629)).toBe('Cloud Concepts 62');
+    expect(domainValue(0.629)).toBe(62);
   });
 
   it('asks for the reset word in capitals', () => {

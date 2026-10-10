@@ -1777,13 +1777,18 @@ dialog.confirm .button {
 
 .bar-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 8px;
-  align-items: center;
-  margin: 4px 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 8px;
+  align-items: baseline;
+  margin: 0 0 12px;
+}
+
+.bar-value {
+  font-variant-numeric: tabular-nums;
 }
 
 .bar-track {
+  grid-column: 1 / -1;
   height: 8px;
   border-radius: 4px;
   background: var(--line);
