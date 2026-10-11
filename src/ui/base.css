@@ -1953,13 +1953,13 @@ dialog.confirm .button {
 }
 
 /* In the plan forms each label sits above its input, so the inputs line up whatever the label's length. */
-.plan-form .date-field {
+:where(.plan-form) .date-field {
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
 }
 
-.plan-form .date-field input {
+:where(.plan-form) .date-field input {
   width: 11rem;
 }
 
