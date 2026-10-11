@@ -9,7 +9,7 @@ import { openDb } from '../store/idb.ts';
 import { allKv, KV_KEYS, type KvRecords, putKv, setKv } from '../store/kv.ts';
 import { migrateStored } from '../store/migrations/stored.ts';
 import { replaceStores } from '../store/replace.ts';
-import { ulid } from '../store/ulid.ts';
+import { monotonicUlid, ulid } from '../store/ulid.ts';
 import { index } from './content.ts';
 import { pad2 } from './router.ts';
 
@@ -110,6 +110,36 @@ export async function record(e: NewEvent, now = new Date()): Promise<StudyEvent>
  */
 export async function recordAll(es: readonly NewEvent[], now = new Date()): Promise<StudyEvent[]> {
   const added = es.map((e) => stamp(e, now));
+  show(added);
+  if (db !== null) {
+    try {
+      await putEvents(db, added);
+    } catch {
+      failed();
+    }
+  }
+  return added;
+}
+
+/**
+ * Records events that happened earlier, each at its own date (the Already done action, spec 8.1): it sorts them by
+ * date first, keeping the given order for equal dates, and takes their ids from a fresh ULID generator at those dates,
+ * so they sort into the log by date whatever order they came in; they reach IndexedDB in one transaction.
+ */
+export async function recordAt(items: readonly (readonly [NewEvent, Date])[]): Promise<StudyEvent[]> {
+  const next = monotonicUlid();
+  const added = [...items]
+    .sort((a, b) => a[1].getTime() - b[1].getTime())
+    .map(
+      ([e, date]) =>
+        ({
+          ...e,
+          id: next(date.getTime()),
+          at: date.toISOString(),
+          tz: tzOffset(date),
+          day: studyDay(date),
+        }) as StudyEvent,
+    );
   show(added);
   if (db !== null) {
     try {

@@ -3,7 +3,8 @@ import { Breadcrumbs } from '../../ui/Breadcrumbs.tsx';
 import { useTitle } from '../../ui/useTitle.ts';
 import { listLede, stageWord } from '../mission-copy.ts';
 import { statuses } from '../missions.ts';
-import { storeReady } from '../progress.ts';
+import { events, storeReady } from '../progress.ts';
+import { AlreadyDone } from './AlreadyDone.tsx';
 
 /** Missions `#/missions` (spec 5.3, 7.3): every mission with its lock, plan-fit, live or done state. */
 export function MissionsPage({ idx }: { idx: ContentIndex }) {
@@ -20,6 +21,7 @@ export function MissionsPage({ idx }: { idx: ContentIndex }) {
       />
       <h1>Missions</h1>
       <p class="muted lede">{listLede(statuses.value)}</p>
+      {ready && !events.value.some((e) => e.t === 'mission') && <AlreadyDone />}
       <ul class="rows">
         {idx.missions.map((m) => {
           const s = ready ? byId.get(m.id) : undefined;
