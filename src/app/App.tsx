@@ -10,14 +10,18 @@ import { useKeyboard } from './keyboard.ts';
 import { rankUp, watchRanks } from './memory.ts';
 import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
 import { LAZY_ERROR, lazyScreen } from './screens/Lazy.tsx';
-import { Palette } from './screens/Palette.tsx';
 import { Screen } from './screens/Screen.tsx';
 import { TopBar } from './screens/TopBar.tsx';
-import { exam, overlay, route } from './state.ts';
+import { exam, type Overlay, overlay, route } from './state.ts';
 import { rankUpLine, rulesLine } from './topbar.ts';
 
-// The Progress and Help sheets' code stays out of the initial bundle (spec 2.10); the app fetches both once the log has
-// loaded, so the save-error banner's Export and the `?` sheet work offline on a first visit too.
+// The search palette's and the Progress and Help sheets' code stays out of the initial bundle (spec 2.10); the app
+// fetches all three once the log has loaded, so search, the save-error banner's Export and the `?` sheet work offline on
+// a first visit too.
+const Palette = lazyScreen(
+  () => import('./screens/Palette.tsx').then((m) => m.Palette),
+  sheetLoadError('palette', 'Search'),
+);
 const Progress = lazyScreen(
   () => import('./screens/Progress.tsx').then((m) => m.Progress),
   sheetLoadError('progress', 'Progress'),
@@ -32,6 +36,7 @@ export function App() {
   useEffect(() => {
     loadIndex();
     void initStore().then(() => {
+      Palette.preload();
       Progress.preload();
       Help.preload();
     });
@@ -109,10 +114,10 @@ function SaveError() {
 }
 
 /**
- * A sheet whose code cannot load: a closable dialog, so closing it gives the keys back and the next open tries the load
- * again.
+ * A sheet or the palette whose code cannot load: a closable dialog, so closing it gives the keys back and the next
+ * open tries the load again.
  */
-function sheetLoadError(sheet: 'progress' | 'help', title: string) {
+function sheetLoadError(sheet: Overlay, title: string) {
   return function SheetLoadError() {
     const dialog = useRef<HTMLDialogElement>(null);
     useEffect(() => {
