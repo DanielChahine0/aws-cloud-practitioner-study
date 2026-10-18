@@ -5,8 +5,11 @@ import { lazyScreen } from './Lazy.tsx';
 import { LessonPage } from './LessonPage.tsx';
 import { ModulePage } from './ModulePage.tsx';
 import { NotFound } from './NotFound.tsx';
-import { Runner } from './Runner.tsx';
 
+// The runner of lesson checks, quizzes, focus quizzes and reviews loads through import() as well, but the app starts
+// that load as it mounts, beside the content index, so a reload on a runner route paints it no later than before.
+const RunnerScreen = lazyScreen(() => import('./Runner.tsx').then((m) => m.Runner));
+export const preloadRunner = RunnerScreen.preload;
 // Exam screens load on first use through import(), so their code stays out of the initial bundle.
 const ExamScreen = lazyScreen(() => import('./Exam.tsx').then((m) => m.Exam));
 const MocksScreen = lazyScreen(() => import('./Mocks.tsx').then((m) => m.Mocks));
@@ -36,11 +39,13 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
       return <MissionScreen idx={idx} id={route.id} />;
     // Keyed by the route object, which every arrival replaces, so "Another quiz" on the quiz route starts afresh.
     case 'check':
-      return <Runner key={route} idx={idx} mode="check" scope={`m${pad2(route.module)}/${route.slug}`} />;
+      return (
+        <RunnerScreen key={route} idx={idx} mode="check" scope={`m${pad2(route.module)}/${route.slug}`} />
+      );
     case 'quiz':
-      return <Runner key={route} idx={idx} mode="quiz" scope={`m${pad2(route.module)}`} />;
+      return <RunnerScreen key={route} idx={idx} mode="quiz" scope={`m${pad2(route.module)}`} />;
     case 'review':
-      return <Runner key={route} idx={idx} mode="review" scope="review" />;
+      return <RunnerScreen key={route} idx={idx} mode="review" scope="review" />;
     case 'lightning':
       return <LightningScreen key={route} idx={idx} />;
     case 'boss':
@@ -50,7 +55,7 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
     case 'mock':
       return <ExamScreen key={route} idx={idx} route={route} />;
     case 'focus':
-      return <Runner key={route} idx={idx} mode="focus" scope={route.scope} />;
+      return <RunnerScreen key={route} idx={idx} mode="focus" scope={route.scope} />;
     case 'results':
       return <ResultsScreen key={route} idx={idx} sid={route.sid} />;
     case 'lab':

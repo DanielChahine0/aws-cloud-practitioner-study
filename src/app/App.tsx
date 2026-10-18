@@ -10,7 +10,7 @@ import { useKeyboard } from './keyboard.ts';
 import { rankUp, watchRanks } from './memory.ts';
 import { events, initStore, kvRecords, progress, saveError, storeReady, writeKv } from './progress.ts';
 import { LAZY_ERROR, lazyScreen } from './screens/Lazy.tsx';
-import { Screen } from './screens/Screen.tsx';
+import { preloadRunner, Screen } from './screens/Screen.tsx';
 import { TopBar } from './screens/TopBar.tsx';
 import { exam, type Overlay, overlay, route } from './state.ts';
 import { rankUpLine, rulesLine } from './topbar.ts';
@@ -35,6 +35,7 @@ const Help = lazyScreen(
 export function App() {
   useEffect(() => {
     loadIndex();
+    preloadRunner();
     void initStore().then(() => {
       Palette.preload();
       Progress.preload();
