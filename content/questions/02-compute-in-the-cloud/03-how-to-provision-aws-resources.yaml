@@ -1,7 +1,7 @@
 questions:
   - id: q-sm5zv8
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-apis
@@ -10,29 +10,31 @@ questions:
     level: 2
     stem: >-
       The cafe's manager stops one EC2 instance by clicking in the AWS Management Console, and the IT lead stops another by typing an AWS CLI command.
-      Why do both actions have the same effect?
+      Why do the click and the typed command end up doing identical work?
     options:
       - id: a
-        text: Both tools run inside the same browser session
-        why: The console runs in a browser while the CLI runs in a terminal, so a shared session is not the link.
+        text: Both tools first check who is making the request
+        why: Checking the caller's identity decides whether a request is allowed, not why a click and a command stop the instance the same way.
       - id: b
         text: Both tools call the same underlying AWS APIs
         correct: true
         why: Every AWS task, including stopping an instance, is an API request no matter which tool sends it.
       - id: c
-        text: Both tools run the same saved script for the task
-        why: The manager clicked rather than ran a script, so a shared script cannot explain the matching result.
+        text: Both tools send requests over an encrypted link
+        why: Encrypting the connection protects the request in transit, but it does not explain why the click and the command have the same effect.
       - id: d
-        text: Both tools work only through AWS CloudShell
-        why: CloudShell is one terminal for CLI commands, and the console click never passes through it.
+        text: Both tools act on resources in a chosen Region
+        why: Choosing a Region decides where the instance lives, not why the two tools act on it in the same way.
     evidence:
       - Every AWS task, from launching to stopping or changing an instance, is an API request.
       - The console, the AWS CLI and the AWS SDK all call the same APIs.
     takeaway: Console clicks, CLI commands and SDK code all turn into the same AWS API calls underneath.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement; the console and CLI both call the AWS APIs.)"
+    verified:
+      keyHash: 29bf0c1a62e8
+      fullHash: 03fbfebd30de
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-c2jr2a
     version: 1
     status: live
@@ -104,7 +106,7 @@ questions:
       on: 2026-10-09
   - id: q-brb8vd
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-management-console
@@ -116,25 +118,27 @@ questions:
       What problem does this habit invite?
     options:
       - id: a
-        text: The launches will bypass the AWS APIs entirely
-        why: Console clicks still become API requests, so clicking does not skip the APIs at all.
+        text: Each launch still turns into an AWS API call
+        why: Console clicks do become API requests, but that is how every tool works and not a problem with the habit.
       - id: b
-        text: Some launches may miss a setting by mistake
+        text: Each launch relies on staff ticking every box
         correct: true
         why: Repeating the same screens by hand is slow and makes it easy to miss a checkbox now and then.
       - id: c
-        text: The servers will be billed even while stopped
-        why: Only running instances are billed, whichever tool launched them, so stopped servers cost nothing here.
+        text: Each launch goes into the Region staff choose
+        why: Picking a Region is a normal part of any launch, and it is not what makes weekly clicking risky.
       - id: d
-        text: The console will block a repeated server launch
-        why: The console lets staff launch the same kind of server as often as they like, so nothing is blocked.
+        text: Each launch shows up later on the AWS bill
+        why: Running servers cost money whichever tool launched them, so the bill is not a drawback of clicking.
     evidence:
       - Repeating its screens for every production launch is slow and invites slips like a missed checkbox.
     takeaway: Clicking through the console for repeated production launches is slow and prone to missed settings.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement; the others are false claims about the console.)"
+    verified:
+      keyHash: 7c164a21c7ba
+      fullHash: 8b7e497a28a4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-azhc3p
     version: 1
     status: live
@@ -416,3 +420,109 @@ questions:
       fullHash: f0c85f0f70f3
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-s83a21
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cli
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's IT lead types one short command in a terminal on a Linux laptop and gets back, as text, the Availability Zones of the current Region.
+      Which tool is the IT lead using?
+    options:
+      - id: a
+        text: AWS Management Console
+        why: The console shows Regions and zones on browser screens that are clicked through, not as typed commands.
+      - id: b
+        text: AWS SDK
+        why: The SDK is called from application code in a language like Python, not by typing one command at a prompt.
+      - id: c
+        text: AWS CLI
+        correct: true
+        why: The CLI sends an API call as a typed command, such as one that lists the Region's Availability Zones.
+      - id: d
+        text: AWS CloudFormation
+        why: CloudFormation builds resources from templates and is not a way to ask a quick question at a prompt.
+    evidence:
+      - "Demo: `aws ec2 run-instances` creates a new instance, and `aws ec2 describe-availability-zones` lists the Region's AZs."
+      - The AWS Command Line Interface (AWS CLI) issues API calls as text commands on Windows, macOS or Linux, so repetitive work can be scripted, and automation keeps deployments predictable.
+    takeaway: A single typed command that calls AWS and prints the result, on your own machine, is the AWS CLI at work.
+    history: []
+    verified:
+      keyHash: 48495301767c
+      fullHash: 2a0c6a48eb69
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-p52nbj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudshell
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's IT lead already runs the AWS CLI on a laptop, and a new barista asks what AWS CloudShell would add.
+      What sets CloudShell apart from that laptop setup?
+    options:
+      - id: a
+        text: It gives a point-and-click visual interface
+        why: A visual point-and-click interface is the Management Console, while CloudShell is a text terminal.
+      - id: b
+        text: It gives code libraries for languages like Python
+        why: Language libraries for app code are the AWS SDK, while CloudShell runs typed CLI commands.
+      - id: c
+        text: It is a terminal that AWS hosts for you
+        correct: true
+        why: CloudShell runs in the cloud and AWS manages it with the CLI ready, so nothing is installed on a laptop.
+      - id: d
+        text: It runs a setup script when an instance launches
+        why: A script run at launch is EC2 user data, which configures an instance rather than giving a terminal.
+    evidence:
+      - AWS CloudShell is an AWS-managed cloud terminal with the AWS CLI ready.
+    takeaway: CloudShell runs the same CLI commands, but in a terminal AWS hosts and manages, so nothing is installed locally.
+    history: []
+    verified:
+      keyHash: 2b16836bbf08
+      fullHash: 5ed8adebe849
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-977hng
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-sdk
+    note: m02/how-to-provision-aws-resources
+    task: "3.1"
+    level: 2
+    stem: >-
+      Four developers on the cafe's team work with AWS in different ways.
+      Whose work is the AWS SDK meant for?
+    options:
+      - id: a
+        text: One who checks a test setup by clicking
+        why: Clicking through a test setup is visual, one-off work that suits the console, not code libraries.
+      - id: b
+        text: One who scripts deployments at a shell prompt
+        why: Scripted typed commands suit the AWS CLI, which works at a shell prompt rather than inside app code.
+      - id: c
+        text: One who adds AWS calls to the loyalty app's code
+        correct: true
+        why: The SDK gives language libraries so the loyalty app's own code can call AWS directly.
+      - id: d
+        text: One who runs a few commands in a cloud terminal
+        why: Running a few commands in a cloud terminal fits CloudShell, which comes with the CLI rather than the SDK.
+    evidence:
+      - The AWS Software Development Kit (AWS SDK) lets code in languages like Python, C++, Java and .NET call AWS, with AWS docs and sample code.
+    takeaway: The AWS SDK is for developers whose application code must call AWS, while people clicking or typing use other tools.
+    history: []
+    verified:
+      keyHash: 08b583ca934c
+      fullHash: 75a97e4cb28d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

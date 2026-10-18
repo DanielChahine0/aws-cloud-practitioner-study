@@ -502,3 +502,216 @@ questions:
       fullHash: 2f6017a0b399
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-g8tt6c
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: scalability
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 2
+    stem: >-
+      The cafe's managers list questions while they plan the ordering system.
+      Which of their questions is about scalability?
+    options:
+      - id: a
+        text: How quickly should instances join at the lunch rush?
+        why: Adding instances in the moment as a rush starts is elasticity, not long-term planning.
+      - id: b
+        text: What happens if the only order server goes down?
+        why: Surviving the loss of a single server is high availability, not planning for growth.
+      - id: c
+        text: How many instances will orders need by next year?
+        correct: true
+        why: Planning ahead for how much capacity growing use will need is scalability.
+      - id: d
+        text: Which pricing option suits the steady back end?
+        why: Choosing a pricing option is about cost, and it says nothing about absorbing more work.
+    evidence:
+      - "Scalability looks ahead: long-term capacity planning so a system can absorb more users or work by adding resources."
+    takeaway: Scalability questions look ahead at how much capacity growth will need, while elasticity handles the moment.
+    history: []
+    verified:
+      keyHash: 887e6a67fabd
+      fullHash: 49667769aaba
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-x49ezt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elasticity
+    note: m02/scaling-amazon-ec2
+    task: "1.1"
+    level: 3
+    stem: >-
+      After a festival weekend, the cafe's ordering site keeps running every extra instance it added, though orders are back to normal.
+      Which cloud benefit would have removed those instances automatically as orders fell?
+    options:
+      - id: a
+        text: Agility
+        why: Agility is about trying and changing things quickly, not shrinking capacity as demand drops.
+      - id: b
+        text: Scalability
+        why: Scalability plans long-term growth, and it does not shed instances when a busy weekend ends.
+      - id: c
+        text: Elasticity
+        correct: true
+        why: Elastic resources scale back in automatically as demand falls, so the quiet days stop costing extra.
+      - id: d
+        text: High availability
+        why: High availability keeps the site up through failures, and it does not trim instances after a rush.
+    evidence:
+      - "Elasticity reacts in the moment: resources scale out automatically when demand spikes and back in when it falls, so each moment costs only what it needs."
+    takeaway: Elasticity works in both directions, scaling back in automatically once a rush is over.
+    history: []
+    verified:
+      keyHash: fdd05b85e70e
+      fullHash: b83176b27436
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-gzbhn6
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: vertical-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      Before the weekend rush, the cafe moved its ordering system to a larger instance type.
+      Each order was already handled quickly, yet customers still waited in line at peak time.
+      Why did scaling up help so little?
+    options:
+      - id: a
+        text: Each tier of the application scales on its own
+        why: Tiers do scale separately, but that does not explain why a bigger server left the queue in place.
+      - id: b
+        text: Surplus instances are scaled in once the rush ends
+        why: Scaling in does happen after a rush, but it says nothing about the queue during the busiest hour.
+      - id: c
+        text: Extra instances serve more customers at one time
+        correct: true
+        why: Scaling up only makes one server stronger, and it cannot serve more customers at once when each order is already fast.
+      - id: d
+        text: A larger instance type costs more for each hour
+        why: A bigger type does bill more, but its cost does not explain why customers kept waiting.
+    evidence:
+      - More power per instance does not always help, since a faster cashier cannot hurry an undecided customer, but extra cashiers serve more people at once.
+      - "**Scaling up (vertical)**: give running instances more power."
+    takeaway: Scaling up makes one instance stronger, which does little when the problem is too many customers at once.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 4 is the only option repeating the stem's 'customers', which points at the key."
+  - id: q-fdbtca
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: horizontal-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      During the lunch rush, a cafe engineer launches more copies of the ordering instance, all of the same size.
+      The copies split the incoming orders between them.
+      Which kind of scaling is this?
+    options:
+      - id: a
+        text: Vertical scaling
+        why: Vertical scaling makes one instance more powerful, while the engineer added same-size copies.
+      - id: b
+        text: Predictive scaling
+        why: Predictive scaling schedules capacity ahead of expected demand, not copies launched by hand mid-rush.
+      - id: c
+        text: Scaling in
+        why: Scaling in removes surplus instances, while the engineer added instances.
+      - id: d
+        text: Horizontal scaling
+        correct: true
+        why: Adding instances that share the orders in parallel is horizontal scaling, also called scaling out.
+    evidence:
+      - "**Scaling out (horizontal scaling)**: adding instances to work in parallel."
+    takeaway: Adding same-size instances that share the work in parallel is horizontal scaling, or scaling out.
+    history: []
+    verified:
+      keyHash: ac283d81ce3d
+      fullHash: 2305eac90834
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-nefwh9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ec2-auto-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      One instance in the cafe's Auto Scaling group fails during the breakfast rush.
+      What does Amazon EC2 Auto Scaling do about the failure?
+    options:
+      - id: a
+        text: It raises the group's maximum capacity
+        why: The maximum is a fixed ceiling the cafe sets, and Auto Scaling works within it rather than raising it.
+      - id: b
+        text: It launches a replacement instance
+        correct: true
+        why: Auto Scaling keeps the desired number of instances running, so it starts a new instance in place of the failed one.
+      - id: c
+        text: It routes orders to the remaining instances
+        why: Spreading requests over the instances that remain is the job of Elastic Load Balancing, not Auto Scaling.
+      - id: d
+        text: It resizes the remaining instances to a larger type
+        why: Auto Scaling changes how many instances run, not their size, so it does not scale the others up.
+    evidence:
+      - It adds instances as demand and key metrics rise and decommissions them as demand falls, keeping the desired number running every minute.
+      - With a second, programmatically created copy, one keeps serving while a replacement for the failed one spins up.
+    takeaway: EC2 Auto Scaling holds the desired instance count, so it replaces a failed instance and improves availability.
+    history: []
+    verified:
+      keyHash: 21be87d97dec
+      fullHash: 1d666752b6df
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-qsd51p
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vertical-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's kitchen display system runs on one EC2 instance that runs short of CPU and memory during lunch, and the software can only run on a single server.
+      Which change gives the system more capacity?
+    options:
+      - id: a
+        text: Run a second instance next to it
+        why: A second instance is scaling out, which does not help software that can only run on one server.
+      - id: b
+        text: Resize it to a larger instance type
+        correct: true
+        why: Moving the one instance to a bigger type is scaling up, which gives that single server more CPU and memory.
+      - id: c
+        text: Place a copy in another Availability Zone
+        why: A copy in another zone adds redundancy, but the software still runs on one server that stays short of power.
+      - id: d
+        text: Add it to an Auto Scaling group
+        why: An Auto Scaling group adds and removes instances, which does not help software limited to one server.
+    evidence:
+      - "**Scaling up (vertical)**: give running instances more power."
+      - "**Scaling up (vertical scaling)**: making a running instance more powerful."
+    takeaway: When work must stay on one server, scale up by moving that instance to a more powerful type.
+    history: []
+    verified:
+      keyHash: 67d219e4d1b2
+      fullHash: 29f8f967c90e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

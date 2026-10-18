@@ -259,7 +259,7 @@ questions:
       on: 2026-10-09
   - id: q-sxarw4
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-machine-image
@@ -271,26 +271,28 @@ questions:
       Why is this a poor plan?
     options:
       - id: a
-        text: An AMI cannot be shared with other accounts
-        why: Launch permissions let an AMI be shared, and sharing has nothing to do with keeping order records.
+        text: An AMI includes launch permissions for sharing
+        why: Launch permissions decide who may launch from the image, which has nothing to do with keeping order records.
       - id: b
-        text: An AMI holds setup, not the data instances write
+        text: An AMI is a setup template, not a data store
         correct: true
         why: An AMI captures how an instance is set up, while order data lives on volumes such as Amazon EBS.
       - id: c
-        text: An AMI cannot include any preinstalled software
-        why: An AMI can bundle preinstalled software, and that is not why it fails to protect order records.
+        text: An AMI can bundle an OS with preinstalled apps
+        why: Bundling software is what an AMI is for, and it does not explain why it fails to protect order records.
       - id: d
-        text: An AMI works only for Amazon Linux instances
-        why: AMIs exist for many operating systems, and the OS choice is not why it fails as a backup.
+        text: An AMI can come from a vendor on AWS Marketplace
+        why: Where an AMI comes from does not change the fact that it holds setup rather than the cafe's records.
     evidence:
       - It does not set size or networking, and it is no data store or backup, since instance data typically lives on volumes like Amazon EBS.
       - An AMI is a configuration template, not a backup.
     takeaway: An AMI captures how an instance is set up, so business data needs its own storage and backups.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement about AMIs; the others are false.)"
+    verified:
+      keyHash: 0ef7076a6d01
+      fullHash: 3ce48bf7fc49
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-qtsy84
     version: 1
     status: live
@@ -397,3 +399,182 @@ questions:
       fullHash: 30faab530e95
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-ez6413
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: launching-ec2-instances
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's new EC2 web server is running, with Nginx installed by its launch script and HTTP allowed from the internet.
+      What does the team browse to in order to see the web page?
+    options:
+      - id: a
+        text: The name given to the instance
+        why: The name only helps the team find the instance in the console, and a browser cannot open it.
+      - id: b
+        text: The name of the instance's key pair
+        why: The key pair is used to sign in to the instance, not to load its web page in a browser.
+      - id: c
+        text: The ID of the instance's AMI
+        why: The AMI ID names the image the server started from, and it is not an address a browser can reach.
+      - id: d
+        text: The instance's public IP address
+        correct: true
+        why: Once HTTP is allowed and Nginx runs, browsing to the public IP address shows the page.
+    evidence:
+      - Browsing to the public IP address then shows the web page.
+    takeaway: After launch, a web server on EC2 is reached by browsing to its public IP address.
+    history: []
+    verified:
+      keyHash: a3b56f772db4
+      fullHash: de92a76dbe1c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-7qrt3e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-key-pairs
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "2.3"
+    level: 1
+    stem: >-
+      The cafe creates a new key pair during an EC2 launch.
+      Where does the public key of that pair end up?
+    options:
+      - id: a
+        text: On the IT lead's laptop
+        why: The laptop holds the private key the IT lead keeps for signing in, not the public key.
+      - id: b
+        text: On the new instance
+        correct: true
+        why: The public key sits on the instance, where it checks the private key presented at sign-in.
+      - id: c
+        text: Inside the chosen AMI
+        why: The AMI holds the OS and software, and the key pair is a separate launch setting.
+      - id: d
+        text: In the user data script
+        why: User data is a setup script run at launch, and it is not where the key pair's public key is kept.
+    evidence:
+      - "**Key pair**: a public key on the instance and a private key you keep for logging in, created at launch or reused."
+    takeaway: In an EC2 key pair, the public key lives on the instance and the private key stays with the user.
+    history: []
+    verified:
+      keyHash: b5e7e4527753
+      fullHash: 517f64ed79b3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-gf2e84
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-user-data
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe launches a new instance from the default Amazon Linux AMI and adds a user data script that installs and starts Nginx.
+      Why does it need that script?
+    options:
+      - id: a
+        text: The AMI does not set the instance's CPU and memory
+        why: CPU and memory come from the instance type, and a script would not change them either.
+      - id: b
+        text: The AMI does not decide which traffic may reach it
+        why: Traffic is handled by the network settings, so it is not the reason for an install script.
+      - id: c
+        text: The AMI does not include the web server software
+        correct: true
+        why: The generic AMI lacks Nginx, so user data installs and starts it when the instance launches.
+      - id: d
+        text: The AMI does not create the key pair for sign-in
+        why: The key pair is its own launch setting, and an install script plays no part in signing in.
+    evidence:
+      - "**User data**: a launch script, here installing and starting Nginx, which the generic AMI lacks."
+    takeaway: User data fills the gap when the chosen AMI lacks software the instance needs at first boot.
+    history: []
+    verified:
+      keyHash: 75198851a766
+      fullHash: 780d236225ba
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-mk4p2s
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: ami-repeatability
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe now launches every web server from one AMI through an automated deployment, instead of setting each server up by hand.
+      Which benefits does this bring?
+    options:
+      - id: a
+        text: Lower prices from a long-term commitment
+        why: Commitment discounts come from the pricing model, such as a Savings Plan, not from launching servers from one image.
+      - id: b
+        text: Fewer errors than hand-built setups
+        correct: true
+        why: Every server starts from the same image by automation, so steps missed by hand no longer creep in.
+      - id: c
+        text: Backups of the data each server writes
+        why: Data on servers lives on volumes like Amazon EBS, and an AMI is a setup template rather than a backup of that data.
+      - id: d
+        text: Easier scaling out to more servers
+        correct: true
+        why: New servers launched from the same AMI match the old ones, which makes adding servers simple.
+      - id: e
+        text: Traffic spread across healthy servers
+        why: Spreading requests over healthy servers is the job of Elastic Load Balancing, not of launching them from one AMI.
+    evidence:
+      - Launching from one AMI with automated deployments gives identical setups, consistent dev and test, fewer errors, easier scaling and simpler large fleets.
+    takeaway: Launching every server from one AMI by automation cuts setup errors and makes scaling out easier.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+  - id: q-v49qm7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ami-repeatability
+    note: m02/demo-launching-an-amazon-ec2-instance
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe set up its test server and its live web server by hand, and a menu change that worked in test broke the live site because the two had different software installed.
+      Which change keeps the two setups the same from now on?
+    options:
+      - id: a
+        text: Run both servers on one instance type
+        why: A shared instance type matches the hardware, but the software on each server can still differ.
+      - id: b
+        text: Let both servers use one key pair
+        why: A shared key pair only controls how people log in, not which software each server runs.
+      - id: c
+        text: Launch both servers from one AMI
+        correct: true
+        why: Both servers then start from the same image, with the same OS and preinstalled software, so test matches live.
+      - id: d
+        text: Give both servers one network setting
+        why: Matching network settings only decide which traffic reaches each server, not what is installed on it.
+    evidence:
+      - Launching from one AMI with automated deployments gives identical setups, consistent dev and test, fewer errors, easier scaling and simpler large fleets.
+      - An AMI holds the OS, architecture, storage layout, preinstalled software and launch permissions.
+    takeaway: Launching test and live servers from one AMI keeps their software the same, so what works in test works live.
+    history: []
+    verified:
+      keyHash: 489dbe1d21b2
+      fullHash: ef10c740eae6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

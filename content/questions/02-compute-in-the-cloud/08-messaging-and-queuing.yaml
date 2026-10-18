@@ -108,7 +108,7 @@ questions:
       on: 2026-10-09
   - id: q-818ghx
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -117,34 +117,36 @@ questions:
     task: "1.2"
     level: 2
     stem: >-
-      The cafe's ordering app now sends orders to its kitchen app through a message queue instead of calling it directly.
-      Which benefits does this loose coupling give the cafe?
+      The cafe's ordering app sends every order to its kitchen app through a message queue, and during the lunch rush the kitchen app crashes.
+      Which things happen before the kitchen app comes back?
     options:
       - id: a
-        text: A failure in the kitchen app stays contained
+        text: The ordering app keeps taking new orders
         correct: true
-        why: Loose coupling keeps the two apps independent, so a kitchen app failure does not cascade to ordering.
+        why: The queue accepts each order, so the ordering app keeps working instead of failing along with the kitchen app.
       - id: b
-        text: The ordering app keeps sending while the kitchen app is down
-        correct: true
-        why: Orders wait in the queue until the kitchen app is back, so the ordering app is not blocked.
+        text: The kitchen app works through the backlog
+        why: Working through the waiting orders needs a running kitchen app, so it only starts once the app is back.
       - id: c
-        text: Each order in the queue is a message with a payload
-        why: This is true of a queue, but it describes what a message holds rather than a benefit of the decoupling.
+        text: New orders wait in the queue for the kitchen
+        correct: true
+        why: Each order the ordering app sends stays in the queue until the kitchen app is back to handle it.
       - id: d
-        text: A consumer deletes each message once it is processed
-        why: This is true of SQS, but it is a step in handling messages, not a benefit the cafe gains from loose coupling.
+        text: The ordering app retries until the kitchen replies
+        why: The ordering app hands each order to the queue and moves on, so it never waits on a reply from the kitchen app.
       - id: e
-        text: Amazon SNS does not hold messages for later delivery
-        why: This is true of SNS, but it is about a different service and names no benefit of the cafe's queue.
+        text: The kitchen app takes the next order off the queue
+        why: A crashed kitchen app takes nothing off the queue, so every order stays there until the app is back.
     evidence:
       - "**Loosely coupled**: a message queue sits between them, so A keeps sending while B is down and messages wait until B handles them."
       - Loose coupling contains failures instead of letting them cascade, and it is the target for AWS architectures.
     takeaway: Loosely coupled components fail independently and keep sending while a receiver is unavailable.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 are the decoupling benefits; 1 and 5 are mechanics and 4 is about SNS.)"
+    verified:
+      keyHash: e1ba6349d131
+      fullHash: 934b909ebdc2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-ynmr52
     version: 1
     status: live
