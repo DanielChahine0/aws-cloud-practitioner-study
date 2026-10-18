@@ -255,42 +255,40 @@ questions:
       on: 2026-10-09
   - id: q-2jhv42
     version: 1
-    status: draft
-    type: multi
-    select: 2
+    status: live
+    type: single
     pool: practice
     concept: gdpr
     note: m04/choosing-aws-regions
     task: "3.2"
-    level: 1
+    level: 2
     stem: >-
-      What does GDPR require of an online shop in the EU that handles personal data?
+      The cafe is picking a Region for its EU coffee bean shop, which must follow GDPR when it handles shoppers' personal data.
+      Under which Region selection factor does the cafe weigh this duty?
     options:
       - id: a
-        text: Let shoppers choose which Region stores their data
-        why: GDPR covers consent and access to personal data, but the choice of Region stays with the shop, not its shoppers.
+        text: Pricing
+        why: Pricing compares each Region's own rates, while GDPR is a legal duty on personal data, not a cost.
       - id: b
-        text: Get shoppers' consent before collecting personal data
-        correct: true
-        why: GDPR makes the shop get people's agreement before it gathers their personal data.
+        text: Feature availability
+        why: This factor asks whether needed services exist in a Region yet, which a privacy law does not decide.
       - id: c
-        text: Keep shoppers' personal data inside the shop's home country
-        why: Keeping data inside one country is what data sovereignty laws may force, not a duty GDPR sets here.
-      - id: d
-        text: Meet PCI rules for every card payment shoppers make
-        why: PCI rules govern payment card handling, a separate standard from the EU privacy law on personal data.
-      - id: e
-        text: Let shoppers see and erase the data held on them
+        text: Compliance
         correct: true
-        why: GDPR gives people the right to see the data held about them and to have it removed.
+        why: GDPR is a data protection law, and laws and data protection rules are what the compliance factor checks.
+      - id: d
+        text: Proximity
+        why: Proximity weighs distance to users for latency, while GDPR sets legal duties on the shop's personal data.
     evidence:
+      - EU online retailer -> GDPR compliance.
       - Under GDPR, the EU privacy law, an EU online shop must get consent before collecting personal data and let people see or erase it.
-      - Data sovereignty laws may force data to stay in the country, which touches both compliance and cost.
-    takeaway: GDPR requires consent before collecting personal data and lets people see or erase what is held.
+    takeaway: When choosing a Region, GDPR duties for an EU online shop are weighed under the compliance factor.
     history: []
-    review:
-      attempts: 11
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 4 are the only core data-privacy-law duties; option 1 is a card-payment standard, option 2 is localization, option 5 is a provider feature.)"
+    verified:
+      keyHash: 3e1151eea0dc
+      fullHash: bece82e94f4e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-0n09j0
     version: 1
     status: live
