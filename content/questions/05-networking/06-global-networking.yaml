@@ -420,3 +420,43 @@ questions:
       fullHash: 70565d22ec54
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-m42kwe
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: edge-networking
+    note: m05/global-networking
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe moves part of its loyalty app's processing out of a distant Region and onto small servers kept in each shop, close to where members order.
+      Which benefits does this edge approach bring?
+    options:
+      - id: a
+        text: Lower latency on each customer's requests
+        correct: true
+        why: Processing near the customers shortens each trip, which is how edge networking lowers latency.
+      - id: b
+        text: Copies of its data kept in several Availability Zones
+        why: Spreading copies across zones adds resilience inside a Region and does not bring processing closer to customers.
+      - id: c
+        text: A private line from the head office to AWS
+        why: A private line helps traffic from the head office reach AWS, and it is not what moving processing into the shops gives.
+      - id: d
+        text: Continued control of the cafe's own infrastructure
+        correct: true
+        why: Processing near users on servers in the shops keeps the cafe in control of its own infrastructure.
+      - id: e
+        text: Automatic scaling of a managed server fleet
+        why: A managed fleet that scales on demand runs in a Region, while the shop servers stay a fixed set the cafe runs itself.
+    evidence:
+      - Processing or caching near users lowers latency and keeps the organization in control of its infrastructure.
+    takeaway: Edge networking lowers latency for users while the organization keeps control of its infrastructure.
+    history: []
+    verified:
+      keyHash: 84f0bf1c266e
+      fullHash: f903c8a721fb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
