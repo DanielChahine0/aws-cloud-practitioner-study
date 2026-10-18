@@ -1,0 +1,133 @@
+id: lab-m10-does-the-scp-allow-it
+module: 10
+title: Does the SCP allow it?
+engine: trace
+tier: stretch
+status: live
+rev: 1
+concepts: [service-control-policies, organizational-units, organization-root, member-accounts, iam-policies]
+notes: [m10/aws-organizations, m09/preventing-unauthorized-access]
+minutes: 8
+brief: >-
+  Market shop manager Raj cannot open the menu files even though his own policy allows it, and developer Kim cannot start a forecast training job in the test kitchen account.
+  Switch statements on or off until every case gets its expected result.
+  In this lab, an action needs an Allow from the SCPs at the root, at the OU and at the account and from the identity's own policies, an SCP grants nothing by itself, and an explicit Deny beats any Allow.
+spec:
+  kind: policy
+  principals:
+    - { id: raj, label: Raj, account: market-shop }
+    - { id: kim, label: Kim, account: test-kitchen }
+  org:
+    - { id: cafe-org, label: Cafe organization root }
+    - { id: shops, label: Shops OU, parent: cafe-org }
+    - { id: harbour-shop, label: Harbour shop account, parent: shops }
+    - { id: market-shop, label: Market shop account, parent: shops }
+    - { id: lab, label: Lab OU, parent: cafe-org }
+    - { id: test-kitchen, label: Test kitchen account, parent: lab }
+  policies:
+    - id: root-full-access
+      label: Full access at the root
+      kind: scp
+      attach: cafe-org
+      statements:
+        - { id: root-all, effect: allow, actions: ['*'], resources: ['*'], on: true }
+    - id: shops-guardrails
+      label: Shops OU guardrails
+      kind: scp
+      attach: shops
+      statements:
+        - { id: approve-dynamodb, effect: allow, actions: ['dynamodb:*'], resources: ['*'], on: true }
+        - { id: approve-cloudwatch, effect: allow, actions: ['cloudwatch:*'], resources: ['*'], on: true }
+        - { id: approve-s3, effect: allow, actions: ['s3:*'], resources: ['*'], on: false }
+        - { id: shops-all, effect: allow, actions: ['*'], resources: ['*'], on: false }
+        - { id: deny-table-delete, effect: deny, actions: [dynamodb:DeleteTable], resources: ['*'], on: true }
+    - id: harbour-full-access
+      label: Full access for the harbour shop
+      kind: scp
+      attach: harbour-shop
+      statements:
+        - { id: harbour-all, effect: allow, actions: ['*'], resources: ['*'], on: true }
+    - id: market-full-access
+      label: Full access for the market shop
+      kind: scp
+      attach: market-shop
+      statements:
+        - { id: market-all, effect: allow, actions: ['*'], resources: ['*'], on: true }
+    - id: lab-full-access
+      label: Full access for the lab
+      kind: scp
+      attach: lab
+      statements:
+        - { id: lab-all, effect: allow, actions: ['*'], resources: ['*'], on: true }
+    - id: kitchen-scp
+      label: Test kitchen account SCP
+      kind: scp
+      attach: test-kitchen
+      statements:
+        - { id: kitchen-all, effect: allow, actions: ['*'], resources: ['*'], on: true }
+        - { id: kitchen-training, effect: allow, actions: [sagemaker:CreateTrainingJob], resources: ['*'], on: false }
+    - id: raj-policy
+      label: Raj's identity policy
+      kind: iam
+      attach: raj
+      statements:
+        - { id: raj-tables, effect: allow, actions: ['dynamodb:*'], resources: ['*'], on: true }
+        - { id: raj-menu, effect: allow, actions: [s3:GetObject], resources: [cafe-menu/*], on: true }
+        - { id: raj-forecast, effect: allow, actions: [sagemaker:CreateTrainingJob], resources: ['*'], on: true }
+        - { id: raj-all-s3, effect: allow, actions: ['s3:*'], resources: ['*'], on: false }
+    - id: kim-policy
+      label: Kim's identity policy
+      kind: iam
+      attach: kim
+      statements:
+        - { id: kim-test-data, effect: allow, actions: [s3:GetObject], resources: [kitchen-data/*], on: true }
+        - { id: kim-training, effect: allow, actions: [sagemaker:CreateTrainingJob], resources: [kitchen-models/*], on: false }
+  cases:
+    - { id: raj-reads-menu, goal: g1, label: Raj opens today's drinks menu file, principal: raj, action: s3:GetObject, resource: cafe-menu/drinks-today.json, expect: allow }
+    - { id: raj-saves-order, goal: g1, label: Raj saves a market stall order, principal: raj, action: dynamodb:PutItem, resource: market-orders, expect: allow }
+    - { id: kim-trains-model, goal: g2, label: Kim starts the latte forecast training job, principal: kim, action: sagemaker:CreateTrainingJob, resource: kitchen-models/latte-forecast, expect: allow }
+    - { id: kim-reads-data, goal: g2, label: Kim reads last month's test sales, principal: kim, action: s3:GetObject, resource: kitchen-data/sales-september.csv, expect: allow }
+    - { id: raj-trains-model, goal: g3, label: Raj starts a forecast training job in the market shop, principal: raj, action: sagemaker:CreateTrainingJob, resource: market-models/stall-forecast, expect: deny }
+    - { id: raj-drops-orders, goal: g3, label: Raj deletes the market orders table, principal: raj, action: dynamodb:DeleteTable, resource: market-orders, expect: deny }
+goals:
+  - id: g1
+    label: Raj reads the menu and saves orders
+    hint: Ask which level of the organization still says no once Raj's own policy says yes.
+  - id: g2
+    label: Kim runs her forecast work in the test kitchen
+    hint: Ask what Kim's own policy allows, since an SCP only sets the most an account may do.
+  - id: g3
+    label: The shops keep to their approved services and keep their tables
+    hint: Ask how far each Allow on the shops OU reaches, and what an explicit Deny does to an identity that may do anything to its tables.
+solution:
+  - { t: toggle, rule: approve-s3, on: true }
+  - { t: toggle, rule: kim-training, on: true }
+wrongPaths:
+  - mistake: Widens Raj's identity policy to every Amazon S3 action, expecting it to get past an SCP that does not allow Amazon S3
+    failsGoal: g1
+    actions:
+      - { t: toggle, rule: raj-all-s3, on: true }
+      - { t: toggle, rule: kim-training, on: true }
+  - mistake: Adds the training action to the test kitchen's SCP, expecting the SCP to grant it to Kim
+    failsGoal: g2
+    actions:
+      - { t: toggle, rule: approve-s3, on: true }
+      - { t: toggle, rule: kitchen-training, on: true }
+  - mistake: Gives the shops OU full access to fix Raj's read, which lifts the approved-services cap for every shop
+    failsGoal: g3
+    actions:
+      - { t: toggle, rule: shops-all, on: true }
+      - { t: toggle, rule: kim-training, on: true }
+  - mistake: Removes the shops' Deny, thinking Raj's own policy is what decides whether he may delete a table
+    failsGoal: g3
+    actions:
+      - { t: toggle, rule: approve-s3, on: true }
+      - { t: toggle, rule: kim-training, on: true }
+      - { t: toggle, rule: deny-table-delete, on: false }
+debrief:
+  lines:
+    - Raj's read went through only once the root, the shops OU and the market shop account all allowed Amazon S3, and his own policy did too.
+    - An SCP caps what an account may do and grants nothing, so Kim still needed an Allow in her own identity policy.
+    - Raj's forecast job stays blocked even though his policy allows it, because the shops' approved services leave it out.
+    - The Deny on the shops OU stops table deletes in every shop account, whatever an identity policy allows.
+  questions: [q-jd3nh3, q-62xvmx, q-33vwnc]
