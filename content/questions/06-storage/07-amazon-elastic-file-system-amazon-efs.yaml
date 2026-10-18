@@ -405,7 +405,7 @@ questions:
       on: 2026-10-09
   - id: q-g6drav
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-efs
@@ -413,31 +413,32 @@ questions:
     task: "3.6"
     level: 2
     stem: >-
-      The cafe runs its own file server for an analytics fleet that shares one sales dataset, and the team spends hours adding disks and setting up copies.
-      If the dataset moves to Amazon EFS, which part of that work does AWS take over?
+      The cafe's three Linux EC2 instances each held their own copy of the menu files, and a script pushed every edit from one instance to the others.
+      The files now sit in one Amazon EFS file system that all three mount.
+      Why can the team retire the script?
     options:
       - id: a
-        text: Growing capacity and replicating the data
+        text: Saved changes are seen by all mounts right away
         correct: true
-        why: With EFS, AWS scales the file system and replicates it, which is the disk and copy work the team does now.
+        why: EFS makes each change visible to every connected instance at once, so the script has nothing left to push.
       - id: b
-        text: Billing only for the storage in use
-        why: EFS does bill only for the storage used, but that is how it is priced, not the disk and copy work the team does.
+        text: Capacity expands on its own as files arrive
+        why: EFS does grow by itself, but growth is about space, not about getting edits to the other instances.
       - id: c
-        text: Serving reads in under a millisecond
-        why: EFS Standard does answer in under a millisecond, but speed is not the disk and copy work named here.
+        text: Standard classes keep copies across zones
+        why: Standard classes do span zones, but that guards against a zone failing, not against instances holding stale files.
       - id: d
-        text: Accepting mounts from on-premises servers
-        why: On-premises servers can use EFS, but that access does not take the disk and copy work off the team.
+        text: The bill covers only the storage in use
+        why: EFS does bill only for storage used, but pricing does nothing to keep the instances' files in step.
     evidence:
-      - Self-hosting a file system that many servers share, such as an analytics fleet on one dataset, means handling capacity, redundancy, backups and upkeep, whereas with EFS AWS scales and replicates it for you.
-      - No minimum fee or setup cost, and you pay only for storage used.
-      - Latency stays consistently low, with EFS Standard under a millisecond, though one instance's local instance store is usually faster.
-    takeaway: Moving a shared file server to EFS hands capacity growth and replication to AWS.
+      - Thousands of concurrent NFS connections let many EC2 instances share files, and every change is visible to all of them at once, with no manual syncing.
+    takeaway: With EFS, every instance sees a change as soon as it is saved, so no manual syncing between servers is needed.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one that bundles two benefits joined by and.)"
+    verified:
+      keyHash: 3dace61cebe2
+      fullHash: d733188dc4c9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-r2xmvx
     version: 1
     status: live
@@ -476,7 +477,7 @@ questions:
       on: 2026-10-18
   - id: q-0nz831
     version: 1
-    status: draft
+    status: live
     type: match
     pool: practice
     concept: ebs-vs-efs
@@ -487,26 +488,28 @@ questions:
       The cafe is sorting four storage situations between Amazon EBS and Amazon EFS.
       Match each situation to the trait that explains it.
     pairs:
-      - left: The kitchen app's drive ran out of space and stopped taking writes
+      - left: The kitchen app's storage filled up and stopped taking new writes
         right: EBS keeping a fixed size until it is resized
         why: An EBS volume never grows by itself, so a full volume stops taking writes until someone enlarges it.
-      - left: The order database needs a private disk that no other server opens
+      - left: The order database needs storage that only its own server uses
         right: EBS attaching to one instance like a hard drive
-        why: An EBS volume serves the one instance it is attached to, which suits a disk kept for the database alone.
-      - left: All the checkout servers save receipts into one folder at the same moment
-        right: EFS serving many instances at the same moment
+        why: An EBS volume serves the one instance it is attached to, which suits storage kept for the database alone.
+      - left: Every checkout server writes receipts to one shared folder
+        right: EFS serving many instances at the same time
         why: EFS lets many instances read and write the same files together, which is what the checkout servers do.
-      - left: The reporting server moves to another data center but keeps its files
-        right: EFS reaching every Availability Zone of a Region
-        why: EFS is Regional, so a server in any Availability Zone of the Region can still reach the same files.
+      - left: The report server is rebuilt in another Availability Zone and needs its files
+        right: EFS being reachable across its whole Region
+        why: EFS is Regional, so a server rebuilt in any Availability Zone of the Region can still reach the same files.
     evidence:
       - EBS is a single-zone drive for one instance, while EFS is a shared, Regional, self-scaling file system.
       - Thousands of concurrent NFS connections let many EC2 instances share files, and every change is visible to all of them at once, with no manual syncing.
     takeaway: EBS is a fixed-size drive for one instance in one zone, while EFS is shared by many instances across a Region.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Pair 3's left and right share the phrase 'at the same moment', which gives the match away. Pair 4's left says 'another data center', which need not mean another Availability Zone, so the Regional trait does not clearly explain it."
+    verified:
+      keyHash: 09e90dd00b5b
+      fullHash: ce4a3d3a1ba4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-hakyvb
     version: 1
     status: live

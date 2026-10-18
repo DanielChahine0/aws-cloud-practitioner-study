@@ -513,39 +513,40 @@ questions:
       on: 2026-10-18
   - id: q-kymhxc
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: data-persistence
     note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
     task: "3.6"
-    level: 2
+    level: 1
     stem: >-
-      The cafe retires the EC2 instance behind its loyalty app by terminating it.
-      Temporary files sat on the instance store, and the customer points sat on a separate EBS data volume, apart from the boot volume, that is set to remain after termination.
-      Which fact explains why the customer points are still there afterwards?
+      The spec sheet for the cafe's new EC2 instance calls its instance store ephemeral storage.
+      What does the word ephemeral tell the manager about that storage?
     options:
       - id: a
-        text: The volume is stored apart from the instance's host
+        text: Its contents are wiped when the instance stops
         correct: true
-        why: The EBS volume lives on durable media away from the host, so removing the instance leaves the points intact.
+        why: Ephemeral storage loses what it holds when the instance stops or terminates, which is exactly what the word warns of.
       - id: b
-        text: The instance store is attached to the instance's host
-        why: This is true, but it explains why the temporary files were lost, not why the points survived.
+        text: Its reads and writes run at very low latency
+        why: Instance store is very fast because it sits on the host, but speed is not what the word ephemeral describes.
       - id: c
-        text: The volume is attached to one instance at a time
-        why: This is true of EBS, but the single attachment says nothing about whether data outlives the instance.
+        text: Its price is included with many instance types
+        why: Many instance types do include instance store at no extra cost, but price is not what the word ephemeral describes.
       - id: d
-        text: The instance store is included at no extra cost
-        why: This is true of many instance types, but price has no bearing on what survives a termination.
+        text: Its access is limited to the instance it serves
+        why: Instance store does serve one instance only, but sharing is a separate matter from how long its contents last.
     evidence:
+      - "**Ephemeral storage**: storage whose data is lost when the instance stops or terminates."
       - Stopping or terminating the instance erases it, since a restarted instance usually lands on another host without that disk.
-      - They live apart from the host on durable SSD or HDD media, so data survives stops, starts and terminations.
-    takeaway: Terminating an instance erases its instance store, but an attached EBS volume keeps its data because it lives apart from the host.
+    takeaway: Ephemeral storage, such as instance store, loses its contents whenever the instance stops or terminates.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 2 repeats the stem's 'apart from', which points at the key. The takeaway says an attached EBS volume keeps its data on termination, which overstates it, since a volume not set to remain is deleted."
+    verified:
+      keyHash: ca419815758e
+      fullHash: bb951142d23c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-d0mctp
     version: 1
     status: live
