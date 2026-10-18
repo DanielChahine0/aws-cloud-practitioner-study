@@ -202,10 +202,10 @@ const PURCHASE: PurchaseConstants = {
 };
 const BEANS_FIX = [set('till', 'reserved'), set('roast-plan', 'spot'), set('loyalty', 'dedicated-host')];
 const DATA_LOSS: DataLossConstants = {
-  hours: 72,
+  hours: 47,
   perHour: 40,
   stopAt: 20,
-  zoneLossAt: 50,
+  zoneLossAt: 46,
   fullSnapshot: 20,
   incrementalSnapshot: 1,
 };
@@ -461,21 +461,30 @@ const SIM_LABS: SimLab[] = [
     wave: 'p5stretch',
     model: 'data-loss',
     constants: DATA_LOSS,
-    params: [choice('store', ['instance-store', 'ebs'], 'instance-store'), int('snapshotEvery', 0, 24, 1, 0)],
+    params: [choice('store', ['instance-store', 'ebs'], 'instance-store'), int('snapshotEvery', 0, 8, 1, 0)],
     thresholds: [
       { goal: 'g1', metric: 'stopLost', max: 0 },
-      { goal: 'g2', metric: 'zoneLost', max: 120 },
+      { goal: 'g2', metric: 'zoneLost', max: 160 },
       { goal: 'g3', metric: 'cost', max: 40 },
     ],
     solution: [set('store', 'ebs'), set('snapshotEvery', 6)],
-    outcome: { stopLost: 0, zoneLost: 80, snapshots: 11, cost: 30 },
+    outcome: { stopLost: 0, zoneLost: 160, snapshots: 7, cost: 26 },
     wrongPaths: [
-      { actions: [set('snapshotEvery', 6)], failsGoal: 'g1', outcome: { stopLost: 800, snapshots: 0 } },
-      { actions: [set('store', 'ebs')], failsGoal: 'g2', outcome: { zoneLost: 2000 } },
+      {
+        actions: [set('snapshotEvery', 6)],
+        failsGoal: 'g1',
+        outcome: { stopLost: 800, zoneLost: 1040, snapshots: 0 },
+      },
+      { actions: [set('store', 'ebs')], failsGoal: 'g2', outcome: { zoneLost: 1840 } },
+      {
+        actions: [set('store', 'ebs'), set('snapshotEvery', 8)],
+        failsGoal: 'g2',
+        outcome: { zoneLost: 240, cost: 24, snapshots: 5 },
+      },
       {
         actions: [set('store', 'ebs'), set('snapshotEvery', 1)],
         failsGoal: 'g3',
-        outcome: { cost: 90, snapshots: 71 },
+        outcome: { cost: 65, snapshots: 46 },
       },
     ],
   },
@@ -653,8 +662,8 @@ describe('the orderings the lessons rest on', () => {
 
   it('Lose the instance: on EBS more frequent snapshots never lose more orders and cost more', () => {
     const ebs = EVERY.map((every) => loss({ store: 'ebs', snapshotEvery: every }));
-    expect(ebs.map((m) => m.zoneLost)).toEqual([2000, 0, 80, 80, 80]);
-    expect(ebs.map((m) => m.cost)).toEqual([0, 90, 30, 24, 21]);
+    expect(ebs.map((m) => m.zoneLost)).toEqual([1840, 0, 160, 400, 880]);
+    expect(ebs.map((m) => m.cost)).toEqual([0, 65, 26, 22, 20]);
     expect(ebs.map((m) => m.stopLost)).toEqual([0, 0, 0, 0, 0]);
   });
 });
