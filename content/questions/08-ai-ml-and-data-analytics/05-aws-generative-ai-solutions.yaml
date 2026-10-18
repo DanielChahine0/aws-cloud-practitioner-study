@@ -328,7 +328,7 @@ questions:
       on: 2026-10-09
   - id: q-wp13bg
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fine-tuning
@@ -347,7 +347,7 @@ questions:
         text: Run the menu set through Amazon Comprehend
         why: Comprehend pulls key phrases and sentiment from text, but the language model itself learns nothing from it.
       - id: c
-        text: Fine-tune the pre-trained model with the menu set
+        text: Fine-tune that model using the menu set
         correct: true
         why: Fine-tuning adapts the existing model with the cafe's own data so it learns that domain.
       - id: d
@@ -358,9 +358,11 @@ questions:
       - Deploys without expertise, domain fine-tuning, model comparison
     takeaway: To fit a pre-trained model to your own domain, fine-tune it with your data rather than start over.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 3 repeats the stem's 'pre-trained' model, which no distractor does."
+    verified:
+      keyHash: 62de1848917e
+      fullHash: c2e1ec36bffb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-7f9y5e
     version: 1
     status: live
@@ -466,3 +468,183 @@ questions:
       fullHash: ccbaa053172c
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-fdzj4n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sagemaker-jumpstart
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      Before it picks a vision model for sorting pastry photos, the cafe wants to try several ready-made models side by side.
+      It then wants to deploy the best one in a few clicks, with no ML experts on staff.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon Q Business
+        why: Q Business answers staff questions from company data and offers no models to compare or deploy.
+      - id: b
+        text: Amazon Bedrock
+        why: Bedrock serves managed foundation models through one API rather than ready-made vision solutions to deploy.
+      - id: c
+        text: Amazon SageMaker JumpStart
+        correct: true
+        why: JumpStart offers ready-made vision solutions, lets the cafe compare models and deploys the chosen one in a few clicks.
+      - id: d
+        text: Amazon Q Developer
+        why: Q Developer suggests code inside an editor and does not offer a set of models to compare.
+    evidence:
+      - Deploys without expertise, domain fine-tuning, model comparison
+      - Hub in SageMaker AI; vision, NLP, tabular solutions to fine-tune and deploy in clicks
+    takeaway: Comparing ready-made models and then deploying one in a few clicks, without ML experts, points to SageMaker JumpStart.
+    history: []
+    verified:
+      keyHash: 846462226bae
+      fullHash: dc5d3b2e79a8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-3zjpfe
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-bedrock
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe tested a foundation model for writing order confirmations and now wants it inside the live ordering app.
+      It needs a managed service built for secure, private apps that grow with demand, with no model servers to run.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon SageMaker JumpStart
+        why: JumpStart deploys models onto endpoints the cafe runs, which means the model servers the stem rules out.
+      - id: b
+        text: Amazon Bedrock
+        correct: true
+        why: Bedrock offers managed foundation models for secure, private and scalable production apps.
+      - id: c
+        text: Amazon Q Business
+        why: Q Business is a ready assistant for staff questions, not a model to build into a customer-facing app.
+      - id: d
+        text: Amazon Q Developer
+        why: Q Developer helps programmers write code, but it does not serve a model inside the ordering app.
+    evidence:
+      - Secure, private, scalable production apps; text and image output; agents on company data
+      - "Amazon Bedrock: Managed FMs, one API."
+    takeaway: Putting a managed foundation model into a secure, private production app that scales points to Amazon Bedrock.
+    history: []
+    verified:
+      keyHash: b0811e223028
+      fullHash: eb65375d6c46
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-94xate
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q-business
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 1
+    stem: >-
+      Where does Amazon Q Business draw the information it uses to answer staff questions?
+    options:
+      - id: a
+        text: From code files open in the developer's editor
+        why: Code open in an editor is what Amazon Q Developer works from when it suggests code.
+      - id: b
+        text: From company repositories over secure links
+        correct: true
+        why: Q Business answers questions and runs tasks using the company's own repositories, reached over secure connections.
+      - id: c
+        text: From model endpoints deployed in SageMaker AI
+        why: Endpoints deployed in SageMaker AI serve models the team runs, which is not where Q Business gets its answers.
+      - id: d
+        text: From images and videos uploaded for labeling
+        why: Labeling uploaded images and video is the work of Amazon Rekognition, not a company-data assistant.
+    evidence:
+      - Fields questions, fixes problems, runs tasks from company repositories over secure links
+      - "Amazon Q Business: Company-data assistant."
+    takeaway: Amazon Q Business answers staff from the company's own repositories, which it reaches over secure connections.
+    history: []
+    verified:
+      keyHash: 9b9a9e733021
+      fullHash: ff274fadfdf9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-peq8w5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q-developer
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      Before each release, the cafe's only programmer wants an AI assistant to help review the Python code of the ordering app and flag weak spots.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Comprehend
+        why: Comprehend finds key phrases and sentiment in written text, and it does not review program code.
+      - id: b
+        text: Amazon SageMaker JumpStart
+        why: JumpStart is a hub for deploying models, so the cafe would still have to build a review tool itself.
+      - id: c
+        text: Amazon Q Business
+        why: Q Business answers staff questions from company data rather than helping programmers review code.
+      - id: d
+        text: Amazon Q Developer
+        correct: true
+        why: Q Developer supports Python and helps programmers with code reviews, reliability and security.
+    evidence:
+      - Faster coding, reliability, security, code reviews
+      - Suggests code, even whole functions and logical blocks, in multiple IDEs; languages include C#, Java, JavaScript, Python, TypeScript
+    takeaway: An AI helper for reviewing program code and spotting weak spots points to Amazon Q Developer.
+    history: []
+    verified:
+      keyHash: "99444e161672"
+      fullHash: 516d8112b6d7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-b25w2r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multimodal-generative-ai
+    note: m08/aws-generative-ai-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe asks one AI model to create both a menu description and a photo of a
+      new seasonal drink in a single request. Which idea does this request show?
+    options:
+      - id: a
+        text: Fine-tuning a pre-trained model
+        why: Fine-tuning adapts a pre-trained model with the cafe's own data, which this request for content does not do.
+      - id: b
+        text: Machine translation
+        why: Translation turns text from one language into another, while this request asks for new text and an image.
+      - id: c
+        text: Multimodal generation
+        correct: true
+        why: Text and an image are two content types, so asking one model for both is multimodal generation.
+      - id: d
+        text: Speech synthesis
+        why: Speech synthesis turns text into spoken audio, while this request asks for a description and a photo.
+    evidence:
+      - "Multimodal: Generating several content types."
+    takeaway: Asking one model for several content types, such as text and an image, is multimodal generation.
+    history: []
+    verified:
+      keyHash: d483435e6f55
+      fullHash: 0161a175a081
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

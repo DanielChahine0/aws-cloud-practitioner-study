@@ -251,7 +251,7 @@ questions:
       on: 2026-10-09
   - id: q-jqjpjv
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: elt
@@ -259,29 +259,32 @@ questions:
     task: "3.7"
     level: 1
     stem: >-
-      A team must choose between ELT and ETL for a new pipeline.
-      What should decide that choice?
+      A team picks ELT for a new pipeline.
+      When does its data get transformed?
     options:
       - id: a
-        text: Whether the data is already usable in place
-        why: Data that is already usable in place points to zero-ETL, not to a choice between ELT and ETL.
+        text: Before loading, into one shared format
+        why: Transforming into one format before loading is ETL, the order ELT reverses.
       - id: b
-        text: Whether the data sits in an S3 data lake
-        why: A data lake can feed either approach, so where the data is stored does not settle the order of steps.
-      - id: c
-        text: What its needs and infrastructure call for
+        text: After loading, whenever a need arises
         correct: true
-        why: Whether to load first and transform later comes down to the team's needs and its infrastructure.
+        why: ELT loads the data first and transforms it later, only as each need calls for it.
+      - id: c
+        text: Not at all, since it is used as-is
+        why: Using data as-is with no transform step is zero-ETL, not ELT, which still transforms after loading.
       - id: d
-        text: Whether a pipeline automates each run
-        why: A pipeline makes either approach repeat reliably, so automation does not decide between them.
+        text: During extraction, inside the source system
+        why: ELT leaves the transform until the data is already loaded, not while it is pulled out of the source.
     evidence:
       - "ELT: load first, transform as needed; needs and infrastructure decide."
-    takeaway: The choice of ELT over ETL comes down to the team's needs and infrastructure.
+      - ETL transforms before loading, ELT after, and zero-ETL not at all.
+    takeaway: ELT loads data first and transforms it afterward, only as each need arises.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the vague, hedged catch-all while the others are specific conditions.)"
+    verified:
+      keyHash: 28a0f49ca1ad
+      fullHash: c5c45637e198
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-z4gbe2
     version: 1
     status: live
@@ -319,7 +322,7 @@ questions:
       on: 2026-10-09
   - id: q-dn1rh9
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -331,29 +334,31 @@ questions:
       Which conditions make zero-ETL a fit?
     options:
       - id: a
-        text: The data is usable without any reshaping
+        text: The data is encrypted while it is stored
+        why: Encryption protects the data, but it does not make the data usable as-is or put it where it is analyzed.
+      - id: b
+        text: The data is usable as-is, with no reshaping
         correct: true
         why: Zero-ETL skips the transform step, which works only when the data needs no reshaping.
-      - id: b
-        text: The data gets reshaped once it has loaded
-        why: Reshaping data after loading is ELT, so the transform step is still there rather than skipped.
       - id: c
-        text: The data already sits where the tool reads it
-        correct: true
-        why: Zero-ETL skips moving the data, which works only when it is already in place for the tool.
+        text: The data comes in several clashing formats
+        why: Clashing formats must be reshaped into one before analysis, which is the transform step zero-ETL skips.
       - id: d
-        text: The data is reshaped to one format first
-        why: Reshaping data to one format before loading is ETL, so the transform step is still there.
+        text: The data sits where it will be analyzed
+        correct: true
+        why: Zero-ETL skips moving the data, which works only when it is already in place for analysis.
       - id: e
-        text: A pipeline copies the data over to the tool
-        why: Copying data over to the tool means it was not already in place, which zero-ETL relies on.
+        text: The data lives far from the analytics tool
+        why: Data kept far from the tool must first be moved into place, which zero-ETL does not do.
     evidence:
       - "Zero-ETL: skip it when data is already usable and in place."
     takeaway: Zero-ETL fits only when data is both already usable and already in place.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 3 describe zero-ETL; 2, 4 and 5 describe ETL and ELT pipelines.)"
+    verified:
+      keyHash: "16e231629488"
+      fullHash: a5b805b82567
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-wd9xep
     version: 1
     status: live
@@ -425,3 +430,75 @@ questions:
       fullHash: 30de65d78c09
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-95r1nz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-analytics
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe has a small table of last year's weekly sales and wants to find its seasonal trends cheaply and efficiently.
+      Which approach fits best?
+    options:
+      - id: a
+        text: Train a custom ML model on the table
+        why: A custom ML model takes more data, time and cost than a small table of past sales calls for.
+      - id: b
+        text: Fine-tune a foundation model on the table
+        why: Fine-tuning adapts a large model with extra training, which is costly work for a small set of past sales.
+      - id: c
+        text: Run traditional analytics on the table
+        correct: true
+        why: Traditional analytics turns past records into trends and stays cheaper and more efficient on small datasets.
+      - id: d
+        text: Pool the table into a new data lake
+        why: A data lake gathers data in one place, but storing the table there does not find any trends in it.
+    evidence:
+      - "Still vital: explaining loan decisions, hypothesis tests on clinical trials, insurance risk models regulators can understand and approve, and cheaper, more efficient work on small datasets."
+      - "Data analytics: analysts turn raw history into insights and trends."
+    takeaway: For finding trends in a small dataset cheaply and efficiently, traditional data analytics still fits better than AI/ML.
+    history: []
+    verified:
+      keyHash: 5097bf0cf9df
+      fullHash: 75eccd850a0c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-qrfpnf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-lakes
+    note: m08/introduction-to-data-analytics
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe is building a data lake to hold its till, app and website data together in one place.
+      Which AWS service would store that pooled data?
+    options:
+      - id: a
+        text: Amazon EMR
+        why: EMR processes large amounts of data, but it is not the store that holds the data lake.
+      - id: b
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams brings streaming data in, but it does not keep the data lake's pooled data.
+      - id: c
+        text: AWS Glue
+        why: Glue catalogs and processes data for analysis rather than serving as the store the lake lives in.
+      - id: d
+        text: Amazon S3
+        correct: true
+        why: S3 serves as a store in an AWS data pipeline, so it can hold the lake's pooled data in one place.
+    evidence:
+      - "Named here: Amazon Kinesis and AWS Glue (ingest), Amazon S3 and Redshift (store), Amazon EMR (process), Amazon QuickSight (visualize)."
+      - "Data lake: One store for all of a business's data."
+    takeaway: A data lake needs one central store, and in an AWS pipeline Amazon S3 is a store that can hold it.
+    history: []
+    verified:
+      keyHash: 938d255343e2
+      fullHash: 873b0e1db7c1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

@@ -450,3 +450,225 @@ questions:
       fullHash: 31e058b02b3d
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+
+  - id: q-gbq8yr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: artificial-intelligence
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      Beyond a report on last month's rush hours, the cafe owner wants a system
+      that forecasts next month's best seller and places the bean order on its
+      own. Which field does this call for?
+    options:
+      - id: a
+        text: Data analytics
+        why: Analytics mines past data for insight, such as last month's rush hours, rather than forecasting and acting alone.
+      - id: b
+        text: Classical programming
+        why: Hand-coded rules repeat a fixed pairing and cannot forecast a best seller from the data on their own.
+      - id: c
+        text: Artificial intelligence
+        correct: true
+        why: AI forecasts and automates, so a system that predicts demand and places the order itself is AI work.
+      - id: d
+        text: Natural language processing
+        why: NLP lets a system grasp human speech, and this job is about forecasting sales, not understanding words.
+    evidence:
+      - AI/ML forecasts and automates, while data analytics mines history for insight.
+      - "AI: the broad field of computer systems that do humanlike tasks."
+    takeaway: Forecasting and acting on its own is AI work, while finding insight in past data is data analytics.
+    history: []
+    verified:
+      keyHash: 2805e143e2a7
+      fullHash: 0b2a1b57418d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-786796
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: machine-learning
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's developer wants to guess what each regular will order next,
+      but the habits behind those orders are far too tangled to capture by hand.
+      Why does machine learning suit this job?
+    options:
+      - id: a
+        text: It can be built and trained in Amazon SageMaker AI.
+        why: True, but naming a place to train a model does not explain how the tangled habits get captured.
+      - id: b
+        text: It learns the job from patterns in data.
+        correct: true
+        why: ML learns complex jobs from data, so nobody has to capture each regular's habits by hand.
+      - id: c
+        text: It sits inside the wider field of artificial intelligence.
+        why: True, but being part of AI does not explain how the job gets done without hand-made rules.
+      - id: d
+        text: Its accuracy rests on how clean its data is.
+        why: True, but this is a limit on ML rather than the reason it can handle habits too tangled to code.
+    evidence:
+      - "ML: AI where machines learn complex jobs from data, not spelled-out instructions."
+    takeaway: ML suits jobs too complex to spell out, because it learns them from data instead of written instructions.
+    history: []
+    verified:
+      keyHash: e702570f3ac0
+      fullHash: fd932de34e97
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-mtth92
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: classical-programming
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 1
+    stem: >-
+      Under classical programming, how does a register come to offer one pastry
+      with one drink?
+    options:
+      - id: a
+        text: A model finds the pairing in each customer's own history.
+        why: Finding pairings in each customer's history is what an ML model does, not a coded rule.
+      - id: b
+        text: A forecast mixes social trends with sales to pick a pairing.
+        why: Mixing trends with sales to forecast describes predictive AI, not a rule someone wrote.
+      - id: c
+        text: A developer writes one fixed pairing into the code by hand.
+        correct: true
+        why: Classical programming hard-codes a rule, such as one pastry with one drink, written by a person.
+      - id: d
+        text: A kiosk adapts the pairing to each reply from a customer.
+        why: Adapting to each reply is conversational AI, while a coded rule never changes with the answers.
+    evidence:
+      - Classical programming hard-codes a rule from past pairings (a cheese Danish with every caramel latte), ignoring the individual customer and product.
+      - "**Classical programming**: Hand-coding fixed rules instead of learning them."
+    takeaway: In classical programming a person hand-codes a fixed rule, rather than the system learning it from data.
+    history: []
+    verified:
+      keyHash: e308218e8a79
+      fullHash: e03fab9f0785
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-ek0001
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-model-training
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's ML system has just finished training on a large store of past
+      sales. What does training hand back to the cafe?
+    options:
+      - id: a
+        text: A cleaned and formatted copy of the records
+        why: Cleaning and formatting happen before training starts, so they are not what training produces.
+      - id: b
+        text: A suggestion for the next order placed
+        why: A suggestion for a new order comes later, at inference, when the model gets fresh data.
+      - id: c
+        text: A fixed pairing rule for the register
+        why: A fixed rule is hand-coded by a developer in classical programming, not produced by training.
+      - id: d
+        text: A model shaped by the patterns it found
+        correct: true
+        why: Training finds hidden patterns in history and outputs a model the cafe can then use.
+    evidence:
+      - "Training: ML finds hidden customer-sales patterns in lots of history and outputs a model."
+      - "**Training**: Finding patterns in historical data to build a model."
+    takeaway: Training turns patterns found in historical data into a model, which inference later uses.
+    history: []
+    verified:
+      keyHash: c3d322042dc3
+      fullHash: 196c81f4dc7d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-393a8m
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ml-inference
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's model is already trained and now runs on each new order as it
+      arrives. What does this stage give the cafe?
+    options:
+      - id: a
+        text: A model built from hidden patterns in past sales
+        why: Building the model from past sales is training, which is already done before the orders arrive.
+      - id: b
+        text: Suggestions fitted to each customer's own history
+        correct: true
+        why: Inference feeds each fresh order to the model, which returns a suggestion fitted to that customer.
+      - id: c
+        text: Sales records that are gathered, cleaned and formatted
+        why: Preparing records is the work done before training, not what the model gives on a new order.
+      - id: d
+        text: One fixed rule that pairs a pastry with a drink
+        why: A fixed pairing is hand-coded in classical programming and does not come from running a model.
+    evidence:
+      - "Inference: the model gets new data, like a fresh order, and predicts or decides."
+      - "Result: suggestions fitted to each customer's order history, and more food sold."
+    takeaway: Inference runs a trained model on each new order, which gives suggestions fitted to each customer.
+    history: []
+    verified:
+      keyHash: fc7f929c4e9a
+      fullHash: ad439ba36589
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-fenkkr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: natural-language-processing
+    note: m08/introduction-to-ai-and-machine-learning
+    task: "3.7"
+    level: 1
+    stem: >-
+      What does natural language processing let a system such as an ordering
+      kiosk do?
+    options:
+      - id: a
+        text: Find hidden patterns in years of sales history
+        why: Finding patterns in sales history is ML training, which builds a model rather than grasping speech.
+      - id: b
+        text: Forecast hits from social trends and sales
+        why: Forecasting hits is predictive AI, which looks ahead rather than making sense of what people say.
+      - id: c
+        text: Grasp human speech and ask follow-up questions
+        correct: true
+        why: NLP lets the kiosk make sense of what a customer says and respond with follow-up questions.
+      - id: d
+        text: Recognize the objects that appear in images
+        why: Image recognition works on pictures, while NLP works on human language such as speech.
+    evidence:
+      - "**Natural language processing (NLP)**: What lets the course's kiosk grasp speech and ask follow-ups."
+    takeaway: Natural language processing is what lets a system grasp human speech and respond with follow-ups.
+    history: []
+    verified:
+      keyHash: 36f9d6c75890
+      fullHash: e6d584a3975e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

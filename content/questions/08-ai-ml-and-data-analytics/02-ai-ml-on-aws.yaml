@@ -36,43 +36,40 @@ questions:
       on: 2026-10-09
   - id: q-yxxh59
     version: 1
-    status: draft
-    type: multi
-    select: 3
+    status: live
+    type: single
     pool: practice
     concept: ai-ml-business-use-cases
     note: m08/ai-ml-on-aws
     task: "3.7"
-    level: 1
+    level: 2
     stem: >-
-      Which kinds of work can machine learning take on for a business?
+      The cafe wants a model that estimates what a sack of coffee beans will cost
+      next month, so it can time its bulk orders. Which kind of machine learning
+      job is this?
     options:
       - id: a
-        text: Predicting values such as future prices
-        correct: true
-        why: Prediction is a core ML job, such as estimating where stock trends or prices of goods will head.
+        text: Making a decision
+        why: Deciding picks an action, such as where to route a caller, while this job estimates a future cost.
       - id: b
-        text: Hard-coding rules such as a fixed pastry pairing
-        why: A hand-written rule is classical programming, the opposite of a model that learns its job from data.
+        text: Predicting a value
+        correct: true
+        why: Estimating the coming price of the beans is prediction, the ML job behind forecasts of prices of goods.
       - id: c
-        text: Making decisions such as routing a caller
-        correct: true
-        why: ML can decide where to send a caller by understanding what they asked for out loud.
+        text: Detecting an anomaly
+        why: Anomaly detection flags rare events such as fraud, while this job puts a figure on a future price.
       - id: d
-        text: Detecting anomalies such as account fraud
-        correct: true
-        why: ML can learn normal behavior and flag the rare events, such as fraud, that do not fit it.
-      - id: e
-        text: Following scripts such as a rule-based phone menu
-        why: A rule-based menu runs fixed steps someone wrote, so it learns nothing from data and is not ML work.
+        text: Recommending a product
+        why: A recommendation suggests an item to a customer, while the cafe here wants a price it can plan around.
     evidence:
       - ML predicts (stock trends, prices of goods), decides (routing a caller by spoken request) and detects anomalies (online-banking fraud).
-      - ML predicts, decides and detects anomalies.
-    takeaway: Business uses of ML fall into predicting values, making decisions and detecting anomalies.
+    takeaway: Estimating a future figure, such as the price of goods, is the predicting kind of ML business use.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 are rule-based, not ML, so the three ML use cases are found without the stem.)"
+    verified:
+      keyHash: 3b7641d478df
+      fullHash: 03c447f0a0f3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-710dgr
     version: 1
     status: live
@@ -247,3 +244,73 @@ questions:
       fullHash: bea761da3ff9
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-8ac166
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-ai-ml-stack
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      As the cafe moves a project from AI services toward ML frameworks and
+      infrastructure in the AWS AI/ML stack, which of these changes?
+    options:
+      - id: a
+        text: Whether the model learns from data
+        why: Models on every tier learn from data, so this stays the same as the project moves down the stack.
+      - id: b
+        text: Whether the team builds its own model
+        correct: true
+        why: AI services hand over ready-made models, while the lower tiers have the team build its own, up to fully custom work.
+      - id: c
+        text: Whether the model can make predictions
+        why: Models on every tier can predict, so moving between tiers does not change this.
+      - id: d
+        text: Whether the model runs in the AWS Cloud
+        why: All three tiers are offered on AWS, so the move down the stack does not change where the model runs.
+    evidence:
+      - Tiers run from ready-made (AI services) to your own models (SageMaker AI) to fully custom.
+    takeaway: Moving down the AWS AI/ML stack trades ready-made models for more and more custom ones.
+    history: []
+    verified:
+      keyHash: 6a1b85cabd2a
+      fullHash: a8485189f943
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-6tqqn7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-ml-services
+    note: m08/ai-ml-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's data team wants a custom demand forecast of its own and picks the
+      ML services tier of the AWS AI/ML stack. Which split of the work matches that tier?
+    options:
+      - id: a
+        text: AWS trains the model, and the team manages the underlying servers
+        why: No tier splits the work this way, since in ML services the team trains the model and AWS runs the servers.
+      - id: b
+        text: The team trains a custom model, and AWS manages the infrastructure
+        correct: true
+        why: In ML services the team creates, trains and ships its own model, while AWS manages the infrastructure, tools and workflows.
+      - id: c
+        text: AWS supplies a pre-trained model, and the team calls it for one job
+        why: Pre-trained models for set jobs are the AI services tier, which does not give the team a custom forecast of its own.
+      - id: d
+        text: The team trains a custom model on infrastructure the team manages
+        why: Running its own infrastructure is the ML frameworks and infrastructure tier, while ML services leaves that to AWS.
+    evidence:
+      - "ML services: for more customization, you create, train and ship custom models in Amazon SageMaker AI while AWS manages infrastructure, tools and workflows, with experiments, data visuals, debugging and monitoring in one place."
+    takeaway: In the ML services tier the team builds its own model, while AWS manages the infrastructure, tools and workflows.
+    history: []
+    verified:
+      keyHash: bd65e103e8a1
+      fullHash: c391c9fb77ad
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
