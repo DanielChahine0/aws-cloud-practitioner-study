@@ -1,7 +1,7 @@
 questions:
   - id: q-f73nps
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -10,33 +10,36 @@ questions:
     task: "2.1"
     level: 2
     stem: >-
-      The cafe keeps its order history on EBS volumes attached to its EC2 instances.
-      Under the shared responsibility model, which tasks for those volumes fall to the cafe?
+      Under the shared responsibility model, the cafe owns the order history on its EBS volumes.
+      Which of the cafe's own tasks make sure it can get that data back after a failure?
     options:
       - id: a
-        text: Replicating each volume inside its zone
-        why: EBS copies every volume inside its Availability Zone on its own, so the cafe never sets this up.
+        text: Encrypting the sensitive data on each volume
+        why: Encryption keeps the data private, but it gives the cafe no copy to recover from after a failure.
       - id: b
         text: Taking regular snapshots of each volume
         correct: true
-        why: The data on a volume belongs to the cafe, so backing it up with snapshots is the cafe's own duty.
+        why: The data is the cafe's to back up, and a snapshot is the copy it restores from after a failure.
       - id: c
-        text: Keeping snapshot data redundant in S3
-        why: AWS places snapshot data in S3 across several Availability Zones, so the cafe does not manage that copy.
+        text: Pruning the oldest snapshots in the chain
+        why: Pruning old snapshots is the cafe's way to control cost, and it adds nothing to recovery.
       - id: d
-        text: Deleting each volume that is not used
+        text: Testing that the snapshots restore correctly
         correct: true
-        why: Deprovisioning unused volumes is part of managing its own data, which the cafe owns.
+        why: A backup the cafe never tested may fail when needed, so testing restores is how it knows recovery works.
       - id: e
-        text: Replacing failed disks under each volume
-        why: AWS looks after the hardware behind each volume, so a failed disk is not the cafe's task.
+        text: Deleting the volumes the cafe stops using
+        why: Deprovisioning unused volumes is the cafe's job too, but it trims the bill rather than protecting data.
     evidence:
       - Your data is your job under shared responsibility, so you provision, move, deprovision and back up volumes.
-    takeaway: The customer owns the EBS data lifecycle, including backing up volumes and removing ones it no longer needs.
+      - "Your part: schedule snapshots, prune them to control cost, encrypt sensitive data, verify integrity and test restores."
+    takeaway: The customer owns its EBS backups, so it must take snapshots and test that they restore before a failure strikes.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are customer duties; 1, 2 and 3 are AWS duties, so the split is known without the stem.)"
+    verified:
+      keyHash: 95706c18a8dc
+      fullHash: 0071eeb158c1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-xvfy1s
     version: 1
     status: live
@@ -75,7 +78,7 @@ questions:
       on: 2026-10-09
   - id: q-emk0mg
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: ebs-snapshots
@@ -92,21 +95,23 @@ questions:
         correct: true
         why: A snapshot holds the volume as it stood at one moment, so a new volume from it brings that data back.
       - id: b
-        text: Enlarge the corrupted volume to add capacity
-        why: Adding capacity gives the volume more room, but the corrupted data stays corrupted.
+        text: Take a fresh snapshot of the damaged volume
+        why: A new snapshot captures the volume as it stands now, so it saves the corrupted data rather than the good data.
       - id: c
-        text: Change the corrupted volume to a faster type
-        why: A faster volume type changes performance and price, not the damaged data on the volume.
+        text: Copy the latest snapshot to another Region
+        why: A cross-Region copy moves the backup elsewhere, but it puts no data back on a volume the database can use.
       - id: d
-        text: Attach the corrupted volume to a new instance
-        why: Moving the volume to another instance carries the corrupted data along with it.
+        text: Delete the older snapshots in the chain
+        why: Deleting old snapshots trims storage cost and does nothing to replace the corrupted data.
     evidence:
       - Restoring a volume after corruption starts from its latest snapshot.
     takeaway: To recover a corrupted EBS volume, create a new volume from its most recent snapshot.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one that does not repeat 'the corrupted volume'.)"
+    verified:
+      keyHash: 4909a328d9d2
+      fullHash: e028b759939c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-2ajvtj
     version: 1
     status: live
@@ -361,3 +366,75 @@ questions:
       fullHash: 6268bced7bca
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-c30ghx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: incremental-backups
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe starts snapshotting a new gift card volume on Monday and takes one more snapshot on Tuesday and on Wednesday.
+      Which of these snapshots wrote out every block in use on the volume when it was taken?
+    options:
+      - id: a
+        text: Only the Wednesday snapshot
+        why: Wednesday's snapshot stored only the blocks changed since Tuesday and points back to older ones for the rest.
+      - id: b
+        text: The Monday and Tuesday snapshots
+        why: Tuesday's snapshot was the second in the chain, so it stored only the blocks changed since Monday.
+      - id: c
+        text: Every snapshot in the chain
+        why: Each snapshot acts as a full copy when restored, but only the first one stored every block itself.
+      - id: d
+        text: Only the Monday snapshot
+        correct: true
+        why: The first snapshot is the full baseline, so Monday's is the one that copied every block in use.
+    evidence:
+      - The first snapshot is a full baseline of all blocks in use.
+      - Later ones store only changed blocks and reference earlier ones, forming a chain for point-in-time recovery.
+    takeaway: Only the first EBS snapshot is a full baseline; each later one stores just the changed blocks and links back.
+    history: []
+    verified:
+      keyHash: 7a74bdeec74f
+      fullHash: f54afb8bb210
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-j1zq1t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-data-lifecycle-manager
+    note: m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's Amazon Data Lifecycle Manager policy covers its order instances.
+      The team wants backups of the data disks only, skipping each instance's boot disk.
+      Which policy setting does that?
+    options:
+      - id: a
+        text: Add cross-Region copies to the policy
+        why: Cross-Region copies send snapshots to another Region, but every targeted volume is still backed up.
+      - id: b
+        text: Turn on fast snapshot restore in the policy
+        why: Fast snapshot restore speeds up volumes made from snapshots and does not change which volumes are backed up.
+      - id: c
+        text: Exclude root volumes from the policy
+        correct: true
+        why: A policy can leave out the root volumes of the instances it covers, so only the data disks get snapshots.
+      - id: d
+        text: Add cross-account sharing to the policy
+        why: Sharing lets another account use the snapshots, but it leaves the boot volumes inside the policy.
+    evidence:
+      - "Policy steps: create it (EC2 console, API, AWS CLI, SDKs or AWS CloudFormation), target volumes or instances, optionally exclude root or data volumes, set schedules, then add extras."
+    takeaway: A Data Lifecycle Manager policy can target instances and exclude their root or data volumes from its snapshots.
+    history: []
+    verified:
+      keyHash: 6baf31d903d0
+      fullHash: d077fea858cd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

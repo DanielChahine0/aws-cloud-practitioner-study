@@ -150,7 +150,7 @@ questions:
       on: 2026-10-09
   - id: q-tqfhs2
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: ebs-volumes
@@ -158,32 +158,34 @@ questions:
     task: "3.6"
     level: 2
     stem: >-
-      The cafe's inventory app has outgrown its small EC2 instance and must move to a bigger instance type.
-      Its data sits on an EBS volume.
-      How can the cafe keep that data through the move?
+      The cafe's inventory app needs more CPU and memory, so the team moves it to a more powerful EC2 instance.
+      The app's data sits on an EBS volume.
+      Which EBS capability lets the app keep using that same data after the move?
     options:
       - id: a
-        text: Attach the existing volume to the new instance
+        text: A volume can be detached and attached elsewhere
         correct: true
-        why: An EBS volume can be moved to another instance, so the data follows the app to the bigger type.
+        why: An EBS volume can be moved to another instance, so the data follows the app to the more powerful machine.
       - id: b
-        text: Copy the data to the new instance's instance store
-        why: Instance store is erased when the instance stops, so the inventory data would not be kept safely.
+        text: A volume can switch to a different volume type
+        why: EBS can switch a volume's type on the fly, but a new type does not connect the volume to the new instance.
       - id: c
-        text: Let the volume's zone replicas attach to the new instance
-        why: EBS does replicate each volume in its zone, but those hidden copies are not volumes the cafe can attach.
+        text: A volume can be enlarged to hold more data
+        why: EBS can enlarge a volume without downtime, but more capacity does not connect it to the new instance.
       - id: d
-        text: Enlarge the volume so it fits the new instance
-        why: Adding capacity to a volume does not connect it to the new instance, so the app still cannot reach the data.
+        text: A volume can be tuned to deliver more IOPS
+        why: EBS can raise IOPS without downtime, but that only tunes speed and leaves the volume where it was.
     evidence:
       - A volume gives consistent low latency, attaches to one instance at a time, and can be backed up, resized and moved to another instance.
       - "Instance type changes: reattach a volume to a bigger or smaller instance and keep the data."
       - "Cost and performance tuning: change type, size or IOPS on the fly without downtime."
     takeaway: Reattaching an EBS volume to a different instance type keeps the data when the cafe resizes its instance.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only one that is a workable, accurate EBS action; the others misstate how volumes work.)"
+    verified:
+      keyHash: e6660e8f0e16
+      fullHash: 2d5e5a827f3e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-gj7912
     version: 1
     status: live
@@ -401,3 +403,183 @@ questions:
       fullHash: 4856becfd7a9
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-vessvp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-store
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      Two of the cafe's EC2 instances must both read and write the same recipe files at the same time.
+      A developer suggests keeping those files on one instance's instance store.
+      Why does this plan fail?
+    options:
+      - id: a
+        text: Instance store comes with many types at no extra cost
+        why: The lack of an extra charge is true, but price has nothing to do with a second instance reaching the files.
+      - id: b
+        text: Instance store gives very low latency and high I/O
+        why: Instance store is very fast, but speed does not let the second instance read or write the files.
+      - id: c
+        text: Instance store serves just the instance on its host
+        correct: true
+        why: Instance store belongs to one instance and cannot be shared, so the second instance never sees the recipe files.
+      - id: d
+        text: Instance store is the default storage on some types
+        why: Some instance types do use it by default, but that says nothing about sharing files between two instances.
+    evidence:
+      - It serves one instance only and cannot be shared the way Amazon EFS can.
+    takeaway: Instance store belongs to a single instance, so files that several instances must share need shared storage instead.
+    history: []
+    verified:
+      keyHash: 7c76b0660dbf
+      fullHash: 066569ca292a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-6hpaa3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ebs
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      Each Monday the cafe's developers build a fresh test server whose disk starts as a copy of the order system's saved drive.
+      Which service lets them create that disk from the saved copy?
+    options:
+      - id: a
+        text: Amazon EC2 instance store
+        why: Instance store is temporary disk on the host and offers no saved copies to build a test disk from.
+      - id: b
+        text: Amazon EFS
+        why: EFS shares a network file system among many servers rather than building a server's own disk from a copy.
+      - id: c
+        text: Amazon EBS
+        correct: true
+        why: EBS snapshots back up a volume, and quick development environments can be built from those snapshots.
+      - id: d
+        text: Amazon FSx
+        why: FSx runs shared Windows, Lustre and NetApp ONTAP file systems, not a test server's disk made from a copy.
+    evidence:
+      - "Use cases: database hosting, application backups and quick development environments built from snapshots."
+      - Back volumes up with incremental Amazon EBS snapshots.
+    takeaway: Amazon EBS snapshots let the cafe build quick development environments from a saved copy of a volume.
+    history: []
+    verified:
+      keyHash: 42c77aa512c4
+      fullHash: d540a3bcf2e0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-zgm0ys
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ebs-volume-types
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's archive server reads its EBS volume only a few times a month, and the manager wants that volume to cost less.
+      Which change fits?
+    options:
+      - id: a
+        text: Raise the volume's IOPS without downtime
+        why: EBS can raise IOPS on the fly, but more performance adds cost the rarely read archive does not need.
+      - id: b
+        text: Move the volume to a lower-priced type
+        correct: true
+        why: Volume types differ in price and performance, and the type can change on the fly, so a cheaper type fits light use.
+      - id: c
+        text: Copy a snapshot of the volume to another Region
+        why: Snapshots can carry data to another Region, but an extra copy adds storage instead of lowering the cost.
+      - id: d
+        text: Reattach the volume to a bigger instance type
+        why: Reattaching keeps the data on a new instance, but a bigger instance does not make the volume cheaper.
+    evidence:
+      - Volume types differ in price and in performance, measured in IOPS (input/output operations per second) and tied to type and often size.
+      - "Cost and performance tuning: change type, size or IOPS on the fly without downtime."
+    takeaway: A lightly used EBS volume can move to a lower-priced volume type on the fly to cut its cost.
+    history: []
+    verified:
+      keyHash: b789e20667b9
+      fullHash: fbb26f952e1a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-kymhxc
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: data-persistence
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe retires the EC2 instance behind its loyalty app by terminating it.
+      Temporary files sat on the instance store, and the customer points sat on a separate EBS data volume, apart from the boot volume, that is set to remain after termination.
+      Which fact explains why the customer points are still there afterwards?
+    options:
+      - id: a
+        text: The volume is stored apart from the instance's host
+        correct: true
+        why: The EBS volume lives on durable media away from the host, so removing the instance leaves the points intact.
+      - id: b
+        text: The instance store is attached to the instance's host
+        why: This is true, but it explains why the temporary files were lost, not why the points survived.
+      - id: c
+        text: The volume is attached to one instance at a time
+        why: This is true of EBS, but the single attachment says nothing about whether data outlives the instance.
+      - id: d
+        text: The instance store is included at no extra cost
+        why: This is true of many instance types, but price has no bearing on what survives a termination.
+    evidence:
+      - Stopping or terminating the instance erases it, since a restarted instance usually lands on another host without that disk.
+      - They live apart from the host on durable SSD or HDD media, so data survives stops, starts and terminations.
+    takeaway: Terminating an instance erases its instance store, but an attached EBS volume keeps its data because it lives apart from the host.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 2 repeats the stem's 'apart from', which points at the key. The takeaway says an attached EBS volume keeps its data on termination, which overstates it, since a volume not set to remain is deleted."
+  - id: q-d0mctp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-persistence
+    note: m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+    task: "3.6"
+    level: 2
+    stem: >-
+      Each night the cafe stops the EC2 instance that renders its menu boards, and it starts the instance again before opening.
+      The scratch files it kept on instance store are missing every morning.
+      Which fact about the instance store disk explains the loss?
+    options:
+      - id: a
+        text: The disk stays behind on the original host
+        correct: true
+        why: Instance store sits on the original host, and a restarted instance usually lands on another host, so the files stay behind with that disk.
+      - id: b
+        text: The disk cannot be shared like Amazon EFS
+        why: Instance store does serve one instance only, but sharing has nothing to do with files vanishing after a stop and start.
+      - id: c
+        text: The disk is included at no extra cost
+        why: This is true of many instance types, but the price of the disk does not explain why its files are gone.
+      - id: d
+        text: The disk offers very low latency and high I/O
+        why: Instance store is fast because it is local, but its speed does not explain why the files disappear after a restart.
+    evidence:
+      - Stopping or terminating the instance erases it, since a restarted instance usually lands on another host without that disk.
+      - "Benefits: included with many instance types at no extra cost, with very low latency and high I/O because it sits on the host."
+    takeaway: Instance store belongs to the host, so an instance that restarts on a new host comes back without that data.
+    history: []
+    verified:
+      keyHash: eae8d807cf47
+      fullHash: 848cd4cb5860
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

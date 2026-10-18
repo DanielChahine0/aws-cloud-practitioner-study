@@ -45,38 +45,39 @@ questions:
     concept: aws-elastic-disaster-recovery
     note: m06/aws-elastic-disaster-recovery
     task: "3.6"
-    level: 1
+    level: 2
     stem: >-
-      Which statements describe how AWS Elastic Disaster Recovery works?
+      The cafe owner asks how AWS Elastic Disaster Recovery keeps her monthly AWS bill small on the many days when nothing fails.
+      Which features of the service explain this?
     options:
       - id: a
-        text: Storage Gateway caches hot data for local apps.
-        why: This is true of Storage Gateway, but Elastic Disaster Recovery replicates without Storage Gateway.
+        text: Recovery tests run apart from the live servers.
+        why: Isolated recovery tests protect production during a drill, but they do not explain why the bill stays low while nothing fails.
       - id: b
-        text: Source-server agents send block changes to AWS.
+        text: Replicas wait in storage, not on running servers.
         correct: true
-        why: Small agents on each source server keep replicating its block-level data to AWS.
+        why: The replicas sit in low-cost storage with minimal compute, so the cafe pays little to keep them ready.
       - id: c
-        text: EBS snapshots back volumes up as increments.
-        why: This is true of EBS snapshots, but it describes volume backups, not how this service protects servers.
+        text: Servers recover in AWS within minutes of a failure.
+        why: Quick recovery cuts downtime on the day a failure hits, not the charges on the many days when nothing fails.
       - id: d
-        text: Recovery tests leave the production servers alone.
+        text: Pricing follows a pay-per-use model.
         correct: true
-        why: Tests launch separate recovery instances and leave the live servers running.
+        why: Pay-per-use pricing bills for what the service actually uses, so quiet days with no recovery cost little.
       - id: e
-        text: S3 Lifecycle moves cold objects to cheaper classes.
-        why: This is true of S3 Lifecycle, but it manages object storage costs rather than server recovery.
+        text: Servers restore to a chosen earlier moment.
+        why: Point-in-time recovery picks which state to bring back after damage, not what keeps the bill low on quiet days.
     evidence:
-      - Lightweight agents on source servers replicate block-level data to AWS nonstop, without Storage Gateway.
-      - Recovery tests leave production alone, and recovery instances start fast.
-    takeaway: Elastic Disaster Recovery uses source-server agents and lets you test recovery without touching production.
+      - "No secondary data center: low-cost storage, minimal compute and pay-per-use pricing."
+      - It removes the cost of a standby data center.
+    takeaway: Elastic Disaster Recovery keeps standby costs low with low-cost storage and pay-per-use pricing instead of a second site.
     history: []
     review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 describe Elastic Disaster Recovery; the others describe other services.)"
+      attempts: 11
+      lastFailure: "critic: Option 5 is the only option about pricing, which the stem's question about the bill points straight at. Option 3 says replicas sit on no running servers, while its own why and the evidence say minimal compute, so the key overstates the service."
   - id: q-d41d6d
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: disaster-recovery
@@ -89,26 +90,29 @@ questions:
       Which disaster recovery approach fits?
     options:
       - id: a
-        text: Keep a copy of the servers in a leased standby site
-        why: A second data center full of waiting servers is the very cost she wants to avoid.
+        text: Copy the servers to an AWS Region nonstop and keep spares running
+        why: Spare servers running all the time are the idle compute she wants to avoid paying for.
       - id: b
-        text: Keep a copy of the servers in an AWS Region
+        text: Copy the servers to an AWS Region nonstop and launch them on failure
         correct: true
-        why: Replicating to AWS uses low-cost storage and minimal compute, so no standby site is needed.
+        why: Nonstop copies on minimal compute keep order loss low and need no idle second site.
       - id: c
-        text: Keep a copy of the servers on drives in the office
-        why: Drives kept in the office share its fate in a flood and leave the latest orders at risk.
+        text: Copy the servers to an AWS Region nightly and restore them on failure
+        why: A nightly copy loses every order taken since the last run, and restoring it takes longer.
       - id: d
-        text: Keep a copy of the servers on tapes in a storage unit
-        why: Tapes survive the flood, but restoring from them is slow and loses every order since the last tape.
+        text: Copy the servers to an AWS Region weekly and restore them on failure
+        why: A weekly copy can lose days of orders, which is the data loss she wants to limit.
     evidence:
       - "No secondary data center: low-cost storage, minimal compute and pay-per-use pricing."
       - Less downtime and data loss, vital where uptime matters, as in healthcare.
+      - Continuous block-level replication enables recovery in minutes.
     takeaway: Recovering to AWS cuts downtime and data loss without the cost of a standby data center.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one that names AWS; the others are on-premises variants of the same sentence.)"
+    verified:
+      keyHash: 72dc6f9eec76
+      fullHash: 444f702864f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-mk1nmy
     version: 1
     status: live
@@ -182,7 +186,7 @@ questions:
       on: 2026-10-09
   - id: q-40h1ey
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: block-level-replication
@@ -195,27 +199,29 @@ questions:
       Which kind of copying fits?
     options:
       - id: a
-        text: Nightly incremental EBS snapshots
-        why: A nightly snapshot loses every order taken since the previous one.
+        text: Nightly incremental snapshots of its disk volumes
+        why: Nightly snapshots leave out every order taken since the last one, so the copy is not current.
       - id: b
-        text: Ongoing copying of the sales folder
-        why: Copying only the sales folder leaves the rest of the server out of the copy in AWS.
+        text: Continuous copying of its order files to Amazon S3
+        why: Copying only the order files leaves the rest of the server out of the copy in AWS.
       - id: c
-        text: Weekly full images of the server disk
-        why: A weekly image leaves days of orders unprotected.
+        text: Weekly AWS Backup jobs that copy its disk volumes
+        why: Weekly backup jobs leave days of orders out of the copy in AWS.
       - id: d
-        text: Ongoing copying of changed disk blocks
+        text: Continuous copying of changed blocks on its disks
         correct: true
-
         why: Changed disk blocks of the whole server reach AWS as they happen, so the copy stays current.
     evidence:
       - Continuous block-level replication enables recovery in minutes.
       - Exact, current replicas let servers recover in the target AWS Region within minutes, with point-in-time recovery.
+      - "**Block-level replication**: copying disk blocks elsewhere as they change."
     takeaway: Continuous block-level replication keeps an up-to-date copy, so a failure loses very little data.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 describes Elastic Disaster Recovery's continuous block replication.)"
+    verified:
+      keyHash: 01b758ff091c
+      fullHash: 20c75fa626fd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-j3gga4
     version: 1
     status: live
@@ -288,7 +294,7 @@ questions:
       on: 2026-10-09
   - id: q-ht8zmy
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -297,33 +303,36 @@ questions:
     task: "3.6"
     level: 2
     stem: >-
-      The cafe wants AWS Elastic Disaster Recovery to protect parts of its setup.
-      Which parts can the service protect?
+      The cafe's tills run on a physical server in the back office, and its bookings run on a virtual machine at a hosting firm.
+      Its order code runs as AWS Lambda functions, its receipts sit in Amazon S3 and its loyalty points sit in Amazon DynamoDB.
+      Which of these can AWS Elastic Disaster Recovery protect?
     options:
       - id: a
-        text: The till app on a physical server in the shop
+        text: The tills
         correct: true
         why: The service protects physical servers, so an agent on the till server can replicate it to AWS.
       - id: b
-        text: The order code in AWS Lambda functions
-        why: Lambda runs code with no server to hold a replication agent, so this service does not protect it.
+        text: The order code
+        why: Lambda functions give the cafe no server of its own to hold a replication agent, so they are not protected.
       - id: c
-        text: The menu site on a virtual machine at another cloud
+        text: The bookings
         correct: true
-        why: The service protects virtual and cloud servers, including one hosted outside AWS.
+        why: The service protects virtual and cloud servers, so an agent on the virtual machine can replicate it.
       - id: d
-        text: The receipts kept in an Amazon S3 bucket
-        why: S3 objects are not a server's disks, so the service has nothing to replicate block by block.
+        text: The receipts
+        why: Objects in S3 are not a server's disks, so the service has nothing to replicate block by block.
       - id: e
-        text: The loyalty points in an Amazon DynamoDB table
-        why: DynamoDB is a managed database with no server of the cafe's own for the service to copy.
+        text: The loyalty points
+        why: A DynamoDB table has no server of the cafe's own for the service to install an agent on and copy.
     evidence:
       - It protects general workloads on physical, virtual and cloud servers.
     takeaway: Elastic Disaster Recovery protects servers of any kind, physical, virtual or cloud, rather than managed data stores.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2 and 3 are the only two not on AWS services, the odd pair out.)"
+    verified:
+      keyHash: f7186f6fbeb2
+      fullHash: e42ae73b23e9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-phcjrv
     version: 1
     status: live
