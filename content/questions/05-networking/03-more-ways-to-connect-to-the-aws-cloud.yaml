@@ -360,7 +360,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
   - id: q-9a2p4s
-    version: 1
+    version: 2
     status: live
     type: single
     pool: practice
@@ -369,32 +369,34 @@ questions:
     task: "3.5"
     level: 2
     stem: >-
-      The cafe's inventory servers sit in a private subnet.
-      They must download software updates from the internet, but nobody outside may open a connection to them.
-      Which component fits?
+      The cafe's admin plans to add a NAT gateway to the VPC.
+      Which of the cafe's needs would it meet?
     options:
       - id: a
-        text: Internet gateway
-        why: An internet gateway gives a public subnet two-way internet access, which would expose the servers.
+        text: Baristas working from home must join the VPC from their laptops
+        why: Staff joining the VPC from their own laptops need AWS Client VPN, while a NAT gateway only lets private instances call out.
       - id: b
-        text: NAT gateway
+        text: Private stock servers must fetch price lists from a supplier's site
         correct: true
-        why: A NAT gateway lets private instances start outbound connections while outsiders cannot start ones to them.
+        why: A NAT gateway lets the private stock servers start the fetch from the supplier's site, and outsiders still cannot start connections to them.
       - id: c
-        text: Virtual private gateway
-        why: A virtual private gateway admits protected traffic from approved networks, not internet downloads.
+        text: Two branch cafes must link their networks to the VPC over encryption
+        why: Encrypted links from branch sites to the VPC come from AWS Site-to-Site VPN, which a NAT gateway does not provide.
       - id: d
-        text: AWS Transit Gateway
-        why: Transit Gateway links VPCs and on-premises networks, and it does not give private servers internet access.
+        text: The cafe's several VPCs must all connect through one central hub
+        why: A central hub joining many VPCs is AWS Transit Gateway, while a NAT gateway only gives private instances a way out.
     evidence:
       - "**NAT gateway**: private instances can start outside connections, but outsiders cannot start ones to them."
-    takeaway: Private instances that must call out but never be called in from outside need a NAT gateway.
-    history: []
+    takeaway: A NAT gateway fits private servers that must call out to the internet, such as to fetch a supplier's files, while blocking calls in.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: d9e84b70ba29
-      fullHash: 436ab2ae4b4e
+      keyHash: d91c16fada5f
+      fullHash: c568bc30dc92
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-23aej4
     version: 1
     status: live
