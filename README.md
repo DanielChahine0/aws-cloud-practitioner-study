@@ -107,6 +107,28 @@ Incidents live in `content/incidents/inc-NNN.yaml`; `pnpm --silent content:repor
 The lightning round at `#/s/lightning` opens once 20 concepts have settled (an FSRS stability of at least 3 days) and asks single practice items for 90 seconds, with a summary at the end.
 Only the first round of a study day pays, 1 XP per right answer up to 10; lightning never moves a card or the streak, and every miss comes back in today's review.
 
+## Missions
+
+Missions are real AWS exercises you do by hand in your own account, listed at `#/missions` and kept in `content/missions/`.
+Mission 0: Guardrails comes first, and its Plan status form records your plan, your credits, the day the plan ends and the services it offers.
+Every other mission stays `Locked` until Mission 0 is verified, and a mission that needs a service your plan does not offer shows `Not on your plan`.
+A mission page walks you through Start, the steps you tick, Verify, `Cleaned up` and, from the next study day, the usage check, which closes the mission.
+While a mission is live, the top bar shows an amber chip such as `M3 live 12m` in place of the `Missions` link, and past the mission's time limit Next turns into `Clean up M3`.
+From the study day after cleanup, Next asks `Check usage for M3` until you confirm the usage is back to baseline; the kept Mission 1 never asks for cleanup.
+Mission 0 pays 50 XP on its first Verify, and every other mission pays 75 XP once, when it closes; three missions cleaned up and checked for usage on a later day earn Leave No Trace.
+If you finished Missions 0 or 1 before this page could track them, the missions list offers `Done some missions already?` once, while the log holds no mission event, and records them with the dates you enter.
+
+## Capstone
+
+The capstone at `#/project` holds 13 decisions for the cafe in `content/project/brief.yaml`, one per module, each written as a short ADR with six headings.
+A decision opens once every lesson of its module is read and the exam is behind you, so with the exam on November 14 the first one opens on Sunday, November 15.
+Cite concepts as `[[Concept name]]`; typing `[[` suggests names, and you need at least 2 distinct concepts and every heading filled before you grade.
+You grade yourself against the rubric first, then the app reveals 4 to 6 reference key points with their evidence lines, you tick the ones you covered, and you grade once more.
+The final grade pays 20 XP, plus 10 when it totals 8 or more, once per decision, and Progress shows the drift between your final and self grades.
+`Export the plan` downloads `cafe-cloud-plan.md`, one sentence per line, with a summary table and the 13 ADRs.
+The reference key points live in `content/project/key-points/`, one file per module, written and checked by `node scripts/content/key-points.ts` with the prompts `agents/key-point-writer.md` and `agents/key-point-critic.md`.
+Honor system: never open `content/project/` or a `project.<hash>.json` chunk before you have self-graded a decision.
+
 ## Course text stays out
 
 The course text lives only in `~/Library/Application Support/ccp-study/`, outside this repository.
