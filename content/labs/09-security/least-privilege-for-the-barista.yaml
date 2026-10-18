@@ -1,0 +1,68 @@
+id: lab-m09-least-privilege-for-the-barista
+module: 9
+title: Least privilege for the barista
+engine: trace
+tier: core
+status: live
+rev: 1
+concepts: [aws-iam, iam-policies, principle-of-least-privilege, authorization]
+notes: [m09/preventing-unauthorized-access, m09/introduction-to-security-on-aws]
+minutes: 7
+brief: >-
+  Barista Ana signs in fine but cannot open today's menu files, and the owner wants baristas kept away from deleting menu files and from the payroll export.
+  Switch statements on or off until every case gets its expected result.
+  In this lab, an explicit Deny beats any Allow, and an action that no Allow matches is denied.
+spec:
+  kind: policy
+  principals:
+    - { id: barista-ana, label: Barista Ana, groups: [baristas] }
+    - { id: manager-lee, label: Manager Lee }
+  groups:
+    - { id: baristas, label: Baristas }
+  policies:
+    - id: baristas-policy
+      label: Baristas group policy
+      kind: iam
+      attach: baristas
+      statements:
+        - { id: read-menu, effect: allow, actions: [s3:GetObject], resources: [cafe-menu/*], on: false }
+        - { id: all-of-s3, effect: allow, actions: ['s3:*'], resources: ['*'], on: false }
+        - { id: deny-menu-delete, effect: deny, actions: [s3:DeleteObject], resources: [cafe-menu/*], on: true }
+        - { id: deny-all-menu, effect: deny, actions: ['s3:*'], resources: [cafe-menu/*], on: false }
+    - id: manager-policy
+      label: Manager policy
+      kind: iam
+      attach: manager-lee
+      statements:
+        - { id: update-menu, effect: allow, actions: [s3:PutObject], resources: [cafe-menu/*], on: true }
+  cases:
+    - { id: ana-reads-menu, goal: g1, label: Ana opens today's drinks menu, principal: barista-ana, action: s3:GetObject, resource: cafe-menu/drinks-today.json, expect: allow }
+    - { id: lee-updates-menu, goal: g1, label: Lee uploads a new drinks menu, principal: manager-lee, action: s3:PutObject, resource: cafe-menu/drinks-today.json, expect: allow }
+    - { id: ana-deletes-menu, goal: g2, label: Ana deletes the pastry menu file, principal: barista-ana, action: s3:DeleteObject, resource: cafe-menu/pastries.json, expect: deny }
+    - { id: ana-reads-payroll, goal: g2, label: Ana opens the payroll export, principal: barista-ana, action: s3:GetObject, resource: cafe-payroll/october.csv, expect: deny }
+goals:
+  - id: g1
+    label: Ana reads the menu and Lee updates it
+    hint: Ask which single statement gives a barista exactly the read the shift needs, and whether any Deny on the group also reaches that read.
+  - id: g2
+    label: Baristas cannot delete menu files or open payroll
+    hint: Ask how far each Allow reaches, and what a barista may do when no Allow mentions the action or the file at all.
+solution:
+  - { t: toggle, rule: read-menu, on: true }
+wrongPaths:
+  - mistake: Switches on a Deny for every menu action to stop deletes, which also blocks reading the menu
+    failsGoal: g1
+    actions:
+      - { t: toggle, rule: read-menu, on: true }
+      - { t: toggle, rule: deny-all-menu, on: true }
+  - mistake: Grants every Amazon S3 action on every resource so Ana can read the menu
+    failsGoal: g2
+    actions:
+      - { t: toggle, rule: all-of-s3, on: true }
+debrief:
+  lines:
+    - A new identity starts with no permissions, so Ana stays out of the payroll export until some statement allows it.
+    - Least privilege means one narrow Allow for reading the menu, not every Amazon S3 action on every resource.
+    - A Deny on every menu action blocks reading too, so a Deny should be only as wide as the risk it stops.
+    - Putting the baristas' statements on their group means one change reaches every barista at once.
+  questions: [q-kw6059, q-33vwnc, q-be8m5y]

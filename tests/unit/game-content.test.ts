@@ -79,7 +79,6 @@ describe('content/game/badges.yaml (spec 3.10)', () => {
 
   it('marks the badges that wait for labs, missions and the capstone', () => {
     expect(badges.filter((b) => b.arrives !== undefined).map((b) => [b.id, b.arrives])).toEqual([
-      ['hands-on', 'labs'],
       ['lab-complete', 'labs'],
       ['leave-no-trace', 'missions'],
       ['architect', 'capstone'],

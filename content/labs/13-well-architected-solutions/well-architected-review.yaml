@@ -1,0 +1,214 @@
+id: lab-m13-well-architected-review
+module: 13
+title: Well-Architected review of the cafe
+engine: investigate
+tier: core
+status: live
+rev: 1
+concepts:
+  - aws-well-architected-framework
+  - architecture-evaluation
+  - operational-excellence-pillar
+  - security-pillar
+  - reliability-pillar
+  - performance-efficiency-pillar
+  - cost-optimization-pillar
+  - sustainability-pillar
+  - aws-well-architected-tool
+notes: [m13/aws-well-architected-framework, m13/introduction-to-well-architected-solutions]
+minutes: 8
+brief: >-
+  The cafe's systems all run, but before the holiday rush the owner had them reviewed against the AWS Well-Architected Framework, and the report lists six findings.
+  Name the pillar each finding belongs to, then pick the fix for two of them.
+  Each resizing finding states its aim, so judge it by what that change is meant to achieve.
+spec:
+  source: Well-Architected review, cafe systems, findings report
+  columns:
+    - { id: ref, label: Ref }
+    - { id: area, label: Area, filter: true }
+    - { id: finding, label: Finding }
+    - { id: concern, label: Aim or risk }
+  records:
+    - id: f1
+      cells:
+        ref: F1
+        area: Ordering
+        finding: Every barista signs in to the order console with one shared admin login that can change anything
+        concern: Anyone at the counter could edit prices or erase the order history
+    - id: f2
+      cells:
+        ref: F2
+        area: Kitchen
+        finding: The kitchen screen server is sized far beyond the orders it handles all day
+        concern: "Capacity review: match the server's size to the orders it really handles"
+    - id: f3
+      cells:
+        ref: F3
+        area: Ordering
+        finding: Updates to the ordering app are copied to the server by hand, and two recent hand updates broke checkout
+        concern: Each release depends on whoever is on shift and is never done the same way twice
+    - id: f4
+      cells:
+        ref: F4
+        area: Back office
+        finding: A server runs day and night to build the weekly stock report, a job of a few minutes each Sunday
+        concern: Cut the energy and carbon of capacity that sits idle almost all week
+    - id: f5
+      cells:
+        ref: F5
+        area: Ordering
+        finding: The order server is one instance in one Availability Zone, with no plan to bring it back if it fails
+        concern: If that instance or its zone fails, every order stops and nothing elsewhere can take over
+    - id: f6
+      cells:
+        ref: F6
+        area: Back office
+        finding: The loyalty report server idles on large specs, and a test server nobody has used since spring still runs
+        concern: Lower the monthly spend; speed and capacity are fine as they are
+  questions:
+    - id: pillar-f1
+      goal: g1
+      prompt: Which pillar does finding F1, the shared admin login, belong to?
+      options:
+        - { id: operational-excellence, label: Operational Excellence }
+        - { id: security, label: Security }
+        - { id: reliability, label: Reliability }
+        - { id: performance-efficiency, label: Performance Efficiency }
+        - { id: cost-optimization, label: Cost Optimization }
+        - { id: sustainability, label: Sustainability }
+      answer: security
+    - id: pillar-f2
+      goal: g1
+      prompt: Which pillar does finding F2, the kitchen screen server, belong to?
+      options:
+        - { id: operational-excellence, label: Operational Excellence }
+        - { id: security, label: Security }
+        - { id: reliability, label: Reliability }
+        - { id: performance-efficiency, label: Performance Efficiency }
+        - { id: cost-optimization, label: Cost Optimization }
+        - { id: sustainability, label: Sustainability }
+      answer: performance-efficiency
+    - id: pillar-f3
+      goal: g1
+      prompt: Which pillar does finding F3, the hand-copied app updates, belong to?
+      options:
+        - { id: operational-excellence, label: Operational Excellence }
+        - { id: security, label: Security }
+        - { id: reliability, label: Reliability }
+        - { id: performance-efficiency, label: Performance Efficiency }
+        - { id: cost-optimization, label: Cost Optimization }
+        - { id: sustainability, label: Sustainability }
+      answer: operational-excellence
+    - id: pillar-f4
+      goal: g2
+      prompt: Which pillar does finding F4, the weekly stock report server, belong to?
+      options:
+        - { id: operational-excellence, label: Operational Excellence }
+        - { id: security, label: Security }
+        - { id: reliability, label: Reliability }
+        - { id: performance-efficiency, label: Performance Efficiency }
+        - { id: cost-optimization, label: Cost Optimization }
+        - { id: sustainability, label: Sustainability }
+      answer: sustainability
+    - id: pillar-f5
+      goal: g2
+      prompt: Which pillar does finding F5, the single order server, belong to?
+      options:
+        - { id: operational-excellence, label: Operational Excellence }
+        - { id: security, label: Security }
+        - { id: reliability, label: Reliability }
+        - { id: performance-efficiency, label: Performance Efficiency }
+        - { id: cost-optimization, label: Cost Optimization }
+        - { id: sustainability, label: Sustainability }
+      answer: reliability
+    - id: pillar-f6
+      goal: g2
+      prompt: Which pillar does finding F6, the idle loyalty report server and old test server, belong to?
+      options:
+        - { id: operational-excellence, label: Operational Excellence }
+        - { id: security, label: Security }
+        - { id: reliability, label: Reliability }
+        - { id: performance-efficiency, label: Performance Efficiency }
+        - { id: cost-optimization, label: Cost Optimization }
+        - { id: sustainability, label: Sustainability }
+      answer: cost-optimization
+    - id: fix-f3
+      goal: g3
+      prompt: Which change answers finding F3 on the ordering app's updates?
+      options:
+        - { id: pipeline, label: 'An automated pipeline that builds, tests and deploys each change' }
+        - { id: larger, label: A larger instance for the ordering app's server }
+        - { id: wa-tool, label: A monthly AWS WA Tool review of the ordering app }
+        - { id: second-zone, label: A second copy of the server in another Availability Zone }
+      answer: pipeline
+    - id: fix-f4
+      goal: g3
+      prompt: Which change answers finding F4 on the weekly stock report?
+      options:
+        - { id: lambda, label: Run the report as AWS Lambda code only when it is due }
+        - { id: larger, label: Move the report to a larger instance that finishes sooner }
+        - { id: more-memory, label: Keep the server on all week and give it more memory }
+        - { id: second-zone, label: Add a second always-on server in another Availability Zone }
+      answer: lambda
+goals:
+  - id: g1
+    label: F1 to F3 each sit under their one pillar
+    hint: Ask what each finding is trying to achieve; for a resizing finding, read its stated aim before its subject.
+  - id: g2
+    label: F4 to F6 each sit under their one pillar
+    hint: Ask whether a change is made to fit the workload, to lower the bill, to cut energy, or to recover from a failure.
+  - id: g3
+    label: The release and stock report findings get their fixes
+    hint: Ask which change removes the cause of the finding, rather than only reviewing it or adding capacity it does not need.
+solution:
+  - { t: filter, column: area, value: Ordering }
+  - { t: answer, question: pillar-f1, option: security }
+  - { t: answer, question: pillar-f3, option: operational-excellence }
+  - { t: answer, question: pillar-f5, option: reliability }
+  - { t: unfilter, column: area }
+  - { t: answer, question: pillar-f2, option: performance-efficiency }
+  - { t: answer, question: pillar-f4, option: sustainability }
+  - { t: answer, question: pillar-f6, option: cost-optimization }
+  - { t: answer, question: fix-f3, option: pipeline }
+  - { t: answer, question: fix-f4, option: lambda }
+wrongPaths:
+  - mistake: Files the capacity-fit resizing under Cost Optimization because a smaller server also costs less
+    failsGoal: g1
+    actions:
+      - { t: answer, question: pillar-f1, option: security }
+      - { t: answer, question: pillar-f2, option: cost-optimization }
+      - { t: answer, question: pillar-f3, option: operational-excellence }
+      - { t: answer, question: pillar-f4, option: sustainability }
+      - { t: answer, question: pillar-f5, option: reliability }
+      - { t: answer, question: pillar-f6, option: cost-optimization }
+      - { t: answer, question: fix-f3, option: pipeline }
+      - { t: answer, question: fix-f4, option: lambda }
+  - mistake: Files the spend cut under Performance Efficiency because it resizes an instance
+    failsGoal: g2
+    actions:
+      - { t: answer, question: pillar-f1, option: security }
+      - { t: answer, question: pillar-f2, option: performance-efficiency }
+      - { t: answer, question: pillar-f3, option: operational-excellence }
+      - { t: answer, question: pillar-f4, option: sustainability }
+      - { t: answer, question: pillar-f5, option: reliability }
+      - { t: answer, question: pillar-f6, option: performance-efficiency }
+      - { t: answer, question: fix-f3, option: pipeline }
+      - { t: answer, question: fix-f4, option: lambda }
+  - mistake: Treats a WA Tool review as the fix, though the tool only reports issues and suggests fixes
+    failsGoal: g3
+    actions:
+      - { t: answer, question: pillar-f1, option: security }
+      - { t: answer, question: pillar-f2, option: performance-efficiency }
+      - { t: answer, question: pillar-f3, option: operational-excellence }
+      - { t: answer, question: pillar-f4, option: sustainability }
+      - { t: answer, question: pillar-f5, option: reliability }
+      - { t: answer, question: pillar-f6, option: cost-optimization }
+      - { t: answer, question: fix-f3, option: wa-tool }
+      - { t: answer, question: fix-f4, option: lambda }
+debrief:
+  lines:
+    - A design that runs is not yet well designed, so the review judges it pillar by pillar and finds work in each one.
+    - Resizing to fit the real workload is Performance Efficiency, while the same move made to cut spend is Cost Optimization.
+    - A fix removes the cause a finding names, such as a pipeline for hand-run releases or Lambda for a job that runs a few minutes a week.
+    - The AWS WA Tool reports issues with best-practice fixes, but making the changes is still the cafe's job.
+  questions: [q-88c3tv, q-4azmqg, q-zjcsrb]

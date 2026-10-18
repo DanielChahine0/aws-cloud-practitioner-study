@@ -1,0 +1,122 @@
+id: lab-m05-two-tiers-two-zones
+module: 5
+title: Two tiers, two zones
+engine: place
+tier: core
+status: live
+rev: 1
+concepts:
+  - amazon-vpc
+  - subnets
+  - public-subnets
+  - private-subnets
+  - internet-gateway
+  - route-tables
+  - availability-zones
+  - multi-az-deployment
+  - virtual-private-gateway
+  - nat-gateway
+notes:
+  - m05/amazon-vpc-demo
+  - m05/subnets-security-groups-and-network-access-control-lists
+  - m05/organizing-aws-cloud-resources
+  - m01/introduction-to-aws-global-infrastructure
+  - m05/more-ways-to-connect-to-the-aws-cloud
+minutes: 8
+brief: >-
+  The cafe serves its online menu from two web servers and keeps orders in a database primary and its standby, in one VPC over two zones, and no server calls out and no office network links in.
+  Place each piece so customers reach the menu, nobody outside reaches the orders, either zone can fail, and nothing unneeded runs.
+  In this lab, the internet reaches a piece only when its subnet holds a route table to the internet gateway on the VPC edge, and the VPC and subnet address ranges are lab values.
+spec:
+  containers:
+    - { id: beanhaven, label: Beanhaven Region, kind: region }
+    - { id: cafe-vpc, label: Cafe VPC, kind: vpc, parent: beanhaven, detail: 10.42.0.0/16 }
+    - { id: vpc-edge, label: VPC edge, kind: edge, parent: cafe-vpc, detail: Outside every subnet }
+    - { id: zone-a, label: Beanhaven Zone A, kind: az, parent: cafe-vpc }
+    - { id: subnet-a1, label: Subnet A1, kind: subnet, parent: zone-a, detail: 10.42.10.0/24 }
+    - { id: subnet-a2, label: Subnet A2, kind: subnet, parent: zone-a, detail: 10.42.20.0/24 }
+    - { id: zone-b, label: Beanhaven Zone B, kind: az, parent: cafe-vpc }
+    - { id: subnet-b1, label: Subnet B1, kind: subnet, parent: zone-b, detail: 10.42.11.0/24 }
+    - { id: subnet-b2, label: Subnet B2, kind: subnet, parent: zone-b, detail: 10.42.21.0/24 }
+    - { id: not-used, label: Not used, kind: bench }
+  pieces:
+    - { id: web-one, label: Menu web server 1 }
+    - { id: web-two, label: Menu web server 2 }
+    - { id: orders-primary, label: Order database primary }
+    - { id: orders-standby, label: Order database standby }
+    - { id: gateway, label: Internet gateway, role: internet-gateway }
+    - { id: route-a, label: Route table A, role: public-route, detail: Local route plus 0.0.0.0/0 to the internet gateway }
+    - { id: route-b, label: Route table B, role: public-route, detail: Local route plus 0.0.0.0/0 to the internet gateway }
+    - { id: private-gateway, label: Virtual private gateway, detail: Admits traffic only from an approved network }
+    - { id: nat, label: NAT gateway, detail: Lets private instances start connections out }
+  failures: [zone-a, zone-b]
+  constraints:
+    - { kind: public, goal: g1, pieces: [web-one, web-two] }
+    - { kind: private, goal: g2, pieces: [orders-primary, orders-standby] }
+    - { kind: survive, goal: g3, pieces: [web-one, web-two], min: 1 }
+    - { kind: survive, goal: g3, pieces: [orders-primary, orders-standby], min: 1 }
+    - { kind: in, goal: g3, pieces: [private-gateway, nat], within: [not-used] }
+goals:
+  - id: g1
+    label: Customers reach both menu web servers
+    hint: Follow a customer's request in, and ask what joins the VPC to the internet and what tells a subnet to send traffic there.
+  - id: g2
+    label: Nobody outside reaches the order database
+    hint: Ask which subnets have a route out to the internet gateway, and keep the orders where no such route exists.
+  - id: g3
+    label: Either zone can fail, and nothing unneeded runs
+    hint: Ask what still serves the menu and holds the orders when one zone goes dark, and whether each gateway you placed has a job here.
+solution:
+  - { t: place, piece: gateway, slot: vpc-edge }
+  - { t: place, piece: route-a, slot: subnet-a1 }
+  - { t: place, piece: web-one, slot: subnet-a1 }
+  - { t: place, piece: orders-primary, slot: subnet-a2 }
+  - { t: place, piece: route-b, slot: subnet-b1 }
+  - { t: place, piece: web-two, slot: subnet-b1 }
+  - { t: place, piece: orders-standby, slot: subnet-b2 }
+  - { t: place, piece: private-gateway, slot: not-used }
+  - { t: place, piece: nat, slot: not-used }
+wrongPaths:
+  - mistake: Attaches the internet gateway but leaves both public route tables unused, as if attaching were enough
+    failsGoal: g1
+    actions:
+      - { t: place, piece: gateway, slot: vpc-edge }
+      - { t: place, piece: route-a, slot: not-used }
+      - { t: place, piece: web-one, slot: subnet-a1 }
+      - { t: place, piece: orders-primary, slot: subnet-a2 }
+      - { t: place, piece: route-b, slot: not-used }
+      - { t: place, piece: web-two, slot: subnet-b1 }
+      - { t: place, piece: orders-standby, slot: subnet-b2 }
+      - { t: place, piece: private-gateway, slot: not-used }
+      - { t: place, piece: nat, slot: not-used }
+  - mistake: Puts the database primary in a public subnet to keep it next to the web server
+    failsGoal: g2
+    actions:
+      - { t: place, piece: gateway, slot: vpc-edge }
+      - { t: place, piece: route-a, slot: subnet-a1 }
+      - { t: place, piece: web-one, slot: subnet-a1 }
+      - { t: place, piece: orders-primary, slot: subnet-a1 }
+      - { t: place, piece: route-b, slot: subnet-b1 }
+      - { t: place, piece: web-two, slot: subnet-b1 }
+      - { t: place, piece: orders-standby, slot: subnet-b2 }
+      - { t: place, piece: private-gateway, slot: not-used }
+      - { t: place, piece: nat, slot: not-used }
+  - mistake: Puts both menu web servers in one zone
+    failsGoal: g3
+    actions:
+      - { t: place, piece: gateway, slot: vpc-edge }
+      - { t: place, piece: route-a, slot: subnet-a1 }
+      - { t: place, piece: web-one, slot: subnet-a1 }
+      - { t: place, piece: orders-primary, slot: subnet-a2 }
+      - { t: place, piece: route-b, slot: subnet-b1 }
+      - { t: place, piece: web-two, slot: subnet-a1 }
+      - { t: place, piece: orders-standby, slot: subnet-b2 }
+      - { t: place, piece: private-gateway, slot: not-used }
+      - { t: place, piece: nat, slot: not-used }
+debrief:
+  lines:
+    - Attaching an internet gateway is not enough, since a subnet turns public only when its route table sends 0.0.0.0/0 traffic to it.
+    - The order database sits in private subnets with no route to the internet gateway, so nobody outside can reach it.
+    - A web server and a database copy in each zone keep the cafe serving when one Availability Zone has an outage.
+    - A virtual private gateway adds nothing when no office network links in, and a NAT gateway adds nothing when no server calls out.
+  questions: [q-vtez84, q-gea5ar, q-48ahxj]

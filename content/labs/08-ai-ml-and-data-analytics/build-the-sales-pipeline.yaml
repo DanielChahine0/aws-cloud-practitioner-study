@@ -1,0 +1,113 @@
+id: lab-m08-build-the-sales-pipeline
+module: 8
+title: Build the sales pipeline
+engine: place
+tier: core
+status: live
+rev: 1
+concepts:
+  - data-pipelines
+  - amazon-kinesis-data-streams
+  - amazon-s3
+  - data-lakes
+  - aws-glue-data-catalog
+  - amazon-athena
+  - amazon-quicksight
+  - amazon-emr
+  - amazon-opensearch-service
+notes: [m08/data-pipelines-on-aws, m08/data-analytics-and-ai-ml, m08/introduction-to-data-analytics]
+minutes: 7
+brief: >-
+  Every till in the cafe sends each sale the moment it rings up, and the area managers, none of them developers, want sales dashboards they can build and read themselves.
+  Place one service in each stage of the sales pipeline, and put any service with no job here on Not used.
+  In this lab, each stage holds the service that does that stage's job, and the sales rows reach the lake in a shape the query tool can read, so no big data cluster is needed.
+spec:
+  containers:
+    - { id: ingest, label: Ingest, kind: stage, detail: Brings each sale in from the tills }
+    - { id: store, label: Store, kind: stage, detail: Keeps every sale together in one place }
+    - { id: catalog, label: Catalog, kind: stage, detail: Records what the sales data looks like and where it sits }
+    - { id: query, label: Query, kind: stage, detail: Asks questions of the stored sales }
+    - { id: visualize, label: Visualize, kind: stage, detail: Shows the answers to the managers }
+    - { id: not-used, label: Not used, kind: bench }
+  pieces:
+    - { id: kinesis-streams, label: Amazon Kinesis Data Streams }
+    - { id: s3-lake, label: Amazon S3 }
+    - { id: glue-catalog, label: AWS Glue Data Catalog }
+    - { id: athena, label: Amazon Athena }
+    - { id: quick-sight, label: Amazon Quick Sight }
+    - { id: emr, label: Amazon EMR }
+    - { id: opensearch, label: Amazon OpenSearch Service }
+  failures: []
+  constraints:
+    - { kind: in, goal: g1, pieces: [kinesis-streams], within: [ingest] }
+    - { kind: in, goal: g1, pieces: [s3-lake], within: [store] }
+    - { kind: in, goal: g2, pieces: [glue-catalog], within: [catalog] }
+    - { kind: in, goal: g2, pieces: [athena], within: [query] }
+    - { kind: in, goal: g3, pieces: [quick-sight], within: [visualize] }
+    - { kind: in, goal: g3, pieces: [emr, opensearch], within: [not-used] }
+goals:
+  - id: g1
+    label: Each sale streams in from the tills and lands in the data lake
+    hint: Ask which service takes in data the moment it happens, and which one pools raw data of any shape in a single place.
+  - id: g2
+    label: Queries find the sales and read them where they sit
+    hint: Ask what tells a query tool the schema of the files and where they live, and which tool runs SQL on the lake in place.
+  - id: g3
+    label: The managers get their dashboards, and nothing spare runs
+    hint: Ask which service lets people who are not developers build their own reports, and whether any service on the board has no job here.
+solution:
+  - { t: place, piece: kinesis-streams, slot: ingest }
+  - { t: place, piece: s3-lake, slot: store }
+  - { t: place, piece: glue-catalog, slot: catalog }
+  - { t: place, piece: athena, slot: query }
+  - { t: place, piece: quick-sight, slot: visualize }
+  - { t: place, piece: emr, slot: not-used }
+  - { t: place, piece: opensearch, slot: not-used }
+wrongPaths:
+  - mistake: Brings the till feed in with Amazon EMR, missing that each sale must stream in as it happens
+    failsGoal: g1
+    actions:
+      - { t: place, piece: emr, slot: ingest }
+      - { t: place, piece: kinesis-streams, slot: not-used }
+      - { t: place, piece: s3-lake, slot: store }
+      - { t: place, piece: glue-catalog, slot: catalog }
+      - { t: place, piece: athena, slot: query }
+      - { t: place, piece: quick-sight, slot: visualize }
+      - { t: place, piece: opensearch, slot: not-used }
+  - mistake: Puts the Data Catalog in the query stage, as if the catalog ran the SQL itself
+    failsGoal: g2
+    actions:
+      - { t: place, piece: kinesis-streams, slot: ingest }
+      - { t: place, piece: s3-lake, slot: store }
+      - { t: place, piece: glue-catalog, slot: query }
+      - { t: place, piece: athena, slot: query }
+      - { t: place, piece: quick-sight, slot: visualize }
+      - { t: place, piece: emr, slot: not-used }
+      - { t: place, piece: opensearch, slot: not-used }
+  - mistake: Leaves the Data Catalog unused, as if Athena could find the sales files on its own
+    failsGoal: g2
+    actions:
+      - { t: place, piece: kinesis-streams, slot: ingest }
+      - { t: place, piece: s3-lake, slot: store }
+      - { t: place, piece: glue-catalog, slot: not-used }
+      - { t: place, piece: athena, slot: query }
+      - { t: place, piece: quick-sight, slot: visualize }
+      - { t: place, piece: emr, slot: not-used }
+      - { t: place, piece: opensearch, slot: not-used }
+  - mistake: Gives the managers Amazon OpenSearch Service, a search and monitoring tool, instead of business dashboards
+    failsGoal: g3
+    actions:
+      - { t: place, piece: kinesis-streams, slot: ingest }
+      - { t: place, piece: s3-lake, slot: store }
+      - { t: place, piece: glue-catalog, slot: catalog }
+      - { t: place, piece: athena, slot: query }
+      - { t: place, piece: opensearch, slot: visualize }
+      - { t: place, piece: quick-sight, slot: not-used }
+      - { t: place, piece: emr, slot: not-used }
+debrief:
+  lines:
+    - A till feed that must arrive as each sale happens calls for real-time ingestion with Amazon Kinesis Data Streams.
+    - Amazon S3 works as the data lake that pools every sale in one place for each tool that reads it.
+    - Amazon Athena runs SQL on the lake in place and reads the AWS Glue Data Catalog table to learn the schema and where the files sit.
+    - Amazon Quick Sight gives non-developers business dashboards, while Amazon OpenSearch Service is for live search and monitoring and Amazon EMR for big Spark or Hadoop jobs.
+  questions: [q-ahb2x6, q-pebdjx, q-20jg2m]
