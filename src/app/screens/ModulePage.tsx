@@ -13,7 +13,11 @@ import { bossLineOf, conceptMarks, labRows, masteryLine, NO_LABS, weakestConcept
 import { progress, storeReady } from '../progress.ts';
 import { pad2 } from '../router.ts';
 import { quizAvailability } from '../runner.ts';
+import { lazyScreen } from './Lazy.tsx';
 import { NotFound } from './NotFound.tsx';
+
+// The Capstone and Missions sections load on first use, so the capstone and mission helpers stay out of the initial bundle.
+const ModuleSections = lazyScreen(() => import('./ModuleSections.tsx').then((m) => m.ModuleSections));
 
 /**
  * Module `#/m/NN` (spec 7.3): the mastery line, the lessons, the tested concepts weakest first, practice with the
@@ -100,6 +104,7 @@ export function ModulePage({ idx, module }: { idx: ContentIndex; module: number 
         </p>
       )}
       <Labs idx={idx} module={module} done={labsDone} />
+      <ModuleSections idx={idx} module={module} />
       <h2>Boss</h2>
       {boss === undefined ? (
         <p class="muted">Loading</p>

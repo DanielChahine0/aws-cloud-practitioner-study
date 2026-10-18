@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { ModuleMeta } from '../../schemas/chunks.ts';
-import { type KeyCommand, type KeyContext, type KeyInput, keyCommand, keyStep } from '../../src/app/keys.ts';
+import {
+  type KeyCommand,
+  type KeyContext,
+  type KeyInput,
+  keyCommand,
+  keyStep,
+  moduleOfNote,
+} from '../../src/app/keys.ts';
 import { SHORTCUTS } from '../../src/app/shortcuts.ts';
 
 const lesson = (n: number, slug: string) => ({
@@ -49,6 +56,7 @@ const ctx = (more: Partial<KeyContext> = {}): KeyContext => ({
   gAt: null,
   exam: false,
   labHolding: false,
+  currentModule: 1,
   ...more,
 });
 
@@ -229,5 +237,52 @@ describe('the Help sheet', () => {
 
   it('has one row per action, so each action keys its row', () => {
     expect(new Set(SHORTCUTS.map((s) => s.action)).size).toBe(SHORTCUTS.length);
+  });
+});
+
+describe('the capstone and current module keys', () => {
+  it('opens the capstone with g then c, and the current module with g then m', () => {
+    expect(keyCommand(key('c'), ctx({ gAt: 9_500 }))).toEqual({ kind: 'navigate', hash: '#/project' });
+    expect(keyCommand(key('M'), ctx({ gAt: 9_500, currentModule: 7 }))).toEqual({
+      kind: 'navigate',
+      hash: '#/m/07',
+    });
+    expect(keyCommand(key('c'), ctx({ gAt: 8_000 }))).toBeNull();
+    expect(keyCommand(key('m'), ctx())).toBeNull();
+  });
+
+  it('lets a pending g win over the lesson check, and keeps c alone for the check', () => {
+    expect(keyCommand(key('c'), ctx({ route: LESSON_A, gAt: 9_500 }))).toEqual({
+      kind: 'navigate',
+      hash: '#/project',
+    });
+    expect(keyCommand(key('c'), ctx({ route: LESSON_A }))).toEqual({
+      kind: 'navigate',
+      hash: '#/s/check/m01/a',
+    });
+  });
+
+  it('keeps g c and g m off during an exam and while typing', () => {
+    expect(keyCommand(key('c'), ctx({ gAt: 9_500, exam: true }))).toBeNull();
+    expect(keyCommand(key('m'), ctx({ gAt: 9_500, exam: true }))).toBeNull();
+    expect(keyCommand(key('c', { typing: true }), ctx({ gAt: 9_500 }))).toBeNull();
+  });
+
+  it('reads the current module from the note id of the lesson last opened, else Module 1', () => {
+    expect(moduleOfNote('m07/amazon-vpc')).toBe(7);
+    expect(moduleOfNote('m13/well-architected')).toBe(13);
+    expect(moduleOfNote(null)).toBe(1);
+    expect(moduleOfNote('m14/nothing')).toBe(1);
+  });
+
+  it('lists g c and g m in Help right after g p, word for word', () => {
+    const rows = SHORTCUTS.map((s) => `${s.keys.join(` ${s.joiner} `)}: ${s.action}`);
+    expect(rows.slice(2, 7)).toEqual([
+      'g then h: Home',
+      'g then r: Review',
+      'g then p: Progress',
+      'g then c: Capstone',
+      'g then m: Current module',
+    ]);
   });
 });

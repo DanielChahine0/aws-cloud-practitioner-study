@@ -18,6 +18,8 @@ const LabScreen = lazyScreen(() => import('./Lab.tsx').then((m) => m.Lab));
 const MissionsScreen = lazyScreen(() => import('./MissionsPage.tsx').then((m) => m.MissionsPage));
 const MissionScreen = lazyScreen(() => import('./MissionPage.tsx').then((m) => m.MissionPage));
 const IncidentScreen = lazyScreen(() => import('./Incident.tsx').then((m) => m.Incident));
+// The capstone, its editor and the plan export load on first use too (spec 6).
+const ProjectScreen = lazyScreen(() => import('./Project.tsx').then((m) => m.Project));
 
 /** The screen for a route; the content index is always loaded by the time this renders. */
 export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
@@ -55,6 +57,10 @@ export function Screen({ route, idx }: { route: Route; idx: ContentIndex }) {
       return <LabScreen key={route} idx={idx} route={route} />;
     case 'incident':
       return <IncidentScreen key={route} idx={idx} />;
+    case 'project':
+      return <ProjectScreen idx={idx} module={null} />;
+    case 'decision':
+      return <ProjectScreen idx={idx} module={route.module} />;
     case 'not-found':
       return <NotFound hash={route.hash} />;
   }

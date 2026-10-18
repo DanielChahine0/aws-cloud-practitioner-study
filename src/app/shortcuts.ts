@@ -12,6 +12,8 @@ export const SHORTCUTS: readonly Shortcut[] = [
   { keys: ['g', 'h'], joiner: 'then', action: 'Home' },
   { keys: ['g', 'r'], joiner: 'then', action: 'Review' },
   { keys: ['g', 'p'], joiner: 'then', action: 'Progress' },
+  { keys: ['g', 'c'], joiner: 'then', action: 'Capstone' },
+  { keys: ['g', 'm'], joiner: 'then', action: 'Current module' },
   { keys: ['Enter'], joiner: '', action: 'Next (Home)' },
   { keys: ['j', 'k'], joiner: 'and', action: 'Move (Home and Module)' },
   { keys: ['[', ']'], joiner: 'and', action: 'Previous or next lesson' },
