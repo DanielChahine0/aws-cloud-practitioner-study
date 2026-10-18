@@ -386,7 +386,7 @@ questions:
       on: 2026-10-09
   - id: q-pvkrzg
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: caching-layer
@@ -398,25 +398,27 @@ questions:
       What does the app do next?
     options:
       - id: a
-        text: Wait for ElastiCache to load it from RDS
-        why: The cache does not fetch missing data on its own here, so the app must read the database itself.
+        text: Return the cached copy to the customer at once
+        why: Returning a copy at once is what the app does on a hit, but here the cache holds nothing for the page.
       - id: b
-        text: Promote an ElastiCache replica, then retry
-        why: Promoting a replica is how ElastiCache recovers from a failed primary, not how the app handles a miss.
+        text: Wait for a replica to be promoted to primary
+        why: Promoting a replica is how ElastiCache recovers from a failed primary node, not how the app handles a miss.
       - id: c
         text: Read RDS, cache the result, then reply
         correct: true
-        why: Storing the result after the database read means the next request for the page is a hit.
+        why: The app reads the database, stores the result in the cache and replies, so the next request for the page is a hit.
       - id: d
-        text: Read RDS and reply, leaving the cache as is
-        why: Skipping the cache write means the next request for the page misses again and goes back to the database.
+        text: Add nodes so the cache can hold more data
+        why: Adding nodes resizes the cache for demand, but it does not fetch the missing page data for this request.
     evidence:
       - On a miss, it reads RDS, caches the result and replies, so the next request hits.
     takeaway: On a cache miss, the app reads the database and stores the result so the next request hits the cache.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the lazy loading pattern on a cache miss.)"
+    verified:
+      keyHash: c8052e583c8a
+      fullHash: 26374cbaa97d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-mn81vz
     version: 1
     status: live
@@ -526,3 +528,149 @@ questions:
       fullHash: d503e3642787
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-v19s0n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: in-memory-caching
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      The exam guide sorts AWS data stores into types of database.
+      Under which type does it place Amazon ElastiCache?
+    options:
+      - id: a
+        text: Relational databases
+        why: Relational databases hold lasting data in tables with rich queries, which ElastiCache does not offer.
+      - id: b
+        text: Document databases
+        why: Document databases store JSON-like records on lasting storage, unlike a store that keeps hot data in RAM.
+      - id: c
+        text: Memory-based databases
+        correct: true
+        why: The exam guide calls in-memory data stores memory-based databases and gives ElastiCache as its example.
+      - id: d
+        text: Graph databases
+        why: Graph databases are built around connections between records, not around serving hot data from memory.
+    evidence:
+      - "The exam guide calls in-memory data stores memory-based databases, and its example is Amazon ElastiCache, a managed in-memory data store and cache."
+    takeaway: The exam guide files in-memory data stores such as Amazon ElastiCache under memory-based databases.
+    history: []
+    verified:
+      keyHash: 5e7cab2770f0
+      fullHash: 74f5917aeab0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-ccvch4
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-elasticache-serverless
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe moves its node-based Amazon ElastiCache cache to the serverless option.
+      Which job does the team stop doing after the move?
+    options:
+      - id: a
+        text: Choosing which data the app keeps in the cache
+        why: The app still decides what to cache, since the serverless option changes how capacity is managed, not what is stored.
+      - id: b
+        text: Adding or removing nodes as demand shifts
+        correct: true
+        why: The serverless option scales itself with demand, so no one resizes the cache by adding or removing nodes.
+      - id: c
+        text: Writing the app code that tries the cache first
+        why: The app's code still checks the cache before the database, so the team keeps writing and owning that logic.
+      - id: d
+        text: Storing a database result in the cache on a miss
+        why: On a miss the app still reads the database and caches the result, so this step stays in the team's code.
+    evidence:
+      - You resize the cache with demand, or let the serverless option scale itself, while AWS runs the infrastructure.
+      - On a miss, it reads RDS, caches the result and replies, so the next request hits.
+    takeaway: ElastiCache serverless takes node resizing off the team, while the app still decides what to cache and when.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the odd one out: the other three are app-side caching logic.)"
+  - id: q-spcgax
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-elasticache-high-availability
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      One machine in the cafe's Amazon ElastiCache cluster stops working during the lunch rush.
+      Which actions does ElastiCache take to keep the cache available?
+    options:
+      - id: a
+        text: It swaps in a fresh node in its place
+        correct: true
+        why: ElastiCache replaces the broken node with a new one, usually within minutes, so capacity comes back.
+      - id: b
+        text: It promotes a replica to primary
+        correct: true
+        why: When the failed node was the primary, a replica takes over its role so the cache keeps serving reads.
+      - id: c
+        text: It encrypts its backups at rest
+        why: Encryption at rest protects stored data and backups, but it does nothing to bring a failed node back.
+      - id: d
+        text: It uses TLS for client traffic
+        why: TLS protects data moving between the app and the cache, and it plays no part in recovering from a failure.
+      - id: e
+        text: It sends cache misses to RDS
+        why: Reading the database on a miss is the app's caching logic, not how ElastiCache recovers a failed node.
+    evidence:
+      - Failed nodes replaced, a replica promoted, usually in minutes
+    takeaway: ElastiCache stays available through a node failure by replacing the node and promoting a replica.
+    history: []
+    verified:
+      keyHash: 0ce9c79327d2
+      fullHash: b7f430630f9c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-a9pays
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-elasticache-serverless
+    note: m07/in-memory-caching-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe will launch a new ordering app next month, and no one can yet say how much cache memory it will need.
+      The team wants to start caching without choosing a cache size first.
+      Which step fits?
+    options:
+      - id: a
+        text: Create the cache with the serverless option
+        correct: true
+        why: The serverless option scales capacity with demand by itself, so the team can launch without picking a cache size first.
+      - id: b
+        text: Spread cache replicas across two Availability Zones
+        why: Replicas in separate zones keep the cache up through a zone outage, but someone still has to size the nodes.
+      - id: c
+        text: Enable TLS for traffic between the app and cache
+        why: TLS protects data moving between the app and the cache, and it does nothing to remove the sizing decision.
+      - id: d
+        text: Switch the cache engine from Redis OSS to Valkey
+        why: Changing the engine keeps existing tools working, yet the cache still needs its size chosen up front.
+    evidence:
+      - "**ElastiCache serverless**: an option that scales with demand by itself."
+      - You resize the cache with demand, or let the serverless option scale itself, while AWS runs the infrastructure.
+    takeaway: When a new app's cache needs are unknown, ElastiCache Serverless lets the team start caching without sizing nodes.
+    history: []
+    verified:
+      keyHash: a894939e8e4b
+      fullHash: 8a5d0d1a9af1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

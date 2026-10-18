@@ -1,7 +1,7 @@
 questions:
   - id: q-cgtcjw
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: purpose-built-databases
@@ -12,7 +12,7 @@ questions:
       Which principle sits behind the purpose-built approach to databases on AWS?
     options:
       - id: a
-        text: Match each job to the engine built for it
+        text: Pick the engine that suits each business need
         correct: true
         why: The purpose-built idea matches each database to the job it must do, since no single engine suits every need.
       - id: b
@@ -28,12 +28,14 @@ questions:
       - Fit the database to the business need, not the data to the database, as none suits every job.
     takeaway: Purpose-built databases mean choosing the engine that fits each workload rather than forcing all data into one.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 3 'the engine built for it' echoes the stem's 'purpose-built', which points at the key."
+    verified:
+      keyHash: e706296ecb0f
+      fullHash: a5f54ddd1920
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-tnjhy3
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -42,34 +44,37 @@ questions:
     task: "3.4"
     level: 2
     stem: >-
-      A new developer at the cafe suggests keeping the loyalty points, the menu catalog and the supplier map in one relational database to keep things simple.
+      A new developer at the cafe suggests keeping the loyalty points, the menu catalog and the web of supplier links in one relational database to keep things simple.
       Which statements reflect the purpose-built approach AWS recommends instead?
     options:
       - id: a
-        text: No single database suits every kind of job
+        text: A data set's shape decides which engine serves it best
         correct: true
-        why: Each of these data sets has its own shape, and no one engine serves them all well.
+        why: The three data sets differ in shape, and AWS advises fitting each one to the engine that serves it rather than forcing all into one.
       - id: b
-        text: Each data set goes to the engine that fits it
-        correct: true
-        why: AWS steers each kind of data to the tool built for it, so the three data sets may land in different engines.
+        text: A managed engine has its OS patches applied by AWS
+        why: AWS does patch a managed engine, but that holds for the one relational database too and gives no reason to split the data.
       - id: c
-        text: Managed databases hand their patching to AWS
-        why: This is true of managed services, but it says nothing about which database each data set should use.
+        text: A cache such as DAX can cut read times for DynamoDB
+        why: DAX does speed up DynamoDB reads, but a cache says nothing about which database each of the three data sets belongs in.
       - id: d
-        text: A cache sits beside a database, never replacing it
-        why: This is true of caching, but it does not argue for splitting the data across purpose-built databases.
+        text: A managed engine can have its backups run by AWS Backup
+        why: AWS Backup can protect any of these engines, but one backup tool does not decide which engine each data set should use.
       - id: e
-        text: Self-hosting on EC2 gives control of the OS
-        why: This is true of self-managed databases, but operating system control has no bearing on matching data to engines.
+        text: An engine like Neptune is built for one kind of workload
+        correct: true
+        why: Neptune is built for connected data such as the supplier links, which is why AWS steers each workload to its own engine.
     evidence:
       - Fit the database to the business need, not the data to the database, as none suits every job.
       - AWS steers each workload to its best-fit purpose-built tool, and offers more than the course covers.
+      - "**Purpose-built database**: one designed for a specific workload."
     takeaway: Different data shapes call for different engines, so split workloads across best-fit databases instead of one.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 4 restate the same purpose-built database idea, standing apart from the other three.)"
+    verified:
+      keyHash: c0e8a96db15d
+      fullHash: 938b24879888
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-8c83x8
     version: 1
     status: live
@@ -566,7 +571,7 @@ questions:
       on: 2026-10-09
   - id: q-17h7g7
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: purpose-built-databases
@@ -575,28 +580,31 @@ questions:
     level: 2
     stem: >-
       The cafe is adding a feature that tracks which customers refer their friends.
-      Under the approach AWS recommends, what should drive the team's choice of database for it?
+      Under the approach AWS recommends, which kind of engine should the team pick for it?
     options:
       - id: a
-        text: Keeping all cafe data in one engine so it can be joined
-        why: Pulling the referrals into one shared engine fits the data to the database, which AWS advises against.
+        text: The engine built for rows in tables joined by foreign keys
+        why: Foreign keys can link referral rows, but a web of who referred whom is clumsy in relational tables, so this is not the best fit.
       - id: b
-        text: Choosing a managed service so AWS handles the patching
-        why: Managed upkeep is a real benefit, but many engines offer it, so it cannot decide which one suits referrals.
+        text: The engine built for JSON-like documents with changing fields
+        why: A document engine suits records whose fields change often, not the links between customers that referrals create.
       - id: c
-        text: Fitting the engine to how the referral data is used
+        text: The engine built for data made of many links between items
         correct: true
-        why: AWS advises fitting the database to the business need, so the referral data's shape and use come first.
+        why: Referrals form a web of links between customers, and AWS advises picking the engine built for that shape of data.
       - id: d
-        text: Picking the engine with the strongest availability
-        why: Availability matters, but it says nothing about whether an engine suits the shape of referral data.
+        text: The engine built for key-value items read in milliseconds
+        why: Key-value items are fetched fast by their key, but that model is not built for following chains of links between customers.
     evidence:
       - Fit the database to the business need, not the data to the database, as none suits every job.
-    takeaway: Choose a database by what the workload needs, not by what the team already runs.
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+    takeaway: Under the purpose-built approach, the shape of the data, such as a web of referrals, decides which engine to pick.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 alone names the stem's specific data ('the referral data').)"
+    verified:
+      keyHash: b6e57eef3d5c
+      fullHash: 032ac82a91fc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-sw0mr3
     version: 1
     status: live
@@ -665,3 +673,78 @@ questions:
       fullHash: c27117c63021
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-ca1jcg
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: semistructured-data
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe is sorting its data sets before it picks databases for them.
+      Which of these data sets are semistructured data?
+    options:
+      - id: a
+        text: Catalog entries whose details nest and vary by item
+        correct: true
+        why: Nested details that differ from item to item defy a rigid schema, which makes the catalog semistructured.
+      - id: b
+        text: Customer profiles that hold different fields per person
+        correct: true
+        why: Profiles whose fields change from one customer to the next do not fit fixed columns, so they are semistructured.
+      - id: c
+        text: Till totals whose amounts vary from day to day
+        why: The amounts change, but each day fills the same fixed columns, so the totals are structured, not semistructured.
+      - id: d
+        text: Points balances whose values differ per person
+        why: Each customer still has one number in the same column, so differing values leave the data structured.
+      - id: e
+        text: Referral links that connect customers to friends
+        why: Links between customers make highly connected data, which is a graph workload rather than semistructured records.
+    evidence:
+      - "**Semistructured data**: varied, complex data that defies rigid schemas."
+      - "Use cases: content management, catalogs and inventory, user profiles and personalization."
+    takeaway: Catalogs and profiles whose fields vary from record to record are semistructured data, unlike fixed tables or key lookups.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 are the only ones whose shape varies, options 1 and 2 vary only in value.)"
+  - id: q-yzx5tz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: semistructured-data
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe keeps a profile for each loyalty customer, and the team calls these profiles semistructured data.
+      Which trait of the profiles earns them that label?
+    options:
+      - id: a
+        text: Each profile can hold a different set of fields
+        correct: true
+        why: Profiles that each carry their own mix of fields vary in shape and defy a rigid schema, which makes them semistructured.
+      - id: b
+        text: Each profile is linked to the profiles of friends
+        why: Links between customers make the data highly connected, which describes a graph workload rather than semistructured records.
+      - id: c
+        text: Each profile is looked up by a single customer key
+        why: Fetching a record by one key describes key-value access, which says nothing about whether its fields vary.
+      - id: d
+        text: Each profile stays stored until the account is closed
+        why: How long a profile is kept is a retention choice, and it says nothing about the shape of the data inside it.
+    evidence:
+      - "**Semistructured data**: varied, complex data that defies rigid schemas."
+      - Where DynamoDB handles key-value data, DocumentDB takes semistructured data too complex for rows and columns.
+    takeaway: Data is semistructured when its records vary in shape, such as profiles holding different fields, not when they share fixed columns.
+    history: []
+    verified:
+      keyHash: 2ed09402e201
+      fullHash: ba6c707b55ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

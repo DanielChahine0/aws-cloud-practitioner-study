@@ -138,7 +138,7 @@ questions:
       on: 2026-10-09
   - id: q-wnq3cs
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: flexible-schema
@@ -146,32 +146,36 @@ questions:
     task: "3.4"
     level: 2
     stem: >-
-      The cafe keeps loyalty members in a NoSQL table with a flexible schema and starts saving birthdays for the members who share one.
-      Which items end up holding a birthday attribute?
+      The cafe keeps loyalty members in a DynamoDB table and starts saving birthdays for the members who share one.
+      A relational table would need a new birthday column on every row.
+      What does the flexible schema of the cafe's table do instead?
     options:
       - id: a
-        text: Every member item, with blanks for the rest
-        why: A flexible schema has no shared column list, so items without a birthday never gain an empty one.
+        text: Items are still found through an indexed primary key
+        why: The primary key stays indexed whatever the schema, so this is not what takes the place of a new column.
       - id: b
-        text: Only the items of members who shared one
-        correct: true
-        why: Items can differ in attributes, so only the members who share a birthday gain that attribute.
+        text: Items are spread over many servers and SSDs
+        why: Spreading data over many servers is how DynamoDB stores data at scale, not how it takes on a new field.
       - id: c
-        text: Only the items created after the change
-        why: Older members who share a birthday gain it too, and newer members who skip it never do.
+        text: Items gain an attribute only where one is written
+        correct: true
+        why: Items can differ in attributes, so only the members who share a birthday gain one and no row-wide column appears.
       - id: d
-        text: None until the table design is altered
-        why: A flexible schema needs no table-wide change, so an attribute can be added to single items right away.
+        text: Items are encrypted at rest and in transit
+        why: Encryption protects every item at rest and in transit, which has nothing to do with how birthdays are added.
     evidence:
       - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+      - Relational databases (MySQL, say), long the default, need a set schema and SQL.
     takeaway: With a flexible schema an attribute can be added to some items only, leaving the rest untouched.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true one: DynamoDB items carry an attribute only when written.)"
+    verified:
+      keyHash: 7e45b20657e6
+      fullHash: b8c393496c21
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-hr3kg3
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -187,26 +191,28 @@ questions:
         correct: true
         why: A flexible schema lets each item carry its own set of attributes within the same table.
       - id: b
-        text: The primary key is still indexed by default
-        why: This is true of NoSQL, but it holds whatever the schema and is not what flexibility allows.
+        text: Items in one table are each named by a unique key
+        why: Every NoSQL item needs a unique key whatever the schema, so this is a rule rather than a freedom it allows.
       - id: c
-        text: Adding an attribute needs no table-wide redesign
+        text: An item can take on a new field with no redesign
         correct: true
         why: Attributes come and go freely on each item, so a new one never forces the table to be redesigned.
       - id: d
-        text: Every item follows one shared column layout
-        why: A shared column layout is the rigid schema of a relational table, the opposite of a flexible one.
+        text: An item can be looked up by its indexed primary key
+        why: NoSQL still indexes the primary key by default, but that holds whatever the schema and is not what flexibility allows.
       - id: e
-        text: Records are linked across tables by SQL joins
-        why: Joining tables with SQL belongs to the relational model and is not something a flexible schema adds.
+        text: A table's throughput can follow its real use
+        why: Auto scaling moves throughput with traffic, which is about capacity rather than what a flexible schema allows.
     evidence:
       - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
       - The core difference is flexible versus rigid schema, not speed or scaling, and NoSQL still indexes the primary key by default.
     takeaway: A flexible schema lets items in one table differ in attributes and change them freely over time.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 describe a flexible NoSQL schema; 1 and 2 are relational traits.)"
+    verified:
+      keyHash: ad3bfc513515
+      fullHash: 860b2e40474e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-fqvcnk
     version: 1
     status: live
@@ -434,30 +440,30 @@ questions:
     task: "3.4"
     level: 2
     stem: >-
-      The cafe's loyalty members live in a DynamoDB table.
-      The team wants to record a preferred milk only for the members who mention one, leaving every other item as it is.
-      Which step achieves this?
+      The cafe's loyalty members live in a DynamoDB table, and the team now wants to record a preferred milk for only the members who have named one.
+      Which DynamoDB trait lets it start doing so without first redesigning the table?
     options:
       - id: a
-        text: Turn on auto scaling for the table's capacity
-        why: Auto scaling is a real setting, but it tunes throughput and does not add a milk attribute to anyone.
-      - id: b
-        text: Pick a customer managed key for its encryption
-        why: DynamoDB does let the cafe choose its encryption key, but that protects data rather than recording milk.
-      - id: c
-        text: Write the field on just those members' items
+        text: Each item may hold values that other items in its table lack
         correct: true
-        why: Items in a NoSQL table can differ, so the cafe adds the attribute only where a member gave one.
+        why: Items in a DynamoDB table need not share attributes, so the cafe writes a milk only on the members who named one.
+      - id: b
+        text: Each table spreads its data over many servers with no practical size cap
+        why: Spreading data over many servers lets the table grow, but it says nothing about adding a value to some items only.
+      - id: c
+        text: Each table encrypts its data at rest and in transit automatically
+        why: Built-in encryption protects the members' data, but it does not decide which items can carry a new value.
       - id: d
-        text: Add a replica of the table in another Region
-        why: A replica in another Region is a real global tables step, but it copies data rather than adding milk.
+        text: Each table keeps an index on its primary key by default
+        why: The primary key index speeds lookups by member, but adding a new value to some items relies on the flexible schema.
     evidence:
       - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
+      - "NoSQL (nonrelational) databases hold key-value pairs: a unique key names an item and attributes carry its values, like a dictionary headword and definition."
     takeaway: A flexible schema lets the cafe add a new attribute to just the items that need it, with no schema change first.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 alone refers back to specific subjects with 'those members'; the rest are generic table features.)"
+      attempts: 10
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 alone talks about each item rather than each table, breaking the parallel pattern of the other three.)"
   - id: q-az9tjx
     version: 1
     status: live
@@ -531,3 +537,180 @@ questions:
       fullHash: f18d2ab47971
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-7m1yqq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: nosql-databases
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      A new barista assumes the cafe's NoSQL loyalty table must read through every member to find one, since the table is nonrelational.
+      Which fact corrects this belief?
+    options:
+      - id: a
+        text: A NoSQL table lets its items differ in attributes
+        why: Items differing in attributes is true of NoSQL, but it says nothing about how a member is found.
+      - id: b
+        text: A NoSQL table can spread its data over many servers
+        why: Spreading data over many servers is how DynamoDB grows, and it does not show how a member is found.
+      - id: c
+        text: A NoSQL table is read without needing SQL queries
+        why: NoSQL tables do not depend on SQL, but that alone does not say how a single member is found.
+      - id: d
+        text: A NoSQL table indexes its primary key by default
+        correct: true
+        why: Being nonrelational does not remove indexing, so the table finds a member through its indexed primary key.
+    evidence:
+      - The core difference is flexible versus rigid schema, not speed or scaling, and NoSQL still indexes the primary key by default.
+    takeaway: NoSQL tables are nonrelational yet still index the primary key by default, so the schema is the real difference.
+    history: []
+    verified:
+      keyHash: a7218ee07da9
+      fullHash: 056bfc876c79
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-xq8j8t
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: key-value-data-model
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      In the cafe's key-value table, one member's item has an entry named favorite pastries that holds a set of pastry names.
+      In key-value terms, what is that set of pastry names?
+    options:
+      - id: a
+        text: The item's unique key
+        why: The unique key names the member's item, while the pastry set is content stored inside that item.
+      - id: b
+        text: An attribute's value
+        correct: true
+        why: An attribute is a name-value pair whose value can be a set, so the pastry names are the value.
+      - id: c
+        text: An attribute's name
+        why: The attribute's name is favorite pastries, the label rather than the set of pastry names it holds.
+      - id: d
+        text: The item as a whole
+        why: The item is the member's whole record, its key plus every attribute, rather than one stored set.
+    evidence:
+      - "**Item and attribute**: a DynamoDB record and its name-value pairs, with values such as numbers, sets or documents."
+    takeaway: In the key-value model an attribute pairs a name with a value, and that value can be a number, a set or a document.
+    history: []
+    verified:
+      keyHash: 876c538220bd
+      fullHash: 77646a1f305a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-xw9vtq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's order history in Amazon DynamoDB grows every day, and the owner worries the table will one day run out of room.
+      Which DynamoDB trait settles that worry?
+    options:
+      - id: a
+        text: It keeps copies in three facilities in each Region
+        why: Copies in three facilities keep the orders available, but they do not add room for a growing table.
+      - id: b
+        text: It encrypts the data automatically at rest and in transit
+        why: Encryption protects the orders at rest and in transit, which has nothing to do with how much the table holds.
+      - id: c
+        text: It answers in single-digit milliseconds at any scale
+        why: Fast answers keep the app quick as it grows, but speed is not what removes a limit on size.
+      - id: d
+        text: It spreads data over many servers with no practical cap
+        correct: true
+        why: DynamoDB spreads data over many servers and SSDs with no practical size cap, so the table can keep growing.
+    evidence:
+      - Data spreads over many servers and SSDs with no practical size cap, you pay per use, and security is built in.
+    takeaway: DynamoDB spreads data across many servers and SSDs, so a growing table has no practical size cap.
+    history: []
+    verified:
+      keyHash: 277bffef057d
+      fullHash: d2981d950a2f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-pq2d2r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-global-tables
+    note: m07/nosql-database-services
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's DynamoDB table already keeps copies in three facilities within its home Region.
+      The owner then turns on global tables for the loyalty app.
+      Where does each new copy of the table go?
+    options:
+      - id: a
+        text: Into another Availability Zone
+        why: Copies across facilities in the home Region are what the table already had, so global tables add more than this.
+      - id: b
+        text: Into another edge location
+        why: Edge locations cache popular content close to users, and they do not hold copies of a DynamoDB table.
+      - id: c
+        text: Into another AWS Region
+        correct: true
+        why: Global tables keep copies of the table in other Regions, beyond the facilities of the home Region.
+      - id: d
+        text: Into another AWS Outposts rack
+        why: An Outposts rack runs AWS on the customer's own site, and global tables do not copy a table there.
+    evidence:
+      - "**Availability**: 99.999%, copies in three facilities per Region and in other Regions."
+      - "**DynamoDB global tables**: the feature for worldwide DynamoDB apps, as on Prime Day."
+    takeaway: DynamoDB global tables copy a table across AWS Regions, beyond the copies a table keeps within its own Region.
+    history: []
+    verified:
+      keyHash: cd57827e810f
+      fullHash: 95e6bd0dae4a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-cdqeaa
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-auto-scaling
+    note: m07/nosql-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      The cafe turns on DynamoDB auto scaling for its orders table, which uses provisioned capacity.
+      As orders rise and fall, what does auto scaling steer the table's capacity toward?
+    options:
+      - id: a
+        text: The traffic level of the busiest hour
+        why: Holding capacity at the peak all day is the waste auto scaling avoids, since quiet hours need far less.
+      - id: b
+        text: The target utilization level
+        correct: true
+        why: Auto scaling moves provisioned throughput toward the target utilization the cafe sets as real use changes.
+      - id: c
+        text: The fixed read and write capacity
+        why: A fixed, hand-set capacity is what auto scaling replaces, since it lets throughput follow real use.
+      - id: d
+        text: The single-digit millisecond latency
+        why: Low latency is how fast DynamoDB answers at any scale, not the level auto scaling tunes capacity toward.
+    evidence:
+      - "**Auto scaling with provisioned capacity**: throughput automatically follows real use toward your target utilization, steady at peaks, cheaper when quiet."
+    takeaway: DynamoDB auto scaling steers provisioned throughput toward the target utilization you set as real use rises and falls.
+    history: []
+    verified:
+      keyHash: 06d28be9d17c
+      fullHash: 9196f59eec4d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

@@ -69,3 +69,48 @@ questions:
       fullHash: c65d8f77fcb0
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-djf0pz
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: ec2-hosted-vs-managed-databases
+    note: m07/introduction-to-databases
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe moves its loyalty database off a MySQL install on an Amazon EC2 instance and onto Amazon RDS.
+      Which jobs does the move hand from the cafe to AWS?
+    options:
+      - id: a
+        text: Patching the database software
+        correct: true
+        why: On EC2 the cafe patched MySQL itself, and a managed database such as RDS hands patching to AWS.
+      - id: b
+        text: Writing the loyalty app's code
+        why: Managed databases leave the application code to the cafe, so this job does not move to AWS.
+      - id: c
+        text: Backing up the loyalty records
+        correct: true
+        why: Backups were the cafe's job on EC2, and RDS takes them over as one of the tasks AWS now runs.
+      - id: d
+        text: Tuning the queries the app sends
+        why: Query tuning stays with the customer on a managed service, so the cafe keeps this job after the move.
+      - id: e
+        text: Scaling the database as it grows
+        correct: true
+        why: Scaling was the cafe's own work on EC2, and RDS hands this upkeep to AWS along with patches and backups.
+      - id: f
+        text: Deciding which staff see the data
+        why: Access to the data stays with the customer even on a managed service, so the cafe still decides this.
+    evidence:
+      - With EC2 hosted databases you still install, patch, back up and scale the database and its operating system yourself, while AWS managed databases such as Amazon RDS hand those tasks to AWS.
+      - Managed services ease scaling and licensing, but leave app code to you.
+    takeaway: Moving a database from EC2 to RDS hands patching, backups and scaling to AWS, while app code, query tuning and access stay yours.
+    history: []
+    verified:
+      keyHash: 308e5ae69ee2
+      fullHash: b93ae12d756c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
