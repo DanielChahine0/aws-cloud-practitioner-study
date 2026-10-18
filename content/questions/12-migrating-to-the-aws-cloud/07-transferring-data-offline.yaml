@@ -37,47 +37,49 @@ questions:
       on: 2026-10-09
   - id: q-bc8c0w
     version: 1
-    status: draft
+    status: live
     type: multi
-    select: 3
+    select: 2
     pool: practice
     concept: offline-data-transfer
     note: m12/transferring-data-offline
     task: "1.3"
-    level: 1
+    level: 2
     stem: >-
-      Which conditions point a migration toward moving data offline instead of over the network?
+      The cafe chain is moving data from several of its sites to AWS.
+      Which sites should send their data on a physical device instead of over the network?
     options:
       - id: a
-        text: Very limited network bandwidth
+        text: A bakery with a thin link that must transfer years of stored files
         correct: true
-        why: Thin bandwidth makes a large upload crawl, so shipping a device can finish sooner.
+        why: Thin bandwidth would make this one-time bulk upload crawl, so a shipped device gets the bakery's files to AWS sooner.
       - id: b
-        text: A site with no internet or Direct Connect
-        correct: true
-        why: Without any network path, a physical device is the only way to carry the data out.
+        text: A kiosk with a thin link that must send a few small files each day
+        why: A few small files a day fit even a thin link, and an ongoing daily need is an online transfer, not a device.
       - id: c
-        text: Petabytes that would take too long to upload
+        text: A warehouse with a working link that must move petabytes of footage
         correct: true
-        why: At petabyte scale, shipping the data on devices can beat even a good network.
+        why: Petabytes can ship faster than they upload even over a working link, so the warehouse should send a device.
       - id: d
-        text: A fast link with spare bandwidth to use
-        why: A fast link with room to spare can carry the data online, so there is no need to ship a device.
+        text: A shop with a fast link that must move new files to AWS every night
+        why: A nightly copy over a fast link is an ongoing online need that DataSync serves, which a shipped device does not fit.
       - id: e
-        text: A few gigabytes that upload in minutes
-        why: A small amount that uploads quickly is well suited to an online move, not a shipped device.
+        text: A supplier with a working link that must exchange files over SFTP
+        why: SFTP exchanges with a supplier are an online transfer that Transfer Family handles, not a shipped device.
       - id: f
-        text: Data that must sync with AWS all the time
-        why: Ongoing sync is an online transfer need, which an offline device does not fit.
+        text: A head office with a fast link whose database must keep serving
+        why: Copying a database that keeps serving points to AWS DMS over the fast link, not to an offline device.
     evidence:
       - "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
       - Many customers prefer online moves; offline means sending data on a physical device when DataSync falls short.
       - Being offline, they do not fit online transfer needs.
     takeaway: Thin bandwidth, no connectivity or huge volume are the signals to move data offline.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2, 3 and 5 are the Snowball use cases; 1, 4 and 6 argue for online transfer.)"
+    verified:
+      keyHash: 2e52ea364dba
+      fullHash: 98ed0608be7d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-71ted3
     version: 1
     status: live
