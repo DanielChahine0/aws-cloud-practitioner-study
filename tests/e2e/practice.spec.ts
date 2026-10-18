@@ -32,15 +32,19 @@ async function answerByKeys(page: Page, q: QuestionView): Promise<void> {
   await expect(page.locator('.verdict')).toHaveCount(0);
 }
 
-/**
- * Runs the Module 3 lesson checks, answering right by clicking, until a question of this type is on screen.
- * Unseen variants come first, so two rounds show every question.
- */
+/** A lesson check shows one variant per concept, unseen first, so this many rounds show every question. */
+function roundsToSeeAll(questions: readonly QuestionView[]): number {
+  const perConcept = new Map<string, number>();
+  for (const q of questions) perConcept.set(q.concept, (perConcept.get(q.concept) ?? 0) + 1);
+  return Math.max(...perConcept.values());
+}
+
+/** Runs the Module 3 lesson checks, answering right by clicking, until a question of this type is on screen. */
 async function untilType(page: Page, type: QuestionView['type']): Promise<[QuestionView, QuestionView[]]> {
   await page.goto('/#/m/03');
   const questions = await chunkFor(page, 3);
   const slugs = await lessonsOf(page, 3);
-  for (let round = 0; round < 2; round++) {
+  for (let round = 0; round < roundsToSeeAll(questions); round++) {
     for (const slug of slugs) {
       await page.goto(`/#/m/03/l/${slug}`);
       await page.goto(`/#/s/check/m03/${slug}`);
@@ -377,7 +381,7 @@ test.describe('accessibility and layout', () => {
     const questions = await chunkFor(page, 3);
     const slugs = await lessonsOf(page, 3);
     const scanned = new Set<string>();
-    for (let round = 0; round < 2 && scanned.size < 2; round++) {
+    for (let round = 0; round < roundsToSeeAll(questions) && scanned.size < 2; round++) {
       for (const slug of slugs) {
         await page.goto(`/#/m/03/l/${slug}`);
         await page.goto(`/#/s/check/m03/${slug}`);
