@@ -1,5 +1,6 @@
 import { ADR_FIELDS, ADR_HEADINGS, type AdrText, type ProjectChunk } from '../../schemas/project-view.ts';
-import { type ConceptName, citedText, type DecisionRecord, scoreTotal } from './capstone.ts';
+import { scoreTotal } from './badges.ts';
+import { type ConceptName, citedText, type DecisionRecord } from './capstone.ts';
 
 /**
  * The capstone export (spec 6): `cafe-cloud-plan.md`, a summary table and the 13 ADRs,

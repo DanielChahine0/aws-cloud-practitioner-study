@@ -1,5 +1,6 @@
 import type { StudyEvent } from '../../schemas/events.ts';
 import { ADR_FIELDS, type AdrText } from '../../schemas/project-view.ts';
+import { scoreTotal } from './badges.ts';
 import { addDays } from './day.ts';
 
 /**
@@ -40,10 +41,6 @@ export function decisionsOf(events: readonly StudyEvent[]): ReadonlyMap<number, 
     }
   }
   return out;
-}
-
-export function scoreTotal(scores: readonly number[]): number {
-  return scores.reduce((sum, s) => sum + s, 0);
 }
 
 /** Final total minus self total, or null until both grades exist (spec 6). */

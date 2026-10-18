@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { NewEvent } from '../../schemas/events.ts';
 import type { AdrText } from '../../schemas/project-view.ts';
+import { scoreTotal } from '../../src/engine/badges.ts';
 import {
   type ConceptName,
   canSelfGrade,
@@ -12,7 +13,6 @@ import {
   driftOf,
   MIN_CITATIONS,
   openDay,
-  scoreTotal,
   toShown,
   toStored,
 } from '../../src/engine/capstone.ts';
