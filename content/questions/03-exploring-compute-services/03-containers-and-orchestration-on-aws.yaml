@@ -581,7 +581,7 @@ questions:
       on: 2026-10-09
   - id: q-8pv530
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: containers
@@ -589,30 +589,31 @@ questions:
     task: "3.3"
     level: 2
     stem: >-
-      The cafe's owner plans to package the gift-card service as a container and asks what the container format provides on its own, apart from the AWS services that usually surround it.
-      What does the container itself provide?
+      The cafe is moving its gift-card service from the back-office server to Amazon EC2, and every earlier move cost a day of reinstalling its runtime, libraries and settings by hand.
+      Which step lets the service start on the new host just as it ran on the old one?
     options:
       - id: a
-        text: An orchestrator that restarts copies that stop working
-        why: Restarting failed copies is orchestration work from ECS or EKS, because containers do not recover or scale themselves.
+        text: Move it onto a Reserved Instance
+        why: A Reserved Instance only changes how the cafe pays for the host, so the runtime and libraries still need installing by hand.
       - id: b
-        text: A registry that keeps every version of each image
-        why: Keeping image versions is the job of a registry such as Amazon ECR, not something the container format supplies.
+        text: Move it into a private subnet
+        why: A private subnet hides the host from the internet, but the service's software still has to be set up again on it.
       - id: c
-        text: One portable unit with code, settings and libraries
+        text: Move it inside a container image
         correct: true
-        why: The container itself bundles the gift-card code with its runtime, libraries and settings, so it runs the same wherever it lands.
+        why: A container image carries the code together with its runtime, libraries and settings, so the service runs the same on the new host.
       - id: d
-        text: Hosting where AWS runs all the servers underneath
-        why: Having AWS run the servers is what Fargate adds as a launch type; the container alone brings no hosting with it.
+        text: Move it behind a load balancer
+        why: A load balancer spreads requests across hosts, and it does nothing to bring the service's dependencies along to the new one.
     evidence:
       - A container packs code, runtime, dependencies and configuration into one isolated unit that runs the same anywhere.
-      - Containers do not scale themselves, so orchestrators run their lifecycle across a cluster, scale them with traffic, and handle recovery, monitoring and updates.
-    takeaway: A container is the portable package of code, runtime, libraries and settings; recovery, image storage and hosting come from other AWS tools.
+    takeaway: Packing a service with its runtime, libraries and settings in a container lets it move to a new host and run unchanged.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: The stem's 'apart from the AWS services that usually surround it' rules out options 2, 3 and 4, which each describe a surrounding AWS service."
+    verified:
+      keyHash: 5f4ab7747220
+      fullHash: e88895960f38
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-pgfacr
     version: 1
     status: live
@@ -696,71 +697,81 @@ questions:
       on: 2026-10-18
   - id: q-mwx641
     version: 1
-    status: draft
-    type: single
+    status: live
+    type: multi
     pool: practice
     concept: amazon-ecs
     note: m03/containers-and-orchestration-on-aws
     task: "3.3"
-    level: 2
+    level: 1
+    select: 2
     stem: >-
-      The cafe is setting up Amazon ECS for its ordering containers.
-      What does the cafe define, leaving ECS to manage the rest?
+      The cafe's new developer is reading up on the AWS container tools before the kitchen display app moves to Amazon ECS.
+      Which statements describe Amazon ECS?
     options:
       - id: a
-        text: Its container restarts after a failure
-        why: Recovering failed containers is orchestration work, so ECS handles the restarts once the cafe has set it up.
-      - id: b
-        text: Its container images and instance types
+        text: It orchestrates containers as a fully managed service
         correct: true
-        why: With ECS, the cafe names its images plus resources such as instance types and load balancers, and ECS manages the rest.
+        why: ECS is the fully managed AWS service whose job is orchestrating the kitchen app's containers.
+      - id: b
+        text: It stores and versions container images in repositories
+        why: Keeping and versioning images in repositories is Amazon ECR's job, and ECS pulls images from there rather than storing them.
       - id: c
-        text: Its container placement across the cluster
-        why: Running containers across a cluster is the lifecycle work an orchestrator takes on, so ECS places them.
+        text: It runs Docker containers as well as other kinds
+        correct: true
+        why: ECS is built for Docker containers and others, so the kitchen app's Docker images fit it as they are.
       - id: d
-        text: Its own scripts to start and stop copies
-        why: Hand-made start and stop scripts are what running containers without an orchestrator demands, and ECS takes that work over.
+        text: It operates the Kubernetes control plane for you
+        why: Running a Kubernetes control plane is what Amazon EKS does, while ECS is AWS's own orchestrator with no Kubernetes involved.
+      - id: e
+        text: It packs code and libraries into one portable unit
+        why: Bundling code with its libraries is what the container itself does, and ECS only orchestrates the containers once they exist.
     evidence:
-      - You set images plus resources like instance types and load balancers, and ECS manages the rest.
-    takeaway: With Amazon ECS, you specify the images and resources such as instance types and load balancers, and ECS handles the rest.
+      - "The exam guide spells out Amazon Elastic Container Service (Amazon ECS), the fully managed AWS service for orchestrating containers."
+      - ECS is the streamlined, integrated orchestrator, for Docker containers and others.
+    takeaway: Amazon ECS is AWS's fully managed container orchestrator, and it runs Docker containers as well as other kinds.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+    verified:
+      keyHash: 2cf60b6b0af7
+      fullHash: ba148fa27470
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-6qnc16
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-eks
     note: m03/containers-and-orchestration-on-aws
     task: "3.3"
-    level: 2
+    level: 3
     stem: >-
-      The cafe's delivery tracker runs on Kubernetes clusters that the cafe operates itself on Amazon EC2 instances.
-      Which job does AWS take on only once the cafe moves the clusters onto Amazon EKS?
+      The cafe's platform team keeps the Kubernetes control plane of its delivery tracker's cluster running by hand on Amazon EC2 instances.
+      It wants to keep using Kubernetes but have AWS operate that control plane instead. Which service fits?
     options:
       - id: a
-        text: Patching the hypervisor under the cluster's instances
-        why: AWS already looks after the hypervisor beneath every EC2 instance, so this is not new with EKS.
+        text: Amazon ECS
+        why: ECS is AWS's own orchestrator rather than Kubernetes, so choosing it would mean dropping Kubernetes instead of keeping it.
       - id: b
-        text: Running the control plane of each cluster
-        correct: true
-        why: With EKS, AWS runs the Kubernetes control plane of every cluster, a job the cafe had been doing itself.
+        text: AWS Fargate
+        why: Fargate is a launch type that runs the containers' servers, and it does not operate a Kubernetes control plane.
       - id: c
-        text: Securing the buildings that hold the cluster's hosts
-        why: AWS already secures its data center buildings for any EC2 workload, so moving to EKS does not add this.
+        text: Amazon EKS
+        correct: true
+        why: EKS runs Kubernetes and has AWS operate the control plane of each cluster, so the team keeps Kubernetes and drops that upkeep.
       - id: d
-        text: Replacing failed drives in the cluster's hosts
-        why: Physical hardware under EC2 instances was already AWS's to repair, so this does not change with EKS.
+        text: Amazon ECR
+        why: ECR is a registry that stores container images, so it neither runs Kubernetes nor operates a control plane.
     evidence:
       - "With Amazon Elastic Kubernetes Service (Amazon EKS), AWS operates the Kubernetes control plane of each cluster for you."
-      - "EC2: you manage the VMs under your containers, for full control plus upkeep."
-    takeaway: Moving self-run Kubernetes onto Amazon EKS hands AWS the job of operating each cluster's control plane.
+      - EKS runs Kubernetes, the open source platform automating container deployment, scaling and management.
+    takeaway: To keep Kubernetes but stop running its control plane yourself, move the cluster to Amazon EKS.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one that is not about physical hosts or the hypervisor.)"
+    verified:
+      keyHash: 5291f9a399ac
+      fullHash: 3901e40bfe0b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-3vc0rn
     version: 1
     status: live
