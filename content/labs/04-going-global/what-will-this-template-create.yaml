@@ -1,0 +1,165 @@
+id: lab-m04-what-will-this-template-create
+module: 4
+title: What will this template create?
+engine: investigate
+tier: stretch
+status: live
+rev: 1
+concepts: [cloudformation-templates, aws-cloudformation, infrastructure-as-code, amazon-ec2, security-groups, s3-buckets]
+notes:
+  - m04/infrastructure-and-automation
+  - m02/introduction-to-amazon-ec2
+  - m05/subnets-security-groups-and-network-access-control-lists
+  - m06/amazon-simple-storage-service-amazon-s3
+minutes: 6
+brief: >-
+  The cafe keeps its online menu in one template, and the owner wants to know what it builds in test, in production and then in a second Region.
+  Read the template and answer what each deployment creates.
+  In this lab, AWS::EC2::Instance is an EC2 instance, AWS::EC2::SecurityGroup a security group and AWS::S3::Bucket an S3 bucket, a resource with a Condition is built only when it holds, and port 443 carries HTTPS.
+spec:
+  source: Menu template, cafe account, read before deployment
+  listing:
+    label: cafe-menu-template.yaml
+    lines:
+      - 'Description: Cafe online menu, one copy per deployment'
+      - 'Parameters:'
+      - '  Environment:'
+      - '    Type: String'
+      - '    AllowedValues: [test, production]'
+      - '    Default: test'
+      - 'Conditions:'
+      - '  IsProduction: Environment equals production'
+      - 'Resources:'
+      - '  MenuFrontDoor:'
+      - '    Type: AWS::EC2::SecurityGroup'
+      - '    Properties:'
+      - '      Description: Front door for the menu servers'
+      - '      Inbound:'
+      - '        - Protocol: tcp'
+      - '          Port: 443'
+      - '          From: anywhere'
+      - '  MenuServerA:'
+      - '    Type: AWS::EC2::Instance'
+      - '    Properties:'
+      - '      SecurityGroups: [MenuFrontDoor]'
+      - '  MenuServerB:'
+      - '    Type: AWS::EC2::Instance'
+      - '    Condition: IsProduction'
+      - '    Properties:'
+      - '      SecurityGroups: [MenuFrontDoor]'
+      - '  MenuPhotos:'
+      - '    Type: AWS::S3::Bucket'
+      - 'Outputs:'
+      - '  MenuAddress:'
+      - '    Value: public address of MenuServerA'
+  questions:
+    - id: test-servers
+      goal: g1
+      prompt: How many menu servers does a deployment with Environment set to test create?
+      options:
+        - { id: none, label: None }
+        - { id: one, label: One }
+        - { id: two, label: Two }
+      answer: one
+    - id: production-servers
+      goal: g1
+      prompt: How many menu servers does a deployment with Environment set to production create?
+      options:
+        - { id: one, label: One }
+        - { id: two, label: Two }
+        - { id: three, label: Three }
+      answer: two
+    - id: inbound-traffic
+      goal: g2
+      prompt: Which inbound traffic does MenuFrontDoor let through to a menu server?
+      options:
+        - { id: https-only, label: HTTPS on port 443 only }
+        - { id: https-and-ssh, label: HTTPS on port 443 and SSH for the staff }
+        - { id: every-port, label: 'Traffic on every port, since no rule blocks any' }
+      answer: https-only
+    - id: covered-servers
+      goal: g2
+      prompt: In a production deployment, which menu servers does the MenuFrontDoor security group guard?
+      options:
+        - { id: every-server, label: MenuServerA and MenuServerB }
+        - { id: server-a-only, label: MenuServerA only }
+        - { id: none-yet, label: None until someone attaches it by hand }
+      answer: every-server
+    - id: first-region
+      goal: g3
+      prompt: The owner runs the template again, set to production, in a second Region. What happens in the first Region?
+      options:
+        - { id: unchanged, label: Nothing changes in the first Region }
+        - { id: updated, label: 'Its resources are updated, and nothing new is built anywhere' }
+        - { id: moved, label: 'Its servers move to the second Region, leaving it empty' }
+      answer: unchanged
+    - id: both-regions
+      goal: g3
+      prompt: Counting only the two production deployments, what do they hold between them?
+      options:
+        - { id: four-two, label: Four menu servers and two photo buckets }
+        - { id: four-one, label: Four menu servers and one shared photo bucket }
+        - { id: two-one, label: Two menu servers and one photo bucket }
+        - { id: two-two, label: Two menu servers and two photo buckets }
+      answer: four-two
+goals:
+  - id: g1
+    label: Count the menu servers each environment gets
+    hint: Ask which resources carry a condition, and whether that condition holds for the environment you are counting.
+  - id: g2
+    label: Name the traffic the security group lets in and what it guards
+    hint: A security group blocks every inbound port until a rule opens one, so read only the rules this template writes.
+  - id: g3
+    label: Say what a deployment in a second Region builds
+    hint: Recall what one template gives across Regions, and where a bucket lives once it is created.
+solution:
+  - { t: answer, question: test-servers, option: one }
+  - { t: answer, question: production-servers, option: two }
+  - { t: answer, question: inbound-traffic, option: https-only }
+  - { t: answer, question: covered-servers, option: every-server }
+  - { t: answer, question: first-region, option: unchanged }
+  - { t: answer, question: both-regions, option: four-two }
+wrongPaths:
+  - mistake: Counts MenuServerB in test, though only production creates it
+    failsGoal: g1
+    actions:
+      - { t: answer, question: test-servers, option: two }
+      - { t: answer, question: production-servers, option: two }
+      - { t: answer, question: inbound-traffic, option: https-only }
+      - { t: answer, question: covered-servers, option: every-server }
+      - { t: answer, question: first-region, option: unchanged }
+      - { t: answer, question: both-regions, option: four-two }
+  - mistake: Thinks a security group lets in every port that no rule names
+    failsGoal: g2
+    actions:
+      - { t: answer, question: test-servers, option: one }
+      - { t: answer, question: production-servers, option: two }
+      - { t: answer, question: inbound-traffic, option: every-port }
+      - { t: answer, question: covered-servers, option: every-server }
+      - { t: answer, question: first-region, option: unchanged }
+      - { t: answer, question: both-regions, option: four-two }
+  - mistake: Thinks a second deployment in another Region updates the first one
+    failsGoal: g3
+    actions:
+      - { t: answer, question: test-servers, option: one }
+      - { t: answer, question: production-servers, option: two }
+      - { t: answer, question: inbound-traffic, option: https-only }
+      - { t: answer, question: covered-servers, option: every-server }
+      - { t: answer, question: first-region, option: updated }
+      - { t: answer, question: both-regions, option: two-one }
+  - mistake: Thinks both Regions share one photo bucket because a bucket is reachable from anywhere
+    failsGoal: g3
+    actions:
+      - { t: answer, question: test-servers, option: one }
+      - { t: answer, question: production-servers, option: two }
+      - { t: answer, question: inbound-traffic, option: https-only }
+      - { t: answer, question: covered-servers, option: every-server }
+      - { t: answer, question: first-region, option: unchanged }
+      - { t: answer, question: both-regions, option: four-one }
+debrief:
+  lines:
+    - One template with a parameter gives test and production from the same file, each with only the resources its choice switches on.
+    - A security group opens only the ports its rules allow, so these menu servers take HTTPS and nothing else.
+    - Running the same template in another Region builds a separate, identical set of resources and leaves the first Region as it was.
+    - Each bucket is created in one Region, so the second deployment adds its own photo bucket instead of sharing the first.
+  questions: [q-2w2z0q, q-7pn04g, q-jgx1ne]
