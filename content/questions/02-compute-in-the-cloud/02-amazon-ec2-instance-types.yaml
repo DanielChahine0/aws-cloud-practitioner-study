@@ -677,7 +677,7 @@ questions:
       on: 2026-10-18
   - id: q-tn8ank
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -686,37 +686,39 @@ questions:
     task: "3.3"
     level: 2
     stem: >-
-      The cafe is sorting its planned workloads by EC2 instance family.
-      Which workloads have no single bottleneck, so they suit general purpose instances best?
+      The cafe's IT lead is picking an EC2 instance family for each of its upcoming jobs.
+      Which jobs belong on general purpose instances?
     options:
       - id: a
-        text: A web service for the cafe's menu
+        text: Hosting the recipe app's code repository
         correct: true
-        why: Web services are everyday balanced work with no single bottleneck, which is what general purpose instances are for.
+        why: A code repository is everyday work with a balanced resource mix, which is what general purpose instances are for.
       - id: b
-        text: Scientific modeling held back by the CPU
-        why: Scientific modeling that is limited by processor power points to compute optimized instead.
+        text: Running a multiplayer game server
+        why: A game server is CPU-heavy work, which points to compute optimized instances rather than a balanced mix.
       - id: c
-        text: A new app whose resource needs are unknown
-        correct: true
-        why: With no known bottleneck yet, the new app starts best on a balanced general purpose instance.
+        text: Holding the loyalty database in memory
+        why: A database held in memory needs fast in-memory processing, which points to memory optimized instances.
       - id: d
-        text: A large database held fully in memory
-        why: A big in-memory database needs lots of RAM, which points to memory optimized instead.
+        text: Serving the menu site's web service
+        correct: true
+        why: A web service has no single bottleneck, so it fits the balanced resources of general purpose instances.
       - id: e
-        text: A data warehouse read from local disks
-        why: A warehouse on local disks needs fast local storage, which points to storage optimized instead.
+        text: Running scientific models of bean yields
+        why: Scientific modeling is CPU-heavy work, which points to compute optimized instances rather than a balanced mix.
       - id: f
-        text: A graphics job that runs on GPUs
-        why: Work that needs GPUs points to accelerated computing instances rather than a balanced mix.
+        text: Analyzing sales in memory in real time
+        why: Real-time in-memory analytics points to memory optimized instances, not to an all-round balance.
     evidence:
       - "**General purpose**: balanced, for web services, code repositories and unpredictable workloads."
-      - "Unknown workload: start with general purpose."
-    takeaway: General purpose instances fit balanced work with no single bottleneck, such as web services and unknown workloads.
+      - "Pick the family by the bottleneck: CPU, memory, accelerators or local disk."
+    takeaway: Web services and code repositories are balanced everyday jobs, so they belong on general purpose instances.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 are the only two workloads that share one instance family, each other option maps to its own.)"
+    verified:
+      keyHash: 27e59f2ee10c
+      fullHash: 3d5349accecf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-j8qjq2
     version: 1
     status: live

@@ -38,43 +38,40 @@ questions:
       on: 2026-10-09
   - id: q-bvas64
     version: 1
-    status: draft
-    type: multi
-    select: 2
+    status: live
+    type: single
     pool: practice
     concept: aws-elastic-disaster-recovery
     note: m06/aws-elastic-disaster-recovery
     task: "3.6"
     level: 2
     stem: >-
-      The cafe owner asks how AWS Elastic Disaster Recovery keeps her monthly AWS bill small on the many days when nothing fails.
-      Which features of the service explain this?
+      The cafe's part-time IT helper built its old server recovery plan by hand, and one skipped step left a till server impossible to restore.
+      The owner now protects those servers with AWS Elastic Disaster Recovery.
+      Which benefit of the service guards against another skipped step?
     options:
       - id: a
-        text: Recovery tests run apart from the live servers.
-        why: Isolated recovery tests protect production during a drill, but they do not explain why the bill stays low while nothing fails.
+        text: It protects physical, virtual and cloud servers
+        why: The service does cover many kinds of servers, but that range says nothing about avoiding a missed step when setting it up.
       - id: b
-        text: Replicas wait in storage, not on running servers.
-        correct: true
-        why: The replicas sit in low-cost storage with minimal compute, so the cafe pays little to keep them ready.
+        text: Its agents copy disk data to AWS nonstop
+        why: Nonstop replication keeps the copy current, but the helper could still miss a step if the setup stayed by hand.
       - id: c
-        text: Servers recover in AWS within minutes of a failure.
-        why: Quick recovery cuts downtime on the day a failure hits, not the charges on the many days when nothing fails.
-      - id: d
-        text: Pricing follows a pay-per-use model.
+        text: Its console automation replaces manual work
         correct: true
-        why: Pay-per-use pricing bills for what the service actually uses, so quiet days with no recovery cost little.
-      - id: e
-        text: Servers restore to a chosen earlier moment.
-        why: Point-in-time recovery picks which state to bring back after damage, not what keeps the bill low on quiet days.
+        why: The console automates the setup the helper once did by hand, so no step depends on someone remembering it.
+      - id: d
+        text: It bills pay-per-use on low-cost storage
+        why: Pay-per-use pricing on low-cost storage keeps the bill down, but it does nothing to stop a skipped setup step.
     evidence:
-      - "No secondary data center: low-cost storage, minimal compute and pay-per-use pricing."
-      - It removes the cost of a standby data center.
-    takeaway: Elastic Disaster Recovery keeps standby costs low with low-cost storage and pay-per-use pricing instead of a second site.
+      - Console automation replaces error-prone manual setup.
+    takeaway: Elastic Disaster Recovery automates recovery setup in its console, removing the error-prone manual steps of a hand-built plan.
     history: []
-    review:
-      attempts: 11
-      lastFailure: "critic: Option 5 is the only option about pricing, which the stem's question about the bill points straight at. Option 3 says replicas sit on no running servers, while its own why and the evidence say minimal compute, so the key overstates the service."
+    verified:
+      keyHash: d0f2f66a404f
+      fullHash: 8a4a94f390f5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-d41d6d
     version: 1
     status: live

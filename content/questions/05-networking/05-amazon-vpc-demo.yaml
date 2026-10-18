@@ -368,7 +368,7 @@ questions:
       on: 2026-10-18
   - id: q-kndvw3
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: private-subnets
@@ -376,32 +376,32 @@ questions:
     task: "3.5"
     level: 2
     stem: >-
-      An admin switched on auto-assign public IP in Private-subnet-1 by mistake, so the cafe's order database servers there received public IPv4 addresses.
-      The VPC's internet gateway is attached and serves the public subnets, and the private subnet's network ACL allows all traffic.
-      What still keeps Private-subnet-1 cut off from the internet?
+      After an admin made one change to the cafe's private payroll subnets, every server launched there now gets an internet-facing address alongside its private one.
+      Which part of the subnets' configuration did the admin change?
     options:
       - id: a
-        text: Its route table has no 0.0.0.0/0 route
-        correct: true
-        why: Without a 0.0.0.0/0 route to the internet gateway, the servers' public addresses lead nowhere, so the subnet stays private.
+        text: Route table association
+        why: The associated route table only decides where the subnets' traffic is sent, so changing it hands no server an address of its own.
       - id: b
-        text: Its CIDR block is a private 10.0 range
-        why: The subnet's range is private, but the mistaken setting gave the servers public IPv4 addresses too, so the range alone is not the barrier.
+        text: Network ACL association
+        why: The associated network ACL filters traffic crossing the subnet edge, and it never gives a launched server any address.
       - id: c
-        text: Its name marks it as a private subnet
-        why: A name such as Private-subnet-1 only labels the subnet; it changes no routing, so it cannot be what keeps the servers offline.
+        text: Auto-assign public IP
+        correct: true
+        why: Switching auto-assign public IP on hands every resource launched in the payroll subnets a public IP, which is why it stays off there.
       - id: d
-        text: Its servers still hold private IPv4 addresses
-        why: The servers do keep private addresses inside the VPC, yet that sits alongside their new public addresses and blocks nothing.
+        text: IPv4 CIDR block
+        why: The CIDR block sets the pool of private addresses the servers draw from, so it cannot add an internet-facing one.
     evidence:
-      - The public subnets now reach the internet through the gateway, while the private subnets lack that route and stay private.
       - Under Actions, Edit subnet settings, auto-assign public IP stays off for private subnets, since turning it on would hand every resource there a public IP.
-      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
-    takeaway: Even with public addresses, a private subnet stays cut off while its route table has no 0.0.0.0/0 route to the internet gateway.
+      - Enter a CIDR (classless inter-domain routing) range, also called a CIDR block, which sets the pool of private IP addresses resources in the VPC can be given.
+    takeaway: Auto-assign public IP is what gives a subnet's servers public addresses, so private subnets keep it switched off.
     history: []
-    review:
-      attempts: 10
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only one that actually makes a subnet private; the other three hold for public subnets too or have no effect.)"
+    verified:
+      keyHash: aec334397208
+      fullHash: 66fc76a653cd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-9waax7
     version: 1
     status: live

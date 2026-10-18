@@ -574,7 +574,7 @@ questions:
       on: 2026-10-18
   - id: q-gzbhn6
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: vertical-scaling
@@ -582,31 +582,32 @@ questions:
     task: "3.3"
     level: 2
     stem: >-
-      Before the weekend rush, the cafe moved its ordering system to a larger instance type.
-      Each order was already handled quickly, yet customers still waited in line at peak time.
-      Why did scaling up help so little?
+      The cafe's owner explains EC2 scaling with the cafe's own counter, where each cashier stands for an instance.
+      Which change at the counter matches scaling up?
     options:
       - id: a
-        text: Each tier of the application scales on its own
-        why: Tiers do scale separately, but that does not explain why a bigger server left the queue in place.
+        text: Hiring extra cashiers for the lunch rush
+        why: Extra cashiers are extra instances working in parallel, which is scaling out rather than scaling up.
       - id: b
-        text: Surplus instances are scaled in once the rush ends
-        why: Scaling in does happen after a rush, but it says nothing about the queue during the busiest hour.
-      - id: c
-        text: Extra instances serve more customers at one time
+        text: Swapping a cashier's till for a faster one
         correct: true
-        why: Scaling up only makes one server stronger, and it cannot serve more customers at once when each order is already fast.
+        why: A faster till makes the same cashier more powerful, just as scaling up gives a running instance more power.
+      - id: c
+        text: Sending spare cashiers home after lunch
+        why: Sending spare cashiers home stands for removing instances after a rush, which is scaling in.
       - id: d
-        text: A larger instance type costs more for each hour
-        why: A bigger type does bill more, but its cost does not explain why customers kept waiting.
+        text: Posting a cashier at a second branch
+        why: A cashier at another branch is a redundant copy in another place, like instances spread over AZs, not a stronger one.
     evidence:
-      - More power per instance does not always help, since a faster cashier cannot hurry an undecided customer, but extra cashiers serve more people at once.
       - "**Scaling up (vertical)**: give running instances more power."
-    takeaway: Scaling up makes one instance stronger, which does little when the problem is too many customers at once.
+      - More power per instance does not always help, since a faster cashier cannot hurry an undecided customer, but extra cashiers serve more people at once.
+    takeaway: Scaling up is like giving the same cashier a faster till, since one instance gets more power and no instance is added.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 4 is the only option repeating the stem's 'customers', which points at the key."
+    verified:
+      keyHash: 6ddc0462d964
+      fullHash: 10e7736577ce
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-fdbtca
     version: 1
     status: live

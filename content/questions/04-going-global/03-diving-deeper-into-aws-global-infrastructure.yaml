@@ -257,45 +257,39 @@ questions:
   - id: q-9cp0nn
     version: 1
     status: draft
-    type: multi
-    select: 3
+    type: single
     pool: practice
     concept: multi-az-deployment
     note: m04/diving-deeper-into-aws-global-infrastructure
     task: "3.2"
-    level: 1
+    level: 2
     stem: >-
-      Beyond riding out the failure of one Availability Zone, which extra benefits does a multi-AZ deployment bring?
+      The cafe's ordering app runs in one Availability Zone, with nothing set up anywhere else.
+      A new barista says AWS will shift the app to another zone by itself if that zone fails.
+      Which fact shows the barista is wrong?
     options:
       - id: a
-        text: Quicker recovery after a disaster
-        correct: true
-        why: With a backup AZ already set up, the app can recover from a disaster faster than rebuilding it.
+        text: Each AZ has its own power and networking
+        why: AZs do have their own power and networking, but that isolation does not move an app that runs in only one of them.
       - id: b
-        text: Survival of a full Region outage
-        why: Every AZ of the deployment sits in one Region, so losing that Region takes a multi-Region design.
+        text: A Region is split into three or more AZs
+        why: A Region does hold three or more AZs, but spare zones nearby do not place the app in any of them.
       - id: c
-        text: Lower latency for end users
+        text: A backup AZ is one the customer sets up
         correct: true
-        why: Spreading the app across AZs also brings lower latency for its users, a bonus on top of riding out a failure.
+        why: In a multi-AZ design the app moves to a backup AZ you set up, so with no backup configured it has nowhere to go.
       - id: d
-        text: AWS services inside your own building
-        why: Running AWS services on premises is what AWS Outposts does, not a spread across AZs.
-      - id: e
-        text: Help in meeting compliance needs
-        correct: true
-        why: Compliance is one of the bonuses a multi-AZ deployment brings alongside recovery and continuity.
-      - id: f
-        text: DNS routing from URLs to IP addresses
-        why: Turning URLs into IP addresses is the job of Amazon Route 53, not a benefit of spreading across AZs.
+        text: Edge locations sit apart from every AZ
+        why: Edge locations are separate caching sites, which says nothing about whether an app gets moved between AZs.
     evidence:
       - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
-      - "**Multi-Region** goes one step further and survives a whole Region going down."
-    takeaway: A multi-AZ deployment also brings quicker disaster recovery, continuity, lower latency and help with compliance.
+      - AZ or Region outage -> switch to a configured backup AZ or another Region.
+      - A Region has three or more AZs, and each AZ has one or more data centers.
+    takeaway: Multi-AZ protection works only once the customer sets up a backup AZ, since AWS does not move a single-AZ app on its own.
     history: []
     review:
-      attempts: 3
-      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+      attempts: 6
+      lastFailure: "critic: Option 4 (the key) repeats the stem's words 'set up' ('nothing set up anywhere else' vs 'one the customer sets up'), which points at the key."
   - id: q-e00ex3
     version: 1
     status: live
@@ -334,35 +328,37 @@ questions:
       on: 2026-10-18
   - id: q-0eknw0
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: multi-az-deployment
     note: m04/diving-deeper-into-aws-global-infrastructure
     task: "3.2"
-    level: 2
+    level: 1
     stem: >-
-      The cafe runs its ordering app in a single Availability Zone.
-      What must the cafe set up so the app keeps taking orders if that zone fails?
+      Which description fits a multi-AZ deployment?
     options:
       - id: a
-        text: A larger instance of the app in the same AZ
-        why: A bigger instance still sits in the failed zone, so it goes down with that zone and orders stop.
+        text: The app runs in more than one Region at once
+        why: Spreading the app over several Regions is a multi-Region architecture, which goes a step past multi-AZ.
       - id: b
-        text: A standby copy of the app in a second AZ
-        correct: true
-        why: The app can only move to a backup AZ the cafe has set up ahead of time, so the copy in a second AZ keeps orders coming.
+        text: AWS services run on racks in your own building
+        why: Running AWS services on premises is what AWS Outposts does, not a spread across Availability Zones.
       - id: c
-        text: A cached copy of the menu pages at edge locations
-        why: Edge caches speed up delivery of content, but taking orders still needs the app running in a working zone.
+        text: Content is cached at sites outside any Region
+        why: Caching content outside Regions is the job of edge locations, which do not host the app's backup.
       - id: d
-        text: An archive of the app's log files in a second AZ
-        why: Log files in another zone record what the app did, but nothing there runs the app or takes new orders.
+        text: The app runs in several zones of one Region
+        correct: true
+        why: A multi-AZ deployment keeps the app in more than one AZ of a Region, so it moves to a backup AZ if one fails.
     evidence:
       - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
-      - AZ or Region outage -> switch to a configured backup AZ or another Region.
-    takeaway: A multi-AZ deployment works only when you set up a backup in a second AZ for the app to move to.
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+      - Edge locations sit outside Regions and cache content for lower latency and faster transfers.
+    takeaway: A multi-AZ deployment spreads an app over several Availability Zones inside one Region.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only one that keeps the app itself running when an AZ fails; 'second AZ' also repeats from option 1 and draws the eye.)"
+    verified:
+      keyHash: c5b32abaceda
+      fullHash: 5103e52d579a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

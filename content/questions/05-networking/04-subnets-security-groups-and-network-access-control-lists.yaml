@@ -470,47 +470,41 @@ questions:
       on: 2026-10-09
   - id: q-zkmhc1
     version: 1
-    status: draft
-    type: multi
-    select: 3
+    status: live
+    type: single
     pool: practice
     concept: subnets
     note: m05/subnets-security-groups-and-network-access-control-lists
     task: "3.5"
     level: 2
     stem: >-
-      The cafe is moving its systems into a VPC with one public subnet and one private subnet.
-      Which systems belong in the private subnet?
+      The cafe adds two apps to a VPC that has one public subnet and one private subnet.
+      Customers on the internet open the gift-card app to check their balances, while only the kitchen's own servers read the pastry tracker.
+      Where should the admin put the two apps?
     options:
       - id: a
-        text: The website where customers place orders
-        why: Customers on the internet must reach the ordering website, so it belongs in the public subnet.
+        text: Private subnet for the gift-card app, public for the pastry tracker
+        why: This swaps the two, so customers online could not reach the gift-card app while the kitchen-only tracker sat where the public reaches.
       - id: b
-        text: The database that holds customer details
-        correct: true
-        why: Customer details should be reached only from the cafe's own network, so their database sits in the private subnet.
+        text: The public subnet for both the gift-card app and the pastry tracker
+        why: Only the kitchen's own servers read the pastry tracker, so placing it in the public subnet puts it where outsiders reach.
       - id: c
-        text: The menu photos that every visitor's browser loads
-        why: Every visitor's browser on the internet must fetch the menu photos, so they belong in the public subnet.
+        text: Public subnet for the gift-card app, private for the pastry tracker
+        correct: true
+        why: Customers online must reach the gift-card app, so it goes public, and the pastry tracker read only by the kitchen's servers goes private.
       - id: d
-        text: The records of every member's past orders
-        correct: true
-        why: Order histories are for the cafe's own systems only, so they belong in the private subnet.
-      - id: e
-        text: The stock app that the kitchen staff use in house
-        correct: true
-        why: Only the cafe's own staff on its own network need the stock app, so it belongs in the private subnet.
-      - id: f
-        text: The page where members sign in to see their orders
-        why: Members on the internet must reach the sign-in page, so it belongs in the public subnet.
+        text: The private subnet for both the gift-card app and the pastry tracker
+        why: Customers on the internet must open the gift-card app, so hiding it in the private subnet would cut them off from their balances.
     evidence:
       - Public subnets hold what the public must reach, such as an online store's website.
       - Private subnets hold what only your private network should reach, such as a database of customer details and order histories.
-    takeaway: Put what the public must reach in a public subnet and what only your own network uses, such as customer data, in a private one.
+    takeaway: Place each app by who must reach it, so what the public opens goes public and what only your own network reads goes private.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+    verified:
+      keyHash: 74449c00ce36
+      fullHash: d52292390806
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-830jpt
     version: 1
     status: live

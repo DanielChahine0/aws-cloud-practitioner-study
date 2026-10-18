@@ -565,7 +565,7 @@ questions:
       on: 2026-10-18
   - id: q-ccvch4
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-elasticache-serverless
@@ -573,30 +573,33 @@ questions:
     task: "3.4"
     level: 2
     stem: >-
-      The cafe moves its node-based Amazon ElastiCache cache to the serverless option.
-      Which job does the team stop doing after the move?
+      The Amazon ElastiCache cache that sits in front of the cafe's RDS database is moved onto the serverless option.
+      Which job does the move hand over from the team to the cache itself?
     options:
       - id: a
-        text: Choosing which data the app keeps in the cache
-        why: The app still decides what to cache, since the serverless option changes how capacity is managed, not what is stored.
+        text: Picking which query results the app keeps cached
+        why: The app still decides what to cache, since the serverless option changes how capacity is handled, not what is stored.
       - id: b
-        text: Adding or removing nodes as demand shifts
+        text: Matching the cache's capacity to each day's demand
         correct: true
-        why: The serverless option scales itself with demand, so no one resizes the cache by adding or removing nodes.
+        why: The serverless option scales itself with demand, so no one resizes the cache ahead of a busy or quiet day.
       - id: c
-        text: Writing the app code that tries the cache first
-        why: The app's code still checks the cache before the database, so the team keeps writing and owning that logic.
+        text: Growing the database's storage as more orders arrive
+        why: ElastiCache scales only the cache, never the database's storage, so the move leaves RDS storage with the team.
       - id: d
-        text: Storing a database result in the cache on a miss
-        why: On a miss the app still reads the database and caches the result, so this step stays in the team's code.
+        text: Choosing the engine the cache stays compatible with
+        why: The team still picks Redis OSS, Valkey or Memcached, since the serverless option changes scaling, not the engine.
     evidence:
       - You resize the cache with demand, or let the serverless option scale itself, while AWS runs the infrastructure.
-      - On a miss, it reads RDS, caches the result and replies, so the next request hits.
-    takeaway: ElastiCache serverless takes node resizing off the team, while the app still decides what to cache and when.
+      - It scales the cache only, not the database's storage.
+      - Fully managed caching compatible with Redis OSS, Valkey and Memcached, so existing tools keep working.
+    takeaway: ElastiCache serverless takes capacity sizing off the team, while caching choices, the engine and the database stay the team's job.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the odd one out: the other three are app-side caching logic.)"
+    verified:
+      keyHash: 123777e0fc20
+      fullHash: 68ac4ab75c26
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-spcgax
     version: 1
     status: live
