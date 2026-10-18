@@ -358,7 +358,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
   - id: q-frzd72
-    version: 1
+    version: 2
     status: live
     type: single
     pool: practice
@@ -367,30 +367,34 @@ questions:
     task: "4.3"
     level: 1
     stem: >-
-      Which AWS resource is a community question-and-answer site that also hosts the AWS Knowledge Center?
+      The cafe's part-time developer wants to post a question about the menu app and get replies from other people who build on AWS.
+      Which AWS resource is made for that?
     options:
       - id: a
         text: AWS Support Center
-        why: The Support Center is where customers open cases with AWS, not a community answer site.
+        why: A Support Center case goes to AWS staff, not out to other builders for them to reply.
       - id: b
-        text: AWS Prescriptive Guidance
-        why: Prescriptive Guidance publishes expert guides and patterns, not community answers.
+        text: AWS Professional Services
+        why: Professional Services sells project-based consulting, not a public board where peers answer.
       - id: c
-        text: AWS Trust and Safety Center
-        why: The Trust and Safety Center takes reports of suspected abuse, not technical questions.
+        text: AWS Health Dashboard
+        why: The Health Dashboard shows AWS service health and updates for the account, not questions from users.
       - id: d
         text: AWS re:Post
         correct: true
-        why: AWS re:Post is the community Q&A site, and it hosts the Knowledge Center's FAQ articles and videos.
+        why: re:Post is the AWS community Q&A site, so a posted question can be answered by other users.
     evidence:
       - "AWS re:Post: community Q&A that hosts the AWS Knowledge Center of FAQ articles and videos."
-    takeaway: AWS re:Post is the AWS community Q&A site and home of the AWS Knowledge Center.
-    history: []
+    takeaway: To ask a question that fellow AWS users can answer, the place to post it is the community site AWS re:Post.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: 6d6169b7b136
-      fullHash: 5a4ca8e8f890
+      keyHash: 59e3bf5c4b84
+      fullHash: bc632fb09a28
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-xmbsrr
     version: 1
     status: live

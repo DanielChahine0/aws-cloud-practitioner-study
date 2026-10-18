@@ -423,7 +423,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
   - id: q-g02dpe
-    version: 1
+    version: 2
     status: live
     type: single
     pool: practice
@@ -432,32 +432,36 @@ questions:
     task: "3.8"
     level: 3
     stem: >-
-      The cafe hires a remote bookkeeper who needs a complete desktop that keeps their files and settings between sessions and works like an office PC from home.
+      The cafe's catering manager works from the back office, a laptop at home and borrowed machines at event venues.
+      The owner wants the same tools, open spreadsheets and saved menus waiting for the manager at every sign-in, without buying a new PC.
       Which service fits?
     options:
       - id: a
         text: Amazon WorkSpaces
         correct: true
-        why: WorkSpaces gives a managed, persistent cloud desktop that staff reach securely from anywhere and use like an office PC.
+        why: WorkSpaces hands the manager one fully managed cloud desktop that persists, so the tools and files follow every sign-in.
       - id: b
         text: Amazon AppStream 2.0
-        why: AppStream 2.0 streams individual apps to a browser, not a complete desktop that persists.
+        why: AppStream 2.0 streams chosen applications to a browser, so the manager gets apps but no lasting desktop of their own.
       - id: c
         text: Amazon WorkSpaces Secure Browser
-        why: Secure Browser is a lightweight browser for web-only users, not a full desktop for daily work.
+        why: Secure Browser only offers a managed browser for web tasks, which leaves out the desktop tools and saved spreadsheets.
       - id: d
         text: Amazon EC2
-        why: EC2 gives raw virtual servers that the cafe would have to manage, not a managed desktop service.
+        why: EC2 rents bare virtual servers, so the cafe would have to build and run a desktop setup on them by itself.
     evidence:
       - "**Amazon WorkSpaces**: fully managed virtual desktop infrastructure, a complete persistent desktop staff reach securely from anywhere and use like an office PC, cost-efficient and easy to run."
       - WorkSpaces gives a full desktop, AppStream 2.0 streams apps (the course's pick for staff SaaS access) and Secure Browser suits web-only work.
-    takeaway: A complete, persistent desktop used like an office PC from anywhere points to Amazon WorkSpaces.
-    history: []
+    takeaway: When one person needs the same managed desktop, tools and files on any device they sign in from, choose Amazon WorkSpaces.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: bd17ec9b1de7
-      fullHash: b869bc37b1de
+      keyHash: cea3a3811bda
+      fullHash: 76820518bc75
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-n5dg2a
     version: 1
     status: live

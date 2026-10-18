@@ -323,7 +323,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
   - id: q-m2tdyx
-    version: 1
+    version: 2
     status: live
     type: single
     pool: practice
@@ -332,32 +332,36 @@ questions:
     task: "2.1"
     level: 2
     stem: >-
-      The cafe launches EC2 instances for its ordering app and must decide which traffic may reach them.
-      Under the AWS shared responsibility model, who sets up the security groups for these instances?
+      A new kitchen display app now runs on an EC2 instance, and the owner is listing the jobs the cafe itself must do to control which senders can reach that instance over the network.
+      Which job belongs on that list?
     options:
       - id: a
-        text: AWS, as part of security of the cloud
-        why: Security of the cloud covers AWS hardware, software and facilities, not the rules around the cafe's instances.
+        text: Guarding the data center buildings that hold the instance
+        why: Physical data centers fall under security of the cloud, which AWS owns, and guarding them does not filter network senders.
       - id: b
-        text: The cafe, as part of security in the cloud
+        text: Writing the allow rules on the instance's security group
         correct: true
-        why: Configuring security groups for its own resources is the customer's job, as security in the cloud.
+        why: The customer sets up the security groups around its own resources, and their allow rules decide which senders reach the instance.
       - id: c
-        text: AWS, as part of security in the cloud
-        why: Security in the cloud is the customer's share, so AWS does not set up the cafe's security groups.
+        text: Replacing failed hardware in the servers that run EC2
+        why: The hardware behind EC2 sits on the AWS side of the model, so the cafe never repairs those servers.
       - id: d
-        text: The cafe, as part of security of the cloud
-        why: Security of the cloud is AWS's share, covering its hardware and facilities, not the cafe's instance traffic.
+        text: Patching the operating system installed on the instance
+        why: Patching the instance's operating system is also the cafe's job, but it fixes software flaws rather than deciding which senders get in.
     evidence:
       - Under the AWS Shared Responsibility Model, setting up network ACLs and security groups for your subnets and resources is your job.
-      - That is security IN the cloud, the traffic protection around your own applications.
-    takeaway: Configuring security groups is the customer's job under the shared responsibility model, as security in the cloud.
-    history: []
+      - AWS owns security OF the cloud, meaning the software, hardware, data centers and facilities behind its services.
+      - A security group is the instance's own virtual firewall, filtering traffic to and from one resource such as an EC2 instance, and every instance gets one at launch.
+    takeaway: Writing security group rules is the customer's job, while AWS secures the hardware, software and buildings behind EC2.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: 8823337dac42
-      fullHash: afa1cf647e47
+      keyHash: 0121ffa65d41
+      fullHash: 6e09ed7a80f0
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-bnkz4w
     version: 1
     status: live

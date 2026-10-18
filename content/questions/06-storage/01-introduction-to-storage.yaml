@@ -37,7 +37,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
   - id: q-rzt6cy
-    version: 1
+    version: 2
     status: live
     type: multi
     select: 2
@@ -47,34 +47,39 @@ questions:
     task: "3.6"
     level: 1
     stem: >-
-      Which AWS offerings store data as blocks, so that an edit rewrites only the blocks that changed?
+      The cafe's till servers run on Amazon EC2, and the IT lead wants their disks to save each update by changing just the affected pieces of data.
+      Which services attach that kind of storage straight to those EC2 servers?
     options:
       - id: a
-        text: Amazon S3 buckets
-        why: S3 keeps whole objects in flat buckets and rewrites the whole object on a change, which is object storage.
+        text: Amazon EFS
+        why: EFS is a shared NFS file system that many servers reach over the network, which is file storage and not per-block disks.
       - id: b
         text: Amazon EC2 instance store
         correct: true
-        why: Instance store is temporary, high-performance block storage that comes with the instance's host.
+        why: Instance store is fast block storage on the till server's own host, though its data is only temporary.
       - id: c
-        text: Amazon EFS file systems
-        why: EFS shares a hierarchical file system over the network, which makes it file storage rather than block storage.
+        text: Amazon S3
+        why: S3 rewrites a whole object whenever it changes, so an update never touches just the affected pieces.
       - id: d
-        text: Amazon EBS volumes
+        text: Amazon EBS
         correct: true
-        why: EBS supplies persistent block volumes that update only the blocks an edit touches.
+        why: EBS gives the till servers managed, persistent block volumes that rewrite only the blocks an update changes.
       - id: e
-        text: Amazon S3 File Gateway
-        why: S3 File Gateway offers a local file share whose files land in S3, so it is not block storage.
+        text: AWS Backup
+        why: AWS Backup copies data for safekeeping on a schedule, so it protects the till disks rather than being the disks.
     evidence:
+      - Data is split into blocks for fast access, and an edit rewrites only changed blocks, which suits frequently updated apps and databases.
       - "Services: Amazon EC2 instance store (unmanaged, temporary, high performance) and Amazon EBS (managed, persistent)."
-    takeaway: EC2 gets block storage from two places, the temporary instance store and persistent Amazon EBS volumes.
-    history: []
+    takeaway: Block storage reaches EC2 two ways, lasting Amazon EBS volumes and fast but temporary instance store on the host.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: f791b8b5b099
-      fullHash: 017c30f3110a
+      keyHash: 6e8f26081e98
+      fullHash: cb8b92bdbdb1
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-bj7kg9
     version: 1
     status: live
