@@ -506,42 +506,40 @@ questions:
       on: 2026-10-18
   - id: q-mk4p2s
     version: 1
-    status: draft
-    type: multi
-    select: 2
+    status: live
+    type: single
     pool: practice
     concept: ami-repeatability
     note: m02/demo-launching-an-amazon-ec2-instance
     task: "3.3"
     level: 2
     stem: >-
-      The cafe now launches every web server from one AMI through an automated deployment, instead of setting each server up by hand.
-      Which benefits does this bring?
+      Each time the cafe adds a web server, a staff member installs its software by hand, and now and then a skipped step leaves the new server broken.
+      Which change stops these slips?
     options:
       - id: a
-        text: Lower prices from a long-term commitment
-        why: Commitment discounts come from the pricing model, such as a Savings Plan, not from launching servers from one image.
+        text: Move each server to a larger instance type
+        why: A larger instance type adds hardware power, but the software would still go on by hand with the same skipped steps.
       - id: b
-        text: Fewer errors than hand-built setups
+        text: Launch each server from one shared AMI
         correct: true
-        why: Every server starts from the same image by automation, so steps missed by hand no longer creep in.
+        why: Every server starts from the same image with its software already in place, so no install step can be skipped.
       - id: c
-        text: Backups of the data each server writes
-        why: Data on servers lives on volumes like Amazon EBS, and an AMI is a setup template rather than a backup of that data.
+        text: Reuse one key pair on each new server
+        why: A shared key pair only controls how staff log in, and it does nothing about missed install steps.
       - id: d
-        text: Easier scaling out to more servers
-        correct: true
-        why: New servers launched from the same AMI match the old ones, which makes adding servers simple.
-      - id: e
-        text: Traffic spread across healthy servers
-        why: Spreading requests over healthy servers is the job of Elastic Load Balancing, not of launching them from one AMI.
+        text: Attach a larger EBS volume to each server
+        why: A larger EBS volume gives each server more disk, but its software would still be installed by hand.
     evidence:
       - Launching from one AMI with automated deployments gives identical setups, consistent dev and test, fewer errors, easier scaling and simpler large fleets.
-    takeaway: Launching every server from one AMI by automation cuts setup errors and makes scaling out easier.
+      - An AMI holds the OS, architecture, storage layout, preinstalled software and launch permissions.
+    takeaway: Launching every server from one AMI replaces hand setup, so skipped install steps stop breaking new servers.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+    verified:
+      keyHash: 7f607d5fa561
+      fullHash: ecd5f32a283e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-v49qm7
     version: 1
     status: live
