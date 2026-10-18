@@ -865,35 +865,36 @@ questions:
     task: "4.3"
     level: 2
     stem: >-
-      Late on a Sunday, the cafe's owner cannot update the payment details on the cafe's AWS account, which is still on Basic Support.
-      She wants help from AWS right away without moving to a paid plan.
-      Which facts explain why she can get that help?
+      The cafe's owner decides to keep the cafe on the free Basic Support plan for now.
+      She lists the help the cafe can still use without paying for a Support plan.
+      Which items belong on her list?
     options:
       - id: a
-        text: Basic Support includes AWS re:Post community answers
-        why: True, but re:Post answers come from other AWS users, not from AWS working on the cafe's own account.
+        text: Community questions and answers on AWS re:Post
+        correct: true
+        why: Basic Support includes re:Post, so the cafe can ask other AWS users for help at no cost.
       - id: b
-        text: Basic Support includes customer service at any hour
+        text: Health alerts from the AWS Personal Health Dashboard
         correct: true
-        why: Basic Support gives every customer 24/7 customer service, so a Sunday night account problem is covered.
+        why: Basic Support includes the Personal Health Dashboard, which alerts the cafe when its resources may be hit.
       - id: c
-        text: Basic Support includes the AWS Personal Health Dashboard
-        why: True, but that dashboard shows AWS service health and alerts, not help with the cafe's payment details.
+        text: Technical support cases opened in AWS Support Center
+        why: Real, but technical cases need a plan above Basic Support, so the free plan leaves them off the list.
       - id: d
-        text: Each Support plan includes the plan below it
-        why: True, but plans stacking explains what an upgrade keeps, not what the free plan already covers.
+        text: Launch planning through infrastructure event management
+        why: Real, but event management is paid help from the higher plans, so the free plan does not include it.
       - id: e
-        text: Every customer can open account and billing cases
-        correct: true
-        why: In the Support Center even a Basic Support customer can open an account and billing case about payment details.
+        text: Architecture and cost advice from a designated TAM
+        why: Real, but a designated TAM comes with Enterprise Support, far above the free plan the cafe keeps.
     evidence:
       - "Basic: 24/7 customer service, docs, whitepapers, forums, re:Post and the AWS Personal Health Dashboard (service health, with alerts when your resources may be hit)."
       - In the AWS Support Center every customer can open account and billing cases, while technical support cases need a plan above Basic Support.
-    takeaway: Basic Support still reaches AWS at any hour for account and billing problems, since every customer can open those cases.
+      - Enterprise Support includes a designated technical account manager.
+    takeaway: Free Basic Support still covers re:Post and Personal Health Dashboard alerts, but not technical cases, event management or a TAM.
     history: []
     review:
-      attempts: 3
-      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+      attempts: 6
+      lastFailure: "critic: Option 2 uses the retired name 'AWS Personal Health Dashboard'; the exam guide's current name is 'AWS Health Dashboard'."
   - id: q-9w43w4
     version: 1
     status: live
