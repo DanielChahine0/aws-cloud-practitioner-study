@@ -251,45 +251,48 @@ questions:
       on: 2026-10-09
   - id: q-yg53ry
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
     concept: aws-audit-manager
     note: m10/auditing-aws-resources-for-compliance
     task: "2.2"
-    level: 1
+    level: 2
     stem: >-
-      Which tasks does AWS Audit Manager perform?
+      The cafe's outside auditor must be sure the audit tool cannot change any of the settings it examines.
+      Between outside audits, the cafe's managers also want the same tool to help them weigh the cafe's exposure themselves.
+      Which AWS Audit Manager traits meet these two needs?
     options:
       - id: a
-        text: Test whether controls such as policies work
+        text: It reaches the resources through read-only access
         correct: true
-        why: Audit Manager tests whether the policies, procedures and activities being audited actually work.
+        why: Read-only access means Audit Manager cannot alter what it audits, which protects the audit's integrity.
       - id: b
-        text: Restore settings that drift from the rules
-        why: Fixing settings is AWS Config's remediation, and Audit Manager only has read-only access.
+        text: It maps resources to standards with prebuilt frameworks
+        why: Frameworks are a real Audit Manager trait, but mapping to a standard neither blocks changes nor helps the managers weigh exposure.
       - id: c
-        text: Support a firm's internal risk assessments
+        text: It backs a company's internal risk assessments
         correct: true
-        why: Audit Manager supports the internal risk assessments a firm runs on its own controls.
+        why: Audit Manager supports internal risk assessments, so the managers can use it to weigh the cafe's exposure between audits.
       - id: d
-        text: Record the API calls made in an account
-        why: Recording API calls is the job of AWS CloudTrail, not of Audit Manager.
+        text: It gathers evidence automatically across the teams
+        why: Automatic evidence gathering saves manual work, but it does not stop the tool from changing settings.
       - id: e
-        text: Spot signs of threats in account activity
-        why: Watching activity for threats is the job of Amazon GuardDuty, not of Audit Manager.
+        text: It builds reports that are ready for an audit
+        why: Audit-ready reports serve the outside audit, yet they neither block changes nor help the managers weigh exposure.
     evidence:
-      - It tests whether controls (policies, procedures, activities) work, runs stakeholder reviews and builds audit-ready reports.
       - Read-only access protects audit integrity, and it supports internal risk assessments.
-    takeaway: AWS Audit Manager tests whether controls work and supports internal risk assessments, all through read-only access.
+    takeaway: AWS Audit Manager works through read-only access to protect audit integrity and also supports a company's internal risk assessments.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 5 describe Audit Manager; 1, 3 and 4 describe GuardDuty, CloudTrail and Config.)"
+    verified:
+      keyHash: 9e0299126dd9
+      fullHash: 6066eee01587
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-c8d2s6
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: automated-evidence-collection
@@ -307,7 +310,7 @@ questions:
         text: Use AWS Artifact to share AWS's own reports
         why: Artifact reports describe AWS's controls, not the cafe's, so the teams still gather their own proof.
       - id: c
-        text: Use AWS Audit Manager to gather the proof
+        text: Use AWS Audit Manager to collect evidence
         correct: true
         why: Audit Manager collects evidence automatically and continually across teams, so no one gathers it by hand.
       - id: d
@@ -317,9 +320,11 @@ questions:
       - Audit Manager is fully managed, audits usage continually and automates evidence collection across teams.
     takeaway: AWS Audit Manager replaces manual, team-by-team proof gathering with continual automated evidence collection.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 uses 'the proof', a definite reference back to the stem.)"
+    verified:
+      keyHash: 3df95a20e2ab
+      fullHash: 917bc37293e3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-9taz85
     version: 1
     status: live

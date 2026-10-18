@@ -36,7 +36,7 @@ questions:
       on: 2026-10-09
   - id: q-v5cxwv
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cloud-monitoring
@@ -44,30 +44,32 @@ questions:
     task: "2.2"
     level: 2
     stem: >-
-      The cafe's ordering app runs on AWS services that add and remove capacity on their own as orders rise and fall.
-      Why does the owner still need to monitor the app?
+      For several weeks the cafe has collected the ordering app's response times and compared each week's readings with the week before.
+      In the monitoring loop, which step comes after judging those readings?
     options:
       - id: a
-        text: The physical servers under the app need the owner's upkeep
-        why: AWS cares for the physical hardware, so there is no server upkeep for the owner to watch.
+        text: Watching the app for the first time
+        why: Watching is where the loop begins, before any response times are gathered or judged.
       - id: b
-        text: The scaling rules expire unless the owner renews them monthly
-        why: Scaling rules do not lapse each month; the reason to watch is that capacity changes by itself.
+        text: Gathering the app's response times
+        why: Gathering the readings comes before judging them, and the cafe has already done it.
       - id: c
-        text: Capacity that changes on its own still needs regular checking
+        text: Acting on what the readings show
         correct: true
-        why: Because capacity shifts by itself, the owner must keep confirming the app stays healthy and fast.
+        why: Once the readings are judged over time, the loop ends by acting on them, such as fixing a slow app.
       - id: d
-        text: The Availability Zones need the owner to patch them each week
-        why: AWS runs the Availability Zones, so patching them is not a duty that calls for the owner to monitor.
+        text: Charting the readings on a dashboard
+        why: Charting shows the gathered readings so they can be judged; it is not the step that follows judging.
     evidence:
-      - AWS services scale on their own, so you must keep checking they behave.
-      - Dynamic scaling makes it essential on AWS.
-    takeaway: Because AWS resources scale dynamically, you must keep monitoring them to confirm they still behave.
+      - "The loop: watch, gather metrics, judge them over time, then act."
+      - Monitoring means collecting metrics, judging them and acting.
+    takeaway: Monitoring runs as a loop that watches, gathers metrics, judges them over time and finally acts on the result.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement; the others are false claims about owner duties.)"
+    verified:
+      keyHash: 266c1c6bff06
+      fullHash: b974dd1ca8e2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-rfv5qd
     version: 1
     status: live

@@ -36,7 +36,7 @@ questions:
       on: 2026-10-09
   - id: q-qed59y
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 3
     pool: practice
@@ -48,33 +48,35 @@ questions:
       Which of these events would the cafe's admin find in AWS Health?
     options:
       - id: a
-        text: AWS schedules maintenance on the cafe's instance
+        text: Maintenance is planned for the cafe's EC2 instance
         correct: true
         why: AWS Health tells you ahead of time about planned changes to your resources so you can prepare.
       - id: b
-        text: AWS opens a new Region in a nearby country
-        why: A new Region is general AWS news, not an event that affects the cafe's own resources.
+        text: A compliance report from AWS is ready to download
+        why: AWS's own compliance reports come from AWS Artifact, not as events in AWS Health.
       - id: c
-        text: An AWS service outage slows the cafe's app
+        text: A service issue slows the cafe's order database
         correct: true
-        why: AWS Health reports service events, such as an outage that touches resources the cafe runs.
+        why: AWS Health reports service events, such as an AWS issue that touches resources the cafe runs.
       - id: d
-        text: AWS releases a new instance type the cafe could try
-        why: A new instance type is a product launch, not a health event affecting resources the cafe already runs.
+        text: A best-practice check finds an idle cafe database
+        why: Best-practice checks that flag idle resources come from AWS Trusted Advisor, not AWS Health.
       - id: e
-        text: AWS sends a notice about the cafe's account
+        text: A notice arrives about the cafe's AWS account
         correct: true
         why: Account notices are one of the event types that AWS Health delivers alongside service events.
       - id: f
-        text: AWS announces a new service in public preview
-        why: A service preview is a general announcement, not an event that touches the cafe's resources.
+        text: The cafe's instance CPU passes its alarm threshold
+        why: A metric crossing a threshold the cafe set is a CloudWatch alarm, not an AWS Health event.
     evidence:
       - It covers service events, planned changes and account notices.
-    takeaway: AWS Health reports service events, planned changes and account notices that affect your resources, not general AWS news.
+    takeaway: AWS Health reports events that affect your resources - service events, planned changes and account notices - not checks, reports or your own alarms.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 2, 4 and 6 are the only ones that say 'the cafe's'.)"
+    verified:
+      keyHash: 49d8a0454a02
+      fullHash: bd620e1a73bf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-8x6k11
     version: 1
     status: live
