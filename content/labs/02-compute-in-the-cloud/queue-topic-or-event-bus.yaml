@@ -1,0 +1,176 @@
+id: lab-m02-queue-topic-or-event-bus
+module: 2
+title: Queue, topic or event bus
+engine: sort
+tier: stretch
+status: live
+rev: 1
+concepts:
+  - messaging-and-queuing
+  - amazon-sqs
+  - amazon-sns
+  - publish-subscribe
+  - amazon-eventbridge
+  - event-driven-architecture
+notes:
+  - m02/messaging-and-queuing
+minutes: 5
+brief: >-
+  The cafe's new ordering system sends and receives many kinds of message, and each needs to travel differently.
+  Sort each need under the AWS service that carries it best.
+spec:
+  buckets:
+    - id: sqs
+      label: Amazon SQS
+    - id: sns
+      label: Amazon SNS
+    - id: eventbridge
+      label: Amazon EventBridge
+  cards:
+    - id: drink-tickets
+      text: Drink tickets from the till that wait until a barista is free to make them
+      bucket: sqs
+      goal: g1
+    - id: catering-backlog
+      text: Catering requests that the cafe's one busy planner works through, one at a time
+      bucket: sqs
+      goal: g1
+    - id: loyalty-points
+      text: Loyalty point updates the rewards app can process later, in the quiet hours
+      bucket: sqs
+      goal: g1
+    - id: menu-change
+      text: One menu change for the ordering app, the shop signage and the email list, all three having asked for menu news
+      bucket: sns
+      goal: g2
+    - id: drink-ready-text
+      text: A text telling a customer their drink is on the counter, sent while they are still waiting
+      bucket: sns
+      goal: g2
+    - id: offers-only
+      text: News of offers sent only to customers who signed up for offers, not for new blends or tasting evenings
+      bucket: sns
+      goal: g2
+    - id: many-sources
+      text: Notices from the cafe's apps, AWS services and a partner's software, each read on arrival to pick the apps it goes to
+      bucket: eventbridge
+      goal: g3
+    - id: supplier-alerts
+      text: Alerts from the bean supplier's software that the stock app reads only in its own format, and only for low stock
+      bucket: eventbridge
+      goal: g3
+    - id: peak-order-events
+      text: Each order placed at the peak, sent to the payment, kitchen and stock services and held for any that is down
+      bucket: eventbridge
+      goal: g3
+goals:
+  - id: g1
+    label: Work that can wait sits with Amazon SQS
+    hint: Ask whether the work can sit and wait until the one who handles it is free, then be picked up, done and cleared.
+  - id: g2
+    label: Messages pushed to subscribers the moment they are sent sit with Amazon SNS
+    hint: Ask whether a message must go out the moment it is sent rather than wait to be picked up, perhaps to a person by text or email, and whether subscribers choose what they hear.
+  - id: g3
+    label: Events filtered, reshaped or routed onward sit with Amazon EventBridge
+    hint: Ask whether something in the middle must take in happenings from any sender, work out who cares about each one and adapt it for them before passing it on.
+solution:
+  - { t: place, card: drink-tickets, bucket: sqs }
+  - { t: place, card: catering-backlog, bucket: sqs }
+  - { t: place, card: loyalty-points, bucket: sqs }
+  - { t: place, card: menu-change, bucket: sns }
+  - { t: place, card: drink-ready-text, bucket: sns }
+  - { t: place, card: offers-only, bucket: sns }
+  - { t: place, card: many-sources, bucket: eventbridge }
+  - { t: place, card: supplier-alerts, bucket: eventbridge }
+  - { t: place, card: peak-order-events, bucket: eventbridge }
+wrongPaths:
+  - mistake: Thinks Amazon SNS parks drink tickets until a barista is free
+    failsGoal: g1
+    actions:
+      - { t: place, card: drink-tickets, bucket: sns }
+      - { t: place, card: catering-backlog, bucket: sqs }
+      - { t: place, card: loyalty-points, bucket: sqs }
+      - { t: place, card: menu-change, bucket: sns }
+      - { t: place, card: drink-ready-text, bucket: sns }
+      - { t: place, card: offers-only, bucket: sns }
+      - { t: place, card: many-sources, bucket: eventbridge }
+      - { t: place, card: supplier-alerts, bucket: eventbridge }
+      - { t: place, card: peak-order-events, bucket: eventbridge }
+  - mistake: Pushes a backlog of catering requests out at once instead of letting the planner work through it
+    failsGoal: g1
+    actions:
+      - { t: place, card: drink-tickets, bucket: sqs }
+      - { t: place, card: catering-backlog, bucket: sns }
+      - { t: place, card: loyalty-points, bucket: sqs }
+      - { t: place, card: menu-change, bucket: sns }
+      - { t: place, card: drink-ready-text, bucket: sns }
+      - { t: place, card: offers-only, bucket: sns }
+      - { t: place, card: many-sources, bucket: eventbridge }
+      - { t: place, card: supplier-alerts, bucket: eventbridge }
+      - { t: place, card: peak-order-events, bucket: eventbridge }
+  - mistake: Puts a menu change on a queue, where one reader takes it and the others never hear it
+    failsGoal: g2
+    actions:
+      - { t: place, card: drink-tickets, bucket: sqs }
+      - { t: place, card: catering-backlog, bucket: sqs }
+      - { t: place, card: loyalty-points, bucket: sqs }
+      - { t: place, card: menu-change, bucket: sqs }
+      - { t: place, card: drink-ready-text, bucket: sns }
+      - { t: place, card: offers-only, bucket: sns }
+      - { t: place, card: many-sources, bucket: eventbridge }
+      - { t: place, card: supplier-alerts, bucket: eventbridge }
+      - { t: place, card: peak-order-events, bucket: eventbridge }
+  - mistake: Thinks a menu change that apps and an email list asked for needs an event router rather than a topic
+    failsGoal: g2
+    actions:
+      - { t: place, card: drink-tickets, bucket: sqs }
+      - { t: place, card: catering-backlog, bucket: sqs }
+      - { t: place, card: loyalty-points, bucket: sqs }
+      - { t: place, card: menu-change, bucket: eventbridge }
+      - { t: place, card: drink-ready-text, bucket: sns }
+      - { t: place, card: offers-only, bucket: sns }
+      - { t: place, card: many-sources, bucket: eventbridge }
+      - { t: place, card: supplier-alerts, bucket: eventbridge }
+      - { t: place, card: peak-order-events, bucket: eventbridge }
+  - mistake: Thinks a topic can filter a supplier's alerts and reshape them for the stock app
+    failsGoal: g3
+    actions:
+      - { t: place, card: drink-tickets, bucket: sqs }
+      - { t: place, card: catering-backlog, bucket: sqs }
+      - { t: place, card: loyalty-points, bucket: sqs }
+      - { t: place, card: menu-change, bucket: sns }
+      - { t: place, card: drink-ready-text, bucket: sns }
+      - { t: place, card: offers-only, bucket: sns }
+      - { t: place, card: many-sources, bucket: eventbridge }
+      - { t: place, card: supplier-alerts, bucket: sns }
+      - { t: place, card: peak-order-events, bucket: eventbridge }
+  - mistake: Thinks one queue hands each peak order to every service, when one consumer takes it and deletes it
+    failsGoal: g3
+    actions:
+      - { t: place, card: drink-tickets, bucket: sqs }
+      - { t: place, card: catering-backlog, bucket: sqs }
+      - { t: place, card: loyalty-points, bucket: sqs }
+      - { t: place, card: menu-change, bucket: sns }
+      - { t: place, card: drink-ready-text, bucket: sns }
+      - { t: place, card: offers-only, bucket: sns }
+      - { t: place, card: many-sources, bucket: eventbridge }
+      - { t: place, card: supplier-alerts, bucket: eventbridge }
+      - { t: place, card: peak-order-events, bucket: sqs }
+  - mistake: Thinks a topic checks each notice and picks its receivers, when it sends every message to all its subscribers
+    failsGoal: g3
+    actions:
+      - { t: place, card: drink-tickets, bucket: sqs }
+      - { t: place, card: catering-backlog, bucket: sqs }
+      - { t: place, card: loyalty-points, bucket: sqs }
+      - { t: place, card: menu-change, bucket: sns }
+      - { t: place, card: drink-ready-text, bucket: sns }
+      - { t: place, card: offers-only, bucket: sns }
+      - { t: place, card: many-sources, bucket: sns }
+      - { t: place, card: supplier-alerts, bucket: eventbridge }
+      - { t: place, card: peak-order-events, bucket: eventbridge }
+debrief:
+  lines:
+    - Amazon SQS holds each message until a consumer is ready to take it, so work that can wait never holds up the sender.
+    - Amazon SNS pushes one message to every subscriber of a topic at once, people included, and separate topics let customers choose what they hear.
+    - Amazon EventBridge takes in events from apps, AWS services and partner software, filters and reshapes them, and delivers each to the services that need it, holding it for any that is down.
+  questions: [q-63w3ny, q-t3s9r7, q-sb3k75]
