@@ -534,3 +534,45 @@ questions:
       fullHash: bb852580890f
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+
+  - id: q-rspxfx
+    version: 1
+    status: live
+    type: multi
+    pool: practice
+    concept: go-global-in-minutes
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 1
+    select: 2
+    stem: >-
+      The cafe chain's owner reads about the benefit called go global in minutes, which the exam guide calls speed of deployment.
+      Which statements describe that benefit?
+    options:
+      - id: a
+        text: An app can reach Regions around the world in a few clicks
+        correct: true
+        why: Deploying one application to multiple Regions with just a few clicks is the speed of deployment the benefit names.
+      - id: b
+        text: Hardware can be sized for today's users, not a forecast
+        why: Sizing for today rather than a forecast is stop guessing capacity, which sizes an app rather than spreading it abroad.
+      - id: c
+        text: A new country can be served from a Region, not new buildings
+        correct: true
+        why: Using a Region AWS already runs abroad, rather than building data centers there, is going global in minutes.
+      - id: d
+        text: Bulk hardware buying lowers the prices that every customer pays
+        why: Lower prices from buying in bulk describe economies of scale, which has nothing to do with reaching new places.
+      - id: e
+        text: Test environments can be deleted so that their costs stop
+        why: Throwaway test environments describe increase speed and agility, which is about trying ideas, not going abroad.
+    evidence:
+      - "The exam guide calls this benefit speed of deployment: with go global in minutes, you deploy an application to multiple Regions around the world with just a few clicks."
+      - A US company expanding to India can deploy to an AWS-managed Region there instead of building its own data centers, in minutes rather than months or years.
+    takeaway: Going global in minutes means deploying to Regions AWS already runs worldwide in a few clicks, instead of building abroad.
+    history: []
+    verified:
+      keyHash: 49ccc14ccf80
+      fullHash: 6ab79077a9bc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
