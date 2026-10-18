@@ -1,0 +1,124 @@
+id: lab-m09-lock-the-root-user
+module: 9
+title: Lock the root user
+engine: configure
+tier: stretch
+status: live
+rev: 1
+concepts:
+  - aws-account-root-user
+  - multi-factor-authentication
+  - iam-password-policies
+  - access-keys
+  - aws-iam
+  - aws-iam-identity-center
+notes:
+  - m09/preventing-unauthorized-access
+minutes: 5
+brief: >-
+  The cafe owner opened the AWS account as the root user, still signs in with it every morning, and once made a root access key for an old billing script.
+  A new manager starts next week, so lock the root user down before then.
+  Set how the root user signs in, which credentials it keeps, and how the team signs in for daily work.
+spec:
+  fields:
+    - kind: toggle
+      id: root-mfa
+      label: Turn on MFA for the root user
+      initial: false
+    - kind: select
+      id: root-password
+      label: Root user password
+      options:
+        - id: till-password
+          label: The till password the staff already share
+        - id: short-word
+          label: A short word that is easy to remember
+        - id: policy-allowed
+          label: Whatever the account password policy allows
+          detail: The account password policy asks for at least 8 characters (a lab value).
+        - id: long-unique
+          label: A long password used nowhere else
+      initial: till-password
+    - kind: select
+      id: root-access-keys
+      label: Root user access keys
+      options:
+        - id: none
+          label: No access keys
+        - id: keep-existing
+          label: Keep the existing access key
+          detail: A long-term access key ID and secret access key that sign CLI and API requests.
+        - id: create-cli
+          label: Create a new one for the command line
+          detail: A fresh long-term key pair for signing AWS CLI requests.
+      initial: keep-existing
+    - kind: select
+      id: daily-sign-in
+      label: Daily sign-in
+      options:
+        - id: root-user
+          label: The root user
+          detail: The owner identity, which can do anything and cannot be restricted.
+        - id: iam-admin-group
+          label: An IAM user for each person, in a group
+          detail: Each person gets their own credentials and inherits the group's permissions.
+        - id: identity-center
+          label: AWS IAM Identity Center
+          detail: Staff use one login from an existing identity source, with single sign-on.
+      initial: root-user
+  rules:
+    - { goal: g1, field: root-mfa, in: [true] }
+    - { goal: g1, field: root-password, in: [long-unique] }
+    - { goal: g2, field: root-access-keys, in: [none] }
+    - { goal: g3, field: daily-sign-in, in: [iam-admin-group, identity-center] }
+goals:
+  - id: g1
+    label: Root sign-in needs MFA and a strong password of its own
+    hint: A stolen password alone should not open the owner identity, so ask whether any account-wide rule checks the root password for you.
+  - id: g2
+    label: The root user has no access keys
+    hint: Access keys are long-term credentials that sign CLI and API calls, and AWS advises temporary credentials from roles for programmatic work, so ask what a leaked owner key could do.
+  - id: g3
+    label: Daily work happens away from the root user
+    hint: The owner identity can do anything and cannot be restricted, so ask which identities can carry just the access a day of work needs.
+solution:
+  - { t: set, field: root-mfa, value: true }
+  - { t: set, field: root-password, value: long-unique }
+  - { t: set, field: root-access-keys, value: none }
+  - { t: set, field: daily-sign-in, value: identity-center }
+wrongPaths:
+  - mistake: Gives the root user a strong password and thinks that is enough without MFA
+    failsGoal: g1
+    actions:
+      - { t: set, field: root-mfa, value: false }
+      - { t: set, field: root-password, value: long-unique }
+      - { t: set, field: root-access-keys, value: none }
+      - { t: set, field: daily-sign-in, value: identity-center }
+  - mistake: Thinks the account password policy also sets the rules for the root user password
+    failsGoal: g1
+    actions:
+      - { t: set, field: root-mfa, value: true }
+      - { t: set, field: root-password, value: policy-allowed }
+      - { t: set, field: root-access-keys, value: none }
+      - { t: set, field: daily-sign-in, value: iam-admin-group }
+  - mistake: Keeps the root access key so the old billing script still runs from the command line
+    failsGoal: g2
+    actions:
+      - { t: set, field: root-mfa, value: true }
+      - { t: set, field: root-password, value: long-unique }
+      - { t: set, field: root-access-keys, value: keep-existing }
+      - { t: set, field: daily-sign-in, value: identity-center }
+  - mistake: Keeps signing in as the root user each day because it never meets a permission error
+    failsGoal: g3
+    actions:
+      - { t: set, field: root-mfa, value: true }
+      - { t: set, field: root-password, value: long-unique }
+      - { t: set, field: root-access-keys, value: none }
+      - { t: set, field: daily-sign-in, value: root-user }
+debrief:
+  lines:
+    - MFA asks for a second kind of proof, such as a one-time code from a phone app, so a leaked root password alone does not open the account.
+    - A password policy sets rules for IAM user passwords only, so the root password has to be strong on its own.
+    - Access keys are long-term credentials, and AWS advises never creating them for the root user and using temporary credentials from roles instead.
+    - The team signs in each day as their own IAM users in a group, or through IAM Identity Center, which maps one login to IAM roles, and the root user stays out of daily work.
+  questions: [q-ej90bp, q-gpwbqs, q-rfw21n]
