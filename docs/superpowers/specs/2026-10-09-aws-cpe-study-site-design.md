@@ -107,6 +107,8 @@ The repository is local only, a pre-commit hook runs the fast checks, and hostin
 - `NoteId` is derived, never stored: `mNN/<slug>` from a note's `module` and `slug` frontmatter, for example `m03/aws-lambda`.
 - No file under the repo holds course text, and Appendix A is the only route by which course data changes.
 
+- NOTE: the reference key points live in 13 files `content/project/key-points/NN-<module-dir>.yaml`, one per decision, beside `brief.yaml`, so 13 writers work in parallel and the brief stays a one-agent file (Phase 6).
+
 ### 1.3 Git and checks
 
 - The repository is local on `master` with no remote, and it already holds the notes commit (`1e0149a`, the own-words notes for all 13 modules); Phase 0 adds the site scaffold.
@@ -404,6 +406,8 @@ export const Question = z.discriminatedUnion('type', [
   NOTE: "different lessons" is a soft rule that `makeBatches` follows when it can; a hard lesson rule can make a 26-batch deal impossible (Phase 3).
 - A full pass costs about `3 x (2C + 260 + incident steps) / 10` agent runs, plus about 20% for revisions.
 
+- NOTE: key points have their own prompts, `agents/key-point-writer.md` and `agents/key-point-critic.md`, and their own pipeline `node scripts/content/key-points.ts`, whose stamp names the check `critic@<version>` (Phase 6).
+
 ### 2.8 How notes and questions reference each other
 
 - References are stored in one direction only: a question points to a concept, a note and evidence lines, and labs, incidents and capstone key points point to concepts.
@@ -688,6 +692,8 @@ Readiness = Mock ? 0.5*Memory + 0.5*Mock : min(Memory, 0.70)
 | Even Keel | 75% or more in every domain of one unseen form |
 | Architect | All 13 capstone decisions with a final grade of 8/12 or more and no criterion at 0 |
 
+- NOTE: per module, only the first `self` grade and the first `final` grade after it count, so decision XP pays once and a later final moves neither the XP nor Architect (Phase 6).
+
 ### 3.11 Anti-grind audit (one test per row)
 
 | Exploit | Blocked by |
@@ -915,6 +921,9 @@ sources:
 | 7 | VPC with public and private subnets and security groups, with no NAT gateway | 5 | VPC and its parts | $0 | route tables match the diagram |
 | 8 | Pricing Calculator estimate and Well-Architected Tool review of the capstone | 11, 13 | workload record | $0 | estimate link saved in decision 11 |
 
+- NOTE: every mission that is cleaned up writes `maxLiveHours: 2` in its frontmatter, because the mission schema requires the field (Phase 6).
+- NOTE: the plan-fit service list is the sorted union of `services` over every mission but Mission 0, and Mission 0's Plan status form ticks each one, so the list never drifts from the missions (Phase 6).
+
 ## 6 Capstone: "Move the cafe to the cloud"
 
 **Decisions.**
@@ -1019,6 +1028,8 @@ CCP                                      [M3 live 1h]   18 due   9d   Business S
 - A rank-up is one dismissible line under the bar (3.4).
 - In focus mode (boss and mock), the bar becomes `Mock A   23/65   61:12   Flag (f)   Grid (g)`.
 
+- NOTE: while a mission is live, its `M3 live 1h` chip takes the place of the top bar's `Missions` link and opens the mission page, not Progress (Phase 6).
+
 ### 7.3 Screens
 
 | Screen | Purpose | Elements |
@@ -1034,6 +1045,8 @@ CCP                                      [M3 live 1h]   18 due   9d   Business S
 | Progress (overlay, `g p`) | Depth on demand | Level and XP, today's XP, 14-day strip, streak and freezes, domain bars, calibration (Sure and Not sure accuracy), error causes, capstone drift, badges, mock history; settings: exam date, export, import (inline preview), reset (inline typed confirmation), content and engine versions |
 | Palette (`/`, `Cmd+K`) | Find anything | Lessons, concepts, glossary, labs, actions |
 | Help (`?`) | Shortcuts | One sheet |
+
+- NOTE: each decision also has its own route `#/project/NN`, which the module page links to and Escape leaves for `#/project` (Phase 6).
 
 ### 7.4 Keyboard
 
@@ -1127,6 +1140,8 @@ type Event = Base & (
 - A full replay takes under 100 ms, and new events fold into the cached snapshot one by one.
 - The app calls `navigator.storage.persist()` on the first answer and waits for the commit before showing Next.
 - If a write fails, a banner reads `Progress can't be saved in this browser` next to an Export button.
+
+- NOTE: the `Already done` events also take their ids from the dates Dani enters, sorted by date first, so they sort into the log on those days (Phase 6).
 
 ### 8.2 Versions and migration
 

@@ -24,7 +24,6 @@
 - id: leave-no-trace
   name: Leave No Trace
   rule: 3 missions closed, each with cleanup and the next-day usage check confirmed (the kept Mission 1 does not count).
-  arrives: missions
 - id: full-dress-rehearsal
   name: Full Dress Rehearsal
   rule: All 65 questions of an unseen form answered before the timer ran out.
@@ -37,4 +36,3 @@
 - id: architect
   name: Architect
   rule: All 13 capstone decisions with a final grade of 8/12 or more and no criterion at 0.
-  arrives: capstone

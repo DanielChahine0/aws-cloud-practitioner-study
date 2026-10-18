@@ -5,10 +5,17 @@ import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
 import type { ContentIndex } from '../../schemas/chunks.ts';
 import { Badges, Ranks } from '../../schemas/game.ts';
+import type { ProjectChunk } from '../../schemas/project-view.ts';
 import { buildContent } from '../../scripts/content/build.ts';
 import { loadContext } from '../../scripts/content/lib/context.ts';
 import { parseUpdateLine } from '../../scripts/content/lib/update-line.ts';
-import { CORE_LABS_PER_MODULE, HANDS_ON_MODULES } from '../../src/engine/badges.ts';
+import { parseHash } from '../../src/app/router.ts';
+import {
+  ARCHITECT,
+  CORE_LABS_PER_MODULE,
+  HANDS_ON_MODULES,
+  LEAVE_NO_TRACE,
+} from '../../src/engine/badges.ts';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const ranksText = readFileSync(join(ROOT, 'content/game/ranks.yaml'), 'utf8');
@@ -80,10 +87,25 @@ describe('content/game/badges.yaml (spec 3.10)', () => {
   it('marks the badges that wait for labs, missions and the capstone', () => {
     expect(badges.filter((b) => b.arrives !== undefined).map((b) => [b.id, b.arrives])).toEqual([
       ['lab-complete', 'labs'],
-      ['leave-no-trace', 'missions'],
-      ['architect', 'capstone'],
     ]);
   });
+
+  it('shows Leave No Trace and Architect as earnable exactly when the missions and the capstone ship', () => {
+    const built = buildContent(loadContext(ROOT));
+    const index = JSON.parse(built.files.get(built.indexFile) ?? 'null') as ContentIndex;
+    const closable = index.missions.filter((m) => !m.gate && !m.keep).length;
+    const leaveNoTrace = badges.find((b) => b.id === 'leave-no-trace');
+    expect(leaveNoTrace?.arrives === undefined).toBe(closable >= LEAVE_NO_TRACE);
+    const project =
+      index.project === null
+        ? null
+        : (JSON.parse(built.files.get(index.project) ?? 'null') as ProjectChunk | null);
+    const screen = parseHash('#/project').kind !== 'not-found';
+    const architect = badges.find((b) => b.id === 'architect');
+    expect(architect?.arrives === undefined).toBe(
+      screen && project?.decisions.length === ARCHITECT.decisions,
+    );
+  }, 30_000);
 
   it('shows Hands On as earnable exactly when 5 modules ship both core labs', () => {
     const built = buildContent(loadContext(ROOT));
