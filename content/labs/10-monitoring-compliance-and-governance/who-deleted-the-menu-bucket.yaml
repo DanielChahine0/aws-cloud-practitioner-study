@@ -1,0 +1,160 @@
+id: lab-m10-who-deleted-the-menu-bucket
+module: 10
+title: Who deleted the menu bucket?
+engine: investigate
+tier: core
+status: live
+rev: 1
+concepts: [aws-cloudtrail, cloud-auditing, cloudwatch-logs, s3-buckets]
+notes: [m10/aws-cloudtrail, m10/amazon-cloudwatch, m06/amazon-simple-storage-service-amazon-s3]
+minutes: 7
+brief: >-
+  Just before lunch the cafe app showed an empty menu, because the bucket that held the menu files was gone.
+  Filter the day's activity log for the cafe account and find who removed the bucket, when, from which address, the last change made to it before then and which service recorded these calls.
+  In this lab, the log holds management events only, such as sign-ins, bucket creates and deletes and bucket policy changes, and all times are in UTC.
+spec:
+  source: Account activity log, cafe account 111122223333, 14 March, times in UTC
+  columns:
+    - { id: time, label: Time (UTC) }
+    - { id: hour, label: Hour (UTC), filter: true }
+    - { id: user, label: User, filter: true }
+    - { id: event, label: Event, filter: true }
+    - { id: resource, label: Resource }
+    - { id: source-ip, label: Source IP }
+    - { id: result, label: Result, filter: true }
+  records:
+    - { id: r1, cells: { time: '07:58 UTC', hour: '07:00 UTC', user: manager-ana, event: ConsoleLogin, resource: cafe console, source-ip: 192.0.2.10, result: Success } }
+    - { id: r2, cells: { time: '08:05 UTC', hour: '08:00 UTC', user: manager-ana, event: CreateBucket, resource: cafe-promo-autumn, source-ip: 192.0.2.10, result: Success } }
+    - { id: r3, cells: { time: '08:21 UTC', hour: '08:00 UTC', user: dev-kai, event: ConsoleLogin, resource: cafe console, source-ip: 192.0.2.10, result: Success } }
+    - { id: r4, cells: { time: '08:40 UTC', hour: '08:00 UTC', user: dev-kai, event: RunInstances, resource: order-server-2, source-ip: 192.0.2.10, result: Success } }
+    - { id: r8, cells: { time: '08:50 UTC', hour: '08:00 UTC', user: manager-ana, event: PutBucketPolicy, resource: cafe-menu-files, source-ip: 192.0.2.10, result: Success } }
+    - { id: r5, cells: { time: '09:02 UTC', hour: '09:00 UTC', user: intern-lee, event: ConsoleLogin, resource: cafe console, source-ip: 198.51.100.23, result: Success } }
+    - { id: r6, cells: { time: '09:14 UTC', hour: '09:00 UTC', user: intern-lee, event: DeleteBucket, resource: cafe-menu-files, source-ip: 198.51.100.23, result: AccessDenied } }
+    - { id: r7, cells: { time: '09:30 UTC', hour: '09:00 UTC', user: barista-sam, event: ConsoleLogin, resource: cafe console, source-ip: 192.0.2.44, result: Success } }
+    - { id: r9, cells: { time: '10:37 UTC', hour: '10:00 UTC', user: dev-kai, event: DeleteBucket, resource: cafe-menu-files, source-ip: 203.0.113.45, result: Success } }
+    - { id: r10, cells: { time: '10:52 UTC', hour: '10:00 UTC', user: dev-kai, event: StopInstances, resource: order-server-2, source-ip: 203.0.113.45, result: Success } }
+    - { id: r11, cells: { time: '11:05 UTC', hour: '11:00 UTC', user: manager-ana, event: DeleteBucket, resource: cafe-promo-summer, source-ip: 192.0.2.10, result: Success } }
+    - { id: r12, cells: { time: '11:20 UTC', hour: '11:00 UTC', user: manager-ana, event: CreateBucket, resource: cafe-menu-files, source-ip: 192.0.2.10, result: Success } }
+  questions:
+    - id: who
+      goal: g1
+      prompt: Who removed the menu bucket, cafe-menu-files?
+      options:
+        - { id: barista-sam, label: barista-sam }
+        - { id: dev-kai, label: dev-kai }
+        - { id: intern-lee, label: intern-lee }
+        - { id: manager-ana, label: manager-ana }
+      answer: dev-kai
+    - id: when
+      goal: g2
+      prompt: When was the menu bucket removed?
+      options:
+        - { id: t0914, label: '09:14 UTC' }
+        - { id: t1037, label: '10:37 UTC' }
+        - { id: t1105, label: '11:05 UTC' }
+        - { id: t1120, label: '11:20 UTC' }
+      answer: t1037
+    - id: where
+      goal: g3
+      prompt: From which source IP address did the call that removed the menu bucket come?
+      options:
+        - { id: ip-192-0-2-10, label: 192.0.2.10 }
+        - { id: ip-198-51-100-23, label: 198.51.100.23 }
+        - { id: ip-203-0-113-45, label: 203.0.113.45 }
+      answer: ip-203-0-113-45
+    - id: what
+      goal: g4
+      prompt: Which call last changed cafe-menu-files before it was removed?
+      options:
+        - { id: put-bucket-policy, label: PutBucketPolicy }
+        - { id: delete-bucket, label: DeleteBucket }
+        - { id: create-bucket, label: CreateBucket }
+      answer: put-bucket-policy
+    - id: recorder
+      goal: g5
+      prompt: Which service records each of these API calls as an event, wherever its log files are later kept?
+      options:
+        - { id: cloudtrail, label: AWS CloudTrail }
+        - { id: cloudwatch-logs, label: Amazon CloudWatch Logs }
+        - { id: trusted-advisor, label: AWS Trusted Advisor }
+      answer: cloudtrail
+goals:
+  - id: g1
+    label: Name who removed the menu bucket
+    hint: Read the result and the resource of every delete, since a denied call changed nothing and a delete on another bucket is not this one.
+  - id: g2
+    label: Pin down when the menu bucket was removed
+    hint: Take the time of the delete that succeeded on this bucket, not of an earlier denied attempt or of a delete on another bucket.
+  - id: g3
+    label: Say where the removing call came from
+    hint: Read the address on the delete call itself, since the log records a source IP for every call, not only for sign-ins.
+  - id: g4
+    label: Name the last change made to the menu bucket before it was removed
+    hint: Read every call on this bucket in time order, and pass over any call that was denied, since it changed nothing.
+  - id: g5
+    label: Name the service that records these calls
+    hint: Ask which service records the API calls made on the account, and which one watches what happens inside apps.
+solution:
+  - { t: filter, column: event, value: DeleteBucket }
+  - { t: answer, question: who, option: dev-kai }
+  - { t: answer, question: when, option: t1037 }
+  - { t: answer, question: where, option: ip-203-0-113-45 }
+  - { t: unfilter, column: event }
+  - { t: answer, question: what, option: put-bucket-policy }
+  - { t: answer, question: recorder, option: cloudtrail }
+wrongPaths:
+  - mistake: Names the user whose delete was denied, as if trying to delete were the same as deleting
+    failsGoal: g1
+    actions:
+      - { t: answer, question: who, option: intern-lee }
+      - { t: answer, question: when, option: t1037 }
+      - { t: answer, question: where, option: ip-203-0-113-45 }
+      - { t: answer, question: what, option: put-bucket-policy }
+      - { t: answer, question: recorder, option: cloudtrail }
+  - mistake: Names the last user to delete a bucket without reading which bucket it was
+    failsGoal: g1
+    actions:
+      - { t: answer, question: who, option: manager-ana }
+      - { t: answer, question: when, option: t1037 }
+      - { t: answer, question: where, option: ip-203-0-113-45 }
+      - { t: answer, question: what, option: put-bucket-policy }
+      - { t: answer, question: recorder, option: cloudtrail }
+  - mistake: Takes the time of the first delete attempt on the menu bucket, which was denied
+    failsGoal: g2
+    actions:
+      - { t: answer, question: who, option: dev-kai }
+      - { t: answer, question: when, option: t0914 }
+      - { t: answer, question: where, option: ip-203-0-113-45 }
+      - { t: answer, question: what, option: put-bucket-policy }
+      - { t: answer, question: recorder, option: cloudtrail }
+  - mistake: Takes the address the user signed in from instead of the address on the delete call
+    failsGoal: g3
+    actions:
+      - { t: answer, question: who, option: dev-kai }
+      - { t: answer, question: when, option: t1037 }
+      - { t: answer, question: where, option: ip-192-0-2-10 }
+      - { t: answer, question: what, option: put-bucket-policy }
+      - { t: answer, question: recorder, option: cloudtrail }
+  - mistake: Takes the denied delete attempt as the last change to the menu bucket, though a denied call changed nothing
+    failsGoal: g4
+    actions:
+      - { t: answer, question: who, option: dev-kai }
+      - { t: answer, question: when, option: t1037 }
+      - { t: answer, question: where, option: ip-203-0-113-45 }
+      - { t: answer, question: what, option: delete-bucket }
+      - { t: answer, question: recorder, option: cloudtrail }
+  - mistake: Thinks Amazon CloudWatch Logs records the API calls made on the account, since CloudTrail log files can be sent there
+    failsGoal: g5
+    actions:
+      - { t: answer, question: who, option: dev-kai }
+      - { t: answer, question: when, option: t1037 }
+      - { t: answer, question: where, option: ip-203-0-113-45 }
+      - { t: answer, question: what, option: put-bucket-policy }
+      - { t: answer, question: recorder, option: cloudwatch-logs }
+debrief:
+  lines:
+    - Each AWS action is an API call, so CloudTrail can show who made it, when, from which IP and with what result.
+    - A denied call changed nothing, so it names neither who removed the bucket nor the last change made to it.
+    - The source IP belongs to each call, so read it on the delete itself and not on an earlier sign-in.
+    - CloudWatch Logs watches what happens inside apps, while CloudTrail records the API activity on the account.
+  questions: [q-5dadmr, q-31vngx, q-ysx6r8]
