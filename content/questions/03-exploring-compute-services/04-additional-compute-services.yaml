@@ -192,7 +192,7 @@ questions:
 
   - id: q-7wek7w
     version: 1
-    status: draft
+    status: live
     type: multi
     pool: practice
     concept: batch-computing
@@ -205,30 +205,32 @@ questions:
       Which descriptions match that term?
     options:
       - id: a
-        text: Adds instances as daytime visitor traffic climbs
-        why: Adding instances as visitor traffic rises is scaling a live site to demand, not running large compute-heavy jobs in bulk.
+        text: Runs code only when an event triggers it
+        why: Running code only when an event arrives describes serverless functions, not large compute-heavy jobs worked through in bulk.
       - id: b
-        text: Works through large jobs that need heavy processing
+        text: Works through large, compute-heavy jobs
         correct: true
         why: Batch computing is about large, compute-heavy work, such as simulations or huge datasets.
       - id: c
-        text: Moves very large datasets to AWS on a rugged device
-        why: Shipping large datasets on a rugged device is data transfer to AWS, not the compute-heavy processing of those jobs.
+        text: Bills only for the time that code runs
+        why: Paying only while code runs is a billing model of serverless compute, and it says nothing about running large jobs.
       - id: d
-        text: Splits one workload so its pieces run at the same time
+        text: Runs the parts of one workload in parallel
         correct: true
         why: Batch work is often split into pieces that run in parallel, so a large workload ends sooner.
       - id: e
-        text: Answers each customer request with very low delay
-        why: Answering each request quickly is interactive, low-latency work, while batch work runs large jobs in bulk.
+        text: Keeps compute in the cafe's own building
+        why: Keeping compute on the cafe's premises describes a hybrid setup, which is about where servers sit, not the kind of job they run.
     evidence:
       - "**Batch computing**: running large, compute-heavy jobs, often in parallel."
       - A fully managed service for heavy compute such as huge datasets, simulations and complex math.
     takeaway: Batch computing is large, compute-heavy work, often split into jobs that run in parallel.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 describe high performance computing; 3, 4 and 5 describe Snowball, latency and scaling.)"
+    verified:
+      keyHash: 28c70ecdf3a2
+      fullHash: 25abce127877
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
 
   - id: q-wz0hrz
     version: 1
@@ -382,7 +384,7 @@ questions:
 
   - id: q-k4kqkq
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: batch-computing
@@ -390,7 +392,7 @@ questions:
     task: "3.3"
     level: 2
     stem: >-
-      The cafe chain lists four computing tasks it plans to move to AWS this year.
+      The cafe chain has drawn up a list of computing tasks it plans to move to AWS this year.
       Which task is an example of batch computing?
     options:
       - id: a
@@ -411,9 +413,11 @@ questions:
       - "**Batch computing**: running large, compute-heavy jobs, often in parallel."
     takeaway: Batch computing covers large, compute-heavy jobs such as ML training, unlike live scaling, quick transactions or plain storage.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: The stem says 'four computing tasks', a number no cited evidence line states."
+    verified:
+      keyHash: ef5775ebc11a
+      fullHash: 236696a9d2ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
 
   - id: q-x5mkbz
     version: 1

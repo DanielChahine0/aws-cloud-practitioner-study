@@ -400,3 +400,148 @@ questions:
       fullHash: 93d788733580
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-4ffhrm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: lambda-triggers
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe has uploaded a Lambda function that adds a stamp to a customer's loyalty card.
+      It should run each time a customer taps the button in the cafe's mobile app.
+      What must the cafe set up so that the taps start the function?
+    options:
+      - id: a
+        text: An execution role for the function
+        why: An execution role lets the function reach other services, but it does not make a tap start a run.
+      - id: b
+        text: An event source for the function
+        correct: true
+        why: Setting the mobile app as the event source turns each tap into a trigger that invokes the function.
+      - id: c
+        text: A custom runtime for the function
+        why: A custom runtime only serves a language Lambda lacks, and it does not decide when the function runs.
+      - id: d
+        text: More memory for the function
+        why: Extra memory tunes speed and price, but it does nothing to connect the taps to the function.
+    evidence:
+      - Set an event source, such as an AWS service, mobile app or HTTP request.
+    takeaway: A Lambda function runs on an event only after you set an event source, such as an app, a request or an AWS service.
+    history: []
+    verified:
+      keyHash: a365549840fc
+      fullHash: 5f3daa1434c2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-cb2p1v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: lambda-runtimes
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's developer writes a new Lambda function in Python.
+      Before deploying it, the developer wonders whether some extra piece must be built first so that Lambda can run the code.
+      Which fact settles the question?
+    options:
+      - id: a
+        text: Each runtime hands a function its event and context data
+        why: This says what every runtime does, but not whether Python's runtime is already there or must be built.
+      - id: b
+        text: A custom runtime can be built for Python or any language
+        why: Being able to build a custom runtime does not mean one is needed, so this leaves the question open.
+      - id: c
+        text: Lambda already ships a built-in runtime for Python code
+        correct: true
+        why: Python is one of the languages Lambda has a runtime for, so nothing custom has to be built first.
+      - id: d
+        text: A blueprint presets a function's code and its runtime
+        why: A blueprint is a starting template, and knowing it exists does not say whether Python needs a custom runtime.
+    evidence:
+      - "The course says Lambda supports any language: Java, Python and Node.js come built in, and you can build a custom runtime."
+    takeaway: For a language Lambda builds in, such as Java, Python or Node.js, you just pick its runtime with no custom work.
+    history: []
+    verified:
+      keyHash: ec4cc7909bdd
+      fullHash: afc3182aa436
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-dycf52
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: lambda-functions
+    note: m03/aws-lambda
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe uploads its gift-card code to AWS Lambda as a function.
+      Between the lunch rush and the dinner rush, no customer buys a gift card.
+      What does the function do during that quiet spell?
+    options:
+      - id: a
+        text: It keeps running until someone stops it
+        why: That describes an EC2 instance, while a Lambda function has no server the cafe keeps switched on.
+      - id: b
+        text: It waits in a queue until a consumer reads it
+        why: That describes a message in Amazon SQS, while the function is code that Lambda runs on demand.
+      - id: c
+        text: It sits idle until an event invokes it
+        correct: true
+        why: A Lambda function runs only when its trigger fires, so with no purchases it does not run at all.
+      - id: d
+        text: It shrinks to the minimum number of instances
+        why: That describes EC2 Auto Scaling, while a function leaves no instances for the cafe to size.
+    evidence:
+      - Instead, you deploy a function holding your code, and it runs whenever its trigger fires.
+      - 3) Code runs only on events, while Lambda handles servers and scaling.
+    takeaway: A Lambda function is code that runs only when an event invokes it, so it does nothing between triggers.
+    history: []
+    verified:
+      keyHash: 88aae7a72732
+      fullHash: ab913c374f38
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-vcah53
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: lambda-pricing
+    note: m03/aws-lambda
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe's stock-count function on AWS Lambda runs too slowly, so the developer raises the memory allocated to it.
+      Besides the function's speed, what else does that setting change?
+    options:
+      - id: a
+        text: The number of copies that run at once
+        why: Lambda scales from one trigger to thousands by itself, so the memory setting does not fix how many copies run.
+      - id: b
+        text: The patches applied to its environment
+        why: AWS patches and secures the environment under every function, whatever memory the developer picks.
+      - id: c
+        text: The price of each millisecond it runs
+        correct: true
+        why: Lambda prices each millisecond by the memory allocated, so more memory raises the rate while it tunes speed.
+      - id: d
+        text: The longest time a single run may last
+        why: A run still lasts 15 minutes at most, so more memory does not let a single run go on longer.
+    evidence:
+      - You pay for compute time only, per millisecond, priced by allocated memory.
+      - Memory size is also how you tune performance.
+    takeaway: Raising a Lambda function's memory can speed it up, but it also raises the price of each millisecond it runs.
+    history: []
+    verified:
+      keyHash: a8cee94f463a
+      fullHash: b93e9ddf9d17
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

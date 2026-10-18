@@ -579,3 +579,366 @@ questions:
       fullHash: e5f065e7d634
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-8pv530
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: containers
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's owner plans to package the gift-card service as a container and asks what the container format provides on its own, apart from the AWS services that usually surround it.
+      What does the container itself provide?
+    options:
+      - id: a
+        text: An orchestrator that restarts copies that stop working
+        why: Restarting failed copies is orchestration work from ECS or EKS, because containers do not recover or scale themselves.
+      - id: b
+        text: A registry that keeps every version of each image
+        why: Keeping image versions is the job of a registry such as Amazon ECR, not something the container format supplies.
+      - id: c
+        text: One portable unit with code, settings and libraries
+        correct: true
+        why: The container itself bundles the gift-card code with its runtime, libraries and settings, so it runs the same wherever it lands.
+      - id: d
+        text: Hosting where AWS runs all the servers underneath
+        why: Having AWS run the servers is what Fargate adds as a launch type; the container alone brings no hosting with it.
+    evidence:
+      - A container packs code, runtime, dependencies and configuration into one isolated unit that runs the same anywhere.
+      - Containers do not scale themselves, so orchestrators run their lifecycle across a cluster, scale them with traffic, and handle recovery, monitoring and updates.
+    takeaway: A container is the portable package of code, runtime, libraries and settings; recovery, image storage and hosting come from other AWS tools.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: The stem's 'apart from the AWS services that usually surround it' rules out options 2, 3 and 4, which each describe a surrounding AWS service."
+  - id: q-pgfacr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: containers-vs-virtual-machines
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe runs several copies of the same small service as containers on one host and the same number as virtual machines on another.
+      Which fact explains why the virtual machines take up more of their host's resources?
+    options:
+      - id: a
+        text: Each one is billed per second while it runs
+        why: How a copy is billed changes the invoice, not how much of the host's memory and CPU each copy takes up.
+      - id: b
+        text: Each one boots a full operating system of its own
+        correct: true
+        why: A virtual machine runs its own complete operating system on the hypervisor, so every copy carries that extra weight.
+      - id: c
+        text: Each one carries its own libraries and settings
+        why: Containers also carry their own libraries and settings, so this does not explain why the virtual machines are heavier.
+      - id: d
+        text: Each one is restarted when a health check fails
+        why: Restarting after a failed health check is about recovery, and it adds nothing to the resources a running copy uses.
+    evidence:
+      - A VM runs its own full OS on a hypervisor, making it heavier and slower to start.
+      - Containers share the host's OS, so they are lighter, start faster and use resources better.
+    takeaway: A virtual machine is heavier than a container because each one runs a full operating system instead of sharing the host's.
+    history: []
+    verified:
+      keyHash: 6eeb07eb52ad
+      fullHash: f21cba1e8cf2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-vmfp9p
+    version: 1
+    status: live
+    type: multi
+    pool: practice
+    concept: container-orchestration
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    select: 3
+    stem: >-
+      The cafe runs its containers on Amazon EC2 instances that it looks after itself, with no orchestrator in place.
+      Until it adopts an orchestrator, which jobs stay with the cafe's own team?
+    options:
+      - id: a
+        text: Checking that the containers stay healthy
+        correct: true
+        why: Without an orchestrator, nobody else watches the containers, so the team must run every health check itself.
+      - id: b
+        text: Patching the hypervisor beneath the containers
+        why: AWS looks after the hypervisor under every EC2 instance, with or without an orchestrator for the containers.
+      - id: c
+        text: Starting and stopping copies of the app
+        correct: true
+        why: Running containers yourself on EC2 means the team starts and stops every copy by hand or by its own scripts.
+      - id: d
+        text: Replacing failed drives in the hardware
+        why: Failed drives in the physical hosts are AWS's hardware to replace, so they never fall to the cafe's team.
+      - id: e
+        text: Setting up networking between instances
+        correct: true
+        why: With no orchestrator, the team must wire up how its containers talk across the instances on its own.
+      - id: f
+        text: Guarding the buildings that hold the hosts
+        why: The buildings that hold the EC2 hosts are secured by AWS, whatever the cafe uses to run its containers.
+    evidence:
+      - Running containers yourself on EC2 means owning health checks, starts, stops, updates and networking.
+      - Containers do not scale themselves, so orchestrators run their lifecycle across a cluster, scale them with traffic, and handle recovery, monitoring and updates.
+    takeaway: Without an orchestrator, the team owns its containers' health checks, starts, stops, updates and networking, which orchestration automates.
+    history: []
+    verified:
+      keyHash: 11ac3b83cf3d
+      fullHash: 4afa22d6ae2b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-mwx641
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-ecs
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is setting up Amazon ECS for its ordering containers.
+      What does the cafe define, leaving ECS to manage the rest?
+    options:
+      - id: a
+        text: Its container restarts after a failure
+        why: Recovering failed containers is orchestration work, so ECS handles the restarts once the cafe has set it up.
+      - id: b
+        text: Its container images and instance types
+        correct: true
+        why: With ECS, the cafe names its images plus resources such as instance types and load balancers, and ECS manages the rest.
+      - id: c
+        text: Its container placement across the cluster
+        why: Running containers across a cluster is the lifecycle work an orchestrator takes on, so ECS places them.
+      - id: d
+        text: Its own scripts to start and stop copies
+        why: Hand-made start and stop scripts are what running containers without an orchestrator demands, and ECS takes that work over.
+    evidence:
+      - You set images plus resources like instance types and load balancers, and ECS manages the rest.
+    takeaway: With Amazon ECS, you specify the images and resources such as instance types and load balancers, and ECS handles the rest.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+  - id: q-6qnc16
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: amazon-eks
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's delivery tracker runs on Kubernetes clusters that the cafe operates itself on Amazon EC2 instances.
+      Which job does AWS take on only once the cafe moves the clusters onto Amazon EKS?
+    options:
+      - id: a
+        text: Patching the hypervisor under the cluster's instances
+        why: AWS already looks after the hypervisor beneath every EC2 instance, so this is not new with EKS.
+      - id: b
+        text: Running the control plane of each cluster
+        correct: true
+        why: With EKS, AWS runs the Kubernetes control plane of every cluster, a job the cafe had been doing itself.
+      - id: c
+        text: Securing the buildings that hold the cluster's hosts
+        why: AWS already secures its data center buildings for any EC2 workload, so moving to EKS does not add this.
+      - id: d
+        text: Replacing failed drives in the cluster's hosts
+        why: Physical hardware under EC2 instances was already AWS's to repair, so this does not change with EKS.
+    evidence:
+      - "With Amazon Elastic Kubernetes Service (Amazon EKS), AWS operates the Kubernetes control plane of each cluster for you."
+      - "EC2: you manage the VMs under your containers, for full control plus upkeep."
+    takeaway: Moving self-run Kubernetes onto Amazon EKS hands AWS the job of operating each cluster's control plane.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only one that is not about physical hosts or the hypervisor.)"
+  - id: q-3vc0rn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: kubernetes
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 1
+    stem: >-
+      The cafe's team asks where new features and fixes for Kubernetes itself come from, now that it runs Kubernetes on Amazon EKS.
+      Which source provides them?
+    options:
+      - id: a
+        text: The Open Container Initiative
+        why: The Open Container Initiative sets the image standards that ECR supports, and it does not update Kubernetes.
+      - id: b
+        text: The team behind Amazon ECS
+        why: Amazon ECS is a separate AWS orchestrator, and its team does not write the updates for Kubernetes.
+      - id: c
+        text: Sellers in AWS Marketplace
+        why: AWS Marketplace sells third-party software, but Kubernetes updates do not come from its sellers.
+      - id: d
+        text: Its open source community
+        correct: true
+        why: Kubernetes is open source, so its updates and support come from its community, while AWS manages the EKS service.
+    evidence:
+      - AWS fully manages EKS, while Kubernetes gets updates and support from its open source community.
+      - EKS runs Kubernetes, the open source platform automating container deployment, scaling and management.
+    takeaway: Kubernetes is updated and supported by its open source community, even when AWS manages it for you through EKS.
+    history: []
+    verified:
+      keyHash: e3c264a846ca
+      fullHash: b903e23007de
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-xgxrqf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ecr
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's developers already build images on their laptops and want to keep their usual workflow when they send those images to Amazon ECR.
+      Which way of working does Amazon ECR give them?
+    options:
+      - id: a
+        text: Running images on servers that AWS manages
+        why: Running containers on servers AWS manages is what Fargate does, and it says nothing about how images get into ECR.
+      - id: b
+        text: Scheduling images as containers across many hosts
+        why: Scheduling containers across hosts is an orchestrator's job, such as ECS or EKS, not how images reach the registry.
+      - id: c
+        text: Pushing and pulling images with standard tools
+        correct: true
+        why: ECR lets developers push and pull images with the standard tools and CLIs they already use, so their workflow stays the same.
+      - id: d
+        text: Converting images to meet the OCI standards
+        why: ECR expects images that already meet the OCI standards, and it does not rework the developers' images for them.
+    evidence:
+      - Orchestrators pull images from it, and you push and pull with standard tools and CLIs.
+      - Images must meet Open Container Initiative (OCI) standards.
+    takeaway: Amazon ECR works with standard tools and CLIs, so teams push and pull images the way they already do.
+    history: []
+    verified:
+      keyHash: e63a727269c2
+      fullHash: cf3b703584c7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-hez7jn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: containers
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe wants its loyalty app and its gift-card app on the same server, but each needs a different version of one shared library, and installing both breaks one of them.
+      Which step lets the two apps run side by side without the clash?
+    options:
+      - id: a
+        text: Give each app its own security group
+        why: A security group filters network traffic to a resource, and it leaves both library versions fighting on the same server.
+      - id: b
+        text: Give each app its own IAM role
+        why: An IAM role grants each app temporary permissions, but the apps still share one set of installed libraries.
+      - id: c
+        text: Give each app its own container
+        correct: true
+        why: Each container is an isolated unit holding its own runtime and libraries, so the two versions never meet on the server.
+      - id: d
+        text: Give each app its own load balancer
+        why: A load balancer spreads incoming requests across targets, and it does nothing about the libraries installed on the server.
+    evidence:
+      - A container packs code, runtime, dependencies and configuration into one isolated unit that runs the same anywhere.
+    takeaway: Because each container isolates its own dependencies, apps needing clashing library versions can share one host.
+    history: []
+    verified:
+      keyHash: b5365529dc47
+      fullHash: 4c11218d50f6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-rey8vz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ecs
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 3
+    stem: >-
+      The cafe's small IT team wants a streamlined orchestrator built into AWS, with no Kubernetes to learn.
+      Its kitchen display app also needs specific hardware and networking on the machines under its containers.
+      Which setup fits?
+    options:
+      - id: a
+        text: Amazon EKS on the EC2 launch type
+        why: The EC2 launch type gives the hardware choice, but EKS runs Kubernetes, which the team does not want to learn.
+      - id: b
+        text: Amazon ECS on the Fargate launch type
+        why: ECS is the streamlined choice, but with Fargate AWS runs the servers, so the team cannot pick their hardware.
+      - id: c
+        text: Amazon EKS on the Fargate launch type
+        why: This brings Kubernetes the team wants to avoid and also hides the servers whose hardware it needs to choose.
+      - id: d
+        text: Amazon ECS on the EC2 launch type
+        correct: true
+        why: ECS is the streamlined AWS orchestrator, and the EC2 launch type lets the team set the instances and networking under it.
+    evidence:
+      - ECS is the streamlined, integrated orchestrator, for Docker containers and others.
+      - "Small or medium business app needing specific hardware or networking: ECS on EC2."
+    takeaway: A small team wanting a streamlined orchestrator plus control of the hardware underneath points to Amazon ECS on EC2.
+    history: []
+    verified:
+      keyHash: 613ead6d2b52
+      fullHash: a00a4a96cb8f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-z6xgjp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-eks
+    note: m03/containers-and-orchestration-on-aws
+    task: "3.3"
+    level: 3
+    stem: >-
+      The cafe chain's head office runs large, complex workloads and wants the extra control and flexibility of Kubernetes.
+      Its engineers also need to tune each instance under the containers in depth.
+      Which setup fits?
+    options:
+      - id: a
+        text: Amazon ECS on the EC2 launch type
+        why: The EC2 launch type allows the instance tuning, but ECS is a separate orchestrator that does not run Kubernetes.
+      - id: b
+        text: Amazon EKS on the EC2 launch type
+        correct: true
+        why: EKS brings Kubernetes for large setups, and the EC2 launch type keeps the instances in the engineers' hands to tune.
+      - id: c
+        text: Amazon ECS on the Fargate launch type
+        why: This drops Kubernetes, and with Fargate AWS runs the servers, so there are no instances left to tune.
+      - id: d
+        text: Amazon EKS on the Fargate launch type
+        why: EKS brings Kubernetes, but Fargate has AWS run the servers, which removes the instance tuning the engineers need.
+    evidence:
+      - EKS suits large-scale or hybrid setups that want extra control and flexibility.
+      - "Enterprise with complex, large workloads needing deep instance tuning: EKS on EC2."
+    takeaway: Large Kubernetes workloads that need deep tuning of each instance point to Amazon EKS on the EC2 launch type.
+    history: []
+    verified:
+      keyHash: 6afad8c4e9ef
+      fullHash: c92496264881
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
