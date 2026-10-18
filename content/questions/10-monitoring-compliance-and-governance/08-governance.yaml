@@ -462,13 +462,13 @@ questions:
       on: 2026-10-09
   - id: q-wjvkrg
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
     concept: aws-license-manager
     note: m10/governance
-    task: "1.4"
+    task: "2.2"
     level: 1
     stem: >-
       Which capabilities does AWS License Manager provide?
@@ -495,9 +495,11 @@ questions:
       - It also eases Microsoft License Mobility through Software Assurance and automates entitlement rollout across accounts.
     takeaway: License Manager enforces license limits and automates entitlement rollout across accounts.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Task 1.4 (cloud economics) fits poorly, since License Manager comes from the governance note and fits task 2.2."
+    verified:
+      keyHash: 1f4678e71c77
+      fullHash: 0a53f9da174e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-yqtcbv
     version: 1
     status: live

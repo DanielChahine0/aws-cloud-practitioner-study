@@ -248,7 +248,7 @@ questions:
       on: 2026-10-09
   - id: q-4jzzrf
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -260,29 +260,31 @@ questions:
       Which tasks does IAM Access Analyzer perform?
     options:
       - id: a
-        text: Checks permission policies against security standards
+        text: Checks policies against the company's security rules
         correct: true
         why: Access Analyzer checks policies against corporate security standards and validates them.
       - id: b
-        text: Flags security groups open to the public
-        why: Spotting security groups open to anyone is one of AWS Trusted Advisor's broad security checks.
+        text: Scans workloads for known software vulnerabilities
+        why: Scanning workloads for software vulnerabilities is the job of Amazon Inspector, not Access Analyzer.
       - id: c
-        text: Shows which outside parties can reach resources
+        text: Reveals which outside accounts can reach resources
         correct: true
         why: Access Analyzer analyzes external access so you can see who can reach what.
       - id: d
-        text: Records which user called each API
-        why: Keeping a log of who called each API is the job of AWS CloudTrail.
+        text: Flags a root user that has no MFA turned on
+        why: A root user without MFA is caught by one of AWS Trusted Advisor's security checks, not Access Analyzer.
       - id: e
-        text: Grants users access by attaching policies
-        why: Granting access by attaching policies is done in IAM itself; Access Analyzer reviews those policies.
+        text: Records each API call as an entry in an audit log
+        why: Keeping a log of who called each API is the job of AWS CloudTrail, not Access Analyzer.
     evidence:
       - It analyzes external access and checks policies against corporate security standards, so you can set, verify and refine permissions.
     takeaway: IAM Access Analyzer validates IAM policies and reveals external access to set, verify and refine permissions.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 4 are IAM Access Analyzer features; the others belong to Trusted Advisor, IAM and CloudTrail.)"
+    verified:
+      keyHash: d6a639b9133c
+      fullHash: c687b2fedd1c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-wgqfrw
     version: 1
     status: live

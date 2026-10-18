@@ -107,7 +107,7 @@ questions:
       on: 2026-10-09
   - id: q-z7c98y
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: organizational-units
@@ -115,29 +115,31 @@ questions:
     task: "2.2"
     level: 2
     stem: >-
-      The cafe wants the interns' test accounts in a group of their own while keeping them within its developer OU.
+      The cafe wants the interns' test accounts in a group of their own that still sits below its developer OU in the hierarchy.
       What should it do?
     options:
       - id: a
-        text: Move the interns' accounts directly under the root
-        why: An account can sit under the root, but there it is outside the developer OU the cafe wants to keep it in.
+        text: Create an interns OU beside the developer OU
+        why: An OU beside the developer OU groups the interns' accounts, but it sits outside the developer OU rather than below it.
       - id: b
-        text: Nest an interns OU inside the developer OU
+        text: Nest an interns OU in the developer OU
         correct: true
-        why: OUs can nest, so an interns OU inside the developer OU groups those accounts and keeps them within it.
+        why: OUs can nest, so an interns OU nested in the developer OU groups those accounts and keeps them below it.
       - id: c
-        text: Attach an SCP to each of the interns' accounts
-        why: An SCP can cap each account, but capping permissions does not put the accounts in a group of their own.
+        text: Move the interns' accounts into the developer OU
+        why: The accounts would sit below the developer OU, but mixed with every other developer account instead of in a group of their own.
       - id: d
-        text: Create an interns IAM group in each test account
-        why: An IAM group holds users inside one account, so it groups people rather than the interns' accounts.
+        text: Attach an SCP for the interns to the developer OU
+        why: An SCP caps permissions, and capping permissions does not put the interns' accounts in a group of their own.
     evidence:
       - OUs group accounts and can nest.
-    takeaway: To group some accounts apart while keeping them inside an existing OU, nest a new OU within it.
+    takeaway: To group some accounts apart while keeping them below an existing OU, nest a new OU within it.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is how SCPs inherit in Organizations; the others do not fit.)"
+    verified:
+      keyHash: 6b595c57dede
+      fullHash: 621f1194c72a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-jd3nh3
     version: 1
     status: live

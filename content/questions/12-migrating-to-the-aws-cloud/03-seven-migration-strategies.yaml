@@ -35,7 +35,7 @@ questions:
       on: 2026-10-09
   - id: q-hqj9aq
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: seven-migration-strategies
@@ -48,26 +48,28 @@ questions:
       Which idea corrects this assumption?
     options:
       - id: a
-        text: Rehost moves an app as it is, with no changes at first
-        why: This is true of rehost, but it describes one strategy rather than whether apps can use different ones.
+        text: Discovery reviews the current apps before any strategy is picked
+        why: Discovery comes first, but it says nothing about whether every app must then take the same strategy.
       - id: b
-        text: Retire switches off apps that are no longer needed
-        why: This is true of retire, but it does not say whether the other apps must share one strategy.
+        text: Unused apps often make up over 10 percent of a portfolio
+        why: This is true of many portfolios, but it does not say whether the apps that move must share one strategy.
       - id: c
-        text: Each app gets its own path, and the paths form one plan
+        text: Strategies are picked app by app, then combined into one plan
         correct: true
-        why: Strategies are chosen per app by goals and complexity, then combined into a tailored plan with less risk.
+        why: Each app gets its own strategy by its goals and complexity, and the strategies combine into one tailored plan.
       - id: d
-        text: Refactor carries the highest upfront planning and staff effort
-        why: This is true of refactor, but it compares effort and does not address using one strategy for every app.
+        text: A tailored plan aims to lower the risk and disruption of the move
+        why: Lower risk is a goal of the plan, but this does not say that different apps may take different strategies.
     evidence:
       - Each app gets one of seven paths, chosen by complexity, goals, time, resources, starting point and future plans.
       - Organizations often combine them into a tailored plan with less risk and disruption.
     takeaway: Each app gets its own migration strategy, and the strategies combine into one tailored plan.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only statement about the whole plan; the other three each define one strategy.)"
+    verified:
+      keyHash: cfad3ddfada9
+      fullHash: 1bd1752d06e0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-hamxsz
     version: 1
     status: live

@@ -403,15 +403,15 @@ questions:
       on: 2026-10-09
   - id: q-3y19jw
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cost-optimization-pillar
     note: m13/aws-well-architected-framework
-    task: "1.4"
+    task: "1.2"
     level: 2
     stem: >-
-      The cafe's servers run On-Demand around the clock, though weekend traffic jumps while weekday use barely changes.
+      The cafe's servers run On-Demand around the clock, and their load stays steady all week, month after month.
       Under the Cost Optimization pillar, which change fits?
     options:
       - id: a
@@ -421,20 +421,22 @@ questions:
         text: Move each server to a larger instance type
         why: A larger instance type changes performance, not the purchase option, and it raises rather than lowers the bill.
       - id: c
-        text: Pay through Savings Plans and Spot Instances
+        text: Change the purchase option for the servers
         correct: true
-        why: Matching purchase options to the traffic pattern cuts spend, a Cost Optimization move.
+        why: Cutting spend by moving the steady servers off On-Demand to a better-fitting purchase option is a Cost Optimization move.
       - id: d
         text: Encrypt the order data at rest and in transit
         why: Encryption is a sound Security step, but it leaves the On-Demand spend unchanged.
     evidence:
       - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
       - "Fitting size to workload points to Performance Efficiency, purchase options and deprovisioning to Cost Optimization, serverless over always-on to Sustainability."
-    takeaway: Choosing purchase options that fit the traffic pattern is a Cost Optimization lever.
+    takeaway: Choosing a purchase option that fits a steady load, in place of On-Demand, is a Cost Optimization lever.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 3 pairs Spot Instances with customer-facing weekend peaks, which Spot interruptions do not suit, so the key is debatable. No cited evidence line mentions Savings Plans or Spot Instances, so the key is not grounded in the note."
+    verified:
+      keyHash: 4c21d5e3d6af
+      fullHash: 2208b0fcf5c6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-wfye2v
     version: 1
     status: live

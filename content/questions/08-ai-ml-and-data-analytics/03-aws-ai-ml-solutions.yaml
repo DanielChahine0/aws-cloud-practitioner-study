@@ -37,7 +37,7 @@ questions:
       on: 2026-10-09
   - id: q-eexfj9
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -46,10 +46,10 @@ questions:
     task: "3.7"
     level: 1
     stem: >-
-      Which statements describe the AWS pre-built AI services tier?
+      Which statements describe the AI services tier of the AWS AI/ML stack?
     options:
       - id: a
-        text: Its models come pre-trained by AWS
+        text: It uses models that AWS has already trained
         correct: true
         why: Tier 1 services are trained by AWS already, so a customer just sends in data and gets results.
       - id: b
@@ -60,7 +60,7 @@ questions:
         correct: true
         why: Vision and search is one of the service groups in this tier, next to language and conversation.
       - id: d
-        text: It runs on infrastructure your team manages
+        text: It runs on infrastructure the customer manages
         why: Running your own infrastructure is the Tier 3 trade-off, while Tier 1 services run fully on AWS.
       - id: e
         text: It offers the most room to customize models
@@ -70,9 +70,11 @@ questions:
       - "Groups: language (text or speech), vision and search (answers from files, images, video), conversation and personalization (talk to apps, tailored picks)."
     takeaway: Tier 1 AI services come pre-trained by AWS and span groups such as language, vision and search.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 1 'pre-trained' echoes the stem's 'pre-built'. Option 2 switches to 'your team', breaking parallel grammar with the other options."
+    verified:
+      keyHash: ea5c6126c83b
+      fullHash: 39be839e1445
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-4xaq5m
     version: 1
     status: live
@@ -471,7 +473,7 @@ questions:
       on: 2026-10-09
   - id: q-nyzbg2
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -497,15 +499,17 @@ questions:
         text: Pre-built components from a framework library
         why: Framework libraries such as PyTorch supply those parts in Tier 3, where the team runs its own servers.
       - id: e
-        text: Full control of servers your team runs
+        text: Full control of self-managed training servers
         why: Running and controlling the servers yourself is the Tier 3 trade-off, while SageMaker AI has AWS run them.
     evidence:
       - "Benefits: tool choice for innovation (IDE for data scientists, no-code for analysts), fast, cheap managed infrastructure, and standardized MLOps and governance for audits."
     takeaway: SageMaker AI pairs custom model building with managed infrastructure and standard MLOps governance.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 3 switches to 'your team' while the stem and other options speak of 'a team', breaking parallel grammar."
+    verified:
+      keyHash: 6446c91ad458
+      fullHash: ae9e0155a137
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-9tq910
     version: 1
     status: live
@@ -545,42 +549,45 @@ questions:
       on: 2026-10-09
   - id: q-ysbndf
     version: 1
-    status: draft
+    status: live
     type: multi
-    select: 3
+    select: 2
     pool: practice
     concept: ml-frameworks-and-infrastructure
     note: m08/aws-ai-ml-solutions
-    task: "3.3"
-    level: 1
+    task: "3.7"
+    level: 2
     stem: >-
-      Which AWS services can supply the infrastructure that a team manages itself when it trains models with an ML framework?
+      The cafe's in-house ML experts plan to train a specialized model with TensorFlow on ML-optimized Amazon EC2 instances.
+      Which statements describe the tier of the AWS AI/ML stack they are choosing?
     options:
       - id: a
-        text: Amazon EC2
+        text: It leaves the team to manage the training servers
         correct: true
-        why: ML-optimized EC2 instances give the team servers it controls for training with a framework.
+        why: Framework work on EC2 runs on infrastructure the team manages, so looking after those servers is the team's job.
       - id: b
-        text: AWS Fargate
-        why: Fargate runs containers on servers AWS manages, so it gives the team no infrastructure of its own to look after.
+        text: It hands the team models that AWS already trained
+        why: Models that AWS has already trained belong to the AI services tier, while these experts train their own model.
       - id: c
-        text: Amazon EMR
+        text: It gives the team full control over training
         correct: true
-        why: EMR runs large-scale data processing clusters that a team can use for framework-based ML work.
+        why: A framework on self-managed EC2 gives the experts full control over every part of training their specialized model.
       - id: d
-        text: AWS Lambda
-        why: Lambda runs short functions on servers AWS manages, so it neither hands the team its own infrastructure nor suits long training runs.
+        text: It has AWS run the servers behind training
+        why: AWS running the training servers is the SageMaker AI tier, which the experts skip by training on their own EC2 instances.
       - id: e
-        text: Amazon ECS
-        correct: true
-        why: ECS runs containers that can package a framework and its training code on infrastructure the team manages.
+        text: It is the quickest tier to put into use
+        why: The ready-made AI services tier is the fastest to deploy, while framework training needs the most skill and setup.
     evidence:
-      - "Infrastructure: ML-optimized EC2, Amazon EMR, Amazon ECS."
-    takeaway: Tier 3 ML frameworks run on infrastructure you manage, such as EC2, Amazon EMR and Amazon ECS.
+      - Full training control for specialized needs, using in-house skill, on infrastructure you manage.
+      - "Tier 3: full control, and you manage the infrastructure."
+    takeaway: Training with an ML framework on EC2 gives full control over training, and the team manages the infrastructure.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "solve-closed: a second option is defensible: EC2, ECS and EMR give self-managed infrastructure for framework training; Fargate could be argued but is serverless."
+    verified:
+      keyHash: 4f9fd222ae26
+      fullHash: 70152cb9e44a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-rvtxre
     version: 1
     status: live
@@ -686,3 +693,190 @@ questions:
       fullHash: 684ef8fc3c62
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-rrr3c6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-comprehend
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's head office receives a steady stream of typed messages from suppliers and staff.
+      It wants each message sorted by topic automatically, such as deliveries, invoices or complaints.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Kendra
+        why: Kendra answers search queries over company content, but it does not label each incoming message with a topic.
+      - id: b
+        text: Amazon Rekognition
+        why: Rekognition looks at images and video, so it has nothing to work with in typed messages.
+      - id: c
+        text: Amazon Comprehend
+        correct: true
+        why: Comprehend applies NLP to written text and suits classifying large volumes of messages by what they are about.
+      - id: d
+        text: Amazon Textract
+        why: Textract pulls text out of scanned forms and tables, but these messages are already typed and need sorting, not extraction.
+    evidence:
+      - Classifying, compliance, sentiment in lots of customer comments
+      - "**Amazon Comprehend**: Text insights, such as sentiment."
+    takeaway: Sorting large volumes of written text into categories points to Amazon Comprehend.
+    history: []
+    verified:
+      keyHash: 3ca07f1af804
+      fullHash: "301818175307"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-kzx3p1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-polly
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe is making short training videos for new baristas from written scripts.
+      It wants a spoken voice-over in a choice of accents without hiring voice actors or booking a studio.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Transcribe
+        why: Transcribe turns recorded speech into text, so it cannot create a voice-over from a written script.
+      - id: b
+        text: Amazon Lex
+        why: Lex runs two-way chat with users, while a training video needs a script read aloud with no conversation.
+      - id: c
+        text: Amazon Translate
+        why: Translate converts the script into another language but still leaves it as written text with no voice.
+      - id: d
+        text: Amazon Polly
+        correct: true
+        why: Polly reads written text aloud in lifelike voices with a choice of accents, so no studio narration is needed.
+    evidence:
+      - Assistants, e-learning, visually impaired users, studio-free narration
+      - "Text to lifelike speech; many languages, genders, accents"
+    takeaway: Studio-free narration for e-learning from written scripts points to Amazon Polly.
+    history: []
+    verified:
+      keyHash: fd6191d5b51e
+      fullHash: 750f653d5ce3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-4aptjm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-translate
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      A new coffee supplier emails its contracts as text files written in a language the cafe's staff cannot read.
+      The owner wants an English version of each contract to review.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Comprehend
+        why: Comprehend can detect which language a contract uses, but it does not rewrite the contract in English.
+      - id: b
+        text: Amazon Translate
+        correct: true
+        why: Translate converts documents from one language to another, so the owner gets each contract in English.
+      - id: c
+        text: Amazon Polly
+        why: Polly can read a contract aloud as speech, but it keeps the words in the language they were written in.
+      - id: d
+        text: Amazon Kendra
+        why: Kendra searches company content for answers and does not turn a document into another language.
+    evidence:
+      - Documents, multilingual apps
+      - "**Amazon Translate**: Text translation."
+    takeaway: Rewriting a document in another language points to Translate, while Comprehend only detects the language.
+    history: []
+    verified:
+      keyHash: cdef6820bbfe
+      fullHash: d8f5c3305c34
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-swvqzr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-lex
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 3
+    stem: >-
+      Customers phone the cafe to book tables, and the owner wants an automated assistant that understands each spoken request and talks the caller through the booking.
+      Which service builds that assistant?
+    options:
+      - id: a
+        text: Amazon Transcribe
+        why: Transcribe can write down what a caller says, but it does not understand the request or reply to the caller.
+      - id: b
+        text: Amazon Polly
+        why: Polly can give the assistant a speaking voice, but it does not work out what the caller is asking for.
+      - id: c
+        text: Amazon Kendra
+        why: Kendra searches company content for answers rather than holding a spoken back-and-forth with a caller.
+      - id: d
+        text: Amazon Lex
+        correct: true
+        why: Lex builds voice or text assistants that recognize speech and understand intent, so it can run the booking call.
+    evidence:
+      - Lifelike voice or text chat via NLU and ASR (language understanding, speech recognition)
+      - Assistants, FAQ search, app bots, pre-built support chat
+    takeaway: An assistant that understands spoken requests and replies points to Lex, not to Polly or Transcribe alone.
+    history: []
+    verified:
+      keyHash: 79de332f95e9
+      fullHash: 23b9b7504db9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-qwey1s
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-personalize
+    note: m08/aws-ai-ml-solutions
+    task: "3.7"
+    level: 2
+    stem: >-
+      Which uses fit Amazon Personalize?
+    options:
+      - id: a
+        text: Scoring the mood of written reviews from customers
+        why: Judging the sentiment of reviews is the work of Amazon Comprehend, not of a recommendation service.
+      - id: b
+        text: Suggesting shows to each viewer of a streaming site
+        correct: true
+        why: Personalize uses each viewer's past activity to choose shows for them, a classic streaming use.
+      - id: c
+        text: Sorting customer comments into topics for compliance
+        why: Classifying comments for compliance is a job for Amazon Comprehend, which analyzes text and recommends nothing.
+      - id: d
+        text: Showing trending products to shoppers in a web store
+        correct: true
+        why: Personalize can surface trending and product picks from historical data for the shoppers of a store.
+      - id: e
+        text: Turning recorded support calls into video subtitles
+        why: Converting speech in calls into text is the job of Amazon Transcribe, which recommends nothing.
+    evidence:
+      - Streaming, product, trending picks
+      - Per-customer picks from historical data
+    takeaway: Amazon Personalize fits streaming, product and trending recommendations built from historical data.
+    history: []
+    verified:
+      keyHash: fd42b92e6df3
+      fullHash: e66bf9675e68
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

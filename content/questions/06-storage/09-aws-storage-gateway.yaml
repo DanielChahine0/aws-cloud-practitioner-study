@@ -37,7 +37,7 @@ questions:
       on: 2026-10-09
   - id: q-rvkvw5
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 3
     pool: practice
@@ -46,34 +46,36 @@ questions:
     task: "3.1"
     level: 1
     stem: >-
-      The cafe is planning how to install AWS Storage Gateway itself.
+      The cafe is planning where AWS Storage Gateway itself will run, apart from the storage it presents to local apps.
       In which forms can the gateway be deployed?
     options:
       - id: a
-        text: As a virtual machine on a host
+        text: As a virtual machine on an on-site host
         correct: true
         why: Storage Gateway can run as a virtual machine on the cafe's existing on-site hosts.
       - id: b
-        text: As an AWS Lambda function
-        why: Lambda runs short event-driven code, and the gateway is not offered as a function, so this is not a deployment form.
+        text: As a container running on Amazon ECS
+        why: Storage Gateway is not offered as an ECS container; it deploys as a virtual machine, a hardware appliance or an EC2 instance.
       - id: c
-        text: As a hardware appliance on site
+        text: As a hardware appliance in the back office
         correct: true
         why: A physical appliance is one of the deployment forms, useful when the cafe has no spare virtualization host.
       - id: d
-        text: As a container on AWS Fargate
-        why: Fargate runs containers without servers to manage, but the gateway is not deployed as a Fargate container.
+        text: As a function running on AWS Lambda
+        why: Storage Gateway is not offered as a Lambda function; it needs a virtual machine, a hardware appliance or an EC2 instance.
       - id: e
-        text: As an instance on Amazon EC2
+        text: As an instance running on Amazon EC2
         correct: true
         why: Storage Gateway can also run on an EC2 instance inside AWS.
     evidence:
       - It deploys as a virtual machine, a hardware appliance or an Amazon EC2 instance.
     takeaway: Storage Gateway deploys as a virtual machine, a hardware appliance or an EC2 instance.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1, 2 and 5 are the Storage Gateway deployment forms; Lambda and Fargate are not.)"
+    verified:
+      keyHash: c1d7a556c93e
+      fullHash: 935cab251b9c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-enpnf4
     version: 1
     status: live

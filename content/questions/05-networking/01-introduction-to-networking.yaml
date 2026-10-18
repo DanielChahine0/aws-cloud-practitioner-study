@@ -141,3 +141,75 @@ questions:
       fullHash: 6dfd68ac1c82
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-37ctkm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-networking
+    note: m05/introduction-to-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe links its tills, its kitchen screens and the office computer so they can pass order data to each other and share one printer.
+      Which idea describes this linking?
+    options:
+      - id: a
+        text: Storage
+        why: Storage keeps data for later reads, while the cafe here is linking devices so they can exchange data and a printer.
+      - id: b
+        text: Compute
+        why: Compute is the processing power that runs code, not the links that let the tills and screens share data.
+      - id: c
+        text: Networking
+        correct: true
+        why: Networking links devices so they can share data and resources, just as the tills, screens and printer do here.
+      - id: d
+        text: Analytics
+        why: Analytics draws insight from data after it is gathered, and it does not connect the cafe's devices to each other.
+    evidence:
+      - Networking links devices to share data and resources, and in AWS it means the infrastructure and services hosting your workloads.
+      - "**Networking**: devices linked to exchange data and resources."
+    takeaway: Networking is linking devices so they can exchange data and share resources, such as tills sharing orders and a printer.
+    history: []
+    verified:
+      keyHash: 6fd20b2a1996
+      fullHash: 22bb947c947a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-k063nx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-vpc
+    note: m05/introduction-to-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's owner worries that resources run by other AWS customers could reach the cafe's ordering system.
+      Which trait of Amazon VPC answers that worry?
+    options:
+      - id: a
+        text: It sits inside a single AWS Region that you pick.
+        why: Picking a Region sets where the VPC lives, but other customers also run resources in that same Region.
+      - id: b
+        text: It is a logically isolated part of the AWS Cloud.
+        correct: true
+        why: A VPC is logically isolated from the rest of the AWS Cloud, which keeps other customers' resources away from the ordering system.
+      - id: c
+        text: It is split into subnets that are IP address ranges.
+        why: Subnets organize resources inside the VPC, but splitting the VPC is not what keeps other customers out.
+      - id: d
+        text: It can hold subnets in more than one Availability Zone.
+        why: Spreading across Availability Zones protects against a failed location, not against other customers' resources.
+    evidence:
+      - Amazon VPC gives you a logically isolated part of the AWS Cloud with a virtual network you design.
+      - A VPC is your own logically isolated network in the AWS Cloud.
+    takeaway: Amazon VPC keeps your resources apart from other customers because it is a logically isolated part of the AWS Cloud.
+    history: []
+    verified:
+      keyHash: 09a4e7a4ff21
+      fullHash: 2647542b4715
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

@@ -37,7 +37,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
   - id: q-rzt6cy
-    version: 1
+    version: 2
     status: live
     type: multi
     select: 2
@@ -47,34 +47,39 @@ questions:
     task: "3.6"
     level: 1
     stem: >-
-      Which AWS offerings store data as blocks, so that an edit rewrites only the blocks that changed?
+      The cafe's till servers run on Amazon EC2, and the IT lead wants their disks to save each update by changing just the affected pieces of data.
+      Which services attach that kind of storage straight to those EC2 servers?
     options:
       - id: a
-        text: Amazon S3 buckets
-        why: S3 keeps whole objects in flat buckets and rewrites the whole object on a change, which is object storage.
+        text: Amazon EFS
+        why: EFS is a shared NFS file system that many servers reach over the network, which is file storage and not per-block disks.
       - id: b
         text: Amazon EC2 instance store
         correct: true
-        why: Instance store is temporary, high-performance block storage that comes with the instance's host.
+        why: Instance store is fast block storage on the till server's own host, though its data is only temporary.
       - id: c
-        text: Amazon EFS file systems
-        why: EFS shares a hierarchical file system over the network, which makes it file storage rather than block storage.
+        text: Amazon S3
+        why: S3 rewrites a whole object whenever it changes, so an update never touches just the affected pieces.
       - id: d
-        text: Amazon EBS volumes
+        text: Amazon EBS
         correct: true
-        why: EBS supplies persistent block volumes that update only the blocks an edit touches.
+        why: EBS gives the till servers managed, persistent block volumes that rewrite only the blocks an update changes.
       - id: e
-        text: Amazon S3 File Gateway
-        why: S3 File Gateway offers a local file share whose files land in S3, so it is not block storage.
+        text: AWS Backup
+        why: AWS Backup copies data for safekeeping on a schedule, so it protects the till disks rather than being the disks.
     evidence:
+      - Data is split into blocks for fast access, and an edit rewrites only changed blocks, which suits frequently updated apps and databases.
       - "Services: Amazon EC2 instance store (unmanaged, temporary, high performance) and Amazon EBS (managed, persistent)."
-    takeaway: EC2 gets block storage from two places, the temporary instance store and persistent Amazon EBS volumes.
-    history: []
+    takeaway: Block storage reaches EC2 two ways, lasting Amazon EBS volumes and fast but temporary instance store on the host.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: f791b8b5b099
-      fullHash: 017c30f3110a
+      keyHash: 6e8f26081e98
+      fullHash: cb8b92bdbdb1
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-bj7kg9
     version: 1
     status: live
@@ -220,3 +225,116 @@ questions:
       fullHash: 1d605b5a8989
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-n52ghj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: block-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 1
+    stem: >-
+      The cafe's order database updates a few small records many times a minute.
+      Which trait of block storage makes it a good fit for this database?
+    options:
+      - id: a
+        text: Each object carries its own ID and its metadata
+        why: A unique ID and metadata per object describe object storage, where any change rewrites the whole object.
+      - id: b
+        text: Many servers share one folder tree over a network
+        why: A shared folder tree describes file storage, which is not what makes block storage fast for small edits.
+      - id: c
+        text: An edit rewrites only the pieces it touches
+        correct: true
+        why: Block storage rewrites just the changed blocks, so the many small record updates stay quick.
+      - id: d
+        text: Flat buckets hold practically unlimited data
+        why: Flat buckets with nearly unlimited room describe object storage, not how block storage handles edits.
+    evidence:
+      - Data is split into blocks for fast access, and an edit rewrites only changed blocks, which suits frequently updated apps and databases.
+    takeaway: Block storage suits busy databases because an edit rewrites only the blocks that changed.
+    history: []
+    verified:
+      keyHash: fa025da546e3
+      fullHash: c66d1cf96c98
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-2cyvah
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: object-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 2
+    stem: >-
+      Customers upload photos of their latte art to the cafe's app, and the collection grows every week.
+      The app saves each photo once, fetches it later by its own ID, and never edits it.
+      Which type of storage fits these photos?
+    options:
+      - id: a
+        text: Block storage
+        why: Block storage splits data into blocks so small edits are quick, which photos that are never edited do not need.
+      - id: b
+        text: File storage
+        why: File storage shares a folder hierarchy over a network, while these photos are fetched by ID with no folders.
+      - id: c
+        text: Object storage
+        correct: true
+        why: Object storage keeps each photo whole as an object with a unique ID, in flat buckets with room to keep growing.
+      - id: d
+        text: Ephemeral storage
+        why: Ephemeral storage loses its data when the instance stops or terminates, so the uploaded photos would not last.
+    evidence:
+      - An object holds data, a unique ID and metadata, and any change rewrites the whole object.
+      - Objects sit in flat buckets with practically unlimited room for unstructured data, and rich metadata helps search and analytics.
+    takeaway: Write-once files fetched by a unique ID from an ever-growing collection point to object storage in flat buckets.
+    history: []
+    verified:
+      keyHash: 1f548698ec20
+      fullHash: cc1ec8dbd5f3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-1zmey8
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: file-storage
+    note: m06/introduction-to-storage
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's content management system runs on several servers that all read and write one shared folder tree over the network.
+      Which services can give the cafe this kind of storage?
+    options:
+      - id: a
+        text: Amazon EFS
+        correct: true
+        why: EFS is a fully managed NFS file system that the content servers can share over the network.
+      - id: b
+        text: Amazon EBS
+        why: EBS gives one instance a block volume like a drive, not a folder tree shared by several servers.
+      - id: c
+        text: Amazon S3
+        why: S3 keeps objects in flat buckets, so it offers no shared folder hierarchy for the servers.
+      - id: d
+        text: Amazon FSx
+        correct: true
+        why: FSx runs fully managed Windows, Lustre and NetApp ONTAP file systems that servers share over the network.
+      - id: e
+        text: Amazon EC2 instance store
+        why: Instance store is temporary block storage on one host, so other servers cannot share it.
+    evidence:
+      - Fits shared-access apps such as content management systems.
+      - "Services: Amazon EFS (fully managed NFS) and Amazon FSx (fully managed Windows, Lustre and NetApp ONTAP file systems)."
+    takeaway: Shared folder trees for apps like a content management system come from file storage in Amazon EFS or Amazon FSx.
+    history: []
+    verified:
+      keyHash: 20a4f6c28994
+      fullHash: 307d1c09d3ed
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

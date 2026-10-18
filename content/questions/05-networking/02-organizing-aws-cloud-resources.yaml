@@ -38,41 +38,39 @@ questions:
       on: 2026-10-09
   - id: q-kce939
     version: 1
-    status: draft
-    type: multi
-    select: 2
+    status: live
+    type: single
     pool: practice
     concept: internet-gateway
     note: m05/organizing-aws-cloud-resources
     task: "3.5"
-    level: 1
+    level: 2
     stem: >-
-      Which statements correctly describe an internet gateway?
+      The cafe's owner asks why no one on staff ever has to add capacity to the internet gateway on the cafe's VPC, even when traffic surges on the busiest days.
+      Which trait of the internet gateway explains this?
     options:
       - id: a
-        text: It admits traffic only from one approved network into a private VPC.
-        why: Admitting only an approved network into a private VPC is what a virtual private gateway does, not an internet gateway.
+        text: It must be attached before any public traffic flows.
+        why: Attaching the gateway is a one-time setup step, and it says nothing about how the gateway keeps up as traffic surges.
       - id: b
-        text: It is a managed VPC part that scales out and stays highly available.
-        correct: true
-        why: AWS runs the internet gateway as a managed, highly available part of the VPC that scales horizontally.
+        text: It carries traffic both into and out of the VPC.
+        why: Two-way traffic is what the gateway carries, and it gives no reason why the staff never have to resize it.
       - id: c
-        text: It wraps traffic in an encrypted tunnel across the public internet.
-        why: An encrypted tunnel across the internet is a VPN, while an internet gateway simply joins the VPC to the internet.
-      - id: d
-        text: It lets public requests into the VPC and their replies back out.
+        text: It scales out horizontally as the traffic grows.
         correct: true
-        why: The gateway carries traffic both ways, so requests can come in from the internet and replies can go out.
-      - id: e
-        text: It provides a private fiber line from a data center into the VPC.
-        why: A private fiber line from a data center is AWS Direct Connect, which does not use the public internet at all.
+        why: The gateway scales horizontally on its own, so busy days never call for the staff to resize it.
+      - id: d
+        text: It joins the VPC to the internet for public traffic.
+        why: Joining the VPC to the internet is the gateway's job, and it says nothing about who sizes it for busy days.
     evidence:
       - The assessment adds that it is a managed, highly available VPC part that scales horizontally and carries traffic both ways.
-    takeaway: An internet gateway is a managed, highly available, horizontally scaling VPC part that carries traffic both in and out.
+    takeaway: An internet gateway scales horizontally on its own, so the customer never has to resize it as traffic grows.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 describe an internet gateway; 1, 4 and 5 describe other connectivity.)"
+    verified:
+      keyHash: b5f79b8edf20
+      fullHash: c0bd33de8f92
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-pyekcy
     version: 1
     status: live
@@ -255,3 +253,76 @@ questions:
       fullHash: 905fb9cbacad
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-yf0jze
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: virtual-private-gateway
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 2
+    stem: >-
+      Picture the cafe moved into a corporate office tower, where visitors must badge in at the lobby before they can buy coffee.
+      If the tower is a VPC that admits traffic only from the chain's approved company network, which component plays the lobby badge check?
+    options:
+      - id: a
+        text: An internet gateway
+        why: An internet gateway is an open front door for anyone on the internet, so it checks no badges at all.
+      - id: b
+        text: A NAT gateway
+        why: A NAT gateway lets instances inside reach out to the internet, and it does not decide who may come in.
+      - id: c
+        text: A public subnet
+        why: A public subnet is an area of the VPC that faces the internet, not the entry that checks who may come in.
+      - id: d
+        text: A virtual private gateway
+        correct: true
+        why: A virtual private gateway admits traffic only from an approved network, like a lobby that lets in only badge holders.
+    evidence:
+      - "Coffee shop: the shop now sits inside a corporate office building, and you must badge in before buying coffee."
+      - A VPC with only private resources skips the internet gateway and uses a virtual private gateway, which admits traffic only from an approved network.
+    takeaway: A virtual private gateway works like a lobby badge check, letting only an approved network into a private-only VPC.
+    history: []
+    verified:
+      keyHash: 426a58b5d1e1
+      fullHash: d190f485e668
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-e6zj28
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vpn
+    note: m05/organizing-aws-cloud-resources
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe links its head office to a private VPC with a VPN that enters through a virtual private gateway.
+      The owner asks what the VPN itself adds to keep the supplier invoices safe on the way.
+      Which answer fits?
+    options:
+      - id: a
+        text: It shares its network with other users' traffic.
+        why: Sharing a network with others is a trade-off of a VPN, and it adds nothing to keeping the invoices safe.
+      - id: b
+        text: It travels over the public internet to the VPC.
+        why: Crossing the public internet is the route the VPN takes, not the protection it adds to the invoices.
+      - id: c
+        text: It encrypts the traffic against interception.
+        correct: true
+        why: The VPN encrypts the traffic so no one along the way can intercept or read the invoices.
+      - id: d
+        text: It lands in the VPC at the virtual private gateway.
+        why: The virtual private gateway is the entry point on the AWS side, so landing there is not what the VPN adds.
+    evidence:
+      - "**VPN**: encrypts traffic against interception or monitoring."
+      - The internet is like the public road to the coffee shop, and a VPN is an encrypted tunnel along it that hides your traffic from ISPs and snoopers.
+    takeaway: Of the pair, the virtual private gateway admits the traffic and the VPN is what encrypts it against interception.
+    history: []
+    verified:
+      keyHash: e62e0324e64b
+      fullHash: f9d5d58da63e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

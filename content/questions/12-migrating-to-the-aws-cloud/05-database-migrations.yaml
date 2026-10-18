@@ -107,7 +107,7 @@ questions:
       on: 2026-10-09
   - id: q-58qf0t
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -116,33 +116,36 @@ questions:
     task: "3.4"
     level: 1
     stem: >-
-      Which statements set a heterogeneous database migration apart from a homogeneous one?
+      Which statements hold for a heterogeneous database migration and set it apart from a homogeneous one?
     options:
       - id: a
         text: The source and the target run different engines.
         correct: true
         why: A change of engine is exactly what makes a database migration heterogeneous.
       - id: b
-        text: AWS DMS can copy the data to a target engine in AWS.
-        why: AWS DMS handles both migration types, so this is shared with a homogeneous move.
+        text: The app runs on the target engine as it is.
+        why: An unchanged app fits a homogeneous move, while a new engine may need app changes.
       - id: c
-        text: The application may need changes to work with the new engine.
+        text: The app may need changes for the new engine.
         correct: true
         why: Code written for the old engine can rely on features the new engine handles differently.
       - id: d
-        text: The target engine can be an AWS managed database service.
-        why: A same-engine move can also land on a managed service, so this does not set the two apart.
+        text: The source and the target run the same engine.
+        why: The same engine on both ends is what defines a homogeneous move, not a heterogeneous one.
       - id: e
-        text: The source engine can stay live while the data copies.
+        text: AWS DMS can keep the source live while data copies.
         why: AWS DMS keeps the source live in both migration types, so this is not a difference.
     evidence:
       - "Heterogeneous: a new engine, such as legacy commercial to Amazon Aurora, which is harder and may need app changes."
+      - "Homogeneous: the same engine on both ends, so fairly simple."
       - AWS DMS keeps the source live and handles both migration types.
     takeaway: A heterogeneous migration moves to a different engine and may require application changes.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 4 are specific to heterogeneous migration; 1, 3 and 5 hold for any DMS migration.)"
+    verified:
+      keyHash: 93fbb64bcd4b
+      fullHash: 1d79688fe333
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-fd58c7
     version: 1
     status: live
@@ -250,44 +253,46 @@ questions:
       on: 2026-10-09
   - id: q-k2fvgj
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
     concept: aws-database-migration-service
     note: m12/database-migrations
     task: "3.4"
-    level: 1
+    level: 2
     stem: >-
-      The cafe moves its sales database to AWS with AWS Database Migration Service (AWS DMS).
-      Which statements describe how AWS DMS carries out the move?
+      The cafe chain will use AWS Database Migration Service (AWS DMS) for two moves: its MySQL menu database to Amazon RDS for MySQL, and its commercial order database to Amazon Aurora once AWS SCT has converted the schema.
+      The owners ask two things: can one service handle both moves, and will copying the huge order history stay within a tight budget?
+      Which strengths of AWS DMS answer the owners?
     options:
       - id: a
-        text: It copies the data with a scheduled task on a replication VM.
+        text: It carries the data in either kind of migration.
         correct: true
-        why: AWS DMS runs the copy as a task on a replication virtual machine between the named source and target.
+        why: One service moves the data for the same-engine menu move and for the new-engine order move alike.
       - id: b
-        text: It ships the data to AWS on an offline storage device.
-        why: AWS DMS copies the data over the network with a replication task, not on a shipped device.
+        text: The source database keeps serving while data copies.
+        why: This is true of AWS DMS, but the owners asked about covering both moves and the budget, not about uptime.
       - id: c
-        text: It lets the source database keep serving orders during the copy.
+        text: It moves terabytes of data at a low cost.
         correct: true
-        why: AWS DMS leaves the source live, so the cafe keeps taking orders while the data moves.
+        why: AWS DMS handles terabyte-scale moves at low cost, which suits the huge order history and the tight budget.
       - id: d
-        text: It requires the app to be rewritten before the copy starts.
-        why: AWS DMS copies the data without a rewrite first; app changes only may come up when the engine changes.
+        text: The owners can switch back to the original database.
+        why: Switching back is true of AWS DMS, but it answers neither of the two things the owners asked.
       - id: e
-        text: It copies only relational databases, never NoSQL ones.
-        why: AWS DMS moves relational and NoSQL databases alike, as well as data warehouses.
+        text: A copy can be placed in another Availability Zone.
+        why: Placing a copy in another zone is true of AWS DMS, but neither question from the owners is about a second location.
     evidence:
-      - You name the source and target, and a scheduled task on a replication VM copies the data while the source stays live.
       - AWS DMS keeps the source live and handles both migration types.
-      - It moves relational and NoSQL databases, data warehouses and analytics workloads to AWS.
-    takeaway: AWS DMS copies data with a replication task while the source database stays live.
+      - Low downtime, high availability, both migration types, low-cost terabyte moves
+    takeaway: AWS DMS moves the data in both homogeneous and heterogeneous migrations and handles terabyte-scale moves at low cost.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 3 are true of AWS DMS; 2, 4 and 5 are false of it.)"
+    verified:
+      keyHash: 0cd678d935e5
+      fullHash: ea8e2d110576
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-xzgjqr
     version: 1
     status: live
@@ -440,3 +445,118 @@ questions:
       fullHash: a8ce80e18125
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-sgmw17
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: homogeneous-database-migration
+    note: m12/database-migrations
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe moves its MySQL stock database to Amazon RDS for MySQL.
+      Why can this move skip AWS SCT?
+    options:
+      - id: a
+        text: AWS DMS keeps the source live during the copy
+        why: A live source is true of every AWS DMS move, so it does not explain why no conversion is needed.
+      - id: b
+        text: The schema already fits the target engine
+        correct: true
+        why: Both ends run MySQL, so the schema carries over without the conversion that AWS SCT performs.
+      - id: c
+        text: Amazon RDS is a managed database service
+        why: A managed target can also run a different engine, so being managed does not remove the need for conversion.
+      - id: d
+        text: The copy runs as a task on a replication VM
+        why: A replication task copies the data in any AWS DMS move and has nothing to do with converting schemas.
+    evidence:
+      - "Homogeneous: the same engine on both ends, so fairly simple."
+      - AWS SCT helps heterogeneous moves by converting schema and code, saving weeks or months.
+    takeaway: In a homogeneous move the engine stays the same, so the schema fits as it is and no conversion is needed.
+    history: []
+    verified:
+      keyHash: aca28b69d6d6
+      fullHash: a404ef454e69
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-jg744y
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: database-schema
+    note: m12/database-migrations
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's order database holds the items below.
+      Which of them are part of its schema?
+    options:
+      - id: a
+        text: The tables kept for orders and for customers
+        correct: true
+        why: Tables are part of the blueprint that the schema defines.
+      - id: b
+        text: The orders that customers placed this morning
+        why: Orders placed this morning are rows of data held in the tables, not the blueprint that shapes them.
+      - id: c
+        text: The type of value each order column must hold
+        correct: true
+        why: Field types are part of the schema, since they define what each column can hold.
+      - id: d
+        text: The price entered in the row for each latte
+        why: A price in a row is a value stored in the data, not the field type that the blueprint sets.
+      - id: e
+        text: The link from every order to one customer
+        correct: true
+        why: Relationships between tables, such as orders to customers, are part of the schema.
+      - id: f
+        text: The customer named on the first order today
+        why: The customer on one order is a stored value, while the schema only defines the link between the tables.
+    evidence:
+      - "**Schema**: The blueprint of a database's tables, field types and relationships."
+    takeaway: A schema covers a database's tables, the field types of their columns and the relationships between them.
+    history: []
+    verified:
+      keyHash: b2631c6ac3ec
+      fullHash: a3eec3e00324
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-1x6qy3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-schema-conversion-tool
+    note: m12/database-migrations
+    task: "1.3"
+    level: 2
+    stem: >-
+      Before the cafe converts its commercial order database for Amazon Aurora, the owners want to know which parts a person must handle and how big the job will be.
+      What can AWS SCT give them?
+    options:
+      - id: a
+        text: A business case with projected cloud costs
+        why: A cost-backed business case comes from Migration Evaluator, not from the schema conversion tool.
+      - id: b
+        text: A live replica kept in sync with the source
+        why: Keeping a target in sync with ongoing changes is the job of AWS DMS replication.
+      - id: c
+        text: An effort estimate that flags manual work
+        correct: true
+        why: AWS SCT flags the parts that need manual work and estimates the effort of the conversion.
+      - id: d
+        text: An inventory of the servers the database uses
+        why: Inventorying on-premises servers and their links is what AWS Application Discovery Service does.
+    evidence:
+      - Flags manual work, estimates effort, automates analysis at scale, works with popular engines
+    takeaway: Before a conversion, AWS SCT flags which parts need manual work and estimates the effort involved.
+    history: []
+    verified:
+      keyHash: 2cc78658695f
+      fullHash: 9df4e18e1f06
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

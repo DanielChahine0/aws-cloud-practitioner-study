@@ -110,7 +110,7 @@ questions:
       on: 2026-10-09
   - id: q-mr2y2e
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -119,35 +119,37 @@ questions:
     task: "4.1"
     level: 2
     stem: >-
-      The cafe plans to move its order system between EC2 instance families as it grows, and it also runs AWS Lambda functions.
-      It wants one discount that keeps covering all of this compute.
-      Which statements about AWS Savings Plans explain why they fit?
+      The cafe's order system will switch to larger and different EC2 instances as it grows, and its loyalty app runs on AWS Lambda.
+      The cafe wants one discount that keeps covering all of this compute.
+      Which statements about AWS Savings Plans explain why one plan can do that?
     options:
       - id: a
-        text: Their discount applies across instance families and sizes.
+        text: They apply whatever the family or size.
         correct: true
-        why: A Savings Plan keeps applying when the order system moves to another family or size.
+        why: A Savings Plan is not tied to one family or size, so it keeps covering the order system after each switch.
       - id: b
-        text: Their discount also reaches serverless compute such as Lambda.
+        text: They extend to serverless services as well.
         correct: true
-        why: Savings Plans cover serverless services such as Lambda, so the cafe's functions share the discount.
+        why: Savings Plans flex to serverless services such as Lambda, so the loyalty app shares the discount.
       - id: c
-        text: They accept all upfront, partial upfront or no upfront payment.
-        why: The payment choices are true of Savings Plans, but they do not explain covering both kinds of compute.
+        text: They accept all, partial or no upfront payment.
+        why: The payment choice is true of Savings Plans, but it says nothing about which compute the discount covers.
       - id: d
-        text: They run for a term of one or three years.
+        text: They last for a term of one or three years.
         why: The term length is true of Savings Plans, but it says nothing about which compute the discount covers.
       - id: e
-        text: They suit critical workloads that want a predictable bill.
-        why: Steady, critical use does fit Savings Plans, but that is not why one discount spans families and Lambda.
+        text: They give a predictable bill for steady use.
+        why: A predictable bill is a real benefit, but it does not explain why one plan covers both the EC2 switches and Lambda.
     evidence:
       - A Savings Plan applies whatever the Region, tenancy, OS, family or size, while an RI stays within its family and Region.
       - "Savings Plans flex across families, Regions and serverless services, and RIs do not."
     takeaway: A Savings Plan discount follows compute across families, sizes and serverless services such as Lambda.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 pair up as the only two that both begin 'Their discount', describing discount scope.)"
+    verified:
+      keyHash: 15b93b2764b9
+      fullHash: 28ec69004f95
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-qngdwe
     version: 1
     status: live

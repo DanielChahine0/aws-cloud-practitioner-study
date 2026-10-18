@@ -222,7 +222,7 @@ questions:
       on: 2026-10-09
   - id: q-yar722
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fsx-for-openzfs
@@ -245,17 +245,19 @@ questions:
         why: ONTAP is aimed at migrations, modern apps and business continuity across Windows and Linux, not these two uses.
       - id: d
         text: Amazon FSx for Windows File Server
-        why: This option serves Windows Server storage over SMB, not storage over NFS v3 to v4.2.
+        why: This option is aimed at Windows file server moves and virtual desktops, not content management or dev and test.
     evidence:
       - "FSx for OpenZFS: ZFS storage over NFS v3 to v4.2, for migrations, analytics, content management and dev and test."
     takeaway: Content management and dev and test workloads on a managed FSx file system point to FSx for OpenZFS.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 4's why argues about NFS v3 to v4.2, which the stem never mentions, rather than the two uses the stem names."
+    verified:
+      keyHash: 210eed6efbe7
+      fullHash: 89c143db5e77
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-f51sx1
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fsx-for-openzfs
@@ -263,31 +265,32 @@ questions:
     task: "3.6"
     level: 2
     stem: >-
-      The cafe's developers keep their dev and test data on an in-house file server built on the ZFS file system, which Linux machines mount over NFS.
-      They want to move it into a managed FSx file system in AWS without changing file systems.
+      The cafe's developers keep their dev and test data on an in-house file server that their Linux machines mount over NFS.
+      They want to move that data into the managed FSx option aimed at dev and test work, and keep reaching it over NFS.
       Which FSx option fits?
     options:
       - id: a
         text: Amazon FSx for NetApp ONTAP
-        why: ONTAP runs NetApp's own ONTAP file system, so the move would change file systems, which the developers want to avoid.
+        why: ONTAP is aimed at migrations, modern apps and business continuity across Windows and Linux, not dev and test work.
       - id: b
         text: Amazon FSx for Windows File Server
         why: This option serves Windows shares over SMB rather than NFS access for Linux machines.
       - id: c
         text: Amazon FSx for OpenZFS
         correct: true
-        why: It runs ZFS storage over NFS in AWS and lists migrations and dev and test among its uses.
+        why: It serves storage over NFS in AWS and lists migrations and dev and test among its main uses.
       - id: d
         text: Amazon FSx for Lustre
         why: Lustre is for ML, HPC, big data and media, not an NFS server holding dev and test data.
     evidence:
       - "FSx for OpenZFS: ZFS storage over NFS v3 to v4.2, for migrations, analytics, content management and dev and test."
-    takeaway: Moving an NFS server built on ZFS into a managed FSx file system fits FSx for OpenZFS.
-
+    takeaway: Moving dev and test data from an NFS file server into a managed FSx file system fits FSx for OpenZFS.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 1 'OpenZFS' repeats the stem's 'ZFS file system', which gives the key away."
+    verified:
+      keyHash: 059850a693a8
+      fullHash: 0d45475c8847
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-3zqbqd
     version: 1
     status: live
@@ -361,7 +364,7 @@ questions:
       on: 2026-10-09
   - id: q-0gwh2a
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: fsx-for-openzfs
@@ -383,14 +386,16 @@ questions:
         why: FSx for OpenZFS serves files over NFS v3 to v4.2 for analytics, content management and dev and test.
       - id: d
         text: Amazon FSx for NetApp ONTAP
-        why: This option brings ONTAP data management to Windows and Linux for modern apps and business continuity.
+        why: ONTAP can serve Linux clients too, but it is aimed at migrations, modern apps and business continuity, not analytics, content management and dev and test.
     evidence:
       - "FSx for OpenZFS: ZFS storage over NFS v3 to v4.2, for migrations, analytics, content management and dev and test."
     takeaway: NFS v3 to v4.2 for analytics, content management and dev and test points to Amazon FSx for OpenZFS.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 4 (FSx for NetApp ONTAP) also serves NFS, and its why does not say why it is wrong for this stem. Option 4's why only describes ONTAP and does not tie it to the stem."
+    verified:
+      keyHash: df4be0e1dabb
+      fullHash: 0c2cce9b53a1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-1rvmp0
     version: 1
     status: live
@@ -468,3 +473,38 @@ questions:
       fullHash: 3e97c0df07aa
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-ybg332
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-fsx
+    note: m06/amazon-fsx
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe moves its office file shares to Amazon FSx and wants staff to keep their current desktop apps, with no new software or retraining.
+      Which FSx benefit makes that possible?
+    options:
+      - id: a
+        text: It speaks the standard protocols for sharing files
+        correct: true
+        why: FSx serves files over standard protocols, so the apps staff already use can open the shares as before.
+      - id: b
+        text: Its storage capacity adjusts on its own as data grows
+        why: Self-adjusting capacity removes resizing work, but it does not decide whether the current apps still work.
+      - id: c
+        text: AWS looks after its hardware, patching and backups
+        why: Managed upkeep frees the cafe from server work, but it is not what lets the current apps keep working.
+      - id: d
+        text: Cold data tiers down so the bill covers only use
+        why: Tiering cold data lowers the cost, which has nothing to do with keeping the staff's current apps.
+    evidence:
+      - "Benefits: standard protocols for existing tools, self-adjusting capacity, and paying only for used storage as cold data tiers down."
+    takeaway: Because FSx uses standard file protocols, existing tools keep working after the move.
+    history: []
+    verified:
+      keyHash: 9aa8ed1b56bf
+      fullHash: cd34d7161639
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

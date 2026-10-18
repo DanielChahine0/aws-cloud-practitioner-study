@@ -500,7 +500,7 @@ questions:
       on: 2026-10-09
   - id: q-psfav6
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: ec2-instance-sizing
@@ -508,30 +508,32 @@ questions:
     task: "1.4"
     level: 2
     stem: >-
-      The cafe has already matched an EC2 instance family to its order system's bottleneck.
-      Which size choice within that family keeps the cost of that server in check?
+      The cafe has already matched an EC2 instance family to its order system's bottleneck and now wants to keep that server's monthly bill low.
+      Which fact should guide the size it picks within that family?
     options:
       - id: a
-        text: Pick the largest size so it never needs a change
-        why: Bigger sizes cost more, and the size can be switched later anyway, so buying the largest wastes money.
+        text: Every size in a family shares one resource mix
+        why: True, but a shared resource mix says nothing about which size keeps the server's bill down.
       - id: b
-        text: Pick a size with spare room for future growth
-        why: Paying now for capacity the order system does not yet use raises cost when the size can grow later.
+        text: A type name encodes both family and size
+        why: The name only labels the family and size, and it does not tell the cafe which size saves money.
       - id: c
-        text: Pick the smallest size that performs well
+        text: Larger sizes in a family are priced higher
         correct: true
-        why: Larger sizes cost more, so the smallest one that meets the need saves money and can grow later.
+        why: Because larger sizes cost more, the cafe should pick the smallest size that still performs well.
       - id: d
-        text: Pick the size with the most memory on offer
-        why: The most memory comes with the biggest and costliest sizes, which the order system may not need.
+        text: A stopped instance is not charged
+        why: True, but stopping the server says nothing about which size to run while it is serving orders.
     evidence:
       - Bigger sizes cost more, so pick the smallest that performs well and switch later if needed.
       - Size trades performance for cost, and nothing is permanent.
     takeaway: Start with the smallest EC2 size that performs well, since larger sizes cost more and you can resize later.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the right-sizing best practice; the others oversize.)"
+    verified:
+      keyHash: 333ed10a09e8
+      fullHash: 742653b10bf7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-ydntrz
     version: 1
     status: live
@@ -600,3 +602,305 @@ questions:
       fullHash: f699e3425a9e
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-5jn7kb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ec2-instance-types
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      The cafe's owner asks why the EC2 launch page lists so many instance types instead of one standard server.
+      What is the reason?
+    options:
+      - id: a
+        text: Workloads need different blends of CPU, memory, storage and networking
+        correct: true
+        why: Each type mixes these resources differently, so the cafe can pick the one that fits each workload.
+      - id: b
+        text: Customers can pay On-Demand or commit to a term for a lower rate
+        why: Payment options are a separate choice, and they are not why so many server designs exist.
+      - id: c
+        text: Servers can be launched in many Regions spread around the world
+        why: Regions decide where a server runs, and they are not why the list of types is so long.
+      - id: d
+        text: Machine images let each server start with its own operating system
+        why: The software a server starts with comes from its image, which any instance type can use.
+    evidence:
+      - Like coffee machines suited to different drinks, instance families each mix CPU, memory, storage and networking differently.
+    takeaway: EC2 offers many instance types because workloads need different mixes of CPU, memory, storage and networking.
+    history: []
+    verified:
+      keyHash: 6e53035302b6
+      fullHash: 38fbe151dea2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-g0skx9
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: ec2-instance-families
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      The cafe's developer is learning the EC2 instance families before choosing servers.
+      Match each family to the resource it leans on most.
+    pairs:
+      - left: Compute optimized
+        right: High processor power
+        why: This family is built for CPU-heavy work, so processor power is where it leans.
+      - left: Memory optimized
+        right: Big datasets held in RAM
+        why: This family is built to process large datasets while they sit in RAM, so RAM is its strength.
+      - left: Storage optimized
+        right: Fast local disk access
+        why: This family is built for quick access to local data, so local disks are its strength.
+      - left: Accelerated computing
+        right: GPUs and other co-processors
+        why: This family adds hardware accelerators that beat CPU-run software at some functions.
+      - left: General purpose
+        right: An even mix of resources
+        why: This family keeps its resources balanced instead of leaning toward any one of them.
+    evidence:
+      - "Pick the family by the bottleneck: CPU, memory, accelerators or local disk."
+      - "**General purpose instances**: balanced, all-round instances."
+    takeaway: Each EC2 family leans on one strength - CPU, memory, local disk or accelerators - except general purpose, which balances them.
+    history: []
+    verified:
+      keyHash: aef2551a5465
+      fullHash: 370a21e3e4f8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-tn8ank
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: general-purpose-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is sorting its planned workloads by EC2 instance family.
+      Which workloads have no single bottleneck, so they suit general purpose instances best?
+    options:
+      - id: a
+        text: A web service for the cafe's menu
+        correct: true
+        why: Web services are everyday balanced work with no single bottleneck, which is what general purpose instances are for.
+      - id: b
+        text: Scientific modeling held back by the CPU
+        why: Scientific modeling that is limited by processor power points to compute optimized instead.
+      - id: c
+        text: A new app whose resource needs are unknown
+        correct: true
+        why: With no known bottleneck yet, the new app starts best on a balanced general purpose instance.
+      - id: d
+        text: A large database held fully in memory
+        why: A big in-memory database needs lots of RAM, which points to memory optimized instead.
+      - id: e
+        text: A data warehouse read from local disks
+        why: A warehouse on local disks needs fast local storage, which points to storage optimized instead.
+      - id: f
+        text: A graphics job that runs on GPUs
+        why: Work that needs GPUs points to accelerated computing instances rather than a balanced mix.
+    evidence:
+      - "**General purpose**: balanced, for web services, code repositories and unpredictable workloads."
+      - "Unknown workload: start with general purpose."
+    takeaway: General purpose instances fit balanced work with no single bottleneck, such as web services and unknown workloads.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 are the only two workloads that share one instance family, each other option maps to its own.)"
+  - id: q-j8qjq2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: compute-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's nightly forecasting job keeps its processor busy at full load, while memory use stays low and the disks are quiet.
+      Which EC2 instance family should the job move to?
+    options:
+      - id: a
+        text: Memory optimized
+        why: Memory use stays low, so extra RAM would not ease a processor that is at full load.
+      - id: b
+        text: General purpose
+        why: A balanced mix gives no extra processor power to a job held back by its CPU.
+      - id: c
+        text: Compute optimized
+        correct: true
+        why: The processor is the bottleneck, and this family is built for CPU-heavy work.
+      - id: d
+        text: Storage optimized
+        why: The disks are quiet, so faster local storage would not speed up this job.
+    evidence:
+      - "Pick the family by the bottleneck: CPU, memory, accelerators or local disk."
+      - "**Compute optimized**: CPU-heavy work like game servers, HPC, machine learning and scientific modeling."
+    takeaway: When the processor is the bottleneck and memory and disk sit idle, move to compute optimized instances.
+    history: []
+    verified:
+      keyHash: 27bf9aade270
+      fullHash: f4a374b0cedf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-s2vvrg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: memory-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      What is the main strength of memory optimized EC2 instances?
+    options:
+      - id: a
+        text: Quick reads and writes on local disks
+        why: Quick local disk access is the strength of storage optimized instances, not memory optimized ones.
+      - id: b
+        text: Fast work on large datasets in RAM
+        correct: true
+        why: These instances are built to process large datasets quickly in memory, as in analytics and databases.
+      - id: c
+        text: Hardware co-processors such as GPUs
+        why: Co-processors such as GPUs mark accelerated computing instances, not memory optimized ones.
+      - id: d
+        text: A balanced mix of every resource
+        why: A balanced mix describes general purpose instances, which do not lean toward memory.
+    evidence:
+      - "**Memory optimized**: fast in-memory processing of large datasets, as in analytics and databases."
+      - "**Memory optimized instances**: instances for big in-memory datasets."
+    takeaway: Memory optimized instances are built for fast processing of large datasets held in memory.
+    history: []
+    verified:
+      keyHash: ce4fe4a2780d
+      fullHash: 0a59d585c40d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-ym7wn5
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: accelerated-computing-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's developer lists the jobs of a new project and wants only some of them on accelerated computing instances.
+      Which jobs would their hardware accelerators run more efficiently than software on a CPU?
+    options:
+      - id: a
+        text: Heavy floating-point math for a pricing model
+        correct: true
+        why: Floating-point math is one of the functions co-processors run more efficiently than CPU software.
+      - id: b
+        text: Rendering lifelike previews of new mug designs
+        correct: true
+        why: Rendering previews is graphics work, which GPUs handle more efficiently than software on a CPU.
+      - id: c
+        text: Running a multiplayer game for customers
+        why: A game server is CPU-heavy work that runs on the CPU itself, which points to compute optimized instances.
+      - id: d
+        text: Spotting the cafe's logo in customer photos
+        correct: true
+        why: Finding a logo in photos is pattern matching, which accelerators run better than CPU software.
+      - id: e
+        text: Scanning a big data warehouse on local disks
+        why: A data warehouse on local disks needs fast local storage, which points to storage optimized.
+      - id: f
+        text: Holding a large sales dataset in memory
+        why: Keeping a large dataset in memory for fast processing is the job of memory optimized instances.
+    evidence:
+      - "**Accelerated computing**: hardware accelerators such as GPUs, co-processors that do floating-point math, graphics, pattern matching and machine learning more efficiently than software running on a CPU."
+    takeaway: Accelerated computing instances use co-processors for work like floating-point math, graphics and pattern matching.
+    history: []
+    verified:
+      keyHash: 5967930cdb9e
+      fullHash: 4ed46e4d1a86
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-jqwk21
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: storage-optimized-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's order log app reads and writes its local disks nonstop, and disk input and output is maxed out while the processor and memory sit mostly idle.
+      Which EC2 instance family should it move to?
+    options:
+      - id: a
+        text: Compute optimized
+        why: The processor sits mostly idle, so more CPU power would not clear the disk bottleneck.
+      - id: b
+        text: Storage optimized
+        correct: true
+        why: Local disk I/O is the bottleneck, and this family is built for fast access to local data.
+      - id: c
+        text: Memory optimized
+        why: Memory sits mostly idle, so a family with more RAM would not speed up the disks.
+      - id: d
+        text: Accelerated computing
+        why: GPUs and other co-processors do nothing for an app limited by local disk throughput.
+    evidence:
+      - "Pick the family by the bottleneck: CPU, memory, accelerators or local disk."
+      - "**Storage optimized**: fast access to local data, as in data warehousing, large databases and I/O-heavy apps."
+    takeaway: When local disk I/O is the bottleneck, as in an I/O-heavy app, move to storage optimized instances.
+    history: []
+    verified:
+      keyHash: 4fb5a0bd7f03
+      fullHash: cff6a94d9583
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-s0623y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: general-purpose-instances
+    note: m02/amazon-ec2-instance-types
+    task: "3.3"
+    level: 1
+    stem: >-
+      The cafe keeps the code repository for its recipe app on a general purpose EC2 instance.
+      Which description fits that instance family?
+    options:
+      - id: a
+        text: Extra processor power for CPU-heavy work like game servers
+        why: This describes compute optimized instances, which tilt toward the CPU rather than a balance.
+      - id: b
+        text: Extra memory for fast in-memory work like large databases
+        why: This describes memory optimized instances, which tilt toward memory rather than a balance.
+      - id: c
+        text: Balanced resources for all-round work like web services
+        correct: true
+        why: General purpose instances balance their resources, which suits everyday work such as hosting a code repository.
+      - id: d
+        text: Fast local disk access for I/O-heavy work like data warehouses
+        why: This describes storage optimized instances, which tilt toward local disk rather than a balance.
+    evidence:
+      - "**General purpose**: balanced, for web services, code repositories and unpredictable workloads."
+      - "**General purpose instances**: balanced, all-round instances."
+    takeaway: General purpose instances keep CPU, memory and other resources balanced for all-round work such as web services.
+    history: []
+    verified:
+      keyHash: 79d93d0be473
+      fullHash: 392c2149ece4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

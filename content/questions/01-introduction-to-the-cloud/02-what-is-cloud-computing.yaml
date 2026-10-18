@@ -433,3 +433,194 @@ questions:
       fullHash: 41fe31bb4e1f
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+
+  - id: q-c10sym
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-computing-definition
+    note: m01/what-is-cloud-computing
+    task: "1.1"
+    level: 2
+    stem: >-
+      A supplier offers the cafe servers and storage that are ready within seconds and billed only for what is used.
+      Staff can work with them only from terminals inside the supplier's own office, never from the cafe or from home.
+      Which part of the cloud computing definition does this offer lack?
+    options:
+      - id: a
+        text: IT resources
+        why: Servers and storage are IT resources, so the offer already has this part of the definition.
+      - id: b
+        text: On-demand delivery
+        why: Resources that are ready within seconds are delivered on demand, so this part is already there.
+      - id: c
+        text: Over the internet
+        correct: true
+        why: Use limited to local terminals in one office is not remote use through web services from anywhere.
+      - id: d
+        text: Pay-as-you-go pricing
+        why: A bill for only what is used is pay-as-you-go pricing, so the offer already meets this part.
+    evidence:
+      - "**Over the internet**: remote use through web-based services, not local hardware, from anywhere."
+      - "Definition, in order: (1) on-demand delivery (2) of IT resources (3) over the internet (4) with pay-as-you-go pricing."
+    takeaway: An offer is cloud computing only when all four parts hold, including remote use over the internet from anywhere.
+    history: []
+    verified:
+      keyHash: bf6357a586ca
+      fullHash: 46ef88f3ce89
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-tas7y1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-center
+    note: m01/what-is-cloud-computing
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe used to co-locate its own servers in a facility it shared with other firms.
+      It has now moved its ordering app to AWS.
+      Which describes the data centers that hold the app now?
+    options:
+      - id: a
+        text: Buildings the cafe owns, with its own power and cooling
+        why: Running its own buildings is the old way of owning a data center, which the move to AWS replaces.
+      - id: b
+        text: A facility the cafe shares, holding servers the cafe owns
+        why: A shared facility with the cafe's own servers is the co-location the cafe has just left behind.
+      - id: c
+        text: Buildings AWS runs, holding servers the cafe does not own
+        correct: true
+        why: On AWS the cafe uses data centers it does not own, and AWS looks after the buildings and servers.
+      - id: d
+        text: A building the cafe owns, holding servers that AWS supplies
+        why: The app moved out of any building the cafe runs, so its servers now sit in data centers that AWS runs.
+    evidence:
+      - Firms once ran their own or co-located, but AWS lets them use data centers they do not own, trading upkeep and repetitive chores for innovation.
+      - A data center is one or more buildings of servers with redundant power, cooling and security.
+    takeaway: Moving to AWS means using data centers the business does not own, rather than running its own or co-locating.
+    history: []
+    verified:
+      keyHash: a751fb2ee29a
+      fullHash: 608f3c23da2c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-67hdxt
+    version: 1
+    status: live
+    type: multi
+    pool: practice
+    concept: cloud-based-deployment
+    note: m01/what-is-cloud-computing
+    task: "3.1"
+    level: 2
+    select: 2
+    stem: >-
+      The cafe wants a cloud-based deployment that holds all of its systems.
+      Which statements describe ways it can reach that deployment?
+    options:
+      - id: a
+        text: It can migrate its existing apps into the cloud
+        correct: true
+        why: A cloud-based deployment can be reached by migrating existing systems, such as moving the data first.
+      - id: b
+        text: It can build new apps in the cloud from the start
+        correct: true
+        why: Apps newly built from virtual servers, databases and networking in the cloud also make a cloud-based deployment.
+      - id: c
+        text: It can keep older systems in-house next to the cloud
+        why: Keeping some systems in-house beside cloud resources is a hybrid deployment, not one that is all in the cloud.
+      - id: d
+        text: It can add virtualization to its own servers
+        why: Virtualizing in-house servers to lift their use belongs to an on-premises deployment, not to the cloud.
+      - id: e
+        text: It can hold sensitive records on site for compliance
+        why: A cloud-based deployment alone cannot keep sensitive data on premises, so this does not lead to it.
+    evidence:
+      - "**Cloud-based** (public cloud): all in the cloud, migrated or newly built, for example moving data first, then building an app of virtual servers, databases and networking."
+    takeaway: A cloud-based deployment puts everything in the cloud, whether existing systems are migrated or new ones are built there.
+    history: []
+    verified:
+      keyHash: a38f26276787
+      fullHash: c50652133ec5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-4tm40q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: on-premises-deployment
+    note: m01/what-is-cloud-computing
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's owner decides to keep every system on servers in the cafe's own building rather than use the cloud.
+      Which advantage does this on-premises choice give up?
+    options:
+      - id: a
+        text: Dedicated resources reserved for the cafe alone
+        why: Dedicated resources are one of the things an on-premises deployment still offers, so they are not lost.
+      - id: b
+        text: Virtualization to make better use of each server
+        why: An on-premises deployment still uses virtualization to try to lift utilization, so the owner keeps it.
+      - id: c
+        text: Easy scaling with little upfront hardware cost
+        correct: true
+        why: Scaling well with little upfront cost is a cloud benefit, which an on-premises deployment misses.
+      - id: d
+        text: Low latency for staff working in the building
+        why: Low latency is another strength that an on-premises deployment keeps, so the owner does not give it up.
+    evidence:
+      - "**On-premises**: largely legacy IT plus virtualization and application management to try to lift utilization, missing many cloud benefits but offering dedicated resources and low latency."
+      - It scales well with little upfront cost, but alone cannot keep sensitive data on premises for compliance.
+    takeaway: An on-premises deployment keeps dedicated, low-latency resources but gives up cloud benefits such as cheap, easy scaling.
+    history: []
+    verified:
+      keyHash: f9e613093a8d
+      fullHash: "172910558524"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+
+  - id: q-11xjz0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: hybrid-deployment
+    note: m01/what-is-cloud-computing
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe chain plans a hybrid deployment and must decide which system stays in its own server room while the rest moves to the cloud.
+      Which system is the one to keep in-house?
+    options:
+      - id: a
+        text: A new analytics app that must scale for monthly reports
+        why: Advanced analytics suits the cloud side of a hybrid deployment, since it gains from easy scaling.
+      - id: b
+        text: An older payroll app that regulators require on site
+        correct: true
+        why: A legacy system that regulation keeps on premises is the part a hybrid deployment holds in-house.
+      - id: c
+        text: A loyalty app that the chain is building for the first time
+        why: A brand-new app has no legacy or regulatory tie to the server room, so it can be built in the cloud.
+      - id: d
+        text: A menu site that gets a rush every weekend morning
+        why: A site with rushes benefits from cloud scaling, so it belongs on the cloud side of the deployment.
+    evidence:
+      - "**Hybrid**: in-house and cloud resources together, for legacy systems kept in-house for maintenance or regulation."
+      - "Regulated legacy apps on site, advanced analytics in the cloud: hybrid deployment."
+    takeaway: In a hybrid deployment the legacy systems held by maintenance or regulation stay in-house while other work runs in the cloud.
+    history: []
+    verified:
+      keyHash: e13a17b0ff37
+      fullHash: c199f6d5753d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

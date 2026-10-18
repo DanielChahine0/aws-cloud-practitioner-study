@@ -33,7 +33,7 @@ questions:
       on: 2026-10-09
   - id: q-e81xws
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: client-server-model
@@ -41,31 +41,33 @@ questions:
     task: "3.1"
     level: 2
     stem: >-
-      The cafe moves the back end of its ordering app from a computer in the back room to AWS.
-      Guests keep placing orders from the same app on their phones.
-      After the move, what does each guest's phone do when an order is placed?
+      The cafe deploys its ordering app's back end on virtual servers in AWS, and guests order from the app on their phones.
+      A guest taps to place an order.
+      Which step starts that exchange?
     options:
       - id: a
-        text: Validates the order and shows the reply
-        why: Showing the reply is the phone's part, but validating the order is server work that now runs in AWS.
+        text: The server in AWS checks the order is valid and allowed
+        why: Checking the order is validation, which the server can only do after an order has arrived from the phone.
       - id: b
-        text: Sends the order and shows the reply
+        text: The phone sends the order over the internet to AWS
         correct: true
-        why: The phone is still the client, so it sends the request and displays whatever the server returns.
+        why: The server does nothing until a client asks, so the phone's request over the internet comes first.
       - id: c
-        text: Sends the order and stores the result
-        why: Sending is the phone's part, but storing the result is server work that the back end in AWS does.
+        text: The server in AWS stores and processes the order data
+        why: Storing and processing the order is server work that follows the request, so it cannot start the exchange.
       - id: d
-        text: Validates the order and stores the result
-        why: Validating and storing are both the server's work, which moved to a virtual server in AWS, not the phone.
+        text: The phone shows the confirmation that AWS returns
+        why: Showing the reply is the last step on the client side, after the server has sent its response.
     evidence:
-      - In the coffee shop, the customer is the client and the barista is the server, which on AWS would be a virtual server.
-      - A server usually both stores and processes data, while the client sends requests and shows the replies, and cloud servers scale for both kinds of demand.
-    takeaway: Moving a back end to AWS keeps the client-server model, so the guest's phone stays the client that sends requests and shows replies.
+      - The client depends on the server to fulfil requests, and the server does nothing until a client asks.
+      - Cloud computing is one version of it, supplying the server side as scalable servers that clients reach over the internet.
+    takeaway: With the back end on AWS, each exchange still starts with the client sending a request over the internet to the server.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Task 3.1 (deploying and operating methods) fits poorly, since the question tests the client-server model, a cloud concept."
+    verified:
+      keyHash: a8ea896b22f2
+      fullHash: "002681882610"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-2k67rk
     version: 1
     status: live
@@ -105,43 +107,40 @@ questions:
       on: 2026-10-09
   - id: q-9wx5re
     version: 1
-    status: draft
-    type: multi
+    status: live
+    type: single
     pool: practice
     concept: pay-as-you-go-pricing
     note: m01/welcome-to-aws-cloud-practitioner-essentials
     task: "1.4"
-    level: 1
-    select: 2
+    level: 2
     stem: >-
-      The cafe's owner asks what pay-as-you-go pricing on AWS would mean for a new ordering site.
-      Which statements describe pay-as-you-go pricing itself?
+      The cafe's owner moves the ordering site to AWS on pay-as-you-go pricing and explains the change to the staff with a cafe example.
+      Which cafe expense is charged the same way as the site's AWS resources?
     options:
       - id: a
-        text: A one-year commitment can lower the hourly rate
-        why: That is a Savings Plans discount for committing ahead, while pay-as-you-go asks for no term at all.
+        text: Rent owed at the same amount every month
+        why: Rent stays the same whether the shop is busy or empty, while the site is billed only for what it consumes.
       - id: b
-        text: No payment is due before any resource is used
-        correct: true
-        why: AWS asks for no prepayment, so the site can start without an upfront charge.
+        text: A coffee machine bought outright before opening
+        why: Buying a machine before opening is a prepayment, and AWS asks for no payment before the site uses anything.
       - id: c
-        text: Heavier storage use can lower the per-unit rate
-        why: That is volume-based pricing, a separate discount from simply paying for what is consumed.
-      - id: d
-        text: The bill rises and falls with resources consumed
+        text: Wages paid for the hours each barista works
         correct: true
-        why: Charges track real consumption, much like wages paid only for hours on shift.
-      - id: e
-        text: Released servers stop adding to the next bill
-        why: That is true of deprovisioning, which ends a resource's charges, not a trait of the pricing model itself.
+        why: Wages follow the hours actually worked, just as the site's bill follows the resources it actually consumes.
+      - id: d
+        text: A long-term bean contract at a discounted price
+        why: A long contract trades a commitment for a lower price, which is a term commitment rather than paying as you go.
     evidence:
       - You pay only for the AWS resources you consume, just as staff earn wages only for hours on shift.
       - On AWS there is no prepayment, and you need not worry about capacity constraints.
-    takeaway: Pay-as-you-go means no upfront payment and a bill that follows actual consumption.
+    takeaway: Pay-as-you-go works like hourly wages, so the bill follows what is actually used, with nothing upfront and no term.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "solve-closed: a second option is defensible: Pay-as-you-go means paying for what you consume with no upfront payment; option 1 is also a true consequence."
+    verified:
+      keyHash: ed5d9713b0c4
+      fullHash: 107ed59bb47d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-va2dze
     version: 1
     status: live
@@ -219,7 +218,7 @@ questions:
       on: 2026-10-09
   - id: q-1zgb64
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: client-server-model
@@ -227,30 +226,33 @@ questions:
     task: "3.1"
     level: 2
     stem: >-
-      The cafe's owner worries that deploying the ordering app on AWS means giving up the client-server design it uses today.
-      Which statement answers that worry about running the app in the AWS Cloud?
+      The cafe moves its ordering app's back end from a computer in the back room to a cloud-based deployment on AWS.
+      Guests order from the app on their phones both before and after the move.
+      Which statement about the back end is true both before and after the move?
     options:
       - id: a
-        text: AWS charges only for the resources the app consumes
-        why: Paying for what is consumed is true on AWS, but it is about billing and says nothing about the client-server design.
+        text: The back end runs on servers in AWS data centers
+        why: This holds only after the move, because before it the back end ran on the cafe's own back-room computer.
       - id: b
-        text: AWS supplies the server side that phones reach online
-        correct: true
-        why: Cloud computing is a form of the client-server model, with AWS providing scalable servers that the guests' phones reach over the internet.
+        text: The back end adds servers the moment the app gets busy
+        why: Adding servers at short notice comes with the cloud, while the back-room computer could not be multiplied quickly.
       - id: c
-        text: AWS secures the data centers that host the app's servers
-        why: AWS does secure its data centers, but that does not tell the owner whether the client-server design survives the move.
+        text: The back end replies to the requests the app sends
+        correct: true
+        why: The cloud does not replace the client-server model, so the back end is the server that answers the app on both sides of the move.
       - id: d
-        text: AWS lets the app add capacity when orders surge
-        why: Adding capacity on demand is true on AWS, but it describes provisioning rather than how the design carries over.
+        text: The back end's physical hardware is maintained by AWS
+        why: AWS looks after the hardware only once the back end runs in its data centers, and before the move the cafe did.
     evidence:
       - The cloud does not replace the client-server model, which modern applications still use.
       - Cloud computing is one version of it, supplying the server side as scalable servers that clients reach over the internet.
-    takeaway: Deploying to the cloud keeps the client-server model, with AWS supplying the server side over the internet.
+    takeaway: A cloud-based deployment keeps the client-server model, so the back end still serves the phones, only now from AWS.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Task 3.1 (deploying and operating methods) fits poorly, since the question tests the client-server model, a cloud concept."
+    verified:
+      keyHash: 1905a547bf3a
+      fullHash: ddfb06803469
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-tk9efy
     version: 1
     status: live

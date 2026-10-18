@@ -72,7 +72,7 @@ questions:
       on: 2026-10-09
   - id: q-947fcx
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -84,33 +84,38 @@ questions:
       Which conditions together turn a subnet into a public subnet?
     options:
       - id: a
-        text: An internet gateway is attached to the subnet's VPC
+        text: An internet gateway is attached to its VPC
         correct: true
         why: Without an attached internet gateway the VPC has no path to the internet at all.
       - id: b
-        text: Its route table sends 0.0.0.0/0 traffic to that gateway
+        text: Its route table sends 0.0.0.0/0 traffic to an internet gateway
         correct: true
         why: That route is what sends the subnet's internet-bound traffic out through the gateway.
       - id: c
-        text: Its route table keeps the local route for 10.0.0.0/16
-        why: Every route table starts with the local route, which only keeps traffic inside the VPC, so private subnets have it too.
+        text: Its route table sends 0.0.0.0/0 traffic to a NAT gateway
+        why: A NAT gateway route only lets servers start outbound connections, so the subnet stays private.
       - id: d
-        text: Its CIDR block sits inside the VPC's own address range
-        why: Every subnet's range sits inside the VPC's range, private ones included, so this makes nothing public.
+        text: A virtual private gateway is attached to its VPC
+        why: A virtual private gateway admits traffic only from an approved private network, so it makes no subnet public.
       - id: e
-        text: Its auto-assign public IPv4 setting is turned on
-        why: The setting hands out public addresses, but without a route to an attached gateway the subnet still cannot reach the internet.
+        text: Its name tag says it uses the internet gateway
+        why: A subnet's name is only a label, and saying it uses the gateway gives it no route there.
+      - id: f
+        text: Its route table keeps the local route for the VPC
+        why: Every route table starts with the local route, which keeps traffic inside the VPC and opens no path to the internet.
     evidence:
       - Naming a subnet "public" does not make it public, because it still needs an attached internet gateway and a route to it.
       - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
     takeaway: A subnet is public only when an attached internet gateway exists and its route table sends 0.0.0.0/0 there.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 5 says 'that gateway', which points back to option 3 and ties the pair together.)"
+    verified:
+      keyHash: 6e4d39e8079f
+      fullHash: 7599d14b4e21
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-hdypgs
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: public-subnets
@@ -118,31 +123,33 @@ questions:
     task: "3.5"
     level: 2
     stem: >-
-      The cafe launches its menu web servers into a public subnet.
-      It wants every new server to come up with an internet-facing address, with no manual step.
-      What should be switched on for that subnet?
+      The cafe launches its menu web servers into a subnet whose route table already sends 0.0.0.0/0 traffic to the internet gateway.
+      It wants every new server there to come up with an internet-facing address, with no manual step.
+      Which part of the subnet's configuration should the cafe change?
     options:
       - id: a
         text: Its auto-assign public IPv4 setting
         correct: true
-        why: Turning this on gives every resource launched in the public subnet its own public IPv4 address.
+        why: Turning this on gives every resource launched in the subnet its own public IPv4 address.
       - id: b
-        text: The local route in the subnet's route table
-        why: The local route only carries traffic inside the VPC and hands out no addresses.
+        text: Its explicit route table association
+        why: The subnet already routes to the gateway, and an association applies routes without handing out any addresses.
       - id: c
-        text: A custom network ACL on the subnet
+        text: Its custom network ACL's inbound rules
         why: A network ACL filters traffic in and out of the subnet; it does not give servers public addresses.
       - id: d
-        text: A larger CIDR range for the subnet
-        why: A bigger range adds more private addresses but leaves the servers without public ones.
+        text: Its IPv4 CIDR range within the VPC
+        why: The range sets which private addresses servers get and leaves them without public ones.
     evidence:
       - In the same settings, auto-assign public IPv4 address is switched on for public subnets so their resources receive public addresses.
       - Auto-assign public IPv4 belongs on public subnets only.
     takeaway: Public subnets turn on auto-assign public IPv4 so the resources launched there get public addresses.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: The stem asks what to 'switch on', which fits only option 3, a 'setting'; options 2 and 4 cannot be switched on."
+    verified:
+      keyHash: c14ddfcddd7f
+      fullHash: 8723bc157a68
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-gea5ar
     version: 1
     status: live
@@ -287,7 +294,7 @@ questions:
       on: 2026-10-09
   - id: q-93wjef
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: public-subnets
@@ -295,34 +302,36 @@ questions:
     task: "3.5"
     level: 2
     stem: >-
-      The cafe already has a route table that sends 0.0.0.0/0 traffic to the internet gateway attached to its VPC, and one subnet uses it.
-      It adds a second subnet in another Availability Zone for its menu site.
-      Which step gives the new subnet that same path to the internet gateway?
+      One of the cafe's subnets already reaches the internet gateway attached to its VPC through a 0.0.0.0/0 route.
+      The cafe adds a second subnet in another Availability Zone for its menu site.
+      Which step gives the new subnet that same path to the gateway?
     options:
       - id: a
         text: Turn on the subnet's auto-assign public IPv4 setting
         why: This hands launched servers public addresses, but it adds no 0.0.0.0/0 route, so the subnet still has no path to the gateway.
       - id: b
-        text: Associate the subnet with the existing route table
+        text: Associate it with the first subnet's route table
         correct: true
         why: The new subnet only gets the 0.0.0.0/0 route once it is explicitly associated with the table that holds it.
       - id: c
         text: Give the subnet a range inside the VPC's CIDR block
         why: Every subnet needs a range from the VPC's block, but an address range carries no route to the internet gateway.
       - id: d
-        text: Spread the menu servers across both of the subnets
-        why: Using two AZs keeps the site reachable during an outage, but it does not route the new subnet's traffic to the gateway.
+        text: Add a local route to the subnet's route table
+        why: Every route table starts with a local route, and it only keeps traffic inside the VPC, so it adds no path to the gateway.
     evidence:
       - On the Subnet associations tab, explicitly associate both public subnets with this table.
       - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
     takeaway: Each public subnet must be explicitly associated with the route table that sends 0.0.0.0/0 to the internet gateway.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 3 alone repeats the stem's 'route table', which points at the key."
+    verified:
+      keyHash: 3649d4a0af35
+      fullHash: 1e795ba3780f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-8nm6qc
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: public-subnets
@@ -330,31 +339,33 @@ questions:
     task: "3.5"
     level: 2
     stem: >-
-      A new staff member creates a subnet for the cafe's menu site and names it public-menu.
-      The VPC has an attached internet gateway, and the subnet's route table holds only the local route.
-      Customers on the web cannot reach the servers launched there. What explains this?
+      A new staff member creates a subnet for the cafe's menu site, names it public-menu and turns on its auto-assign public IPv4 setting.
+      The VPC already has an attached internet gateway, yet customers on the web cannot reach the servers launched there.
+      What explains this?
     options:
       - id: a
-        text: The subnet sits in a single Availability Zone
-        why: Every subnet lives in one AZ, public ones included, so its zone does not cut it off from the web.
+        text: Its servers were given no public IPv4 addresses
+        why: Auto-assign public IPv4 is on, so every server launched there already has a public address.
       - id: b
-        text: The internet gateway serves the whole VPC
-        why: That is true of every attached gateway, and the public subnets of the same VPC still reach the web through it.
+        text: Its VPC has no internet gateway attached
+        why: The VPC already has an attached gateway, so a missing gateway is not what blocks the customers.
       - id: c
-        text: The subnet's route table has no route to the gateway
+        text: Its route table sends no traffic to the gateway
         correct: true
         why: A subnet becomes public only when its route table sends 0.0.0.0/0 to the attached gateway, whatever the subnet is called.
       - id: d
-        text: The subnet's range sits inside the VPC's range
-        why: Every subnet takes its range from the VPC's block, public ones included, so this does not block web traffic.
+        text: Its servers all sit in one Availability Zone
+        why: Every subnet lives in one AZ, public ones included, so its zone does not cut it off from the web.
     evidence:
       - Naming a subnet "public" does not make it public, because it still needs an attached internet gateway and a route to it.
-      - Attaching alone does not yet tell instances how to reach the internet.
-    takeaway: A subnet's name does not make it public; it needs a route to an attached internet gateway.
+      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+    takeaway: Naming a subnet public changes nothing; its route table must send traffic to an attached internet gateway.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is what keeps a subnet private; the others are true of every subnet.)"
+    verified:
+      keyHash: ff990c574577
+      fullHash: 30d40c4fbc8c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-kndvw3
     version: 1
     status: draft
@@ -365,29 +376,32 @@ questions:
     task: "3.5"
     level: 2
     stem: >-
-      The cafe's VPC is open to the web for its menu site, and its order database sits in a private subnet of that same VPC.
-      What keeps the database's subnet cut off from the internet?
+      An admin switched on auto-assign public IP in Private-subnet-1 by mistake, so the cafe's order database servers there received public IPv4 addresses.
+      The VPC's internet gateway is attached and serves the public subnets, and the private subnet's network ACL allows all traffic.
+      What still keeps Private-subnet-1 cut off from the internet?
     options:
       - id: a
         text: Its route table has no 0.0.0.0/0 route
         correct: true
-        why: Without a route that sends outside traffic to the internet gateway, the private subnet has no path to the internet.
+        why: Without a 0.0.0.0/0 route to the internet gateway, the servers' public addresses lead nowhere, so the subnet stays private.
       - id: b
-        text: Its CIDR block is a slice of the VPC's range
-        why: Every subnet takes a slice of the VPC's range, including the public subnets that do reach the internet.
+        text: Its CIDR block is a private 10.0 range
+        why: The subnet's range is private, but the mistaken setting gave the servers public IPv4 addresses too, so the range alone is not the barrier.
       - id: c
-        text: It sits in a single Availability Zone
-        why: The public subnets each sit in one Availability Zone too, so the zone does not decide whether the internet is reachable.
+        text: Its name marks it as a private subnet
+        why: A name such as Private-subnet-1 only labels the subnet; it changes no routing, so it cannot be what keeps the servers offline.
       - id: d
-        text: Its name tag labels it as a private subnet
-        why: A subnet's name tag is only a label and has no effect on where its traffic can go.
+        text: Its servers still hold private IPv4 addresses
+        why: The servers do keep private addresses inside the VPC, yet that sits alongside their new public addresses and blocks nothing.
     evidence:
       - The public subnets now reach the internet through the gateway, while the private subnets lack that route and stay private.
-    takeaway: A private subnet stays private because its route table has no 0.0.0.0/0 route to the internet gateway.
+      - Under Actions, Edit subnet settings, auto-assign public IP stays off for private subnets, since turning it on would hand every resource there a public IP.
+      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
+    takeaway: Even with public addresses, a private subnet stays cut off while its route table has no 0.0.0.0/0 route to the internet gateway.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is what makes a subnet private; the others hold for any subnet.)"
+      attempts: 10
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only one that actually makes a subnet private; the other three hold for public subnets too or have no effect.)"
   - id: q-9waax7
     version: 1
     status: live
@@ -425,7 +439,7 @@ questions:
       on: 2026-10-09
   - id: q-2jd63p
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: public-subnets
@@ -438,30 +452,32 @@ questions:
       What should the cafe do?
     options:
       - id: a
-        text: Attach a second internet gateway to the VPC
-        why: The VPC's one attached gateway already serves the first subnet, so a second gateway adds nothing the new subnet lacks.
+        text: Rename it to match the first subnet's name
+        why: A subnet's name is only a label, so matching the first subnet's name changes nothing about where its traffic goes.
       - id: b
         text: Associate it with the first subnet's route table
         correct: true
-        why: That table sends 0.0.0.0/0 to the gateway, and the new subnet only becomes public once it is associated with such a route.
+        why: That table sends 0.0.0.0/0 to the attached gateway, and the new subnet only becomes public once it is associated with such a route.
       - id: c
-        text: Move it into the first subnet's Availability Zone
-        why: The zone a subnet sits in does not decide whether it is public; the missing piece is the route to the gateway.
+        text: Recreate it in the first subnet's Availability Zone
+        why: The zone a subnet sits in does not decide internet access, so without a route to the gateway it stays unreachable in any zone.
       - id: d
-        text: Give it a larger CIDR block in the VPC range
-        why: A bigger address block holds more servers but gives none of them a path to the internet gateway.
+        text: Copy the first subnet's auto-assign IPv4 setting
+        why: The setting is already on, so the servers get public addresses; what they lack is a route to the gateway.
     evidence:
       - Naming a subnet "public" does not make it public, because it still needs an attached internet gateway and a route to it.
       - On the Subnet associations tab, explicitly associate both public subnets with this table.
       - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
     takeaway: A subnet's name and public addresses do not make it public; associating it with a route to the internet gateway does.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only action that can make a subnet public; a VPC takes one internet gateway, and AZ or CIDR size never changes routing.)"
+    verified:
+      keyHash: bebde9c82fd6
+      fullHash: 83dbe1c32efc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-wqephw
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: public-subnets
@@ -469,31 +485,32 @@ questions:
     task: "3.5"
     level: 2
     stem: >-
-      During a cleanup, a cafe admin detaches the internet gateway from the VPC that hosts the menu site.
-      The menu subnets keep auto-assign public IPv4 on, stay associated with their route table, and that table still sends 0.0.0.0/0 to the gateway.
-      Which step makes the menu subnets public again?
+      Before rebuilding the menu site's network, a cafe admin writes a checklist: create an internet gateway, add a 0.0.0.0/0 route to it in a new route table, associate the menu subnets with that table, and turn on their auto-assign public IPv4 setting.
+      Which step must the checklist gain before the menu subnets can be public?
     options:
       - id: a
-        text: Turn on auto-assign public IPv4 for the subnets
-        why: The setting is still on, so the servers already get public addresses; what they lack is a gateway joined to the VPC.
+        text: Add a local route to the new route table
+        why: Every new route table already starts with a local route, and it only keeps traffic inside the VPC.
       - id: b
-        text: Associate the subnets with the route table
-        why: The subnets are still associated with the table, so redoing this changes nothing while the gateway stays detached.
+        text: Place the subnets in two Availability Zones
+        why: Two AZs keep the site reachable during an outage, but they are not what makes a subnet public.
       - id: c
         text: Attach the internet gateway to the VPC
         correct: true
-        why: A public subnet needs its 0.0.0.0/0 route to point at an attached gateway, and attaching is the only piece the cleanup removed.
+        why: A public subnet needs its 0.0.0.0/0 route to point at a gateway attached to the VPC, and creating one does not attach it.
       - id: d
-        text: Add a 0.0.0.0/0 route to the internet gateway
-        why: The table already holds this route, but it leads nowhere until the gateway is attached to the VPC again.
+        text: Create a NAT gateway for the menu subnets
+        why: A NAT gateway only lets servers start outbound connections, so it is not the step that makes a subnet public.
     evidence:
       - Naming a subnet "public" does not make it public, because it still needs an attached internet gateway and a route to it.
-      - A subnet only becomes public when its associated route table sends 0.0.0.0/0 traffic to an attached internet gateway.
-    takeaway: A public subnet needs its route to point at an internet gateway that is attached to the VPC, not just one that exists.
+      - Open Internet gateways in the navigation pane, create one named my-ig, then use Actions, Attach to VPC to join it to My VPC.
+    takeaway: Creating an internet gateway is not enough; it must be attached to the VPC before a route to it makes a subnet public.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 4 mirrors the stem's 'detaches the internet gateway from the VPC' with the opposite verb and the same nouns, so the key can be read off the stem without knowing public subnets. The stem states outright that the other three pieces are still in place, which turns options 1 to 3 into giveaways by elimination; consider describing the setup less explicitly."
+    verified:
+      keyHash: f8c7050e188b
+      fullHash: 8578322729ab
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-vtez84
     version: 1
     status: live
@@ -531,3 +548,73 @@ questions:
       fullHash: "812e88161233"
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-5n7f3k
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cidr-blocks
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      After building its VPC, the cafe moves on to security groups that say where traffic to its order servers may come from.
+      Which kind of value from the VPC setup do those rules reuse to describe the allowed sources?
+    options:
+      - id: a
+        text: Availability Zone names
+        why: Zone names say where subnets are placed and do not describe which addresses traffic may come from.
+      - id: b
+        text: Route table targets
+        why: A target such as the internet gateway says where routed traffic goes, not which sources a security group admits.
+      - id: c
+        text: CIDR address ranges
+        correct: true
+        why: Security groups reuse CIDR notation, the same form used for the VPC's block, to say where traffic may come from or go to.
+      - id: d
+        text: Subnet name tags
+        why: A name tag only labels a subnet and carries no address range that a traffic rule could match.
+    evidence:
+      - Next comes traffic filtering through security groups and network ACLs, and security groups reuse CIDR notation to define where traffic may come from or go to.
+    takeaway: CIDR notation sets a VPC's address pool and is reused by security groups to say where traffic may come from or go to.
+    history: []
+    verified:
+      keyHash: 0340f600dda9
+      fullHash: c169d70084db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-328wm3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: route-tables
+    note: m05/amazon-vpc-demo
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's admin wants to change where traffic leaving its private subnets is sent.
+      Which part of the VPC holds the rules the admin should edit?
+    options:
+      - id: a
+        text: The network ACL on the subnets
+        why: A network ACL filters which traffic may enter or leave a subnet, but it does not decide where that traffic goes.
+      - id: b
+        text: The route table for the subnets
+        correct: true
+        why: A route table holds the routes that decide where the traffic of its associated subnets is sent.
+      - id: c
+        text: The servers' security groups
+        why: Security groups filter traffic to and from each server, and they hold no rules about where traffic is sent.
+      - id: d
+        text: The VPC's internet gateway
+        why: An internet gateway is a doorway to the internet that routes can point at, and it holds no routing rules itself.
+    evidence:
+      - A route table holds rules, called routes, that decide where network traffic is sent, and every subnet must be associated with one.
+    takeaway: Where a subnet's traffic goes is set by the routes in its associated route table, not by filters such as network ACLs.
+    history: []
+    verified:
+      keyHash: f56096b38c2a
+      fullHash: c8a6902add16
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

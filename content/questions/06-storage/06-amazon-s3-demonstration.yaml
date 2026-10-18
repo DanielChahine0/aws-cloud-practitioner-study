@@ -37,7 +37,7 @@ questions:
       on: 2026-10-09
   - id: q-nhakj3
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 3
     pool: practice
@@ -46,36 +46,40 @@ questions:
     task: "3.6"
     level: 2
     stem: >-
-      The cafe uploads a photo of its new pastry to an S3 bucket.
-      Which of the photo's metadata are system-defined?
+      The cafe uploads a photo of its new pastry to an S3 bucket, then opens the object's metadata in the console.
+      Which of these entries are system-defined?
     options:
       - id: a
-        text: Tags that staff attach to the object
-        why: S3 does keep tags on an object, but staff add them, so they are user-defined metadata.
+        text: Its seasonal-menu tag
+        why: S3 can hold a tag like this, but the cafe chooses and adds it, so it is user-defined metadata.
       - id: b
-        text: The date the object was created
+        text: Its date of creation
         correct: true
         why: S3 records when it created the object, so this date is system-defined metadata.
       - id: c
-        text: Notes that staff add at upload time
-        why: S3 does keep custom details on an object, but staff supply them, so they are user-defined metadata.
+        text: Its allergen field
+        why: S3 can hold a detail like this, but the cafe supplies it, so it is user-defined metadata.
       - id: d
-        text: The size of the stored object
+        text: Its size in bytes
         correct: true
         why: S3 records the object's size on its own, so it is system-defined metadata.
       - id: e
-        text: The class the object is stored in
+        text: Its storage class
         correct: true
         why: S3 tracks which storage class holds the object, so it is system-defined metadata.
-
+      - id: f
+        text: Its baker's note
+        why: S3 can hold a note like this, but the cafe types it in, so it is user-defined metadata.
     evidence:
       - System-defined metadata records basics such as creation date, size and storage class.
       - User-defined metadata holds your own details, such as tags.
     takeaway: Details S3 tracks itself are system-defined metadata, while tags and notes you add are user-defined metadata.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2, 3 and 4 are system metadata; 1 and 5 are user-defined.)"
+    verified:
+      keyHash: ebd087251d0e
+      fullHash: 592fd24c906d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-49atgb
     version: 1
     status: live
@@ -184,3 +188,40 @@ questions:
       fullHash: 08838a704aa1
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-zmn8cp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-bucket-policies
+    note: m06/amazon-s3-demonstration
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe keeps Block Public Access turned on where its sales reports sit in S3, so the object URLs stay closed to the public.
+      Its accountant's AWS account still needs to read the reports.
+      Which permissions setting decides exactly who can reach the objects?
+    options:
+      - id: a
+        text: The object ownership setting
+        why: Object ownership sets who owns the objects uploaded to the bucket, not which accounts may reach them.
+      - id: b
+        text: The Block Public Access setting
+        why: Block Public Access only keeps outsiders out, and it does not name the accounts that may get in.
+      - id: c
+        text: The bucket policy
+        correct: true
+        why: With Block Public Access on, the bucket policy states exactly which accounts, such as the accountant's, may reach the reports.
+      - id: d
+        text: The CORS configuration
+        why: CORS governs requests that web pages on other sites make to the bucket, not which accounts may read it.
+    evidence:
+      - With Block Public Access on, the bucket policy decides exactly who gets in.
+      - "Permissions: Block Public Access, the bucket policy, object ownership and cross-origin resource sharing (CORS)."
+    takeaway: When Block Public Access is on, an S3 bucket policy is what decides exactly which accounts can reach the objects.
+    history: []
+    verified:
+      keyHash: 8c3732056532
+      fullHash: a2df1adca8e5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

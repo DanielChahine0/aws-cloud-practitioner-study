@@ -291,3 +291,109 @@ questions:
       fullHash: 1e262fc1f65c
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-qjx1t5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-datasync
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe already runs an AWS Direct Connect line from its office into its VPC.
+      It wants to move its large on-premises file share into Amazon S3 over that line, with the move itself automated.
+      Which service manages the move?
+    options:
+      - id: a
+        text: AWS Transfer Family
+        why: Transfer Family hosts protocol-based file exchange, such as partner uploads, not a bulk move of a file share.
+      - id: b
+        text: AWS Direct Connect
+        why: Direct Connect is only the private path the data travels on, so it does not run or manage the move.
+      - id: c
+        text: AWS Storage Gateway
+        why: Storage Gateway gives on-premises apps ongoing access to cloud storage rather than running a one-time move.
+      - id: d
+        text: AWS DataSync
+        correct: true
+        why: DataSync automates large moves from on-premises storage into Amazon S3 and can run over a Direct Connect line.
+    evidence:
+      - It is only the path; DataSync still manages the move.
+      - Automates and speeds large, secure moves from on-premises storage into AWS storage like Amazon S3.
+    takeaway: Direct Connect supplies the network path, while DataSync is the service that runs and manages the data move.
+    history: []
+    verified:
+      keyHash: 398ab40500ad
+      fullHash: 32f74aaf02e2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-8g6nv3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-transfer-family
+    note: m12/transferring-data-online
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which description fits AWS Transfer Family?
+    options:
+      - id: a
+        text: Automated bulk copying from on-premises storage to AWS
+        why: Automated bulk copying from on-premises storage describes DataSync, not Transfer Family.
+      - id: b
+        text: Managed file exchange with AWS over standard file protocols
+        correct: true
+        why: Transfer Family is a fully managed service that moves files in and out of AWS storage over protocols such as SFTP.
+      - id: c
+        text: A dedicated private network line from a site into a VPC
+        why: A dedicated private line describes Direct Connect, which is a network path rather than a file service.
+      - id: d
+        text: Shipped storage devices that carry data into AWS offline
+        why: Shipped devices for offline moves describe the Snow Family, while Transfer Family works over the network.
+    evidence:
+      - Fully managed file transfer in and out of Amazon S3 and Amazon EFS over FTP, SFTP, FTPS and other transfer protocols.
+    takeaway: AWS Transfer Family is managed, protocol-based file transfer in and out of AWS storage.
+    history: []
+    verified:
+      keyHash: 3e0fddbda060
+      fullHash: 5ae241ec04f1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-gge239
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: transfer-protocols
+    note: m12/transferring-data-online
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe and its flour supplier settle on one set of rules for how invoice files travel from the supplier's system to the cafe.
+      What is that set of rules called?
+    options:
+      - id: a
+        text: A bucket policy
+        why: A bucket policy controls who may access an S3 bucket, not how files travel between two places.
+      - id: b
+        text: A route table
+        why: A route table controls where subnet traffic is sent, not the rules files follow while they move.
+      - id: c
+        text: A transfer protocol
+        correct: true
+        why: A transfer protocol is the rule set for how data moves between places, such as SFTP for file uploads.
+      - id: d
+        text: A security group
+        why: A security group filters which traffic may reach a resource, not how the files themselves travel.
+    evidence:
+      - "**Transfer protocol**: A rule set for how data moves between places."
+    takeaway: The agreed rules for how files move between two places, such as FTP, SFTP or FTPS, are a transfer protocol.
+    history: []
+    verified:
+      keyHash: 51af24cf90be
+      fullHash: bbf64bfc1ddd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

@@ -315,3 +315,76 @@ questions:
       fullHash: a5e69e149cbb
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-9v1cy4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: unmanaged-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe's booking site runs on Amazon EC2 instances.
+      Before a busy holiday week, the operating system on those instances needs patching and the site needs room for extra visitors.
+      Who is responsible for this work?
+    options:
+      - id: a
+        text: The cafe as the customer
+        correct: true
+        why: With an unmanaged service like EC2, patching the OS and scaling for demand stay with the cafe.
+      - id: b
+        text: AWS as the cloud provider
+        why: AWS runs the hardware under EC2, but the OS patches and the scaling of the site are not its share.
+      - id: c
+        text: The cafe and AWS jointly
+        why: These two jobs are not split, since on EC2 the OS and the scaling both rest with the cafe alone.
+      - id: d
+        text: AWS's data center staff
+        why: Data center staff look after the physical layer, which leaves the instance OS and site capacity untouched.
+    evidence:
+      - You get fine control, but patching, scaling and the OS are yours while AWS runs the hardware.
+    takeaway: On an unmanaged service like EC2, the customer patches the OS and scales the app, while AWS runs only the hardware.
+    history: []
+    verified:
+      keyHash: 59af4606ea56
+      fullHash: d1fea2d95b80
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-byjscg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: serverless-computing
+    note: m03/introduction-to-serverless-computing
+    task: "3.3"
+    level: 1
+    stem: >-
+      A developer tells the cafe's owner that the new app will run on machines the cafe never sees or touches.
+      AWS will provision, scale and maintain all of them.
+      Which term names this approach?
+    options:
+      - id: a
+        text: Hybrid deployment
+        why: A hybrid deployment links in-house resources with the cloud, so the cafe would still see and run some servers.
+      - id: b
+        text: Serverless computing
+        correct: true
+        why: Serverless computing runs apps on hidden servers that AWS provisions, scales and maintains for the customer.
+      - id: c
+        text: Edge networking
+        why: Edge networking places compute and storage near users, which says nothing about who looks after the servers.
+      - id: d
+        text: Container orchestration
+        why: Container orchestration manages the lifecycle of containers, and it does not by itself hide the servers beneath them.
+    evidence:
+      - The servers hosting your app are hidden and out of reach.
+      - AWS handles provisioning, maintenance, scaling and high availability.
+    takeaway: Serverless computing means running apps on servers you never see, while AWS provisions, scales and maintains them.
+    history: []
+    verified:
+      keyHash: 641b8ae42552
+      fullHash: ec13a2d46d8a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

@@ -178,7 +178,7 @@ questions:
       on: 2026-10-09
   - id: q-1k6gdz
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: generative-ai
@@ -186,28 +186,30 @@ questions:
     task: "3.7"
     level: 1
     stem: >-
-      How does generative AI relate to the other parts of artificial intelligence?
+      Where does generative AI sit in the nesting of AI fields?
     options:
       - id: a
         text: It creates new stories, images and music
-        why: That is what generative AI produces, not where it sits within the field of AI.
+        why: That is what generative AI produces, not where it sits among the fields of AI.
       - id: b
         text: It runs on FMs pre-trained on massive data
-        why: Foundation models power generative AI, but that says nothing about how it relates to ML or AI.
+        why: Foundation models power generative AI, but that says nothing about where it sits among ML and AI.
       - id: c
-        text: It is one part of deep learning, itself in ML
+        text: It is a subset of deep learning, within ML
         correct: true
-        why: Generative AI is part of deep learning, which is part of ML, which is part of AI.
+        why: Generative AI sits inside deep learning, which sits inside ML, which sits inside AI.
       - id: d
         text: It is offered on AWS through Amazon Bedrock
-        why: Bedrock is one way to use generative AI on AWS, not a statement of how it relates to the rest of AI.
+        why: Bedrock is one way to use generative AI on AWS, not a statement of where it sits within AI.
     evidence:
       - Generative AI sits inside deep learning, inside ML, inside AI.
     takeaway: Generative AI nests inside deep learning, which nests inside machine learning, which nests inside AI.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 4 'one part of deep learning' echoes the stem's 'the other parts of artificial intelligence'."
+    verified:
+      keyHash: 48a2534299ae
+      fullHash: fbe989762f77
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-fcnd42
     version: 1
     status: live
@@ -457,71 +459,76 @@ questions:
       on: 2026-10-09
   - id: q-1f5mjv
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: generative-ai
     note: m08/introduction-to-generative-ai-on-aws
     task: "3.7"
-    level: 1
+    level: 2
     stem: >-
-      The cafe's marketing team uses generative AI to draft short stories about its drinks.
-      What kind of model does that work behind the scenes?
+      The cafe's marketing team uses generative AI to draft short stories about its drinks,
+      though nobody at the cafe ever built a model or gathered examples for one.
+      What makes that possible?
     options:
       - id: a
-        text: Rules written by hand by programmers
-        why: Hand-written rules cannot produce original stories, which generative AI creates from learned patterns.
+        text: Deep learning theory has existed for decades
+        why: The age of the theory is true but does not explain why the cafe could skip building a model.
       - id: b
-        text: Huge models pre-trained on vast data
+        text: Foundation models already learned from massive data
         correct: true
-        why: Generative AI is powered by foundation models, huge models pre-trained on massive amounts of data.
+        why: Generative AI is powered by foundation models that arrive already pre-trained on massive data, so the cafe builds nothing.
       - id: c
-        text: Classic ML models built for one task each
-        why: A classic single-task model is the contrast to the multi-task foundation models behind generative AI.
+        text: Neural networks pass summaries between their layers
+        why: Passing summaries through layers is how any network works inside, and it says nothing about who made the model.
       - id: d
-        text: Small models trained only on cafe data
-        why: A small model trained on one cafe's data lacks the massive pre-training that the foundation models behind generative AI have.
+        text: Amazon Q connects to the company's own repositories
+        why: Linking to company data gives Amazon Q its context, but it does not explain how the story model came ready to use.
     evidence:
       - Deep learning producing original content and ideas (conversations, stories, images, music), powered by foundation models (FMs), huge models pre-trained on massive data.
     takeaway: Generative AI runs on foundation models, which are huge models pre-trained on massive data.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 describes foundation models, the basis of generative AI; the others are rules or narrow models.)"
+    verified:
+      keyHash: 9129975a1d7c
+      fullHash: d4c96fd631a2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-t7rq59
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: generative-ai
     note: m08/introduction-to-generative-ai-on-aws
     task: "3.7"
-    level: 1
+    level: 2
     stem: >-
-      Generative AI is one kind of deep learning.
-      What sets it apart from the rest of deep learning?
+      The cafe runs two deep learning models: one spots empty pastry trays in camera images, and the other drafts the weekly newsletter.
+      What sets the second model apart from the first?
     options:
       - id: a
         text: It sits inside the wider field of AI
-        why: Every kind of deep learning sits inside AI, so this does not set generative AI apart.
+        why: Both models are deep learning, and all deep learning sits inside AI, so this does not set the second apart.
       - id: b
         text: It runs data through layers of neurons
-        why: Layered neural networks are what all deep learning uses, not a trait unique to generative AI.
+        why: Layered neural networks are what all deep learning uses, so the tray spotter has them too.
       - id: c
-        text: It produces new content of its own
+        text: It makes original output of its own
         correct: true
-        why: Generative AI is the deep learning that produces new content, such as conversations, stories, images and music.
+        why: The newsletter model is generative AI, the deep learning that creates original content, while the tray spotter only recognizes images.
       - id: d
         text: It solves harder problems than older ML
-        why: Cracking harder problems such as computer vision is true of all deep learning, so it is shared rather than distinctive.
+        why: Cracking harder problems such as computer vision is true of all deep learning, including the tray spotter.
     evidence:
       - Deep learning producing original content and ideas (conversations, stories, images, music), powered by foundation models (FMs), huge models pre-trained on massive data.
       - "ML subset with decades-old theory that needed modern hardware; neural networks pass summaries through layers of artificial neurons (math functions) to form a model, cracking harder problems like computer vision and NLP."
     takeaway: What marks generative AI out within deep learning is that it creates new content rather than only analyzing data.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 3 'produces new content' paraphrases the stem's word 'Generative', so the key can be picked from the name alone."
+    verified:
+      keyHash: fd6e4f767e5d
+      fullHash: d7f40cd37e41
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-2gzsea
     version: 1
     status: live
@@ -558,3 +565,144 @@ questions:
       fullHash: f53eb5d20ada
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-p6j855
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: neural-networks
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      A new barista asks why the cafe's image model is called a neural network.
+      Which explanation fits the name?
+    options:
+      - id: a
+        text: It became practical only with modern hardware
+        why: Needing modern hardware is true of deep learning, but it says nothing about where the word neural comes from.
+      - id: b
+        text: Its layered design takes its cue from the brain
+        correct: true
+        why: A neural network is brain-inspired, built from layers of artificial neurons, which is where its name comes from.
+      - id: c
+        text: It can handle hard problems like computer vision
+        why: Handling computer vision is what the network can do, not the reason it carries a brain-related name.
+      - id: d
+        text: It learns from examples instead of fixed rules
+        why: Learning from data is true of all machine learning, so it does not explain the neural part of the name.
+    evidence:
+      - "**Neural network**: Brain-inspired layers of artificial neurons."
+    takeaway: A neural network takes its name from the brain, since it is built from brain-inspired layers of artificial neurons.
+    history: []
+    verified:
+      keyHash: f3b1dfe67119
+      fullHash: bb675142da4d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-8mgan9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: foundation-models
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe likes how a foundation model writes, but wants its replies to reflect the menu and house style.
+      What can the cafe do with the model?
+    options:
+      - id: a
+        text: Use it for many tasks after a single training
+        why: Serving many tasks is true of a foundation model, but it does not make the replies match the cafe's menu.
+      - id: b
+        text: Have it create images and video as well as text
+        why: Making other media is true of foundation models, but it does nothing to bring in the cafe's house style.
+      - id: c
+        text: Reach it through a single Amazon Bedrock API
+        why: One API is how Bedrock serves its models, which is about access rather than tailoring the replies.
+      - id: d
+        text: Adapt it privately with the cafe's own data
+        correct: true
+        why: A foundation model can be customized with the cafe's own data, kept private, so its replies reflect the menu and style.
+    evidence:
+      - "Amazon SageMaker JumpStart: FM and prebuilt-solution hub, few-click deploys, customizable with your data."
+      - "Amazon Bedrock: fully managed, a wide pick of top-performing FMs from Amazon and other leading AI firms, private adaptation, no infrastructure to run, one API."
+    takeaway: A general foundation model can be adapted privately with a company's own data so its output fits that business.
+    history: []
+    verified:
+      keyHash: efb0e0583d64
+      fullHash: d3c4756e9622
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-nr7g19
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: large-language-models
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      A new barista claims that large language models are a family of their own, unrelated to the huge multi-task models behind generative AI.
+      Which correction fits?
+    options:
+      - id: a
+        text: LLMs handle written human language
+        why: Working with human language is true of LLMs, but it does not show how they relate to the bigger family.
+      - id: b
+        text: LLMs are a popular choice for chat apps
+        why: Popularity for chat is true, but it leaves the barista's claim about separate families untouched.
+      - id: c
+        text: LLMs learn from data, not coded rules
+        why: Learning from data is true of all machine learning, so it does not correct the claim about families.
+      - id: d
+        text: LLMs are one kind of foundation model
+        correct: true
+        why: An LLM is a foundation model trained on text, so it belongs to the same family rather than standing apart.
+    evidence:
+      - LLMs are popular text-trained FMs for human language; FMs also make video, images, music.
+    takeaway: Large language models are not a separate family; each one is a foundation model trained on text.
+    history: []
+    verified:
+      keyHash: 1fecb151a7da
+      fullHash: "545520674256"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-z42pb2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-q
+    note: m08/introduction-to-generative-ai-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      Cafe managers already chat with Amazon Q about the cafe's documents.
+      What more can it do for them, beyond answering in chat?
+    options:
+      - id: a
+        text: Answer questions with the cafe's context
+        why: Answering with context is the chat the managers already use, so it is not something beyond it.
+      - id: b
+        text: Carry out actions and suggest solutions
+        correct: true
+        why: Besides contextual chat, Amazon Q offers solutions and takes actions for the people who use it.
+      - id: c
+        text: Ship as Business and Developer editions
+        why: The two editions are real, but they are how Q is packaged, not an extra thing it does for the managers.
+      - id: d
+        text: Link to the cafe's own data repositories
+        why: The repository link is what already feeds the chat its context, not a further task Q performs.
+    evidence:
+      - "Amazon Q: assistant tied to company repositories for contextual chat, solutions and actions (Q Business, Q Developer)."
+    takeaway: Amazon Q goes beyond contextual chat, since it can also offer solutions and take actions.
+    history: []
+    verified:
+      keyHash: 61297d88dc4d
+      fullHash: dde704555446
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

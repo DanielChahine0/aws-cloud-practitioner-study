@@ -38,7 +38,7 @@ questions:
       on: 2026-10-09
   - id: q-0n46s7
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: load-balancing
@@ -46,28 +46,30 @@ questions:
     task: "3.3"
     level: 1
     stem: >-
-      Why does spreading incoming requests over several resources improve performance?
+      Why does spreading incoming requests over several servers improve performance?
     options:
       - id: a
-        text: Each resource is moved to a larger size
-        why: Spreading requests does not resize anything, and making one resource larger is vertical scaling.
+        text: The hourly cost stays flat as traffic grows
+        why: ELB grows with traffic at no extra hourly cost, but that is a cost benefit, not why spreading speeds things up.
       - id: b
-        text: Each request is handled by all resources at once
-        why: A request goes to one resource, and sending it to all of them would waste capacity rather than help.
+        text: Front ends need only one address to call
+        why: A single entry point simplifies the front end, but it does not explain why spreading requests helps performance.
       - id: c
-        text: No single resource is left carrying everything
+        text: No single resource has to do all the work
         correct: true
         why: When the work is shared, no single resource is overloaded, so performance holds up.
       - id: d
-        text: Each request waits until the busiest resource is free
-        why: Waiting on the busiest resource would slow requests, which is the opposite of what spreading achieves.
+        text: AWS handles the patching and the failover
+        why: AWS-run upkeep lightens management, but it does not explain why spreading requests helps performance.
     evidence:
       - Spreading a workload keeps any one resource from carrying it all, which boosts performance.
     takeaway: Load balancing improves performance by keeping any one resource from carrying the whole workload.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only accurate description of load distribution; the others are false.)"
+    verified:
+      keyHash: 0442f5d1a64e
+      fullHash: db9ffb0eba6a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-0sxzy0
     version: 1
     status: live
@@ -255,7 +257,7 @@ questions:
       on: 2026-10-09
   - id: q-80t69j
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -265,34 +267,39 @@ questions:
     level: 1
     stem: >-
       The cafe pairs Elastic Load Balancing with Amazon EC2 Auto Scaling.
-      Which jobs belong to ELB rather than to Auto Scaling?
+      Which jobs belong to Auto Scaling rather than to ELB?
     options:
       - id: a
         text: Adding instances when demand climbs
-        why: Adding instances is Auto Scaling's job, since ELB never adds or removes instances.
+        correct: true
+        why: Adding instances as demand rises is Auto Scaling's job, since ELB never adds instances itself.
       - id: b
         text: Spreading requests across instances
-        correct: true
-        why: ELB routes traffic, spreading requests over whatever instances Auto Scaling keeps running.
+        why: Spreading requests is ELB's job, routing traffic over whatever instances Auto Scaling keeps running.
       - id: c
-        text: Removing instances when demand drops
-        why: Removing instances is also Auto Scaling's job, and ELB leaves the count alone.
+        text: Resizing instances that run hot
+        why: Neither service resizes instances, since ELB never does and Auto Scaling changes the count rather than the size.
       - id: d
         text: Giving front ends one address to call
-        correct: true
-        why: ELB is the single Regional entry point, so front ends call it instead of tracking each instance.
+        why: ELB is the single Regional entry point, so giving front ends one address is its job, not Auto Scaling's.
       - id: e
-        text: Holding a minimum count of instances
-        why: Keeping a floor of running instances is set on the Auto Scaling group, not on ELB.
+        text: Setting how many instances run
+        correct: true
+        why: Auto Scaling sets how many instances run, while ELB only routes traffic across them.
+      - id: f
+        text: Collecting performance and latency metrics
+        why: Gathering performance and latency metrics is the job of Amazon CloudWatch, and Auto Scaling only acts on them.
     evidence:
       - Auto Scaling changes the instance count, and ELB only routes traffic across those instances.
       - ELB never adds, removes or resizes instances itself.
-      - ELB is Regional, so front ends need only its single URL, and it passes each request to the back-end instance with the fewest outstanding requests.
+      - "They are separate services with complementary jobs: Auto Scaling sets how many instances run, and ELB spreads traffic across them."
     takeaway: Auto Scaling changes how many instances run, and ELB only spreads traffic across them.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 2 and 3 are load balancer jobs; 1, 4 and 5 are Auto Scaling jobs.)"
+    verified:
+      keyHash: b222b6a4a477
+      fullHash: 5fb0f5964520
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-bt0e83
     version: 1
     status: live

@@ -184,7 +184,7 @@ questions:
       on: 2026-10-09
   - id: q-24bbtb
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-migration-hub
@@ -192,29 +192,31 @@ questions:
     task: "3.8"
     level: 1
     stem: >-
-      The cafe worries that tracking its migration in AWS Migration Hub will add to its AWS bill.
-      What does Migration Hub itself charge?
+      The cafe worries that running its whole move through AWS Migration Hub will push up the AWS bill.
+      Which statement settles that worry?
     options:
       - id: a
-        text: A charge for each server it tracks
-        why: Migration Hub has no per-server fee; the hub itself is free.
+        text: Migration Hub spans mobilize through modernize
+        why: This is true, since the hub covers several phases of the move, but it does not say whether the hub adds to the bill.
       - id: b
-        text: A charge for each task it tracks
-        why: Migration Hub has no per-task fee; tracking any number of tasks there is free.
+        text: Migration Hub gives guidance and recommendations
+        why: This is true, since the hub offers guidance and automated recommendations, but it says nothing about cost.
       - id: c
-        text: A flat monthly charge
-        why: Migration Hub carries no subscription; the hub itself costs nothing.
-      - id: d
-        text: No charge for the hub
+        text: Migration Hub carries no charge of its own
         correct: true
-        why: Migration Hub is free, so tracking the move there adds no charge of its own.
+        why: Migration Hub is free, so running the move through it adds nothing to the AWS bill.
+      - id: d
+        text: Migration Hub shows every task's progress in one view
+        why: This is true, since the hub tracks each task in one place, but it does not settle the worry about the bill.
     evidence:
       - Migration Hub is free and spans mobilize through migrate and modernize.
-    takeaway: AWS Migration Hub itself is free, so tracking a migration there adds no charge of its own.
+    takeaway: AWS Migration Hub itself is free, so running a migration through it adds no charge of its own.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is true: Migration Hub itself has no charge.)"
+    verified:
+      keyHash: fdccec68a98a
+      fullHash: 431502c15f91
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-zqy286
     version: 1
     status: live
@@ -392,3 +394,110 @@ questions:
       fullHash: 063c34afe611
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-gycgwj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-evaluator
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's bank will fund the move to AWS only after it sees what the cafe would spend in the cloud compared with today.
+      Which service should the owners use first?
+    options:
+      - id: a
+        text: AWS Migration Hub
+        why: Migration Hub tracks tasks and progress during the move, but the bank first needs a priced business case.
+      - id: b
+        text: AWS Application Discovery Service
+        why: Discovery Service maps servers and their links, which feeds the plan but does not justify the spend.
+      - id: c
+        text: AWS Application Migration Service
+        why: Application Migration Service moves the apps, which comes only after the funding is approved.
+      - id: d
+        text: Migration Evaluator
+        correct: true
+        why: Migration Evaluator builds a data-driven business case with projected cloud costs, which the bank asks for.
+    evidence:
+      - "Finance wants projected AWS costs before approving: Migration Evaluator."
+      - The spend must be justified and budgeted
+    takeaway: When someone must approve the spend first, Migration Evaluator builds the cost-backed business case.
+    history: []
+    verified:
+      keyHash: 5733e97e42d7
+      fullHash: 1205872fec72
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-gsh1qk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-application-discovery-service
+    note: m12/migration-services-and-tools
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe ran AWS Application Discovery Service across its back-room servers last week.
+      What is its inventory of servers, databases and links meant to feed?
+    options:
+      - id: a
+        text: A business case that justifies the spend
+        why: A business case comes from Migration Evaluator in the assess phase, not from the Discovery Service inventory.
+      - id: b
+        text: A detailed plan for the migration
+        correct: true
+        why: Discovery Service builds its inventory to feed a detailed migration plan in the mobilize phase.
+      - id: c
+        text: A live view of each workstream's status
+        why: A live status view of workstreams is what Migration Hub provides while the move runs.
+      - id: d
+        text: A replica of each app running on AWS
+        why: Replicating the apps onto AWS is the job of Application Migration Service once the move begins.
+    evidence:
+      - An automatic inventory of on-premises servers, databases and links, feeding a detailed migration plan
+    takeaway: Application Discovery Service inventories servers and their links so the team can build a detailed migration plan.
+    history: []
+    verified:
+      keyHash: d532919fc110
+      fullHash: 2ca29a05eaf5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-vvcx1n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-application-migration-service
+    note: m12/migration-services-and-tools
+    task: "3.8"
+    level: 1
+    stem: >-
+      The cafe will replicate its booking app to AWS with AWS Application Migration Service.
+      What else can this service optionally do for the app?
+    options:
+      - id: a
+        text: Project its future cloud costs
+        why: Projecting cloud costs for a business case is the work of Migration Evaluator, not Application Migration Service.
+      - id: b
+        text: Inventory the servers it uses
+        why: Inventorying on-premises servers and their links is what Application Discovery Service does before the move.
+      - id: c
+        text: Draft a readiness plan for it
+        why: A readiness plan comes with the business case from Migration Evaluator, not from the service that moves apps.
+      - id: d
+        text: Modernize it along the way
+        correct: true
+        why: Application Migration Service replicates apps to AWS and can optionally modernize them on the way.
+    evidence:
+      - Apps replicated to AWS faster, for less and with minimal downtime, optionally modernized
+      - Application Migration Service moves and modernizes apps faster and cheaper.
+    takeaway: AWS Application Migration Service can modernize apps as it moves them, not only replicate them.
+    history: []
+    verified:
+      keyHash: 2fd0306b3c2a
+      fullHash: b1a795718500
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

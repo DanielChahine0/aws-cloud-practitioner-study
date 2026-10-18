@@ -36,12 +36,12 @@ questions:
       on: 2026-10-09
   - id: q-q4crdt
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: consolidated-billing
     note: m11/aws-pricing-and-billing-services
-    task: "4.1"
+    task: "4.2"
     level: 1
     stem: >-
       The cafe's catering team and loyalty-app team each run their own AWS account.
@@ -65,9 +65,11 @@ questions:
       - With consolidated billing, subaccounts (by team, project, department or any split) link to a primary account that alone receives the bill and sees all spend.
     takeaway: Linking accounts to one primary account gives one bill that still shows the spend of each linked account.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Task 4.1 (pricing models) fits poorly, since consolidated billing is a billing resource under task 4.2."
+    verified:
+      keyHash: 91fe472984f0
+      fullHash: 64160dcc1f70
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-x003qz
     version: 1
     status: live

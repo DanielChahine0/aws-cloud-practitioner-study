@@ -35,7 +35,7 @@ questions:
       on: 2026-10-09
   - id: q-c494w6
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-ec2
@@ -43,30 +43,32 @@ questions:
     task: "2.1"
     level: 2
     stem: >-
-      The cafe runs its point-of-sale program on several EC2 instances.
-      Under the split of duties between AWS and the cafe, which item does the cafe itself control?
+      The cafe wants to install a new loyalty program on its point-of-sale EC2 instances without waiting on AWS.
+      Under the split of duties between AWS and the cafe, which fact lets the cafe do this itself?
     options:
       - id: a
-        text: The physical host under each instance
-        why: AWS manages the host machine, so the cafe never touches the hardware its instances run on.
+        text: AWS manages the physical host under each instance
+        why: This is true, but AWS looking after the hardware says nothing about who installs programs on the instances.
       - id: b
-        text: The hypervisor on each physical host
-        why: AWS runs the hypervisor that shares the host's resources, so it is not the cafe's to control.
+        text: AWS runs the hypervisor on each physical host
+        why: This is true, but the hypervisor sits below the instances and has no part in installing the cafe's program.
       - id: c
-        text: The software installed on each instance
+        text: The cafe controls the software on each instance
         correct: true
-        why: The cafe picks the OS and fully controls the software on its instances, including the sales program.
+        why: The cafe fully controls the software on its instances, so it can install the loyalty program on its own.
       - id: d
-        text: The isolation between instances on a host
-        why: AWS keeps tenants on a shared host apart, so the cafe does not manage that isolation itself.
+        text: The cafe decides which requests reach each instance
+        why: This is true, but controlling incoming requests is about access, not about installing a new program.
     evidence:
       - You choose the OS (Windows or Linux, across up to thousands of instances), fully control the software, and decide which requests get in and whether access is public or private.
       - A hypervisor on the host shares resources among them while isolating them, and AWS manages host, hypervisor and isolation.
     takeaway: On EC2 the customer controls the OS and software on its instances, while AWS manages the host, hypervisor and isolation.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the odd one out, the only customer-side item among three AWS-side items.)"
+    verified:
+      keyHash: "58243e392401"
+      fullHash: a3a4770b3768
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-rjqabt
     version: 1
     status: live
@@ -454,3 +456,187 @@ questions:
       fullHash: 16e2f1fe964a
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-x9pmaj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: on-premises-vs-cloud
+    note: m02/introduction-to-amazon-ec2
+    task: "1.1"
+    level: 2
+    stem: >-
+      The cafe has no IT staff, and its owner dreads installing and looking after server hardware for a new booking system.
+      Which point about EC2 speaks most directly to that worry?
+    options:
+      - id: a
+        text: It cuts the setup and upkeep the cafe must do
+        correct: true
+        why: EC2 needs less setup and upkeep than owned servers, so the cafe avoids installing and tending hardware.
+      - id: b
+        text: It bills each instance only while it is running
+        why: This is true, but it is about cost, not about the hardware work the owner wants to avoid.
+      - id: c
+        text: It lets each instance run Windows or Linux
+        why: This is true, but choosing the OS does not take away the work of installing and tending servers.
+      - id: d
+        text: It offers SSH or RDP to reach each instance
+        why: This is true, but ways of connecting do nothing to spare the cafe the upkeep of hardware.
+    evidence:
+      - EC2 suits startups and enterprises and needs less setup and upkeep.
+      - Owning means upfront purchases, delivery waits, installation and fixed capacity.
+    takeaway: Compared with owned servers, EC2 spares a business the hardware installation and much of the upkeep.
+    history: []
+    verified:
+      keyHash: 1783274744b5
+      fullHash: 61fb4355bd15
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-61cx81
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-tenancy
+    note: m02/introduction-to-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's EC2 instance runs on the same physical machine as instances that belong to a bakery and a bookshop, and each is kept apart from the others.
+      Which term names this arrangement?
+    options:
+      - id: a
+        text: Vertical scaling
+        why: Vertical scaling changes one instance's CPU and memory, not how instances share a machine.
+      - id: b
+        text: Compute as a Service
+        why: Compute as a Service is renting servers on demand, not several tenants sharing one host.
+      - id: c
+        text: Multi-tenancy
+        correct: true
+        why: Isolated instances from different customers sharing one physical host is exactly multi-tenancy.
+      - id: d
+        text: Amazon Machine Image
+        why: An AMI is the OS and software an instance starts from, not an arrangement of shared hosts.
+    evidence:
+      - "Many EC2 instances, which are virtual machines (VMs), share one physical host: multi-tenancy."
+      - The course also calls the sharers tenants, or users, kept apart for security and performance.
+    takeaway: When isolated instances from different customers share one physical host, that is multi-tenancy.
+    history: []
+    verified:
+      keyHash: 549f816f419e
+      fullHash: 3bb53f213f2a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-4whjtt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: hypervisor
+    note: m02/introduction-to-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      A bakery's EC2 instance runs on the same physical server as the cafe's, and it starts a heavy job.
+      What keeps the bakery's job from eating into the cafe's share of that server's resources?
+    options:
+      - id: a
+        text: The guest operating system
+        why: The guest OS runs inside one tenant's virtual machine and cannot control how the physical server is divided.
+      - id: b
+        text: The Amazon Machine Image
+        why: The AMI only sets the software a virtual machine starts with and plays no part in sharing the physical server.
+      - id: c
+        text: The hypervisor
+        correct: true
+        why: The hypervisor shares the physical server's resources among the virtual machines and isolates them from each other.
+      - id: d
+        text: The Availability Zone
+        why: An Availability Zone sets where the server stands and does nothing to divide one server between tenants.
+    evidence:
+      - A hypervisor on the host shares resources among them while isolating them, and AWS manages host, hypervisor and isolation.
+      - The course also calls the sharers tenants, or users, kept apart for security and performance.
+    takeaway: On a shared EC2 host, the hypervisor divides the resources and keeps one tenant's load from affecting another.
+    history: []
+    verified:
+      keyHash: 31a0b042fad0
+      fullHash: 66d264b279a0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-0kkkx0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: compute-as-a-service
+    note: m02/introduction-to-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      Each time the cafe runs a promotion, it rents an extra server from AWS for just those weeks and owns no hardware for it.
+      Which term names this way of getting servers?
+    options:
+      - id: a
+        text: Multi-tenancy
+        why: Multi-tenancy is instances sharing one host, not the model of renting servers when needed.
+      - id: b
+        text: Vertical scaling
+        why: Vertical scaling resizes one instance's CPU and memory rather than renting servers on demand.
+      - id: c
+        text: Instance type
+        why: An instance type is a hardware profile of CPU, memory and network, not a way of getting servers.
+      - id: d
+        text: Compute as a Service
+        correct: true
+        why: Renting servers from a provider on demand, with nothing to buy, is Compute as a Service.
+    evidence:
+      - "**Compute as a Service**: renting servers on demand."
+    takeaway: Renting servers on demand for as long as they are needed, instead of buying them, is Compute as a Service.
+    history: []
+    verified:
+      keyHash: d367d0f62f18
+      fullHash: ed4b535e8e42
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-9qx8zk
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: connecting-to-ec2-instances
+    note: m02/introduction-to-amazon-ec2
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe's manager needs to sign in to the cafe's Windows EC2 instance to change a setting.
+      Which ways of connecting fit a Windows instance?
+    options:
+      - id: a
+        text: Secure Shell (SSH)
+        why: SSH is the usual way into a Linux instance, not the method given for a Windows one.
+      - id: b
+        text: Remote Desktop Protocol (RDP)
+        correct: true
+        why: RDP opens a remote session on a Windows instance, so the manager can change the setting.
+      - id: c
+        text: AWS Systems Manager
+        correct: true
+        why: Systems Manager gives secure, simplified access to instances, Windows ones included.
+      - id: d
+        text: HTTP from a web browser
+        why: HTTP is the network route an application's visitors use to reach the instance, and it gives no sign-in session.
+      - id: e
+        text: AWS CLI commands
+        why: CLI commands call EC2 APIs to start, stop or describe the instance from outside, and they open no session on it.
+    evidence:
+      - "**Connect**: by network for applications, or SSH (Linux), Remote Desktop Protocol (RDP) (Windows) or AWS Systems Manager."
+      - "**AWS Systems Manager**: an AWS service for secure, simplified instance access."
+    takeaway: A person reaches a Windows instance with RDP or AWS Systems Manager, while SSH is the usual route into Linux.
+    history: []
+    verified:
+      keyHash: 8a3084ed2c7f
+      fullHash: 51f9ac510d93
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

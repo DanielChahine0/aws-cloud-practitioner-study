@@ -251,7 +251,7 @@ questions:
       on: 2026-10-09
   - id: q-g2gr98
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-rds-read-replicas
@@ -260,10 +260,10 @@ questions:
     level: 2
     stem: >-
       The cafe's Amazon RDS database slows each evening as staff run many reports that only query data and never change it.
-      Which RDS option takes on that load without the cost of a bigger primary instance?
+      Which database option takes on that load without the cost of a bigger primary instance?
     options:
       - id: a
-        text: Adding RDS read replicas
+        text: Adding read replicas
         correct: true
         why: Replicas serve the report queries, so the primary can stay at a smaller, cheaper size.
       - id: b
@@ -273,16 +273,18 @@ questions:
         text: Turning on storage autoscaling
         why: Storage autoscaling resizes storage with demand, which does nothing for the evening query load.
       - id: d
-        text: Moving to a larger primary
-        why: A bigger primary would handle the load, but it is the costlier step the cafe wants to avoid.
+        text: Turning on automated backups
+        why: Automated backups keep copies for recovery and take none of the evening report queries.
     evidence:
       - Read replicas scale reads horizontally, sparing the primary a bigger, costlier instance.
       - Read replicas and ElastiCache spare the primary database from scaling up.
     takeaway: Read replicas scale reads out so the RDS primary does not need a costlier, larger instance.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 3 is the only option that repeats the stem's 'RDS', which points at the key."
+    verified:
+      keyHash: 4e2948b6e104
+      fullHash: cc39845fe74d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-qzq1yp
     version: 1
     status: live
@@ -356,7 +358,7 @@ questions:
       on: 2026-10-09
   - id: q-x2r88h
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cost-optimization
@@ -365,28 +367,30 @@ questions:
     level: 2
     stem: >-
       A cafe developer proposes shrinking every resource to its smallest size, even if orders slow down at the morning peak.
-      Cost optimization on AWS instead aims for the right balance of which three things?
+      Cost optimization on AWS instead aims for the right balance among which goals?
     options:
       - id: a
-        text: Compute, storage and data transfer
-        why: These are the three main cost drivers on the bill, not the three goals that cost optimization balances.
+        text: Cost, storage and data transfer
+        why: Storage and data transfer are drivers on the bill, not goals that cost optimization weighs against cost.
       - id: b
-        text: Security, compliance and governance
-        why: These are real concerns for a design, but cost optimization weighs the bill against speed and running effort.
+        text: Cost, security and regulatory compliance
+        why: Security and compliance are real design concerns, but cost optimization weighs the bill against speed and running effort.
       - id: c
         text: Cost, performance and efficiency
         correct: true
         why: The goal is the right mix of cost, performance and operational efficiency, so the morning peak cannot be sacrificed.
       - id: d
-        text: Reliability, scale and sustainability
-        why: These matter in a well-run design, but the balance cost optimization seeks is cost against performance and efficiency.
+        text: Cost, agility and innovation
+        why: Agility and innovation are cloud benefits, but the balance cost optimization seeks is cost against performance and efficiency.
     evidence:
       - Aim for the right balance of cost, performance and operational efficiency.
     takeaway: Cost optimization balances cost against performance and operational efficiency rather than chasing the lowest bill.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: The stem asks for 'which three things', a count no cited evidence line states."
+    verified:
+      keyHash: cd21fb1338e7
+      fullHash: 8f33cb3e909a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-jmg705
     version: 1
     status: live

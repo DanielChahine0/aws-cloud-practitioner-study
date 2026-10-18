@@ -149,45 +149,50 @@ questions:
       on: 2026-10-09
   - id: q-j4gayv
     version: 1
-    status: draft
+    status: live
     type: multi
-    select: 2
+    select: 3
     pool: practice
     concept: amazon-rds
     note: m07/relational-database-services
     task: "2.1"
     level: 2
     stem: >-
-      The cafe moves its order database to Amazon RDS.
-      Which jobs stay with the cafe rather than with AWS?
+      The cafe runs its order database itself on Amazon EC2 and now moves it to Amazon RDS.
+      Which jobs does the cafe hand over to AWS in this move?
     options:
       - id: a
-        text: Patching the database engine and its operating system
-        why: RDS applies patches to the engine and operating system, so this job moves to AWS.
+        text: Patching the OS that hosts the order data
+        correct: true
+        why: On EC2 the cafe controlled and patched the OS, and under RDS AWS applies those patches instead.
       - id: b
-        text: Encrypting the data both at rest and in transit
-        correct: true
-        why: Under RDS the customer still owns encryption of stored and moving data, so the cafe keeps this job.
+        text: Choosing which staff may read the order data
+        why: Who may read the data is a security measure, and those stay with the cafe under RDS just as they did on EC2.
       - id: c
-        text: Running the scheduled automated database backups
-        why: RDS takes automated backups on the schedule the cafe sets, so AWS carries out this job.
-      - id: d
-        text: Failing over to a standby when an instance fails
-        why: RDS automates failover, so AWS moves traffic to the standby without the cafe stepping in.
-      - id: e
-        text: Maintaining the servers and storage hardware
-        why: AWS runs the infrastructure under RDS, so the cafe no longer handles any hardware.
-      - id: f
-        text: Choosing the security measures that guard the data
+        text: Taking the regular backups of the order data
         correct: true
-        why: Security measures stay with the customer under RDS, so the cafe decides how the data is guarded.
+        why: The cafe ran its own backups on EC2, and RDS takes them automatically once the database moves.
+      - id: d
+        text: Designing the tables that hold the order data
+        why: RDS runs the database for the cafe, but what tables and columns the order data needs is still the cafe's call.
+      - id: e
+        text: Failing the order data over to a standby
+        correct: true
+        why: A self-run database on EC2 leaves failover to the cafe, while RDS automates failover for it.
+      - id: f
+        text: Writing the queries the order app runs on the data
+        why: The order app and its queries are the cafe's own code, so writing them stays with the cafe after the move.
     evidence:
       - AWS runs infrastructure, OS, patching and backups, while you own security measures and encryption at rest and in transit.
-    takeaway: With Amazon RDS, AWS handles patching and backups while the customer keeps security and encryption.
+      - A relational service for operational workloads, not data warehousing, that automates patching, backups, provisioning, failover and disaster recovery.
+      - Lift-and-shift puts an on-premises database as is on Amazon EC2, keeping control of OS, memory, CPU and storage.
+    takeaway: Moving a database from EC2 to Amazon RDS hands OS patching, backups and failover to AWS, while access, data design and queries stay with the cafe.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 1 and 2 are customer duties on RDS; the rest are AWS duties.)"
+    verified:
+      keyHash: 37bc3413ce93
+      fullHash: 93cd818b32f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-qde6tq
     version: 1
     status: live
@@ -336,3 +341,105 @@ questions:
       fullHash: 90cfd5c69cd3
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-ddw6wj
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: relational-databases
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      The cafe keeps its coffee products in a relational inventory table.
+      Match each part of the table to what it holds.
+    pairs:
+      - left: A row
+        right: One coffee product with its own values
+        why: Each row of the inventory table is one product, such as a single drink with its ID, name, size and price.
+      - left: A column
+        right: One attribute, such as price, for every product
+        why: A column holds a single attribute that every row shares, such as the price of each product.
+      - left: The schema
+        right: The fixed layout that every row must follow
+        why: A relational schema is rigid, so every product row carries the same set of attributes.
+    evidence:
+      - "**Inventory table**: one coffee product per row with ID, name, size and price."
+      - Tables of rows and columns follow a rigid schema and share attributes, so one query spans customers and orders.
+    takeaway: In a relational table each row is one record, each column one shared attribute, and the schema fixes the layout.
+    history: []
+    verified:
+      keyHash: 63c153f28362
+      fullHash: 876e7bfb0eea
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-xs51gr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: sql
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe switches the relational engine behind its order tables on Amazon RDS to a different one.
+      How does its reporting app keep reading the order rows after the switch?
+    options:
+      - id: a
+        text: Through key-value reads by partition key
+        why: Key-value reads by partition key suit a NoSQL table such as DynamoDB, not rows in a relational engine.
+      - id: b
+        text: Through graph traversals across linked nodes
+        why: Traversing nodes and links is how a graph database is read, not how a relational engine returns rows.
+      - id: c
+        text: Through SQL queries sent to the database
+        correct: true
+        why: SQL is the usual interface across relational engines such as MySQL and PostgreSQL, so the app keeps querying rows the same way.
+      - id: d
+        text: Through document lookups in JSON form
+        why: JSON document lookups fit a document database such as DocumentDB, not the cafe's relational tables.
+    evidence:
+      - SQL is the usual interface, on engines like MySQL, PostgreSQL and Microsoft SQL Server, and the model keeps structured data consistent and scalable.
+    takeaway: SQL works across relational engines such as MySQL and PostgreSQL, so moving between them keeps the same query language.
+    history: []
+    verified:
+      keyHash: 78447b391754
+      fullHash: 827f3c504524
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-xthr8d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-aurora
+    note: m07/relational-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's MySQL ordering app slows down under the morning rush, so the cafe moves it to Amazon Aurora for more throughput.
+      Where does Aurora's extra throughput come from?
+    options:
+      - id: a
+        text: Its continuous backups to Amazon S3
+        why: Aurora does back up continuously to S3, but backups protect the data rather than speed up orders.
+      - id: b
+        text: Its encryption of the data at rest
+        why: Aurora encrypts data at rest, but encryption guards the records and adds no throughput.
+      - id: c
+        text: Its point-in-time restore window
+        why: Point-in-time restore through AWS Backup helps recover past data, not serve the morning rush faster.
+      - id: d
+        text: Its distributed storage design
+        correct: true
+        why: Aurora's higher MySQL throughput comes from its distributed storage, not from automatic CPU scaling.
+    evidence:
+      - Up to 5x MySQL and 3x PostgreSQL throughput comes from distributed storage, not automatic CPU scaling.
+    takeaway: Aurora's extra throughput over standard MySQL and PostgreSQL comes from its distributed storage design.
+    history: []
+    verified:
+      keyHash: d987ac43a2d9
+      fullHash: db1db959b123
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

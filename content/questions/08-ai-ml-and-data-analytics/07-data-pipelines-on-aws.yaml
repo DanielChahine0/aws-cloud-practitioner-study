@@ -180,7 +180,7 @@ questions:
       on: 2026-10-09
   - id: q-nsq3kp
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -192,30 +192,32 @@ questions:
       Which statements describe Amazon Redshift?
     options:
       - id: a
-        text: It runs SQL on big datasets using massively parallel processing.
+        text: It handles frequent, heavy SQL on big datasets.
         correct: true
-        why: Columnar storage and massively parallel processing are how Redshift handles frequent, heavy SQL.
+        why: Columnar storage and massively parallel processing let Redshift run frequent, heavy SQL on large datasets.
       - id: b
-        text: It runs SQL on data where it lives and bills for each query.
-        why: Querying data in place with per-query billing describes Amazon Athena, not Redshift.
+        text: It runs SQL in place and bills for each query.
+        why: Querying data where it lives with per-query billing describes Amazon Athena, not Redshift.
       - id: c
-        text: It stores structured or semistructured data for business reports.
+        text: It is a managed warehouse for business reports.
         correct: true
-        why: Redshift is the managed data warehouse of the pipeline, built for structured data used in business intelligence.
+        why: Redshift is the pipeline's managed data warehouse, built for structured data used in business intelligence.
       - id: d
-        text: It stores raw data of any shape as the usual data lake.
-        why: An elastic object store used as a data lake describes Amazon S3, not Redshift.
+        text: It is the usual lake for raw data of any shape.
+        why: An elastic object store used as the data lake for raw data describes Amazon S3, not Redshift.
       - id: e
-        text: It queries sources on premises or in other clouds as well.
+        text: It queries data on premises or in other clouds.
         why: Serverless SQL over sources on premises or in other clouds describes Amazon Athena, not Redshift.
     evidence:
       - Athena queries data where it lives and bills per query, while Redshift handles frequent, heavy SQL.
       - S3 is the lake for raw data of any shape, while Redshift is the warehouse for structured or semistructured data.
     takeaway: Redshift is both the pipeline's data warehouse and a fast engine for heavy, frequent SQL on large datasets.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Options 3 and 5 are the two longest options (64 and 65 characters), a length tell for the keys."
+    verified:
+      keyHash: b23c3f0e950b
+      fullHash: cb095dbfb1eb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-8e2n1p
     version: 1
     status: live

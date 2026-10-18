@@ -358,7 +358,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
   - id: q-frzd72
-    version: 1
+    version: 2
     status: live
     type: single
     pool: practice
@@ -367,30 +367,34 @@ questions:
     task: "4.3"
     level: 1
     stem: >-
-      Which AWS resource is a community question-and-answer site that also hosts the AWS Knowledge Center?
+      The cafe's part-time developer wants to post a question about the menu app and get replies from other people who build on AWS.
+      Which AWS resource is made for that?
     options:
       - id: a
         text: AWS Support Center
-        why: The Support Center is where customers open cases with AWS, not a community answer site.
+        why: A Support Center case goes to AWS staff, not out to other builders for them to reply.
       - id: b
-        text: AWS Prescriptive Guidance
-        why: Prescriptive Guidance publishes expert guides and patterns, not community answers.
+        text: AWS Professional Services
+        why: Professional Services sells project-based consulting, not a public board where peers answer.
       - id: c
-        text: AWS Trust and Safety Center
-        why: The Trust and Safety Center takes reports of suspected abuse, not technical questions.
+        text: AWS Health Dashboard
+        why: The Health Dashboard shows AWS service health and updates for the account, not questions from users.
       - id: d
         text: AWS re:Post
         correct: true
-        why: AWS re:Post is the community Q&A site, and it hosts the Knowledge Center's FAQ articles and videos.
+        why: re:Post is the AWS community Q&A site, so a posted question can be answered by other users.
     evidence:
       - "AWS re:Post: community Q&A that hosts the AWS Knowledge Center of FAQ articles and videos."
-    takeaway: AWS re:Post is the AWS community Q&A site and home of the AWS Knowledge Center.
-    history: []
+    takeaway: To ask a question that fellow AWS users can answer, the place to post it is the community site AWS re:Post.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: 6d6169b7b136
-      fullHash: 5a4ca8e8f890
+      keyHash: 59e3bf5c4b84
+      fullHash: bc632fb09a28
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-xmbsrr
     version: 1
     status: live
@@ -850,3 +854,79 @@ questions:
       fullHash: 41781011b731
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-3v6rrz
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-support-plans
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      Late on a Sunday, the cafe's owner cannot update the payment details on the cafe's AWS account, which is still on Basic Support.
+      She wants help from AWS right away without moving to a paid plan.
+      Which facts explain why she can get that help?
+    options:
+      - id: a
+        text: Basic Support includes AWS re:Post community answers
+        why: True, but re:Post answers come from other AWS users, not from AWS working on the cafe's own account.
+      - id: b
+        text: Basic Support includes customer service at any hour
+        correct: true
+        why: Basic Support gives every customer 24/7 customer service, so a Sunday night account problem is covered.
+      - id: c
+        text: Basic Support includes the AWS Personal Health Dashboard
+        why: True, but that dashboard shows AWS service health and alerts, not help with the cafe's payment details.
+      - id: d
+        text: Each Support plan includes the plan below it
+        why: True, but plans stacking explains what an upgrade keeps, not what the free plan already covers.
+      - id: e
+        text: Every customer can open account and billing cases
+        correct: true
+        why: In the Support Center even a Basic Support customer can open an account and billing case about payment details.
+    evidence:
+      - "Basic: 24/7 customer service, docs, whitepapers, forums, re:Post and the AWS Personal Health Dashboard (service health, with alerts when your resources may be hit)."
+      - In the AWS Support Center every customer can open account and billing cases, while technical support cases need a plan above Basic Support.
+    takeaway: Basic Support still reaches AWS at any hour for account and billing problems, since every customer can open those cases.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+  - id: q-9w43w4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-support-plans
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe plans a global ad push next month and expects a surge of online orders on launch day.
+      The owner wants AWS staff to help the cafe plan and prepare for that day ahead of time.
+      Which part of AWS Support fits this need?
+    options:
+      - id: a
+        text: AWS Health Dashboard alerts
+        why: The AWS Health Dashboard alerts the cafe when AWS service events may hit its resources, but nobody plans the launch with it.
+      - id: b
+        text: Full set of Trusted Advisor checks
+        why: Trusted Advisor checks the account against best practices, but it does not plan a launch day with the cafe.
+      - id: c
+        text: Infrastructure event management
+        correct: true
+        why: Infrastructure event management is paid planning help from AWS for a big launch or ad push like this one.
+      - id: d
+        text: Knowledge Center articles and videos
+        why: Knowledge Center articles and videos are self-serve answers, with no AWS staff planning this launch.
+    evidence:
+      - "A major launch or campaign: infrastructure event management."
+    takeaway: For a big launch or global ad push, AWS Support offers paid infrastructure event management to plan ahead.
+    history: []
+    verified:
+      keyHash: d8395114547f
+      fullHash: 2fba91050029
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

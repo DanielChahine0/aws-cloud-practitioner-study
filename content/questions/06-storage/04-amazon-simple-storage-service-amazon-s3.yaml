@@ -71,46 +71,41 @@ questions:
       on: 2026-10-09
   - id: q-4gnhar
     version: 1
-    status: draft
-    type: multi
-    select: 3
+    status: live
+    type: single
     pool: practice
     concept: s3-objects
     note: m06/amazon-simple-storage-service-amazon-s3
     task: "3.6"
-    level: 1
+    level: 2
     stem: >-
-      The cafe uploads a photo of a new pastry to its S3 bucket.
-      Which elements make up the object that S3 stores for that photo?
+      The cafe plans to store each of its very large staff training videos as a single object in Amazon S3.
+      Which fact about S3 objects tells the cafe how big one video can be?
     options:
       - id: a
-        text: Data
+        text: An object can be up to 5 TB in size
         correct: true
-        why: The data is the photo's content itself, and every object carries its data.
+        why: An S3 object can hold up to 5 TB, and that limit is what decides whether one video fits as a single object.
       - id: b
-        text: Disk blocks
-        why: Disk blocks belong to block storage such as EBS, while S3 keeps the photo whole as an object.
+        text: An object's metadata records its size
+        why: Metadata does describe the object, size included, but it reports the size rather than setting how large a video may be.
       - id: c
-        text: Metadata
-        correct: true
-        why: Every object carries metadata, information about the photo stored alongside its data.
+        text: An object's key is unique in its bucket
+        why: The key names the video uniquely in its bucket, but a name places no limit on how big the video can be.
       - id: d
-        text: Directory path
-        why: S3 places objects in buckets instead of directories, so the photo's object has no directory path.
-      - id: e
-        text: Key
-        correct: true
-        why: The key is the name that picks out the photo's object uniquely within its bucket.
-      - id: f
-        text: Volume ID
-        why: A volume ID names an EBS volume attached to an instance, not a part of an S3 object.
+        text: An object is kept in several Availability Zones
+        why: Copies in several Availability Zones protect the video, but they do not set how large one object can be.
     evidence:
+      - Objects run from a few bytes to 5 TB per upload, and buckets have no size cap.
       - An object has data, metadata and a key that names it uniquely in its bucket, plus properties such as a version ID and access control details.
-    takeaway: An S3 object is made of its data, its metadata and a key that names it in its bucket.
+      - Each object is stored durably in multiple facilities, meaning several Availability Zones, within your chosen Region.
+    takeaway: A single S3 object can hold up to 5 TB, so even a very large video fits as one object.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: An S3 object is data, metadata and a key; the others are block or file terms.)"
+    verified:
+      keyHash: 197982e740a4
+      fullHash: b95097e9cfa7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-bp7pa4
     version: 1
     status: live
@@ -183,7 +178,7 @@ questions:
       on: 2026-10-09
   - id: q-srx0h1
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: s3-buckets
@@ -199,21 +194,23 @@ questions:
         correct: true
         why: The bucket is the basic unit of access control and takes settings such as versioning, logging and permissions.
       - id: b
-        text: The object metadata
-        why: Metadata describes one object's data and is not where versioning, logging or permissions are set.
+        text: The object
+        why: An object carries a version ID, but versioning and logging are switched on for the whole bucket, not image by image.
       - id: c
-        text: The object key
-        why: A key is only the name of one object in its bucket, so it carries no versioning or logging settings.
+        text: The Region
+        why: The Region is only where the bucket lives, chosen at creation, and it takes no versioning or logging settings.
       - id: d
-        text: The object data
-        why: The data is the image content itself, which holds no versioning, logging or permission settings.
+        text: The account
+        why: The account owns the buckets, but versioning and logging are set on each bucket rather than on the account.
     evidence:
       - A bucket is the basic unit of access control, holds virtually unlimited objects and takes settings like versioning, logging and permissions.
     takeaway: Settings such as versioning, logging and permissions are set on the S3 bucket, the basic unit of access control.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Options 2, 3 and 4 all start 'The object', so option 1 stands out as the odd one and points at the key."
+    verified:
+      keyHash: cd80ac164d86
+      fullHash: 93e61c329760
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-68t9dv
     version: 1
     status: live
@@ -358,7 +355,7 @@ questions:
       on: 2026-10-09
   - id: q-phryrw
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: s3-presigned-urls
@@ -380,15 +377,17 @@ questions:
         text: S3 Access Points
         why: Access Points set ongoing access rules for groups sharing a dataset, not a short-lived link for an outsider.
       - id: d
-        text: S3 Audit Logs
-        why: Audit logs record who accessed what and when, but they grant no access to the invoice.
+        text: S3 Versioning
+        why: Versioning keeps earlier versions of the invoice for restoring, but it grants the accountant no access.
     evidence:
       - Presigned URLs grant expiring access without touching the bucket policy.
     takeaway: Brief access to one private object for an outside party fits an S3 presigned URL.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 3 'S3 Audit Logs' is not a real S3 feature name, so it is easy to rule out. Option 3 names a feature that is not in the glossary, against the distractor rule."
+    verified:
+      keyHash: b98b6c5292cc
+      fullHash: eb5d3373adac
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-9tehxx
     version: 1
     status: live
@@ -566,7 +565,7 @@ questions:
       on: 2026-10-09
   - id: q-q5b9ze
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: s3-presigned-urls
@@ -576,28 +575,31 @@ questions:
     stem: >-
       Last week the cafe sent a supplier a presigned URL to download a price list from its private bucket.
       Today the same link no longer works, though nobody changed the bucket or its policy.
-      What explains the failure?
+      Which trait of presigned URLs explains the failure?
     options:
       - id: a
-        text: The link's access period has run out
+        text: Each one grants access only for a set time
         correct: true
-        why: A presigned URL grants access only until it expires, after which the link stops working.
+        why: A presigned URL grants access only until it expires, so last week's link has run out.
       - id: b
-        text: The bucket blocks all public access
-        why: The bucket was private last week too, and a presigned URL worked then without any public access.
+        text: Each one works without editing the bucket policy
+        why: True of presigned URLs, but it explains why the link worked last week with no policy change, not why it fails now.
       - id: c
-        text: The price list is encrypted at rest
-        why: Encryption at rest protects the stored object but did not stop the same link working last week.
+        text: Each one can open an object in a private bucket
+        why: True of presigned URLs, and the bucket was private last week too, so privacy is not what broke the link.
       - id: d
-        text: The bucket policy grants no public reads
-        why: A presigned URL works without the bucket policy, which was just as strict when the link worked.
+        text: Each one can be used from any location
+        why: Given permission, a bucket is reachable from anywhere whatever its Region, so the supplier's location does not matter.
     evidence:
       - Presigned URLs grant expiring access without touching the bucket policy.
+      - Given permission, a bucket is reachable from anywhere, whatever its Region.
     takeaway: A presigned URL gives temporary access to an object, and the link stops working once it expires.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 alone mentions 'the link' and an access period, matching a presigned link.)"
+    verified:
+      keyHash: 42a28ffd4999
+      fullHash: a73f7c522f95
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-85qk13
     version: 1
     status: live
@@ -634,3 +636,144 @@ questions:
       fullHash: 53cf570869a6
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-m0593h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-s3
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's online shop shows product photos to thousands of shoppers during a holiday sale, then goes quiet again.
+      The owner wants the photos to keep loading through the rush with no capacity planning by the cafe.
+      Which AWS service should hold the photos?
+    options:
+      - id: a
+        text: Amazon EBS
+        why: An EBS volume is a disk attached to one instance, sized in advance, so the cafe would plan its capacity.
+      - id: b
+        text: Amazon EC2 instance store
+        why: Instance store is temporary block storage on one host and loses the photos when the instance stops.
+      - id: c
+        text: Amazon S3
+        correct: true
+        why: AWS runs S3 as a managed service, so the photos keep loading through a traffic spike with no scaling work.
+      - id: d
+        text: Amazon FSx
+        why: FSx runs managed file systems such as Windows File Server for the cafe's servers, not a shop's photo store.
+    evidence:
+      - An online store's product images on S3 survive a traffic spike with no scaling work, because AWS runs the service.
+    takeaway: Product images that must survive traffic spikes with no scaling work fit Amazon S3, because AWS runs the service.
+    history: []
+    verified:
+      keyHash: 6e56bbabd2ed
+      fullHash: 2aee0cab3e87
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-9ywds7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-durability
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's manager plans a nightly job that duplicates the staff video library in S3 to a second location, in case a storage device fails.
+      Why is that job unnecessary for guarding against a failed device?
+    options:
+      - id: a
+        text: S3 Versioning can bring back an object after a delete
+        why: Versioning undoes accidental deletes, which is a different risk from a storage device failing.
+      - id: b
+        text: S3 keeps redundant copies of each object on its own
+        correct: true
+        why: AWS keeps redundant copies automatically, so a failed device does not lose the videos and no job is needed.
+      - id: c
+        text: S3 Lifecycle rules can move objects between classes
+        why: Lifecycle rules change an object's storage class by the cafe's rules and make no extra copies for safety.
+      - id: d
+        text: S3 can encrypt each object at rest and in transit
+        why: Encryption keeps the videos confidential, but it does nothing to keep them when a device fails.
+    evidence:
+      - For most storage classes AWS keeps redundant copies automatically, giving 11 nines (99.999999999 percent) of durability, so losing an object within a year is vanishingly unlikely.
+    takeaway: S3 keeps redundant copies automatically, so the cafe need not build its own copy jobs to survive hardware failure.
+    history: []
+    verified:
+      keyHash: bc7211fca16c
+      fullHash: b2b126df2727
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-hv4n79
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-versioning
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "3.6"
+    level: 1
+    stem: >-
+      The cafe's manager reads that S3 Versioning is turned on for the recipe bucket.
+      What does that setting do for the recipes?
+    options:
+      - id: a
+        text: Moves each recipe between storage classes by rule
+        why: Moving objects between storage classes by rule is what S3 Lifecycle does, not versioning.
+      - id: b
+        text: Grants expiring access to one private recipe
+        why: Expiring access to one object comes from a presigned URL, not from versioning.
+      - id: c
+        text: Blocks public access to recipes despite any policy
+        why: Overriding a permissive policy is the job of S3 Block Public Access, not versioning.
+      - id: d
+        text: Keeps older copies of each recipe for restoring
+        correct: true
+        why: Versioning keeps earlier versions, so a recipe can be brought back after an accidental delete.
+    evidence:
+      - Versioning lets you bring back earlier versions after an accidental delete.
+    takeaway: S3 Versioning keeps earlier versions of each object so they can be restored later.
+    history: []
+    verified:
+      keyHash: d11717027649
+      fullHash: 307ada5cbe2a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-qztqry
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-block-public-access
+    note: m06/amazon-simple-storage-service-amazon-s3
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe wants its menu bucket open to the public for its website, while every other bucket in its account stays blocked from public access.
+      Where should the cafe turn on S3 Block Public Access?
+    options:
+      - id: a
+        text: On the account that owns all the buckets
+        why: Set on the account, Block Public Access would also override the policy that opens the menu bucket.
+      - id: b
+        text: On each bucket except the menu bucket
+        correct: true
+        why: Turning it on bucket by bucket blocks public access to the others while the menu bucket's policy still works.
+      - id: c
+        text: On the menu bucket and on no other bucket
+        why: This would block the one bucket meant to be public and leave the others free to be opened.
+      - id: d
+        text: On every bucket, the menu bucket included
+        why: Blocking the menu bucket too would override its public policy, so the website could not read the menu.
+    evidence:
+      - Block Public Access, on the account or the bucket, overrides any bucket policy that would open data to the public.
+    takeaway: S3 Block Public Access can be set per bucket, so one bucket can stay public while the rest are blocked.
+    history: []
+    verified:
+      keyHash: b375fe513e6c
+      fullHash: 9987a7b240ee
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

@@ -149,3 +149,44 @@ questions:
       fullHash: af39cb1465ab
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-nsz7yw
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: purpose-built-services
+    note: m13/introduction-to-well-architected-solutions
+    task: "3.8"
+    level: 1
+    stem: >-
+      The cafe's app already runs on the core AWS building blocks covered so far.
+      The owner now wants to explore the groups of purpose-built services AWS offers beyond those blocks.
+      Which groups are among them?
+    options:
+      - id: a
+        text: Development
+        correct: true
+        why: Development services are one of the purpose-built groups that come after the core building blocks.
+      - id: b
+        text: Networking
+        why: Networking is one of the core building blocks the app already uses, not a purpose-built group beyond them.
+      - id: c
+        text: Business
+        correct: true
+        why: Business services are one of the purpose-built groups, alongside development, end-user computing and IoT.
+      - id: d
+        text: Databases
+        why: Databases are one of the core building blocks under the app, not a purpose-built group that comes after them.
+      - id: e
+        text: Compute
+        why: Compute is one of the core building blocks the app already runs on, not a purpose-built group beyond them.
+    evidence:
+      - "Next: development, business, end-user computing and IoT services."
+    takeaway: The purpose-built groups beyond the core building blocks are development, business, end-user computing and IoT services.
+    history: []
+    verified:
+      keyHash: 1225f99b5bfb
+      fullHash: c0eba57c7b33
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

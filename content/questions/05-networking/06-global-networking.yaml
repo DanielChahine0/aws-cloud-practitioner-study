@@ -174,7 +174,7 @@ questions:
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
   - id: q-wdt2p1
-    version: 1
+    version: 2
     status: live
     type: multi
     select: 2
@@ -184,34 +184,38 @@ questions:
     task: "3.5"
     level: 1
     stem: >-
-      Which tasks can Amazon Route 53 carry out?
+      The cafe is launching a website for party bookings, and the manager is listing what Amazon Route 53 could take on.
+      Which jobs belong on that list?
     options:
       - id: a
-        text: Register new domain names
+        text: Register the domain name that guests will type
         correct: true
-        why: Route 53 can register fresh domains, so names and DNS records sit in the same service.
+        why: Route 53 registers new domains, so the site's name and its DNS records can sit in one service.
       - id: b
-        text: Cache images at edge locations
-        why: Caching content near users is what CloudFront does, not the DNS service.
+        text: Keep copies of menu photos close to each guest
+        why: Holding copies of photos at edge locations near guests is CloudFront caching, not a DNS job.
       - id: c
-        text: Run health checks on endpoints
+        text: Check whether each server still answers requests
         correct: true
-        why: Route 53 checks whether endpoints are healthy so it can avoid sending users to a failed one.
+        why: Route 53 runs health checks so it can stop pointing guests at a server that no longer answers.
       - id: d
-        text: Serve videos from near viewers
-        why: Serving videos from locations near viewers is CloudFront's content delivery, not DNS work.
+        text: Carry traffic over the AWS private global network
+        why: Moving app traffic off public routes onto the AWS private global network is what Global Accelerator does.
       - id: e
-        text: Give an app static IP addresses
-        why: Static IP addresses for an app come from Global Accelerator, not from Route 53.
+        text: Run the code that sends confirmation emails
+        why: Running application code is a compute job for a service such as AWS Lambda, not something the DNS service does.
     evidence:
       - It also runs health checks, registers new domains and takes over DNS records from other registrars, so all your domains live in one place.
-    takeaway: Besides answering DNS queries, Route 53 registers domains and runs health checks on endpoints.
-    history: []
+    takeaway: Route 53 does more than answer DNS lookups, since it can also register a fresh domain and health-check the endpoints it routes to.
+    history:
+      - version: 2
+        change: rewrite
+        rescore: false
     verified:
-      keyHash: a45dda6e3091
-      fullHash: 6fdd0297a283
+      keyHash: 80fc4fa2ac97
+      fullHash: fa3a5efd99b6
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
-      on: 2026-10-09
+      on: 2026-10-18
   - id: q-r8ed0z
     version: 1
     status: live
@@ -420,3 +424,43 @@ questions:
       fullHash: 70565d22ec54
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-m42kwe
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: edge-networking
+    note: m05/global-networking
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe moves part of its loyalty app's processing out of a distant Region and onto small servers kept in each shop, close to where members order.
+      Which benefits does this edge approach bring?
+    options:
+      - id: a
+        text: Lower latency on each customer's requests
+        correct: true
+        why: Processing near the customers shortens each trip, which is how edge networking lowers latency.
+      - id: b
+        text: Copies of its data kept in several Availability Zones
+        why: Spreading copies across zones adds resilience inside a Region and does not bring processing closer to customers.
+      - id: c
+        text: A private line from the head office to AWS
+        why: A private line helps traffic from the head office reach AWS, and it is not what moving processing into the shops gives.
+      - id: d
+        text: Continued control of the cafe's own infrastructure
+        correct: true
+        why: Processing near users on servers in the shops keeps the cafe in control of its own infrastructure.
+      - id: e
+        text: Automatic scaling of a managed server fleet
+        why: A managed fleet that scales on demand runs in a Region, while the shop servers stay a fixed set the cafe runs itself.
+    evidence:
+      - Processing or caching near users lowers latency and keeps the organization in control of its infrastructure.
+    takeaway: Edge networking lowers latency for users while the organization keeps control of its infrastructure.
+    history: []
+    verified:
+      keyHash: 84f0bf1c266e
+      fullHash: f903c8a721fb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

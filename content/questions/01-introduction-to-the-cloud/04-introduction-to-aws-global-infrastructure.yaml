@@ -321,7 +321,7 @@ questions:
       on: 2026-10-09
   - id: q-6nwzkw
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: availability-zones
@@ -330,30 +330,32 @@ questions:
     level: 3
     stem: >-
       The cafe's ordering app runs in one Availability Zone of the Dublin Region, and its data must stay in the Dublin Region.
-      The cafe wants the app to keep serving if a flood cuts off that zone.
-      Where should it place a second copy of the app and its data?
+      The cafe wants the app to keep serving if a flood cuts off one zone.
+      Which layout should the cafe run the app and its data in?
     options:
       - id: a
-        text: A second data center in the same zone in Dublin
-        why: A data center in the same zone is cut off by the same flood, so both copies would stop together.
+        text: One Availability Zone in Dublin and one in Paris
+        why: Spreading across Dublin and Paris would survive the flood, but it puts data in the Paris Region, which the cafe must avoid.
       - id: b
-        text: A larger server in the same zone in Dublin
-        why: A bigger server adds capacity, but it sits in the flooded zone and goes down with the first copy.
+        text: Two Availability Zones in the Paris Region
+        why: Two zones in Paris would survive a flood in one of them, but all the data would leave the Dublin Region.
       - id: c
-        text: An Availability Zone in the Paris Region
-        why: A zone in Paris would survive the flood, but it moves the data out of the Dublin Region, which the cafe cannot do.
+        text: Two data centers in one Paris zone
+        why: Both data centers sit in one zone, so a flood there stops them together, and the data also leaves Dublin.
       - id: d
-        text: A different Availability Zone in the Dublin Region
+        text: Two Availability Zones in the Dublin Region
         correct: true
-        why: Another zone in Dublin is isolated from the flooded one and keeps the data inside the Region the cafe must use.
+        why: Two isolated zones in Dublin keep serving when a flood cuts off one, and the data never leaves the Dublin Region.
     evidence:
       - Spread resources and replicate data across several AZs so one AZ's outage does not stop applications.
       - Isolated location in one Region (never spanning Regions) with its own power, networking and connectivity, kept apart from other AZs as a disaster could cut off a whole AZ
     takeaway: To survive one zone's outage without leaving a Region, replicate across another Availability Zone in that Region.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the standard high-availability choice, another AZ in the same Region.)"
+    verified:
+      keyHash: 591b930b7fdb
+      fullHash: fc308da66adf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-032ns6
     version: 1
     status: live
@@ -389,3 +391,74 @@ questions:
       fullHash: 683484b4bfca
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-sq6b7v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: high-availability
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's owner wants to move every app into one large data center with strong security and redundant power.
+      Why does this plan still fall short of high availability?
+    options:
+      - id: a
+        text: An outage at that one site would stop every app together.
+        correct: true
+        why: With every app in one data center, a single outage or disaster there takes all of them down, so downtime is not kept small.
+      - id: b
+        text: Each data center sits inside one Availability Zone of a Region.
+        why: Belonging to one zone is true of any data center but does not explain why one site leaves the apps exposed.
+      - id: c
+        text: Customers far from that one site would see higher latency.
+        why: Distance from customers affects how fast the apps answer, not whether they stay up when the site fails.
+      - id: d
+        text: Each data center has redundant power, networking and connectivity.
+        why: Redundant power and networking help the site itself, yet they cannot keep the apps up if the whole site goes down.
+    evidence:
+      - One giant data center is the opposite, since one outage or disaster stops every application.
+      - High availability means business resources stay up, which no single storage location or data center ensures.
+    takeaway: No single data center gives high availability, because one outage there stops every app it runs.
+    history: []
+    verified:
+      keyHash: 6e3a139461a5
+      fullHash: c77a6dfe25cb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-tvy502
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: fault-tolerance
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe wants its payment system to keep running even when several of its components fail at the same moment.
+      How does the cafe give the system this fault tolerance?
+    options:
+      - id: a
+        text: By building resilience into every layer of the system.
+        correct: true
+        why: Resilience in every layer lets the system run on while several components fail, which is how fault tolerance works.
+      - id: b
+        text: By keeping a standby ready for when one component fails.
+        why: A standby covering one failed component gives high availability, which falls short of surviving several failures at once.
+      - id: c
+        text: By adding and removing capacity as demand changes.
+        why: Matching capacity to demand is elasticity, which does nothing to keep payments running when parts break.
+      - id: d
+        text: By placing resources in a Region near its customers.
+        why: A nearby Region lowers latency for customers, but it does not keep the system up when several components fail.
+    evidence:
+      - "Fault tolerance: going further, the system runs on when several components fail, via resilience in every layer."
+    takeaway: Fault tolerance comes from resilience in every layer, so the system runs on when several components fail.
+    history: []
+    verified:
+      keyHash: ca872ded4456
+      fullHash: b9f2f85f04dd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
