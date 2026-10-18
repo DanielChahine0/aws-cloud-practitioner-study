@@ -1,7 +1,7 @@
 questions:
   - id: q-9v0w33
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: ddos-attacks
@@ -12,26 +12,28 @@ questions:
       What sets a distributed denial of service (DDoS) attack apart from a plain denial of service (DoS) attack?
     options:
       - id: a
-        text: It uses one machine to flood the app.
-        why: A flood from a single machine is a plain DoS attack, which is what a DDoS goes beyond.
+        text: A single machine floods the app with requests.
+        why: A flood from a single machine describes a plain DoS attack, which is the very thing a DDoS goes beyond.
       - id: b
-        text: It uses many infected machines at once.
+        text: Many infected machines flood the app together.
         correct: true
         why: A DDoS spreads the flood across many infected machines whose owners do not know they take part.
       - id: c
-        text: It floods the app until customers get no answer.
-        why: Starving real customers of answers is the goal of every DoS attack, so it does not set DDoS apart.
+        text: A fake email tricks staff into giving passwords.
+        why: That describes phishing, which steals credentials and does not flood the app with requests at all.
       - id: d
-        text: It exhausts capacity rather than stealing data.
-        why: Exhausting capacity rather than stealing data is true of both kinds, so it is no difference.
+        text: Malware locks the files until a ransom is paid.
+        why: That describes ransomware, which holds data for payment rather than flooding the app with requests.
     evidence:
       - One machine is not enough, so a distributed (DDoS) attack adds many infected computers, or zombie bots, whose owners have no idea.
       - A denial of service (DoS) attack exhausts an app's capacity so real customers get no answer.
     takeaway: A DDoS attack is a DoS attack launched from many compromised machines at once.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the defining trait of a DDoS versus a DoS; the others hold for both.)"
+    verified:
+      keyHash: fc5dcfbd5a88
+      fullHash: 1dcc71b6f96a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-dgncfp
     version: 1
     status: live
@@ -105,7 +107,7 @@ questions:
       on: 2026-10-09
   - id: q-hgw6m0
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -115,33 +117,35 @@ questions:
     level: 2
     stem: >-
       The cafe's web server slows to a crawl while it sorts through masses of weather forecasts it never asked for.
-      Which statements explain how this UDP flood works?
+      Which statements explain how this UDP flood swamps the server?
     options:
       - id: a
-        text: The bots' requests named the cafe's server as the sender.
+        text: The requests to the weather service name the cafe as sender.
         correct: true
-        why: Forging the cafe's address is what sends the weather service's replies to the cafe's server.
+        why: Forging the cafe as the sender is what sends the weather service's replies to the cafe's server.
       - id: b
-        text: Each small request triggered a much larger reply.
+        text: Each small request to the service draws a much larger reply.
         correct: true
-        why: The size gap means little effort from the bots turns into a heavy load on the cafe's server.
+        why: The size gap turns little effort from the bots into a heavy load of replies on the cafe's server.
       - id: c
-        text: The bots first broke into the weather service's servers.
-        why: The bots only ask the public service for forecasts, so no break-in is needed for this flood.
+        text: The owners of the bots do not know their machines take part.
+        why: Unaware owners are true of zombie bots, but that does not explain how the replies swamp the server.
       - id: d
-        text: The replies carried code that took over the server.
-        why: The replies are plain forecast data, and the harm comes from their volume, not from hidden code.
+        text: Security groups can drop forecast data sent on other protocols.
+        why: Security groups are a defense that can drop the forecast data, so they do not explain how the flood works.
       - id: e
-        text: Each bot sent its requests straight to the cafe's server.
-        why: The bots send requests to the weather service, which then floods the cafe with the replies.
+        text: Shield Standard protects ELB, CloudFront and Route 53 for free.
+        why: Shield Standard is a free defense against common DDoS attacks, not part of how this flood swamps the server.
     evidence:
       - Bots ask a helpful public service, like the National Weather Service, for forecasts, forging your address as the sender.
       - Small requests trigger big replies, so your server stalls sorting unwanted data.
     takeaway: A UDP flood pairs a forged sender address with small requests that trigger big replies.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 5 describe reflection and amplification correctly; 1, 2 and 4 misdescribe the attack.)"
+    verified:
+      keyHash: ad53b6352b1b
+      fullHash: 55d494e5472b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-gxf0xv
     version: 1
     status: live
@@ -396,9 +400,9 @@ questions:
       on: 2026-10-09
   - id: q-x8zkm2
     version: 1
-    status: draft
+    status: live
     type: multi
-    select: 3
+    select: 2
     pool: practice
     concept: aws-firewall-manager
     note: m09/protecting-networks-and-applications
@@ -422,19 +426,20 @@ questions:
         text: S3 bucket policies
         why: Bucket policies control access to S3 data and are not among the rules Firewall Manager enforces.
       - id: e
-        text: AWS Network Firewall firewalls
-        correct: true
-        why: Firewall Manager can configure Network Firewall firewalls centrally for the organization.
+        text: AWS Config rules
+        why: Config rules are standards that AWS Config checks resources against, not firewall rules that Firewall Manager rolls out.
       - id: f
         text: Service control policies
         why: Service control policies set limits for accounts through AWS Organizations, not through Firewall Manager.
     evidence:
       - AWS Firewall Manager centrally configures and enforces firewall rules, such as AWS WAF rules, security group rules and AWS Network Firewall firewalls, across the accounts in your organization.
-    takeaway: Firewall Manager centrally enforces WAF rules, security group rules and Network Firewall firewalls.
+    takeaway: Firewall Manager centrally enforces firewall rules, such as WAF rules and security group rules, across an organization.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 6 'AWS Network Firewall firewalls' repeats 'Firewall' from the stem's service name."
+    verified:
+      keyHash: e1f53f63c4f4
+      fullHash: 38e507afe131
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-wdc48t
     version: 1
     status: live

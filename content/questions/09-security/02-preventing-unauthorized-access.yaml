@@ -739,7 +739,7 @@ questions:
       on: 2026-10-09
   - id: q-55ybjp
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -748,34 +748,37 @@ questions:
     task: "2.3"
     level: 1
     stem: >-
-      Which statements describe AWS IAM Identity Center?
+      The cafe is moving its staff off one IAM user per employee and onto AWS IAM Identity Center.
+      Which outcomes does Identity Center deliver for the staff?
     options:
       - id: a
-        text: It replaces IAM roles for staff access
-        why: Identity Center maps the corporate login to IAM roles, so it relies on roles rather than replacing them.
-      - id: b
-        text: It links to an existing identity source
+        text: Staff keep signing in with their existing work login
         correct: true
-        why: Identity Center connects to an identity source the organization already has, which is federation.
+        why: Identity Center links to the cafe's existing identity source, so staff keep their usual work login.
+      - id: b
+        text: Staff IAM user passwords must meet a minimum length
+        why: Account-wide rules for IAM user passwords come from an IAM password policy, not from Identity Center.
       - id: c
-        text: It creates an IAM user for each employee
-        why: Identity Center avoids an IAM user per employee by letting staff use their corporate login.
+        text: Staff get a login created on each back-office server
+        why: Creating user accounts on the servers themselves is user management that Systems Manager automates.
       - id: d
-        text: It gives staff one login for many accounts
+        text: Staff use one login for every connected account
         correct: true
         why: One login for every connected account and app is the single sign-on that Identity Center provides.
       - id: e
-        text: It works inside only a single AWS account
-        why: Identity Center centralizes workforce access across many AWS accounts and applications.
+        text: Staff permissions that sit unused show up in a report
+        why: Last accessed data that shows unused permissions comes from IAM access reports, not from Identity Center.
     evidence:
       - Linked to an existing identity source, it gives staff one login for every connected account and service, which is SSO.
       - "**AWS IAM Identity Center** centralizes workforce access across AWS accounts and applications."
       - "**Federation at scale**: rather than an IAM user per employee, staff use their corporate login mapped to IAM roles, set up through AWS IAM Identity Center with single sign-on (SSO)."
     takeaway: IAM Identity Center federates with an existing identity source to give staff one login across accounts.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 5 are true of IAM Identity Center; 1, 2 and 4 are false of it.)"
+    verified:
+      keyHash: f8bf18cc0176
+      fullHash: 093597f7937f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-exrpf7
     version: 1
     status: live
@@ -886,7 +889,7 @@ questions:
       on: 2026-10-09
   - id: q-xa31th
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-systems-manager
@@ -894,28 +897,30 @@ questions:
     task: "2.3"
     level: 1
     stem: >-
-      Which access-related task can AWS Systems Manager automate on nodes?
+      Which access-related task does AWS Systems Manager automate on the machines it manages?
     options:
       - id: a
-        text: Rotating database passwords
-        why: Rotating database passwords is the job of Secrets Manager, not of Systems Manager.
+        text: Enforcing IAM password rules
+        why: Account-wide rules for IAM user passwords come from an IAM password policy, not from Systems Manager.
       - id: b
-        text: Managing users on nodes
+        text: Managing local user accounts
         correct: true
         why: Systems Manager automates node work such as user management, registry changes and patching.
       - id: c
-        text: Signing staff in with SSO
-        why: Single sign-on for staff across accounts is the job of IAM Identity Center.
+        text: Giving staff one login for all accounts
+        why: One login for staff across accounts is the single sign-on of IAM Identity Center.
       - id: d
-        text: Reporting unused permissions
+        text: Reporting unused IAM permissions
         why: Last accessed data on unused permissions comes from IAM access reports.
     evidence:
       - It reports details like node ID and operating system and automates registry changes, user management and security patching.
     takeaway: Systems Manager automates node tasks such as user management and patching across your fleet.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 2 'on nodes' repeats the stem's 'on nodes', which points at the key."
+    verified:
+      keyHash: b72852ebe736
+      fullHash: 2849b0080dcc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-7gjhvq
     version: 1
     status: live
@@ -990,42 +995,45 @@ questions:
       on: 2026-10-09
   - id: q-b4a2c8
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-systems-manager
     note: m09/preventing-unauthorized-access
     task: "2.3"
-    level: 2
+    level: 3
     stem: >-
-      The cafe's security lead wants a single inventory of every machine it runs, from back-office servers to EC2 instances in two Regions.
-      Each entry should show the machine's ID and operating system.
-      Which access management service fits?
+      The cafe already keeps its order app's database password in a service that stores and rotates it.
+      Now the IT lead wants to add and remove the operating system user accounts on the back-office servers and on EC2 instances in several Regions, all from one view.
+      Which service fits this new job?
     options:
       - id: a
-        text: AWS IAM Identity Center
-        why: Identity Center gives staff one login across accounts and apps, but it keeps no inventory of machines.
+        text: AWS Organizations
+        why: Organizations groups and governs AWS accounts, not the operating system user accounts inside the cafe's servers.
       - id: b
         text: AWS Secrets Manager
-        why: Secrets Manager stores and rotates passwords and API keys rather than listing the cafe's machines.
+        why: Secrets Manager is the service already storing and rotating the password, and it does not manage server user accounts.
       - id: c
         text: AWS Systems Manager
         correct: true
-        why: Systems Manager shows cloud and on-site nodes together and reports details such as node ID and operating system.
+        why: Systems Manager sees nodes across Regions and hybrid setups in one view and automates user management on them.
       - id: d
-        text: AWS Organizations
-        why: Organizations groups and governs AWS accounts, and it does not report on the servers inside them.
+        text: AWS Identity and Access Management (IAM)
+        why: IAM controls which identities may call AWS resources, not the local user accounts on the cafe's servers.
     evidence:
+      - "**AWS Secrets Manager** is the central place to store, fetch and rotate secrets such as passwords, database credentials and API keys."
       - "**AWS Systems Manager** shows all your nodes, meaning connection points, across accounts, Regions, multi-cloud and hybrid setups in one view."
       - It reports details like node ID and operating system and automates registry changes, user management and security patching.
-    takeaway: Systems Manager lists every node, in the cloud or on site, with details such as node ID and operating system in one view.
+    takeaway: Secrets Manager keeps app secrets, while Systems Manager automates user management on hybrid nodes from one view.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: The stem calls Systems Manager an 'access management service' to fit task 2.3, but a node inventory is an operations task, not access management."
+    verified:
+      keyHash: 729de9591c28
+      fullHash: 62d057095af2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-zan4tp
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-systems-manager
@@ -1033,31 +1041,33 @@ questions:
     task: "2.3"
     level: 2
     stem: >-
-      To keep its machines secure, the cafe's IT lead wants one view of every server across its AWS accounts and its back-office hardware.
-      The same tool should show each machine's operating system and apply security patches automatically.
+      A new shift lead starts on Monday and needs a login on every server the cafe runs, across several AWS accounts and in the back office.
+      The IT lead wants that login created on all of them in one automated step.
       Which service fits?
     options:
       - id: a
-        text: AWS IAM Identity Center
-        why: IAM Identity Center gives staff one login across accounts and apps, but it does not inventory or patch servers.
+        text: AWS Config
+        why: Config records resource configurations and checks them against rules, but it does not create logins on servers.
       - id: b
-        text: AWS Secrets Manager
-        why: Secrets Manager stores and rotates credentials such as database passwords, not the servers' operating systems.
+        text: AWS CloudTrail
+        why: CloudTrail logs who made which AWS API call, and it does not add user accounts to the cafe's servers.
       - id: c
         text: AWS Systems Manager
         correct: true
-        why: Systems Manager shows nodes across accounts and hybrid setups in one view and automates their security patching.
+        why: Systems Manager covers nodes across accounts and hybrid setups and automates user management on them.
       - id: d
-        text: AWS Identity and Access Management (IAM)
-        why: IAM controls which identities may use AWS resources but does not oversee or patch the servers themselves.
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices, but it does not manage the logins on servers.
     evidence:
       - "**AWS Systems Manager** shows all your nodes, meaning connection points, across accounts, Regions, multi-cloud and hybrid setups in one view."
       - It reports details like node ID and operating system and automates registry changes, user management and security patching.
-    takeaway: Systems Manager secures a hybrid fleet by showing every node in one view and automating its security patching.
+    takeaway: Creating a login on every hybrid server in one automated step points to the user management in Systems Manager.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Key 'AWS Systems Manager' shares the word 'system' with the stem's 'operating system', which points at it. Distractors IAM Identity Center, IAM and Secrets Manager are identity and secrets services, not management services like the key, so they are easy to rule out. Task 2.3 (access management) fits poorly; inventorying and patching servers is security operations, not access management."
+    verified:
+      keyHash: f6471bc31aa0
+      fullHash: 772328f02065
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-0k0gw2
     version: 1
     status: live

@@ -37,7 +37,7 @@ questions:
       on: 2026-10-09
   - id: q-bn8cq7
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: data-encryption
@@ -46,33 +46,36 @@ questions:
     level: 2
     stem: >-
       The cafe wants one key to encrypt customers' card details and a different key to decrypt them.
-      Which statement fits this plan?
+      A developer says encryption cannot work that way.
+      Which statement settles the question?
     options:
       - id: a
-        text: Separate keys can split encrypting and decrypting.
+        text: Two keys can share the locking and unlocking.
         correct: true
-        why: Encryption can use one key for both steps or a separate key for each, so this plan works.
+        why: Encryption can use one key for both steps or a separate key for each, so the cafe's plan works.
       - id: b
-        text: Hashing lets the cafe read the card details back.
-        why: Hashing is one-way and cannot be reversed, so it could never give the card details back.
+        text: Only holders of the right key can read the data.
+        why: This is true of encryption, but it does not say whether the locking key and the unlocking key may differ.
       - id: c
-        text: Masking hides card details using a pair of keys.
-        why: Masking protects data without any keys, so it does not use a pair of keys.
+        text: AWS KMS keys never leave the AWS KMS service.
+        why: This is true of AWS KMS, but where keys live says nothing about using separate keys for each step.
       - id: d
-        text: SSL/TLS keys protect card details kept in a database.
-        why: SSL/TLS encrypts a connection for data on the move, not card details stored in a database.
+        text: A key alone does not protect data in transit.
+        why: This is true, since SSL/TLS protects moving data, but it does not answer whether two keys can split the work.
     evidence:
       - One key can lock and unlock, or separate encryption and decryption keys can split the work.
-      - Hashing and salting, used for stored passwords, are one-way and cannot be reversed.
-      - Tokenization and masking protect data without keys.
+      - "Encryption is a lock: only holders of the right key can read data such as customers' phone and card details."
+      - A key alone does not secure data in transit, but SSL/TLS does.
     takeaway: Encryption can use one key to encrypt and decrypt, or separate keys for each step.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only true statement; the others misdescribe hashing, masking and TLS.)"
+    verified:
+      keyHash: d567ca807b2d
+      fullHash: 774499ffd799
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-1ts5ye
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: encryption-at-rest
@@ -81,28 +84,31 @@ questions:
     level: 2
     stem: >-
       The cafe stores its customer profiles in an Amazon DynamoDB table and has changed no security settings.
-      Which statement describes how the profiles sitting in that table are protected?
+      Which statement describes how the profiles are encrypted while they sit idle?
     options:
       - id: a
-        text: The profiles sit on an encrypted EBS volume.
-        why: The profiles live in a DynamoDB table, not on an EBS volume, so EBS encryption does not apply.
+        text: Encrypted by hashing that cannot be reversed
+        why: Hashing is one-way and used for stored passwords, so it cannot be how profiles the app must read are kept.
       - id: b
-        text: The profiles are encrypted only while moving to an app.
-        why: DynamoDB also encrypts the table data sitting at rest, not only data on the move.
+        text: Encrypted by SSL/TLS on the way to the app
+        why: SSL/TLS protects the profiles while they move to the app, not while they sit idle in DynamoDB.
       - id: c
-        text: The profiles are encrypted at rest with AWS KMS keys.
+        text: Encrypted server-side with AWS KMS keys
         correct: true
         why: DynamoDB encrypts all table data at rest on the server side using AWS KMS keys, with no setting to change.
       - id: d
-        text: The profiles stay unencrypted until someone turns it on.
-        why: DynamoDB needs no setting change, because all table data is already encrypted at rest.
+        text: Encrypted with a certificate from ACM
+        why: ACM manages SSL/TLS certificates for connections, and it does not encrypt the idle data in DynamoDB.
     evidence:
       - "**Amazon DynamoDB**: all table data is encrypted at rest server-side with AWS KMS keys."
+      - ACM is for certificates, and AWS KMS for general-purpose encryption keys.
     takeaway: DynamoDB encrypts every table at rest by default, using AWS KMS keys on the server side.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 3 is the only true statement: DynamoDB encrypts at rest by default with KMS keys.)"
+    verified:
+      keyHash: e40c9b92e688
+      fullHash: 5dec0388a1fa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-v89tg9
     version: 1
     status: live
@@ -187,37 +193,39 @@ questions:
       on: 2026-10-09
   - id: q-fxzzez
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-kms
     note: m09/protecting-data
     task: "2.2"
-    level: 1
+    level: 2
     stem: >-
-      Which statement is accurate about AWS KMS?
+      The cafe worries that the key locking its order records could end up copied into one of its apps.
+      Which feature of AWS KMS removes that worry?
     options:
       - id: a
-        text: Its keys are the SSL/TLS certificates behind HTTPS.
-        why: SSL/TLS certificates are managed in ACM, while KMS handles general-purpose encryption keys.
+        text: It lets you choose which IAM roles may manage keys.
+        why: Choosing who may manage keys is a real KMS feature, but it does not stop a key from being copied out.
       - id: b
-        text: Its keys stay in it and can be disabled for a while.
+        text: Its keys never leave the service that holds them.
         correct: true
-        why: KMS keeps every key inside the service and lets you disable a key temporarily.
+        why: KMS keeps every key inside the service, so the key can never be copied into one of the cafe's apps.
       - id: c
-        text: Its keys are copied out to every app that uses them.
-        why: Keys never leave KMS, so they are not copied out to the apps that use them.
+        text: It lets you disable a key temporarily when needed.
+        why: Disabling a key for a while is a real KMS feature, but it pauses use rather than keeping the key inside.
       - id: d
-        text: Its keys can be managed only by the root user.
-        why: You choose which IAM users and roles may manage KMS keys, so it is not limited to the root user.
+        text: It creates keys as random digit strings that lock data.
+        why: KMS does create keys as random digit strings, but that says nothing about where the key may go.
     evidence:
       - You set which IAM users and roles may manage keys and where they are used, keys never leave KMS, and a key can be disabled temporarily.
-      - ACM is for certificates, and AWS KMS for general-purpose encryption keys.
-    takeaway: AWS KMS keys never leave the service, and a key can be disabled temporarily.
+    takeaway: AWS KMS keys never leave the service, so apps use a key without ever holding a copy of it.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only true statement about KMS keys.)"
+    verified:
+      keyHash: 531ab0cedc3b
+      fullHash: cddfb926f5c6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-y8hk72
     version: 1
     status: live
@@ -397,8 +405,9 @@ questions:
       on: 2026-10-09
   - id: q-zaap9c
     version: 1
-    status: draft
-    type: single
+    status: live
+    type: multi
+    select: 3
     pool: practice
     concept: encryption-in-transit
     note: m09/protecting-data
@@ -406,29 +415,39 @@ questions:
     level: 2
     stem: >-
       The cafe is listing where its data needs encryption in transit.
-      Which data belongs on that list?
+      Which items belong on that list?
     options:
       - id: a
-        text: Records sitting in an Amazon DynamoDB table
-        why: Records sitting in a table are idle data at rest, so they need encryption at rest instead.
-      - id: b
-        text: Snapshots kept from an EBS volume
-        why: Stored snapshots are idle data at rest, which EBS encryption at rest covers.
-      - id: c
-        text: Objects stored in an S3 bucket
-        why: Objects kept in a bucket are idle data at rest, which S3 encrypts at rest.
-      - id: d
-        text: Records sent from a database to an app
+        text: Loyalty points sent from the database to the app
         correct: true
-        why: Records moving from a database to an app are data in transit, which is what encryption in transit protects.
+        why: Points on their way from a database to an app are moving, so they are data in transit.
+      - id: b
+        text: Loyalty points saved in an Amazon DynamoDB table
+        why: Points sitting in a table are idle data at rest, so they need encryption at rest instead.
+      - id: c
+        text: A menu photo uploading from a laptop to Amazon S3
+        correct: true
+        why: A photo on its way up to a bucket is moving across the network, so it is data in transit.
+      - id: d
+        text: A menu photo stored in an Amazon S3 bucket
+        why: A photo kept in a bucket is idle data at rest, which S3 encrypts at rest automatically.
+      - id: e
+        text: A till receipt crossing the network to head office
+        correct: true
+        why: A receipt travelling over the network to another office is moving, so it is data in transit.
+      - id: f
+        text: A till receipt kept on an Amazon EBS volume
+        why: A receipt kept on a volume is idle data at rest, which EBS encryption at rest covers.
     evidence:
       - "**In transit**: moving data, such as records sent from a database to an app."
       - "**At rest**: idle data, such as records in a database."
     takeaway: Encryption in transit protects data on the move, such as records sent from a database to an app.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only data that is moving ('sent'), the odd one out among data at rest.)"
+    verified:
+      keyHash: 481b42d3d15a
+      fullHash: 1522bcc528f2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-vg6ppm
     version: 1
     status: live
@@ -500,7 +519,7 @@ questions:
       on: 2026-10-09
   - id: q-e1h7b1
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: data-encryption
@@ -516,7 +535,7 @@ questions:
         text: MFA asks for a second factor at every sign-in
         why: The thief already holds a copy of the file, so a sign-in check never comes into play.
       - id: b
-        text: Only holders of the right key can read the data
+        text: Only holders of the right key can unlock the data
         correct: true
         why: Encryption works like a lock, so the copied details stay unreadable to anyone without the right key.
       - id: c
@@ -529,9 +548,11 @@ questions:
       - "Encryption is a lock: only holders of the right key can read data such as customers' phone and card details."
     takeaway: Encrypted data stays unreadable to everyone except those who hold the right key.
     history: []
-    review:
-      attempts: 3
-      lastFailure: "critic: Option 3 'can read the data' repeats the stem's 'reading', which no distractor does."
+    verified:
+      keyHash: 5320381c839a
+      fullHash: 24c83e26c03c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-mbppzp
     version: 1
     status: live

@@ -319,7 +319,7 @@ questions:
       on: 2026-10-09
   - id: q-cymwtj
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: security-incident-response
@@ -331,25 +331,27 @@ questions:
       Why should it still run detection services on top of those safeguards?
     options:
       - id: a
-        text: Least privilege limits what each identity may do
-        why: Least privilege is true and useful, but it is part of the prevention the cafe already has, not a reason to detect.
+        text: Patching can need a server restart to apply
+        why: A patch may need a restart, but that is a cost of prevention, not a reason the cafe still needs detection.
       - id: b
-        text: Prevention can miss flaws nobody knows about yet
+        text: Patching can fix only the flaws already known
         correct: true
-        why: Prevention can miss flaws nobody knows about yet, so the cafe must detect and respond quickly.
+        why: Patches cover only known flaws, and prevention can miss unknown ones, so the cafe must detect and react fast.
       - id: c
-        text: Default deny refuses every action until allowed
-        why: Default deny is true of IAM, but it is another safeguard and does not explain why detection is still needed.
+        text: Access rules can block staff from needed work
+        why: Rules that are too strict can get in the way, but that is a drawback of prevention, not a reason to add detection.
       - id: d
-        text: Encryption keeps stolen data unreadable without a key
-        why: Encryption is true protection for data, but it prevents harm rather than explaining why detection is needed.
+        text: Detection services can add to the monthly bill
+        why: Detection does add cost, but that is a reason against running it, not why the cafe still needs it.
     evidence:
       - Prevention can miss unknown software flaws, so detect and react fast.
     takeaway: Prevention alone can miss unknown flaws, so detecting and responding fast is part of security.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 is the only one stating a limitation; the others state what a control does.)"
+    verified:
+      keyHash: eef5228c6cd9
+      fullHash: bf616bbd9519
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-fxg96d
     version: 1
     status: live
@@ -388,3 +390,47 @@ questions:
       fullHash: 9c9dbafb2764
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-6r2q0e
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: amazon-inspector
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe runs many kinds of resources on AWS and wants the right ones scanned for vulnerable software.
+      Which of its resources can Amazon Inspector scan automatically?
+    options:
+      - id: a
+        text: The EC2 instances for the till system
+        correct: true
+        why: Inspector automatically scans EC2 instances for vulnerable software and best-practice gaps.
+      - id: b
+        text: The S3 buckets for the menu photos
+        why: Finding sensitive data in S3 is the job of Amazon Macie, and Inspector does not scan buckets.
+      - id: c
+        text: The containers for the kitchen display
+        correct: true
+        why: Containers are among the workloads Inspector scans automatically for vulnerabilities.
+      - id: d
+        text: The DynamoDB table for the loyalty points
+        why: A DynamoDB table stores data rather than running software, so it is not one of the workloads Inspector scans.
+      - id: e
+        text: The Lambda functions for the loyalty app
+        correct: true
+        why: Inspector scans Lambda functions, along with EC2 and containers, for vulnerable software.
+      - id: f
+        text: The IAM users for the cafe's staff
+        why: IAM users are identities rather than workloads, so they are outside what Inspector scans for software flaws.
+    evidence:
+      - Automatically scans EC2, containers and Lambda for vulnerabilities and best-practice gaps, like open EC2 access or vulnerable software.
+    takeaway: Amazon Inspector scans compute workloads, namely EC2, containers and Lambda, for vulnerabilities.
+    history: []
+    verified:
+      keyHash: 2e9a2203fc93
+      fullHash: d6f100b145ae
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
