@@ -179,7 +179,7 @@ questions:
       on: 2026-10-09
   - id: q-aq8k5m
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -188,14 +188,14 @@ questions:
     task: "3.2"
     level: 1
     stem: >-
-      Which local conditions help set the AWS rates in a given Region?
+      Which factors make AWS rates differ from one Region to another?
     options:
       - id: a
         text: Energy and operating costs
         correct: true
         why: The cost of running and powering facilities in that place feeds into the Region's rates.
       - id: b
-        text: Local taxes and tax incentives
+        text: Taxes and tax incentives
         correct: true
         why: Taxes and incentives differ from place to place and shape what each Region charges.
       - id: c
@@ -208,13 +208,15 @@ questions:
         text: Uptime and performance levels
         why: Uptime and performance are broadly equal across Regions, so they do not explain differing rates.
     evidence:
-      - AWS pricing is transparent and granular, yet each Region has its own rates.
+      - Operating and energy costs, local taxes and tax incentives
       - Uptime and performance are broadly equal across Regions, and licensing or hardware specs are on-premises concerns.
     takeaway: Regional AWS rates follow local operating and energy costs plus local taxes and tax incentives.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 2 'Local taxes' repeats the stem's word 'local', which points at one key."
+    verified:
+      keyHash: 3fb9a8e31585
+      fullHash: 7281f7de874f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-w2pk5v
     version: 1
     status: live
@@ -265,29 +267,30 @@ questions:
       What does GDPR require of an online shop in the EU that handles personal data?
     options:
       - id: a
-        text: Ask for consent before gathering personal data
+        text: Let shoppers choose which Region stores their data
+        why: GDPR covers consent and access to personal data, but the choice of Region stays with the shop, not its shoppers.
+      - id: b
+        text: Get shoppers' consent before collecting personal data
         correct: true
         why: GDPR makes the shop get people's agreement before it gathers their personal data.
-      - id: b
-        text: Store all personal data in AWS GovCloud Regions
-        why: GovCloud Regions serve US government bodies and contractors, not EU privacy rules.
       - id: c
-        text: Allow people to view or delete their own data
+        text: Keep shoppers' personal data inside the shop's home country
+        why: Keeping data inside one country is what data sovereignty laws may force, not a duty GDPR sets here.
+      - id: d
+        text: Meet PCI rules for every card payment shoppers make
+        why: PCI rules govern payment card handling, a separate standard from the EU privacy law on personal data.
+      - id: e
+        text: Let shoppers see and erase the data held on them
         correct: true
         why: GDPR gives people the right to see the data held about them and to have it removed.
-      - id: d
-        text: Handle personal data under HIPAA health rules
-        why: Health record rules come from HIPAA, a US law, rather than from the EU privacy law.
-      - id: e
-        text: Delete personal data after each completed order
-        why: GDPR lets people ask for erasure, but it does not force the shop to wipe data after every order.
     evidence:
       - Under GDPR, the EU privacy law, an EU online shop must get consent before collecting personal data and let people see or erase it.
+      - Data sovereignty laws may force data to stay in the country, which touches both compliance and cost.
     takeaway: GDPR requires consent before collecting personal data and lets people see or erase what is held.
     history: []
     review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 5 are GDPR principles; the others are false or belong to HIPAA or GovCloud.)"
+      attempts: 11
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 3 and 4 are the only core data-privacy-law duties; option 1 is a card-payment standard, option 2 is localization, option 5 is a provider feature.)"
   - id: q-0n09j0
     version: 1
     status: live
@@ -359,3 +362,74 @@ questions:
       fullHash: bd2d41db6b86
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-ev4n03
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: region-selection
+    note: m04/choosing-aws-regions
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's new app is built around an AWS capability that launched only recently.
+      Before it picks a Region, what should the cafe confirm about each candidate Region?
+    options:
+      - id: a
+        text: Whether its laws allow the app's data to live there
+        why: Data location laws matter for compliance, but the stem's concern is a newly launched service, not a legal rule.
+      - id: b
+        text: Whether it sits close to most of the app's customers
+        why: Distance to users shapes latency, but nearness does not tell the cafe whether the new service runs there.
+      - id: c
+        text: Whether the services the app needs exist there
+        correct: true
+        why: Services reach Regions gradually, so a recently launched one may be missing from some candidate Regions.
+      - id: d
+        text: Whether its rates suit the cafe's monthly budget
+        why: Each Region has its own rates, but price says nothing about whether the needed service is offered there.
+    evidence:
+      - Regions are isolated, follow local law, and differ in services and prices.
+      - The four factors are compliance, proximity, feature availability and pricing.
+    takeaway: A newly launched service may not reach every Region at once, so check feature availability in each candidate.
+    history: []
+    verified:
+      keyHash: 0f823eb1967f
+      fullHash: 4f74df28419a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-vdpfv3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-govcloud-regions
+    note: m04/choosing-aws-regions
+    task: "2.2"
+    level: 1
+    stem: >-
+      Which group are AWS GovCloud Regions built to serve?
+    options:
+      - id: a
+        text: UK public bodies and their contractors
+        why: GovCloud Regions are set aside for US government work, while UK-only data points to a Region such as London.
+      - id: b
+        text: US public bodies and their contractors
+        correct: true
+        why: GovCloud Regions add strict physical, operational and personnel controls for US government bodies and contractors.
+      - id: c
+        text: EU public bodies and their contractors
+        why: EU bodies answer to EU law such as GDPR, while GovCloud Regions are set aside for US government work.
+      - id: d
+        text: Public bodies worldwide and their contractors
+        why: GovCloud's strict controls are aimed at US government bodies and contractors, not every country's public sector.
+    evidence:
+      - AWS GovCloud Regions carry strict physical, operational and personnel controls for US government bodies and contractors.
+      - "**AWS GovCloud Regions**: Regions with strict security controls for US government agencies and their contractors."
+    takeaway: AWS GovCloud Regions exist for US government agencies and the contractors that work for them.
+    history: []
+    verified:
+      keyHash: 1f654a816c9b
+      fullHash: 1654e4eeaa24
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

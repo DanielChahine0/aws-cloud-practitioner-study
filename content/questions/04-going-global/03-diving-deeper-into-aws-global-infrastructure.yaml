@@ -185,7 +185,7 @@ questions:
       on: 2026-10-09
   - id: q-6vamf1
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: edge-locations
@@ -193,30 +193,32 @@ questions:
     task: "3.2"
     level: 2
     stem: >-
-      A cafe developer suggests moving the main order database onto edge locations so it sits nearer to customers.
+      A cafe developer suggests running the ordering app's back end, with its order history, on edge locations so it sits nearer to customers.
       Which fact about edge locations argues against the plan?
     options:
       - id: a
         text: They sit outside Regions rather than inside AZs.
-        why: Being outside Regions and AZs is true, but it says nothing about whether a database can run there.
+        why: Being outside Regions and AZs is true, but it says nothing about whether a back end can run there.
       - id: b
-        text: They cache content rather than run databases.
+        text: They cache content rather than run heavy compute.
         correct: true
-        why: Edge locations are caching sites, so the order database belongs in a Region that runs such services.
+        why: Edge locations are caching sites, so the back end and its order history belong in a Region that runs such services.
       - id: c
         text: They answer DNS lookups through Amazon Route 53.
-        why: Route 53 does run on edge locations, but hosting DNS does not tell the developer where a database belongs.
+        why: Route 53 does run on edge locations, but hosting DNS does not tell the developer where a back end belongs.
       - id: d
         text: They serve images near users through Amazon CloudFront.
-        why: CloudFront does cache images there, but that fact does not rule out or support placing a database.
+        why: CloudFront does cache images there, but that fact does not rule out or support placing a back end.
     evidence:
       - Regions run most AWS services; edge locations are not for heavy compute, databases or redundant storage.
       - Edge locations sit apart from Regions, in spots like Atlanta and Shanghai, and cache data, video and apps for higher transfer speeds and lower latency.
-    takeaway: Edge locations cache content near users, while databases and heavy compute belong in a Region.
+    takeaway: Edge locations cache content near users, while heavy compute and databases belong in a Region.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 3 alone mentions databases, echoing the stem's 'order database'."
+    verified:
+      keyHash: 9f108817d9d2
+      fullHash: "22e354399153"
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-k02cy9
     version: 1
     status: live
@@ -252,3 +254,115 @@ questions:
       fullHash: "767055e66666"
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-9cp0nn
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: multi-az-deployment
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 1
+    stem: >-
+      Beyond riding out the failure of one Availability Zone, which extra benefits does a multi-AZ deployment bring?
+    options:
+      - id: a
+        text: Quicker recovery after a disaster
+        correct: true
+        why: With a backup AZ already set up, the app can recover from a disaster faster than rebuilding it.
+      - id: b
+        text: Survival of a full Region outage
+        why: Every AZ of the deployment sits in one Region, so losing that Region takes a multi-Region design.
+      - id: c
+        text: Lower latency for end users
+        correct: true
+        why: Spreading the app across AZs also brings lower latency for its users, a bonus on top of riding out a failure.
+      - id: d
+        text: AWS services inside your own building
+        why: Running AWS services on premises is what AWS Outposts does, not a spread across AZs.
+      - id: e
+        text: Help in meeting compliance needs
+        correct: true
+        why: Compliance is one of the bonuses a multi-AZ deployment brings alongside recovery and continuity.
+      - id: f
+        text: DNS routing from URLs to IP addresses
+        why: Turning URLs into IP addresses is the job of Amazon Route 53, not a benefit of spreading across AZs.
+    evidence:
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+    takeaway: A multi-AZ deployment also brings quicker disaster recovery, continuity, lower latency and help with compliance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: Best fit for the stem on closed-book reading."
+  - id: q-e00ex3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-region-architecture
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe already runs its ordering app across two Availability Zones in one Region.
+      Which extra failure would a move to a multi-Region architecture protect against, beyond what the current setup covers?
+    options:
+      - id: a
+        text: Failure of one data center in an AZ
+        why: An AZ is one or more data centers, and the current setup already moves the app to its backup AZ.
+      - id: b
+        text: Failure of one of its two AZs
+        why: Spreading across two AZs already covers one AZ failing, so this needs no second Region.
+      - id: c
+        text: Failure of both AZs at once
+        correct: true
+        why: Both AZs sit in the same Region, so only copies in another Region keep the app up when both go down together.
+      - id: d
+        text: Failure of a nearby edge location
+        why: Edge locations only cache content, so the ordering app does not run there and their loss is not this risk.
+    evidence:
+      - "**Multi-Region** goes one step further and survives a whole Region going down."
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+    takeaway: Multi-Region goes a step past multi-AZ by keeping an app running when a whole Region goes down.
+    history: []
+    verified:
+      keyHash: 58dd9b14f11a
+      fullHash: 04bf7b77256d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-0eknw0
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: multi-az-deployment
+    note: m04/diving-deeper-into-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe runs its ordering app in a single Availability Zone.
+      What must the cafe set up so the app keeps taking orders if that zone fails?
+    options:
+      - id: a
+        text: A larger instance of the app in the same AZ
+        why: A bigger instance still sits in the failed zone, so it goes down with that zone and orders stop.
+      - id: b
+        text: A standby copy of the app in a second AZ
+        correct: true
+        why: The app can only move to a backup AZ the cafe has set up ahead of time, so the copy in a second AZ keeps orders coming.
+      - id: c
+        text: A cached copy of the menu pages at edge locations
+        why: Edge caches speed up delivery of content, but taking orders still needs the app running in a working zone.
+      - id: d
+        text: An archive of the app's log files in a second AZ
+        why: Log files in another zone record what the app did, but nothing there runs the app or takes new orders.
+    evidence:
+      - "**Multi-AZ** covers one AZ failing: the app moves to a backup AZ you set up, with quicker disaster recovery, continuity, lower latency and compliance as bonuses."
+      - AZ or Region outage -> switch to a configured backup AZ or another Region.
+    takeaway: A multi-AZ deployment works only when you set up a backup in a second AZ for the app to move to.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 2 is the only one that keeps the app itself running when an AZ fails; 'second AZ' also repeats from option 1 and draws the eye.)"

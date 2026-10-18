@@ -35,7 +35,7 @@ questions:
       on: 2026-10-09
   - id: q-gvkk1n
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: infrastructure-as-code
@@ -43,31 +43,33 @@ questions:
     task: "3.1"
     level: 2
     stem: >-
-      The cafe is opening in three new Regions.
-      It wants one declared definition of its setup that is peer reviewed, versioned and rolled out the same way to every Region.
-      Which approach fits best?
+      The cafe is opening in several new Regions and builds each one with infrastructure as code.
+      Its team wants to peer review every change to the setup and keep earlier versions of it.
+      What about infrastructure as code makes that possible?
     options:
       - id: a
-        text: Build each Region in the console
-        why: The console suits small one-off jobs and leaves no definition to review or version.
+        text: It provisions and configures each resource through AWS APIs
+        why: Calling AWS APIs is how resources get built, but it does not give the team anything to review or version.
       - id: b
-        text: Automate it with CLI scripts
-        why: Scripts automate only part of the work and grow hard to maintain across Regions.
+        text: It handles multi-tier apps with intricate dependencies
+        why: Handling complex dependencies is true of IaC, yet it says nothing about reviewing or versioning the setup.
       - id: c
-        text: Mix console work with CLI scripts
-        why: Mixing methods lets the Regions drift apart, and leaves no single definition to review.
+        text: It speeds up deployments once the team has learned it
+        why: Faster deployments are a benefit, but speed is not what lets the team review changes or keep old versions.
       - id: d
-        text: Adopt infrastructure as code
+        text: It keeps the setup as a declarative, source-controlled file
         correct: true
-        why: Declarative IaC can be versioned, reviewed and deployed the same way to every Region.
+        why: A declarative file under source control is something the team can review line by line and keep versions of.
     evidence:
-      - For consistent multi-Region rollouts, the console fits only small one-off jobs, scripts automate partly but get hard to maintain, and mixing methods causes drift.
       - IaC is declarative, so teams can version, review and automate deployments.
-    takeaway: Reviewed, versioned and repeatable multi-Region rollouts call for IaC over console work or scripts.
+      - Infrastructure as code (IaC) stores the architecture as a source-controlled blueprint that tools rebuild anywhere, identically and easily.
+    takeaway: IaC keeps the setup as a declarative, source-controlled file, which is what lets a team review and version it.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the known best practice for repeatable builds; the others are manual or partial.)"
+    verified:
+      keyHash: e5d9dc1a424e
+      fullHash: 12971bdc578d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-7pn04g
     version: 1
     status: live
@@ -182,7 +184,7 @@ questions:
       on: 2026-10-09
   - id: q-gt9ahj
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: cloudformation-templates
@@ -195,25 +197,27 @@ questions:
       What should it do?
     options:
       - id: a
-        text: Turn the template into a list of CLI commands
-        why: Rebuilding resource by resource with commands repeats the manual steps the template already removes.
+        text: Script the test account's EBS backups with the CLI
+        why: The CLI suits scripted routine jobs like EBS backups, but backups do not build the test environment.
       - id: b
         text: Deploy the same template in the test account
         correct: true
         why: Reusing one template across accounts produces an identical environment from one command.
       - id: c
-        text: Copy the template and hand-edit it for testing
-        why: Hand edits make a second template that can drift from the first, so the environments may stop matching.
+        text: Keep the template in source control for review
+        why: Source control keeps the template versioned and reviewable, yet storing it builds nothing in the test account.
       - id: d
-        text: Recreate the template's stack in the console
-        why: Console work suits small one-off jobs and invites mistakes when copying a whole stack by hand.
+        text: Check the test account's costs in the console
+        why: The console suits billing dashboards, but checking costs creates none of the resources the test account needs.
     evidence:
       - One template across accounts or Regions gives identical environments from one command, with fewer errors and more resilience.
     takeaway: Reusing one template in another account or Region gives an identical environment with fewer errors.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 4 is the only sound CloudFormation practice; the others defeat the point of a template.)"
+    verified:
+      keyHash: c2c17eb5c4ba
+      fullHash: c6d0ff8df8d3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-dv03bv
     version: 1
     status: live
