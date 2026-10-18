@@ -389,7 +389,7 @@ questions:
       on: 2026-10-09
   - id: q-0qwgj3
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: amazon-appstream-2-0
@@ -406,10 +406,10 @@ questions:
         text: A managed browser for web-only work
         why: A managed browser for web-only users is WorkSpaces Secure Browser, not AppStream 2.0.
       - id: c
-        text: A toolkit for building web and mobile apps
-        why: A toolkit for building full-stack web and mobile apps is AWS Amplify, not a way to stream software to users.
+        text: A toolkit for building full-stack web software
+        why: A toolkit for building full-stack web and mobile apps is AWS Amplify, not a way to deliver existing software to users.
       - id: d
-        text: Desktop programs streamed to any browser
+        text: Desktop programs that open in any browser
         correct: true
         why: AppStream 2.0 streams desktop and SaaS apps to a browser on any device, with nothing to install.
     evidence:
@@ -417,9 +417,11 @@ questions:
       - "**Amazon AppStream 2.0**: streams desktop and SaaS apps (even desktop apps made SaaS with no code changes) to a browser on any device, so nothing is installed and modest hardware suffices."
     takeaway: Amazon AppStream 2.0 streams individual desktop and SaaS apps to a browser on any device.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: Option 1 'streamed' echoes the service name AppStream in the stem, which gives the key away."
+    verified:
+      keyHash: 6e1ebb2ab0a2
+      fullHash: 95879fbe3192
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-g02dpe
     version: 1
     status: live
@@ -528,7 +530,7 @@ questions:
       on: 2026-10-09
   - id: q-s99dm6
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -537,34 +539,35 @@ questions:
     task: "3.8"
     level: 2
     stem: >-
-      The cafe is reviewing several projects.
-      Which of them are IoT solutions that AWS IoT Core would connect to the cloud?
+      The cafe fits its coffee machines with sensors that report bean levels online, so staff can watch and adjust them from anywhere.
+      Which jobs would AWS IoT Core take on for this project?
     options:
       - id: a
-        text: A coffee machine that reports online when its beans run low
+        text: Connect the machines securely to the cafe's cloud apps
         correct: true
-        why: A physical machine that senses its beans and shares the data online is an IoT device that IoT Core can connect.
+        why: IoT Core is the managed service that links devices such as these machines to cloud apps, with mutual authentication and encryption.
       - id: b
-        text: A loyalty app that alerts staff online when a regular orders
-        why: The alert comes from plain software with no sensing physical device, so it is not IoT.
+        text: Record supplier calls about the machines' bean orders
+        why: Recording calls is a contact center feature of Amazon Connect, not a job IoT Core does for the sensor-fitted machines.
       - id: c
-        text: Herb planters that water themselves from soil and weather data
+        text: Ingest the machines' bean readings and act on them
         correct: true
-        why: Planters that measure soil and adjust watering to the weather are an IoT solution for IoT Core.
+        why: IoT Core simplifies ingesting, processing and acting on device data, such as the bean levels the machines report.
       - id: d
-        text: A smoke alarm that senses smoke and beeps loudly in the kitchen
-        why: The alarm senses smoke, but it neither shares data online nor takes remote control, so it is not IoT.
+        text: Trace slow requests in the app showing the machines' readings
+        why: Tracing requests to find slow spots in an app is AWS X-Ray, which does not link the machines or take in their data.
       - id: e
-        text: A catering web form that emails staff online when it is sent
-        why: The email comes from an ordinary web form without a sensing device, so it does not count as IoT.
+        text: Stream the machines' stock program to managers' browsers
+        why: Streaming a program to a browser on any device is Amazon AppStream 2.0, which does not connect sensor devices to the cloud.
     evidence:
-      - IoT needs a sensing physical device, managed with AWS IoT Core; a plain app or software feature does not count.
-      - "A camera that alerts your phone, a remote pet feeder or irrigation tuned to weather and soil: IoT solutions on AWS IoT Core."
-    takeaway: IoT requires a physical device with sensors that shares data online; plain apps and software features are not IoT.
+      - "**AWS IoT Core**: managed service that securely links devices to cloud apps and simplifies ingesting, processing and acting on their data, using mutual authentication, end-to-end encryption and a choice of protocols."
+    takeaway: AWS IoT Core securely links sensor devices to cloud apps and handles ingesting, processing and acting on their data.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Options 4 and 5 are the only internet-connected devices; 1 and 2 are apps and 3 is offline.)"
+    verified:
+      keyHash: 5c5aa45b4308
+      fullHash: b3b26fbb9cb8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-6zdycj
     version: 1
     status: live
@@ -635,3 +638,153 @@ questions:
       fullHash: 8b9a34ebc210
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-gg7jq2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-codepipeline
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe's developers already use AWS CodeBuild as managed CI for the loyalty app.
+      They now plan to add AWS CodePipeline around it.
+      What would CodePipeline add beyond the work CodeBuild covers?
+    options:
+      - id: a
+        text: Compiling, testing and packaging each change
+        why: Compiling, testing and packaging code is the CI work CodeBuild already does, so CodePipeline would not add it.
+      - id: b
+        text: Tracing requests to find slow spots in the app
+        why: Tracing requests to find bottlenecks is what AWS X-Ray does, not a stage that CodePipeline adds to the release.
+      - id: c
+        text: Taking each committed change on through deployment
+        correct: true
+        why: CodeBuild stops at building, testing and packaging, while CodePipeline also carries each change through a deploy stage.
+      - id: d
+        text: Joining many data sources behind one GraphQL API
+        why: Merging backend data sources behind one GraphQL API is AWS AppSync, not part of the release flow CodePipeline runs.
+    evidence:
+      - "**AWS CodeBuild**: managed CI that compiles, tests and packages code, scales itself and bills only for build time."
+      - "**AWS CodePipeline**: managed CI/CD that spots repository changes and runs build, test and deploy stages, shipping fixes reliably with no servers to provision."
+    takeaway: CodeBuild compiles, tests and packages code, and CodePipeline extends the flow through deployment.
+    history: []
+    verified:
+      keyHash: 0d1e1a46b0b2
+      fullHash: 6aea1fd01acc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-hqk8fs
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-x-ray
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      Now and then, customers see an error when they redeem loyalty points, and the developers cannot reproduce it.
+      They want to visualize how each request moves through the app so they can debug it faster.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS AppSync
+        why: AppSync gives frontends one GraphQL API over many data sources, but it does not show how requests behave while the app runs.
+      - id: b
+        text: AWS CloudTrail
+        why: CloudTrail logs who made which AWS API calls, which audits the account but does not trace requests inside the app.
+      - id: c
+        text: AWS Amplify
+        why: Amplify helps build and host full-stack apps, but it does not trace live requests to debug an error.
+      - id: d
+        text: AWS X-Ray
+        correct: true
+        why: X-Ray monitors and traces requests so developers can visualize app behavior and debug faster.
+    evidence:
+      - "**AWS X-Ray**: monitors and traces requests so developers can visualize app behavior, find bottlenecks, debug faster and tune efficiency and reliability."
+    takeaway: To see how requests move through an app and debug errors faster, developers trace them with AWS X-Ray.
+    history: []
+    verified:
+      keyHash: 5b97b9e3fd87
+      fullHash: 66dbea308c94
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-gnq82v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-amplify
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe's web developer can build the frontend of a new ordering site but has never set up a backend.
+      She wants one toolkit that also gives the site its backend pieces, so she can build, deploy and run the whole app herself.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Lightsail
+        why: Lightsail offers simple, predictably priced hosting, but it does not add backend pieces such as sign-in to the app.
+      - id: b
+        text: AWS Amplify
+        correct: true
+        why: Amplify speeds up building, deploying and running full-stack web apps, adding the backend with little infrastructure work.
+      - id: c
+        text: AWS Elastic Beanstalk
+        why: Elastic Beanstalk turns finished code into a running web environment, but it does not supply the backend features for her.
+      - id: d
+        text: AWS AppSync
+        why: AppSync builds one GraphQL data API, which is only a single backend piece rather than a full-stack toolkit.
+    evidence:
+      - "**AWS Amplify**: speeds up building, deploying and running secure, scalable full-stack (frontend plus backend) web and mobile apps, adding sign-in, APIs, storage and hosting with little infrastructure work."
+      - "**Full-stack application**: App with a frontend and a backend."
+    takeaway: A developer who needs both frontend and backend for a web app, with little infrastructure work, can use AWS Amplify.
+    history: []
+    verified:
+      keyHash: 57a86e67b5b2
+      fullHash: 762fb3d4950e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
+  - id: q-zyq6rn
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-connect
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      The cafe is moving its customer help line onto Amazon Connect.
+      Which features does Connect provide for that help line?
+    options:
+      - id: a
+        text: Giving each agent a persistent virtual desktop
+        why: A persistent virtual desktop for each agent is what Amazon WorkSpaces provides, not a contact center feature of Connect.
+      - id: b
+        text: Routing each contact to the right staff member
+        correct: true
+        why: Connect has call routing built in, so each call or chat on the help line reaches the right person.
+      - id: c
+        text: Tracing slow requests in the cafe's web app
+        why: Tracing requests to find slow spots in an app is the job of AWS X-Ray, not a feature of the Connect contact center.
+      - id: d
+        text: Recording each conversation for later review
+        correct: true
+        why: Connect records calls, so the cafe can review help line conversations and feed them into analytics.
+      - id: e
+        text: Streaming an order program to staff browsers
+        why: Streaming a program to a browser on any device is Amazon AppStream 2.0, not a contact center feature of Connect.
+    evidence:
+      - "**Amazon Connect**: AI-powered cloud contact center for calls and chats, with call routing, recording, analytics and AWS integrations."
+    takeaway: Amazon Connect is a cloud contact center with call routing, recording and analytics built in for calls and chats.
+    history: []
+    verified:
+      keyHash: f04b938f77bf
+      fullHash: 54d5a4196a8f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
