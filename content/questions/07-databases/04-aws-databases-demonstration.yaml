@@ -258,7 +258,7 @@ questions:
       on: 2026-10-18
   - id: q-xgk78h
     version: 1
-    status: draft
+    status: live
     type: multi
     select: 2
     pool: practice
@@ -267,35 +267,40 @@ questions:
     task: "3.4"
     level: 2
     stem: >-
-      The cafe's DynamoDB orders table uses the pickup code printed on each receipt as its partition key and grows every week.
-      Which jobs should the staff's tools handle with a query rather than a scan?
+      Every item in the cafe's DynamoDB orders table holds a receipt number, a pickup code and a payment reference, and the receipt number is the partition key.
+      Every item in its members table holds an email address, a phone number and a card number, and the email address is the partition key.
+      Which lookups can the counter staff run as a query rather than a scan?
     options:
       - id: a
-        text: Fetching the one order whose pickup code a customer reads out
-        correct: true
-        why: The pickup code is the partition key, so a query reads just the order with that value instead of every item.
+        text: A member found from their phone number
+        why: The phone number is only an attribute of the members table, so finding a member by it means scanning every item.
       - id: b
-        text: Fetching the one order whose order number a customer reads out
-        why: The order number is not this table's partition key, so finding the order by it means a scan of every item.
-      - id: c
-        text: Counting how many pickup codes the table holds in all
-        why: Counting every pickup code needs every item in the table, which is the whole-table read that a scan does.
-      - id: d
-        text: Fetching the notes on the order with a given pickup code
+        text: An order found from its receipt number
         correct: true
-        why: A given pickup code is a partition key value, so a query fetches that order, notes included, and skips the rest.
+        why: The receipt number is the orders table's partition key, so a query reads just the matching order.
+      - id: c
+        text: An order found from its pickup code
+        why: The pickup code is only an attribute of the orders table, so finding an order by it means a scan of every item.
+      - id: d
+        text: A member found from their email address
+        correct: true
+        why: The email address is the members table's partition key, so a query fetches that member and skips the rest.
       - id: e
-        text: Fetching the orders whose notes mention oat milk
-        why: The notes are not the partition key, so finding the orders that mention oat milk takes a scan through all the items.
+        text: An order found from its payment reference
+        why: The orders table is keyed on the receipt number, so looking up an order by payment reference takes a scan.
+      - id: f
+        text: A member found from their card number
+        why: The card number is not the members table's partition key, so finding a member by it takes a scan of the whole table.
     evidence:
       - "**Query**: a DynamoDB read of the items matching a partition key value."
-      - A scan (Explore table items, then Run) read back everything, and a notes attribute appeared on only some items.
       - A scan returns the whole table, while a query fetches items by partition key.
-    takeaway: A job that starts from one partition key value calls for a query, while jobs on other attributes or the whole table need a scan.
+    takeaway: A query works only when a lookup starts from that table's own partition key, and any other attribute calls for a scan.
     history: []
-    review:
-      attempts: 11
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 4 both look up by pickup code, the attribute that repeats across options, and option 2 is a near-twin of 3 that only swaps the key attribute.)"
+    verified:
+      keyHash: 9bde991304fb
+      fullHash: fdaa1237ee67
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-g6ht3v
     version: 1
     status: live

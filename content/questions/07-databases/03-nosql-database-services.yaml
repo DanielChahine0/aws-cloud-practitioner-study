@@ -432,7 +432,7 @@ questions:
       on: 2026-10-09
   - id: q-tg3wm7
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: flexible-schema
@@ -440,30 +440,32 @@ questions:
     task: "3.4"
     level: 2
     stem: >-
-      The cafe's loyalty members live in a DynamoDB table, and the team now wants to record a preferred milk for only the members who have named one.
-      Which DynamoDB trait lets it start doing so without first redesigning the table?
+      The cafe's DynamoDB catering table has only ever held pickup orders.
+      It now starts taking delivery orders as well, and each one needs a street address that a pickup order never has.
+      Which property of the table lets the address live on the delivery orders alone?
     options:
       - id: a
-        text: Each item may hold values that other items in its table lack
-        correct: true
-        why: Items in a DynamoDB table need not share attributes, so the cafe writes a milk only on the members who named one.
+        text: Its items can be spread over many servers and SSDs
+        why: Spreading items over many servers lets the table grow, but it does not let one order hold an address another lacks.
       - id: b
-        text: Each table spreads its data over many servers with no practical size cap
-        why: Spreading data over many servers lets the table grow, but it says nothing about adding a value to some items only.
+        text: Its items can be copied into other Regions by global tables
+        why: Global tables serve the orders worldwide, but copying items to other Regions has nothing to do with which ones hold an address.
       - id: c
-        text: Each table encrypts its data at rest and in transit automatically
-        why: Built-in encryption protects the members' data, but it does not decide which items can carry a new value.
+        text: Its items can be given differing sets of attributes
+        correct: true
+        why: DynamoDB items need not share attributes, so the address is written on delivery orders and the pickup orders stay unchanged.
       - id: d
-        text: Each table keeps an index on its primary key by default
-        why: The primary key index speeds lookups by member, but adding a new value to some items relies on the flexible schema.
+        text: Its items can be encrypted at rest with keys you pick
+        why: Encryption with a choice of keys protects the orders, but it has no bearing on which items can carry an address.
     evidence:
       - Items can differ in attributes, which come and go freely (one customer has a favorite drink, another a birthday).
-      - "NoSQL (nonrelational) databases hold key-value pairs: a unique key names an item and attributes carry its values, like a dictionary headword and definition."
-    takeaway: A flexible schema lets the cafe add a new attribute to just the items that need it, with no schema change first.
+    takeaway: A flexible schema lets a DynamoDB table add a new attribute to only the items that need it, leaving the rest as they were.
     history: []
-    review:
-      attempts: 10
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 alone talks about each item rather than each table, breaking the parallel pattern of the other three.)"
+    verified:
+      keyHash: e2eaab8f47ee
+      fullHash: 212f12b871b7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-az9tjx
     version: 1
     status: live

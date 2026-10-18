@@ -676,42 +676,39 @@ questions:
   - id: q-ca1jcg
     version: 1
     status: draft
-    type: multi
-    select: 2
+    type: single
     pool: practice
     concept: semistructured-data
     note: m07/additional-database-services
     task: "3.4"
     level: 2
     stem: >-
-      The cafe is sorting its data sets before it picks databases for them.
-      Which of these data sets are semistructured data?
+      The cafe's shop catalog is semistructured data, since every drink, bean bag and mug carries its own nested details.
+      The team wants to query and index whichever details an item happens to have.
+      Which data model fits this catalog best?
     options:
       - id: a
-        text: Catalog entries whose details nest and vary by item
+        text: JSON-like documents, each with its own fields
         correct: true
-        why: Nested details that differ from item to item defy a rigid schema, which makes the catalog semistructured.
+        why: Documents with dynamic schemas let every catalog item keep its own nested details and still be queried and indexed on them.
       - id: b
-        text: Customer profiles that hold different fields per person
-        correct: true
-        why: Profiles whose fields change from one customer to the next do not fit fixed columns, so they are semistructured.
+        text: Table rows that all share one fixed column set
+        why: Fixed columns force every item into the same shape, which the catalog's varied nested details do not fit.
       - id: c
-        text: Till totals whose amounts vary from day to day
-        why: The amounts change, but each day fills the same fixed columns, so the totals are structured, not semistructured.
+        text: Graph nodes linked to each other by edges
+        why: A graph suits highly connected data, while the catalog items are defined by their own details rather than by links.
       - id: d
-        text: Points balances whose values differ per person
-        why: Each customer still has one number in the same column, so differing values leave the data structured.
-      - id: e
-        text: Referral links that connect customers to friends
-        why: Links between customers make highly connected data, which is a graph workload rather than semistructured records.
+        text: Single values each fetched by a lookup key
+        why: A plain key lookup returns a whole value by its key, which does not let the team query and index the nested details.
     evidence:
       - "**Semistructured data**: varied, complex data that defies rigid schemas."
-      - "Use cases: content management, catalogs and inventory, user profiles and personalization."
-    takeaway: Catalogs and profiles whose fields vary from record to record are semistructured data, unlike fixed tables or key lookups.
+      - Fully managed, it stores, queries and indexes JSON-like documents with dynamic schemas, ideal when schemas change often.
+      - Where DynamoDB handles key-value data, DocumentDB takes semistructured data too complex for rows and columns.
+    takeaway: Semistructured data whose records carry varied nested details is kept as JSON-like documents, not fixed rows, graph edges or plain key lookups.
     history: []
     review:
-      attempts: 3
-      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 are the only ones whose shape varies, options 1 and 2 vary only in value.)"
+      attempts: 6
+      lastFailure: "critic: Option 3 (the key) echoes the stem's phrase 'its own' ('its own nested details' vs 'its own fields'), which points at the key."
   - id: q-yzx5tz
     version: 1
     status: live
