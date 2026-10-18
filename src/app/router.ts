@@ -16,6 +16,8 @@ export type Route =
   | { kind: 'results'; sid: string }
   | { kind: 'lab'; module: number; id: string }
   | { kind: 'incident' }
+  | { kind: 'project' }
+  | { kind: 'decision'; module: number }
   | { kind: 'not-found'; hash: string };
 
 /** A mock's route segment: a form in lower case, or the remix. */
@@ -36,6 +38,9 @@ const RESULTS_PATH = /^\/r\/([0-9A-HJKMNP-TV-Z]{26})$/;
 /** A lab (spec 7.2): the module in the path must be the module in the lab id. */
 const LAB_PATH = /^\/m\/(0[1-9]|1[0-3])\/lab\/(lab-m(0[1-9]|1[0-3])-[a-z0-9]+(?:-[a-z0-9]+)*)$/;
 
+/** One capstone decision's ADR editor (spec 6); `#/project` alone lists all 13. */
+const DECISION_PATH = new RegExp(`^/project/${MODULE}$`);
+
 export function pad2(n: number): string {
   return String(n).padStart(2, '0');
 }
@@ -48,6 +53,7 @@ export function parseHash(hash: string): Route {
   if (path === '/s/review') return { kind: 'review' };
   if (path === '/s/lightning') return { kind: 'lightning' };
   if (path === '/s/mock') return { kind: 'mocks' };
+  if (path === '/project') return { kind: 'project' };
   if (path === '/s/incident') return { kind: 'incident' };
   const module = MODULE_PATH.exec(path);
   if (module) return { kind: 'module', module: Number(module[1]) };
@@ -71,6 +77,8 @@ export function parseHash(hash: string): Route {
   if (results) return { kind: 'results', sid: results[1] ?? '' };
   const lab = LAB_PATH.exec(path);
   if (lab && lab[1] === lab[3]) return { kind: 'lab', module: Number(lab[1]), id: lab[2] ?? '' };
+  const decision = DECISION_PATH.exec(path);
+  if (decision) return { kind: 'decision', module: Number(decision[1]) };
   return { kind: 'not-found', hash };
 }
 
@@ -108,6 +116,10 @@ export function toHash(route: Route): string {
       return `#/m/${pad2(route.module)}/lab/${route.id}`;
     case 'incident':
       return '#/s/incident';
+    case 'project':
+      return '#/project';
+    case 'decision':
+      return `#/project/${pad2(route.module)}`;
     case 'not-found':
       return route.hash;
   }

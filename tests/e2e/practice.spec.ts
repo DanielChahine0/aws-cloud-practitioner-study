@@ -2,7 +2,9 @@ import { readFile } from 'node:fs/promises';
 import { expect, type Page, test } from '@playwright/test';
 import type { QuestionView } from '../../schemas/chunks.ts';
 import { findEvidence } from '../../src/app/evidence.ts';
-import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1 } from './helpers.ts';
+import { adrKey, KV_KEYS } from '../../src/store/kv.ts';
+import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1, seedKv } from './helpers.ts';
+import { readKv } from './project-helpers.ts';
 import { chunkFor, finishByClicking, lessonsOf, pickRight, pickWrong, shown } from './questions.ts';
 
 /** Every practice e2e test uses Module 3, which the Phase 1 pilot fills with live questions. */
@@ -272,6 +274,28 @@ test('a reported problem is confirmed inline', async ({ page }) => {
   await expect(page.getByRole('status')).toHaveText('Reported. It travels with your next backup.');
 });
 
+/** An ADR draft, mission ticks and a plan record, which a backup must carry through a wiped browser (spec 8.1). */
+const PHASE_6_KV: Readonly<Record<string, unknown>> = {
+  [adrKey(3)]: {
+    v: 1,
+    context: 'The bakery bakes for twelve shops.',
+    options: 'Hire ovens by the minute.',
+    decision: 'Hire ovens by the minute.',
+    why: 'They follow the rush, like [[aws-lambda]] and [[aws-fargate]].',
+    tradeoffs: 'Hired ovens cost more per hour.',
+    cost: 'About $40 a month.',
+    ticks: ['kp-03-retired'],
+  },
+  [KV_KEYS.missionTicks]: { 'mission-00': ['budget', 'mfa'] },
+  [KV_KEYS.plan]: {
+    plan: 'free',
+    credits: 120,
+    endsOn: '2027-04-01',
+    services: { 'AWS Lambda': true },
+    recordedAt: '2026-10-10T09:00:00.000Z',
+  },
+};
+
 test('a backup exports, survives a wiped browser and imports once', async ({ page }) => {
   const questions = await startLambdaCheck(page);
   await page.locator('#stem').focus();
@@ -279,6 +303,8 @@ test('a backup exports, survives a wiped browser and imports once', async ({ pag
   await page.getByRole('radio', { name: 'Typo' }).check();
   await page.getByRole('button', { name: 'Send' }).click();
   await finishByClicking(page, questions);
+  await seedKv(page, PHASE_6_KV);
+  await page.reload();
 
   await page.goto('/#/m/03');
   const row = page.locator('a.row[href="#/m/03/l/aws-lambda"]');
@@ -326,6 +352,7 @@ test('a backup exports, survives a wiped browser and imports once', async ({ pag
   await sheet.getByRole('button', { name: 'Merge' }).click();
   await expect(sheet.getByRole('status')).toHaveText(`Imported. ${count} new events.`);
   await expect(sheet.locator('.progress-summary')).toHaveText(summary);
+  expect(await readKv(page, Object.keys(PHASE_6_KV))).toEqual(PHASE_6_KV);
 
   await sheet.getByLabel('Import a backup').setInputFiles(file);
   await sheet.getByRole('button', { name: 'Merge' }).click();

@@ -27,6 +27,8 @@ export interface KeyContext {
   exam: boolean;
   /** True while a lab card is held: Escape is the lab's, which puts the card down. */
   labHolding: boolean;
+  /** The module of the lesson last opened, else 1; `g m` opens it. */
+  currentModule: number;
 }
 
 export type KeyCommand =
@@ -56,6 +58,14 @@ export function keyStep(
   if (MODIFIER_KEYS.has(input.key)) return { command: null, gAt: ctx.gAt };
   const command = keyCommand(input, ctx);
   return { command, gAt: command?.kind === 'g' ? command.at : null };
+}
+
+const NOTE_MODULE = /^m(0[1-9]|1[0-3])\//;
+
+/** The module of a lesson note id (`m07/amazon-vpc` is 7), or Module 1 without one. */
+export function moduleOfNote(note: string | null): number {
+  const match = note === null ? null : NOTE_MODULE.exec(note);
+  return match === null ? 1 : Number(match[1]);
 }
 
 /** True when `g` was the previous key and came less than a second ago. */
@@ -102,11 +112,17 @@ export function keyCommand(input: KeyInput, ctx: KeyContext): KeyCommand | null 
         ? { kind: 'move', delta: key === 'j' ? 1 : -1 }
         : null;
     case 'c':
+      // A pending `g` wins, so `g c` opens the capstone even on a lesson, where `c` alone opens the check.
+      if (gPending(input, ctx)) return { kind: 'navigate', hash: toHash({ kind: 'project' }) };
       return ctx.route.kind === 'lesson'
         ? {
             kind: 'navigate',
             hash: toHash({ kind: 'check', module: ctx.route.module, slug: ctx.route.slug }),
           }
+        : null;
+    case 'm':
+      return gPending(input, ctx)
+        ? { kind: 'navigate', hash: toHash({ kind: 'module', module: ctx.currentModule }) }
         : null;
     case 'Escape': {
       if (ctx.labHolding) return null;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LabMeta } from '../../schemas/chunks.ts';
+import type { LabMeta, MissionMeta } from '../../schemas/chunks.ts';
 import {
   bossLineOf,
   conceptMarks,
@@ -10,8 +10,15 @@ import {
   recallBand,
   weakestConcepts,
 } from '../../src/app/module.ts';
+import {
+  capstoneRow,
+  DECISION_STAGE_WORDS,
+  missionRows,
+  NO_MISSIONS,
+} from '../../src/app/module-sections.ts';
 import type { BossStatus } from '../../src/engine/boss.ts';
 import type { MemoryState } from '../../src/engine/memory.ts';
+import type { MissionStatus } from '../../src/engine/missions.ts';
 import type { SrsCard } from '../../src/engine/srs.ts';
 
 const NOW = new Date('2026-10-14T10:00:00.000Z');
@@ -223,5 +230,78 @@ describe('labRows', () => {
   it('gives a module without labs no rows and says so', () => {
     expect(labRows({ labs: LABS }, 5, new Set())).toEqual([]);
     expect(NO_LABS).toBe('No labs for this module yet.');
+  });
+});
+
+describe('capstoneRow', () => {
+  it('names the decision and links its editor, with one word per stage', () => {
+    expect(capstoneRow(3, 'open', 'Ovens for the morning rush')).toEqual({
+      label: 'Decision 3: Ovens for the morning rush',
+      meta: 'Open',
+      href: '#/project/03',
+    });
+    expect(DECISION_STAGE_WORDS).toEqual({
+      locked: 'Locked',
+      waiting: 'After your exam',
+      open: 'Open',
+      self: 'Self-graded',
+      done: 'Graded',
+    });
+  });
+});
+
+describe('missionRows', () => {
+  const mission = (
+    id: string,
+    title: string,
+    modules: number[],
+  ): Pick<MissionMeta, 'id' | 'title' | 'modules'> => ({
+    id,
+    title,
+    modules,
+  });
+  const status = (id: string, stage: MissionStatus['stage']): MissionStatus => ({
+    id,
+    n: Number(id.slice('mission-'.length)),
+    stage,
+    missing: [],
+    liveMs: null,
+    usageFrom: null,
+    closedDay: null,
+  });
+  const MISSIONS = [
+    mission('mission-00', 'Set the bakery budget', [1, 2]),
+    mission('mission-03', 'Upload a bakery receipt', [6]),
+    mission('mission-07', 'Two counters, one kitchen', [5, 6]),
+  ];
+  const STATUSES = [
+    status('mission-00', 'closed'),
+    status('mission-03', 'live'),
+    status('mission-07', 'locked'),
+  ];
+
+  it('lists the missions whose modules name this module, in index order, each with its status', () => {
+    expect(missionRows(6, STATUSES, { missions: MISSIONS })).toEqual([
+      {
+        id: 'mission-03',
+        n: 3,
+        title: 'Upload a bakery receipt',
+        href: '#/missions/mission-03',
+        status: STATUSES[1],
+      },
+      {
+        id: 'mission-07',
+        n: 7,
+        title: 'Two counters, one kitchen',
+        href: '#/missions/mission-07',
+        status: STATUSES[2],
+      },
+    ]);
+  });
+
+  it('skips a mission with no status yet, and says when no mission uses the module', () => {
+    expect(missionRows(2, [], { missions: MISSIONS })).toEqual([]);
+    expect(missionRows(9, STATUSES, { missions: MISSIONS })).toEqual([]);
+    expect(NO_MISSIONS).toBe('No missions for this module.');
   });
 });

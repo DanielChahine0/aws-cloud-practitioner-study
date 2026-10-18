@@ -2,8 +2,8 @@ import { useEffect } from 'preact/hooks';
 import { now } from './clock.ts';
 import { index } from './content.ts';
 import { nextLabel } from './home.ts';
-import { G_WINDOW_MS, keyStep } from './keys.ts';
-import { nextUp } from './memory.ts';
+import { G_WINDOW_MS, keyStep, moduleOfNote } from './keys.ts';
+import { currentLesson, nextUp } from './memory.ts';
 import { closeTerm, exam, labHolding, navigate, openTerm, overlay, route } from './state.ts';
 
 /** Input types that take no typed text, so single-letter shortcuts stay on while one has focus. */
@@ -77,6 +77,7 @@ export function useKeyboard(): void {
           gAt,
           exam: exam.value !== null,
           labHolding: labHolding.value,
+          currentModule: moduleOfNote(currentLesson.value),
         },
       );
       gAt = step.gAt;

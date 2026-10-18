@@ -54,10 +54,17 @@ export function wellCalibrated(c: Calibration): boolean {
   );
 }
 
+/**
+ * A capstone decision's rubric total. It lives here rather than in the capstone engine, so the eager XP and badge
+ * derivation does not pull the capstone helpers into the initial bundle.
+ */
+export function scoreTotal(scores: readonly number[]): number {
+  return scores.reduce((sum, s) => sum + s, 0);
+}
+
 /** A capstone decision passes with a total of at least 8 of 12 and no criterion at 0. */
 export function decisionPasses(scores: readonly number[]): boolean {
-  const total = scores.reduce((sum, s) => sum + s, 0);
-  return total >= ARCHITECT.minTotal && scores.every((s) => s > 0);
+  return scoreTotal(scores) >= ARCHITECT.minTotal && scores.every((s) => s > 0);
 }
 
 /** Right and total per exam domain, in domain order; an item's domain is its task's first digit. */

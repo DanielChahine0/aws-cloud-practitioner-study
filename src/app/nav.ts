@@ -48,6 +48,10 @@ export function up(route: Route): Route | null {
       return { kind: 'home' };
     case 'mock':
       return { kind: 'mocks' };
+    case 'project':
+      return { kind: 'home' };
+    case 'decision':
+      return { kind: 'project' };
     case 'home':
       return null;
   }

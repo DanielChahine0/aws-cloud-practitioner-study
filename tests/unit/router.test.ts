@@ -147,3 +147,24 @@ describe('toHash', () => {
     expect(pad2(13)).toBe('13');
   });
 });
+
+describe('the capstone routes', () => {
+  it('reads #/project and #/project/NN, and nothing else under #/project', () => {
+    expect(parseHash('#/project')).toEqual({ kind: 'project' });
+    expect(parseHash('#/project/03')).toEqual({ kind: 'decision', module: 3 });
+    expect(parseHash('#/project/13')).toEqual({ kind: 'decision', module: 13 });
+    for (const hash of ['#/project/3', '#/project/00', '#/project/14', '#/project/03/x', '#/project/']) {
+      expect(parseHash(hash)).toEqual({ kind: 'not-found', hash });
+    }
+  });
+
+  it('writes them back, so every capstone route round-trips', () => {
+    const routes: Route[] = [
+      { kind: 'project' },
+      { kind: 'decision', module: 1 },
+      { kind: 'decision', module: 13 },
+    ];
+    expect(routes.map(toHash)).toEqual(['#/project', '#/project/01', '#/project/13']);
+    for (const r of routes) expect(parseHash(toHash(r))).toEqual(r);
+  });
+});

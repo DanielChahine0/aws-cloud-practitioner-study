@@ -9,6 +9,7 @@ import {
   type ProjectChunk,
   type RubricView,
 } from '../../../schemas/project-view.ts';
+import { scoreTotal } from '../../engine/badges.ts';
 import {
   type ConceptName,
   canSelfGrade,
@@ -19,7 +20,6 @@ import {
   decisionsOf,
   openDay,
   type Scores,
-  scoreTotal,
   toShown,
   toStored,
 } from '../../engine/capstone.ts';
@@ -31,7 +31,6 @@ import { useTitle } from '../../ui/useTitle.ts';
 import { type AdrDraft, adrDraftOf, emptyAdrDraft } from '../adr-draft.ts';
 import { now } from '../clock.ts';
 import { TARGET_EXAM_DATE } from '../config.ts';
-import { ensureProject, project } from '../content.ts';
 import { downloadText } from '../download.ts';
 import { examDateLabel } from '../home.ts';
 import { bosses, memory } from '../memory.ts';
@@ -62,6 +61,7 @@ import {
   TICK_LABEL,
   tickKeyPoint,
 } from '../project.ts';
+import { ensureProject, project } from '../project-content.ts';
 import { highlight } from '../state.ts';
 import { LAZY_ERROR } from './Lazy.tsx';
 import { NotFound } from './NotFound.tsx';

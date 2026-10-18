@@ -18,10 +18,10 @@ import {
   LEAVE_NO_TRACE,
   LONG_MEMORY,
   PASS_MARK,
+  scoreTotal,
   wellCalibrated,
 } from './badges.ts';
 import { betXp } from './bets.ts';
-import { scoreTotal } from './capstone.ts';
 import { addDays, dayStartAt, nextDayStart, studyDayAt } from './day.ts';
 import { GATE_MISSION, type MissionRef, type OpenMissionLog, stepMission } from './mission-log.ts';
 import type { SessionState } from './replay.ts';

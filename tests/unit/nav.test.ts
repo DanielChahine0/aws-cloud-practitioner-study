@@ -101,3 +101,10 @@ describe('up', () => {
     expect(up({ kind: 'results', sid: '01JA0000000000000000000000' })).toEqual({ kind: 'home' });
   });
 });
+
+describe('up from the capstone', () => {
+  it('goes from a decision to the project, and from the project to Home', () => {
+    expect(up({ kind: 'decision', module: 3 })).toEqual({ kind: 'project' });
+    expect(up({ kind: 'project' })).toEqual({ kind: 'home' });
+  });
+});
