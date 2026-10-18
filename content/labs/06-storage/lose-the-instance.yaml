@@ -1,0 +1,92 @@
+id: lab-m06-lose-the-instance
+module: 6
+title: Lose the instance
+engine: simulate
+tier: stretch
+status: live
+rev: 1
+concepts:
+  - ec2-instance-store
+  - amazon-ebs
+  - ebs-volumes
+  - data-persistence
+  - ebs-snapshots
+  - incremental-backups
+notes:
+  - m06/ec2-instance-store-and-amazon-elastic-block-store-amazon-ebs
+  - m06/amazon-elastic-block-store-amazon-ebs-data-lifecycle
+minutes: 8
+brief: >-
+  The cafe's order server writes 40 orders an hour, is stopped and started again for upkeep at hour 20, and loses its whole Availability Zone at hour 46, just after any snapshot due then, which ends the run.
+  Pick the order store and the hours between snapshots so the stop loses no order, the zone loss costs at most 160 orders and snapshots stay within 40 lab credits.
+  These figures are lab values, as are the first snapshot's 20 lab credits and 1 lab credit for each later one.
+spec:
+  model: data-loss
+  constants:
+    hours: 47
+    perHour: 40
+    stopAt: 20
+    zoneLossAt: 46
+    fullSnapshot: 20
+    incrementalSnapshot: 1
+  params:
+    - kind: choice
+      id: store
+      label: Where the order store lives
+      options:
+        - id: instance-store
+          label: Amazon EC2 instance store
+        - id: ebs
+          label: Amazon EBS volume
+      initial: instance-store
+    - kind: int
+      id: snapshotEvery
+      label: Hours between snapshots (0 for none)
+      min: 0
+      max: 8
+      step: 1
+      initial: 0
+      unit: hours
+  thresholds:
+    - { goal: g1, metric: stopLost, max: 0 }
+    - { goal: g2, metric: zoneLost, max: 160 }
+    - { goal: g3, metric: cost, max: 40 }
+goals:
+  - id: g1
+    label: No order is lost when the instance stops
+    hint: Ask whether the disk sits on the instance's own host, since a stopped instance usually comes back on another host without that disk.
+  - id: g2
+    label: At most 160 orders are lost with the zone
+    hint: Everything in the failed zone goes with it, so ask which copy of the orders is kept outside the zone and how many hours of orders it misses.
+  - id: g3
+    label: Snapshots cost at most 40 lab credits
+    hint: Only the first backup copies everything and each later one stores just the changes, yet every extra one still adds to the bill.
+solution:
+  - { t: set, param: store, value: ebs }
+  - { t: set, param: snapshotEvery, value: 6 }
+wrongPaths:
+  - mistake: Schedules snapshots but keeps the orders on the instance store, which a stop erases and no snapshot covers
+    failsGoal: g1
+    actions:
+      - { t: set, param: snapshotEvery, value: 6 }
+  - mistake: Trusts the Amazon EBS volume's copies inside its own zone and takes no snapshots
+    failsGoal: g2
+    actions:
+      - { t: set, param: store, value: ebs }
+  - mistake: Takes one snapshot a shift, every 8 hours, leaving more hours of orders outside any copy than the zone loss limit allows
+    failsGoal: g2
+    actions:
+      - { t: set, param: store, value: ebs }
+      - { t: set, param: snapshotEvery, value: 8 }
+  - mistake: Takes a snapshot every hour, paying for far more backups than the zone loss limit needs
+    failsGoal: g3
+    actions:
+      - { t: set, param: store, value: ebs }
+      - { t: set, param: snapshotEvery, value: 1 }
+debrief:
+  lines:
+    - The stop erased the instance store, because that disk sits on the host the instance usually leaves, and no snapshot can protect it.
+    - The Amazon EBS volume kept every order through the stop, since it lives apart from the host.
+    - The volume lives in one Availability Zone and went with it, so only the orders since the last snapshot were lost, as snapshots sit in Amazon S3 across several zones.
+    - Each snapshot after the full first one stores only the changes for 1 lab credit, so a shorter gap trades a bigger bill for fewer orders at risk.
+  questions: [q-x8b8tj, q-bqhwe9, q-n4kd9s]
