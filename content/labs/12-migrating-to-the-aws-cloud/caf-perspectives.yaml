@@ -1,0 +1,200 @@
+id: lab-m12-caf-perspectives
+module: 12
+title: CAF perspectives
+engine: sort
+tier: stretch
+status: live
+rev: 1
+concepts:
+  - aws-cloud-adoption-framework
+  - aws-caf-business-perspective
+  - aws-caf-people-perspective
+  - aws-caf-governance-perspective
+  - aws-caf-platform-perspective
+  - aws-caf-security-perspective
+  - aws-caf-operations-perspective
+notes:
+  - m12/aws-cloud-adoption-framework
+minutes: 6
+brief: >-
+  The cafe chain is planning its move to AWS, and the owner wants every migration task and role to have a clear home before work starts.
+  Sort each card under the AWS CAF perspective that owns it.
+spec:
+  buckets:
+    - id: business
+      label: Business
+      detail: A business capability
+    - id: people
+      label: People
+      detail: A business capability
+    - id: governance
+      label: Governance
+      detail: A business capability
+    - id: platform
+      label: Platform
+      detail: A technical capability
+    - id: security
+      label: Security
+      detail: A technical capability
+    - id: operations
+      label: Operations
+      detail: A technical capability
+  cards:
+    - id: rank-projects
+      text: Making the case for the move and ranking which cloud project the chain funds first
+      bucket: business
+      goal: g1
+    - id: analyst-goals
+      text: The business analyst lining up the cloud goals with the owner's sales targets
+      bucket: business
+      also: [governance]
+      goal: g1
+    - id: portfolio-risk
+      text: The program manager steering the migration portfolio toward more value and less risk
+      bucket: governance
+      goal: g1
+    - id: measure-spend
+      text: The CIO measuring what the cloud investments return and updating the processes that oversee them
+      bucket: governance
+      goal: g1
+    - id: skills-gaps
+      text: Reviewing which baristas and back-office staff lack cloud skills and setting training priorities
+      bucket: people
+      goal: g2
+    - id: hr-change
+      text: The HR lead guiding the whole chain through new team structures and roles
+      bucket: people
+      goal: g2
+    - id: target-design
+      text: The cloud architect drawing the detailed target design for the moved order system
+      bucket: platform
+      goal: g3
+    - id: build-patterns
+      text: Choosing patterns for new cloud apps and for moving the back-room servers
+      bucket: platform
+      goal: g3
+    - id: card-controls
+      text: Choosing and putting in place the controls that guard customer card data
+      bucket: security
+      goal: g3
+    - id: audit-trail
+      text: The CISO's analysts needing visibility and an audit trail across every cafe account
+      bucket: security
+      goal: g3
+    - id: routines
+      text: The IT support manager setting the daily to yearly routines that keep the order app running
+      bucket: operations
+      goal: g4
+    - id: agreed-recovery
+      text: Running and recovering the loyalty app at the level agreed with the owner, with the procedures to match
+      bucket: operations
+      goal: g4
+goals:
+  - id: g1
+    label: The case for the move and oversight of its value sit in Business and Governance
+    hint: Ask whether the task argues for the move and ties spending to results, or oversees the investment for value and risk.
+  - id: g2
+    label: Staff skills and organizational change sit under People
+    hint: Ask whether the task is about the staff themselves, their structures, roles and skills, and the change they live through.
+  - id: g3
+    label: Design and protection tasks sit under Platform and Security
+    hint: Ask whether the task shapes what gets built and moved, or decides how it is controlled, seen and audited.
+  - id: g4
+    label: Keeping workloads running and recovering sits under Operations
+    hint: Ask whether the task keeps a workload running day to day and year to year, at the level the owner agreed.
+solution:
+  - { t: place, card: rank-projects, bucket: business }
+  - { t: place, card: analyst-goals, bucket: business }
+  - { t: place, card: portfolio-risk, bucket: governance }
+  - { t: place, card: measure-spend, bucket: governance }
+  - { t: place, card: skills-gaps, bucket: people }
+  - { t: place, card: hr-change, bucket: people }
+  - { t: place, card: target-design, bucket: platform }
+  - { t: place, card: build-patterns, bucket: platform }
+  - { t: place, card: card-controls, bucket: security }
+  - { t: place, card: audit-trail, bucket: security }
+  - { t: place, card: routines, bucket: operations }
+  - { t: place, card: agreed-recovery, bucket: operations }
+wrongPaths:
+  - mistake: Files measuring cloud investments under Business, as if every money question were a business case
+    failsGoal: g1
+    actions:
+      - { t: place, card: rank-projects, bucket: business }
+      - { t: place, card: analyst-goals, bucket: business }
+      - { t: place, card: portfolio-risk, bucket: governance }
+      - { t: place, card: measure-spend, bucket: business }
+      - { t: place, card: skills-gaps, bucket: people }
+      - { t: place, card: hr-change, bucket: people }
+      - { t: place, card: target-design, bucket: platform }
+      - { t: place, card: build-patterns, bucket: platform }
+      - { t: place, card: card-controls, bucket: security }
+      - { t: place, card: audit-trail, bucket: security }
+      - { t: place, card: routines, bucket: operations }
+      - { t: place, card: agreed-recovery, bucket: operations }
+  - mistake: Files the staff skills review under Governance, since Governance also updates skills
+    failsGoal: g2
+    actions:
+      - { t: place, card: rank-projects, bucket: business }
+      - { t: place, card: analyst-goals, bucket: business }
+      - { t: place, card: portfolio-risk, bucket: governance }
+      - { t: place, card: measure-spend, bucket: governance }
+      - { t: place, card: skills-gaps, bucket: governance }
+      - { t: place, card: hr-change, bucket: people }
+      - { t: place, card: target-design, bucket: platform }
+      - { t: place, card: build-patterns, bucket: platform }
+      - { t: place, card: card-controls, bucket: security }
+      - { t: place, card: audit-trail, bucket: security }
+      - { t: place, card: routines, bucket: operations }
+      - { t: place, card: agreed-recovery, bucket: operations }
+  - mistake: Treats choosing security controls as Governance, because both deal with risk
+    failsGoal: g3
+    actions:
+      - { t: place, card: rank-projects, bucket: business }
+      - { t: place, card: analyst-goals, bucket: business }
+      - { t: place, card: portfolio-risk, bucket: governance }
+      - { t: place, card: measure-spend, bucket: governance }
+      - { t: place, card: skills-gaps, bucket: people }
+      - { t: place, card: hr-change, bucket: people }
+      - { t: place, card: target-design, bucket: platform }
+      - { t: place, card: build-patterns, bucket: platform }
+      - { t: place, card: card-controls, bucket: governance }
+      - { t: place, card: audit-trail, bucket: security }
+      - { t: place, card: routines, bucket: operations }
+      - { t: place, card: agreed-recovery, bucket: operations }
+  - mistake: Hands the target design to Operations, thinking whoever runs the app also designs it
+    failsGoal: g3
+    actions:
+      - { t: place, card: rank-projects, bucket: business }
+      - { t: place, card: analyst-goals, bucket: business }
+      - { t: place, card: portfolio-risk, bucket: governance }
+      - { t: place, card: measure-spend, bucket: governance }
+      - { t: place, card: skills-gaps, bucket: people }
+      - { t: place, card: hr-change, bucket: people }
+      - { t: place, card: target-design, bucket: operations }
+      - { t: place, card: build-patterns, bucket: platform }
+      - { t: place, card: card-controls, bucket: security }
+      - { t: place, card: audit-trail, bucket: security }
+      - { t: place, card: routines, bucket: operations }
+      - { t: place, card: agreed-recovery, bucket: operations }
+  - mistake: Puts the agreed recovery level under Business, because the owner sets it
+    failsGoal: g4
+    actions:
+      - { t: place, card: rank-projects, bucket: business }
+      - { t: place, card: analyst-goals, bucket: business }
+      - { t: place, card: portfolio-risk, bucket: governance }
+      - { t: place, card: measure-spend, bucket: governance }
+      - { t: place, card: skills-gaps, bucket: people }
+      - { t: place, card: hr-change, bucket: people }
+      - { t: place, card: target-design, bucket: platform }
+      - { t: place, card: build-patterns, bucket: platform }
+      - { t: place, card: card-controls, bucket: security }
+      - { t: place, card: audit-trail, bucket: security }
+      - { t: place, card: routines, bucket: operations }
+      - { t: place, card: agreed-recovery, bucket: business }
+debrief:
+  lines:
+    - Business, People and Governance are the business capabilities of AWS CAF, and Platform, Security and Operations are the technical ones.
+    - Business ties IT spending to the cafe's results and builds the case, while Governance measures the cloud investments for more value and less risk.
+    - People owns change management across the whole chain, reviewing roles and skill gaps to set training priorities.
+    - "The technical perspectives split the work: Platform shapes what gets built and moved, Security chooses the controls and keeps it all visible and auditable, and Operations runs and recovers it at the level agreed with the owner."
+  questions: [q-2bja5g, q-08jmpm, q-d52jr6]

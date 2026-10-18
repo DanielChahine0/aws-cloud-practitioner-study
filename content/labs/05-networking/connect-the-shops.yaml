@@ -1,0 +1,236 @@
+id: lab-m05-connect-the-shops
+module: 5
+title: Connect the shops
+engine: sort
+tier: stretch
+status: live
+rev: 1
+concepts:
+  - aws-client-vpn
+  - aws-site-to-site-vpn
+  - vpn
+  - aws-direct-connect
+  - direct-connect-failover
+  - aws-transit-gateway
+  - aws-privatelink
+  - internet-gateway
+  - nat-gateway
+notes:
+  - m05/more-ways-to-connect-to-the-aws-cloud
+  - m05/organizing-aws-cloud-resources
+  - m05/global-architectures
+minutes: 7
+brief: >-
+  The cafe chain is wiring its shops, its roastery, its home-working staff and a bean supplier into its AWS network, and every link has a different need.
+  Sort each need under the connection that fits it best.
+spec:
+  buckets:
+    - id: client-vpn
+      label: AWS Client VPN
+    - id: site-to-site-vpn
+      label: AWS Site-to-Site VPN
+    - id: direct-connect
+      label: AWS Direct Connect
+    - id: privatelink
+      label: AWS PrivateLink
+    - id: transit-gateway
+      label: AWS Transit Gateway
+    - id: internet-gateway
+      label: Internet gateway
+    - id: nat-gateway
+      label: NAT gateway
+  cards:
+    - id: home-barista-laptop
+      text: A barista working from home opens the stock app on a laptop
+      bucket: client-vpn
+      goal: g1
+    - id: bought-chain-staff
+      text: Staff of a newly bought cafe chain, on their own laptops in many towns, who need secure access this week
+      bucket: client-vpn
+      goal: g1
+    - id: shop-office-routers
+      text: Each shop's back-office router, which needs an encrypted link to the cafe VPC
+      bucket: site-to-site-vpn
+      goal: g1
+    - id: harbour-nightly-file
+      text: The harbour shop network's nightly sales file, a modest transfer into the cafe VPC
+      bucket: site-to-site-vpn
+      goal: g1
+    - id: roastery-bulk-loads
+      text: The roastery's huge daily loads of roast-sensor data, which need steady bandwidth on a private path
+      bucket: direct-connect
+      goal: g2
+    - id: training-video
+      text: Live training video from the head office data center into the cafe VPC, needing steady bandwidth and no internet hop
+      bucket: direct-connect
+      goal: g2
+    - id: standby-tunnel
+      text: A backup path for the roastery's traffic over its existing internet link, for when its dedicated cable is cut
+      bucket: site-to-site-vpn
+      goal: g2
+    - id: shop-vpcs-hub
+      text: Every shop's VPC and the head office network, joined through one central point instead of link by link
+      bucket: transit-gateway
+      goal: g3
+    - id: europe-hub-peering
+      text: The European shops' networks, which must reach the home Region's shop networks through one Region-to-Region link
+      bucket: transit-gateway
+      goal: g3
+    - id: supplier-ordering
+      text: The bean supplier's ordering service alone, reached from the cafe VPC with no public address or internet path
+      bucket: privatelink
+      goal: g3
+    - id: payroll-only
+      text: Only the payroll service in the head office's other VPC, with nothing else in that VPC reachable
+      bucket: privatelink
+      goal: g3
+    - id: public-menu-site
+      text: Customers on the internet loading the menu site in the cafe VPC
+      bucket: internet-gateway
+      goal: g4
+    - id: order-page-replies
+      text: Replies from the online order page in a public subnet going back out to customers' browsers
+      bucket: internet-gateway
+      goal: g4
+    - id: private-db-patches
+      text: Order database servers with no public address that must fetch software patches but never accept calls from outside
+      bucket: nat-gateway
+      goal: g4
+goals:
+  - id: g1
+    label: People and shop sites each have their own VPN link
+    hint: Ask whether the link is for a person on a device or for a whole site's network, and whether a dedicated line is really needed.
+  - id: g2
+    label: Heavy steady traffic rides a dedicated line with a standby
+    hint: Ask whether the traffic is heavy enough to need its own private line, and what carries it while that cable is down.
+  - id: g3
+    label: The hub and the private service links are told apart
+    hint: Ask whether the cafe joins whole networks at one central point, or opens private access to exactly the services it picks.
+  - id: g4
+    label: Public traffic and private outbound calls use the right gateway
+    hint: Ask whether outsiders must be able to start a connection, or only the cafe's own servers call out.
+solution:
+  - { t: place, card: home-barista-laptop, bucket: client-vpn }
+  - { t: place, card: bought-chain-staff, bucket: client-vpn }
+  - { t: place, card: shop-office-routers, bucket: site-to-site-vpn }
+  - { t: place, card: harbour-nightly-file, bucket: site-to-site-vpn }
+  - { t: place, card: roastery-bulk-loads, bucket: direct-connect }
+  - { t: place, card: training-video, bucket: direct-connect }
+  - { t: place, card: standby-tunnel, bucket: site-to-site-vpn }
+  - { t: place, card: shop-vpcs-hub, bucket: transit-gateway }
+  - { t: place, card: europe-hub-peering, bucket: transit-gateway }
+  - { t: place, card: supplier-ordering, bucket: privatelink }
+  - { t: place, card: payroll-only, bucket: privatelink }
+  - { t: place, card: public-menu-site, bucket: internet-gateway }
+  - { t: place, card: order-page-replies, bucket: internet-gateway }
+  - { t: place, card: private-db-patches, bucket: nat-gateway }
+wrongPaths:
+  - mistake: Gives a home-working barista a site link, as if one laptop were a branch office
+    failsGoal: g1
+    actions:
+      - { t: place, card: home-barista-laptop, bucket: site-to-site-vpn }
+      - { t: place, card: bought-chain-staff, bucket: client-vpn }
+      - { t: place, card: shop-office-routers, bucket: site-to-site-vpn }
+      - { t: place, card: harbour-nightly-file, bucket: site-to-site-vpn }
+      - { t: place, card: roastery-bulk-loads, bucket: direct-connect }
+      - { t: place, card: training-video, bucket: direct-connect }
+      - { t: place, card: standby-tunnel, bucket: site-to-site-vpn }
+      - { t: place, card: shop-vpcs-hub, bucket: transit-gateway }
+      - { t: place, card: europe-hub-peering, bucket: transit-gateway }
+      - { t: place, card: supplier-ordering, bucket: privatelink }
+      - { t: place, card: payroll-only, bucket: privatelink }
+      - { t: place, card: public-menu-site, bucket: internet-gateway }
+      - { t: place, card: order-page-replies, bucket: internet-gateway }
+      - { t: place, card: private-db-patches, bucket: nat-gateway }
+  - mistake: Buys a dedicated line for a small nightly file that a plain site link carries fine
+    failsGoal: g1
+    actions:
+      - { t: place, card: home-barista-laptop, bucket: client-vpn }
+      - { t: place, card: bought-chain-staff, bucket: client-vpn }
+      - { t: place, card: shop-office-routers, bucket: site-to-site-vpn }
+      - { t: place, card: harbour-nightly-file, bucket: direct-connect }
+      - { t: place, card: roastery-bulk-loads, bucket: direct-connect }
+      - { t: place, card: training-video, bucket: direct-connect }
+      - { t: place, card: standby-tunnel, bucket: site-to-site-vpn }
+      - { t: place, card: shop-vpcs-hub, bucket: transit-gateway }
+      - { t: place, card: europe-hub-peering, bucket: transit-gateway }
+      - { t: place, card: supplier-ordering, bucket: privatelink }
+      - { t: place, card: payroll-only, bucket: privatelink }
+      - { t: place, card: public-menu-site, bucket: internet-gateway }
+      - { t: place, card: order-page-replies, bucket: internet-gateway }
+      - { t: place, card: private-db-patches, bucket: nat-gateway }
+  - mistake: Sends the roastery's huge steady loads over a VPN that shares the internet link
+    failsGoal: g2
+    actions:
+      - { t: place, card: home-barista-laptop, bucket: client-vpn }
+      - { t: place, card: bought-chain-staff, bucket: client-vpn }
+      - { t: place, card: shop-office-routers, bucket: site-to-site-vpn }
+      - { t: place, card: harbour-nightly-file, bucket: site-to-site-vpn }
+      - { t: place, card: roastery-bulk-loads, bucket: site-to-site-vpn }
+      - { t: place, card: training-video, bucket: direct-connect }
+      - { t: place, card: standby-tunnel, bucket: site-to-site-vpn }
+      - { t: place, card: shop-vpcs-hub, bucket: transit-gateway }
+      - { t: place, card: europe-hub-peering, bucket: transit-gateway }
+      - { t: place, card: supplier-ordering, bucket: privatelink }
+      - { t: place, card: payroll-only, bucket: privatelink }
+      - { t: place, card: public-menu-site, bucket: internet-gateway }
+      - { t: place, card: order-page-replies, bucket: internet-gateway }
+      - { t: place, card: private-db-patches, bucket: nat-gateway }
+  - mistake: Thinks PrivateLink is the hub that joins every shop network together
+    failsGoal: g3
+    actions:
+      - { t: place, card: home-barista-laptop, bucket: client-vpn }
+      - { t: place, card: bought-chain-staff, bucket: client-vpn }
+      - { t: place, card: shop-office-routers, bucket: site-to-site-vpn }
+      - { t: place, card: harbour-nightly-file, bucket: site-to-site-vpn }
+      - { t: place, card: roastery-bulk-loads, bucket: direct-connect }
+      - { t: place, card: training-video, bucket: direct-connect }
+      - { t: place, card: standby-tunnel, bucket: site-to-site-vpn }
+      - { t: place, card: shop-vpcs-hub, bucket: privatelink }
+      - { t: place, card: europe-hub-peering, bucket: transit-gateway }
+      - { t: place, card: supplier-ordering, bucket: privatelink }
+      - { t: place, card: payroll-only, bucket: privatelink }
+      - { t: place, card: public-menu-site, bucket: internet-gateway }
+      - { t: place, card: order-page-replies, bucket: internet-gateway }
+      - { t: place, card: private-db-patches, bucket: nat-gateway }
+  - mistake: Uses a hub that joins whole networks when the cafe wants one supplier service only
+    failsGoal: g3
+    actions:
+      - { t: place, card: home-barista-laptop, bucket: client-vpn }
+      - { t: place, card: bought-chain-staff, bucket: client-vpn }
+      - { t: place, card: shop-office-routers, bucket: site-to-site-vpn }
+      - { t: place, card: harbour-nightly-file, bucket: site-to-site-vpn }
+      - { t: place, card: roastery-bulk-loads, bucket: direct-connect }
+      - { t: place, card: training-video, bucket: direct-connect }
+      - { t: place, card: standby-tunnel, bucket: site-to-site-vpn }
+      - { t: place, card: shop-vpcs-hub, bucket: transit-gateway }
+      - { t: place, card: europe-hub-peering, bucket: transit-gateway }
+      - { t: place, card: supplier-ordering, bucket: transit-gateway }
+      - { t: place, card: payroll-only, bucket: privatelink }
+      - { t: place, card: public-menu-site, bucket: internet-gateway }
+      - { t: place, card: order-page-replies, bucket: internet-gateway }
+      - { t: place, card: private-db-patches, bucket: nat-gateway }
+  - mistake: Gives private database servers the internet gateway, which lets outsiders call them too
+    failsGoal: g4
+    actions:
+      - { t: place, card: home-barista-laptop, bucket: client-vpn }
+      - { t: place, card: bought-chain-staff, bucket: client-vpn }
+      - { t: place, card: shop-office-routers, bucket: site-to-site-vpn }
+      - { t: place, card: harbour-nightly-file, bucket: site-to-site-vpn }
+      - { t: place, card: roastery-bulk-loads, bucket: direct-connect }
+      - { t: place, card: training-video, bucket: direct-connect }
+      - { t: place, card: standby-tunnel, bucket: site-to-site-vpn }
+      - { t: place, card: shop-vpcs-hub, bucket: transit-gateway }
+      - { t: place, card: europe-hub-peering, bucket: transit-gateway }
+      - { t: place, card: supplier-ordering, bucket: privatelink }
+      - { t: place, card: payroll-only, bucket: privatelink }
+      - { t: place, card: public-menu-site, bucket: internet-gateway }
+      - { t: place, card: order-page-replies, bucket: internet-gateway }
+      - { t: place, card: private-db-patches, bucket: internet-gateway }
+debrief:
+  lines:
+    - Client VPN links people on their own devices, while Site-to-Site VPN links a whole office or shop network to the VPC.
+    - Direct Connect is a dedicated private line worth choosing only when heavy traffic needs the bandwidth, and a VPN tunnel can stand by if its cable is cut.
+    - Transit Gateway joins many networks at one hub, while PrivateLink opens private access to exactly the services the cafe chooses.
+    - An internet gateway carries traffic both ways between the VPC and the internet, while a NAT gateway lets private servers call out but not be called.
+  questions: [q-akkdy7, q-071q34, q-9a2p4s]
