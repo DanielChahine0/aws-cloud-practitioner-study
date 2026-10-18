@@ -1,0 +1,122 @@
+id: lab-m04-survive-an-az-outage
+module: 4
+title: Survive an AZ outage
+engine: place
+tier: core
+status: live
+rev: 1
+concepts:
+  - availability-zones
+  - multi-az-deployment
+  - high-availability
+  - fault-tolerance
+  - elastic-load-balancing
+  - multi-region-architecture
+notes:
+  - m01/introduction-to-aws-global-infrastructure
+  - m04/diving-deeper-into-aws-global-infrastructure
+  - m02/directing-traffic-with-elastic-load-balancing
+  - m02/scaling-amazon-ec2
+minutes: 8
+brief: >-
+  The owner wants the cafe's online ordering, order data included, kept in the Roastmere Region and running through an outage in any one of its three zones, for the fewest lab credits.
+  Place each piece so at least two web servers stay behind the load balancer whichever zone fails, and the order data outlives any one zone.
+  In this lab, two standard web servers carry the lunch rush (a lab value), each server and data piece runs in one zone, and the slot across all zones stays up when one fails.
+spec:
+  containers:
+    - { id: roastmere, label: Roastmere Region, kind: region }
+    - { id: region-wide, label: Across all Roastmere zones, kind: edge, parent: roastmere, detail: Spans every zone of the Region }
+    - { id: zone-a, label: Roastmere Zone A, kind: az, parent: roastmere }
+    - { id: zone-b, label: Roastmere Zone B, kind: az, parent: roastmere }
+    - { id: zone-c, label: Roastmere Zone C, kind: az, parent: roastmere }
+    - { id: brewford, label: Brewford Region, kind: region }
+    - { id: brewford-zone, label: Brewford Zone A, kind: az, parent: brewford }
+    - { id: not-used, label: Not used, kind: bench }
+  pieces:
+    - { id: load-balancer, label: Load balancer, detail: 'Elastic Load Balancing, a Regional service' }
+    - { id: web-one, label: Order web server 1 }
+    - { id: web-two, label: Order web server 2 }
+    - { id: web-three, label: Order web server 3 }
+    - { id: orders-primary, label: Order data primary }
+    - { id: orders-copy, label: Order data copy, detail: A replicated copy of the primary }
+    - { id: far-web, label: Brewford web server, detail: An order web server for the Brewford Region }
+    - { id: big-server, label: Large order web server, detail: 'More CPU and memory than a standard server, at more lab credits (a lab value)' }
+  failures: [zone-a, zone-b, zone-c]
+  constraints:
+    - { kind: in, goal: g1, pieces: [load-balancer], within: [region-wide] }
+    - { kind: in, goal: g1, pieces: [web-one, web-two, web-three, big-server], within: [zone-a, zone-b, zone-c, not-used] }
+    - { kind: survive, goal: g1, pieces: [web-one, web-two, web-three, big-server], min: 2 }
+    - { kind: in, goal: g2, pieces: [orders-primary, orders-copy], within: [zone-a, zone-b, zone-c] }
+    - { kind: survive, goal: g2, pieces: [orders-primary, orders-copy], min: 1 }
+    - { kind: in, goal: g3, pieces: [far-web, big-server], within: [not-used] }
+goals:
+  - id: g1
+    label: At least two web servers take orders whichever zone fails
+    hint: Ask how many web servers still answer when any one zone goes dark, and what happens to every order if the one piece they all pass through goes dark with a zone.
+  - id: g2
+    label: The order data outlives any one zone
+    hint: Ask whether the copy would go dark together with the primary if the primary's zone lost its power or network.
+  - id: g3
+    label: The plan runs no more web servers, and no bigger ones, than the rush needs
+    hint: Recall that capacity bought past the need only wastes money, and ask what the plan still needs once standard servers cover any lost zone.
+solution:
+  - { t: place, piece: load-balancer, slot: region-wide }
+  - { t: place, piece: web-one, slot: zone-a }
+  - { t: place, piece: web-two, slot: zone-b }
+  - { t: place, piece: web-three, slot: zone-c }
+  - { t: place, piece: orders-primary, slot: zone-a }
+  - { t: place, piece: orders-copy, slot: zone-b }
+  - { t: place, piece: far-web, slot: not-used }
+  - { t: place, piece: big-server, slot: not-used }
+wrongPaths:
+  - mistake: Puts every web server in one zone, as if three servers were enough on their own
+    failsGoal: g1
+    actions:
+      - { t: place, piece: load-balancer, slot: region-wide }
+      - { t: place, piece: web-one, slot: zone-a }
+      - { t: place, piece: web-two, slot: zone-a }
+      - { t: place, piece: web-three, slot: zone-a }
+      - { t: place, piece: orders-primary, slot: zone-a }
+      - { t: place, piece: orders-copy, slot: zone-b }
+      - { t: place, piece: far-web, slot: not-used }
+      - { t: place, piece: big-server, slot: not-used }
+  - mistake: Keeps the order data copy in the primary's zone, so one zone outage takes both
+    failsGoal: g2
+    actions:
+      - { t: place, piece: load-balancer, slot: region-wide }
+      - { t: place, piece: web-one, slot: zone-a }
+      - { t: place, piece: web-two, slot: zone-b }
+      - { t: place, piece: web-three, slot: zone-c }
+      - { t: place, piece: orders-primary, slot: zone-a }
+      - { t: place, piece: orders-copy, slot: zone-a }
+      - { t: place, piece: far-web, slot: not-used }
+      - { t: place, piece: big-server, slot: not-used }
+  - mistake: Runs the large order web server for extra headroom though the three spread servers already cover the rush
+    failsGoal: g3
+    actions:
+      - { t: place, piece: load-balancer, slot: region-wide }
+      - { t: place, piece: web-one, slot: zone-a }
+      - { t: place, piece: web-two, slot: zone-b }
+      - { t: place, piece: web-three, slot: zone-c }
+      - { t: place, piece: orders-primary, slot: zone-a }
+      - { t: place, piece: orders-copy, slot: zone-b }
+      - { t: place, piece: far-web, slot: not-used }
+      - { t: place, piece: big-server, slot: zone-c }
+  - mistake: Runs the large order web server in place of a standard one, as if more power per server made the plan safer
+    failsGoal: g3
+    actions:
+      - { t: place, piece: load-balancer, slot: region-wide }
+      - { t: place, piece: web-one, slot: zone-a }
+      - { t: place, piece: web-two, slot: zone-b }
+      - { t: place, piece: web-three, slot: not-used }
+      - { t: place, piece: orders-primary, slot: zone-a }
+      - { t: place, piece: orders-copy, slot: zone-b }
+      - { t: place, piece: far-web, slot: not-used }
+      - { t: place, piece: big-server, slot: zone-c }
+debrief:
+  lines:
+    - One web server in each of three zones leaves two behind the Regional load balancer when any one zone fails.
+    - A copy of the order data in a second zone takes over when the primary's zone has an outage, which is what a Multi-AZ design buys.
+    - A larger web server buys no protection that the spread standard servers lack, only more lab credits.
+    - Running in a second Region with failover guards against a whole Region going down, a step beyond what this cafe asked for.
+  questions: [q-1xez0y, q-vqx7fw, q-6ygz70]
