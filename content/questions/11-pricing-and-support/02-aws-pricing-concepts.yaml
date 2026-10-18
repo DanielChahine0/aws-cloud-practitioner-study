@@ -353,3 +353,38 @@ questions:
       fullHash: e545483ad8df
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-qrnvrp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-pricing
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe keeps years of old sales reports in Amazon S3 and opens them only a few times a year.
+      Which S3 pricing feature lets the cafe pay less to keep files it opens so seldom?
+    options:
+      - id: a
+        text: Lower unit prices as total storage grows
+        why: Volume pricing rewards keeping more in S3 overall, not opening these reports less often.
+      - id: b
+        text: Free transfer of uploads from the internet
+        why: Free inbound transfer only lowers the cost of uploads, not the cost of keeping seldom opened reports.
+      - id: c
+        text: Storage tiers priced by access pattern
+        correct: true
+        why: S3 tiers let the cost follow how often data is read, so seldom opened reports can sit in a cheaper tier.
+      - id: d
+        text: Outbound transfer pooled across services
+        why: Pooling outbound transfer affects data leaving AWS, not the price of keeping reports that stay put.
+    evidence:
+      - S3 tiers let cost follow how often and how fast you read data.
+    takeaway: Data that is read rarely costs less in an S3 tier chosen for how often and how fast it is read.
+    history: []
+    verified:
+      keyHash: 304d57415a4c
+      fullHash: a6194aa57be4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18

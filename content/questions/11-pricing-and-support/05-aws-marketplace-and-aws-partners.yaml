@@ -402,36 +402,39 @@ questions:
       on: 2026-10-09
   - id: q-xv6dsf
     version: 1
-    status: draft
+    status: live
     type: single
     pool: practice
     concept: aws-partner-training-and-certification
     note: m11/aws-marketplace-and-aws-partners
     task: "4.3"
-    level: 1
+    level: 2
     stem: >-
-      What range of content does the partner-centered training in the AWS Partner Network span?
+      A cafe's IT consultancy joined the AWS Partner Network and wants partner-centered content for its staff, from preparing for an AWS exam down to a single service.
+      Which wider AWS offering holds that content?
     options:
       - id: a
-        text: From discovery and trial to purchase and deployment
-        why: This range describes the AWS Marketplace buying lifecycle, not partner training content.
+        text: AWS re:Post
+        why: re:Post is the community question-and-answer site, not the home of partner-centered exam and service content.
       - id: b
-        text: From certification down to one service or goal
+        text: AWS Training and Certification
         correct: true
-        why: Partner-centered training sits in AWS Training and Certification and runs from full certification to one service or goal.
+        why: Partner-centered content sits within the wider AWS Training and Certification, from a full exam path to one service.
       - id: c
-        text: From building through marketing to selling with AWS
-        why: Building, marketing and selling with AWS is what partner funding supports, not the training content.
+        text: AWS Prescriptive Guidance
+        why: Prescriptive Guidance offers expert guides and patterns for migration and modernization work, not partner exam paths.
       - id: d
-        text: From online webinars to in-person workshops
-        why: Webinars and workshops are partner events for networking and updates, a separate benefit.
+        text: AWS Knowledge Center
+        why: The Knowledge Center holds FAQ articles and videos on re:Post, not partner-centered content within an exam program.
     evidence:
       - Partner-centered content within the wider AWS Training and Certification, from certification to one service or goal.
     takeaway: Partner-centered training sits in AWS Training and Certification and spans full certification down to one service or goal.
     history: []
-    review:
-      attempts: 4
-      lastFailure: "solve-closed: picked c, the key is b"
+    verified:
+      keyHash: 38a0c1a46464
+      fullHash: 01b2b617c947
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-10-18
   - id: q-21gvex
     version: 1
     status: live
