@@ -1,0 +1,184 @@
+id: lab-m07-who-manages-what
+module: 7
+title: Who manages what?
+engine: sort
+tier: stretch
+status: live
+rev: 1
+concepts:
+  - unmanaged-services
+  - managed-services
+  - fully-managed-services
+  - ec2-hosted-vs-managed-databases
+  - amazon-ec2
+  - amazon-rds
+  - amazon-dynamodb
+  - aws-lambda
+  - serverless-computing
+notes:
+  - m03/introduction-to-serverless-computing
+  - m07/introduction-to-databases
+  - m07/relational-database-services
+  - m07/nosql-database-services
+  - m03/aws-lambda
+minutes: 6
+brief: >-
+  The cafe runs its loyalty list, order history, customer favorites and tip totals on four different AWS services, and the new manager keeps asking who looks after what.
+  Sort each service, and each split of the work between the cafe and AWS, under the service model it belongs to.
+spec:
+  buckets:
+    - id: unmanaged
+      label: Unmanaged
+    - id: managed
+      label: Managed
+    - id: fully-managed
+      label: Fully managed
+  cards:
+    - id: loyalty-on-ec2
+      text: The loyalty list kept in a MySQL database on one of the cafe's Amazon EC2 instances
+      bucket: unmanaged
+      goal: g1
+    - id: physical-layer
+      text: AWS runs the physical servers underneath, while the operating system, network setup and apps are the cafe's
+      bucket: unmanaged
+      goal: g1
+    - id: engine-patches
+      text: Installing the database engine and patching it and its operating system falls to the cafe
+      bucket: unmanaged
+      goal: g1
+    - id: own-backups
+      text: Backing up the database and scaling it as the data grows falls to the cafe
+      bucket: unmanaged
+      goal: g1
+    - id: orders-on-rds
+      text: The order history kept in an Amazon RDS database
+      bucket: managed
+      also: [fully-managed]
+      goal: g2
+    - id: config-and-queries
+      text: AWS patches and backs up the database, but the cafe still sets its configuration and tunes slow queries
+      bucket: managed
+      goal: g2
+    - id: favorites-on-dynamodb
+      text: Customer favorites kept as items in an Amazon DynamoDB table
+      bucket: fully-managed
+      goal: g3
+    - id: tips-on-lambda
+      text: An AWS Lambda function that totals the day's tips each time the till closes
+      bucket: fully-managed
+      goal: g3
+    - id: item-design
+      text: AWS provisions, scales and tunes the database, leaving the cafe only its data design and who may access it
+      bucket: fully-managed
+      goal: g3
+    - id: code-only
+      text: There is no server for the cafe to provision or patch, so it writes the code and keeps that code secure
+      bucket: fully-managed
+      goal: g3
+goals:
+  - id: g1
+    label: The self-hosted database and its upkeep sit under Unmanaged
+    hint: Ask who installs, patches, backs up and scales the database, and remember that AWS still runs the hardware under any instance.
+  - id: g2
+    label: The relational service and its leftover setup sit under Managed
+    hint: Ask which upkeep AWS has taken off the cafe's hands, and which setup and tuning work the cafe still does itself.
+  - id: g3
+    label: The serverless services and the cafe's small share sit under Fully managed
+    hint: Ask whether any server is left for the cafe to see at all, or only its own data design, access and code.
+solution:
+  - { t: place, card: loyalty-on-ec2, bucket: unmanaged }
+  - { t: place, card: physical-layer, bucket: unmanaged }
+  - { t: place, card: engine-patches, bucket: unmanaged }
+  - { t: place, card: own-backups, bucket: unmanaged }
+  - { t: place, card: orders-on-rds, bucket: managed }
+  - { t: place, card: config-and-queries, bucket: managed }
+  - { t: place, card: favorites-on-dynamodb, bucket: fully-managed }
+  - { t: place, card: tips-on-lambda, bucket: fully-managed }
+  - { t: place, card: item-design, bucket: fully-managed }
+  - { t: place, card: code-only, bucket: fully-managed }
+wrongPaths:
+  - mistake: Thinks a database on an EC2 instance is managed because EC2 is itself an AWS service
+    failsGoal: g1
+    actions:
+      - { t: place, card: loyalty-on-ec2, bucket: managed }
+      - { t: place, card: physical-layer, bucket: unmanaged }
+      - { t: place, card: engine-patches, bucket: unmanaged }
+      - { t: place, card: own-backups, bucket: unmanaged }
+      - { t: place, card: orders-on-rds, bucket: managed }
+      - { t: place, card: config-and-queries, bucket: managed }
+      - { t: place, card: favorites-on-dynamodb, bucket: fully-managed }
+      - { t: place, card: tips-on-lambda, bucket: fully-managed }
+      - { t: place, card: item-design, bucket: fully-managed }
+      - { t: place, card: code-only, bucket: fully-managed }
+  - mistake: Thinks the cafe still installs and patches the database engine on a managed database such as Amazon RDS
+    failsGoal: g1
+    actions:
+      - { t: place, card: loyalty-on-ec2, bucket: unmanaged }
+      - { t: place, card: physical-layer, bucket: unmanaged }
+      - { t: place, card: engine-patches, bucket: managed }
+      - { t: place, card: own-backups, bucket: unmanaged }
+      - { t: place, card: orders-on-rds, bucket: managed }
+      - { t: place, card: config-and-queries, bucket: managed }
+      - { t: place, card: favorites-on-dynamodb, bucket: fully-managed }
+      - { t: place, card: tips-on-lambda, bucket: fully-managed }
+      - { t: place, card: item-design, bucket: fully-managed }
+      - { t: place, card: code-only, bucket: fully-managed }
+  - mistake: Treats Amazon RDS as self-hosted because it runs familiar engines such as MySQL
+    failsGoal: g2
+    actions:
+      - { t: place, card: loyalty-on-ec2, bucket: unmanaged }
+      - { t: place, card: physical-layer, bucket: unmanaged }
+      - { t: place, card: engine-patches, bucket: unmanaged }
+      - { t: place, card: own-backups, bucket: unmanaged }
+      - { t: place, card: orders-on-rds, bucket: unmanaged }
+      - { t: place, card: config-and-queries, bucket: managed }
+      - { t: place, card: favorites-on-dynamodb, bucket: fully-managed }
+      - { t: place, card: tips-on-lambda, bucket: fully-managed }
+      - { t: place, card: item-design, bucket: fully-managed }
+      - { t: place, card: code-only, bucket: fully-managed }
+  - mistake: Calls the database fully managed once AWS patches and backs it up, missing the cafe's settings and query tuning
+    failsGoal: g2
+    actions:
+      - { t: place, card: loyalty-on-ec2, bucket: unmanaged }
+      - { t: place, card: physical-layer, bucket: unmanaged }
+      - { t: place, card: engine-patches, bucket: unmanaged }
+      - { t: place, card: own-backups, bucket: unmanaged }
+      - { t: place, card: orders-on-rds, bucket: managed }
+      - { t: place, card: config-and-queries, bucket: fully-managed }
+      - { t: place, card: favorites-on-dynamodb, bucket: fully-managed }
+      - { t: place, card: tips-on-lambda, bucket: fully-managed }
+      - { t: place, card: item-design, bucket: fully-managed }
+      - { t: place, card: code-only, bucket: fully-managed }
+  - mistake: Thinks the cafe still picks the servers under a Lambda function, as it picks an Amazon RDS instance class
+    failsGoal: g3
+    actions:
+      - { t: place, card: loyalty-on-ec2, bucket: unmanaged }
+      - { t: place, card: physical-layer, bucket: unmanaged }
+      - { t: place, card: engine-patches, bucket: unmanaged }
+      - { t: place, card: own-backups, bucket: unmanaged }
+      - { t: place, card: orders-on-rds, bucket: managed }
+      - { t: place, card: config-and-queries, bucket: managed }
+      - { t: place, card: favorites-on-dynamodb, bucket: fully-managed }
+      - { t: place, card: tips-on-lambda, bucket: managed }
+      - { t: place, card: item-design, bucket: fully-managed }
+      - { t: place, card: code-only, bucket: fully-managed }
+  - mistake: Lumps DynamoDB in with RDS, as if every AWS database left the instance class and query tuning to the cafe
+    failsGoal: g3
+    actions:
+      - { t: place, card: loyalty-on-ec2, bucket: unmanaged }
+      - { t: place, card: physical-layer, bucket: unmanaged }
+      - { t: place, card: engine-patches, bucket: unmanaged }
+      - { t: place, card: own-backups, bucket: unmanaged }
+      - { t: place, card: orders-on-rds, bucket: managed }
+      - { t: place, card: config-and-queries, bucket: managed }
+      - { t: place, card: favorites-on-dynamodb, bucket: managed }
+      - { t: place, card: tips-on-lambda, bucket: fully-managed }
+      - { t: place, card: item-design, bucket: fully-managed }
+      - { t: place, card: code-only, bucket: fully-managed }
+debrief:
+  lines:
+    - On Amazon EC2, AWS runs only the physical layer, so installing, patching, backing up and scaling the database are the cafe's jobs.
+    - Amazon RDS hands patching and backups to AWS, but the cafe still configures the database and tunes its queries.
+    - Amazon DynamoDB and AWS Lambda hide every server, leaving the cafe its data design, access and code.
+    - The more the cafe hands to AWS, the less it can tweak and the less it has to look after, so each workload gets the model that fits it.
+  questions: [q-rzd6s3, q-43kfy4, q-hbhw20]
