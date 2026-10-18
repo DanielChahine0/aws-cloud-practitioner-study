@@ -6,10 +6,20 @@ import { parseUpdateLine } from './update-line.ts';
 
 const LIST_MARKER = /^(?:[-*+]|\d+[.)])\s+/;
 const LINK = /\[([^\]]*)\]\([^)]*\)/g;
+const CODE = /`([^`]*)`/g;
 
-/** A line in its comparable form: trimmed, one list marker stripped, bold markers removed and links reduced to their text. */
+/**
+ * A line in its comparable form, the text the rendered note shows: trimmed, one list marker stripped, bold markers
+ * removed, and links and inline code reduced to their text.
+ */
 export function evidenceForm(line: string): string {
-  return line.trim().replace(LIST_MARKER, '').replaceAll('**', '').replace(LINK, '$1').trim();
+  return line
+    .trim()
+    .replace(LIST_MARKER, '')
+    .replaceAll('**', '')
+    .replace(LINK, '$1')
+    .replace(CODE, '$1')
+    .trim();
 }
 
 const TABLE_ROW = /^\|.*\|$/;

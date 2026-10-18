@@ -30,6 +30,12 @@ describe('evidenceForm', () => {
     expect(evidenceForm('  2. Ovens **warm** up.  ')).toBe('Ovens warm up.');
     expect(evidenceForm('Plain line.')).toBe('Plain line.');
   });
+
+  it('reduces inline code to its text, as the rendered note shows it', () => {
+    expect(evidenceForm('- Demo: `aws ec2 run-instances` starts one.')).toBe(
+      'Demo: aws ec2 run-instances starts one.',
+    );
+  });
 });
 
 describe('noteLines', () => {
