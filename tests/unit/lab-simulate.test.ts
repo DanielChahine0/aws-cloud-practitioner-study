@@ -427,13 +427,13 @@ describe('the Simulate texts R7 checks', () => {
   });
 });
 
-/** Four made-up bakery jobs: two all year, one for a month, one that may stop; one needs its own hardware. */
+/** Four made-up bakery jobs: one every hour all year, three part-time, one that may stop; two need their own hardware. */
 const BAKES: PurchaseConstants = {
   workloads: [
     {
       id: 'oven',
       label: 'Oven controller',
-      hours: 100,
+      hours: 730,
       months: 12,
       interruptible: false,
       needs: 'dedicated-instance',
@@ -464,14 +464,14 @@ const everyWorkload = (option: string): SimValues =>
 
 describe('the purchase model', () => {
   it.each([
-    ['on-demand', 1200, 20, 100, 1420, 0, 2],
-    ['reserved', 600, 60, 600, 1860, 0, 2],
-    ['savings-plan', 720, 72, 720, 2232, 0, 2],
-    ['spot', 240, 4, 20, 284, 3, 2],
-    ['dedicated-instance', 1800, 30, 150, 2130, 0, 1],
-    ['dedicated-host', 2400, 40, 200, 2840, 0, 0],
+    ['on-demand', 8760, 20, 100, 8980, 0, 2],
+    ['reserved', 4380, 4380, 4380, 17520, 0, 2],
+    ['savings-plan', 5256, 5256, 5256, 21024, 0, 2],
+    ['spot', 1752, 4, 20, 1796, 3, 2],
+    ['dedicated-instance', 13140, 30, 150, 13470, 0, 1],
+    ['dedicated-host', 17520, 40, 200, 17960, 0, 0],
   ] as const)(
-    'prices every workload on %s, where a commitment bills the whole term',
+    'prices every workload on %s, where a commitment bills every hour of its term',
     (option, oven, batch, month, total, interrupted, unmet) => {
       expect(runModel('purchase', BAKES, everyWorkload(option))).toEqual({
         metrics: {
@@ -581,13 +581,15 @@ describe('the purchase and data-loss shapes', () => {
     expect(metricInfo('data-loss', 'cost.oven', SHOP)).toBeNull();
   });
 
-  it('rejects a repeated workload id, a missing rate and a stop or zone loss out of order', () => {
+  it('rejects a repeated workload id, a month past 730 hours, a missing rate and a stop or zone loss out of order', () => {
     const issues = (model: 'purchase' | 'data-loss', c: unknown) =>
       SIM_CONSTANTS[model].safeParse(c).error?.issues.map((i) => `${i.path.join('.')}: ${i.message}`) ?? [];
     expect(SIM_CONSTANTS.purchase.safeParse(BAKES).success).toBe(true);
     expect(issues('purchase', { ...BAKES, workloads: [BAKES.workloads[0], BAKES.workloads[0]] })).toEqual([
       "workloads.1.id: duplicate id 'oven'",
     ]);
+    const [oven, ...rest] = BAKES.workloads;
+    expect(issues('purchase', { ...BAKES, workloads: [{ ...oven, hours: 731 }, ...rest] })).toHaveLength(1);
     const { spot: _, ...noSpot } = BAKES.rates;
     expect(issues('purchase', { ...BAKES, rates: noSpot })).toHaveLength(1);
     expect(SIM_CONSTANTS['data-loss'].safeParse(SHOP).success).toBe(true);

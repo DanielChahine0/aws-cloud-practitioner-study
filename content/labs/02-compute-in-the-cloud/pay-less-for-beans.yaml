@@ -1,0 +1,157 @@
+id: lab-m02-pay-less-for-beans
+module: 2
+title: Pay less for beans
+engine: simulate
+tier: stretch
+status: live
+rev: 1
+concepts:
+  - on-demand-instances
+  - reserved-instances
+  - savings-plans
+  - spot-instances
+  - dedicated-instances
+  - dedicated-hosts
+notes:
+  - m02/amazon-ec2-pricing
+minutes: 8
+brief: >-
+  Pick one way to pay for each of the cafe's four Amazon EC2 workloads so the year costs at most 20,000 lab credits and roast planning at most 100 lab credits, nothing that must keep running is reclaimable, and the loyalty software keeps its per-physical-server license.
+  Hours, months and rates are lab values; a Reserved Instance or Savings Plan bills every hour of its 12-month term, used or not.
+  In this lab both cover only shared hardware, though a real Savings Plan applies whatever the tenancy.
+spec:
+  model: purchase
+  constants:
+    workloads:
+      - id: till
+        label: Till and order server
+        hours: 730
+        months: 12
+        interruptible: false
+        needs: none
+      - id: roast-plan
+        label: Weekend roast planning
+        hours: 16
+        months: 12
+        interruptible: true
+        needs: none
+      - id: promo
+        label: Holiday promo site
+        hours: 730
+        months: 1
+        interruptible: false
+        needs: none
+      - id: loyalty
+        label: Loyalty software
+        hours: 730
+        months: 12
+        interruptible: false
+        needs: dedicated-host
+    rates:
+      on-demand: 1
+      reserved: 0.6
+      savings-plan: 0.65
+      spot: 0.3
+      dedicated-instance: 1.2
+      dedicated-host: 1.5
+    termMonths: 12
+  params:
+    - kind: choice
+      id: till
+      label: 'Till and order server: 730 h a month all year, never pauses'
+      options:
+        - { id: on-demand, label: On-Demand Instances (1 lab credit/h) }
+        - { id: reserved, label: Reserved Instances (0.6 lab credits/h) }
+        - { id: savings-plan, label: Savings Plans (0.65 lab credits/h) }
+        - { id: spot, label: Spot Instances (0.3 lab credits/h) }
+        - { id: dedicated-instance, label: Dedicated Instances (1.2 lab credits/h) }
+        - { id: dedicated-host, label: Dedicated Hosts (1.5 lab credits/h) }
+      initial: on-demand
+    - kind: choice
+      id: roast-plan
+      label: 'Roast planning: 16 h a month all year, can pause and resume'
+      options:
+        - { id: on-demand, label: On-Demand Instances (1 lab credit/h) }
+        - { id: reserved, label: Reserved Instances (0.6 lab credits/h) }
+        - { id: savings-plan, label: Savings Plans (0.65 lab credits/h) }
+        - { id: spot, label: Spot Instances (0.3 lab credits/h) }
+        - { id: dedicated-instance, label: Dedicated Instances (1.2 lab credits/h) }
+        - { id: dedicated-host, label: Dedicated Hosts (1.5 lab credits/h) }
+      initial: on-demand
+    - kind: choice
+      id: promo
+      label: 'Holiday promo site: 730 h in one month only, never pauses'
+      options:
+        - { id: on-demand, label: On-Demand Instances (1 lab credit/h) }
+        - { id: reserved, label: Reserved Instances (0.6 lab credits/h) }
+        - { id: savings-plan, label: Savings Plans (0.65 lab credits/h) }
+        - { id: spot, label: Spot Instances (0.3 lab credits/h) }
+        - { id: dedicated-instance, label: Dedicated Instances (1.2 lab credits/h) }
+        - { id: dedicated-host, label: Dedicated Hosts (1.5 lab credits/h) }
+      initial: on-demand
+    - kind: choice
+      id: loyalty
+      label: 'Loyalty software: 730 h a month all year, never pauses'
+      options:
+        - { id: on-demand, label: On-Demand Instances (1 lab credit/h) }
+        - { id: reserved, label: Reserved Instances (0.6 lab credits/h) }
+        - { id: savings-plan, label: Savings Plans (0.65 lab credits/h) }
+        - { id: spot, label: Spot Instances (0.3 lab credits/h) }
+        - { id: dedicated-instance, label: Dedicated Instances (1.2 lab credits/h) }
+        - { id: dedicated-host, label: Dedicated Hosts (1.5 lab credits/h) }
+      initial: on-demand
+  thresholds:
+    - { goal: g1, metric: total, max: 20000 }
+    - { goal: g1, metric: cost.roast-plan, max: 100 }
+    - { goal: g2, metric: interrupted, max: 0 }
+    - { goal: g3, metric: unmet, max: 0 }
+goals:
+  - id: g1
+    label: The year stays within 20,000 lab credits, roast planning within 100 lab credits
+    hint: A term commitment lowers the rate but bills every hour of the term, so it pays off only for work that runs all the time, and work that can pause and resume can use the deepest discount.
+  - id: g2
+    label: Nothing that must keep running sits on capacity AWS may reclaim
+    hint: AWS can take back its cheapest spare capacity after a short warning, so only a job that can save its progress and resume later belongs there.
+  - id: g3
+    label: The loyalty software runs where its physical-server license allows
+    hint: Ask whether the license needs only hardware kept for the cafe's account, or control over the very physical server the instances are placed on.
+solution:
+  - { t: set, param: till, value: reserved }
+  - { t: set, param: roast-plan, value: spot }
+  - { t: set, param: loyalty, value: dedicated-host }
+wrongPaths:
+  - mistake: Puts the till on Spot for the lowest rate, though it must keep taking orders
+    failsGoal: g2
+    actions:
+      - { t: set, param: till, value: spot }
+      - { t: set, param: roast-plan, value: spot }
+      - { t: set, param: loyalty, value: dedicated-host }
+  - mistake: Reserves the one-month promo site, as if a commitment were always cheaper
+    failsGoal: g1
+    actions:
+      - { t: set, param: till, value: reserved }
+      - { t: set, param: roast-plan, value: spot }
+      - { t: set, param: loyalty, value: dedicated-host }
+      - { t: set, param: promo, value: reserved }
+  - mistake: Thinks a Dedicated Instance meets a license bound to one physical server
+    failsGoal: g3
+    actions:
+      - { t: set, param: till, value: reserved }
+      - { t: set, param: roast-plan, value: spot }
+      - { t: set, param: loyalty, value: dedicated-instance }
+  - mistake: Leaves the all-year till on On-Demand, paying full rate for steady use
+    failsGoal: g1
+    actions:
+      - { t: set, param: roast-plan, value: spot }
+      - { t: set, param: loyalty, value: dedicated-host }
+  - mistake: Keeps the roast planning on On-Demand, though it can pause and resume later
+    failsGoal: g1
+    actions:
+      - { t: set, param: till, value: reserved }
+      - { t: set, param: loyalty, value: dedicated-host }
+debrief:
+  lines:
+    - A Reserved Instance or a Savings Plan bills every hour of its term, used or not, so it saves only on steady all-year work, and a one-month or part-time job pays less On-Demand.
+    - Spot Instances are the cheapest way to run a job that can save its progress and resume, and the wrong place for one that must not stop.
+    - Only a Dedicated Host gives control over the physical server a physical-server license needs, while a Dedicated Instance isolates hardware but AWS picks the server.
+  questions: [q-kc0z3b, q-7hgys4, q-y78t9a]

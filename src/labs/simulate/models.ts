@@ -129,7 +129,7 @@ export type PurchaseOption = (typeof PURCHASE_OPTIONS)[number];
 export interface PurchaseWorkload {
   id: string;
   label: string;
-  /** Hours it runs each month it runs. */
+  /** Hours it runs each month it runs, at most `HOURS_PER_MONTH`. */
   hours: number;
   /** Months of the year it runs. */
   months: number;
@@ -141,9 +141,14 @@ export interface PurchaseConstants {
   workloads: PurchaseWorkload[];
   /** Lab credits per hour for each option. */
   rates: Readonly<Record<PurchaseOption, number>>;
-  /** The months a Reserved Instance or a Savings Plan bills, whether the workload runs or not. */
+  /**
+   * The months a Reserved Instance or a Savings Plan commits to: it bills every hour of them,
+   * `HOURS_PER_MONTH` a month, whether the workload runs or not.
+   */
   termMonths: number;
 }
+/** The hours in a month, as AWS bills them; a commitment bills each one of its term. */
+export const HOURS_PER_MONTH = 730;
 export interface DataLossConstants {
   hours: number;
   /** Orders written each hour. */
@@ -486,7 +491,8 @@ function purchase(c: PurchaseConstants, v: SimValues): SimResult {
     const o: PurchaseOption = (PURCHASE_OPTIONS as readonly string[]).includes(picked)
       ? (picked as PurchaseOption)
       : 'on-demand';
-    const cost = round2(c.rates[o] * w.hours * (COMMITMENTS.has(o) ? c.termMonths : w.months));
+    const hours = COMMITMENTS.has(o) ? HOURS_PER_MONTH * c.termMonths : w.hours * w.months;
+    const cost = round2(c.rates[o] * hours);
     metrics[`cost.${w.id}`] = cost;
     total += cost;
     if (o === 'spot' && !w.interruptible) interrupted += 1;

@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { metricInfo, modelParams, type PurchaseOption, type SimModel } from '../src/labs/simulate/models.ts';
+import {
+  HOURS_PER_MONTH,
+  metricInfo,
+  modelParams,
+  type PurchaseOption,
+  type SimModel,
+} from '../src/labs/simulate/models.ts';
 import { ConceptId, ModuleNumber, NoteId, Slug } from './common.ts';
 import { LAB_ENGINES, LAB_ID, type LabEngineId } from './ids.ts';
 import { InvestigateAction, InvestigateSpec } from './lab-investigate.ts';
@@ -411,7 +417,7 @@ export const SIM_CONSTANTS: { readonly [M in SimModel]: z.ZodType } = {
         .array(
           z.strictObject({
             ...Named,
-            hours: z.int().min(1).max(744),
+            hours: z.int().min(1).max(HOURS_PER_MONTH),
             months: z.int().min(1).max(12),
             interruptible: z.boolean(),
             needs: z.enum(['none', 'dedicated-instance', 'dedicated-host']),

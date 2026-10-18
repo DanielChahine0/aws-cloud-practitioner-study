@@ -167,7 +167,7 @@ const PURCHASE: PurchaseConstants = {
     {
       id: 'till',
       label: 'Till and order server',
-      hours: 720,
+      hours: 730,
       months: 12,
       interruptible: false,
       needs: 'none',
@@ -180,11 +180,11 @@ const PURCHASE: PurchaseConstants = {
       interruptible: true,
       needs: 'none',
     },
-    { id: 'promo', label: 'Holiday promo site', hours: 720, months: 1, interruptible: false, needs: 'none' },
+    { id: 'promo', label: 'Holiday promo site', hours: 730, months: 1, interruptible: false, needs: 'none' },
     {
       id: 'loyalty',
       label: 'Loyalty software',
-      hours: 720,
+      hours: 730,
       months: 12,
       interruptible: false,
       needs: 'dedicated-host',
@@ -423,11 +423,11 @@ const SIM_LABS: SimLab[] = [
     ],
     solution: BEANS_FIX,
     outcome: {
-      'cost.till': 5184,
+      'cost.till': 5256,
       'cost.roast-plan': 57.6,
-      'cost.promo': 720,
-      'cost.loyalty': 12960,
-      total: 18921.6,
+      'cost.promo': 730,
+      'cost.loyalty': 13140,
+      total: 19183.6,
       interrupted: 0,
       unmet: 0,
     },
@@ -435,9 +435,9 @@ const SIM_LABS: SimLab[] = [
       {
         actions: [set('till', 'spot'), set('roast-plan', 'spot'), set('loyalty', 'dedicated-host')],
         failsGoal: 'g2',
-        outcome: { interrupted: 1, total: 16329.6 },
+        outcome: { interrupted: 1, total: 16555.6 },
       },
-      { actions: [...BEANS_FIX, set('promo', 'reserved')], failsGoal: 'g1', outcome: { total: 23385.6 } },
+      { actions: [...BEANS_FIX, set('promo', 'reserved')], failsGoal: 'g1', outcome: { total: 23709.6 } },
       {
         actions: [set('till', 'reserved'), set('roast-plan', 'spot'), set('loyalty', 'dedicated-instance')],
         failsGoal: 'g3',
@@ -446,12 +446,12 @@ const SIM_LABS: SimLab[] = [
       {
         actions: [set('roast-plan', 'spot'), set('loyalty', 'dedicated-host')],
         failsGoal: 'g1',
-        outcome: { total: 22377.6 },
+        outcome: { total: 22687.6 },
       },
       {
         actions: [set('till', 'reserved'), set('loyalty', 'dedicated-host')],
         failsGoal: 'g1',
-        outcome: { 'cost.roast-plan': 192, total: 19056 },
+        outcome: { 'cost.roast-plan': 192, total: 19318 },
       },
     ],
   },
@@ -638,13 +638,13 @@ describe('the orderings the lessons rest on', () => {
     Object.fromEntries(PURCHASE_OPTIONS.map((o) => [o, beans({ [workload]: o })[`cost.${workload}`]]));
 
   it('Pay less for beans: a commitment beats On-Demand for the all-year till, and On-Demand beats one for the one-month promo', () => {
-    expect(each('till')).toMatchObject({ reserved: 5184, 'savings-plan': 5616, 'on-demand': 8640 });
-    expect(each('promo')).toMatchObject({ 'on-demand': 720, reserved: 5184 });
+    expect(each('till')).toMatchObject({ reserved: 5256, 'savings-plan': 5694, 'on-demand': 8760 });
+    expect(each('promo')).toMatchObject({ 'on-demand': 730, reserved: 5256, 'savings-plan': 5694 });
   });
 
   it('Pay less for beans: Spot is the cheapest option for the roast batch, and only Spot stays under 100', () => {
     const roast = each('roast-plan');
-    expect(roast).toMatchObject({ spot: 57.6, reserved: 115.2, 'savings-plan': 124.8, 'on-demand': 192 });
+    expect(roast).toMatchObject({ spot: 57.6, 'on-demand': 192, reserved: 5256, 'savings-plan': 5694 });
     expect(PURCHASE_OPTIONS.filter((o) => (roast[o] ?? 0) <= 100)).toEqual(['spot']);
   });
 
