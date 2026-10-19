@@ -846,6 +846,14 @@ debrief: { lines: [ ... ], questions: [q-4m2x8c, q-9tq3vd] }
 | Trace | Step a request through security groups, network ACLs, IAM and SCP rules, or edit rules until the test cases pass | Stateful security groups, stateless ordered network ACLs, and explicit deny over allow over implicit deny, with SCPs intersecting IAM |
 | Investigate | Filter fictional CloudTrail events, metrics or findings and answer | Exact answers (who, what, when, which pillar) |
 
+- NOTE: the Place, Trace and Investigate zod schemas live in their own files, `schemas/lab-place.ts`, `schemas/lab-trace.ts` and `schemas/lab-investigate.ts`, which `schemas/lab.ts` gathers into `LAB_SCHEMAS` (Phase 5).
+- NOTE: Place containers form a tree by `parent`, a container that no other container names as its parent is a slot, the slots are numbered depth-first in spec order with the optional bench last, and the board is complete when no piece is left in the tray (Phase 5).
+- NOTE: Place checks four constraint kinds, `in`, `survive`, `public` and `private`, where `private` needs each piece in a subnet, or in a slot below one, and not reachable, and `survive` holds under every failure the spec lists, while the failure toggle only previews one failure on the board (Phase 5).
+- NOTE: a Place goal's message counts checks, `<k> of <n> checks pass`, not pieces right, because a `survive` constraint judges a set of pieces and gives no verdict per piece; the `survive` hint still names the failed zone (Phase 5).
+- NOTE: Trace edits rules by switching fixed candidate rules on and off; a `network` lab has one security group and one network ACL around one instance, and a `policy` lab has identity policies and an organization tree in which every node carries an SCP (Phase 5).
+- NOTE: Trace matches actions ignoring letter case and resources exactly, with `*` as the only wildcard, models no management account, and shows each test case's result live while the goals wait for Check (Phase 5).
+- NOTE: Investigate answers are option ids chosen from a list per question and checked exactly, filters match exact column values and never change a check, an optional listing shows a document such as a template, and every time is written in UTC (Phase 5).
+
 ### 5.2 Per-module labs
 
 | M | Core labs | Stretch labs |
@@ -867,6 +875,7 @@ debrief: { lines: [ ... ], questions: [q-4m2x8c, q-9tq3vd] }
 Core labs by engine: Sort 11, Simulate 6, Place 3, Configure 2, Trace 2 and Investigate 2.
 
 - NOTE: Simulate runs six fixed model functions (`scaling`, `compute-cost`, `s3-lifecycle`, `cache`, `bill`, `transfer`), and each Simulate lab's constants, parameters, solution, thresholds and wrong paths come from a fixed table, so lab writers write only the text (Phase 4).
+- NOTE: Simulate now runs eight fixed models, with `purchase` for Pay less for beans and `data-loss` for Lose the instance, whose numbers are fixed in the same table as the other six (Phase 5).
 - NOTE: every Simulate lab and every lab whose text names lab credits carries `credits`, which shows `Prices are in lab credits, a made-up unit, not AWS prices.` (Phase 4).
 
 ### 5.3 Real-AWS missions (optional, free plan)
@@ -1048,6 +1057,8 @@ CCP                                      [M3 live 1h]   18 due   9d   Business S
 
 - NOTE: each decision also has its own route `#/project/NN`, which the module page links to and Escape leaves for `#/project` (Phase 6).
 
+- NOTE: the module page marks each stretch lab `Stretch` before its minutes, since Hands On and Lab Complete count core labs only, and a stretch lab pays XP like a core lab (Phase 5).
+
 ### 7.4 Keyboard
 
 Single-letter keys work only inside their context, ignore case, and are off while a text field has focus.
@@ -1222,6 +1233,7 @@ Playwright with `page.clock` covers multi-day journeys, axe runs on every screen
   7. **Missions:** the Mission 0 gate blocks the other missions, a live mission past `maxLiveHours` turns Next into `Clean up`, and the kept Mission 1 never does.
   8. **Exam date:** the question appears once after the Module 1 lessons, and with the clock at `examDate - 7` and readiness below Ready the go/no-go line shows.
   9. **Keyboard only:** a run through the runner, the exam shell and a Place lab.
+     - NOTE: the keyboard-only runs cover a Place lab as well as a Sort, a Configure, a Simulate, a Trace and an Investigate lab (Phase 5).
 - **Accessibility and visuals:**
   - axe-core runs on every screen with zero violations allowed.
   - `toHaveScreenshot` captures Home, the runner, the exam shell, results, a module page, a lesson with an update line and a lab at 375 and 1280 px.
@@ -1247,6 +1259,8 @@ Nothing but fixes ships between the go/no-go check on Saturday, November 7 and t
 | 6 Capstone and missions | after the exam, all of it; capstone decisions unlocked earlier wait until then | ADR editor, reference reveal, export; Missions 2-8 and the one-time `Already done` action for Missions 0 and 1; accessibility and visual baselines; 3 questions per concept | The complete product | All e2e green; R10 at 3 per concept |
 
 - If the booked date moves, the targets move with it, and the cut order stays the same.
+
+- NOTE: Phase 5 was built before the exam by Dani's decision of 2026-10-10 and shipped as `0.8.0` on `2026-10-18` with all 26 core labs, after its 9 stretch labs had merged as content; nothing but fixes ships after Saturday, November 7 (Phase 5).
 
 ### 10.2 Study calendar for the November 14 exam
 

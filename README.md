@@ -97,7 +97,17 @@ Unfinished work stays in the browser, so a lab resumes after a reload, and labs 
 Configure labs walk a short wizard of choices, and Check judges the finished setup against the goals.
 Simulate labs set a few parameters, and `Enter` (or `Run and check`) runs the lab's fixed model before it checks the goals, so the goals always read the parameters on screen.
 Every price in a lab is in lab credits, a made-up unit, never an AWS price.
-The six Simulate labs take their constants, solutions and wrong paths from fixed tables, and `tests/content/sim-labs.test.ts` pins the outcome each lesson rests on.
+The eight Simulate labs take their constants, solutions and wrong paths from fixed tables, and `tests/content/sim-labs.test.ts` pins the outcome each lesson rests on.
+
+## Place, Trace and Investigate labs
+
+Place labs nest pieces into containers, such as a Region with its zones, a VPC with its subnets, or the stages of a pipeline, and a bench holds the pieces you decide not to run.
+Tap a piece, then its slot; by keyboard, `Space` picks a piece up or places the held piece in the focused slot, `1` to `9` and `0` place it in the first ten slots, `Backspace` sends it back to the tray and `Escape` puts it down.
+The failure buttons preview one failure on the board, while Check tests the board under every failure the lab lists.
+Trace labs switch fixed security group, network ACL, IAM and SCP rules on and off with checkboxes, and each test case shows its result live and opens to step its request through every hop.
+Investigate labs filter made-up records, such as CloudTrail events or review findings, or read a listing such as a template, and each question takes one answer from its list.
+In every lab, `Enter` checks the goals, `h` shows a hint and `r` asks before it resets the board.
+Stretch labs carry a `Stretch` mark on the module page and pay XP like core labs, but only core labs count toward Hands On and Lab Complete.
 
 ## Incidents and lightning
 

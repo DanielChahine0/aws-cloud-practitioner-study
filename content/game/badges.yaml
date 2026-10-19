@@ -20,7 +20,6 @@
 - id: lab-complete
   name: Lab Complete
   rule: All 26 core labs completed.
-  arrives: labs
 - id: leave-no-trace
   name: Leave No Trace
   rule: 3 missions closed, each with cleanup and the next-day usage check confirmed (the kept Mission 1 does not count).

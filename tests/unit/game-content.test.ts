@@ -12,10 +12,12 @@ import { parseUpdateLine } from '../../scripts/content/lib/update-line.ts';
 import { parseHash } from '../../src/app/router.ts';
 import {
   ARCHITECT,
+  CORE_LABS,
   CORE_LABS_PER_MODULE,
   HANDS_ON_MODULES,
   LEAVE_NO_TRACE,
 } from '../../src/engine/badges.ts';
+import { HEAVY_TIMEOUT_MS } from '../fixtures/timeouts.ts';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const ranksText = readFileSync(join(ROOT, 'content/game/ranks.yaml'), 'utf8');
@@ -85,9 +87,7 @@ describe('content/game/badges.yaml (spec 3.10)', () => {
   });
 
   it('marks the badges that wait for labs, missions and the capstone', () => {
-    expect(badges.filter((b) => b.arrives !== undefined).map((b) => [b.id, b.arrives])).toEqual([
-      ['lab-complete', 'labs'],
-    ]);
+    expect(badges.filter((b) => b.arrives !== undefined).map((b) => [b.id, b.arrives])).toEqual([]);
   });
 
   it('shows Leave No Trace and Architect as earnable exactly when the missions and the capstone ship', () => {
@@ -107,7 +107,9 @@ describe('content/game/badges.yaml (spec 3.10)', () => {
     );
   }, 30_000);
 
-  it('shows Hands On as earnable exactly when 5 modules ship both core labs', () => {
+  it('shows Hands On as earnable exactly when 5 modules ship both core labs', {
+    timeout: HEAVY_TIMEOUT_MS,
+  }, () => {
     const built = buildContent(loadContext(ROOT));
     const index = JSON.parse(built.files.get(built.indexFile) ?? 'null') as ContentIndex;
     const perModule = new Map<number, number>();
@@ -117,6 +119,24 @@ describe('content/game/badges.yaml (spec 3.10)', () => {
     const complete = [...perModule.values()].filter((n) => n >= CORE_LABS_PER_MODULE).length;
     const handsOn = badges.find((b) => b.id === 'hands-on');
     expect(handsOn?.arrives === undefined).toBe(complete >= HANDS_ON_MODULES);
+  });
+
+  it('shows Lab Complete as earnable exactly when 26 core labs are live', {
+    timeout: HEAVY_TIMEOUT_MS,
+  }, () => {
+    const built = buildContent(loadContext(ROOT));
+    const index = JSON.parse(built.files.get(built.indexFile) ?? 'null') as ContentIndex;
+    const core = index.labs.filter((lab) => lab.tier === 'core');
+    const labComplete = badges.find((b) => b.id === 'lab-complete');
+    expect(labComplete).toBeDefined();
+    expect(labComplete?.arrives === undefined).toBe(core.length >= CORE_LABS);
+    if (core.length >= CORE_LABS) {
+      const perModule = new Map<number, number>();
+      for (const lab of core) perModule.set(lab.module, (perModule.get(lab.module) ?? 0) + 1);
+      expect([...perModule.entries()].sort((a, b) => a[0] - b[0])).toEqual(
+        Array.from({ length: CORE_LABS / CORE_LABS_PER_MODULE }, (_, i) => [i + 1, CORE_LABS_PER_MODULE]),
+      );
+    }
   });
 
   it('ends every rule with a period', () => {
