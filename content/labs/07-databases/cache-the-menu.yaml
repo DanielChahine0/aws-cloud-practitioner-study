@@ -1,0 +1,101 @@
+id: lab-m07-cache-the-menu
+module: 7
+title: Cache the menu
+engine: simulate
+tier: core
+status: live
+rev: 1
+concepts:
+  - database-performance-bottlenecks
+  - caching-layer
+  - in-memory-caching
+  - amazon-elasticache
+notes:
+  - m07/in-memory-caching-services
+minutes: 6
+brief: >-
+  At lunch the cafe's app reads the same menu 900 times a second and writes 50 orders a second to one small Amazon RDS database.
+  Choose the database size and the cache so menu reads average at most 10 ms, the database keeps spare capacity and the month costs at most 200 lab credits.
+  Every figure in this lab is a lab value: a read takes 0.5 ms from the cache and 20 ms from the database, writes always reach the database, and a database slows sharply once its load passes its capacity.
+spec:
+  model: cache
+  constants:
+    reads: 900
+    writes: 50
+    dbs:
+      - id: small-db
+        label: Small database
+        capacity: 400
+        credits: 100
+      - id: large-db
+        label: Large database
+        capacity: 1200
+        credits: 400
+    caches:
+      - id: 'off'
+        label: No cache
+        hit: 0
+        credits: 0
+      - id: menu-cache
+        label: Menu cache
+        hit: 0.8
+        credits: 60
+    cacheMs: 0.5
+    dbMs: 20
+  params:
+    - kind: choice
+      id: db
+      label: Amazon RDS database size
+      options:
+        - id: small-db
+          label: Small, 400 requests/s, 100 lab credits
+        - id: large-db
+          label: Large, 1200 requests/s, 400 lab credits
+      initial: small-db
+    - kind: choice
+      id: cache
+      label: Amazon ElastiCache beside the database
+      options:
+        - id: 'off'
+          label: None
+        - id: menu-cache
+          label: Menu cache, 80% hits, 60 lab credits
+      initial: 'off'
+  thresholds:
+    - { goal: g1, metric: latency, max: 10 }
+    - { goal: g2, metric: spare, min: 0 }
+    - { goal: g3, metric: cost, max: 200 }
+goals:
+  - id: g1
+    label: Menu reads average 10 ms or less
+    hint: A bigger database still fetches every read from disk itself; only reads answered from memory before the database is asked come back much faster.
+  - id: g2
+    label: The database keeps spare capacity at lunch
+    hint: Database load is every read that reaches it plus every write, and a flood of repeated reads for the same menu need not reach the database at all.
+  - id: g3
+    label: The month costs at most 200 lab credits
+    hint: Every database and cache is billed each month, and once repeated reads are answered before the database, it no longer has to be sized for the whole lunch flood.
+solution:
+  - { t: set, param: cache, value: menu-cache }
+wrongPaths:
+  - mistake: Buys a bigger database instead of a cache, so every menu read still goes to the database
+    failsGoal: g1
+    actions:
+      - { t: set, param: db, value: large-db }
+  - mistake: Adds the cache but keeps the bigger database, paying for capacity the cache already freed
+    failsGoal: g3
+    actions:
+      - { t: set, param: db, value: large-db }
+      - { t: set, param: cache, value: menu-cache }
+  - mistake: Leaves the small database to answer every menu read with no cache beside it
+    failsGoal: g2
+    actions:
+      - { t: set, param: db, value: small-db }
+      - { t: set, param: cache, value: 'off' }
+debrief:
+  lines:
+    - With the cache answering most menu reads, only the misses and the writes reached the small database, so it stopped bottlenecking under the lunch flood.
+    - A read from the in-memory cache returns far faster than one from the database's disk, so latency fell, while a bigger database alone still served every read from disk.
+    - Because the cache took the repeated reads, the small database was enough, and the small database with the cache cost less than the large database by itself.
+    - The cache complements the database rather than replacing it, since a miss is read from the database and cached for the next request, and the database keeps the lasting data.
+  questions: [q-cse1r3, q-yph3ws, q-1q7mfh]
