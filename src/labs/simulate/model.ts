@@ -1,6 +1,13 @@
 import type { SimulateAction, SimulateSpec } from '../../../schemas/lab.ts';
 import type { GoalResult, LabEngine } from '../contract.ts';
-import { fmt, metricInfo, runModel, type SimResult, type SimValue } from './models.ts';
+import {
+  type MetricInfo,
+  metricInfo,
+  metricText,
+  runModel,
+  type SimResult,
+  type SimValue,
+} from './models.ts';
 
 /** The parameter values on screen and the result of the last run, cleared by any change. */
 export interface SimulateState {
@@ -34,9 +41,7 @@ export function simulateGoals(spec: SimulateSpec): string[] {
   return [...new Set(spec.thresholds.map((t) => t.goal))];
 }
 
-interface Reading {
-  label: string;
-  unit: string;
+interface Reading extends MetricInfo {
   value: number;
   holds: boolean;
 }
@@ -48,8 +53,8 @@ function read(spec: SimulateSpec, result: SimResult, t: Threshold): Reading {
   return { ...info, value, holds };
 }
 
-function limitText(t: Threshold, unit: string): string {
-  return t.max !== undefined ? `max ${fmt(t.max, unit)}` : `min ${fmt(t.min ?? 0, unit)}`;
+function limitText(t: Threshold, info: MetricInfo): string {
+  return t.max !== undefined ? `max ${metricText(t.max, info)}` : `min ${metricText(t.min ?? 0, info)}`;
 }
 
 export const SIMULATE: LabEngine<SimulateSpec, SimulateState, SimulateAction> = {
@@ -78,7 +83,7 @@ export const SIMULATE: LabEngine<SimulateSpec, SimulateState, SimulateAction> = 
         goalId,
         pass: readings.every(({ r }) => r.holds),
         message: readings
-          .map(({ t, r }) => `${r.label}: ${fmt(r.value, r.unit)} (${limitText(t, r.unit)})`)
+          .map(({ t, r }) => `${r.label}: ${metricText(r.value, r)} (${limitText(t, r)})`)
           .join('; '),
       };
     });
@@ -91,8 +96,8 @@ export const SIMULATE: LabEngine<SimulateSpec, SimulateState, SimulateAction> = 
       const r = read(spec, result, t);
       if (r.holds) continue;
       return t.max !== undefined
-        ? `${r.label} is ${fmt(r.value, r.unit)}, over the ${fmt(t.max, r.unit)} limit.`
-        : `${r.label} is ${fmt(r.value, r.unit)}, under the ${fmt(t.min ?? 0, r.unit)} minimum.`;
+        ? `${r.label} is ${metricText(r.value, r)}, over the ${metricText(t.max, r)} limit.`
+        : `${r.label} is ${metricText(r.value, r)}, under the ${metricText(t.min ?? 0, r)} minimum.`;
     }
     return 'Every threshold of this goal holds.';
   },

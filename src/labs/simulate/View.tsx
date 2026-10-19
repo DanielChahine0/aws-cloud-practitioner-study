@@ -1,7 +1,7 @@
 import type { SimulateAction, SimulateSpec } from '../../../schemas/lab.ts';
 import { SIM_IDLE, SIM_RESULTS, simChartLabel, tickPoints } from '../../app/lab.ts';
 import type { SimulateState } from './model.ts';
-import { fmt, metricInfo, type SimSeries } from './models.ts';
+import { fmt, metricInfo, metricText, type SimSeries } from './models.ts';
 
 const W = 480;
 const H = 160;
@@ -204,7 +204,7 @@ export function SimulateView(props: {
                 return (
                   <tr key={metric}>
                     <th scope="row">{info.label}</th>
-                    <td>{fmt(value, info.unit)}</td>
+                    <td>{metricText(value, info)}</td>
                   </tr>
                 );
               })}
