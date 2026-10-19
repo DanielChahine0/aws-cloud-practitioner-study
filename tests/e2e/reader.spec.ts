@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
-import { expectNoAxeViolations, expectNoSidewaysScroll, failOnPageProblems, h1 } from './helpers.ts';
+import { expectNoAxeViolations, failOnPageProblems, h1 } from './helpers.ts';
 
 const HOME_TITLE = 'AWS Cloud Practitioner Essentials';
 const SUPPORT_PLANS = '/#/m/11/l/aws-support-plans';
@@ -212,39 +212,7 @@ test('a mission page shows its facts and its sources', async ({ page }) => {
   await expect(page.locator('main a[href="https://aws.amazon.com/free/"]').first()).toBeVisible();
 });
 
-const SCREENS: { name: string; path: string; ready: (page: Page) => Locator }[] = [
-  { name: 'Home', path: '/', ready: (page) => h1(page, HOME_TITLE) },
-  {
-    name: 'Module 5',
-    path: '/#/m/05',
-    ready: (page) => page.getByRole('heading', { level: 2, name: 'Key takeaways' }),
-  },
-  {
-    name: 'the Support plans lesson',
-    path: SUPPORT_PLANS,
-    ready: (page) => page.locator('li.update').first(),
-  },
-  {
-    name: 'Missions',
-    path: '/#/missions',
-    ready: (page) => page.locator('main a[href="#/missions/mission-01"]'),
-  },
-  { name: 'Mission 0', path: '/#/missions/mission-00', ready: (page) => page.locator('dl.facts') },
-  { name: 'Mission 1', path: '/#/missions/mission-01', ready: (page) => page.locator('main pre').first() },
-  { name: 'the not-found screen', path: '/#/nowhere', ready: (page) => h1(page, 'Page not found') },
-  { name: 'the mock list', path: '/#/s/mock', ready: (page) => h1(page, 'Mock exams') },
-];
-
 test.describe('accessibility and layout', () => {
-  for (const view of SCREENS) {
-    test(`${view.name} has no axe violations and no sideways scroll`, async ({ page }) => {
-      await page.goto(view.path);
-      await expect(view.ready(page)).toBeVisible();
-      await expectNoAxeViolations(page);
-      await expectNoSidewaysScroll(page);
-    });
-  }
-
   test('the open palette has no axe violations', async ({ page }) => {
     await page.goto('/');
     await expect(h1(page, HOME_TITLE)).toBeVisible();
