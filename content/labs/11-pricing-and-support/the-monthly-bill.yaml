@@ -1,0 +1,101 @@
+id: lab-m11-the-monthly-bill
+module: 11
+title: The monthly bill
+engine: simulate
+tier: core
+status: live
+rev: 1
+concepts:
+  - consolidated-billing
+  - aws-organizations
+  - pay-less-by-using-more
+  - save-when-you-commit
+  - savings-plans
+  - aws-budgets
+notes:
+  - m11/aws-pricing-concepts
+  - m11/aws-pricing-and-billing-services
+  - m10/aws-organizations
+  - m02/amazon-ec2-pricing
+minutes: 7
+brief: >-
+  The cafe and bakery accounts each run 720 compute hours, store 400 and 300 GB in Amazon S3 and send 300 and 200 GB out.
+  Stay within the 2,000 lab credit budget, save 500 and get the alert by day 23.
+  All figures are lab values: an hour is 1 lab credit, 0.7 with a Savings Plan, a GB stored 0.5 to 500 GB then 0.3, sent out 1 to 400 GB then 0.6; consolidated billing prices both accounts' summed GB on those tiers, spend is even over 30 days, and the alert fires when actual spend hits its threshold.
+spec:
+  model: bill
+  constants:
+    accounts:
+      - { id: cafe, label: Cafe account, hours: 720, s3Gb: 400, outGb: 300 }
+      - { id: bakery, label: Bakery account, hours: 720, s3Gb: 300, outGb: 200 }
+    hourRate: 1
+    commitRate: 0.7
+    s3Tiers:
+      - { upTo: 500, rate: 0.5 }
+      - { upTo: null, rate: 0.3 }
+    outTiers:
+      - { upTo: 400, rate: 1 }
+      - { upTo: null, rate: 0.6 }
+    budget: 2000
+  params:
+    - kind: int
+      id: commit
+      label: Compute hours under a Savings Plan
+      min: 0
+      max: 100
+      step: 10
+      initial: 0
+      unit: '%'
+    - kind: toggle
+      id: consolidated
+      label: Consolidated billing in AWS Organizations
+      initial: false
+    - kind: int
+      id: alert
+      label: AWS Budgets alert threshold
+      min: 50
+      max: 150
+      step: 10
+      initial: 100
+      unit: '% of budget'
+  thresholds:
+    - { goal: g1, metric: bill, max: 2000 }
+    - { goal: g2, metric: saved, min: 500 }
+    - { goal: g3, metric: alertDay, max: 23 }
+goals:
+  - id: g1
+    label: The month's bill stays within the 2,000 lab credit budget
+    hint: The compute hours are steady all month, and a commitment to steady usage earns a lower hourly rate than paying as you go.
+  - id: g2
+    label: The month costs at least 500 lab credits less than today's bill
+    hint: A lower hourly rate alone falls short; storage and outbound data get cheaper per GB as volume grows, and neither account reaches that volume on its own bill.
+  - id: g3
+    label: The budget alert reaches the owner by day 23
+    hint: AWS Budgets gives warnings near or past a limit, so a threshold the month's spend never reaches never warns at all.
+solution:
+  - { t: set, param: commit, value: 100 }
+  - { t: set, param: consolidated, value: true }
+  - { t: set, param: alert, value: 60 }
+wrongPaths:
+  - mistake: Commits every compute hour but keeps a separate bill for each account
+    failsGoal: g2
+    actions:
+      - { t: set, param: commit, value: 100 }
+      - { t: set, param: alert, value: 60 }
+  - mistake: Consolidates the bills but leaves every compute hour at the pay-as-you-go rate
+    failsGoal: g1
+    actions:
+      - { t: set, param: consolidated, value: true }
+      - { t: set, param: alert, value: 60 }
+  - mistake: Sets the budget alert at the full budget, so a month under budget never warns
+    failsGoal: g3
+    actions:
+      - { t: set, param: commit, value: 100 }
+      - { t: set, param: consolidated, value: true }
+debrief:
+  lines:
+    - Consolidated billing rolls child bills up into one bill where discounts apply; here both accounts' storage and outbound data count together, so more of it is billed at the cheaper tier.
+    - A Savings Plan trades a commitment to steady compute use for a rate below On-Demand, which matters most for hours that run all month.
+    - Committing lowers the price of each hour, while using more lowers the price of each GB, so the owner needed both to save 500 lab credits across the two accounts.
+    - Here the alert watches actual spend, so one set below the full budget warns while spend is still nearing the limit, and one at the full budget fires only once the whole budget is spent.
+  questions: [q-hhkszn, q-gn5az9, q-6ew4wn]

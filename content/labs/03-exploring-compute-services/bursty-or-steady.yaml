@@ -1,0 +1,78 @@
+id: lab-m03-bursty-or-steady
+module: 3
+title: Bursty or steady
+engine: simulate
+tier: core
+status: live
+rev: 1
+concepts:
+  - aws-lambda
+  - lambda-pricing
+notes:
+  - m03/aws-lambda
+  - m02/amazon-ec2-pricing
+minutes: 6
+brief: >-
+  The cafe's menu export runs one short burst a week and its order worker runs all month; run each on AWS Lambda or an always-on Amazon EC2 instance so the export costs at most 10 lab credits a month and the worker at most 100.
+  In this lab, Lambda charges 1 lab credit per million requests plus 0.0001 lab credits per GB-second, each second of run time times its GB of memory, and the instance costs a flat 50 lab credits a month, busy or idle.
+  Every figure here and in the settings is a lab value.
+spec:
+  model: compute-cost
+  constants:
+    workloads:
+      - id: menu-export
+        label: Weekly menu export
+        requests: 30000
+        ms: 800
+        mb: 512
+      - id: order-worker
+        label: Order queue worker
+        requests: 20000000
+        ms: 150
+        mb: 1024
+    perMillion: 1
+    perGbSecond: 0.0001
+    instanceMonth: 50
+  params:
+    - kind: choice
+      id: menu-export
+      label: 'Menu export: 30,000 requests a month, 800 ms, 512 MB'
+      options:
+        - { id: lambda, label: AWS Lambda function }
+        - { id: instance, label: Always-on Amazon EC2 instance }
+      initial: instance
+    - kind: choice
+      id: order-worker
+      label: 'Order worker: 20 million requests a month, 150 ms, 1,024 MB'
+      options:
+        - { id: lambda, label: AWS Lambda function }
+        - { id: instance, label: Always-on Amazon EC2 instance }
+      initial: lambda
+  thresholds:
+    - { goal: g1, metric: cost.menu-export, max: 10 }
+    - { goal: g2, metric: cost.order-worker, max: 100 }
+goals:
+  - id: g1
+    label: The weekly menu export costs at most 10 lab credits a month
+    hint: The export runs in one short burst a week and sits idle the rest of the month, so a flat monthly price pays mostly for hours when none of its code runs.
+  - id: g2
+    label: The order queue worker costs at most 100 lab credits a month
+    hint: The worker is never idle, so a charge for every request and every millisecond of run time keeps growing with the work until it passes a flat monthly price.
+solution:
+  - { t: set, param: menu-export, value: lambda }
+  - { t: set, param: order-worker, value: instance }
+wrongPaths:
+  - mistake: Moves the export to Lambda but leaves the never-idle worker there too, as if serverless were always cheaper
+    failsGoal: g2
+    actions:
+      - { t: set, param: menu-export, value: lambda }
+  - mistake: Moves the worker to the instance but keeps the weekly export there too, paying a whole month for a few bursts
+    failsGoal: g1
+    actions:
+      - { t: set, param: order-worker, value: instance }
+debrief:
+  lines:
+    - The weekly export is idle almost all month, and Lambda charges only while its code runs, so the export costs about 1.23 lab credits on Lambda against the instance's flat 50.
+    - The order worker is never idle, so Lambda's charges for its requests and run time reach 320 lab credits, and the always-on instance wins at a flat 50 because the worker leaves it no idle hours to pay for.
+    - Allocated memory sets the price of each millisecond, so each second of the worker's 1,024 MB costs twice a second of the export's 512 MB.
+  questions: [q-dvjppr, q-aftqd7]

@@ -1,0 +1,75 @@
+id: lab-m12-online-or-offline
+module: 12
+title: Online or offline
+engine: simulate
+tier: core
+status: live
+rev: 1
+concepts:
+  - online-data-transfer
+  - offline-data-transfer
+  - aws-snow-family
+  - aws-snowball-edge-storage-optimized
+notes:
+  - m12/transferring-data-online
+  - m12/transferring-data-offline
+minutes: 6
+brief: >-
+  The cafe must send 2 TB of menu photos to AWS within 3 days over a 500 Mbps link, and a 200 TB receipt archive within 30 days over a 100 Mbps link.
+  In this lab an online move runs at 80% of its link speed, and an offline move fills 80 TB AWS Snowball Edge Storage Optimized devices that ship together and land in AWS 10 days later.
+  Choose how each set travels; every figure here, the 80% included, is a lab value.
+spec:
+  model: transfer
+  constants:
+    jobs:
+      - { id: menu-photos, label: Menu photos, tb: 2, mbps: 500, deadline: 3 }
+      - { id: receipt-archive, label: Receipt archive, tb: 200, mbps: 100, deadline: 30 }
+    turnaround: 10
+    deviceTb: 80
+  params:
+    - kind: choice
+      id: menu-photos
+      label: How the menu photos travel
+      options:
+        - id: online
+          label: Online, over the network link
+        - id: offline
+          label: Offline, on shipped devices
+      initial: offline
+    - kind: choice
+      id: receipt-archive
+      label: How the receipt archive travels
+      options:
+        - id: online
+          label: Online, over the network link
+        - id: offline
+          label: Offline, on shipped devices
+      initial: online
+  thresholds:
+    - { goal: g1, metric: days.menu-photos, max: 3 }
+    - { goal: g2, metric: days.receipt-archive, max: 30 }
+goals:
+  - id: g1
+    label: The menu photos reach AWS within 3 days
+    hint: A shipped device takes the full turnaround however little it carries, so weigh that wait against how long a fast link needs for a small set.
+  - id: g2
+    label: The receipt archive reaches AWS within 30 days
+    hint: Work out the archive's time at 80% of a 100 Mbps link; when bandwidth and volume rule out the network, the data needs another way in.
+solution:
+  - { t: set, param: menu-photos, value: online }
+  - { t: set, param: receipt-archive, value: offline }
+wrongPaths:
+  - mistake: Ships the archive on devices but leaves the small photo set on devices too, as if offline is always faster
+    failsGoal: g1
+    actions:
+      - { t: set, param: receipt-archive, value: offline }
+  - mistake: Moves the photos online but leaves the large archive online too, because online is the usual choice
+    failsGoal: g2
+    actions:
+      - { t: set, param: menu-photos, value: online }
+debrief:
+  lines:
+    - The small set of menu photos crosses the fast link online in under a day, well before a shipped device could land, so the photos stay online, the way many customers prefer to move data.
+    - The large archive would take months over the thin 100 Mbps link, but it ships on three AWS Snowball Edge Storage Optimized devices in days, faster than it could upload.
+    - So the choice follows bandwidth and volume, and offline transfer on AWS Snow Family devices is for the moves that the network cannot finish in time.
+  questions: [q-n6bsjs, q-qna4rv]

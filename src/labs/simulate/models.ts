@@ -29,6 +29,8 @@ export interface SimResult {
 export interface MetricInfo {
   label: string;
   unit: string;
+  /** Writes the value in words where a number and its unit would mislead, such as the day an alert fires. */
+  show?: (value: number) => string;
 }
 export interface ParamShape {
   id: string;
@@ -261,15 +263,15 @@ export function metricInfo(model: SimModel, metric: string, constants: unknown):
       keptDays: { label: 'Days kept', unit: 'days' },
     },
     cache: {
-      load: { label: 'Database load', unit: 'reads/s' },
-      spare: { label: 'Spare capacity', unit: 'reads/s' },
+      load: { label: 'Database load', unit: 'requests/s' },
+      spare: { label: 'Spare capacity', unit: 'requests/s' },
       latency: { label: 'Average latency', unit: 'ms' },
       cost: { label: 'Monthly cost', unit: CREDITS },
     },
     bill: {
       bill: { label: 'Monthly bill', unit: CREDITS },
       saved: { label: 'Saved', unit: CREDITS },
-      alertDay: { label: 'Alert day', unit: 'day of 30' },
+      alertDay: { label: 'Budget alert', unit: '', show: alertDayText },
     },
     transfer: { late: { label: 'Late jobs', unit: '' } },
     purchase: {
@@ -304,9 +306,19 @@ export function metricInfo(model: SimModel, metric: string, constants: unknown):
   return null;
 }
 
-/** At most 2 decimals, trailing zeros trimmed, no grouping; `%` attaches, any other unit follows a space. */
+/** The bill model reports 31 for an alert that never fires within the 30-day month. */
+function alertDayText(day: number): string {
+  return day > 30 ? 'after day 30' : `day ${day} of 30`;
+}
+
+/** A metric's value as the lab shows it: its own wording when it has one, else the number and its unit. */
+export function metricText(value: number, info: Pick<MetricInfo, 'unit' | 'show'>): string {
+  return info.show?.(value) ?? fmt(value, info.unit);
+}
+
+/** At most 2 decimals, trailing zeros trimmed, thousands grouped as the lab text writes them; `%` attaches, any other unit follows a space. */
 export function fmt(value: number, unit: string): string {
-  const n = String(round2(value) + 0);
+  const n = (round2(value) + 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
   if (unit === '') return n;
   return unit === '%' ? `${n}%` : `${n} ${unit}`;
 }

@@ -133,7 +133,7 @@ const CACHE: CacheConstants = {
     { id: 'off', label: 'No cache', hit: 0, credits: 0 },
     { id: 'menu-cache', label: 'Menu cache', hit: 0.8, credits: 60 },
   ],
-  cacheMs: 1,
+  cacheMs: 0.5,
   dbMs: 20,
 };
 const BILL: BillConstants = {
@@ -266,21 +266,17 @@ const SIM_LABS: SimLab[] = [
     constants: COMPUTE,
     params: [
       choice('menu-export', ['lambda', 'instance'], 'instance'),
-      choice('order-worker', ['lambda', 'instance'], 'instance'),
+      choice('order-worker', ['lambda', 'instance'], 'lambda'),
     ],
     thresholds: [
       { goal: 'g1', metric: 'cost.menu-export', max: 10 },
       { goal: 'g2', metric: 'cost.order-worker', max: 100 },
     ],
-    solution: [set('menu-export', 'lambda')],
+    solution: [set('menu-export', 'lambda'), set('order-worker', 'instance')],
     outcome: { 'cost.menu-export': 1.23, 'cost.order-worker': 50 },
     wrongPaths: [
-      {
-        actions: [set('menu-export', 'lambda'), set('order-worker', 'lambda')],
-        failsGoal: 'g2',
-        outcome: { 'cost.order-worker': 320 },
-      },
-      { actions: [set('menu-export', 'instance')], failsGoal: 'g1', outcome: { 'cost.menu-export': 50 } },
+      { actions: [set('menu-export', 'lambda')], failsGoal: 'g2', outcome: { 'cost.order-worker': 320 } },
+      { actions: [set('order-worker', 'instance')], failsGoal: 'g1', outcome: { 'cost.menu-export': 50 } },
     ],
   },
   {
@@ -344,7 +340,7 @@ const SIM_LABS: SimLab[] = [
       { goal: 'g3', metric: 'cost', max: 200 },
     ],
     solution: [set('cache', 'menu-cache')],
-    outcome: { load: 230, spare: 170, latency: 4.8, cost: 160 },
+    outcome: { load: 230, spare: 170, latency: 4.4, cost: 160 },
     wrongPaths: [
       { actions: [set('db', 'large-db')], failsGoal: 'g1', outcome: { latency: 20 } },
       {
@@ -386,23 +382,23 @@ const SIM_LABS: SimLab[] = [
     model: 'transfer',
     constants: TRANSFER,
     params: [
-      choice('menu-photos', ['online', 'offline'], 'online'),
+      choice('menu-photos', ['online', 'offline'], 'offline'),
       choice('receipt-archive', ['online', 'offline'], 'online'),
     ],
     thresholds: [
       { goal: 'g1', metric: 'days.menu-photos', max: 3 },
       { goal: 'g2', metric: 'days.receipt-archive', max: 30 },
     ],
-    solution: [set('receipt-archive', 'offline')],
+    solution: [set('menu-photos', 'online'), set('receipt-archive', 'offline')],
     outcome: { 'days.menu-photos': 0.46, 'days.receipt-archive': 10, 'devices.receipt-archive': 3 },
     wrongPaths: [
       {
-        actions: [set('menu-photos', 'offline'), set('receipt-archive', 'offline')],
+        actions: [set('receipt-archive', 'offline')],
         failsGoal: 'g1',
         outcome: { 'days.menu-photos': 10 },
       },
       {
-        actions: [set('receipt-archive', 'online')],
+        actions: [set('menu-photos', 'online')],
         failsGoal: 'g2',
         outcome: { 'days.receipt-archive': 231.48 },
       },
