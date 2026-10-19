@@ -17,6 +17,11 @@ export default defineConfig({
   testDir: 'tests',
   // Browser-only regression tests sit beside the Vitest ones as `.spec.ts` (tests/regressions/README.md).
   testMatch: ['e2e/**/*.spec.ts', 'regressions/**/*.spec.ts'],
+  // One baseline per project, beside the tests: tests/e2e/__screenshots__/<project>/<name>.png (spec 9).
+  snapshotPathTemplate: '{testDir}/e2e/__screenshots__/{projectName}/{arg}{ext}',
+  expect: {
+    toHaveScreenshot: { animations: 'disabled', caret: 'hide', maxDiffPixels: 100 },
+  },
   forbidOnly: true,
   // Half the cores at most, as Playwright's default, and fewer while other builds load the machine.
   workers: workersNow(Math.max(1, Math.floor(availableParallelism() / 2))),
