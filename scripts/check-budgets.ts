@@ -23,7 +23,7 @@ const breaches: string[] = [];
 
 const html = readFileSync(join(dist, 'index.html'), 'utf8');
 const scripts = [
-  ...new Set([...html.matchAll(/(?:src|href)="\/?(assets\/[^"]+\.js)"/g)].map((m) => m[1] ?? '')),
+  ...new Set([...html.matchAll(/(?:src|href)="(?:\.?\/)?(assets\/[^"]+\.js)"/g)].map((m) => m[1] ?? '')),
 ];
 const initialJs = scripts.reduce((total, file) => total + gzipped(file), 0);
 if (scripts.length === 0) breaches.push('dist/index.html references no script under assets/');
@@ -70,7 +70,7 @@ if (existsSync(join(dist, 'sw.js'))) {
   worker = gzipped('sw.js');
   if (code.includes(SW_PLACEHOLDER)) breaches.push('dist/sw.js still holds the manifest placeholder');
   for (const file of ['index.html', ...chunks, ...examChunks, ...projectChunks]) {
-    if (!code.includes(`"/${file}"`)) breaches.push(`dist/sw.js does not precache /${file}`);
+    if (!code.includes(`"${file}"`)) breaches.push(`dist/sw.js does not precache ${file}`);
   }
   if (worker > SW_BUDGET) breaches.push(`sw.js is ${kb(worker)} gzipped, over ${kb(SW_BUDGET)}`);
 } else {

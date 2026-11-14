@@ -15,15 +15,13 @@ const SKIPPED = new Set(['sw.js', 'deploys.json']);
 const PLACEHOLDER = new RegExp(`(['"\`])${SW_PLACEHOLDER}\\1`, 'g');
 
 /**
- * The precache manifest of a build (spec 1.4): `/` first, then every build path from the site root, sorted;
+ * The precache manifest of a build (spec 1.4): `./` first, then every build path relative to `sw.js`, sorted, so the
+ * worker precaches the right files under any sub-path;
  * the version changes whenever a file name or `index.html` changes, so each deploy gets a new cache.
  */
 export function swManifest(files: readonly string[], indexHtml: string): SwManifest {
-  const kept = files
-    .filter((file) => !SKIPPED.has(file) && !file.endsWith('.map'))
-    .map((file) => `/${file}`)
-    .sort();
-  const list = ['/', ...kept];
+  const kept = files.filter((file) => !SKIPPED.has(file) && !file.endsWith('.map')).sort();
+  const list = ['./', ...kept];
   const hash = createHash('sha256')
     .update(`${list.join('\n')}\n${indexHtml}`, 'utf8')
     .digest('hex');

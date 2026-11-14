@@ -66,7 +66,12 @@ Then `pnpm verify` should pass on a clean checkout.
 
 ## Deploying
 
-The site runs on a private S3 bucket behind CloudFront, created from `infra/site.yaml` in Mission 1 (`content/missions/mission-01-host-this-site.md`).
+The site is live on GitHub Pages at https://danielchahine0.github.io/aws-cloud-practitioner-study/.
+Every push to `master` runs `.github/workflows/pages.yml`, which runs `pnpm verify` on macOS and publishes `dist/` when it passes; a failed run uploads `test-results/`.
+The build uses relative URLs, so the same `dist/` works under that sub-path and at a domain root.
+GitHub Pages cannot send headers, so the build writes the CSP of `scripts/csp.ts` into `index.html` as a `<meta>` tag, without `frame-ancestors`, which a meta policy cannot carry.
+
+The Mission 1 stack still works as a second host: a private S3 bucket behind CloudFront, created from `infra/site.yaml` (`content/missions/mission-01-host-this-site.md`), which also sends the full CSP and the other security headers.
 `pnpm site:deploy` refuses to run with uncommitted changes, and it reads the stack `ccp-study-site` with the AWS profile `ccp-admin` unless `CCP_STACK` or `AWS_PROFILE` say otherwise.
 
 ## Exams

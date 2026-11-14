@@ -17,17 +17,17 @@ const BUILD = [
 const HTML = '<!doctype html><title>CCP Study</title>';
 
 describe('swManifest', () => {
-  it('lists / first, then every build file sorted, exam forms and the project chunk included, without sw.js, deploys.json and source maps', () => {
+  it('lists ./ first, then every build file relative to sw.js and sorted, exam forms and the project chunk included, without sw.js, deploys.json and source maps', () => {
     expect(swManifest(BUILD, HTML).files).toEqual([
-      '/',
-      '/assets/index-BmD2kQ9x.js',
-      '/assets/index-C4f1aZ7e.css',
-      '/content/exam-a.0f1e2d3c.json',
-      '/content/index.328894ee.json',
-      '/content/m01.bf78409a.json',
-      '/content/m02.2efa04cd.json',
-      '/content/project.5a6b7c8d.json',
-      '/index.html',
+      './',
+      'assets/index-BmD2kQ9x.js',
+      'assets/index-C4f1aZ7e.css',
+      'content/exam-a.0f1e2d3c.json',
+      'content/index.328894ee.json',
+      'content/m01.bf78409a.json',
+      'content/m02.2efa04cd.json',
+      'content/project.5a6b7c8d.json',
+      'index.html',
     ]);
   });
 
@@ -42,7 +42,7 @@ describe('swManifest', () => {
 });
 
 describe('injectManifest', () => {
-  const manifest = { version: 'sw-0123456789ab', files: ['/', '/index.html'] };
+  const manifest = { version: 'sw-0123456789ab', files: ['./', 'index.html'] };
   const json = JSON.stringify(manifest);
 
   it('replaces the placeholder in single, double or back quotes with the manifest as JSON', () => {
@@ -60,7 +60,7 @@ describe('injectManifest', () => {
   });
 
   it('keeps dollar signs in file names as they are', () => {
-    const odd = { version: 'sw-0123456789ab', files: ["/assets/a$'b.js"] };
+    const odd = { version: 'sw-0123456789ab', files: ["assets/a$'b.js"] };
     expect(injectManifest(`x('${SW_PLACEHOLDER}')`, odd)).toBe(`x(${JSON.stringify(odd)})`);
   });
 

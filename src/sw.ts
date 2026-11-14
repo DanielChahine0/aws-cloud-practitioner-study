@@ -1,7 +1,7 @@
 /**
  * The service worker (spec 1.4 and 9 e2e 6): precaches the whole build on install, so every lesson and every
  * module's questions work offline after one visit. Navigations go to the network first and fall back to the
- * cached `index.html`; everything else, all of it content-hashed, comes from the cache first. A new version
+ * cached `index.html`; every path is relative to the worker, so the site runs under any sub-path; everything else, all of it content-hashed, comes from the cache first. A new version
  * waits for the next launch (no `skipWaiting`), so an open page never mixes two builds.
  * The file imports nothing, so the build emits it as one classic script; `scripts/sw-plugin.ts` writes the
  * manifest over the placeholder string below.
@@ -61,7 +61,7 @@ async function networkFirst(request: Request): Promise<Response> {
   try {
     return await fetch(request);
   } catch {
-    return (await caches.match('/index.html', MATCH)) ?? Response.error();
+    return (await caches.match('index.html', MATCH)) ?? Response.error();
   }
 }
 
