@@ -792,3 +792,72 @@ questions:
       fullHash: 54d5a4196a8f
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-80tzeb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-ses
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Which job does Amazon SES do for the cafe's ordering app?
+    options:
+      - id: a
+        text: Pushes notifications to every subscriber of a topic
+        why: Fanning out notifications to the subscribers of a topic is what Amazon SNS does, not SES.
+      - id: b
+        text: Routes customer phone calls and chats to agents
+        why: Routing calls and chats to agents is the work of Amazon Connect, a cloud contact center.
+      - id: c
+        text: Sends marketing and receipt email to customers
+        correct: true
+        why: SES sends transactional and marketing email, such as receipts and promotions, straight from the app.
+      - id: d
+        text: Holds messages in a queue between app components
+        why: Holding messages in a queue between components is Amazon SQS, which never emails customers.
+    evidence:
+      - Amazon Simple Email Service (Amazon SES) sends transactional, marketing and bulk email straight from your applications, with pay-as-you-go pricing.
+      - "**Amazon SES**: Scalable bulk email service."
+    takeaway: Amazon SES is the service an application uses to send transactional, marketing and bulk email.
+    history: []
+    verified:
+      keyHash: 8e72805e705a
+      fullHash: 0956a5bcf34f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-9xp9k0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-workspaces
+    note: m13/aws-specialized-services
+    task: "3.8"
+    level: 1
+    stem: >-
+      Amazon WorkSpaces is a fully managed form of which kind of technology?
+    options:
+      - id: a
+        text: Content delivery network
+        why: A content delivery network caches content close to viewers, which is the job of Amazon CloudFront, not WorkSpaces.
+      - id: b
+        text: Virtual desktop infrastructure
+        correct: true
+        why: WorkSpaces is fully managed virtual desktop infrastructure that gives each user a persistent cloud desktop.
+      - id: c
+        text: Continuous integration and delivery
+        why: CI/CD builds, tests and ships code changes, which AWS CodePipeline handles, so it gives staff no desktop.
+      - id: d
+        text: Infrastructure as code
+        why: Defining resources in templates is what AWS CloudFormation does, not a way to hand staff a desktop.
+    evidence:
+      - "**Amazon WorkSpaces**: fully managed virtual desktop infrastructure, a complete persistent desktop staff reach securely from anywhere and use like an office PC, cost-efficient and easy to run."
+    takeaway: Amazon WorkSpaces is managed virtual desktop infrastructure, giving staff cloud desktops in place of office PCs.
+    history: []
+    verified:
+      keyHash: 9e9f23614a18
+      fullHash: c49bd2adba75
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
