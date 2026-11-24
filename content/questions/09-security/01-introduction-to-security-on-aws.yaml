@@ -205,3 +205,110 @@ questions:
       fullHash: 40a55a0b7e6b
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-2jg55s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: authentication
+    note: m09/introduction-to-security-on-aws
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's ordering system is about to check whether a shift lead may approve refunds.
+      Which step must already have succeeded before that check can start?
+    options:
+      - id: a
+        text: Proving the shift lead's identity
+        correct: true
+        why: Rights can only be checked for a known identity, so the shift lead's identity must be proven first.
+      - id: b
+        text: Encrypting the stored refund records
+        why: Encrypting records keeps stored data unreadable without the key, but it does not tell the system who is asking.
+      - id: c
+        text: Reviewing the logs of past refunds
+        why: Reviewing logs is auditing, which looks back at activity and is not needed before a rights check.
+      - id: d
+        text: Securing the data center hardware
+        why: AWS secures the hardware as its share of the work, which has nothing to do with this sign-in order.
+    evidence:
+      - Authentication checks credentials, like a username and password, to prove identity.
+      - Authorization then uses granted rights to limit that identity's actions.
+    takeaway: Authentication comes first, since rights are checked only after a user's identity has been proven.
+    history: []
+    verified:
+      keyHash: c40111cd176b
+      fullHash: bf678220079e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-ts8e3z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: authorization
+    note: m09/introduction-to-security-on-aws
+    task: "2.3"
+    level: 2
+    stem: >-
+      A barista is promoted to shift lead.
+      Signing in with the same username and password as before, she can now open the stock orders page.
+      What changed for her?
+    options:
+      - id: a
+        text: The credentials she signs in with
+        why: Her username and password stayed the same, so the proof of who she is did not change.
+      - id: b
+        text: The rights granted to her identity
+        correct: true
+        why: Her new job came with new granted rights, which now let her proven identity open the stock orders page.
+      - id: c
+        text: The encryption on the order records
+        why: Encryption encodes stored data and does not decide which signed-in user may open a page.
+      - id: d
+        text: The audit logs of all her actions
+        why: Audit logs record what she did afterward and do not grant her access to anything.
+    evidence:
+      - Authorization then uses granted rights to limit that identity's actions.
+    takeaway: Changing what a signed-in user may do changes their authorization, not the credentials that prove who they are.
+    history: []
+    verified:
+      keyHash: 0376d867f2c4
+      fullHash: 87e19d35d5fb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-c2qz5h
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-controls
+    note: m09/introduction-to-security-on-aws
+    task: "2.4"
+    level: 2
+    stem: >-
+      Before its new online menu goes live, the cafe sets up access management so that only managers can change menu prices.
+      Which goal of security controls does this step serve?
+    options:
+      - id: a
+        text: Recover from incidents
+        why: Recovering restores systems after an incident has done harm, while this step sets access before anything goes wrong.
+      - id: b
+        text: Detect incidents
+        why: Detecting means noticing an incident that is already underway, while this step limits access ahead of time.
+      - id: c
+        text: Prevent incidents
+        correct: true
+        why: Controlling who can change prices is access management, the way controls stop incidents before they start.
+      - id: d
+        text: Respond to incidents
+        why: Responding acts on an incident that has already been found, while this step comes before any misuse.
+    evidence:
+      - Controls **prevent** incidents by access management, **protect** networks, apps and data, and **detect and respond** to incidents.
+    takeaway: Using access management to stop misuse before it starts is the prevent goal of security controls.
+    history: []
+    verified:
+      keyHash: dfa9b0ad61fa
+      fullHash: 504d32f13d8b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

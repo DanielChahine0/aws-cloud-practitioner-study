@@ -548,3 +548,109 @@ questions:
       fullHash: f01b1725c404
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-pw021x
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-shield-standard
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 3
+    stem: >-
+      The cafe's menu site sits behind Amazon Route 53 and Amazon CloudFront.
+      A wave of common DDoS traffic hits it, yet the cafe never turned on any extra protection.
+      What is already defending the site?
+    options:
+      - id: a
+        text: AWS WAF
+        why: AWS WAF filters requests through a web ACL that the cafe must set up, and it never set one up.
+      - id: b
+        text: AWS Shield Advanced
+        why: Shield Advanced is a paid service the cafe would have to sign up for, which it never did.
+      - id: c
+        text: AWS Shield Standard
+        correct: true
+        why: Shield Standard is built into Route 53 and CloudFront and defends against common DDoS attacks automatically.
+      - id: d
+        text: AWS Firewall Manager
+        why: Firewall Manager applies firewall rules across an organization's accounts once configured, which the cafe never did.
+    evidence:
+      - "**AWS Shield Standard**: free, automatic, real-time defense against common DDoS attacks, built into ELB, CloudFront and Route 53."
+    takeaway: Shield Standard is built into Route 53, CloudFront and ELB, so it fends off common DDoS attacks with no setup.
+    history: []
+    verified:
+      keyHash: 841a8faa10fa
+      fullHash: 6a18c978337f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-f8s38n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-shield-advanced
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 2
+    stem: >-
+      DDoS attacks keep getting past the free AWS protection on the cafe chain's load-balanced ordering site.
+      Which fact points the chain to AWS Shield Advanced?
+    options:
+      - id: a
+        text: Shield Standard is built into Route 53 and CloudFront
+        why: This is true, but it describes the free protection that is already failing to stop these attacks.
+      - id: b
+        text: Shield Standard handles common DDoS attacks for free
+        why: This is true, but common attacks are not the problem, and this tier is the one being overwhelmed.
+      - id: c
+        text: Shield Advanced mitigates sophisticated DDoS attacks
+        correct: true
+        why: Detecting and mitigating sophisticated DDoS attacks is exactly what the paid Shield Advanced adds.
+      - id: d
+        text: Shield Advanced charges a fee on top of Standard
+        why: This is true, but a price is a cost to weigh, not a reason the paid tier stops attacks the free one misses.
+    evidence:
+      - "**AWS Shield Advanced**: paid, with in-depth diagnostics and detection and mitigation of sophisticated DDoS attacks, integrating with CloudFront, Route 53 and ELB."
+    takeaway: When sophisticated DDoS attacks beat the free tier, Shield Advanced adds paid detection and mitigation.
+    history: []
+    verified:
+      keyHash: a1a045aef164
+      fullHash: 423e3498726e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-0r65sw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-waf
+    note: m09/protecting-networks-and-applications
+    task: "2.4"
+    level: 2
+    stem: >-
+      Bad actors keep hitting the cafe's web app from fresh IP addresses that the cafe has yet to add to its web ACL.
+      Which AWS WAF capability can still catch them?
+    options:
+      - id: a
+        text: Always-on DDoS protection at no extra cost
+        why: Free, always-on DDoS protection is AWS Shield Standard, which absorbs floods rather than spotting unlisted bad actors.
+      - id: b
+        text: Firewall rules that drop other protocols
+        why: Dropping traffic on unexpected protocols is what security groups do, not how AWS WAF spots unlisted bad actors.
+      - id: c
+        text: Central rules enforced across accounts
+        why: Enforcing rules across accounts is the job of AWS Firewall Manager, not a way to spot unlisted bad actors.
+      - id: d
+        text: Machine learning that spots attack patterns
+        correct: true
+        why: Besides its web ACL block list, AWS WAF uses machine learning to catch threats it has not seen before.
+    evidence:
+      - It also spots bad actors' signatures and uses machine learning to catch new threats.
+    takeaway: Beyond its web ACL block list, AWS WAF uses machine learning to catch threats it has not seen before.
+    history: []
+    verified:
+      keyHash: c8fd5604010a
+      fullHash: 2e8c0add7872
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

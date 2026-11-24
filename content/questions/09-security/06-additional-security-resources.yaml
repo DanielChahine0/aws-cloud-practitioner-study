@@ -282,3 +282,143 @@ questions:
       fullHash: a03a566f4e45
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-qdgt7r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-documentation
+    note: m09/additional-security-resources
+    task: "2.4"
+    level: 2
+    stem: >-
+      The cafe has just started using AWS Secrets Manager and wants AWS's own guide to locking down that one service before it stores any passwords.
+      Which resource should it open?
+    options:
+      - id: a
+        text: AWS Security Hub
+        why: Security Hub gathers security findings into one view and does not hold the guide written for one AWS service.
+      - id: b
+        text: AWS Knowledge Center
+        why: The Knowledge Center answers questions and helps troubleshoot, rather than giving each service's own guide.
+      - id: c
+        text: AWS Security Documentation
+        correct: true
+        why: AWS Security Documentation is organized by product, so it holds the security guide for that one service.
+      - id: d
+        text: AWS Trust and Safety Center
+        why: The Trust and Safety Center is where suspected abuse of AWS gets reported, not a guide to securing one service.
+    evidence:
+      - Each service differs, so read its docs.
+      - "[AWS Security Documentation](https://docs.aws.amazon.com/security/): by product."
+    takeaway: For the security guidance of one specific service, go to AWS Security Documentation, which is organized by product.
+    history: []
+    verified:
+      keyHash: 2ae046aa2324
+      fullHash: b8e42483d00f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-b619bh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-knowledge-center
+    note: m09/additional-security-resources
+    task: "4.3"
+    level: 1
+    stem: >-
+      Which kind of help is the AWS Knowledge Center built around?
+    options:
+      - id: a
+        text: Expert tips and advice from AWS specialists
+        why: Expert tips from AWS specialists are what the AWS Security Blog offers, not the Knowledge Center.
+      - id: b
+        text: Questions and answers for troubleshooting
+        correct: true
+        why: The Knowledge Center gathers questions with answers and troubleshooting help.
+      - id: c
+        text: Security guides organized by product
+        why: Guides organized by product make up AWS Security Documentation, not the Knowledge Center.
+      - id: d
+        text: Third-party security tools for sale
+        why: Third-party security tools are sold through AWS Marketplace, not the Knowledge Center.
+    evidence:
+      - "[Knowledge Center](https://repost.aws/search/content?globalSearch=security): Q&A, troubleshooting."
+    takeaway: The AWS Knowledge Center is built around questions, answers and troubleshooting help.
+    history: []
+    verified:
+      keyHash: 530a4da3127c
+      fullHash: 78ab1f270d88
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-kgm9tp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-blog
+    note: m09/additional-security-resources
+    task: "2.4"
+    level: 1
+    stem: >-
+      What sets the AWS Security Blog apart from AWS Security Documentation?
+    options:
+      - id: a
+        text: The blog goes by product, and the docs share expert tips
+        why: This swaps the two, since the documentation is the one organized by product.
+      - id: b
+        text: The blog answers questions, and the docs share expert tips
+        why: Answering questions is the Knowledge Center's role, and expert tips come from the blog, not the docs.
+      - id: c
+        text: The blog shares expert tips, and the docs go by product
+        correct: true
+        why: The blog is the source of expert tips, while the documentation is organized product by product.
+      - id: d
+        text: The blog shares expert tips, and the docs answer questions
+        why: The blog half is right, but answering questions is the Knowledge Center's role, not the documentation's.
+    evidence:
+      - "[AWS Security Documentation](https://docs.aws.amazon.com/security/): by product."
+      - "[AWS Security Blog](https://aws.amazon.com/blogs/security/): expert tips."
+    takeaway: The AWS Security Blog offers expert tips, while AWS Security Documentation is organized by product.
+    history: []
+    verified:
+      keyHash: a99d94a2204f
+      fullHash: b9527b155a81
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-sgk73w
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-center
+    note: m09/additional-security-resources
+    task: "2.4"
+    level: 2
+    stem: >-
+      A new hire at the cafe thinks AWS Security Center is something to switch on in the console to collect security findings.
+      Which statement corrects that?
+    options:
+      - id: a
+        text: It is the console service that groups findings
+        why: That describes AWS Security Hub, a separate service, rather than the security site AWS documentation names.
+      - id: b
+        text: It is the Q&A site with troubleshooting help
+        why: Questions and troubleshooting help come from the AWS Knowledge Center, not the Security Center.
+      - id: c
+        text: It is the AWS security and compliance website
+        correct: true
+        why: AWS documentation gives the name AWS Security Center to its cloud security site, a source to read rather than a service.
+      - id: d
+        text: It is the store selling third-party security tools
+        why: Third-party security tools are sold through AWS Marketplace, not the Security Center.
+    evidence:
+      - AWS Security Center is the name AWS documentation gives the cloud security site at aws.amazon.com/security, where it points you for more on AWS security and compliance.
+    takeaway: AWS Security Center is the security and compliance website AWS documentation points to, not a console service.
+    history: []
+    verified:
+      keyHash: 0020b7291ea8
+      fullHash: ef1ac56ac1d2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

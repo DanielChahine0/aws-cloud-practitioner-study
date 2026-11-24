@@ -1105,3 +1105,428 @@ questions:
       fullHash: cd37a98fcc52
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-v175vc
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-account-root-user
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      Which statements describe the AWS account root user?
+    options:
+      - id: a
+        text: It comes with every new AWS account
+        correct: true
+        why: Every AWS account is created with a root user, the owner identity, already in place.
+      - id: b
+        text: It holds no permissions until allowed
+        why: Starting with zero permissions is how a new IAM identity behaves, while the root user can do anything.
+      - id: c
+        text: It can do anything and cannot be limited
+        correct: true
+        why: The root user is the all-powerful owner, and no policy can restrict what it does.
+      - id: d
+        text: It is assumed for temporary permissions
+        why: Being assumed for temporary permissions describes an IAM role, not the account's owner identity.
+      - id: e
+        text: It inherits permissions from its group
+        why: Inheriting permissions from a group describes an IAM user in an IAM group, not the root user.
+    evidence:
+      - Every new AWS account comes with a root user, the owner, who can do anything and cannot be restricted.
+    takeaway: The root user comes with every new account and has unrestricted power, unlike IAM identities that start with none.
+    history: []
+    verified:
+      keyHash: 9525f9288693
+      fullHash: 9370fe357135
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-n18p11
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: multi-factor-authentication
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe has just opened its AWS account and given the root user a strong password.
+      What does AWS advise turning on for the root user right after that first root sign-in?
+    options:
+      - id: a
+        text: An IAM account password policy
+        why: A password policy governs IAM user passwords and never applies to the root user password.
+      - id: b
+        text: Multi-factor authentication
+        correct: true
+        why: AWS advises adding MFA to the root user right after its first sign-in, on top of the strong password.
+      - id: c
+        text: AWS IAM Identity Center
+        why: Identity Center gives staff one login through an existing identity source and does not guard the root sign-in.
+      - id: d
+        text: IAM access reports
+        why: Access reports show which permissions identities used, which does not add a check to the root sign-in.
+    evidence:
+      - Give it a strong password and turn on multi-factor authentication (MFA) right after the first root login.
+    takeaway: Right after the first root sign-in, pair the strong root password with multi-factor authentication.
+    history: []
+    verified:
+      keyHash: 7e33ecc9373e
+      fullHash: 590b6c115295
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-e0m5wt
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: iam-password-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      The cafe is writing its account password policy for staff IAM users.
+      Which rules can that policy enforce?
+    options:
+      - id: a
+        text: Expiring passwords after a set period
+        correct: true
+        why: Expiration is one of the account-wide rules a password policy can set for IAM user passwords.
+      - id: b
+        text: Rotating database passwords on a schedule
+        why: AWS Secrets Manager rotates database credentials, while a password policy covers only IAM user sign-in passwords.
+      - id: c
+        text: Requiring certain character types
+        correct: true
+        why: Required character types are one of the rules a password policy can set for IAM user passwords.
+      - id: d
+        text: Adding a one-time code to each sign-in
+        why: A one-time code is multi-factor authentication, a separate control that a password policy does not set.
+      - id: e
+        text: Signing CLI requests with an access key
+        why: Access keys sign programmatic requests, and a password policy sets rules for sign-in passwords, not for keys.
+    evidence:
+      - Password policies set account-wide rules for IAM user passwords, such as minimum length, required character types, expiration and preventing reuse, but they never apply to the root user password.
+    takeaway: An IAM password policy sets rules such as length, character types, expiration and reuse for IAM user passwords.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 4 are the only pair of rules about user passwords themselves; the rest are other credential features.)"
+  - id: q-zbfd7r
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-iam
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      Match each cafe access need to the IAM identity that fits it.
+    pairs:
+      - left: A new barista needs her own sign-in credentials
+        right: IAM user
+        why: An IAM user stands for one person with their own credentials, which is what the new barista needs.
+      - left: Every counter worker needs the same baseline access
+        right: IAM group
+        why: Users in an IAM group all inherit its permissions, so shared baseline access is set in one place.
+      - left: A stock audit needs extra permissions for one afternoon
+        right: IAM role
+        why: An IAM role is assumed for temporary permissions, which suits a short task that needs extra access.
+    evidence:
+      - "**IAM user**: one person or application with its own credentials, and AWS advises one per person who needs access."
+      - "**IAM group**: users who all inherit the group's permissions, ideal when many people need the same baseline access."
+      - "**IAM role**: an identity someone assumes for temporary permissions, with no long-term username or password."
+    takeaway: In IAM, users fit individuals, groups fit shared baseline access, and roles fit temporary extra permissions.
+    history: []
+    verified:
+      keyHash: 15fc1936bc90
+      fullHash: 9b49d5b29251
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-0npaww
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: principle-of-least-privilege
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe's receipt app only ever adds new receipt files to one S3 bucket.
+      Which permissions for the app follow the principle of least privilege?
+    options:
+      - id: a
+        text: Adding and reading files in the receipts bucket
+        why: The app never reads receipts, so read access goes beyond what it needs.
+      - id: b
+        text: Adding files to the receipts bucket
+        correct: true
+        why: Adding files to that one bucket is exactly the app's job, so nothing extra is granted.
+      - id: c
+        text: Reading files in the receipts bucket
+        why: The app's job is adding receipts, so read access alone grants something it never uses and blocks the work it does.
+      - id: d
+        text: Adding files to every bucket in the account
+        why: The app writes to one bucket only, so access to every other bucket is more than it needs.
+    evidence:
+      - "**Least privilege** is the guiding principle: allow only what a person or system needs."
+    takeaway: Least privilege applies to apps as well as people, so a system gets only the actions it actually performs.
+    history: []
+    verified:
+      keyHash: fe894f613a43
+      fullHash: 7127cf24f171
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-ghpyh4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cross-account-iam-roles
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 1
+    stem: >-
+      A developer from the cafe's development account assumes a role in its production account.
+      What kind of credentials does the developer get in production?
+    options:
+      - id: a
+        text: Long-term access keys
+        why: Access keys are long-term credentials for an IAM user, while assuming a role gives short-lived ones.
+      - id: b
+        text: A separate IAM password
+        why: A cross-account role removes the need for a separate IAM user, and so for its password, in production.
+      - id: c
+        text: A one-time MFA code
+        why: An MFA code is a second sign-in factor, not the credentials a role hands out in the other account.
+      - id: d
+        text: Temporary credentials
+        correct: true
+        why: Assuming a role in another account gives the developer temporary credentials there.
+    evidence:
+      - With cross-account IAM roles, users in one AWS account assume a role in another account and get temporary credentials there, so nobody needs a separate IAM user in each account.
+    takeaway: Assuming a cross-account IAM role gives the user temporary credentials in the other account.
+    history: []
+    verified:
+      keyHash: cbb72329e19c
+      fullHash: 22907c6f1f8f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-n4af0n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe wants a policy that lets its finance staff work with the invoices bucket while every other bucket stays out of reach.
+      Which fact about an IAM policy makes that narrow scope possible?
+    options:
+      - id: a
+        text: It can take effect through an IAM group
+        why: Attaching to a group decides who gets the policy, not which buckets the policy reaches.
+      - id: b
+        text: It can name one target as its Resource
+        correct: true
+        why: The Resource element names what the calls target, and it can be as narrow as the one invoices bucket.
+      - id: c
+        text: It can allow any API call as its Action
+        why: The Action part lists which calls are allowed, not which bucket those calls may target.
+      - id: d
+        text: It can hold both Allow and Deny rules
+        why: The Effect decides whether calls are allowed or denied, not which buckets those calls may reach.
+    evidence:
+      - A policy, written in JSON, holds allow or deny rules for AWS services and resources, scoped as wide as every S3 bucket or as narrow as one.
+      - Each statement sets an **Effect** (only Allow or Deny), an **Action** (any AWS API call) and a **Resource** (what the call targets).
+    takeaway: An IAM policy's Resource can be scoped as narrowly as one bucket, so access reaches only that target.
+    history: []
+    verified:
+      keyHash: 8b5fc4818e91
+      fullHash: 682fcb26cded
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-pn1wte
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-access-reports
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe's IAM access report shows that its delivery app role has never tried to use one of the services its policy allows.
+      What does that finding let the cafe do?
+    options:
+      - id: a
+        text: See who changed the role's settings and when
+        why: A history of setting changes comes from AWS Config, not from last accessed information.
+      - id: b
+        text: Review each API call the role made in detail
+        why: A detailed record of each API call comes from AWS CloudTrail, not from an access report.
+      - id: c
+        text: Trim the role's policy to the access it uses
+        correct: true
+        why: The report shows a service the role never uses, so the cafe can remove that permission and keep least privilege.
+      - id: d
+        text: Check the role's resources against best practices
+        why: Best-practice checks on resources come from AWS Trusted Advisor, not from an IAM access report.
+    evidence:
+      - IAM access reports show last accessed information, meaning which services and actions each user, role or policy actually tried to use, so you can remove unused permissions and keep least privilege.
+    takeaway: IAM access reports reveal permissions an identity never uses, so the cafe can remove them and keep least privilege.
+    history: []
+    verified:
+      keyHash: 505b5b10d06c
+      fullHash: c453014eeb92
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-ftp7q3
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: custom-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe attached an AWS managed policy to its baristas group, but the policy allows one action the cafe wants the baristas to lose.
+      Which fact explains why the cafe must write a custom policy to remove that action?
+    options:
+      - id: a
+        text: AWS managed policies can be attached to groups
+        why: This is true, and it is how the policy reached the baristas, but it gives no way to take the action out.
+      - id: b
+        text: AWS managed policies can be used in any account
+        why: This is true, but being available in every account does not stop the cafe from changing the policy.
+      - id: c
+        text: AWS managed policies are maintained by AWS alone
+        correct: true
+        why: Only AWS maintains its managed policies, so the cafe cannot edit one and must put the trimmed rules in a custom policy.
+      - id: d
+        text: AWS managed policies are written in JSON text
+        why: This is true, but JSON is only the policy's format and says nothing about who may change it.
+    evidence:
+      - Custom policies are customer managed or inline policies that you write and change yourself for your own use cases, unlike AWS managed policies, which AWS creates and you cannot edit.
+      - "**AWS managed policy**: A prebuilt policy that AWS maintains."
+    takeaway: AWS managed policies cannot be edited, so tailored rules belong in a custom policy the cafe writes and changes itself.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 stands out with 'alone', the only option naming what sets AWS managed policies apart.)"
+  - id: q-19dwpf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-secrets-manager
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 3
+    stem: >-
+      The cafe's delivery app calls a partner's API with a key that now sits in a config file on each server.
+      The cafe wants the app to fetch that key from one central store whenever it runs.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Systems Manager
+        why: Systems Manager oversees and patches nodes, and is not the central store an app fetches API keys from.
+      - id: b
+        text: AWS Key Management Service (AWS KMS)
+        why: AWS KMS controls cryptographic keys that never leave it, so an app cannot fetch a partner's API key from it.
+      - id: c
+        text: AWS Secrets Manager
+        correct: true
+        why: Secrets Manager is the central place to store and fetch secrets such as API keys.
+      - id: d
+        text: AWS IAM Identity Center
+        why: Identity Center gives staff one login across accounts and does not hold an app's API keys.
+    evidence:
+      - "**AWS Secrets Manager** is the central place to store, fetch and rotate secrets such as passwords, database credentials and API keys."
+    takeaway: An app that needs an API key at run time can fetch it from Secrets Manager instead of a local config file.
+    history: []
+    verified:
+      keyHash: d794fce6b14e
+      fullHash: bee1fbb0c5b1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-d1816y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: iam-password-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe wants one password length rule for every staff IAM user, including staff it adds next season, without setting it person by person.
+      Where does the cafe set an IAM password policy so that it reaches all of them?
+    options:
+      - id: a
+        text: In the AWS account's IAM settings
+        correct: true
+        why: A password policy is one account-wide setting, so every IAM user password follows it, new users included.
+      - id: b
+        text: On an IAM group the staff belong to
+        why: Groups pass permission policies on to members, but a password policy is an account setting, not a group attachment.
+      - id: c
+        text: In a secret kept in AWS Secrets Manager
+        why: Secrets Manager stores and rotates app secrets, and it does not hold the rules for IAM user passwords.
+      - id: d
+        text: On an IAM role the staff assume
+        why: A role hands out temporary permissions with no long-term password, so it carries no password rules.
+    evidence:
+      - Password policies set account-wide rules for IAM user passwords, such as minimum length, required character types, expiration and preventing reuse, but they never apply to the root user password.
+    takeaway: An IAM password policy is one account-wide setting, so it covers every IAM user password without per-user setup.
+    history: []
+    verified:
+      keyHash: 15b2667dc81e
+      fullHash: 52a75a28e0b4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-7dkna9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: custom-policies
+    note: m09/preventing-unauthorized-access
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe's bakers IAM group carries an inline policy, embedded directly in the group.
+      Which kind of policy is that inline policy?
+    options:
+      - id: a
+        text: A custom policy
+        correct: true
+        why: Inline policies are one of the two kinds of custom policy, which the cafe writes and changes itself.
+      - id: b
+        text: An AWS managed policy
+        why: An AWS managed policy is a prebuilt standalone policy from AWS, never one embedded in the cafe's group.
+      - id: c
+        text: A service control policy
+        why: A service control policy caps what whole accounts in an organization may do, not what one group may do.
+      - id: d
+        text: An S3 bucket policy
+        why: A bucket policy sits on the bucket itself, while this inline policy is embedded in the bakers group.
+    evidence:
+      - Custom policies are customer managed or inline policies that you write and change yourself for your own use cases, unlike AWS managed policies, which AWS creates and you cannot edit.
+    takeaway: An inline policy is a custom policy, like a customer managed one, so the cafe writes and changes it rather than AWS.
+    history: []
+    verified:
+      keyHash: 6c1ac6e47f69
+      fullHash: bd292058df87
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

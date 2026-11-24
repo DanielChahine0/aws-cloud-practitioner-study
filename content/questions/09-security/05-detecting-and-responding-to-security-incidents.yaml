@@ -434,3 +434,111 @@ questions:
       fullHash: d6f100b145ae
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-85mecz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-guardduty
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe wants an Amazon GuardDuty threat finding to be dealt with on its own at night, with nobody at the console.
+      Which statement shows this is possible?
+    options:
+      - id: a
+        text: AWS Security Hub collects GuardDuty findings
+        why: This is true, but gathering findings into one view does not deal with any of them on its own.
+      - id: b
+        text: AWS Lambda can remediate GuardDuty findings
+        correct: true
+        why: AWS Lambda can run the remediation for GuardDuty findings automatically, with no one at the console.
+      - id: c
+        text: Amazon Detective traces GuardDuty findings
+        why: This is true, but tracing a finding to its root cause helps an investigation and does not deal with it.
+      - id: d
+        text: Amazon GuardDuty rates each finding's severity
+        why: This is true, but a severity rating helps staff decide what to look at first and does not deal with it.
+    evidence:
+      - Lambda can run its fixes automatically.
+    takeaway: GuardDuty findings can trigger AWS Lambda to run fixes automatically, without waiting for staff.
+    history: []
+    verified:
+      keyHash: 8503c894400e
+      fullHash: 8a70024aaf76
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-qsta3v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-detective
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.4"
+    level: 3
+    stem: >-
+      AWS Security Hub already shows the cafe's findings from every service in one view.
+      Now the security lead needs deep forensics on how one breach unfolded across the cafe's accounts over time.
+      Which service adds that?
+    options:
+      - id: a
+        text: AWS Security Hub
+        why: Security Hub shows findings for posture and compliance, not deep forensics over time.
+      - id: b
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks resources against best practices and does not trace how a breach unfolded.
+      - id: c
+        text: Amazon GuardDuty
+        why: GuardDuty detects threats but lacks the interactive investigation views needed to trace a breach.
+      - id: d
+        text: Amazon Detective
+        correct: true
+        why: Detective traces an incident's root cause across accounts by charting activity over a time window.
+    evidence:
+      - After detection, it traces the root cause across your accounts.
+      - Security Hub also shows security data, but for posture and compliance, not deep forensics over time.
+    takeaway: Security Hub gives the posture view, while Amazon Detective adds deep forensics on how an incident unfolded.
+    history: []
+    verified:
+      keyHash: d2fc04569b2a
+      fullHash: bf0677427912
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-27wj1y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-security-hub
+    note: m09/detecting-and-responding-to-security-incidents
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe already gathers its security findings in AWS Security Hub.
+      The owner now wants issues fixed sooner, so the time to resolution drops.
+      Which Security Hub feature helps?
+    options:
+      - id: a
+        text: Graph analytics charts
+        why: Graph analytics charts belong to Amazon Detective and help investigation rather than fixing issues sooner.
+      - id: b
+        text: Threat intelligence feeds
+        why: Threat intelligence such as known bad IP addresses feeds GuardDuty's detection, not faster fixes.
+      - id: c
+        text: Automated remediation
+        correct: true
+        why: Security Hub's automated remediation fixes findings without manual steps, which shortens time to resolution.
+      - id: d
+        text: Vulnerability scanning
+        why: Scanning for vulnerabilities is the job of Amazon Inspector and does not shorten time to resolution.
+    evidence:
+      - Sorts them into actionable groups called insights, and automated remediation shortens time to resolution (TTR).
+    takeaway: Security Hub's automated remediation shortens time to resolution (TTR) for the findings it gathers.
+    history: []
+    verified:
+      keyHash: 44839a1b19b2
+      fullHash: 57a690e5f66a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
