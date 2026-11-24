@@ -353,3 +353,181 @@ questions:
       fullHash: 79457af7f7ec
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-g4hypz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-migration
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe runs no servers of its own, and its loyalty app is hosted by a provider other than AWS.
+      A consultant says the cafe therefore has nothing to migrate.
+      Which fact shows the consultant is wrong?
+    options:
+      - id: a
+        text: A migration can start from another cloud, not only from on premises
+        correct: true
+        why: Because a migration can start from another cloud, moving the loyalty app into AWS still counts.
+      - id: b
+        text: A migration often runs in stages, not only as one single move
+        why: This is true, but running in stages says nothing about whether an app hosted elsewhere can move.
+      - id: c
+        text: A migration covers databases and other IT resources, not only apps
+        why: This is true, but it widens what moves rather than where a move may start from.
+      - id: d
+        text: A migration takes planning and upkeep, not only the move itself
+        why: This is true, but planning and upkeep do not show that an app off premises can still move.
+    evidence:
+      - Moving apps, databases and other IT resources from on premises or another cloud to AWS.
+    takeaway: A move into AWS from another cloud provider counts as a cloud migration, just like a move from on premises.
+    history: []
+    verified:
+      keyHash: 212ba5d7906a
+      fullHash: c2b1c52d9cc8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-74rtr4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: three-phase-migration-process
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe's team is closing staff skill gaps and choosing a strategy for each app.
+      Which work should already be finished, in the phase before this one?
+    options:
+      - id: a
+        text: Gauging readiness and weighing findings into a business case
+        correct: true
+        why: The team is in mobilize, and the phase before it, assess, checks readiness and builds the business case.
+      - id: b
+        text: Architecting, moving and validating each app in AWS
+        why: Architecting, moving and validating apps is the last phase, which comes after the current one.
+      - id: c
+        text: Moving the stock records into AWS with DataSync or the Snow Family
+        why: Moving data with DataSync or the Snow Family is last-phase work, which comes after mobilize.
+      - id: d
+        text: Tracking every app's progress through the move in Migration Hub
+        why: Migration Hub serves mobilize and the last phase, so this work does not belong to the phase before.
+    evidence:
+      - "Order: assess, mobilize, migrate and modernize."
+      - "**Assess**: gauge readiness, set outcomes, goals and the need to move, then weigh findings into a business case (Migration Evaluator)."
+    takeaway: Mobilize follows assess, so readiness checks and the business case are done before strategies are picked.
+    history: []
+    verified:
+      keyHash: 7f8ea53c0925
+      fullHash: 861c92e24466
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-g8t4jp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-assess-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      Before anything else is planned, the cafe owner wants to see whether moving to AWS is worth the cost and effort.
+      What should the first phase of the migration hand the owner?
+    options:
+      - id: a
+        text: A migration plan grouped around app dependencies
+        why: A plan built around app dependencies comes from mobilize, which follows the first phase.
+      - id: b
+        text: A business case built on the readiness findings
+        correct: true
+        why: Assess gauges readiness and weighs the findings into a business case that shows whether the move pays off.
+      - id: c
+        text: A team trained to close its cloud skill gaps
+        why: Closing readiness gaps is mobilize work, which starts only after the first phase.
+      - id: d
+        text: A report that each moved app passed its validation
+        why: Validating moved apps happens in the last phase, long after the decision to move.
+    evidence:
+      - "**Assess**: gauge readiness, set outcomes, goals and the need to move, then weigh findings into a business case (Migration Evaluator)."
+      - Assess yields the business case; mobilize, the plan.
+    takeaway: The assess phase ends in a business case that shows whether moving to AWS is worth it.
+    history: []
+    verified:
+      keyHash: 81eb6a3f4a33
+      fullHash: 47e6bbef5070
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-vq0mfk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-mobilize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe is in the mobilize phase, and the managers who will run its systems have never worked with AWS.
+      Which task of this phase deals with that?
+    options:
+      - id: a
+        text: Closing readiness gaps before the move starts
+        correct: true
+        why: Mobilize readies the organization by closing readiness gaps, such as missing AWS skills.
+      - id: b
+        text: Gauging readiness to set the goals of the move
+        why: Gauging readiness is assess work, done before mobilize, and it measures gaps rather than closing them.
+      - id: c
+        text: Validating each app once it is running in AWS
+        why: Validating apps happens in the migrate and modernize phase and does not build staff skills.
+      - id: d
+        text: Weighing findings into a cost-backed business case
+        why: The business case is assess work and does nothing to prepare the managers.
+    evidence:
+      - "**Mobilize**: ready the organization and resources, write the plan around app dependencies, close readiness gaps and pick strategies (Application Discovery Service, Migration Hub)."
+    takeaway: Mobilize readies the organization, which includes closing readiness gaps such as missing skills.
+    history: []
+    verified:
+      keyHash: b010b492cea5
+      fullHash: 035d62a69cfe
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-zzcs5j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migrate-and-modernize-phase
+    note: m12/introduction-to-migration
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe is ready to move its apps, but its small IT team has never architected anything in AWS.
+      How can the migrate and modernize phase still go ahead?
+    options:
+      - id: a
+        text: Work with specialists or competency partners on each app
+        correct: true
+        why: This phase can run alone or with specialists and competency partners, who bring the missing skills.
+      - id: b
+        text: Use Migration Evaluator to build a cost-backed business case
+        why: The business case is assess work and gives the team no help architecting its apps.
+      - id: c
+        text: Use AWS Application Discovery Service to map app dependencies
+        why: Mapping dependencies shapes the plan in mobilize and does not supply architecture skills.
+      - id: d
+        text: Track the status of every app's move in AWS Migration Hub
+        why: Tracking progress shows how the move is going but adds no architecture skills to the team.
+    evidence:
+      - "**Migrate and modernize**: architect, migrate and validate each app, alone or with specialists and competency partners."
+    takeaway: A team that lacks skills can still migrate and modernize by working with specialists or competency partners.
+    history: []
+    verified:
+      keyHash: 2f63730324c6
+      fullHash: bae0bfd0bba5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
