@@ -603,3 +603,293 @@ questions:
       fullHash: 789dc9dda76d
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-yk07gr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-rehost
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe's owner wants a lower IT bill soon and accepts that the first move will miss some cloud benefits.
+      Which strategy can still cut total costs by up to 30 percent?
+    options:
+      - id: a
+        text: Refactor
+        why: Refactor brings the highest upfront planning and staff effort, the opposite of a quick saving.
+      - id: b
+        text: Rehost
+        correct: true
+        why: Rehost misses some cloud benefits, yet it can cut total costs by up to 30 percent.
+      - id: c
+        text: Replatform
+        why: Replatform adds optimizations for a tangible gain, while the up to 30 percent saving is tied to rehost.
+      - id: d
+        text: Retain
+        why: Retain keeps the apps in the source environment, so nothing moves and no cloud saving follows.
+    evidence:
+      - Misses some benefits, yet can cut total costs by up to 30 percent; most apps in a legacy migration that must scale fast
+    takeaway: Rehost misses some cloud benefits but can still cut total costs by up to 30 percent.
+    history: []
+    verified:
+      keyHash: 3728ecd5bf94
+      fullHash: ab2b3c5a97ac
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-pmvzs0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-relocate
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's back-office apps already run as virtual machines on its own virtualization hosts.
+      It wants those same VMs running on a cloud host, with no physical servers to convert.
+      Which strategy fits?
+    options:
+      - id: a
+        text: Rehost
+        why: Rehost often turns physical servers into VMs, but these VMs already exist and only change host.
+      - id: b
+        text: Replatform
+        why: Replatform adds cloud optimizations, while the cafe only wants the same VMs on a new host.
+      - id: c
+        text: Relocate
+        correct: true
+        why: Relocate moves VMs or containers that already run on premises over to a cloud host.
+      - id: d
+        text: Repurchase
+        why: Repurchase swaps a license for SaaS, while the cafe keeps running its own VMs.
+    evidence:
+      - VMs or containers already running on premises move to a cloud host
+      - "**Relocate**: Moving existing VMs or containers to the cloud."
+    takeaway: When VMs or containers already run on premises and simply change host, the strategy is relocate, not rehost.
+    history: []
+    verified:
+      keyHash: 2b0ec44c1ead
+      fullHash: 87959c585dd6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-n15x63
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-replatform
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      In a planning meeting, the cafe's IT contractor calls the path for one app "lift, tinker and shift".
+      Which strategy goes by that name?
+    options:
+      - id: a
+        text: Rehost
+        why: Rehost is known as lift and shift, with no tinkering on the way.
+      - id: b
+        text: Replatform
+        correct: true
+        why: Replatform is also called lift, tinker and shift, because it adds a few cloud optimizations.
+      - id: c
+        text: Relocate
+        why: Relocate has no other name and moves existing VMs or containers to a cloud host.
+      - id: d
+        text: Refactor
+        why: Refactor is also called re-architect, because it rebuilds the app with new code.
+    evidence:
+      - Lift, tinker and shift
+      - "**Replatform**: Moving apps with small cloud optimizations."
+    takeaway: Lift, tinker and shift is replatform, a move with a few cloud optimizations and no new code.
+    history: []
+    verified:
+      keyHash: dcfc1d35f274
+      fullHash: 7eac6e9d3f99
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-smwaed
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-refactor
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 1
+    stem: >-
+      The cafe's developers say the loyalty app will be re-architected as part of the move.
+      Which strategy goes by that other name?
+    options:
+      - id: a
+        text: Replatform
+        why: Replatform is called lift, tinker and shift, and it keeps the app's code.
+      - id: b
+        text: Refactor
+        correct: true
+        why: Refactor is also called re-architect, because it rebuilds the app with new code and cloud-built features.
+      - id: c
+        text: Rehost
+        why: Rehost is called lift and shift, and it moves the app unchanged.
+      - id: d
+        text: Relocate
+        why: Relocate moves existing VMs or containers and leaves the app's design as it is.
+    evidence:
+      - Re-architect
+      - "**Refactor**: Rebuilding an app with new code and cloud-built features."
+    takeaway: Refactor, also called re-architect, rebuilds an app with new code and cloud-built features.
+    history: []
+    verified:
+      keyHash: da8054e6bae2
+      fullHash: b187e6f95ff6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-k2y2rk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-repurchase
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe plans to drop its licensed staff rota software for a SaaS product from a new vendor.
+      Which trade-off should it expect from this strategy?
+    options:
+      - id: a
+        text: The move misses some cloud benefits in its early stages
+        why: Missing some cloud benefits is the trade-off of rehost, which moves an app unchanged.
+      - id: b
+        text: The rebuild needs the most upfront planning of any strategy
+        why: The most upfront planning and staff effort is the trade-off of refactor, not of buying SaaS.
+      - id: c
+        text: The new package can be slow to adopt and cost more upfront
+        correct: true
+        why: Repurchase brings a new package that can be slow to adopt and can cost more upfront.
+      - id: d
+        text: The app stays in the source environment for the time being
+        why: Staying in the source environment describes retain, while this app is being replaced.
+    evidence:
+      - A database license dropped for cloud databases, or a CRM replaced by new sales force software; the new package can be slow to adopt and cost more upfront
+    takeaway: Repurchase swaps a license for SaaS, and the new package can be slow to adopt and cost more upfront.
+    history: []
+    verified:
+      keyHash: a20669e7551d
+      fullHash: e68ce417395b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-c3s7sh
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: migration-strategy-retain
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe is sorting its apps before the move to AWS.
+      Which apps fit the retain strategy?
+    options:
+      - id: a
+        text: The old rota app, which nobody at the cafe uses any more
+        why: An app nobody uses is switched off under retire, not kept running.
+      - id: b
+        text: The ordering app, which would need major refactoring to move
+        correct: true
+        why: A business-critical app like ordering that needs major refactoring can stay where it is for now under retain.
+      - id: c
+        text: The accounts app, whose license will be swapped for SaaS
+        why: Swapping a license for SaaS is repurchase, which replaces the app rather than keeping it.
+      - id: d
+        text: The stock app, which is only months away from being deprecated
+        correct: true
+        why: Apps months from deprecation stay in the source environment under retain and are retired in place later.
+      - id: e
+        text: The legacy till app, which must move fast so the chain can scale
+        why: A legacy app that must scale fast is a rehost candidate, which moves it to AWS.
+    evidence:
+      - "Business-critical apps stay in the source environment for now: those needing major refactoring, work that can wait, or apps months from deprecation"
+    takeaway: Retain keeps critical apps in place for now, such as those needing major refactoring or nearing deprecation.
+    history: []
+    verified:
+      keyHash: d4759f00fcb8
+      fullHash: a2e53a5acdc8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-w1epzp
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: migration-strategy-retire
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 2
+    stem: >-
+      Discovery shows that several of the cafe's apps have sat unused for a long time.
+      Why does the team plan to shut them down instead of moving them?
+    options:
+      - id: a
+        text: Rehost moves apps to AWS with no change to their code
+        why: This is true of rehost, but moving an unused app as it is still wastes cost and effort.
+      - id: b
+        text: Retire saves the cost and effort of running idle apps
+        correct: true
+        why: Retiring apps nobody uses saves the cost and effort of moving and running them.
+      - id: c
+        text: Retain keeps business-critical apps in their source environment
+        why: This is true of retain, but these apps are unused rather than business-critical.
+      - id: d
+        text: Refactor needs the most upfront planning and staff effort of all
+        why: This is true of refactor, and it gives no reason to switch unused apps off.
+    evidence:
+      - Often over 10 percent of a portfolio is unused; ending it saves cost and effort
+      - "**Retire**: Shutting down apps no longer needed."
+    takeaway: Retiring unused apps saves cost and effort, and such apps often make up over 10 percent of a portfolio.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 is the only option about idle apps, echoing the stem's 'unused', and 'Retire' plainly means the stem's 'shut them down'."
+  - id: q-hxaazt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: migration-strategy-retire
+    note: m12/seven-migration-strategies
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe's old stock-count tool was months from deprecation, so it stayed on the cafe's own servers during the move.
+      It has now reached that date, and no one uses it.
+      Which strategy applies to the tool now?
+    options:
+      - id: a
+        text: Retain
+        why: Retain fit while the tool was still needed, but keeping a tool nobody uses running only adds cost.
+      - id: b
+        text: Rehost
+        why: Moving an unused tool to AWS unchanged spends migration effort on something no one needs.
+      - id: c
+        text: Retire
+        correct: true
+        why: The tool has reached its end with no users left, so switching it off in place saves cost and effort.
+      - id: d
+        text: Relocate
+        why: Relocate moves VMs or containers to a cloud host, and there is no reason to move a tool no one uses.
+    evidence:
+      - "**Retire**: Shutting down apps no longer needed."
+      - Migrate only what makes business sense; retire these in place later
+    takeaway: An app kept in place until its deprecation date is retired there once no one needs it, rather than migrated.
+    history: []
+    verified:
+      keyHash: b788b45acd88
+      fullHash: f9e4127c1f66
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

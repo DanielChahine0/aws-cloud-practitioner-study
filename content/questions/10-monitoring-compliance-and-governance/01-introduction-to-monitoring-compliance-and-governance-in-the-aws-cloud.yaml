@@ -70,3 +70,40 @@ questions:
       fullHash: 78a656ef528a
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-9ws5v1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: secure-monitor-audit-comply-progression
+    note: m10/introduction-to-monitoring-compliance-and-governance-in-the-aws-cloud
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's new owner wants to start proving to a card network that the cafe meets its payment rules.
+      So far, nobody has set up sign-in, firewalls or any access controls on the order system.
+      Which step of the progression must the cafe put in place first, since the other steps rest on it?
+    options:
+      - id: a
+        text: Comply
+        why: Proving that rules are met is the last step, and it has nothing to stand on until controls exist.
+      - id: b
+        text: Audit
+        why: An audit checks that controls work, but there are no controls yet for it to check.
+      - id: c
+        text: Monitor
+        why: Watching activity for threats comes after access is protected, not before it.
+      - id: d
+        text: Secure
+        correct: true
+        why: Securing stops unauthorized access first, and monitoring, audits and compliance all build on it.
+    evidence:
+      - Monitoring, audits, compliance and governance build on security.
+      - "Order: secure, monitor, audit, comply."
+    takeaway: Security comes first in the progression, because monitoring, audits and compliance all build on it.
+    history: []
+    verified:
+      keyHash: d8be9f51da03
+      fullHash: a7c7420d5323
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

@@ -506,3 +506,175 @@ questions:
       fullHash: 4c3e11c53cd9
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-88fy4s
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: regulatory-compliance
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      After moving its ordering system to AWS, the cafe still has card-payment rules to meet.
+      Which part of meeting those rules stays with the cafe?
+    options:
+      - id: a
+        text: Writing its own audit of AWS's data centers
+        why: AWS keeps its infrastructure compliant and offers its reports on demand, so the cafe inherits that proof instead of writing it.
+      - id: b
+        text: Setting how its ordering app stores card data
+        correct: true
+        why: AWS secures the infrastructure, which leaves the cafe to make its own workload and the card data in it meet the rules.
+      - id: c
+        text: Patching the host software under its servers
+        why: The host layer under the cafe's servers is part of the infrastructure AWS keeps compliant for it.
+      - id: d
+        text: Guarding the network between data centers
+        why: AWS's networks come with its compliant infrastructure, which the cafe inherits rather than runs.
+    evidence:
+      - You inherit AWS's compliant infrastructure and handle your own workloads.
+      - So you focus on your own workloads, helped by automated compliance and on-demand reports.
+    takeaway: On AWS you inherit a compliant infrastructure, so your compliance work centres on your own workloads and data.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 is the only customer-side duty; options 2 and 3 are both AWS duties, so neither could be a single key.)"
+  - id: q-4vqbxb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: hipaa
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's parent company runs several apps in the US and the EU.
+      Which app must it check against HIPAA?
+    options:
+      - id: a
+        text: An EU loyalty app that stores customer emails
+        why: EU consumer data falls under GDPR, not a US healthcare law.
+      - id: b
+        text: A US cafe till that takes card payments
+        why: Card payments bring payment card rules, but a till handles no health information.
+      - id: c
+        text: A US pharmacy app that holds prescriptions
+        correct: true
+        why: HIPAA covers US healthcare apps, and prescriptions are health records.
+      - id: d
+        text: A menu website that stores no personal data
+        why: A menu site with no personal data is not a healthcare app, so HIPAA does not reach it.
+    evidence:
+      - "Rules follow the workload: GDPR for EU consumer data, HIPAA for US healthcare apps."
+      - "**HIPAA**: US Health Insurance Portability and Accountability Act of 1996."
+    takeaway: HIPAA follows US healthcare workloads, while EU consumer data falls under GDPR instead.
+    history: []
+    verified:
+      keyHash: b59706eb425e
+      fullHash: 95306aeb3921
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-k236sk
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-artifact-agreements
+    note: m10/compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's new manager wants to see which legal terms with AWS the cafe accepted last year, and to keep track of them from now on.
+      Where should she look?
+    options:
+      - id: a
+        text: AWS Artifact Reports
+        why: Artifact Reports holds outside audits of AWS, not the terms the cafe itself has accepted.
+      - id: b
+        text: AWS Organizations
+        why: Organizations groups accounts and sets SCPs; it is not where terms with AWS are read or tracked.
+      - id: c
+        text: AWS Audit Manager
+        why: Audit Manager collects evidence about the cafe's own controls, not its terms with AWS.
+      - id: d
+        text: AWS Artifact Agreements
+        correct: true
+        why: Artifact Agreements is where a customer reads, signs and tracks its agreements with AWS.
+    evidence:
+      - "**Agreements**: where you read, sign and track your agreements with AWS, for a single account or across AWS Organizations, including HIPAA ones."
+    takeaway: AWS Artifact Agreements is where you read, sign and keep track of your agreements with AWS over time.
+    history: []
+    verified:
+      keyHash: 88e5c19372b4
+      fullHash: 907a9a5c779f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-edm644
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-compliance-resources
+    note: m10/compliance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's new risk lead wants a single place that lists the AWS services built to help regulated firms meet their obligations.
+      Where should she look?
+    options:
+      - id: a
+        text: AWS Customer Compliance Center
+        correct: true
+        why: The compliance portal shows the services that enable compliance together in one place.
+      - id: b
+        text: AWS Artifact
+        why: Artifact hands out AWS's audit reports and agreements, not an overview of helpful services.
+      - id: c
+        text: AWS Audit Manager
+        why: Audit Manager gathers evidence from the cafe's own account rather than listing AWS services.
+      - id: d
+        text: AWS Config
+        why: Config checks resource settings against rules; it does not point to other services.
+    evidence:
+      - The AWS Compliance portal (the video's AWS Compliance Center, the assessment's Customer Compliance Center) shows compliance-enabling services in one place.
+    takeaway: The Customer Compliance Center, not Artifact, is where AWS gathers the services that help with compliance in one place.
+    history: []
+    verified:
+      keyHash: a91fdd3185cf
+      fullHash: c25618498287
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-62bwdz
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: regulatory-compliance
+    note: m10/compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe must meet several rules at once, and they come from different places.
+      Match each rule to the kind of rule it is.
+    pairs:
+      - left: GDPR's limits on using EU customers' personal data
+        right: A government regulation
+        why: GDPR is law made by the EU, so it is a government regulation for any business that holds EU consumer data.
+      - left: The card networks' security rules for taking payments
+        right: An industry standard
+        why: The card networks agree these rules across the payments trade, so they form an industry standard rather than a law.
+      - left: The manager's ban on phones behind the till
+        right: An internal policy
+        why: The manager set this rule for this cafe alone, so it is an internal policy, which compliance must satisfy as well.
+    evidence:
+      - "It is a security and data-protection bar: your resources and data must satisfy each internal policy, industry standard and regulation that binds you."
+      - "Rules follow the workload: GDPR for EU consumer data, HIPAA for US healthcare apps."
+    takeaway: Compliance covers government regulations such as GDPR, industry standards such as card payment rules, and a business's internal policies.
+    history: []
+    verified:
+      keyHash: 9433cddcb209
+      fullHash: e07934aa0c73
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

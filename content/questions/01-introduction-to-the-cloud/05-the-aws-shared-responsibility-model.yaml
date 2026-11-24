@@ -370,3 +370,183 @@ questions:
       fullHash: 3a1d5e701388
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-e8sadq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: shared-responsibility-model
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe is comparing two AWS services to hold its gift card records.
+      One duty sits with the customer in the first service's guide and with AWS in the second.
+      Which duty could that be?
+    options:
+      - id: a
+        text: Watching data center halls with surveillance cameras
+        why: Surveillance of the buildings is physical security, which AWS always keeps whatever service the cafe picks.
+      - id: b
+        text: Encrypting stored records on the AWS server side
+        correct: true
+        why: Server-side encryption is a duty whose owner shifts with the service, so two guides can place it differently.
+      - id: c
+        text: Choosing which staff accounts can read the records
+        why: Deciding who reaches its data stays with the cafe in every service, set through AWS controls.
+      - id: d
+        text: Encrypting records on the cafe tills before upload
+        why: Encrypting on the client before AWS gets the data is always the cafe's job, so no guide moves it to AWS.
+    evidence:
+      - Server-side encryption and OS, network and firewall setup vary by service.
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+      - Customers patch their OS and secure applications, data, access and client-side encryption.
+    takeaway: Server-side encryption is a shared duty whose owner moves between AWS and the customer with the service chosen.
+    history: []
+    verified:
+      keyHash: 77faf6c447a1
+      fullHash: c9a4b2612204
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-p2r7tc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-of-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe's ordering server shares physical hardware with other AWS customers.
+      The owner worries that another customer could reach the cafe's data through the virtualization layer underneath.
+      Which party secures that layer?
+    options:
+      - id: a
+        text: The cafe
+        why: The cafe secures what it runs on top of the virtualization layer, not the layer that AWS operates.
+      - id: b
+        text: AWS
+        correct: true
+        why: AWS secures the hypervisor layer and keeps customers isolated from one another as part of security of the cloud.
+      - id: c
+        text: The other customer
+        why: Another customer has no control over the shared virtualization layer and cannot be the one to secure it.
+      - id: d
+        text: The cafe and AWS jointly
+        why: Hypervisor isolation sits fully in AWS's share and is not a duty that AWS splits with the cafe.
+    evidence:
+      - "**Hypervisor layer**: a virtualization layer that AWS secures."
+      - AWS owns security of the cloud, including all physical security, and the customer owns security in the cloud.
+    takeaway: Isolating customers at the hypervisor layer is part of security of the cloud, which AWS owns.
+    history: []
+    verified:
+      keyHash: 7aadba58c720
+      fullHash: 84fa5a1517f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-b67z4y
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: security-in-the-cloud
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe decides who can reach each kind of data it stores on AWS.
+      Match each item to the access the cafe should set for it.
+    pairs:
+      - left: Menu photos shown on the public website
+        right: Everyone
+        why: Photos meant for the public site should be open to anyone, and making that choice is the cafe's job.
+      - left: Shift schedules that every staff member checks
+        right: Some users
+        why: Schedules for the team should reach the staff only, a group the cafe picks through AWS controls.
+      - left: Payroll files the owner opens only from the office
+        right: One person under conditions
+        why: Payroll limited to the owner on the office network is one person with conditions, set by the cafe.
+    evidence:
+      - "You choose what data to store and, via AWS controls, who reaches it: everyone, some users, one person under conditions, or nobody."
+      - "Public retail photos versus locked-down bank records: customer-controlled access."
+    takeaway: Deciding who can reach each piece of stored data, from everyone to nobody, is the customer's security in the cloud.
+    history: []
+    verified:
+      keyHash: a9051178e47d
+      fullHash: 4e0efd355456
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-6x9hgb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: client-side-encryption
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.2"
+    level: 2
+    stem: >-
+      Before uploading its recipe files to AWS, the cafe patches the office laptop's operating system and encrypts the files on the laptop.
+      Later it leaves the stored copies open to anyone with a link by mistake.
+      What keeps the recipes unreadable to a stranger who opens them?
+    options:
+      - id: a
+        text: AWS guarding the buildings that hold its storage
+        why: Guarding the buildings stops physical theft, but it does nothing about a link the cafe left open.
+      - id: b
+        text: The cafe patching the laptop's operating system
+        why: Patching protects the laptop itself, but it does not change what a stranger sees in the stored copies.
+      - id: c
+        text: The cafe encrypting the files on the laptop
+        correct: true
+        why: Files encrypted before upload stay scrambled in storage, so an open link still shows nothing readable.
+      - id: d
+        text: AWS keeping each customer's storage apart
+        why: Isolation separates one customer from another, but a stranger with the open link goes around it.
+    evidence:
+      - Encrypted data stays unreadable even if access is left open.
+      - "**Client-side encryption**: encrypting data on the client before the server gets it."
+    takeaway: Client-side encryption keeps data unreadable even when the cafe leaves access open by mistake.
+    history: []
+    verified:
+      keyHash: 37548331588e
+      fullHash: a8e916970830
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-jzcf4j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: operating-system-patching
+    note: m01/the-aws-shared-responsibility-model
+    task: "2.1"
+    level: 2
+    stem: >-
+      AWS notices that the operating system on the cafe's server is missing a patch, yet it only sends the cafe an alert.
+      What keeps AWS from applying the patch itself?
+    options:
+      - id: a
+        text: Only the cafe can sign in to the server's OS
+        correct: true
+        why: AWS has no back door into the OS a customer runs, so only the cafe can sign in and apply the patch.
+      - id: b
+        text: Only AWS secures the hypervisor below the OS
+        why: Securing the hypervisor is AWS's share, but it gives AWS no access inside the cafe's operating system.
+      - id: c
+        text: Only AWS maintains the hardware under the server
+        why: Hardware upkeep is AWS's duty, yet it does not let AWS sign in to the cafe's operating system.
+      - id: d
+        text: Only the cafe decides whether to encrypt its data
+        why: Choosing to encrypt is the cafe's call, but it has nothing to do with who can sign in and patch the OS.
+    evidence:
+      - Only you can sign in to your OS or add users, since AWS has no back door.
+      - "AWS spots a flaw in a customer's OS: it can only alert them, and they patch."
+    takeaway: AWS cannot patch a customer's OS because it has no way in, so applying the patch stays the customer's job.
+    history: []
+    verified:
+      keyHash: 91b517f1617d
+      fullHash: fc55bfae70ae
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

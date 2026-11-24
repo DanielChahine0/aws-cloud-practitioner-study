@@ -190,3 +190,39 @@ questions:
       fullHash: c0eba57c7b33
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-76pwf5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: architecture-evaluation
+    note: m13/introduction-to-well-architected-solutions
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's ordering app runs without errors, but before the holiday rush the owner wants to know whether its design works, uses resources well, stays protected and will hold up over time.
+      Which guide should the owner judge the design against?
+    options:
+      - id: a
+        text: AWS Cloud Adoption Framework
+        why: The Cloud Adoption Framework guides a business through adopting the cloud, not a judgment of whether one design is sound.
+      - id: b
+        text: AWS Shared Responsibility Model
+        why: This model splits security duties between AWS and the cafe, and it does not grade the quality of a design.
+      - id: c
+        text: AWS Well-Architected Framework
+        correct: true
+        why: The Framework is the best-practice guide for judging whether a design works, is efficient and secure, and will last.
+      - id: d
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates what a design will cost, but it does not judge how well the design is built.
+    evidence:
+      - The AWS Well-Architected Framework, a leading AWS aid, tests if a design is functional, efficient, secure, built to last.
+      - Judge designs with the Framework.
+    takeaway: A design that already runs is judged for soundness against the AWS Well-Architected Framework, not a cost or adoption guide.
+    history: []
+    verified:
+      keyHash: 6e9aee82ae3e
+      fullHash: c9a0a70c659f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

@@ -472,3 +472,39 @@ questions:
       fullHash: c0bd9f9c6df4
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-acwzj7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: point-in-time-recovery
+    note: m06/aws-elastic-disaster-recovery
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's order server replicates to AWS with AWS Elastic Disaster Recovery.
+      In which situation should staff recover the server as it stood at an earlier moment rather than from the latest replica?
+    options:
+      - id: a
+        text: The server's disk failed during the lunch rush
+        why: A hardware fault leaves the latest replica intact, so the current copy brings the server back as it was.
+      - id: b
+        text: A mistaken bulk edit wiped prices this morning
+        correct: true
+        why: The replica has already copied the bad edit, so staff pick a moment before it to get the prices back.
+      - id: c
+        text: A storm cut the office power for the whole night
+        why: A power cut does not damage the data, so the latest replica is the right state to recover.
+      - id: d
+        text: Staff ran the yearly recovery drill last week
+        why: A recovery drill leaves production alone and has no damaged data to roll back from.
+    evidence:
+      - Exact, current replicas let servers recover in the target AWS Region within minutes, with point-in-time recovery.
+      - "**Point-in-time recovery**: restoring a system as it stood at a chosen earlier moment."
+    takeaway: Recover to an earlier point in time when the latest replica already holds the mistake, and use the current replica otherwise.
+    history: []
+    verified:
+      keyHash: 90e20347c345
+      fullHash: 9db7049a9945
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

@@ -370,3 +370,74 @@ questions:
       fullHash: aa5d815146aa
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-44yyr4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: elastic-load-balancing
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 1
+    stem: >-
+      What does the word "Elastic" in Elastic Load Balancing describe?
+    options:
+      - id: a
+        text: It spreads incoming requests evenly over the instances behind it
+        why: Spreading requests is what any load balancer does, not what the word "Elastic" refers to.
+      - id: b
+        text: It grows and shrinks with traffic at no extra hourly cost
+        correct: true
+        why: The service scales itself with traffic and does not raise its hourly cost as it does so.
+      - id: c
+        text: It accepts both internal and external traffic for an application
+        why: Handling both kinds of traffic is true of ELB, but it is not what the name "Elastic" means.
+      - id: d
+        text: It has its patching, upgrades and failover handled by AWS
+        why: AWS-run upkeep makes ELB a managed service, which is a different trait from being elastic.
+    evidence:
+      - '"Elastic" means it grows and shrinks with traffic at no extra hourly cost.'
+    takeaway: The "Elastic" in ELB means it scales with traffic by itself without raising its hourly cost.
+    history: []
+    verified:
+      keyHash: ee75f0d2a9f4
+      fullHash: 288550ee10da
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-nqefhx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: load-balancing-routing-methods
+    note: m02/directing-traffic-with-elastic-load-balancing
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's order servers answer at different speeds through the day, and customers notice the slow ones.
+      The cafe wants each request sent to whichever server is answering fastest at that moment.
+      Which routing method fits?
+    options:
+      - id: a
+        text: Round Robin
+        why: Round Robin cycles through the servers in order, whatever their speed at the moment.
+      - id: b
+        text: Least Connections
+        why: Least Connections counts open connections, which is not the same as picking the fastest server.
+      - id: c
+        text: IP Hash
+        why: IP Hash pins each client to one server, even when that server is slow.
+      - id: d
+        text: Least Response Time
+        correct: true
+        why: Least Response Time sends traffic to the fastest-responding server to cut latency.
+    evidence:
+      - "**Least Response Time**: routing toward the fastest-responding server to cut latency."
+      - "**Least Connections**: routing toward the server with the fewest open connections."
+    takeaway: To send each request to the quickest server and cut latency, route with Least Response Time.
+    history: []
+    verified:
+      keyHash: fe2ab6940c74
+      fullHash: cd92f32be7a3
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

@@ -695,3 +695,116 @@ questions:
       fullHash: c15cee50c05b
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-hgtj8p
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-certificate-manager
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      A cafe developer plans to use AWS Certificate Manager (ACM) to handle encryption at rest for the order database.
+      Which fact shows that ACM is the wrong choice?
+    options:
+      - id: a
+        text: ACM also covers connected on-premises resources
+        why: This is true, but reaching on-premises resources does not make ACM a source of general encryption keys.
+      - id: b
+        text: ACM is built to manage SSL/TLS certificates
+        correct: true
+        why: ACM is built for SSL/TLS certificates, while general-purpose encryption keys for stored data belong in AWS KMS.
+      - id: c
+        text: ACM offers central management for AWS services
+        why: This is true, but managing things in one place does not make ACM the service for database encryption keys.
+      - id: d
+        text: ACM is reached from the AWS Management Console
+        why: This is true, but where the developer opens ACM says nothing about what kind of encryption it handles.
+    evidence:
+      - ACM is for certificates, and AWS KMS for general-purpose encryption keys.
+      - "**AWS Certificate Manager (ACM)**: central management of SSL/TLS certificates for AWS services and connected on-premises resources."
+    takeaway: ACM manages SSL/TLS certificates, while general-purpose encryption keys belong in AWS KMS.
+    history: []
+    verified:
+      keyHash: 17677f1d2751
+      fullHash: 6fb55f2ed56d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-grfe1f
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-macie
+    note: m09/protecting-data
+    task: "2.4"
+    level: 1
+    stem: >-
+      The cafe is weighing Amazon Macie for the S3 buckets that hold its customer records.
+      Which statements describe what Macie offers?
+    options:
+      - id: a
+        text: It keeps watch on sensitive data at rest
+        correct: true
+        why: Macie finds and then keeps monitoring sensitive data stored in S3, such as customer records.
+      - id: b
+        text: It creates and controls cryptographic keys
+        why: Creating and controlling keys is the job of AWS KMS, not of Macie.
+      - id: c
+        text: It aids security posture and compliance reviews
+        correct: true
+        why: By showing where sensitive data sits, Macie helps the cafe review its security posture and compliance.
+      - id: d
+        text: It manages SSL/TLS certificates in one place
+        why: Central certificate management is what AWS Certificate Manager does, not Macie.
+      - id: e
+        text: It scans EC2 instances for software flaws
+        why: Scanning instances for vulnerable software is the job of Amazon Inspector, not Macie.
+    evidence:
+      - "**Amazon Macie**: uses machine learning (ML) and automation to find and monitor sensitive data at rest in S3, aiding security posture reviews and compliance."
+    takeaway: Macie watches sensitive data at rest in S3 and helps the cafe review its security posture and compliance.
+    history: []
+    verified:
+      keyHash: 98f83c51bde2
+      fullHash: e36c12d52770
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-48mv9e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: ssl-tls-certificates
+    note: m09/protecting-data
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe already keeps an encryption key in AWS KMS.
+      A developer says that key on its own will protect orders as they cross the network from the app to the database.
+      Which statement corrects the developer?
+    options:
+      - id: a
+        text: Keys in AWS KMS never leave the service
+        why: This is true, but it explains how keys are guarded, not what protects orders on the move.
+      - id: b
+        text: DynamoDB encrypts its table data at rest
+        why: This is true, but it covers stored data, not orders while they cross the network.
+      - id: c
+        text: SSL/TLS is needed to secure the connection
+        correct: true
+        why: A key alone does not protect data in transit, while an SSL/TLS connection does.
+      - id: d
+        text: Hashing is one-way, so it cannot be reversed
+        why: This is true of hashing for stored passwords, but it does not protect orders crossing the network.
+    evidence:
+      - A key alone does not secure data in transit, but SSL/TLS does.
+      - SSL and its successor TLS use certificates to verify identity, then encrypt the connection.
+    takeaway: An encryption key alone does not protect data on the move, but an SSL/TLS connection does.
+    history: []
+    verified:
+      keyHash: 6aa0f17b0f06
+      fullHash: d82ff6b6297c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

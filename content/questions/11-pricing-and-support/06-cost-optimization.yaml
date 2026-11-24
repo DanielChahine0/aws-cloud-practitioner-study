@@ -427,3 +427,107 @@ questions:
       fullHash: fb6ee3510449
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-zsahep
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: rightsizing
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe wants to shrink its EC2 menu servers to save money, but the team is unsure what size would be enough.
+      What should the team do first?
+    options:
+      - id: a
+        text: Commit to the servers' current size for a term
+        why: A commitment discounts the current size, but it locks in servers that may be bigger than needed.
+      - id: b
+        text: Copy the servers to a second Availability Zone
+        why: A second Availability Zone adds resilience and cost, and it says nothing about the right size.
+      - id: c
+        text: Measure the servers' real workload needs
+        correct: true
+        why: Rightsizing starts by measuring what the workload really needs, then resizing the servers to fit.
+      - id: d
+        text: Move the servers to a Region with lower prices
+        why: A cheaper Region can lower the price, but the servers would still be sized without any data.
+    evidence:
+      - "Rightsizing: measure real workload needs and resize to fit."
+    takeaway: Rightsizing starts with measuring real workload needs, and only then resizing resources to fit them.
+    history: []
+    verified:
+      keyHash: 108a06ac8656
+      fullHash: d23929df92e5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-7r5gfg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-compute-optimizer
+    note: m11/cost-optimization
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe's EC2 bill is high, and the owner suspects some running instances are far bigger than their work needs.
+      Which service flags those instances so she can resize them?
+    options:
+      - id: a
+        text: AWS Budgets
+        why: AWS Budgets alerts when spend nears or passes a limit, but it does not point out which instances are too big.
+      - id: b
+        text: AWS Compute Optimizer
+        correct: true
+        why: Compute Optimizer flags overprovisioned instances, so the cafe can resize them to fit the work they really do.
+      - id: c
+        text: AWS Pricing Calculator
+        why: The Pricing Calculator estimates costs before deploying, not how well running instances fit their work.
+      - id: d
+        text: AWS Billing and Cost Management dashboard
+        why: The dashboard shows charges and top services by cost, but it does not flag which instances are oversized.
+    evidence:
+      - AWS Compute Optimizer, a cost-minded sidekick, flags overprovisioned instances.
+    takeaway: AWS Compute Optimizer flags overprovisioned instances, so the cafe knows which ones to resize.
+    history: []
+    verified:
+      keyHash: 7c495cb862ac
+      fullHash: 56cc573dd8d1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-s12ppn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: vpc-endpoints
+    note: m11/cost-optimization
+    task: "3.5"
+    level: 1
+    stem: >-
+      What does a VPC endpoint connect?
+    options:
+      - id: a
+        text: A VPC and an on-site data center over a VPN tunnel
+        why: A link to an on-site data center over a VPN is a Site-to-Site VPN, not a VPC endpoint.
+      - id: b
+        text: Private subnets and the internet, for outbound use
+        why: Outbound internet access for private subnets comes from a NAT gateway, not a VPC endpoint.
+      - id: c
+        text: A VPC and AWS services, without the internet
+        correct: true
+        why: A VPC endpoint links a VPC privately to supported AWS services, off the public internet.
+      - id: d
+        text: Many VPCs and on-premises networks through one hub
+        why: Joining many VPCs and networks through one hub is AWS Transit Gateway, not a VPC endpoint.
+    evidence:
+      - VPC endpoints connect a VPC privately to supported services, and one used for S3 trims transfer costs, notably out-of-Region.
+    takeaway: A VPC endpoint connects a VPC privately to supported AWS services, keeping that traffic off the public internet.
+    history: []
+    verified:
+      keyHash: d256a4f712c1
+      fullHash: 87bc77970c6b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

@@ -563,3 +563,293 @@ questions:
       fullHash: 525488873f73
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-vh3szd
+    version: 1
+    status: live
+    type: multi
+    select: 3
+    pool: practice
+    concept: aws-cloud-adoption-framework
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe owner learns that AWS CAF names both the kinds of project it supports and the payoffs it aims for.
+      Which of these are kinds of project it supports?
+    options:
+      - id: a
+        text: Moving the cafe's legacy servers and apps to AWS
+        correct: true
+        why: Legacy infrastructure and app moves are one of the kinds of project AWS CAF supports.
+      - id: b
+        text: Raising the cafe's revenue and staff productivity
+        why: Higher revenue and productivity are payoffs AWS CAF aims for, not a kind of project it supports.
+      - id: c
+        text: Reworking the cafe's processes and operations
+        correct: true
+        why: Process and operations changes are one of the kinds of project AWS CAF supports.
+      - id: d
+        text: Cutting the cafe's operating costs and risk
+        why: Lower operating costs and risk are payoffs AWS CAF aims for, not a kind of project it supports.
+      - id: e
+        text: Starting a new business model for the cafe
+        correct: true
+        why: New business models are one of the kinds of project AWS CAF supports.
+      - id: f
+        text: Improving the cafe's sustainability and transparency
+        why: Better sustainability and transparency are payoffs AWS CAF aims for, not a kind of project it supports.
+    evidence:
+      - "Uses: legacy infrastructure and app moves, process and operations changes, and new business models."
+      - "Payoffs: revenue, productivity and customer experience up, operating costs and risk down, sustainability and transparency up."
+    takeaway: AWS CAF supports moving legacy systems, changing processes and operations, and launching new business models.
+    history: []
+    verified:
+      keyHash: fb64abef68a5
+      fullHash: c5f8cf86f12d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-9ddjjj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-caf-business-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which statement describes the focus of the AWS CAF Business perspective?
+    options:
+      - id: a
+        text: Making IT serve business needs and tying IT spend to key results
+        correct: true
+        why: The Business perspective makes IT serve business needs and ties IT spending to key business results.
+      - id: b
+        text: Running and recovering workloads at the level agreed with the business
+        why: Running and recovering workloads at an agreed service level is the Operations perspective.
+      - id: c
+        text: Reviewing roles and skill gaps to set training and staffing priorities
+        why: Reviewing roles and skill gaps to plan training and staffing is the People perspective.
+      - id: d
+        text: Choosing and putting in place controls for visibility and auditability
+        why: Choosing controls for visibility and auditability is the Security perspective.
+    evidence:
+      - IT serves business needs and IT spending ties to key business results; build the business case, rank cloud initiatives, align goals
+    takeaway: The AWS CAF Business perspective makes IT serve business needs and ties IT spending to key business results.
+    history: []
+    verified:
+      keyHash: 00a661da46e4
+      fullHash: b731c60386bc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-0hfe9n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-caf-people-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      The cafe's head of HR and its staffing coordinator join the AWS CAF workshops as stakeholders.
+      Which perspective most typically includes these roles?
+    options:
+      - id: a
+        text: Governance
+        why: Governance typically includes the CIO, program and portfolio managers and enterprise architects, not HR.
+      - id: b
+        text: Operations
+        why: Operations typically includes IT operations and support managers, not HR or staffing roles.
+      - id: c
+        text: People
+        correct: true
+        why: HR, staffing and people managers are the typical stakeholders of the People perspective.
+      - id: d
+        text: Business
+        why: Business typically includes finance managers, budget owners and strategy stakeholders, not HR.
+    evidence:
+      - HR, staffing, people managers
+      - "Course mapping: a business or finance analyst to Business (Governance also lists business analysts), HR to People, a cloud architect to Platform."
+    takeaway: HR and staffing roles are the typical stakeholders of the AWS CAF People perspective.
+    history: []
+    verified:
+      keyHash: a32fdba8b9ca
+      fullHash: 662250b3c970
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-nhffw7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-caf-governance-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      The cafe chain's CIO asks what the AWS CAF Governance perspective is meant to achieve for the cloud move.
+      Which outcome does it aim for?
+    options:
+      - id: a
+        text: Faster recovery of workloads at agreed service levels
+        why: Running and recovering workloads at agreed levels is the aim of the Operations perspective.
+      - id: b
+        text: More value from IT with less risk along the way
+        correct: true
+        why: Governance aligns IT and business strategy to get more value from IT while lowering risk.
+      - id: c
+        text: A detailed target-state design for the moved workloads
+        why: Architectural models and a detailed target state come from the Platform perspective.
+      - id: d
+        text: Better staff skills through training and new hires
+        why: Setting training and staffing priorities is the aim of the People perspective.
+    evidence:
+      - Align IT and business strategy for more value and less risk; update skills and processes, measure cloud investments
+    takeaway: The AWS CAF Governance perspective aligns IT with business strategy to add value and cut risk.
+    history: []
+    verified:
+      keyHash: 1035c53cc891
+      fullHash: 99987573b014
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-pcvfvx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-caf-platform-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe wants to build a brand-new delivery app in AWS rather than move an old one.
+      It needs proven patterns and an architectural model for this new solution.
+      Which AWS CAF perspective covers this work?
+    options:
+      - id: a
+        text: Operations
+        why: Operations runs and recovers workloads at agreed levels and does not design a new solution.
+      - id: b
+        text: Platform
+        correct: true
+        why: Platform gives patterns for new cloud solutions as well as for moving workloads, with architectural models.
+      - id: c
+        text: Governance
+        why: Governance aligns IT with business strategy and measures investments; it does not design apps.
+      - id: d
+        text: Security
+        why: Security chooses controls for visibility and auditability, not the architecture of the app.
+    evidence:
+      - Patterns for new cloud solutions and moving on-premises workloads; architectural models, detailed target state
+    takeaway: The AWS CAF Platform perspective covers new cloud solutions too, not only moving existing workloads.
+    history: []
+    verified:
+      keyHash: 407169a948d1
+      fullHash: fd94994045db
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-7tfq85
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-caf-security-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      Which pair of goals sits at the heart of the AWS CAF Security perspective?
+    options:
+      - id: a
+        text: Training and staffing plans
+        why: Setting training and staffing priorities is the focus of the People perspective.
+      - id: b
+        text: Recovery and agreed service levels
+        why: Running and recovering workloads at agreed levels is the focus of the Operations perspective.
+      - id: c
+        text: More value and less risk
+        why: More value with less risk is the aim of the Governance perspective.
+      - id: d
+        text: Visibility and auditability
+        correct: true
+        why: The Security perspective centers on visibility, auditability, control and agility.
+    evidence:
+      - Visibility, auditability, control and agility; choose and implement security controls
+    takeaway: The AWS CAF Security perspective aims for visibility, auditability, control and agility.
+    history: []
+    verified:
+      keyHash: 67028ce2e136
+      fullHash: 589857b79c02
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-zfe21e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-caf-operations-perspective
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 2
+    stem: >-
+      With its ordering app now in AWS, the cafe must write down the procedures its IT staff follow today and the process changes they need to keep the app running.
+      Which AWS CAF perspective covers this work?
+    options:
+      - id: a
+        text: Platform
+        why: Platform designs architecture and patterns for moving workloads, not the procedures to run them.
+      - id: b
+        text: Business
+        why: Business ties IT spending to business results and does not define how IT runs the app.
+      - id: c
+        text: Operations
+        correct: true
+        why: Operations defines current procedures and needed process changes to run workloads at agreed levels.
+      - id: d
+        text: Security
+        why: Security chooses controls for visibility and auditability, not the procedures to run the app.
+    evidence:
+      - Enable, run, use, operate and recover workloads at the level agreed with business stakeholders; set daily to yearly routines, support business operations, define current procedures plus needed process changes and training
+    takeaway: Defining today's run procedures and the process changes needed belongs to the AWS CAF Operations perspective.
+    history: []
+    verified:
+      keyHash: c9b4cd9ad435
+      fullHash: 3350c4f49077
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-bx50ft
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-caf-action-plan
+    note: m12/aws-cloud-adoption-framework
+    task: "1.3"
+    level: 1
+    stem: >-
+      The cafe is about to draw up its AWS CAF Action Plan.
+      What is the plan built from?
+    options:
+      - id: a
+        text: The four business outcomes that AWS CAF ties adoption to
+        why: The four outcomes frame why to adopt the cloud, but the Action Plan is not built from them.
+      - id: b
+        text: The skill and process gaps found in each perspective
+        correct: true
+        why: Skill and process gaps found in each perspective feed the AWS CAF Action Plan.
+      - id: c
+        text: The typical stakeholder roles listed for each perspective
+        why: The roles name each perspective's stakeholders, while the Action Plan is built from gaps.
+      - id: d
+        text: The business case built at the end of the assess phase
+        why: The business case justifies the move, while the Action Plan is built from perspective gaps.
+    evidence:
+      - Skill and process gaps found per perspective feed the AWS CAF Action Plan, which guides change management.
+    takeaway: The AWS CAF Action Plan is built from the skill and process gaps that each perspective uncovers.
+    history: []
+    verified:
+      keyHash: 8f5353c23559
+      fullHash: 9dca51f164e8
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

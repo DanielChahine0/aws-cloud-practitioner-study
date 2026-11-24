@@ -462,3 +462,75 @@ questions:
       fullHash: b9f2f85f04dd
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-arhjta
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-global-infrastructure
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe chain already spreads its ordering app across several Availability Zones in one Region.
+      It now wants the app to keep serving customers even if that whole Region goes down.
+      Which design adds this protection?
+    options:
+      - id: a
+        text: Run in several Regions with failover between them
+        correct: true
+        why: Running in more than one Region with failover lets another Region take over when a whole Region goes down.
+      - id: b
+        text: Add one more Availability Zone in the same Region
+        why: Another zone in the same Region guards against one zone failing, but not against losing the whole Region.
+      - id: c
+        text: Move the app to the Region closest to its customers
+        why: A Region near customers cuts latency, but the app would still depend on that one Region staying up.
+      - id: d
+        text: Add a second data center inside one of its zones
+        why: A further data center inside one zone stays within the same Region, so a Region outage still stops the app.
+    evidence:
+      - For disaster protection, businesses often run in several Regions with failover.
+      - "**Failover**: switching to another AZ or Region when one fails."
+    takeaway: Spreading across AZs survives a zone outage, while running in several Regions with failover survives losing a whole Region.
+    history: []
+    verified:
+      keyHash: 65d78116f41b
+      fullHash: f08624e0f119
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-h8knjn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-regions
+    note: m01/introduction-to-aws-global-infrastructure
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe's data must stay in the Tokyo Region, yet its IT lead wants the ordering app to keep running if one Availability Zone fails.
+      Which fact about AWS Regions lets the app do both?
+    options:
+      - id: a
+        text: Each Region covers its own geographic area
+        why: A Region's location explains where the data stays, but says nothing of a second zone to fail over to.
+      - id: b
+        text: Each AZ holds one or more data centers
+        why: Data centers inside one zone all go down with that zone, so they do not keep the app running.
+      - id: c
+        text: Each Region holds three or more AZs
+        correct: true
+        why: Tokyo alone has several zones, so the app can run in more than one without the data leaving the Region.
+      - id: d
+        text: Each Region is sited near a group of customers
+        why: Being near customers explains where a Region is placed, not how the app survives a zone failure there.
+    evidence:
+      - "**AWS Region**: a geographic area with three or more AZs."
+    takeaway: Every AWS Region holds three or more AZs, so an app can survive a zone failure without leaving its Region.
+    history: []
+    verified:
+      keyHash: f693dd29bef3
+      fullHash: 086dbdd815a1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

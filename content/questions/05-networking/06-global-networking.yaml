@@ -464,3 +464,186 @@ questions:
       fullHash: f903c8a721fb
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-8pvm4r
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: domain-name-system
+    note: m05/global-networking
+    task: "3.5"
+    level: 1
+    stem: >-
+      A diner's laptop looks up the cafe's web address before loading the menu.
+      Match each part of that lookup to the job it does.
+    pairs:
+      - left: The browser
+        right: Passes the typed name on to start the lookup
+        why: The browser does not find the address itself, so it hands the name to a customer DNS resolver.
+      - left: The customer DNS resolver
+        right: Queries another server on the browser's behalf
+        why: The resolver takes the name from the browser and asks the company's DNS server for its address.
+      - left: The company's DNS server
+        right: Sends back the IP address for that name
+        why: The company's DNS server holds the answer and replies with the IP address the laptop connects to.
+    evidence:
+      - "Resolution: the browser hands the name to a customer DNS resolver, which asks the company's DNS server, which replies with the IP address (192.0.2.0 for AnyCompany)."
+    takeaway: A DNS lookup runs from the browser to a customer DNS resolver to the company's DNS server, which returns the IP address.
+    history: []
+    verified:
+      keyHash: 1897cae8e57b
+      fullHash: d8b7c90734ec
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-wcsy1q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-route-53
+    note: m05/global-networking
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe's online shop runs on Amazon EC2 instances, while its gift-card site still sits with an outside hosting company.
+      The cafe wants one service to answer name lookups for both sites and send each customer to the right one.
+      Which service fits?
+    options:
+      - id: a
+        text: Elastic Load Balancing
+        why: A load balancer spreads requests across targets inside one Region and does not answer name lookups for the sites.
+      - id: b
+        text: AWS Transit Gateway
+        why: A transit gateway joins VPCs and on-premises networks, and it does not resolve names for customers.
+      - id: c
+        text: Amazon Route 53
+        correct: true
+        why: Route 53 is a DNS service that can route users to apps running in AWS or to apps hosted outside it.
+      - id: d
+        text: AWS Global Accelerator
+        why: Global Accelerator steers app traffic over the AWS network to endpoints, but it is not the service that answers DNS lookups.
+    evidence:
+      - Route 53 is a reliable, low-cost DNS service whose worldwide, auto-scaling DNS servers route users to apps in AWS (EC2 instances, load balancers) or outside it.
+    takeaway: Route 53 answers DNS lookups and can point users at apps running in AWS or hosted outside AWS.
+    history: []
+    verified:
+      keyHash: 9023d7635ee8
+      fullHash: d257bc183272
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-bm7be1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: route-53-routing-policies
+    note: m05/global-networking
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe has copied its ordering app into two AWS Regions on different continents, so customers anywhere sit near one of them.
+      It wants Route 53 to send every customer to whichever of the two Regions answers them fastest, whatever country they are in.
+      Which routing policy fits?
+    options:
+      - id: a
+        text: Geoproximity routing
+        why: Geoproximity weighs the distance between users and resources, not which Region gives the quickest response.
+      - id: b
+        text: Latency-based routing
+        correct: true
+        why: Latency-based routing sends each customer to the endpoint that gives them the lowest delay.
+      - id: c
+        text: Geolocation routing
+        why: Geolocation routing picks a Region from the customer's country, which the cafe wants to ignore here.
+      - id: d
+        text: Weighted round robin routing
+        why: Weighted round robin splits traffic by shares the cafe sets and does not look at response times.
+    evidence:
+      - "Routing policies: weighted round robin, latency-based, geolocation and geoproximity."
+      - Route 53 is one of many services hosted at the edge, building on edge locations from an earlier module.
+    takeaway: With an app in several Regions, Route 53 latency-based routing sends each customer to the Region that answers them fastest.
+    history: []
+    verified:
+      keyHash: 20c9cbb18ea5
+      fullHash: 1c2a382dd5c1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-qw4102
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-cloudfront
+    note: m05/global-networking
+    task: "3.5"
+    level: 2
+    stem: >-
+      During the holiday rush, the cafe's online store responds slowly for customers far from its Region, and many leave before paying.
+      The cafe puts Amazon CloudFront in front of the store.
+      What does this change give the cafe?
+    options:
+      - id: a
+        text: Fixed IP addresses that stay the same for the store
+        why: Static IP addresses for an app come from Global Accelerator, not from a content delivery network.
+      - id: b
+        text: Faster page loads from copies held near buyers
+        correct: true
+        why: CloudFront serves the store's content from edge locations close to each customer, so pages load sooner.
+      - id: c
+        text: One place to register and hold its domain names
+        why: Registering and gathering domain names is a Route 53 job, not something CloudFront takes on.
+      - id: d
+        text: Lower cost of delivering the store's content
+        correct: true
+        why: Serving copies from edge locations cuts trips to the origin, which CloudFront offers as lower delivery cost.
+      - id: e
+        text: Lookups that turn its domain name into an address
+        why: Turning the store's domain name into an IP address is DNS work done by Route 53, not by a content delivery network.
+    evidence:
+      - CloudFront is a CDN (content delivery network) that securely serves static and dynamic web content from edge locations near customers, for faster loads, lower cost and reliability.
+      - "Use cases: smooth workout videos at peak hours, fast store pages in busy seasons (fewer abandoned carts) and quick map loads in a travel app."
+    takeaway: CloudFront serves content from edge locations near customers, giving faster loads and lower delivery cost in busy seasons.
+    history: []
+    verified:
+      keyHash: 58b7a690678b
+      fullHash: 2cd71228b732
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-g8kfq8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-global-accelerator
+    note: m05/global-networking
+    task: "3.5"
+    level: 3
+    stem: >-
+      The cafe hosts a live trivia game for members on several continents, and every tap a player makes must reach the game servers at once.
+      Nothing in this traffic can be cached, and play stutters when it crosses crowded public internet routes.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon CloudFront
+        why: CloudFront speeds delivery by caching content near users, which does not help traffic that cannot be cached.
+      - id: b
+        text: Elastic Load Balancing
+        why: A load balancer spreads requests across servers within a Region and does not change the route players' traffic takes.
+      - id: c
+        text: AWS Global Accelerator
+        correct: true
+        why: Global Accelerator moves app traffic off crowded public routes onto the AWS private global network for steadier performance.
+      - id: d
+        text: Amazon Route 53
+        why: Route 53 resolves the game's name to an address, but the traffic still crosses the same public routes afterward.
+    evidence:
+      - Global Accelerator moves app traffic off crowded public routes onto the AWS private global network for better availability, performance and security.
+      - "Use cases: even gameplay for gamers in Tokyo, London and New York, and a banking app that stays fast at peaks or on poor local networks."
+    takeaway: For live, uncacheable app traffic from users worldwide, Global Accelerator keeps play steady by carrying it over the AWS global network.
+    history: []
+    verified:
+      keyHash: a89fa2570ca4
+      fullHash: 9983977be6fb
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

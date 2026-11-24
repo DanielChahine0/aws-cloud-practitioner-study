@@ -397,3 +397,38 @@ questions:
       fullHash: bbf64bfc1ddd
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-zajg6d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: online-data-transfer
+    note: m12/transferring-data-online
+    task: "1.3"
+    level: 2
+    stem: >-
+      Before the cafe starts moving its shared files to AWS over the network, the team lists what to check first.
+      Which set of points belongs on that list?
+    options:
+      - id: a
+        text: Readiness, goals, outcomes and the need to move
+        why: These are what the assess phase sets for the whole migration, not the checks before moving data.
+      - id: b
+        text: Visibility, auditability, control and agility
+        why: These are the focus of the AWS CAF Security perspective, not the checks before moving data.
+      - id: c
+        text: Reliability, performance, cost and sustainability
+        why: These are themes of well-architected design, not the checks made before a data move.
+      - id: d
+        text: Safety, integrity, timing and bandwidth
+        correct: true
+        why: Before moving data, the team checks its safety and integrity, the timing and the bandwidth.
+    evidence:
+      - Check safety, integrity, timing and bandwidth.
+    takeaway: Before moving data online, check its safety and integrity, the timing and the bandwidth available.
+    history: []
+    verified:
+      keyHash: e59ed9c90549
+      fullHash: a78d1a21f85b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

@@ -456,3 +456,158 @@ questions:
       fullHash: 82baad362846
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+
+  - id: q-1930yf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-elastic-beanstalk
+    note: m03/additional-compute-services
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's team runs its Java booking API on raw Amazon EC2 instances that it configured by hand.
+      It now moves the API to AWS Elastic Beanstalk.
+      Which job does the team stop doing?
+    options:
+      - id: a
+        text: Writing the code for the booking API
+        why: Elastic Beanstalk takes the team's code as its input, so writing that code stays with the team.
+      - id: b
+        text: Supplying settings for the environment
+        why: The team still hands Elastic Beanstalk its settings along with the code, so this job does not go away.
+      - id: c
+        text: Building out deployment and scaling
+        correct: true
+        why: Raw EC2 left deployment and scaling to the team, while Elastic Beanstalk builds them from the code and settings.
+      - id: d
+        text: Replacing failed data center hardware
+        why: AWS already looked after the hardware under raw EC2, so the move does not take this job off the team.
+    evidence:
+      - Give this fully managed service code and settings, and it builds the EC2 setup, scaling, load balancing and health checks.
+      - Raw EC2, by contrast, leaves deployment and scaling to you.
+    takeaway: Compared with raw EC2, Elastic Beanstalk takes over deployment and scaling, while you still supply the code and settings.
+    history: []
+    verified:
+      keyHash: f18892bafdcc
+      fullHash: 8b8b571b904b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+
+  - id: q-w174xs
+    version: 1
+    status: live
+    type: multi
+    pool: practice
+    concept: aws-batch
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 2
+    select: 2
+    stem: >-
+      The cafe chain's tech team is sorting its workloads to decide which ones to hand to AWS Batch.
+      Which workloads fit AWS Batch?
+    options:
+      - id: a
+        text: Re-encoding the full recipe video library
+        correct: true
+        why: Re-encoding a whole video library is heavy, parallel transcoding work, and AWS Batch schedules such jobs and sizes a fleet to fit them.
+      - id: b
+        text: Streaming recipe videos to guests on demand
+        why: Sending each video as a guest asks for it is live delivery to viewers, not a heavy job that a scheduler queues and finishes.
+      - id: c
+        text: Training a demand model on years of orders
+        correct: true
+        why: Training a model on years of orders is heavy ML work that splits into parallel jobs, which AWS Batch schedules and scales resources for.
+      - id: d
+        text: Storing years of orders for future audits
+        why: Keeping orders on file for audits is a storage need, since the records sit unread rather than feeding compute jobs.
+      - id: e
+        text: Showing each guest's past orders in the app
+        why: Showing a guest's past orders is a quick lookup answered live in the app, not a large compute-heavy job to schedule.
+    evidence:
+      - It fits parallel work like genomics, media transcoding and ML training.
+      - It schedules jobs and scales resources to fit them across a fleet such as EC2 instances.
+    takeaway: AWS Batch fits heavy, parallel jobs such as media transcoding and ML training, not live requests or plain storage.
+    history: []
+    verified:
+      keyHash: 87cd5572aa1c
+      fullHash: 4d7f7f84f673
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+
+  - id: q-ea3ee2
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-lightsail
+    note: m03/additional-compute-services
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe's owner moves the recipe blog to Amazon Lightsail.
+      How will the blog's hosting be charged?
+    options:
+      - id: a
+        text: For the EC2 resources built around its code
+        why: Paying for the EC2 resources built from the code fits Elastic Beanstalk, not a Lightsail hosting bundle.
+      - id: b
+        text: For only the milliseconds its code runs
+        why: Paying per millisecond of compute describes AWS Lambda, not the server bundle that Lightsail sells.
+      - id: c
+        text: For a bundle at one set monthly price
+        correct: true
+        why: Lightsail packs a VPS with storage, databases and networking for a predictable monthly price.
+      - id: d
+        text: For racks AWS installs on the cafe's premises
+        why: Racks placed on the cafe's own premises describe AWS Outposts, not a hosting bundle for a small blog.
+    evidence:
+      - "A cost-effective bundle: virtual private servers (VPSs) plus storage, databases and networking, for a predictable monthly price."
+      - Lightsail is the simple, predictably priced pick for small sites.
+    takeaway: Lightsail charges one predictable monthly price for a bundle of server, storage, database and networking.
+    history: []
+    verified:
+      keyHash: 1b51e9b52ef5
+      fullHash: 62ec8fe2e709
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+
+  - id: q-cks489
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-outposts
+    note: m03/additional-compute-services
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe chain installs AWS Outposts in its head office data center.
+      Its developers already manage the chain's workloads in an AWS Region.
+      How will they manage the AWS services that run on the local racks?
+    options:
+      - id: a
+        text: Through a private line that carries traffic to a Region
+        why: A private line into AWS describes AWS Direct Connect, which links sites to a Region rather than managing services on local racks.
+      - id: b
+        text: With the same tools and APIs they use in the cloud
+        correct: true
+        why: Outposts runs AWS services on premises with the same tools and APIs as in the cloud, so the developers keep their way of working.
+      - id: c
+        text: Through a simpler console made for small, low-traffic sites
+        why: A simpler console for small sites describes Amazon Lightsail, which is not how services on Outposts racks are run.
+      - id: d
+        text: By shipping data to AWS on a rugged storage device
+        why: Moving data on a rugged device describes AWS Snow Family, which carries data offline rather than managing local services.
+    evidence:
+      - AWS services run locally with the same tools and APIs as in the cloud.
+      - A fully managed hybrid cloud offering that brings AWS compute, storage and networking into your data center.
+    takeaway: Outposts runs AWS services in your own data center, managed with the same tools and APIs you use in the cloud.
+    history: []
+    verified:
+      keyHash: 99ecfe85dabe
+      fullHash: 1aa3f268a57d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

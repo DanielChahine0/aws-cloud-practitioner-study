@@ -328,3 +328,156 @@ questions:
       fullHash: 8730a3f3167e
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-5yvf6z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-snow-family
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 3
+    stem: >-
+      The cafe tried AWS DataSync to copy the bakery's photo archive to AWS, but the bakery's thin link would take far too long.
+      Which AWS offering should the cafe turn to instead?
+    options:
+      - id: a
+        text: AWS Storage Gateway
+        why: Storage Gateway still sends the data over the network, so the thin link would hold it back.
+      - id: b
+        text: AWS Transfer Family
+        why: Transfer Family moves files over network protocols, so the thin link would still slow it.
+      - id: c
+        text: AWS Snow Family
+        correct: true
+        why: When DataSync falls short on a thin link, Snow Family devices carry the data to AWS offline.
+      - id: d
+        text: AWS Application Migration Service
+        why: Application Migration Service replicates apps over the network and is not built for a photo archive.
+    evidence:
+      - Many customers prefer online moves; offline means sending data on a physical device when DataSync falls short.
+      - "**AWS Snow Family**: The AWS device family for offline transfer, including Snowball Edge."
+    takeaway: When a thin link leaves DataSync too slow, the AWS Snow Family moves the data offline on devices.
+    history: []
+    verified:
+      keyHash: d60e68b92b21
+      fullHash: 5c883f4c21e4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-csvbh7
+    version: 1
+    status: draft
+    type: multi
+    select: 3
+    pool: practice
+    concept: aws-snowball-edge-storage-optimized
+    note: m12/transferring-data-offline
+    task: "3.8"
+    level: 1
+    stem: >-
+      The cafe chain picks a Snowball Edge Storage Optimized device to carry its warehouse footage to AWS.
+      Which traits does the device bring?
+    options:
+      - id: a
+        text: Live uploads over the site's internet
+        why: The device works offline and suits sites where internet may be unavailable, so it does not upload as it goes.
+      - id: b
+        text: Fast storage built on NVMe drives
+        correct: true
+        why: Snowball Edge Storage Optimized devices store their data on NVMe drives.
+      - id: c
+        text: Too little compute for edge jobs
+        why: The device brings strong compute and also serves rugged, secure edge computing at remote sites.
+      - id: d
+        text: Large capacity for multi-petabyte moves
+        correct: true
+        why: The device offers large capacity and is built to carry multi-petabyte loads from on-premises sites.
+      - id: e
+        text: A light build made for indoor offices
+        why: The device is rugged and secure enough for edge computing at remote sites, not limited to offices.
+      - id: f
+        text: Throughput of gigabytes per second
+        correct: true
+        why: The devices move data at gigabytes per second, which suits multi-petabyte moves.
+    evidence:
+      - AWS Snow Family devices with NVMe storage for multi-petabyte moves from on-premises sites where internet may be unavailable.
+      - They bring strong compute, large capacity and gigabytes per second, and also serve rugged, secure edge computing.
+      - Being offline, they do not fit online transfer needs.
+    takeaway: Snowball Edge Storage Optimized pairs NVMe storage with multi-petabyte capacity and gigabytes per second of throughput.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 4, 5 and 6 are all strengths while options 1, 2 and 3 are all shortcomings.)"
+  - id: q-12g2bx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: edge-computing
+    note: m12/transferring-data-offline
+    task: "3.1"
+    level: 1
+    stem: >-
+      The cafe's IT lead reads that Snowball Edge also serves edge computing.
+      What does that use mean?
+    options:
+      - id: a
+        text: Caching copies of popular content at locations close to its viewers
+        why: Caching content near viewers is what CloudFront edge locations do, not edge computing on a Snowball Edge.
+      - id: b
+        text: Running workloads on rugged, secure hardware out at a remote site
+        correct: true
+        why: For edge computing, a Snowball Edge runs workloads on site and is built to be rugged and secure.
+      - id: c
+        text: Carrying users' traffic onto the AWS global network close to them
+        why: Carrying traffic onto the AWS network near users is what AWS Global Accelerator does.
+      - id: d
+        text: Running AWS services on racks installed in the cafe's own data center
+        why: Racks that run AWS services in a customer's data center are AWS Outposts, not a Snowball Edge.
+    evidence:
+      - "**Edge computing**: A Snowball Edge use case that calls for a secure, rugged device."
+      - They bring strong compute, large capacity and gigabytes per second, and also serve rugged, secure edge computing.
+    takeaway: Edge computing on a Snowball Edge means running workloads at a remote site on a rugged, secure device.
+    history: []
+    verified:
+      keyHash: e6d1d375a0ef
+      fullHash: 82a8c115ad0c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-kd4mzg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-snowball-edge-storage-optimized
+    note: m12/transferring-data-offline
+    task: "1.3"
+    level: 2
+    stem: >-
+      The cafe chain's bakery on a remote island has no internet service and keeps a multi-petabyte archive of oven sensor data.
+      The chain wants the whole archive moved into AWS.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon S3 File Gateway
+        why: S3 File Gateway links the bakery's files to Amazon S3 over the network, and the bakery has no internet service.
+      - id: b
+        text: AWS Application Migration Service
+        why: Application Migration Service replicates apps to AWS over a connection, which the bakery lacks.
+      - id: c
+        text: AWS Snowball Edge Storage Optimized
+        correct: true
+        why: This NVMe device carries multi-petabyte moves offline from sites where internet may be unavailable.
+      - id: d
+        text: AWS Database Migration Service (AWS DMS)
+        why: AWS DMS copies databases to AWS over a network connection, which the island bakery does not have.
+    evidence:
+      - AWS Snow Family devices with NVMe storage for multi-petabyte moves from on-premises sites where internet may be unavailable.
+      - "Triggers: thin bandwidth, remote sites without internet or Direct Connect, or petabytes that ship faster than they upload."
+    takeaway: A multi-petabyte move from a site with no internet calls for a Snowball Edge Storage Optimized device, which carries the data offline.
+    history: []
+    verified:
+      keyHash: cfb445cda604
+      fullHash: 91693e288e00
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

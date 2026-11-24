@@ -431,3 +431,268 @@ questions:
       fullHash: 5d590801e706
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-7gzsn1
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: cloud-auditing
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe moved its back office to AWS, where each action is an API call that can be logged in one central place.
+      Which gains does logging every call centrally give the cafe?
+    options:
+      - id: a
+        text: Simpler audits of past actions
+        correct: true
+        why: With every action already logged in one place, auditors have a full trail to review instead of gaps.
+      - id: b
+        text: Charts of server CPU use over time
+        why: CPU use is a performance metric, and a log of API calls records who acted, not how hard the servers work.
+      - id: c
+        text: Evidence that the cafe meets rules
+        correct: true
+        why: A central log of who did what serves as proof when the cafe must show it follows the rules.
+      - id: d
+        text: Alerts when server load runs high
+        why: Load alerts come from watching metrics, while a log of API calls only notes the actions people and services took.
+      - id: e
+        text: Backups of the order data it holds
+        why: Logging API calls records activity on the account, but it keeps no copy of the cafe's order data.
+    evidence:
+      - On AWS every action is an API call, so all can be logged centrally.
+      - It eases audits, proves compliance, improves security posture and aids troubleshooting.
+    takeaway: Because every AWS action is a logged API call, a central record makes audits easier and helps prove compliance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 3 alone repeats the stem's word 'action', which points at it."
+  - id: q-1883v4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudtrail
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe runs its ordering app on AWS, keeps a till server in the back office and hosts its newsletter with another cloud provider.
+      For a compliance review, the owner wants one record of who changed what, when and with what result across all three.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon CloudWatch
+        why: CloudWatch can watch AWS and on-premises servers, but it tracks performance, not who made each change.
+      - id: b
+        text: AWS Config
+        why: Config judges resource settings against rules; it does not record who made each request and its result.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks an account against best practices and keeps no record of who changed what.
+      - id: d
+        text: AWS CloudTrail
+        correct: true
+        why: CloudTrail records who made each request, when and with what result, and it can also track on-premises and other-cloud activity.
+    evidence:
+      - "Who called, when, from which IP, and the result: a new state or a denial."
+      - It also tracks activity on premises and with other cloud providers.
+      - "A hybrid financial firm traces changes for fixes and compliance: CloudTrail."
+    takeaway: CloudTrail records who did what and with what result, and it can cover on-premises and other-cloud activity too.
+    history: []
+    verified:
+      keyHash: eb393bf52e59
+      fullHash: 35b6b8ace88a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-adkzxx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: log-file-integrity-validation
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's trail delivers log files to Amazon S3 with log file integrity validation turned on.
+      Months later, someone with full access edits one of the delivered files.
+      What does integrity validation do about the edit?
+    options:
+      - id: a
+        text: It blocks the edit from being saved
+        why: Keeping logs in a separate account is what guards them from edits; validation only detects changes.
+      - id: b
+        text: It flags unusual API call volume
+        why: Spotting unusual call volume is the job of CloudTrail Insights, not of integrity validation.
+      - id: c
+        text: It shows that the file was altered
+        correct: true
+        why: Validation exposes tampering, so a check reveals that the delivered file no longer matches.
+      - id: d
+        text: It copies the file to CloudWatch Logs
+        why: A trail can send events to CloudWatch Logs, but that has nothing to do with spotting an edited file.
+    evidence:
+      - Integrity validation exposes tampering, and a separate log account blocks root-level edits.
+      - "**Log file integrity validation**: reveals tampered logs."
+    takeaway: Log file integrity validation reveals that a log was tampered with; it detects edits rather than preventing them.
+    history: []
+    verified:
+      keyHash: 775824d0cc8b
+      fullHash: cafb27f54fea
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-vb1fdv
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: cloudtrail-event-history
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 1
+    stem: >-
+      The cafe's admin opens CloudTrail event history to review a change made to a security group yesterday.
+      Which statements describe the records she is working with?
+    options:
+      - id: a
+        text: Records can be searched and downloaded
+        correct: true
+        why: Event history lets her search its records and download them, at no charge.
+      - id: b
+        text: Records reach back with no 90-day cap
+        why: Only log files a trail stores have no 90-day cap, while event history holds 90 days.
+      - id: c
+        text: Records cannot be edited once captured
+        correct: true
+        why: Events in event history are unchangeable, so nobody can rewrite what was recorded.
+      - id: d
+        text: Records are compared with normal call volume
+        why: Comparing activity with normal volume is what CloudTrail Insights does once it is enabled.
+      - id: e
+        text: Records serve as long-term HIPAA proof
+        why: Long-term proof for HIPAA audits comes from CloudTrail log files, not the 90-day event history.
+    evidence:
+      - Single actions (API or console calls); event history shows 90 days of management events per Region, free, searchable, downloadable, unchangeable
+      - "**Event history**: free 90-day view of management events."
+    takeaway: CloudTrail event history is a free, searchable, downloadable and unchangeable view of 90 days of management events.
+    history: []
+    verified:
+      keyHash: 19d0acf5c1b5
+      fullHash: d35f8823345a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-prd47t
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: cloudtrail-logs
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 1
+    stem: >-
+      The cafe creates a trail so that its CloudTrail events are kept beyond what event history holds.
+      Where can the trail deliver them?
+    options:
+      - id: a
+        text: Amazon EBS
+        why: EBS gives block storage to EC2 instances and is not a place a trail delivers its events.
+      - id: b
+        text: Amazon S3
+        correct: true
+        why: A trail can write its log files to an S3 bucket, where they can be kept for long audits.
+      - id: c
+        text: Amazon DynamoDB
+        why: DynamoDB is a NoSQL database for apps, and a trail does not write its events there.
+      - id: d
+        text: Amazon CloudWatch Logs
+        correct: true
+        why: A trail can also send its events to CloudWatch Logs, where they can be stored and searched.
+      - id: e
+        text: AWS Artifact
+        why: Artifact serves AWS's own audit reports and agreements, not the cafe's API activity files.
+    evidence:
+      - The files holding events, sent to S3 or CloudWatch Logs, no 90-day cap, usable as PCI or HIPAA proof
+    takeaway: CloudTrail log files go to Amazon S3 or CloudWatch Logs, with no 90-day cap on how long they are kept.
+    history: []
+    verified:
+      keyHash: b0fb43505b73
+      fullHash: 5e9e38e18add
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-c5yamj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudtrail-insights
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's admin wants CloudTrail to flag unusual swings in API error rates, but so far she has only used event history.
+      What must she do before CloudTrail starts flagging anything?
+    options:
+      - id: a
+        text: Turn on integrity validation for a trail
+        why: Integrity validation reveals edited log files; it does not start the study of normal API error rates.
+      - id: b
+        text: Turn on Insights for a trail
+        correct: true
+        why: Insights studies normal API activity and flags deviations only once it is enabled on a trail or an event data store.
+      - id: c
+        text: Send a trail's events to CloudWatch Logs
+        why: Sending events to CloudWatch Logs stores and searches them, but it does not flag unusual error rates.
+      - id: d
+        text: Download the Region's event history
+        why: Downloading event history gives a copy of past events, but nothing in it flags unusual error rates.
+    evidence:
+      - Studies management events for normal API volume and error rates, and flags deviations once enabled on a trail or event data store
+    takeaway: CloudTrail Insights is off until you enable it on a trail or event data store; then it flags unusual API volume and errors.
+    history: []
+    verified:
+      keyHash: 98ba862c7985
+      fullHash: f6e9b0b30e7b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-3r87bf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloud-auditing
+    note: m10/aws-cloudtrail
+    task: "2.2"
+    level: 2
+    stem: >-
+      A cafe manager changes a setting by clicking through the AWS Management Console instead of running a script.
+      Why can that change still be logged in one central place along with every other action?
+    options:
+      - id: a
+        text: The console checks each sign-in through IAM
+        why: Checking who signs in controls access, but it does not explain why the change itself can be recorded.
+      - id: b
+        text: The console sends each click as an API call
+        correct: true
+        why: Every action on AWS, a console click included, is an API call, and API calls are what can be logged centrally.
+      - id: c
+        text: The console shows resources Region by Region
+        why: Showing resources by Region shapes the view, but it does not make the manager's change recordable.
+      - id: d
+        text: The console runs in a standard web browser
+        why: Running in a browser is how staff reach the console, not why the change can be logged with the rest.
+    evidence:
+      - On AWS every action is an API call, so all can be logged centrally.
+    takeaway: A console click is still an API call, so changes made by hand can be logged centrally just like scripted ones.
+    history: []
+    verified:
+      keyHash: d755182bac17
+      fullHash: 78546e37e8c0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

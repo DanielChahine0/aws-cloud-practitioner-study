@@ -388,3 +388,144 @@ questions:
       fullHash: a6194aa57be4
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-we367z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: save-when-you-commit
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 2
+    stem: >-
+      Each of the cafe's workloads runs at a flat load today.
+      The loyalty app is being rebuilt next month, the menu site moves to a new host in spring, and the kitchen display goes when the old ovens are replaced.
+      The till system will keep running as it is for years.
+      On which workload does a usage commitment pay off?
+    options:
+      - id: a
+        text: The loyalty app
+        why: The loyalty app is rebuilt next month, so a commitment term would outlast the workload it covers.
+      - id: b
+        text: The menu site
+        why: The menu site leaves in spring, well before a commitment term ends, leaving the cafe paying for unused commitment.
+      - id: c
+        text: The till system
+        correct: true
+        why: The till system stays steady for years, which is the long, flat use a usage commitment rewards with a big discount.
+      - id: d
+        text: The kitchen display
+        why: The kitchen display ends with the old ovens, so committing to it for a term risks paying for use that stops.
+    evidence:
+      - "Save when you commit: a usage commitment, usually 1 or 3 years, earns big discounts on steady workloads."
+    takeaway: A usage commitment pays off on a workload that stays steady for the whole term, not one due to end or change soon.
+    history: []
+    verified:
+      keyHash: c27a22c6d8c7
+      fullHash: 2c0f838d7262
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-6t7ndx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: pay-less-by-using-more
+    note: m11/aws-pricing-concepts
+    task: "1.4"
+    level: 1
+    stem: >-
+      Under the pay-less-by-using-more principle, why can AWS charge less per unit as a customer's usage grows?
+    options:
+      - id: a
+        text: Customers pay only for what they run, with nothing upfront
+        why: This is pay as you go, which explains paying only for use but not a unit price that falls with volume.
+      - id: b
+        text: AWS gains economies of scale from its sheer size
+        correct: true
+        why: AWS operates at a scale that lowers its unit costs, and it passes that on as lower unit prices for higher usage.
+      - id: c
+        text: A commitment over a term earns a discount on steady work
+        why: A commitment discount rewards agreeing to a term, not the sheer volume this principle is about.
+      - id: d
+        text: The price of a service varies by Region and configuration
+        why: Prices do differ by Region and configuration, but that does not make each unit cheaper as usage grows.
+    evidence:
+      - "Pay less by using more: economies of scale lower the unit price as usage grows, and some services use tiered pricing."
+    takeaway: Pay less by using more rests on AWS economies of scale, which lower the unit price as a customer's usage grows.
+    history: []
+    verified:
+      keyHash: a768864fcd65
+      fullHash: fead5a19d50a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-0w044y
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cost-drivers
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe prices the same instance type for a new shop in Europe and another in Asia.
+      The hourly price differs between the two. Which fact explains the gap?
+    options:
+      - id: a
+        text: Data arriving from the internet into AWS costs nothing
+        why: Free inbound transfer applies in every location, so it cannot explain a different hourly instance price.
+      - id: b
+        text: Savings Plans price some compute below the On-Demand rate
+        why: A Savings Plan lowers price for a commitment, but the cafe is comparing the same option in two places.
+      - id: c
+        text: The price of a service depends on the Region it runs in
+        correct: true
+        why: Price varies by Region as well as by service, configuration and pricing model, so two locations can differ.
+      - id: d
+        text: Storage is billed for the gigabytes kept and for how long
+        why: This describes how storage is measured, not why one instance type costs more per hour in one place.
+    evidence:
+      - Price varies by service category, configuration, Region and pricing model, so check each pricing page.
+    takeaway: The same service can cost a different amount in each Region, so check the pricing page for the Region you plan to use.
+    history: []
+    verified:
+      keyHash: c10fcbe6f739
+      fullHash: 3a69b0bdad58
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-47t4d4
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: outbound-data-transfer
+    note: m11/aws-pricing-concepts
+    task: "4.1"
+    level: 2
+    stem: >-
+      The cafe sends a nightly sales extract out of AWS to an analytics firm.
+      Besides the number of gigabytes, what else sets the price of that transfer?
+    options:
+      - id: a
+        text: The instance type that runs the export
+        why: The instance type shapes compute cost, not the price of the gigabytes that leave AWS.
+      - id: b
+        text: The storage class that holds the extract
+        why: The storage class shapes storage and retrieval cost, not the transfer price of the nightly extract.
+      - id: c
+        text: The hour of the night the export runs
+        why: Outbound data is priced by volume and destination, and the hour the extract leaves plays no part.
+      - id: d
+        text: Where the extract is delivered to
+        correct: true
+        why: Outbound transfer is priced by volume and by where it goes, such as another Region or the internet.
+    evidence:
+      - "Data transfer: sending data out for analytics is outbound, priced by volume and by the destination Region or internet source."
+    takeaway: Outbound transfer is priced by how much data leaves and by where it goes, such as another Region or the internet.
+    history: []
+    verified:
+      keyHash: 800a573093b6
+      fullHash: 558df9c76fb4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

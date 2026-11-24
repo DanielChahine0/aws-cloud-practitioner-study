@@ -716,3 +716,75 @@ questions:
       fullHash: 29f8f967c90e
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-v9w7y9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: dynamic-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe turns on dynamic scaling so its order site adds instances the moment traffic climbs.
+      What tells Amazon EC2 Auto Scaling that traffic is climbing?
+    options:
+      - id: a
+        text: The group's desired capacity setting
+        why: Desired capacity is the count the group aims to hold, not a signal that traffic is rising.
+      - id: b
+        text: Metrics collected by Amazon CloudWatch
+        correct: true
+        why: CloudWatch gathers the performance and latency metrics that trigger dynamic scaling in real time.
+      - id: c
+        text: A schedule built ahead of expected demand
+        why: Scheduling capacity ahead of expected demand is predictive scaling, not a real-time signal.
+      - id: d
+        text: The group's maximum capacity setting
+        why: The maximum caps how far the group can grow, and it does not detect rising traffic.
+    evidence:
+      - Amazon CloudWatch collects the performance, latency and other metrics that trigger these changes.
+      - "**Dynamic scaling** responds to demand in real time, and **predictive scaling** schedules capacity ahead of expected demand."
+    takeaway: Dynamic scaling reacts in real time to the metrics that Amazon CloudWatch collects.
+    history: []
+    verified:
+      keyHash: 789287ca067e
+      fullHash: be0db9c2ccf2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-zwkm05
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: predictive-scaling
+    note: m02/scaling-amazon-ec2
+    task: "3.3"
+    level: 2
+    stem: >-
+      The cafe is choosing where to try predictive scaling first.
+      Which of its workloads suits that approach best?
+    options:
+      - id: a
+        text: Orders that rise each Friday at noon
+        correct: true
+        why: A peak that comes at a known time lets predictive scaling schedule instances before it arrives.
+      - id: b
+        text: Orders that jump after a surprise review
+        why: An unannounced jump gives nothing to plan around, so dynamic scaling handles it in real time.
+      - id: c
+        text: A kitchen app limited to one server
+        why: Software that runs on only one server needs a more powerful instance, not more instances on a schedule.
+      - id: d
+        text: A server that fails with no warning
+        why: Replacing a failed instance keeps the system available, but there is no expected demand to plan for.
+    evidence:
+      - "**Predictive scaling**: Auto Scaling that schedules capacity ahead of anticipated demand."
+      - "**Dynamic scaling** responds to demand in real time, and **predictive scaling** schedules capacity ahead of expected demand."
+    takeaway: Predictive scaling suits demand you can expect in advance, such as a rush at the same time each week.
+    history: []
+    verified:
+      keyHash: "533752370e70"
+      fullHash: 124177ffea7a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

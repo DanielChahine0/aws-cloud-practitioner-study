@@ -253,3 +253,111 @@ questions:
       fullHash: 1c00dde14ebf
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-vjhdvy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health-dashboard
+    note: m10/aws-health
+    task: "4.3"
+    level: 3
+    stem: >-
+      AWS has scheduled a planned change to the hardware under one of the cafe's instances next month.
+      The operations lead wants to see this upcoming event for the cafe's own account, with guidance, so she can plan around it.
+      Where should she look?
+    options:
+      - id: a
+        text: Amazon CloudWatch dashboards
+        why: CloudWatch dashboards chart the cafe's own metrics; they do not announce planned changes by AWS.
+      - id: b
+        text: AWS Health Dashboard
+        correct: true
+        why: The Health Dashboard is the account-specific view of AWS events, with updates and advice for planning.
+      - id: c
+        text: AWS Trusted Advisor
+        why: Trusted Advisor checks the account against best practices, not upcoming AWS maintenance.
+      - id: d
+        text: AWS Config
+        why: Config tracks the cafe's resource settings and has no notice of changes AWS plans to make.
+    evidence:
+      - "**AWS Health Dashboard**: account-specific health view."
+      - "Uses: plan lifecycle events, troubleshoot incidents."
+      - The dashboard adds updates and timely fix advice to manage service health at scale.
+    takeaway: The AWS Health Dashboard shows AWS events for your own account, such as planned changes, with advice to plan around them.
+    history: []
+    verified:
+      keyHash: 84a76a9f7267
+      fullHash: 14108725a313
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-gt7rsd
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-health-api
+    note: m10/aws-health
+    task: "4.3"
+    level: 1
+    stem: >-
+      The cafe's admin already reads AWS Health events in the console.
+      What does the AWS Health API add?
+    options:
+      - id: a
+        text: Graphs of metrics for each resource
+        why: Graphs of resource metrics come from Amazon CloudWatch, not from the Health API.
+      - id: b
+        text: A full catalog of account resources
+        why: AWS Health is no resource catalog, and its API does not list the account's resources.
+      - id: c
+        text: Programmatic access to its event data
+        correct: true
+        why: The Health API gives programmatic access, so the admin's own scripts and tools can read health events without the console.
+      - id: d
+        text: Best-practice checks across the account
+        why: Best-practice checks come from AWS Trusted Advisor, not from the Health API.
+    evidence:
+      - "**AWS Health API**: programmatic access."
+      - It is no resource catalog.
+    takeaway: The AWS Health API offers programmatic access to the same health events you see in the console.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 3 says 'its event data', a pronoun that points back to a service named in the stem.)"
+  - id: q-cvycjc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-health-api
+    note: m10/aws-health
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe's developer connects the staff rota tool to the AWS Health API so the tool can pull data each night.
+      Which data can the tool get this way?
+    options:
+      - id: a
+        text: Best-practice check results for the cafe's account
+        why: Best-practice check results come from AWS Trusted Advisor, not from the AWS Health API.
+      - id: b
+        text: Records of the API calls made in the cafe's account
+        why: A record of API calls comes from AWS CloudTrail, not from the AWS Health API.
+      - id: c
+        text: Planned changes coming to the cafe's resources
+        correct: true
+        why: The AWS Health API gives code access to health events, and planned changes to the cafe's resources are among them.
+      - id: d
+        text: CPU readings for each of the cafe's instances
+        why: CPU readings for instances are metrics in Amazon CloudWatch, not events in the AWS Health API.
+    evidence:
+      - "**AWS Health API**: programmatic access."
+      - It covers service events, planned changes and account notices.
+    takeaway: The AWS Health API gives code access to AWS Health events, such as planned changes to your resources.
+    history: []
+    verified:
+      keyHash: bc988649738a
+      fullHash: 34c996038893
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

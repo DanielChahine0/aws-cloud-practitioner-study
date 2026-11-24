@@ -388,3 +388,77 @@ questions:
       fullHash: ec13a2d46d8a
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-4jvafp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: managed-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe has been running its own message queue on Amazon EC2 instances, and it now moves the queue to Amazon SQS, a managed service.
+      Which job passes from the cafe to AWS because of the move?
+    options:
+      - id: a
+        text: Choosing the queue's message settings
+        why: Under a managed service the cafe still configures the queue, so these settings stay with its team after the move.
+      - id: b
+        text: Patching the servers' operating system
+        correct: true
+        why: Once the queue is on a managed service, AWS keeps it running with no server upkeep left to the cafe, so OS patches move to AWS.
+      - id: c
+        text: Sending the cafe's orders to the queue
+        why: Putting orders on the queue is the cafe's own app logic, which a managed service does not take over.
+      - id: d
+        text: Replacing the servers' failed hardware
+        why: AWS already ran the physical layer under the EC2 instances, so this job does not change hands with the move.
+    evidence:
+      - After you configure one, AWS keeps it running with no server management on your part.
+      - ELB, SNS and SQS are earlier examples.
+      - "Unmanaged, like EC2: AWS covers the physical layer, while each instance's OS, network setup and apps are yours to set up, secure and maintain."
+    takeaway: Moving to a managed service like SQS hands the server upkeep to AWS, while configuring the service stays with you.
+    history: []
+    verified:
+      keyHash: c7010d584acc
+      fullHash: be29355895df
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-3sfqsd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: fully-managed-services
+    note: m03/introduction-to-serverless-computing
+    task: "2.1"
+    level: 2
+    stem: >-
+      The cafe's gift-card logic runs on AWS Lambda, a fully managed service.
+      A flaw turns up in the logic's own code that would let a guest redeem one card twice.
+      Who is responsible for fixing it?
+    options:
+      - id: a
+        text: AWS's service team
+        why: AWS runs every server under Lambda, but the function code the cafe wrote is not part of its share.
+      - id: b
+        text: The cafe's developers
+        correct: true
+        why: Under a fully managed service the application code and its security stay with the customer, so the cafe's developers fix it.
+      - id: c
+        text: AWS's data center staff
+        why: Data center staff look after the physical layer, which has nothing to do with a flaw in the cafe's own code.
+      - id: d
+        text: The cafe and AWS jointly
+        why: The code is not split between the two, since a fully managed service leaves the code and its security wholly with the cafe.
+    evidence:
+      - What stays with you under Lambda is the application code and keeping it secure.
+      - Serverless leaves you only your code and its security.
+    takeaway: Even with a fully managed service like Lambda, the customer still owns its application code and keeping that code secure.
+    history: []
+    verified:
+      keyHash: 41b0293e3baa
+      fullHash: 28c5940a0de7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

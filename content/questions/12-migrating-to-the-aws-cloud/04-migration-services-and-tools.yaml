@@ -501,3 +501,73 @@ questions:
       fullHash: b1a795718500
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-bb2f80
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-migration-and-modernization-competency-partners
+    note: m12/migration-services-and-tools
+    task: "4.3"
+    level: 1
+    stem: >-
+      The cafe owner asks what the AWS Migration and Modernization Competency Partners offer.
+      Which description fits them?
+    options:
+      - id: a
+        text: Migration consulting run by AWS's own experts
+        why: Consulting delivered by AWS's own staff is AWS Professional Services, not outside partner firms.
+      - id: b
+        text: A catalog of third-party software sold by vendors
+        why: A catalog of third-party software to buy is AWS Marketplace, not a listing of migration helpers.
+      - id: c
+        text: Outside firms listed by migration phase or need
+        correct: true
+        why: The AWS Competency Partner Program lists these migration partners by phase or by kind of help.
+      - id: d
+        text: A technical account manager from a Support plan
+        why: A technical account manager comes with AWS Enterprise Support, not from the migration partner listing.
+    evidence:
+      - "The AWS Competency Partner Program lists migration partners by phase or kind of help: see [AWS Migration and Modernization Competency Partners](https://aws.amazon.com/migration/partner-solutions/)."
+    takeaway: The Migration and Modernization Competency Partners are outside experts listed by migration phase or kind of help.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the most specific, adding a detail about how the firms are listed that the others lack.)"
+  - id: q-0vje0e
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-migration-and-modernization-competency-partners
+    note: m12/migration-services-and-tools
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe knows which servers it has, has an approved budget and tracks its tasks in one place.
+      Its two IT staff have never run a migration, though, and the owner fears the move will stall.
+      Which step closes this gap?
+    options:
+      - id: a
+        text: Hire an AWS Migration and Modernization Competency Partner
+        correct: true
+        why: These partners specialize in migration phases or needs, so they bring the experience the two staff lack.
+      - id: b
+        text: Copy the apps over using AWS Application Migration Service
+        why: Application Migration Service moves the apps, but the staff still lack the experience to run the move.
+      - id: c
+        text: Build a fuller business case with Migration Evaluator
+        why: The budget is already approved, and a business case adds no migration experience to the team.
+      - id: d
+        text: Run a deeper server scan with AWS Application Discovery Service
+        why: The cafe already knows its servers, and a deeper inventory gives the staff no migration skills.
+    evidence:
+      - Competency partners fill expertise gaps.
+      - "**AWS Migration and Modernization Competency Partners**: AWS partners specializing in migration phases or needs."
+    takeaway: When a team has the migration tools but lacks the experience to run the move, Competency Partners fill that gap.
+    history: []
+    verified:
+      keyHash: f623d4de0b87
+      fullHash: 8550dd78597e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

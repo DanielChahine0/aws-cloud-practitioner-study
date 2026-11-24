@@ -612,3 +612,256 @@ questions:
       fullHash: e48567df6740
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-zr4ger
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-well-architected-framework
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's ordering site, inventory app and loyalty app were each built by a different contractor.
+      The owner wants all three judged the same way so the results can be compared, and picks the AWS Well-Architected Framework.
+      Why does the framework suit this goal?
+    options:
+      - id: a
+        text: It forecasts each app's spending for the months ahead
+        why: Forecasting spend is the job of AWS Cost Explorer and AWS Budgets, and it does not judge how each app is designed.
+      - id: b
+        text: It moves each app to the Region nearest its users
+        why: The framework does not migrate workloads between Regions, and moving the apps would not make their reviews comparable.
+      - id: c
+        text: It applies one consistent method to each workload
+        correct: true
+        why: The framework applies one consistent method to any workload, so all three apps are judged on the same terms.
+      - id: d
+        text: It limits each contractor to the app they built
+        why: Managing permissions is the job of IAM, and limiting access does not give the owner a common way to judge the designs.
+    evidence:
+      - The framework aims past merely working, at secure, high-performing, resilient and efficient designs, with one consistent method for any workload.
+    takeaway: The Well-Architected Framework applies one consistent method, so different workloads are judged the same way.
+    history: []
+    verified:
+      keyHash: d57bae2a2a49
+      fullHash: f76ef687e48e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-bnhrhx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: operational-excellence-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      After a payment glitch slowed the lunch rush, the cafe's team writes up how it handled the event and updates its runbook for responding next time.
+      The aim is to keep improving how the ordering site is run for the business.
+      Which pillar does this work fall under?
+    options:
+      - id: a
+        text: Reliability
+        why: Reliability plans how systems recover from failures, while this work improves the team's own response process.
+      - id: b
+        text: Performance Efficiency
+        why: Performance Efficiency sizes resources to the workload, and nothing here changes the size of a resource.
+      - id: c
+        text: Operational Excellence
+        correct: true
+        why: Responding well to events and improving the processes that run the site for the business is Operational Excellence.
+      - id: d
+        text: Cost Optimization
+        why: Cost Optimization lowers spend, and refining how the team responds to events does not target the bill.
+    evidence:
+      - "**Operational Excellence**: running and monitoring systems for business value, improving processes, pipeline-automated releases and good event response."
+    takeaway: Improving how a team responds to events and runs its systems for the business is an Operational Excellence practice.
+    history: []
+    verified:
+      keyHash: ef8988e1a84a
+      fullHash: 81ad98b3c9e4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-ncneqc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: security-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's ordering servers already sit inside a VPC.
+      A review finds that every staff login can change any setting and that order records could be altered without anyone noticing.
+      Which pillar does fixing these findings serve?
+    options:
+      - id: a
+        text: Reliability
+        why: Reliability plans recovery from failures, not who may change settings or whether records stay intact.
+      - id: b
+        text: Operational Excellence
+        why: Operational Excellence improves how systems are run and released, while these findings are gaps in protection.
+      - id: c
+        text: Security
+        correct: true
+        why: Least-privilege access and keeping data intact build protection in beyond the VPC, which is the Security pillar.
+      - id: d
+        text: Cost Optimization
+        why: Cost Optimization lowers spend, and neither tighter access nor intact records is aimed at the bill.
+    evidence:
+      - "**Security**: protection built in, with least-privilege access, intact data and guarded systems."
+    takeaway: A VPC alone is not enough; least-privilege access and intact data still belong to the Security pillar.
+    history: []
+    verified:
+      keyHash: 7e1e2b9383da
+      fullHash: 7b0138993159
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-10e4dm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: reliability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's site already runs across several Availability Zones.
+      A review suggests checking each server's health and replacing a failed one automatically, so orders keep flowing after a failure.
+      Which pillar does this suggestion serve?
+    options:
+      - id: a
+        text: Operational Excellence
+        why: Operational Excellence refines how systems are run and released, while this change is about recovering from failure.
+      - id: b
+        text: Reliability
+        correct: true
+        why: Health monitoring with automated recovery from failures is the heart of the Reliability pillar.
+      - id: c
+        text: Performance Efficiency
+        why: Performance Efficiency sizes resources to the workload, and replacing a failed server leaves its size unchanged.
+      - id: d
+        text: Security
+        why: Security protects access and data, and server health checks do not decide who may reach the site.
+    evidence:
+      - "**Reliability**: planning recovery from failures and adapting as business and customer needs grow."
+      - "Pillar cues: automated releases point to Operational Excellence, least privilege and encryption to Security, multiple AZs and recovery to Reliability."
+    takeaway: Health checks with automated recovery, on top of multiple Availability Zones, are Reliability improvements.
+    history: []
+    verified:
+      keyHash: 827e7eb80218
+      fullHash: 473ee31e3230
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-a2shc9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: performance-efficiency-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's reporting instance idles at a small share of its capacity, while its order database runs short of memory every lunch rush.
+      The architect shrinks the first and enlarges the second so each matches its real workload, and the monthly bill comes out about the same.
+      Which pillar does this follow?
+    options:
+      - id: a
+        text: Cost Optimization
+        why: The monthly bill stays about the same, so lowering spend is not what this pair of resizes achieves.
+      - id: b
+        text: Operational Excellence
+        why: Operational Excellence improves how systems are run and released, not how each resource is sized.
+      - id: c
+        text: Performance Efficiency
+        correct: true
+        why: Rightsizing both resources against waste and underprovisioning fits capacity to the real workload, which is Performance Efficiency.
+      - id: d
+        text: Security
+        why: Security protects access and data, and resizing instances to match their load adds no protection.
+    evidence:
+      - Fitting capacity to the real workload is Performance Efficiency in the assessment; cutting spend via purchase options, budgets or deprovisioning is Cost Optimization.
+      - "**Rightsizing**: Matching a resource's size to its real workload."
+    takeaway: Resizing each resource to fit its real load, rather than to lower the bill, is a Performance Efficiency choice.
+    history: []
+    verified:
+      keyHash: e163a20664e0
+      fullHash: b24f6d59cc2c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-3vev12
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: sustainability-pillar
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe's order database on Amazon RDS runs around the clock, and monitoring shows it rarely uses much of its CPU or memory.
+      To cut the energy it draws and its carbon impact, which change fits the Sustainability pillar?
+    options:
+      - id: a
+        text: Add a standby database copy in a second Availability Zone
+        why: A standby copy helps recovery, but it adds a second always-on instance and raises energy use.
+      - id: b
+        text: Move the database to a smaller instance class
+        correct: true
+        why: A smaller instance fits the light load and avoids an oversized always-on resource, cutting energy and carbon.
+      - id: c
+        text: Encrypt the database's storage at rest
+        why: Encryption protects the data, but the underused instance keeps drawing the same energy around the clock.
+      - id: d
+        text: Cover the database with a Reserved Instance
+        why: A reservation lowers the price, but the instance stays just as big and draws just as much energy.
+    evidence:
+      - "**Sustainability**: energy-efficient, lower-impact designs that avoid always-on resources, like Lambda over a nonstop EC2 instance or a smaller RDS instance, cutting cost, energy and carbon."
+    takeaway: Moving an always-on, underused database to a smaller instance cuts its energy and carbon, a Sustainability choice.
+    history: []
+    verified:
+      keyHash: c0d2bba35179
+      fullHash: e042a55e1360
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-5cwdjp
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-well-architected-tool
+    note: m13/aws-well-architected-framework
+    task: "1.2"
+    level: 1
+    stem: >-
+      The cafe's architect defines the ordering workload in the AWS Well-Architected Tool and runs a review on the cafe's account.
+      What does the review hand back?
+    options:
+      - id: a
+        text: A forecast of the workload's costs for the coming months
+        why: Forecasting costs is the job of AWS Cost Explorer and AWS Budgets, not something the WA Tool review produces.
+      - id: b
+        text: A report of issues, each paired with a best-practice fix
+        correct: true
+        why: The review produces a report of the workload's issues, and each issue comes with a best-practice fix.
+      - id: c
+        text: A copy of the workload moved into a second AWS Region
+        why: The WA Tool does not migrate workloads across Regions, so a review leaves the workload where it is.
+      - id: d
+        text: A set of permissions granted to each member of the team
+        why: IAM manages permissions; the WA Tool may use IAM for access control, but a review grants no permissions.
+    evidence:
+      - You define a workload, run the review on your account and get a report of issues, each with a best-practice fix.
+      - It does not migrate workloads across Regions, forecast costs (AWS Cost Explorer and AWS Budgets do) or manage permissions (IAM does, though the tool may use it for access control).
+    takeaway: A WA Tool review returns a report of issues with best-practice fixes; it does not forecast costs, migrate or manage permissions.
+    history: []
+    verified:
+      keyHash: f6853ef45066
+      fullHash: f169ea9c4738
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
