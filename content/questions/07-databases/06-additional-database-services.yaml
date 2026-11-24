@@ -745,3 +745,300 @@ questions:
       fullHash: ba6c707b55ee
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-8b4dzn
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-documentdb
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe is sorting its workloads to decide which ones should move into Amazon DocumentDB.
+      Which workloads suit DocumentDB best?
+    options:
+      - id: a
+        text: Customer profiles that drive personal drink offers
+        correct: true
+        why: User profiles and personalization are a core DocumentDB use, since each profile can carry its own mix of fields.
+      - id: b
+        text: A ledger of card payments under strict banking rules
+        why: Strict-compliance banking records suit a relational database better than a document store like DocumentDB.
+      - id: c
+        text: Session data held in memory for the morning rush
+        why: Holding session data in memory is a caching job, which DocumentDB is not built to do.
+      - id: d
+        text: Content pages for the cafe's blog and seasonal menus
+        correct: true
+        why: Content management is a DocumentDB use case, since pages and menus are flexible documents whose fields change.
+      - id: e
+        text: Receipts kept untouched for years as an archive
+        why: Long-term archives that are rarely read are not an ideal fit for DocumentDB, which serves live, changing documents.
+    evidence:
+      - "Use cases: content management, catalogs and inventory, user profiles and personalization."
+      - Not ideal for strict-compliance banking (relational fits better), archives or in-memory caching.
+    takeaway: DocumentDB suits content, catalogs and user profiles, while strict banking, archives and in-memory caching belong elsewhere.
+    history: []
+    verified:
+      keyHash: c6b2d0d3575d
+      fullHash: ad7cf72034b1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-tgwzm1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-neptune
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's referral map in Amazon Neptune is heading toward billions of ties between customers.
+      Queries that cross many of those ties in one go must keep answering in milliseconds.
+      Which Neptune trait keeps such queries fast as the web grows?
+    options:
+      - id: a
+        text: Failover that switches over without manual steps
+        why: Automatic failover keeps Neptune available after a fault, but it does not make queries that cross many ties any faster.
+      - id: b
+        text: Storage that holds up to 64 TB of graph data
+        why: The 64 TB ceiling says how much data fits, not how quickly a query can cross the ties between customers.
+      - id: c
+        text: An engine built for traversing relationships
+        correct: true
+        why: Neptune's engine is tuned for traversal, which keeps queries across many ties fast as they grow into the billions.
+      - id: d
+        text: Backups that run without anyone starting them
+        why: Automatic backups protect the referral map from loss, but they play no part in how fast queries run.
+    evidence:
+      - "**Scale**: billions of relationships in milliseconds as complexity grows, storage up to 64 TB, and a traversal-tuned engine."
+    takeaway: Neptune stays fast on billions of relationships because its engine is tuned for traversing them.
+    history: []
+    verified:
+      keyHash: c2192878342e
+      fullHash: 77908c550d82
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-mnf4sz
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: graph-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe is planning new features for its loyalty app and wants to know which ones a graph database would serve best.
+      Which features fit a graph database?
+    options:
+      - id: a
+        text: Pairing each menu drink with the allergens it contains
+        why: Each drink and its allergens form one small, self-contained record, which a document or relational table holds without following any chain of links.
+      - id: b
+        text: Suggesting drinks liked by friends of a regular's friends
+        correct: true
+        why: Hopping from a regular to friends and then to their friends crosses many links in a social web, the highly connected data a graph database is built around.
+      - id: c
+        text: Matching a loyalty card number to the regular who holds it
+        why: Finding one regular from a card number is a single key-value lookup, with no web of connections to walk through.
+      - id: d
+        text: Joining each order to its customer for a monthly report
+        why: One join from each order to its customer is a plain relational task, not a dense web that needs a graph.
+      - id: e
+        text: Spotting fraud rings where loyalty accounts share phones
+        correct: true
+        why: Fraud rings show up only by following shared phones from account to account, the kind of connected pattern a graph database matches quickly.
+    evidence:
+      - "**Graph database**: one built around connections."
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+      - "Use cases: social network mapping, fraud detection, search and recommendations."
+    takeaway: Features that follow many links across a web, such as friends of friends or accounts tied into a fraud ring, fit a graph database.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 1 and 5 are the only relationship-traversal tasks; the other three are simple lookups or joins.)"
+  - id: q-cx4yc8
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-managed-blockchain
+    note: m07/additional-database-services
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe and its dairy suppliers want one shared record of every milk delivery for food safety, with each partner holding a copy that no single partner controls.
+      The cafe has no IT staff to spare for installing and patching the software and servers behind it.
+      Which option fits?
+    options:
+      - id: a
+        text: Amazon EC2 instances
+        why: Instances could host blockchain software, but the cafe would then have to install, patch and run the network itself.
+      - id: b
+        text: Amazon Neptune
+        why: Neptune maps highly connected data in a graph, and it does not run a shared record that partners each hold.
+      - id: c
+        text: Amazon Managed Blockchain
+        correct: true
+        why: Managed Blockchain builds and runs blockchain networks, so the cafe gets a shared delivery record without running servers.
+      - id: d
+        text: Amazon DocumentDB (with MongoDB compatibility)
+        why: DocumentDB stores JSON-like documents in one database, and it does not run a record that each partner holds a copy of.
+    evidence:
+      - "**Amazon Managed Blockchain** runs blockchain networks, such as a grocer's food-safety shipment tracking."
+      - "**Amazon Managed Blockchain**: a service for building and running blockchain networks."
+    takeaway: Partners who want a shared delivery record without running its servers can have Amazon Managed Blockchain run the network.
+    history: []
+    verified:
+      keyHash: 5fe95ba0f8ba
+      fullHash: 41a92fd814d9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-syypfz
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-dynamodb-accelerator
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      Reads slow down in several of the cafe's databases during the morning rush.
+      The team wants to add DAX to help.
+      Which database can DAX speed up?
+    options:
+      - id: a
+        text: The orders database kept in Amazon RDS
+        why: DAX is a cache built into DynamoDB, so it cannot sit in front of a relational database on RDS.
+      - id: b
+        text: The referral graph kept in Amazon Neptune
+        why: DAX caches DynamoDB reads only, so it does nothing for a graph database such as Neptune.
+      - id: c
+        text: The points table kept in Amazon DynamoDB
+        correct: true
+        why: DAX is DynamoDB's built-in cache, so it can sharply cut read times on the points table.
+      - id: d
+        text: The menu catalog kept in Amazon DocumentDB
+        why: DAX belongs to DynamoDB alone, so it cannot cache reads from a document database such as DocumentDB.
+    evidence:
+      - "**DynamoDB Accelerator (DAX)** is a built-in cache that sharply cuts DynamoDB read times."
+      - "**DynamoDB Accelerator (DAX)**: a built-in DynamoDB cache."
+    takeaway: DAX is built into DynamoDB, so it speeds up DynamoDB reads only and not other databases.
+    history: []
+    verified:
+      keyHash: e70da66d5e40
+      fullHash: 306b106a7e78
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-m6ze18
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-backup
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 1
+    stem: >-
+      A new barista sees AWS Backup listed next to Amazon RDS and Amazon DynamoDB in the cafe's database plan.
+      What does AWS Backup do for those databases?
+    options:
+      - id: a
+        text: Stores the cafe's order records in tables of its own
+        why: AWS Backup is not a database, so it keeps copies of the cafe's tables rather than holding the live order records itself.
+      - id: b
+        text: Caches frequent reads so the tables answer faster
+        why: Caching reads is the job of DAX for DynamoDB, while AWS Backup only protects data by keeping copies of it.
+      - id: c
+        text: Answers the queries sent by the monthly sales report
+        why: Answering queries is the work of the databases themselves, and AWS Backup only keeps copies of their data.
+      - id: d
+        text: Copies the databases on a schedule from one place
+        correct: true
+        why: AWS Backup sets copy schedules for RDS, DynamoDB and other services from one place, so the cafe has restore points for both.
+    evidence:
+      - A backup service for databases and storage alike, not a database.
+      - It covers EBS, Amazon EFS, RDS, DynamoDB and more, even on-premises data.
+    takeaway: AWS Backup is not a database; it centrally schedules and keeps copies of databases such as RDS and DynamoDB.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 1 is the only one describing an outside service acting on the databases; the others describe the database itself.)"
+  - id: q-rp2mf1
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: graph-databases
+    note: m07/additional-database-services
+    task: "3.4"
+    level: 2
+    stem: >-
+      The cafe's app ties each regular to the friends they follow, the drinks they like and the shops they visit, and new ties pile up every week.
+      Which strength of a graph database keeps queries over this growing web quick?
+    options:
+      - id: a
+        text: Serves repeated reads from an in-memory cache
+        why: An in-memory cache in front of a table, such as DAX, speeds repeat lookups but does not follow ties from regular to friend to drink.
+      - id: b
+        text: Stores JSON documents whose fields change often
+        why: Flexible JSON documents suit a document database, which keeps self-contained records rather than walking a web of ties.
+      - id: c
+        text: Walks long chains of relationships at speed
+        correct: true
+        why: A graph database has an engine tuned to traverse relationships, so it stays quick as the regulars, friends and drinks gain more ties.
+      - id: d
+        text: Runs a blockchain network shared with partners
+        why: A shared blockchain network, as in Managed Blockchain, tracks records among parties and is not built to follow social ties.
+    evidence:
+      - "**Scale**: billions of relationships in milliseconds as complexity grows, storage up to 64 TB, and a traversal-tuned engine."
+      - A fully managed graph database for highly connected data, like social webs that are clumsy in relational tables.
+    takeaway: A graph database stays quick as a web of relationships grows, because its engine is tuned to traverse links.
+    history: []
+    verified:
+      keyHash: 05a06c047f78
+      fullHash: e005f35c5edf
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-tmvar0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-backup
+    note: m07/additional-database-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe now runs a separate AWS account for each of its shops, and the owner wants the same backup rules to apply in every account without setting them up shop by shop.
+      Which AWS Backup capability fits?
+    options:
+      - id: a
+        text: Organization-wide backup policies
+        correct: true
+        why: Organization-wide policies set one set of backup rules that every shop's account follows, so no account is configured by hand.
+      - id: b
+        text: Cross-Region backup copies
+        why: Copies in another Region protect against a Regional outage but do not push the same rules into each shop's account.
+      - id: c
+        text: Automatic protection of new resources
+        why: Auto-protection brings new resources under an existing plan, but it does not spread one set of rules across many accounts.
+      - id: d
+        text: Encryption of stored backups
+        why: Encryption keeps each backup's contents safe, yet it does nothing to make the backup rules match from one account to the next.
+    evidence:
+      - "**Compliance**: audit logs, reports, organization-wide policies and activity tracking."
+      - "**Central management**: one view of jobs, restore points and compliance across services and accounts, with schedules, encryption and auto-protection of new resources."
+    takeaway: Organization-wide policies in AWS Backup apply the same backup rules across every account from one place.
+    history: []
+    verified:
+      keyHash: 5d387eead5ee
+      fullHash: 8684d8c531ae
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
