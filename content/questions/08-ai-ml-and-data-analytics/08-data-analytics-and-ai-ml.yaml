@@ -214,3 +214,111 @@ questions:
       fullHash: 0cc499738a46
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-24a5s6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: data-pipelines
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      Each week, a cafe analyst exports orders by hand so the pastry model can be retrained, and the steps vary from week to week.
+      What does an automated data pipeline give the cafe instead?
+    options:
+      - id: a
+        text: Queries that are billed only as they run
+        why: Paying per query is how Amazon Athena bills, which does not stop the weekly exports from varying.
+      - id: b
+        text: Storage that scales to hold any data shape
+        why: Elastic storage for any shape of data is what the S3 data lake offers, not what removes the hand-run exports.
+      - id: c
+        text: Runs that repeat reliably on a schedule
+        correct: true
+        why: Once built, a pipeline reruns on a schedule the same way each time, so nobody exports orders by hand.
+      - id: d
+        text: Dashboards that non-experts build themselves
+        why: Self-service dashboards come from a BI tool, and they do not replace the analyst's hand-run exports.
+    evidence:
+      - Once built, the pipeline reruns on a schedule, so data scientists focus on insights and ML engineers on keeping the model current.
+      - Nonstop collection and analysis suit an efficient, repeatable, error-free automated pipeline.
+    takeaway: An automated pipeline replaces hand-run data moves with scheduled runs that repeat the same way every time.
+    history: []
+    verified:
+      keyHash: c5ec2745cfc9
+      fullHash: b912181abb58
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-bw7wcn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-glue-data-catalog
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's pipeline delivers order files to its S3 data lake, but no AWS Glue Data Catalog table is ever created for them.
+      Which step of the pipeline then cannot recognize how those files are structured?
+    options:
+      - id: a
+        text: Converting records with AWS Lambda
+        why: The Lambda function reshapes records before delivery, so it works without a catalog table for the files.
+      - id: b
+        text: Querying the files in Amazon Athena
+        correct: true
+        why: Athena reads the catalog table to recognize the data's structure, so without it the ad hoc queries cannot find their way.
+      - id: c
+        text: Retraining with Amazon SageMaker AI
+        why: In this pipeline SageMaker AI pulls the S3 data directly to retrain the model, not through the catalog table.
+      - id: d
+        text: Delivering records with Amazon Data Firehose
+        why: Firehose delivers records into S3 before any cataloging happens, so a missing table does not affect it.
+    evidence:
+      - "**6 Catalog data**: an AWS Glue Data Catalog table notes the data's schema and where it sits in S3, so ad hoc queries can find it."
+      - "**7 Perform data analytics**: data scientists query S3 in place with standard SQL in Amazon Athena, which reads the catalog table to recognize the structure."
+    takeaway: Without a Glue Data Catalog table, Athena cannot recognize the structure of the S3 data it is meant to query.
+    history: []
+    verified:
+      keyHash: 6f1939662013
+      fullHash: 3229ae70c34a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-5cz440
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-athena
+    note: m08/data-analytics-and-ai-ml
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe's pipeline ends by sending the same S3 order data down two branches, one of them to Amazon Athena.
+      What does the Athena branch do for the cafe?
+    options:
+      - id: a
+        text: Lets engineers retrain the pastry model
+        why: Retraining the model on the shared S3 data is the other branch, handled by Amazon SageMaker AI.
+      - id: b
+        text: Lets analysts run SQL on the lake's data
+        correct: true
+        why: Athena lets analysts query the S3 data in place with standard SQL, the analytics branch of the pipeline.
+      - id: c
+        text: Suggests pastries to customers in the app
+        why: Suggesting products is the recommendation model's job, which the SageMaker AI branch keeps current.
+      - id: d
+        text: Converts JSON records into .csv files
+        why: Reshaping JSON into .csv happens earlier, in a Lambda function that Firehose invokes before delivery.
+    evidence:
+      - "**7 Perform data analytics**: data scientists query S3 in place with standard SQL in Amazon Athena, which reads the catalog table to recognize the structure."
+      - One scheduled pipeline feeds both Athena analysis and SageMaker AI training from the same S3 data.
+    takeaway: In a shared pipeline, Athena is the branch where people run standard SQL on the S3 data lake.
+    history: []
+    verified:
+      keyHash: b0818f0683d9
+      fullHash: 9fd01e53c849
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

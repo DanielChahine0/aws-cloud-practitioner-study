@@ -502,3 +502,39 @@ questions:
       fullHash: 873b0e1db7c1
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-csa268
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: etl
+    note: m08/introduction-to-data-analytics
+    task: "3.7"
+    level: 1
+    stem: >-
+      The cafe's head office asks why the data team runs ETL on the raw sales data before anyone works with it.
+      What is the main purpose of that ETL work?
+    options:
+      - id: a
+        text: To fit the data to analytics tools and AI
+        correct: true
+        why: ETL reshapes raw data into one format and loads it, so analytics tools and AI algorithms can use it.
+      - id: b
+        text: To protect the data with encryption at rest
+        why: Encryption keeps stored data from being read by the wrong people, but it does not reshape raw data for analytics tools.
+      - id: c
+        text: To make each run repeat the same way on its own
+        why: Repeating each run hands-off is what a pipeline adds around ETL, not the purpose of the ETL work itself.
+      - id: d
+        text: To turn past records into trends for analysts
+        why: Finding trends in past records is data analytics, which ETL only prepares the data for.
+    evidence:
+      - Data must also suit analytics tools and AI algorithms.
+      - "ETL: extract and store, transform to one format, load into a warehouse or analytics platform."
+    takeaway: ETL exists to reshape raw data into one format that analytics tools and AI algorithms can use.
+    history: []
+    verified:
+      keyHash: d117ad3030e7
+      fullHash: f8e0ef8aede5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

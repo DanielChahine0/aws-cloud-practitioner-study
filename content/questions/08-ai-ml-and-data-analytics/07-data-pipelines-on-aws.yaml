@@ -535,3 +535,229 @@ questions:
       fullHash: 54c462c8c3a8
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-xg0t9r
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-kinesis-data-streams
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      Which statements describe Amazon Kinesis Data Streams?
+    options:
+      - id: a
+        text: It ingests data from apps and sensors in real time.
+        correct: true
+        why: Kinesis Data Streams is the serverless service that takes in app and sensor data in real time.
+      - id: b
+        text: It lands streams in a lake with managed delivery.
+        why: Managed delivery into a lake in near real time describes Amazon Data Firehose, not Kinesis Data Streams.
+      - id: c
+        text: It lets several apps read one stream at once.
+        correct: true
+        why: Kinesis Data Streams lets several apps, such as a dashboard and an alerting app, read one stream at once.
+      - id: d
+        text: It hands data on to its target in near real time.
+        why: Delivery to a target in near real time describes Amazon Data Firehose, while Kinesis Data Streams works in real time.
+      - id: e
+        text: It runs SQL on data in place and bills per query.
+        why: Querying data where it lives with per-query billing describes Amazon Athena, not an ingestion service.
+    evidence:
+      - Kinesis Data Streams is real time with many readers, while Firehose is near real time with managed delivery.
+      - "**Amazon Kinesis Data Streams**: Serverless real-time ingestion."
+    takeaway: Kinesis Data Streams ingests data in real time and lets several apps read the same stream at once.
+    history: []
+    verified:
+      keyHash: 44adbbda4d45
+      fullHash: 5081090ef388
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-jz3bbw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-data-firehose
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's ordering app sends a constant stream of order events.
+      The cafe wants each event reshaped while it is still in flight and landed in its S3 data lake within seconds, with no capacity to provision or scale.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS Glue
+        why: Glue runs managed ETL jobs on a schedule over stored data, rather than reshaping a live stream in flight.
+      - id: b
+        text: Amazon Kinesis Data Streams
+        why: Kinesis Data Streams ingests events in real time for many readers, but it is not the managed streaming ETL that lands them in the lake.
+      - id: c
+        text: Amazon Data Firehose
+        correct: true
+        why: Firehose is fully managed streaming ETL that scales itself and lands data in lakes within seconds.
+      - id: d
+        text: Amazon EMR
+        why: EMR runs large processing jobs on Apache frameworks across clusters, not managed in-flight delivery to the lake.
+    evidence:
+      - Fully managed streaming ETL in near real time; provisions and scales itself; lands data in seconds in lakes, warehouses or analytics tools
+      - Kinesis Data Streams is real time with many readers, while Firehose is near real time with managed delivery.
+    takeaway: A stream that must be transformed in flight and landed in a store within seconds, fully managed, points to Data Firehose.
+    history: []
+    verified:
+      keyHash: 1986c44da38b
+      fullHash: 6a5fb15a899f
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-5w13ja
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-glue
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      In a data pipeline built from AWS services, which phases does AWS Glue handle?
+    options:
+      - id: a
+        text: Cataloging the metadata of the stored data
+        correct: true
+        why: The AWS Glue Data Catalog, a feature of Glue, keeps the pipeline's central store of metadata.
+      - id: b
+        text: Storing raw data of any shape as the lake
+        why: Holding raw data of any shape as the data lake is the store phase, handled by Amazon S3.
+      - id: c
+        text: Processing the data with managed ETL jobs
+        correct: true
+        why: Glue is a managed ETL service whose jobs clean and transform the data in the process phase.
+      - id: d
+        text: Querying data in place with pay-per-query SQL
+        why: Serverless SQL over data where it lives, billed per query, is the query phase handled by Amazon Athena.
+      - id: e
+        text: Visualizing the data on business dashboards
+        why: Business intelligence dashboards belong to the visualize phase, handled by Amazon Quick Sight.
+    evidence:
+      - "**AWS Glue Data Catalog**: Central metadata repository within AWS Glue."
+      - "**AWS Glue**: Managed ETL service."
+      - "Order: ingest, store, catalog, process, then query and visualize."
+    takeaway: AWS Glue covers two pipeline phases, cataloging metadata with its Data Catalog and processing data with managed ETL jobs.
+    history: []
+    verified:
+      keyHash: f09ab996e6bb
+      fullHash: 9c886aba716e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-bmwj2s
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-emr
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 2
+    stem: >-
+      The cafe chain's engineers run nightly Apache Hadoop and Hive jobs on servers they build and resize by hand.
+      They want to keep running those same jobs on AWS without building or resizing the clusters themselves.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon EC2
+        why: EC2 gives the engineers virtual servers, so they would still build and resize the Hadoop clusters themselves.
+      - id: b
+        text: AWS Glue
+        why: Glue offers a simplified, code-free approach to ETL rather than running existing Hadoop and Hive jobs as they are.
+      - id: c
+        text: AWS Batch
+        why: Batch plans and scales compute for general batch jobs, but it does not manage Apache big data clusters.
+      - id: d
+        text: Amazon EMR
+        correct: true
+        why: EMR runs Hadoop and Hive work at scale and takes over the provisioning, clusters and scaling for the engineers.
+    evidence:
+      - Large-scale work on Apache Spark, Hadoop or Hive; handles provisioning, clusters and scaling
+      - "**Amazon EMR**: Big data processing on Apache frameworks."
+    takeaway: Existing Hadoop or Hive jobs can move to Amazon EMR, which takes over provisioning and scaling the clusters.
+    history: []
+    verified:
+      keyHash: fc4b45622a93
+      fullHash: cdd9ee26a1a2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-ktfyqj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-quicksight
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 3
+    stem: >-
+      The cafe's manager wants to type a plain-language question, such as which branch sold the most muffins last month, and get back a business intelligence chart.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon OpenSearch Service
+        why: OpenSearch Service also takes natural language, but to search and monitor live operational data rather than build BI charts.
+      - id: b
+        text: Amazon Athena
+        why: Athena answers questions written in standard SQL, and it gives the manager no chart to show.
+      - id: c
+        text: Amazon Quick Sight
+        correct: true
+        why: Quick Sight builds BI dashboards and reports, and its Amazon Q feature lets users ask for them in natural language.
+      - id: d
+        text: Amazon Redshift
+        why: Redshift runs heavy SQL in a data warehouse, but it is not the tool where the manager asks questions and gets charts.
+    evidence:
+      - "BI at scale: experts and non-experts build interactive dashboards and reports without infrastructure or developers; Amazon Q in QuickSight adds natural language"
+      - QuickSight is for BI dashboards, while OpenSearch Service is for real-time search and monitoring.
+    takeaway: Asking business questions in plain language and getting BI charts back points to Amazon Quick Sight, not OpenSearch Service.
+    history: []
+    verified:
+      keyHash: 83af02a4a400
+      fullHash: 681b33163d7b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-j52a8b
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-opensearch-service
+    note: m08/data-pipelines-on-aws
+    task: "3.7"
+    level: 1
+    stem: >-
+      What is Amazon OpenSearch Service mainly used for in a data pipeline?
+    options:
+      - id: a
+        text: Building BI dashboards and reports for managers
+        why: BI dashboards and reports for business users are the job of Amazon Quick Sight at the visualize step.
+      - id: b
+        text: Monitoring and analyzing live operational data
+        correct: true
+        why: OpenSearch Service searches, monitors and analyzes business and operational data live, by keyword or natural language.
+      - id: c
+        text: Running serverless SQL billed for each query
+        why: Serverless SQL with per-query billing describes Amazon Athena, which queries data where it lives.
+      - id: d
+        text: Processing big data on Apache Spark clusters
+        why: Big data processing on Apache Spark clusters describes Amazon EMR at the process step.
+    evidence:
+      - "**Amazon OpenSearch Service**: Real-time search and monitoring."
+      - QuickSight is for BI dashboards, while OpenSearch Service is for real-time search and monitoring.
+    takeaway: Amazon OpenSearch Service is the pipeline's tool for real-time search and monitoring of data.
+    history: []
+    verified:
+      keyHash: 7f759dcdaded
+      fullHash: aa87b4b3ddac
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
