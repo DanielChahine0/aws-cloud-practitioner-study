@@ -931,3 +931,430 @@ questions:
       fullHash: 2fba91050029
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-q1yjrs
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: technical-account-manager
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe chain's owner wants one person at AWS who learns the chain's setup, keeps an eye on its environment and advises over time on cutting cost and on which AWS programs to join.
+      Which AWS role fits?
+    options:
+      - id: a
+        text: AWS Professional Services consultant
+        why: A Professional Services consultant works on a scoped project, not as the chain's ongoing main contact.
+      - id: b
+        text: Incident Management Engineer
+        why: An Incident Management Engineer responds when a critical system is down, rather than advising over time.
+      - id: c
+        text: AWS solutions architect
+        why: A solutions architect advises on designing apps, but is not the main contact who watches the environment.
+      - id: d
+        text: Technical account manager
+        correct: true
+        why: A TAM is the main AWS contact who monitors the environment and advises on cost and AWS programs.
+    evidence:
+      - A TAM, your main AWS contact, monitors your environment and advises on services, architecture, cost and AWS programs, such as combining services in one app.
+    takeaway: A technical account manager is the ongoing main AWS contact who watches the environment and advises on cost and programs.
+    history: []
+    verified:
+      keyHash: a78efe39858c
+      fullHash: 58176008b2f9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-awpy14
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: aws-business-support-plus
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe's mission-critical online ordering system goes live next week.
+      The owner wants a promised response in under 30 minutes if it goes down, and sees no reason to pay for a plan that promises a faster one.
+      Which plan fits?
+    options:
+      - id: a
+        text: AWS Enterprise Support
+        why: Enterprise Support promises under 15 minutes, a faster response than the owner wants to pay for.
+      - id: b
+        text: Basic Support
+        why: Basic Support promises no response time for an outage, so it misses the owner's 30-minute need.
+      - id: c
+        text: AWS Unified Operations
+        why: Unified Operations promises under 5 minutes, far faster than the owner wants to pay for.
+      - id: d
+        text: AWS Business Support+
+        correct: true
+        why: Business Support+ promises a response in under 30 minutes for a down critical system, and nothing faster.
+    evidence:
+      - With Business Support+, a business-critical or mission-critical system that is down gets a response in under 30 minutes.
+      - With Enterprise Support, a business-critical or mission-critical system that is down gets a response in under 15 minutes.
+    takeaway: When an under-30-minute response to a critical outage is enough, Business Support+ meets it without paying for a faster plan.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "solve-closed: a second option is defensible: Business Support+ promises a 30-minute critical response, the slowest plan that meets the bar; the stem says under 30 minutes, which strictly read would point to Enterprise Support's 15 minutes."
+  - id: q-nfdwg5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-enterprise-support
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      With AWS Enterprise Support, how soon does AWS respond when a business-critical or mission-critical system is down?
+    options:
+      - id: a
+        text: In under 30 minutes
+        why: Under 30 minutes is the Business Support+ response, and Enterprise Support promises a faster one.
+      - id: b
+        text: In under 5 minutes
+        why: Under 5 minutes is the Unified Operations response, which is faster than Enterprise Support promises.
+      - id: c
+        text: In under 15 minutes
+        correct: true
+        why: Enterprise Support promises a response in under 15 minutes when a critical system is down.
+      - id: d
+        text: With no set response time
+        why: No promised response is Basic Support, while Enterprise Support sets a fast response for a critical outage.
+    evidence:
+      - With Enterprise Support, a business-critical or mission-critical system that is down gets a response in under 15 minutes.
+    takeaway: Enterprise Support responds in under 15 minutes when a business-critical or mission-critical system is down.
+    history: []
+    verified:
+      keyHash: f3d6c4801959
+      fullHash: 95a3b5cb3556
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-3hh5fc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-unified-operations
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      On AWS Unified Operations, who from AWS responds when a business-critical or mission-critical system is down?
+    options:
+      - id: a
+        text: A technical account manager
+        why: A TAM is the main contact who advises over time, not the role named for outage response in this plan.
+      - id: b
+        text: An Incident Management Engineer
+        correct: true
+        why: Unified Operations has an Incident Management Engineer respond in under 5 minutes to a critical outage.
+      - id: c
+        text: An AWS solutions architect
+        why: A solutions architect advises on app design, not on responding when a critical system goes down.
+      - id: d
+        text: A Professional Services consultant
+        why: A Professional Services consultant works on scoped projects, not on urgent outage response.
+    evidence:
+      - With Unified Operations, an Incident Management Engineer responds in under 5 minutes when a business-critical or mission-critical system is down.
+    takeaway: In Unified Operations, an Incident Management Engineer responds in under 5 minutes when a critical system is down.
+    history: []
+    verified:
+      keyHash: 9ab113dbd1bf
+      fullHash: a8671ff4ca06
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-ch2mpb
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-re-post
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      The cafe's developer reads an AWS Knowledge Center article and video about fixing a common error.
+      Which AWS resource hosts the Knowledge Center?
+    options:
+      - id: a
+        text: AWS Prescriptive Guidance
+        why: Prescriptive Guidance publishes expert patterns for migration and modernization, not the Knowledge Center.
+      - id: b
+        text: AWS Support Center
+        why: The Support Center is where customers open cases, not where the Knowledge Center articles live.
+      - id: c
+        text: AWS re:Post
+        correct: true
+        why: re:Post is the community Q&A site that also hosts the Knowledge Center of FAQ articles and videos.
+      - id: d
+        text: AWS Health Dashboard
+        why: The Health Dashboard shows service health and alerts, not FAQ articles and videos.
+    evidence:
+      - "AWS re:Post: community Q&A that hosts the AWS Knowledge Center of FAQ articles and videos."
+    takeaway: AWS re:Post hosts the AWS Knowledge Center, its collection of FAQ articles and videos.
+    history: []
+    verified:
+      keyHash: dcad7b364259
+      fullHash: 87866e4b3558
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-rd1kc3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-trust-and-safety-center
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      A customer tells the cafe that a fake copy of its ordering site, running on AWS resources, is tricking people into entering card numbers.
+      Where should the cafe report this?
+    options:
+      - id: a
+        text: AWS Trust and Safety Center
+        correct: true
+        why: Suspected abuse of AWS resources, such as a fake site run on them, is reported to the Trust and Safety Center.
+      - id: b
+        text: AWS Support Center
+        why: The Support Center handles cases about the cafe's own account, not reports of abuse by someone else.
+      - id: c
+        text: Amazon GuardDuty
+        why: GuardDuty looks for threats in the cafe's own accounts, not abuse coming from someone else's resources.
+      - id: d
+        text: AWS re:Post
+        why: re:Post is a public community Q&A site, not the channel for reporting suspected abuse to AWS.
+    evidence:
+      - "AWS Trust and Safety Center: report suspected abuse."
+      - Suspected misuse of AWS resources, such as odd network traffic coming from an AWS IP address, is reported to the AWS Trust and Safety team.
+    takeaway: Any suspected abuse of AWS resources, such as a fake site run on them, goes to the AWS Trust and Safety Center.
+    history: []
+    verified:
+      keyHash: d17625ffff06
+      fullHash: 2a9a244eb552
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-7fyv0r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-solutions-architects
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe's team has drafted a design for a new delivery app.
+      Before building, it wants AWS experts to check the design against best practices for scale and security, and it has no need for an ongoing named contact.
+      Which AWS help fits?
+    options:
+      - id: a
+        text: A technical account manager
+        why: A TAM is an ongoing named contact who watches the environment, which the cafe says it does not need.
+      - id: b
+        text: AWS Prescriptive Guidance
+        why: Prescriptive Guidance offers published patterns to follow alone, not experts reviewing the cafe's own design.
+      - id: c
+        text: AWS solutions architects
+        correct: true
+        why: Solutions architects help customers design scalable, secure apps and advise on architecture best practices.
+      - id: d
+        text: AWS Trust and Safety Center
+        why: The Trust and Safety Center takes reports of abuse, not requests for design advice.
+    evidence:
+      - "AWS solutions architects: for Business and Enterprise customers, help designing scalable, secure apps, with architecture and best practice advice."
+    takeaway: AWS solutions architects review and advise on app designs and architecture best practices, without being an ongoing contact.
+    history: []
+    verified:
+      keyHash: 84d84b003ce3
+      fullHash: 51e45d4a50d2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-vtf9sg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-professional-services
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      How does AWS Professional Services work with a customer?
+    options:
+      - id: a
+        text: As a named contact who watches the account over time
+        why: An ongoing named contact who monitors the environment is a technical account manager.
+      - id: b
+        text: As expert-written patterns a team follows on its own
+        why: Published patterns that a team follows alone are AWS Prescriptive Guidance.
+      - id: c
+        text: As consulting delivered on one project at a time
+        correct: true
+        why: Professional Services is project-based consulting, such as a complex migration or a security audit.
+      - id: d
+        text: As community answers to questions that users post
+        why: Answers from other users to posted questions come from AWS re:Post.
+    evidence:
+      - "AWS Professional Services: project-based consulting, such as complex migrations, security audits and performance tuning."
+    takeaway: AWS Professional Services delivers consulting as scoped projects, such as migrations, audits and tuning.
+    history: []
+    verified:
+      keyHash: b53c02c59fbb
+      fullHash: cc867190d876
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-yppcjd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-self-support-resources
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe's developer wants short, informal write-ups from AWS about how a newly released feature works and how others have put it to use.
+      Which self-support resource fits best?
+    options:
+      - id: a
+        text: AWS whitepapers
+        why: Whitepapers are in-depth technical documents with decision guides, not short informal write-ups.
+      - id: b
+        text: AWS SDK guides
+        why: SDK guides explain how to call AWS from code, not informal news about how a feature is used.
+      - id: c
+        text: AWS user guides
+        why: User guides document how a service works in full, rather than short informal posts about new features.
+      - id: d
+        text: AWS blog posts
+        correct: true
+        why: Blog posts are the informal self-support resource where AWS writes about new features and how they are used.
+    evidence:
+      - "Self-support: user guides, SDK guides, blog posts and whitepapers."
+    takeaway: Among self-support resources, AWS blog posts give short, informal coverage of new features and how they are used.
+    history: []
+    verified:
+      keyHash: 743e75192dd2
+      fullHash: 17080656384e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-zem1cn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-support-center
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe's developer tries to open a technical case in the AWS Support Center about errors on an EC2 instance, but only account and billing cases are offered.
+      Which step lets her open the technical case?
+    options:
+      - id: a
+        text: Post the errors on AWS re:Post
+        why: Posting on re:Post gets community answers, but it does not unlock technical cases in the Support Center.
+      - id: b
+        text: Upgrade to AWS Business Support+
+        correct: true
+        why: Technical cases need a plan above Basic Support, and Business Support+ is one, while billing cases are open to all.
+      - id: c
+        text: Report the errors to AWS Trust and Safety
+        why: The Trust and Safety team takes reports of misuse, not technical errors in the cafe's own instance.
+      - id: d
+        text: Hire AWS Professional Services for it
+        why: Professional Services runs paid consulting projects, which does not unlock technical cases in the Support Center.
+    evidence:
+      - In the AWS Support Center every customer can open account and billing cases, while technical support cases need a plan above Basic Support.
+      - "The exam guide names four Support plans: Basic Support, AWS Business Support+, AWS Enterprise Support and AWS Unified Operations."
+    takeaway: In the AWS Support Center, technical cases need a plan above Basic Support, while billing cases are open to all.
+    history: []
+    verified:
+      keyHash: c3ef6891088e
+      fullHash: b3fba1d02544
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-fvzf5x
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-prescriptive-guidance
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 3
+    stem: >-
+      The cafe's developer wants to cut the running cost of the ordering app herself.
+      She wants step-by-step patterns with architectures and code written by AWS technology experts, rather than answers from other users.
+      Which resource fits?
+    options:
+      - id: a
+        text: AWS re:Post
+        why: re:Post gathers community answers from other users, which the developer wants to avoid relying on.
+      - id: b
+        text: AWS Professional Services
+        why: Professional Services sends consultants to do a project, while she wants to do the work herself.
+      - id: c
+        text: AWS Support Center
+        why: The Support Center is where cases are opened with AWS, not where published patterns are found.
+      - id: d
+        text: AWS Prescriptive Guidance
+        correct: true
+        why: Prescriptive Guidance offers expert guides and patterns with steps, architectures, tools and code for optimization work.
+    evidence:
+      - AWS Prescriptive Guidance offers guides and patterns from AWS technology experts, with steps, architectures, tools and code for common migration, optimization and modernization work.
+    takeaway: AWS Prescriptive Guidance covers optimization as well as migration, with expert patterns, steps and code to follow in-house.
+    history: []
+    verified:
+      keyHash: dfce1f600a2e
+      fullHash: 79725a625be0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-32t0k4
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: aws-business-support-plus
+    note: m11/aws-support-plans
+    task: "4.3"
+    level: 1
+    stem: >-
+      The cafe's manager is comparing AWS Business Support+ with the other Support plans on a price sheet.
+      Which statements describe Business Support+?
+    options:
+      - id: a
+        text: It includes a designated technical account manager.
+        why: A designated technical account manager comes with Enterprise Support, a plan above Business Support+.
+      - id: b
+        text: It answers a down critical system in under 30 minutes.
+        correct: true
+        why: Business Support+ promises a response in under 30 minutes when a business-critical system is down.
+      - id: c
+        text: It includes round-the-clock monitoring of workloads.
+        why: Round-the-clock workload monitoring belongs to Unified Operations alone, not to Business Support+.
+      - id: d
+        text: It is the free plan that every AWS customer gets.
+        why: The free plan every customer gets is Basic Support, while Business Support+ is a paid plan above it.
+      - id: e
+        text: It is the lowest plan AWS advises for production.
+        correct: true
+        why: AWS calls Business Support+ the minimum plan it recommends for running production workloads.
+    evidence:
+      - AWS calls Business Support+ the minimum plan it recommends for production workloads.
+      - With Business Support+, a business-critical or mission-critical system that is down gets a response in under 30 minutes.
+    takeaway: Business Support+ is the production minimum AWS recommends, with an under 30 minute response to a critical outage.
+    history: []
+    verified:
+      keyHash: 55e7f3dbc9e3
+      fullHash: ada48beded53
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

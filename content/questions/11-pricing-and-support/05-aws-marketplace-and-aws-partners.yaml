@@ -539,3 +539,215 @@ questions:
       fullHash: df26747c4b09
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-tx1365
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-marketplace
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      The cafe is browsing AWS Marketplace for a reporting tool.
+      Which pricing models can listings there use?
+    options:
+      - id: a
+        text: On-demand, spot or reserved capacity
+        why: These are ways to buy Amazon EC2 capacity, not the pricing models of Marketplace listings.
+      - id: b
+        text: Free, pay-as-you-go or annual
+        correct: true
+        why: Marketplace listings can be priced as free, pay-as-you-go or annual.
+      - id: c
+        text: Savings Plans or capacity reservations
+        why: These are commitment and reservation options for AWS compute, not the pricing models of Marketplace listings.
+      - id: d
+        text: Tiered or volume-discount pricing
+        why: Tiered and volume discounts lower the price of AWS services as usage grows, not how a Marketplace listing is priced.
+    evidence:
+      - Pricing can be free, pay-as-you-go or annual.
+    takeaway: AWS Marketplace listings can be free, pay-as-you-go or priced by the year.
+    history: []
+    verified:
+      keyHash: 061fef70125d
+      fullHash: 71e41c6efcda
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-bm7ny3
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: independent-software-vendors
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      The cafe buys a staff scheduling app in AWS Marketplace.
+      The listing comes from the outside company that wrote the app, rather than from AWS or from a firm that runs the cafe's workloads.
+      Which term names that seller?
+    options:
+      - id: a
+        text: System integrator
+        why: A system integrator delivers professional or managed services to run workloads, which the stem rules out.
+      - id: b
+        text: Independent software vendor
+        correct: true
+        why: An ISV is a third-party seller that lists its own product, and ISVs supply most Marketplace listings.
+      - id: c
+        text: AWS Professional Services consultant
+        why: Professional Services is consulting from AWS itself, and this seller is not part of AWS.
+      - id: d
+        text: AWS solutions architect
+        why: A solutions architect is an AWS expert who advises on design, not an outside company selling an app.
+    evidence:
+      - A curated catalog of thousands of listings, mostly from independent software vendors (ISVs).
+      - "**Independent software vendor (ISV)**: A third-party seller on Marketplace."
+    takeaway: An independent software vendor is a third-party company that sells its own product through AWS Marketplace.
+    history: []
+    verified:
+      keyHash: 1f67524512ac
+      fullHash: 166dbde75cde
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-z2xmzj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-network
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A firm that builds cafe apps on AWS is weighing whether to join the AWS Partner Network.
+      It wants a benefit that cuts the price of the large amount of AWS it buys for its clients.
+      Which benefit of joining fits that need?
+    options:
+      - id: a
+        text: Partner program funding
+        why: Funding helps a partner build, market and sell with AWS, but it does not lower the price of what it buys.
+      - id: b
+        text: Partner events and webinars
+        why: Events bring networking, updates and AWS experts, not a lower price on AWS usage.
+      - id: c
+        text: Partner volume discounts
+        correct: true
+        why: Volume discounts lower the price a partner pays as its AWS purchases grow, which suits a firm buying a lot for clients.
+      - id: d
+        text: Partner training content
+        why: Training content helps staff learn and certify, not pay less for the AWS it buys.
+    evidence:
+      - The exam guide lists partner volume discounts among the benefits of joining the AWS Partner Network.
+    takeaway: Joining the AWS Partner Network brings partner volume discounts, which cut the price of the AWS a partner buys.
+    history: []
+    verified:
+      keyHash: 0f778334efbc
+      fullHash: 76baad9050f0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-9b8efd
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-funding
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A partner firm in the AWS Partner Network has an idea for a new stock-tracking solution for cafes on AWS.
+      It needs money to pay for building the first version. Which partner benefit fits?
+    options:
+      - id: a
+        text: Partner-centered training content
+        why: Training content teaches the firm's staff, but it does not pay for building the solution.
+      - id: b
+        text: Webinars, workshops and partner events
+        why: Events offer networking, updates and AWS experts, but they do not pay for the build.
+      - id: c
+        text: Volume discounts for partners
+        why: Volume discounts lower what the firm pays for AWS, rather than paying for building something new.
+      - id: d
+        text: Funding through partner programs
+        correct: true
+        why: Partner programs offer funding to help partners build, market and sell their solutions with AWS.
+    evidence:
+      - Funding, via partner programs, to build, market and sell with AWS.
+    takeaway: AWS Partner funding comes through partner programs and can help a partner build a solution, not only market and sell it.
+    history: []
+    verified:
+      keyHash: 4565e69b1144
+      fullHash: 07123d15bbd0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-1f2bn9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-partner-events
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 2
+    stem: >-
+      A partner firm that sets up AWS ordering systems for cafes wants its engineers to meet other partners in person and hear the latest AWS updates from AWS experts.
+      Which partner benefit fits?
+    options:
+      - id: a
+        text: AWS Partner training
+        why: Partner training is content for building skills and earning certification, not for meeting other partners or hearing updates.
+      - id: b
+        text: AWS Partner funding
+        why: Funding pays toward building, marketing and selling, not for meeting other partners and AWS experts.
+      - id: c
+        text: AWS Partner events
+        correct: true
+        why: Partner events, from webinars to in-person sessions, are where partners network, get updates and meet AWS experts.
+      - id: d
+        text: AWS Professional Services
+        why: Professional Services consults for customers on projects, not on bringing partners together with AWS experts.
+    evidence:
+      - Events (webinars, workshops, in person) for networking, updates and AWS experts.
+    takeaway: Networking with other partners and hearing updates from AWS experts is what the AWS Partner events benefit offers.
+    history: []
+    verified:
+      keyHash: 98ba26faa84c
+      fullHash: 90afa4617afc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-9b9nmj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: system-integrators
+    note: m11/aws-marketplace-and-aws-partners
+    task: "4.3"
+    level: 1
+    stem: >-
+      Which kind of AWS Partner is a system integrator?
+    options:
+      - id: a
+        text: An AWS software partner
+        why: Software partners sell their own products, such as Marketplace listings, rather than delivering services.
+      - id: b
+        text: An AWS training partner
+        why: Training partners teach AWS skills, while system integrators build and run customer workloads.
+      - id: c
+        text: An AWS hardware partner
+        why: Hardware partners supply devices, while system integrators deliver professional or managed services.
+      - id: d
+        text: An AWS services partner
+        correct: true
+        why: System integrators are services partners that deliver professional or managed services for AWS workloads.
+    evidence:
+      - System integrators are AWS services partners that deliver professional or managed services to help customers build and run their workloads on AWS.
+    takeaway: System integrators are AWS services partners that deliver professional or managed services for customer workloads.
+    history: []
+    verified:
+      keyHash: 489d0c0b823b
+      fullHash: 64d293413027
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

@@ -578,3 +578,182 @@ questions:
       fullHash: b487db5b9ca2
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-j2xe9j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-budgets
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe labels every catering resource with project=catering and sets aside a monthly amount for catering alone.
+      The owner wants an email when catering spend nears that amount, whatever the rest of the account spends.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Cost Explorer
+        why: Cost Explorer can chart catering spend by tag, but it sends no email when spend nears a limit.
+      - id: b
+        text: AWS Cost and Usage Report
+        why: The report delivers detailed cost files to S3, but it does not warn anyone as spend nears a limit.
+      - id: c
+        text: AWS Billing and Cost Management
+        why: The dashboard gives a first look at overall charges and payments, not a tag-scoped limit with alerts.
+      - id: d
+        text: AWS Budgets
+        correct: true
+        why: A custom budget can be scoped to one tag and sends an alert as that spend nears or passes its limit.
+    evidence:
+      - Custom budgets by service, cost category or tag, including Savings Plans and Reserved Instance utilization or coverage
+      - Budgets and Cost Explorer both forecast, but only Budgets sends threshold alerts.
+    takeaway: AWS Budgets can scope a custom budget to a single tag and alert when that slice of spend nears its limit.
+    history: []
+    verified:
+      keyHash: 779c8c7c9a77
+      fullHash: b24caa04601a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-tkx729
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cost-explorer
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 3
+    stem: >-
+      The cafe's shops each have their own AWS account, all linked under one bill.
+      The owner wants a chart of recent months showing which shop's account is behind the rise in spend.
+      Which tool fits?
+    options:
+      - id: a
+        text: AWS Organizations
+        why: Organizations groups the accounts and sets up the single bill, but it does not chart spend over time.
+      - id: b
+        text: AWS Cost Explorer
+        correct: true
+        why: Cost Explorer charts cost and usage over time and can break it down by linked account to show the driver.
+      - id: c
+        text: AWS Budgets
+        why: Budgets warns when spend nears a set limit, rather than charting past spend by account to find a cause.
+      - id: d
+        text: AWS Pricing Calculator
+        why: The calculator estimates designs before they are built, so it holds no record of past spend.
+    evidence:
+      - Charts of cost and usage over time by service, linked account or tag, with trends and Reserved Instance advice
+    takeaway: Cost Explorer can chart spend over time by linked account, showing which account in a bill drives the cost.
+    history: []
+    verified:
+      keyHash: de5f189d0186
+      fullHash: bd24e14f9a31
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-vyqp8d
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-pricing-calculator
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 1
+    stem: >-
+      The cafe's developer opens the AWS Pricing Calculator to price a menu app the team has only planned so far.
+      Which details does she enter to get an itemized estimate?
+    options:
+      - id: a
+        text: Tags and cost categories on running resources
+        why: Tags and cost categories group the spend of resources that already exist, not of a design on paper.
+      - id: b
+        text: Invoices and payment methods for the account
+        why: Invoices and payment methods live in the billing dashboard and say nothing about a future design.
+      - id: c
+        text: Instance types, storage and transfer volumes
+        correct: true
+        why: The calculator builds an itemized estimate from the instance types, storage and transfer volumes entered.
+      - id: d
+        text: Reserved Instance coverage of past usage
+        why: Coverage of past usage is tracked for workloads already running, which the unbuilt app has none of.
+    evidence:
+      - An itemized estimate from the instance types, storage and transfer volumes you enter
+    takeaway: The Pricing Calculator turns planned instance types, storage and transfer volumes into an itemized estimate.
+    history: []
+    verified:
+      keyHash: 5c08d0bf3f82
+      fullHash: 02525f885a7b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-ex84hg
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cost-allocation-tags
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 2
+    stem: >-
+      The cafe runs development and production resources side by side in one AWS account.
+      The owner wants Cost Explorer to show which of the two drives most of the spend.
+      What should the team add first?
+    options:
+      - id: a
+        text: A budget alert for each environment
+        why: A budget alert warns near a limit, but it does not label resources so costs can be split between them.
+      - id: b
+        text: A Savings Plan for each environment
+        why: A Savings Plan lowers the price of committed use, but it does not show which environment drives spend.
+      - id: c
+        text: An IAM role for each environment
+        why: An IAM role grants permissions, and Cost Explorer does not split costs by the role a resource uses.
+      - id: d
+        text: A resource tag for each environment
+        correct: true
+        why: A tag such as environment lets Cost Explorer allocate costs to development or production once it is activated.
+    evidence:
+      - Cost Explorer can allocate costs by tags such as project, department or environment, showing who drives spend.
+    takeaway: Tagging resources by environment, project or department lets Cost Explorer show which group drives the spend.
+    history: []
+    verified:
+      keyHash: 2fe94a5eee25
+      fullHash: 2ded2cd9fdc7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-4pp301
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cost-and-usage-report
+    note: m11/aws-pricing-and-billing-services
+    task: "4.2"
+    level: 1
+    stem: >-
+      The cafe's accountant is setting up the AWS Cost and Usage Report.
+      At which levels of time detail can the report break down its data?
+    options:
+      - id: a
+        text: Per minute, hour or day
+        why: The report offers no breakdown by the minute, so this set does not match its time levels.
+      - id: b
+        text: Per hour, day or month
+        correct: true
+        why: The report can break down cost and usage data by hour, by day or by month.
+      - id: c
+        text: Per day, week or month
+        why: The report offers no breakdown by the week, so this set does not match its time levels.
+      - id: d
+        text: Per week, month or year
+        why: The report goes down to the hour and day, not up to weeks and years, so this set does not match it.
+    evidence:
+      - "The AWS Cost and Usage Report holds the most detailed AWS cost and usage data, broken down by hour, day or month and by your tags, delivered as files to an Amazon S3 bucket you own."
+    takeaway: The AWS Cost and Usage Report can break its detailed data down by hour, day or month.
+    history: []
+    verified:
+      keyHash: 76e891e120dc
+      fullHash: a9fbf6f3c60d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
