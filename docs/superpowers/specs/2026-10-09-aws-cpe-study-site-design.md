@@ -1261,6 +1261,7 @@ Nothing but fixes ships between the go/no-go check on Saturday, November 7 and t
 - If the booked date moves, the targets move with it, and the cut order stays the same.
 
 - NOTE: Phase 5 was built before the exam by Dani's decision of 2026-10-10 and shipped as `0.8.0` on `2026-10-18` with all 26 core labs, after its 9 stretch labs had merged as content; nothing but fixes ships after Saturday, November 7 (Phase 5).
+- NOTE: Phase 6 shipped as `0.7.0` with R10 at 2 per concept; its Tasks 1 and 3 landed on 2026-11-24, after the exam, so R10 now stands at 3 per concept and Phase 6's exit criteria are met (Phase 6).
 
 ### 10.2 Study calendar for the November 14 exam
 
