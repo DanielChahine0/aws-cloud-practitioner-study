@@ -217,3 +217,151 @@ questions:
       fullHash: d7ab9ece4e7f
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-kt7qbf
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: s3-static-website-hosting
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 1
+    stem: >-
+      The cafe is about to publish its menu site with S3 static website hosting.
+      Which statement describes the work the cafe does to set it up?
+    options:
+      - id: a
+        text: Storage and data sent out appear on the monthly bill
+        why: This is how the menu site is billed once it runs, not a step the cafe takes to set the site up.
+      - id: b
+        text: Rushes of visitors are absorbed with no scaling work
+        why: S3 handles busy days on its own, which describes running the site rather than the work of setting it up.
+      - id: c
+        text: Site files are uploaded and hosting is switched on
+        correct: true
+        why: Setting up the menu site means uploading its HTML, CSS, JavaScript and media files to a bucket and turning hosting on.
+      - id: d
+        text: Site files are kept as objects rather than as blocks
+        why: S3 stores the menu site's files as objects by design, so this is a property of the service, not a setup task for the cafe.
+    evidence:
+      - Setup is uploading HTML, CSS, JavaScript and media files and switching hosting on.
+      - S3 absorbs any traffic level itself, and you pay for storage plus data transferred out.
+    takeaway: S3 static website hosting is set up by uploading the site's files to a bucket and switching hosting on.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: Option 1 alone repeats the stem's word 'hosting' and is the only option describing an action, so the stem's 'work the cafe does' points at it."
+  - id: q-dn2qdy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: choosing-storage-services
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      A cafe manager suggests keeping the order database's data in Amazon S3 because S3 scales so easily.
+      The database rewrites rows constantly throughout the day.
+      Which fact about S3 makes it the wrong fit for this data?
+    options:
+      - id: a
+        text: S3 bills for stored data plus data sent out
+        why: The billing model is true of S3, but it does not explain why constant database rewrites fail there.
+      - id: b
+        text: S3 keeps data as objects rather than as blocks
+        correct: true
+        why: Object storage is not built for constant rapid rewrites, while a database needs the block-level access EBS gives.
+      - id: c
+        text: S3 serves a site's static files from a bucket
+        why: Static website hosting is a true S3 feature, but it has no bearing on where a busy database should live.
+      - id: d
+        text: S3 handles any traffic level without scaling work
+        why: Absorbing traffic is a strength of S3 and is the manager's reason, not the reason the idea fails.
+    evidence:
+      - S3 would not work, since object storage is not built for constant rapid rewrites, while EBS gives databases block-level access.
+      - A database that rewrites data constantly should not sit on S3, because that work needs block storage such as EBS.
+    takeaway: A database that rewrites data constantly needs block storage such as EBS, because object storage like S3 is not built for it.
+    history: []
+    verified:
+      keyHash: e295e8761d46
+      fullHash: 4d1ce732c1a0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-9h39aa
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: provisioned-iops-ssd
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's IT lead is deciding which workloads deserve a Provisioned IOPS SSD volume on Amazon EBS.
+      Which signs point a workload toward that volume type?
+    options:
+      - id: a
+        text: Staff at many sites open the same files at once
+        why: Many locations sharing the same files point to a shared file system such as EFS, not a faster EBS volume.
+      - id: b
+        text: The app is mission-critical to the business
+        correct: true
+        why: A workload the cafe cannot run without is the kind the top-performing EBS volume type is meant for.
+      - id: c
+        text: The data is static web assets for visitors
+        why: Static web assets are served well from an S3 bucket, with no EBS volume involved.
+      - id: d
+        text: Its reads and writes need steady low latency
+        correct: true
+        why: A workload whose reads and writes must stay steadily fast gains the most from the top-performing EBS volume type.
+      - id: e
+        text: Rarely used data should tier down to cut cost
+        why: Tiering cold data lowers cost in services such as S3 and EFS, which is the opposite of buying top performance.
+    evidence:
+      - Popular classes fill fast, so reads and writes need consistently low latency.
+      - The fix is moving to Provisioned IOPS SSD, the top-performing volume type for mission-critical apps.
+    takeaway: Mission-critical apps whose reads and writes need consistently low latency are the case for Provisioned IOPS SSD.
+    history: []
+    verified:
+      keyHash: 2ab0e2726672
+      fullHash: 8a3cdc5df0df
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-5zva9z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: s3-static-website-hosting
+    note: m06/comparing-storage-services
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe is sorting the sets of files it keeps for its business.
+      Which set is a good fit for S3 static website hosting?
+    options:
+      - id: a
+        text: Database files for loyalty points, rewritten each order
+        why: Object storage is not built for constant rapid rewrites, so these database files belong on block storage such as EBS.
+      - id: b
+        text: Recipe video files that all branches edit at once
+        why: Many sites working on the same files at once call for a shared file system such as EFS, not a website bucket.
+      - id: c
+        text: HTML and image files that visitors load for the menu
+        correct: true
+        why: HTML and media files that visitors load are the static assets that S3 static website hosting serves from a bucket.
+      - id: d
+        text: System files on the boot volume of the till's EC2 server
+        why: An instance boots from a block volume such as EBS, which a website bucket cannot stand in for.
+    evidence:
+      - Setup is uploading HTML, CSS, JavaScript and media files and switching hosting on.
+      - S3 would not work, since object storage is not built for constant rapid rewrites, while EBS gives databases block-level access.
+    takeaway: S3 static website hosting serves static assets such as HTML, CSS, JavaScript and media, not databases or shared working files.
+    history: []
+    verified:
+      keyHash: 78dfd9ceadf7
+      fullHash: cd0dc2bc9461
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

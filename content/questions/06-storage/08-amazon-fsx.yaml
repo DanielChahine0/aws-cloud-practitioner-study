@@ -508,3 +508,116 @@ questions:
       fullHash: cd34d7161639
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-cmmj18
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: fsx-for-windows-file-server
+    note: m06/amazon-fsx
+    task: "3.6"
+    level: 1
+    stem: >-
+      The cafe plans to move its office file shares to Amazon FSx for Windows File Server.
+      Which features will that file system bring to the shares?
+    options:
+      - id: a
+        text: Microsoft Active Directory integration
+        correct: true
+        why: This FSx option works with Microsoft Active Directory, so the shares keep their Windows sign-in and permissions.
+      - id: b
+        text: Storage served over NFS v3 to v4.2
+        why: Serving ZFS storage over NFS v3 to v4.2 describes FSx for OpenZFS, not the Windows File Server option.
+      - id: c
+        text: Data deduplication of stored files
+        correct: true
+        why: Data deduplication is one of the Windows Server storage features this FSx option offers the shares.
+      - id: d
+        text: An on-site cache of frequently used files
+        why: FSx runs in the AWS Cloud with no local cache, so fast on-site access to hot files is a Storage Gateway job.
+      - id: e
+        text: Lustre speed for compute-heavy clusters
+        why: Lustre speed for ML and HPC work comes from FSx for Lustre, not from the Windows File Server option.
+    evidence:
+      - "FSx for Windows File Server: Windows Server storage with SMB, Microsoft Active Directory, data deduplication and steady sub-millisecond latency."
+    takeaway: FSx for Windows File Server brings Windows Server features such as Active Directory and data deduplication to shares in AWS.
+    history: []
+    verified:
+      keyHash: 9aa241856164
+      fullHash: e690c49fdb47
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-2hkm9a
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: fsx-for-netapp-ontap
+    note: m06/amazon-fsx
+    task: "3.6"
+    level: 3
+    stem: >-
+      The cafe is migrating a file store that its Windows office PCs and its Linux reporting servers both use.
+      It wants one managed file system in AWS that serves both kinds of machine.
+      Which service fits?
+    options:
+      - id: a
+        text: Amazon Elastic File System (Amazon EFS)
+        why: EFS serves NFS to Linux clients, so it falls short for the Windows office PCs that share the store.
+      - id: b
+        text: Amazon FSx for NetApp ONTAP
+        correct: true
+        why: ONTAP brings one managed file system with its data management to both Windows and Linux, and it is aimed at migrations.
+      - id: c
+        text: Amazon FSx for Windows File Server
+        why: This option is built around Windows Server storage over SMB, aimed at Windows workloads rather than a mixed fleet.
+      - id: d
+        text: Amazon FSx for OpenZFS
+        why: OpenZFS serves ZFS storage over NFS, which is not the FSx option aimed at mixed Windows and Linux use.
+    evidence:
+      - "FSx for NetApp ONTAP: ONTAP data management for Windows and Linux, for migrations, modern apps and business continuity."
+      - For Windows shares, EFS (NFS, Linux) and EBS (no SMB or Active Directory) fall short, and the SMB-capable gateways mainly bridge sites to the cloud.
+    takeaway: Migrating a file store that both Windows and Linux machines use points to FSx for NetApp ONTAP rather than EFS.
+    history: []
+    verified:
+      keyHash: b100c41837b7
+      fullHash: 54dd1bd74e98
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-7tcydr
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: fsx-for-lustre
+    note: m06/amazon-fsx
+    task: "3.6"
+    level: 2
+    stem: >-
+      The cafe's marketing team renders short video ads on a cluster of compute instances.
+      Every render node reads the same large media files at high speed.
+      Which FSx option fits this workload?
+    options:
+      - id: a
+        text: Amazon FSx for OpenZFS
+        why: OpenZFS is aimed at migrations, analytics, content management and dev and test, not speed at scale for rendering.
+      - id: b
+        text: Amazon FSx for NetApp ONTAP
+        why: ONTAP is aimed at data management across Windows and Linux, not the raw speed a render cluster needs.
+      - id: c
+        text: Amazon FSx for Lustre
+        correct: true
+        why: Lustre brings speed and scale to compute-heavy work, and media is one of the workloads it is built for.
+      - id: d
+        text: Amazon FSx for Windows File Server
+        why: This option offers Windows shares over SMB for office use, not storage tuned for a render cluster.
+    evidence:
+      - "FSx for Lustre: Lustre speed and scale for machine learning (ML), high performance computing (HPC), big data and media."
+    takeaway: Compute-heavy media work on a cluster of nodes points to the speed and scale of FSx for Lustre.
+    history: []
+    verified:
+      keyHash: 3e0a4e7dfc6b
+      fullHash: 97fbf509ae7c
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
