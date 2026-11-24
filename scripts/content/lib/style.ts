@@ -6,8 +6,13 @@ import type { Question } from '../../../schemas/question.ts';
 import { NEEDS_DANI_ATTEMPTS } from './checks.ts';
 import type { Context, LessonNote } from './context.ts';
 
-/** Live practice questions per tested concept that the pilot and Phase 2's R10 aim for. */
-export const PER_CONCEPT_TARGET = 2;
+/**
+ * Open practice questions per tested concept that the writers and the draft check aim for: R10's practicePerConcept,
+ * never below the pilot's 2, so `--homed`, `--targets`, `--draft` and R10 always agree.
+ */
+export function practiceTarget(ctx: Pick<Context, 'config'>): number {
+  return Math.max(2, ctx.config?.practicePerConcept ?? 0);
+}
 
 const BANNED: readonly (readonly [RegExp, string])[] = [
   [/\ball of the above\b/i, 'uses "all of the above"'],
@@ -103,7 +108,7 @@ export function isOpen(q: Question): boolean {
   return q.status === 'live' || (q.status === 'draft' && (q.review?.attempts ?? 0) < NEEDS_DANI_ATTEMPTS);
 }
 
-/** The tested concepts homed in a question file's note that still lack PER_CONCEPT_TARGET open questions there. */
+/** The tested concepts homed in a question file's note that still lack practiceTarget open questions there. */
 export function coverageProblems(file: string, ctx: Context): string[] {
   const match = /^content\/questions\/(\d{2})-[a-z0-9-]+\/\d{2}-([a-z0-9-]+)\.yaml$/.exec(file);
   if (match === null) return [`${file} is not a question file path`];
@@ -114,15 +119,14 @@ export function coverageProblems(file: string, ctx: Context): string[] {
       counts.set(entry.q.concept, (counts.get(entry.q.concept) ?? 0) + 1);
     }
   }
+  const target = practiceTarget(ctx);
   const problems: string[] = [];
   for (const c of ctx.concepts) {
     if (c.home !== noteId || c.tested === false) continue;
     const n = [c.id, ...(c.aliases ?? [])].reduce((sum, id) => sum + (counts.get(id) ?? 0), 0);
-    if (n < PER_CONCEPT_TARGET) {
+    if (n < target) {
       const noun = n === 1 ? 'question' : 'questions';
-      problems.push(
-        `concept ${c.id} has ${n} ${noun} that can still go live; it needs ${PER_CONCEPT_TARGET}`,
-      );
+      problems.push(`concept ${c.id} has ${n} ${noun} that can still go live; it needs ${target}`);
     }
   }
   return problems;

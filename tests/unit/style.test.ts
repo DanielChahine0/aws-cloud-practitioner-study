@@ -3,15 +3,17 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { LessonNote } from '../../scripts/content/lib/context.ts';
 import { loadContext } from '../../scripts/content/lib/context.ts';
+import { homed } from '../../scripts/content/lib/report.ts';
 import {
   coverageProblems,
   isOpen,
   labStyleProblems,
   moduleStyle,
+  practiceTarget,
   retiredPlanProblems,
   styleProblems,
 } from '../../scripts/content/lib/style.ts';
-import { FIXTURE_TODAY, makeFixtureRoot } from '../fixtures/content-root.ts';
+import { FIXTURE_TODAY, makeFixtureRoot, replaceIn } from '../fixtures/content-root.ts';
 import { matchQuestion, multiQuestion, singleQuestion, writeQuestions } from '../fixtures/questions.ts';
 
 const FILE = 'content/questions/01-baking-basics/01-what-a-bakery-cloud-is.yaml';
@@ -187,5 +189,35 @@ describe('retiredPlanProblems', () => {
       "retired Support plan name in 'Enterprise On-Ramp adds a pool of managers.'",
     ]);
     expect(labStyleProblems(texts)).toEqual(retiredPlanProblems(texts));
+  });
+});
+
+describe('practiceTarget', () => {
+  it('follows practicePerConcept and never asks for fewer than 2', () => {
+    const config = { rules: ['R10' as const], examQuotas: false, blueprintTerms: false };
+    expect(practiceTarget({ config: null })).toBe(2);
+    expect(practiceTarget({ config: { ...config, practicePerConcept: 0 } })).toBe(2);
+    expect(practiceTarget({ config: { ...config, practicePerConcept: 2 } })).toBe(2);
+    expect(practiceTarget({ config: { ...config, practicePerConcept: 3 } })).toBe(3);
+  });
+
+  it('asks the draft check and the writers for 3 once practicePerConcept is 3', () => {
+    const root = makeFixtureRoot();
+    replaceIn(root, 'content/validate.yaml', 'practicePerConcept: 0', 'practicePerConcept: 3');
+    const ctx = loadContext(root, { today: FIXTURE_TODAY });
+    expect(coverageProblems(FILE, ctx)).toEqual([
+      'concept shared-kitchen has 1 question that can still go live; it needs 3',
+      'concept per-minute-rental has 2 questions that can still go live; it needs 3',
+    ]);
+    expect(
+      homed(ctx, 'm01/what-a-bakery-cloud-is').concepts.map((c) => ({
+        id: c.id,
+        open: c.open,
+        need: c.need,
+      })),
+    ).toEqual([
+      { id: 'shared-kitchen', open: 1, need: 2 },
+      { id: 'per-minute-rental', open: 2, need: 1 },
+    ]);
   });
 });

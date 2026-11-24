@@ -11,7 +11,7 @@ import { labProblems } from '../../scripts/content/rules/r11-labs.ts';
 const ROOT = resolve(import.meta.dirname, '..', '..');
 /** Each prompt's current version; a new version of a prompt changes its line here. */
 const VERSIONS: Record<string, number> = {
-  'question-writer': 3,
+  'question-writer': 4,
   'exam-writer': 1,
   'solve-closed': 1,
   'solve-notes': 1,
@@ -38,6 +38,8 @@ describe('agent prompts', () => {
     const read = (name: string): string => readFileSync(join(ROOT, 'agents', `${name}.md`), 'utf8');
     expect(read('question-writer')).toContain('content/STYLE.md');
     expect(read('question-writer')).toContain('`need`');
+    expect(read('question-writer')).toContain('3 open questions');
+    expect(read('question-writer')).not.toMatch(/\b2 (?:open )?questions/);
     for (const name of ['solve-closed', 'solve-notes', 'critic']) expect(read(name)).toContain('keys.json');
     expect(readFileSync(join(ROOT, 'content', 'STYLE.md'), 'utf8')).toContain('**NOT**');
     for (const name of ['lab-writer', 'lab-critic']) {

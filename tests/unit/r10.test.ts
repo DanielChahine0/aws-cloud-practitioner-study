@@ -81,6 +81,21 @@ describe('R10 practice per concept', () => {
     );
   });
 
+  it('asks for 3 once practicePerConcept is 3, so a concept with 2 live practice questions fails', () => {
+    const two = contextWith({ practicePerConcept: 3 }, [singleQuestion({ status: 'live' })]);
+    expect(messages(two)).toEqual([
+      'content/concepts.yaml  concept shared-kitchen has 2 live practice questions; it needs 3',
+      'content/concepts.yaml  concept per-minute-rental has 1 live practice question; it needs 3',
+    ]);
+    const three = contextWith({ practicePerConcept: 3 }, [
+      singleQuestion({ status: 'live' }),
+      singleQuestion({ id: 'q-4j6k8m', status: 'live' }),
+    ]);
+    expect(messages(three)).toEqual([
+      'content/concepts.yaml  concept per-minute-rental has 1 live practice question; it needs 3',
+    ]);
+  });
+
   it('skips an untested concept', () => {
     const base = contextWith({ practicePerConcept: 2 });
     const concepts = base.concepts.map((c) => (c.id === 'per-minute-rental' ? { ...c, tested: false } : c));

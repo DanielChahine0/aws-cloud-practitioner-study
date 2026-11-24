@@ -14,7 +14,7 @@ import {
 import { conceptsMdDrift, coverage, examConceptCounts, examCounts, practiceCounts } from './coverage.ts';
 import { parseGlossary } from './glossary.ts';
 import { notesAnchors } from './markdown.ts';
-import { isOpen, moduleStyle, PER_CONCEPT_TARGET } from './style.ts';
+import { isOpen, moduleStyle, practiceTarget } from './style.ts';
 
 const DRIFT_LINES = 10;
 const pct = (n: number, of: number): string => `${of === 0 ? 0 : Math.round((n / of) * 100)}%`;
@@ -120,7 +120,7 @@ export interface HomedConcepts {
     live: number;
     /** Live questions plus drafts that can still go live (fewer than 3 failed check rounds). */
     open: number;
-    /** New drafts to write: PER_CONCEPT_TARGET minus open, never below 0. */
+    /** New drafts to write: practiceTarget minus open, never below 0. */
     need: number;
   }[];
   existing: number;
@@ -134,6 +134,7 @@ export function homed(ctx: Context, noteId: string): HomedConcepts {
   const taskText = new Map((ctx.blueprint?.tasks ?? []).map((t) => [t.id, t.text] as const));
   const live = practiceCounts(ctx, (q) => q.status === 'live');
   const opened = practiceCounts(ctx, isOpen);
+  const target = practiceTarget(ctx);
   const concepts = ctx.concepts
     .filter((c) => c.home === noteId && c.tested !== false)
     .map((c, i) => ({ c, at: anchors.indexOf(c.anchor), i }))
@@ -148,7 +149,7 @@ export function homed(ctx: Context, noteId: string): HomedConcepts {
         confusableWith: c.confusableWith ?? [],
         live: live.get(c.id) ?? 0,
         open,
-        need: Math.max(0, PER_CONCEPT_TARGET - open),
+        need: Math.max(0, target - open),
       };
     });
   const existing = ctx.questions.filter(
