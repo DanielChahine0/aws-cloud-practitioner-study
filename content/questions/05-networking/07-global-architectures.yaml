@@ -76,3 +76,40 @@ questions:
       fullHash: 722ddcc550c1
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-08fq8n
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: direct-connect-failover
+    note: m05/global-architectures
+    task: "3.5"
+    level: 2
+    stem: >-
+      The cafe's roasting plant sends payment records to a VPC over a single dedicated private link into AWS.
+      Compliance rules say this data must never cross the public internet, even while that link is down.
+      Which backup fits?
+    options:
+      - id: a
+        text: An AWS Site-to-Site VPN tunnel
+        why: A Site-to-Site VPN can stand by for Direct Connect, but its tunnel runs over the public internet, which the rules forbid.
+      - id: b
+        text: An AWS Client VPN endpoint
+        why: Client VPN gives remote users encrypted access over the internet, not a private dedicated path for the plant.
+      - id: c
+        text: An AWS Transit Gateway hub
+        why: A transit gateway joins networks at one hub, but it adds no second physical path if the plant's only line is cut.
+      - id: d
+        text: A second Direct Connect line
+        correct: true
+        why: A second Direct Connect line can take over when the first is cut, and it keeps the data on a private dedicated path.
+    evidence:
+      - Direct Connect is a physical cable that can be cut, so a VPN often stands by as its failover, or a second Direct Connect line does.
+      - "Weak spots: it shares the local internet link, so big data loads can drag, and strict compliance or regulatory needs may favor Direct Connect."
+    takeaway: When backup traffic must also stay on a private dedicated path, a second Direct Connect line is the failover rather than a VPN.
+    history: []
+    verified:
+      keyHash: dbff3f1f28f9
+      fullHash: 3dd6eff8f937
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
