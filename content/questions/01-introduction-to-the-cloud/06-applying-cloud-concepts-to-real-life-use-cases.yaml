@@ -70,3 +70,39 @@ questions:
       fullHash: e3b8a874428f
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-5sddyw
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: latency
+    note: m01/applying-cloud-concepts-to-real-life-use-cases
+    task: "3.2"
+    level: 2
+    stem: >-
+      The cafe chain runs its ordering app only in the Ireland Region, and it has customers in several countries.
+      All else being equal, which group of customers waits longest for each page to load?
+    options:
+      - id: a
+        text: Customers in Ireland
+        why: Customers in Ireland sit closest to the Region, so their requests travel the shortest distance.
+      - id: b
+        text: Customers in France
+        why: France lies near Ireland, so its customers see far less delay than customers on another continent.
+      - id: c
+        text: Customers in Singapore
+        correct: true
+        why: Singapore is the farthest of these places from Ireland, and the delay grows with distance from the servers.
+      - id: d
+        text: Customers in the United Kingdom
+        why: The United Kingdom neighbours Ireland, so requests from there make only a short trip to the Region.
+    evidence:
+      - "**Latency**: delay in answering requests, growing with distance from the infrastructure."
+      - The company, based in Seattle, Washington, wants customers worldwide, but the farther its servers are from them the higher the latency.
+    takeaway: Latency grows with distance, so users farthest from an app's only Region wait longest for each reply.
+    history: []
+    verified:
+      keyHash: 730fb0ea10df
+      fullHash: 40f3724e4439
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

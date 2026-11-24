@@ -624,3 +624,39 @@ questions:
       fullHash: c199f6d5753d
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-te6v8j
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: on-demand-delivery
+    note: m01/what-is-cloud-computing
+    task: "1.1"
+    level: 1
+    stem: >-
+      In 2003, Amazon.com planned to let other businesses get servers within seconds, whenever they asked, and scale them up or down without long setup.
+      Which part of the cloud computing definition names that founding idea of AWS?
+    options:
+      - id: a
+        text: Pay-as-you-go pricing
+        why: Paying only for what is consumed is a separate part of the definition, not the idea AWS was founded on.
+      - id: b
+        text: On-demand delivery
+        correct: true
+        why: Renting out resources on demand, ready within seconds and without long setup, is the idea AWS started from.
+      - id: c
+        text: Over the internet
+        why: Reaching resources remotely from anywhere is another part of the definition, not the one AWS began with.
+      - id: d
+        text: IT resources
+        why: Servers are what gets supplied, but the stem stresses getting them in seconds whenever asked, which is on-demand delivery.
+    evidence:
+      - Amazon.com, then selling books and other goods, kept scaling its servers, and in 2003 planned to rent such resources out on demand, which could spare others upfront hardware costs.
+      - "**On-demand delivery**: resources in seconds, scaled up or down without long setup, the idea AWS began with."
+    takeaway: On-demand delivery, resources ready within seconds whenever they are needed, is the idea AWS was built on.
+    history: []
+    verified:
+      keyHash: 7c8c8c5f157d
+      fullHash: 43b475ec79a6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

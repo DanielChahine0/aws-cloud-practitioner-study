@@ -576,3 +576,223 @@ questions:
       fullHash: 6ab79077a9bc
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-18
+  - id: q-nkx1dm
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: benefits-of-the-aws-cloud
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 1
+    stem: >-
+      The cafe's owner is making a staff training slide that lists the six benefits of the AWS Cloud by their course names.
+      Which phrase belongs on that slide?
+    options:
+      - id: a
+        text: Rent servers on demand
+        why: On-demand delivery is part of what cloud computing is, but it is not one of the six named benefits.
+      - id: b
+        text: Share security duties
+        why: Splitting security work with AWS is the shared responsibility model, which is not one of the six benefits.
+      - id: c
+        text: Go global in minutes
+        correct: true
+        why: Going global in minutes is one of the six named benefits, so it belongs on the owner's slide.
+      - id: d
+        text: Spread apps across AZs
+        why: Running an app in several AZs is a way to build for high availability, not one of the six named benefits.
+    evidence:
+      - "The six benefits by their course names: trade fixed expense for variable expense, benefit from massive economies of scale, stop guessing capacity, increase speed and agility, stop spending money running and maintaining data centers, and go global in minutes."
+    takeaway: The six benefits run from trading fixed for variable expense to going global in minutes, and other cloud ideas are not on that list.
+    history: []
+    verified:
+      keyHash: afa14a31c433
+      fullHash: 4e56f9eeaf2b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-dqhm56
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: trade-fixed-expense-for-variable-expense
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 1
+    stem: >-
+      The cafe's accountant is sorting the cafe's costs before its move to AWS.
+      Which description fits the fixed costs that the move lets the cafe trade away?
+    options:
+      - id: a
+        text: Paid up front for servers whether or not they are used
+        correct: true
+        why: Fixed costs are paid ahead for data centers and servers and stay the same whether or not the cafe uses them.
+      - id: b
+        text: Billed each month for only the resources consumed
+        why: A bill that follows consumption is the variable cost the cafe trades into, not the fixed cost it trades away.
+      - id: c
+        text: Lowered for every customer by bulk hardware buying
+        why: Lower prices from buying hardware in bulk describe economies of scale, not the kind of cost the cafe drops.
+      - id: d
+        text: Stopped as soon as a failed test environment is deleted
+        why: Charges that stop when a test environment is deleted follow usage, the opposite of a fixed cost.
+    evidence:
+      - "Fixed costs are paid up front for data centers and servers whether or not you use them, while variable costs on AWS follow only what you actually consume."
+    takeaway: A fixed expense is paid up front whether or not it is used, and AWS swaps it for spending that follows consumption.
+    history: []
+    verified:
+      keyHash: 7422071208c8
+      fullHash: 317a15a6b3ea
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-gn4dpx
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: economies-of-scale
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 1
+    stem: >-
+      The cafe's owner wonders how AWS can rent out powerful servers at unit prices that even a small cafe can afford.
+      What makes those lower unit prices possible?
+    options:
+      - id: a
+        text: AWS bills each customer only for what it consumes
+        why: Paying only for consumption lowers the cafe's total bill, but it does not lower the price of each unit.
+      - id: b
+        text: AWS buys hardware in bulk for data centers worldwide
+        correct: true
+        why: Buying hardware in huge volumes lowers AWS's costs, and AWS passes those lower prices on to every customer.
+      - id: c
+        text: AWS lets customers scale with actual demand in minutes
+        why: Scaling with demand stops the cafe paying for idle servers, but the price of each unit stays the same.
+      - id: d
+        text: AWS runs the physical layer of its data centers
+        why: AWS running the facilities spares the cafe upkeep work, which is a separate benefit from lower unit prices.
+    evidence:
+      - AWS buys hardware in bulk for its worldwide data centers and passes the lower prices on.
+      - "**Economies of scale**: lower unit prices from huge purchase volumes."
+    takeaway: Economies of scale come from AWS buying hardware in bulk, which lowers the unit prices every customer pays.
+    history: []
+    verified:
+      keyHash: 0d815f43fc4a
+      fullHash: 05c91b9b8baa
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-zms26z
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: stop-guessing-capacity
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 2
+    stem: >-
+      The cafe bought too few servers for its festival-week forecast.
+      On the first day, orders time out and customers walk off to other cafes.
+      On AWS, what would the cafe do instead to keep orders flowing?
+    options:
+      - id: a
+        text: Deploy the app to a Region in another country
+        why: A Region abroad brings the app nearer to distant customers, but it adds no capacity for this festival rush.
+      - id: b
+        text: Provision for today and scale with real demand
+        correct: true
+        why: Sizing for today and scaling with real demand in minutes adds servers as the rush arrives, so orders keep flowing.
+      - id: c
+        text: Spin up a test environment and delete it if it fails
+        why: Throwaway test environments help the team try ideas quickly, but they add no capacity during the rush.
+      - id: d
+        text: Pay a monthly bill that follows the app's usage
+        why: Usage-based billing changes how the cafe pays, but on its own it adds no servers when orders pile up.
+    evidence:
+      - "On premises you buy hardware for a forecast: plan for 10 million users over three years and get about 500,000, and the excess sits idle, while underestimating means a scramble for servers, degraded service and lost customers."
+      - On AWS you provision for today and scale with real demand in minutes, not weeks or months, keeping performance optimal without over- or under-provisioning.
+    takeaway: On AWS the cafe sizes for today and scales with real demand in minutes, avoiding the lost orders an underestimate causes.
+    history: []
+    verified:
+      keyHash: 673c15576fb9
+      fullHash: 73535178ba75
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-dn8qw7
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: increase-speed-and-agility
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.1"
+    level: 1
+    stem: >-
+      The cafe's owner is explaining the increase speed and agility benefit to the cafe's investors.
+      Which results for the business does this benefit bring?
+    options:
+      - id: a
+        text: New features reach customers sooner
+        correct: true
+        why: Faster deployment shortens the time to market, so new features reach the cafe's customers sooner.
+      - id: b
+        text: Unit prices drop thanks to bulk buying
+        why: Lower unit prices from bulk hardware buying come from economies of scale, not from speed and agility.
+      - id: c
+        text: Developer time moves from setup to new ideas
+        correct: true
+        why: Spending less time provisioning and deprovisioning frees the cafe's developers to innovate and improve its apps.
+      - id: d
+        text: Racking and powering servers moves to AWS
+        why: Handing the physical server work to AWS comes from no longer running data centers, a separate benefit.
+      - id: e
+        text: Customers abroad see lower latency
+        why: Serving distant customers from a nearby Region is the result of going global in minutes, a separate benefit.
+    evidence:
+      - Teams spin up test environments, try ideas and delete failures so costs stop, shifting time from provisioning and deprovisioning to innovating and optimizing.
+      - Faster deployment shortens time to market and quickens responses to change.
+    takeaway: Increase speed and agility shifts time from provisioning to innovating and shortens the time to market.
+    history: []
+    verified:
+      keyHash: 85f5773f0423
+      fullHash: af0cc0e0aa6a
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-2h1s92
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: stop-spending-money-on-data-centers
+    note: m01/benefits-of-the-aws-cloud
+    task: "1.4"
+    level: 2
+    stem: >-
+      The cafe chain paid off its own server room last year, and its finance lead now claims that keeping the room costs nothing.
+      Which point answers that claim?
+    options:
+      - id: a
+        text: Bulk buying gives AWS lower unit prices
+        why: Lower prices from bulk buying are economies of scale and say nothing about what an owned room keeps costing.
+      - id: b
+        text: Power and upkeep keep costing after the build
+        correct: true
+        why: Utilities, maintenance and racking, stacking and powering servers keep costing money long after the room is built.
+      - id: c
+        text: Monthly AWS bills follow each service's usage
+        why: Usage-based billing describes how AWS charges, not the ongoing costs of a room the chain already owns.
+      - id: d
+        text: Regions abroad host apps without new buildings
+        why: Reaching other countries through existing Regions is going global, which does not answer the cost claim.
+    evidence:
+      - A data center keeps costing money after it is built, for utilities, maintenance, and racking, stacking and powering servers.
+      - AWS runs that physical layer, freeing time and money for customers and strategy.
+    takeaway: An owned data center keeps costing money for utilities and upkeep after it is built, and AWS takes over that physical layer.
+    history: []
+    verified:
+      keyHash: 8073dad9252a
+      fullHash: f2dab317393d
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
