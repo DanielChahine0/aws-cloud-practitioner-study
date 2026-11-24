@@ -644,3 +644,224 @@ questions:
       fullHash: 1202517cf665
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-n8amf5
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: messaging-and-queuing
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      At the cafe, the cashier hands each paper order straight to the barista, and orders stall whenever the barista is tied up or away.
+      Which change at the counter applies messaging and queuing?
+    options:
+      - id: a
+        text: Hire a second cashier to take more orders
+        why: Another cashier adds capacity at the till but still leaves every order waiting on a free barista.
+      - id: b
+        text: Pin each order to a board the barista reads
+        correct: true
+        why: An order board holds each order until the barista is free, which is the buffer messaging and queuing adds.
+      - id: c
+        text: Give the barista a faster espresso machine
+        why: A faster machine makes one barista more powerful but does nothing while the barista is away.
+      - id: d
+        text: Post a host at the door to point to short lines
+        why: Sending arrivals to the shortest line is load balancing, and it does not hold any orders.
+    evidence:
+      - Posting orders to an order board removes that dependency, and buffering messages this way is called messaging and queuing.
+      - "**Messaging and queuing**: passing messages between applications through a buffer."
+    takeaway: Messaging and queuing puts a buffer, like an order board, between a sender and a receiver that may be busy.
+    history: []
+    verified:
+      keyHash: 63cb705e2283
+      fullHash: 6cbe7ecc14d6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-zbcm7k
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: monolithic-vs-microservices
+    note: m02/messaging-and-queuing
+    task: "1.2"
+    level: 2
+    stem: >-
+      The cafe splits its monolithic ordering app into loosely coupled microservices.
+      Which benefits does this change bring?
+    options:
+      - id: a
+        text: Higher availability for the app as a whole
+        correct: true
+        why: With loosely coupled parts, the rest keep working when one fails, so the app stays available.
+      - id: b
+        text: Lower latency for customers in far Regions
+        why: Serving distant customers faster depends on where the app runs, not on splitting it into microservices.
+      - id: c
+        text: More flexibility in how each part works
+        correct: true
+        why: Microservices add flexibility because each part is no longer tied tightly to the others.
+      - id: d
+        text: Lower prices for a steady hourly commitment
+        why: Lower prices for a spend commitment come from Savings Plans, not from how the app is built.
+      - id: e
+        text: Stronger protection for data kept at rest
+        why: Protecting stored data is a matter of encryption, which splitting the app does not change.
+    evidence:
+      - Microservices loosely couple those parts, so the rest keep working and talking when one fails, adding availability, resilience and flexibility.
+    takeaway: Moving from a monolith to microservices adds availability, resilience and flexibility.
+    history: []
+    verified:
+      keyHash: fb2b7c7bc960
+      fullHash: 37d5fc5932b5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-3xw93f
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-eventbridge
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      EventBridge routes each order-placed event from the cafe's delivery app to payment, the kitchen and driver dispatch.
+      The dispatch service goes offline for a short while.
+      What happens to the events meant for dispatch?
+    options:
+      - id: a
+        text: They are held until dispatch is back up
+        correct: true
+        why: EventBridge holds events for a service that is down and delivers them once it recovers.
+      - id: b
+        text: They are pushed out by text and email
+        why: Fanning out by text and email is how SNS reaches people, not what happens to dispatch's events.
+      - id: c
+        text: They are sent to the least busy server
+        why: Sending requests to a less busy server is load balancing, not how EventBridge delivers events.
+      - id: d
+        text: They add instances to the dispatch group
+        why: Adding instances is the job of Auto Scaling, and EventBridge never launches servers.
+    evidence:
+      - 'EventBridge routes events like "order placed" to each service, copes with peaks, keeps services independent and holds events for a service that is down until it recovers.'
+    takeaway: EventBridge holds events for a service that is down and delivers them when it recovers.
+    history: []
+    verified:
+      keyHash: cf1c0bdeb1f3
+      fullHash: bfbddee982e7
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-te5x11
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: event-driven-architecture
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      In the cafe's delivery app, payment, the kitchen and dispatch all start work when a new order is announced.
+      The cafe later adds a loyalty service that reacts to the same announcement, with no change to the ordering code.
+      Which part of this design makes that possible?
+    options:
+      - id: a
+        text: A router passes each event to every listener
+        correct: true
+        why: The ordering code only announces the event and the router hands it to each listener, so a new service joins without code changes.
+      - id: b
+        text: A queue holds each message until one worker reads it
+        why: A queue buffers messages for a consumer that picks each one up and deletes it, which does not fan one announcement out to a new service.
+      - id: c
+        text: A load balancer spreads requests over healthy servers
+        why: Spreading requests across servers is the job of ELB and has nothing to do with adding a new service.
+      - id: d
+        text: Auto Scaling adds instances as demand rises
+        why: Adding instances changes capacity, not which services can react to an order.
+    evidence:
+      - 'EventBridge routes events like "order placed" to each service, copes with peaks, keeps services independent and holds events for a service that is down until it recovers.'
+      - EventBridge, SNS and SQS all support scalable event-driven or message-based communication between application parts.
+    takeaway: In an event-driven design a router hands each event to every listener, so a new service can react without changing the sender.
+    history: []
+    verified:
+      keyHash: db2d12dcb7f4
+      fullHash: 4bcd93f1bfdd
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-3weaw7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sqs
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 1
+    stem: >-
+      In the cafe's Amazon SQS setup, each order message carries the customer's name, the drink and the time.
+      What is that data inside the message called?
+    options:
+      - id: a
+        text: Topic
+        why: A topic is the SNS channel that publishers send to, not the data a message carries.
+      - id: b
+        text: Payload
+        correct: true
+        why: The payload is the data inside a message, such as the name, drink and time on an order.
+      - id: c
+        text: Queue
+        why: The queue is where messages wait, like the order board, not the data inside one.
+      - id: d
+        text: Subscription
+        why: A subscription signs a receiver up to an SNS topic and is not data inside a message.
+    evidence:
+      - In the coffee shop, the order board is the queue and each order is a message whose contents (name, drink, time) are the payload.
+      - "**Payload**: the data inside a message."
+    takeaway: In Amazon SQS, the data a message carries, such as an order's details, is its payload.
+    history: []
+    verified:
+      keyHash: bb6d31842245
+      fullHash: 859ba7af5fae
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-fgt89q
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-sns
+    note: m02/messaging-and-queuing
+    task: "3.8"
+    level: 2
+    stem: >-
+      The cafe sends one email about every menu change, deal and tasting to all of its customers, and many have stopped reading.
+      Which Amazon SNS feature lets each customer receive only the kinds of update they care about?
+    options:
+      - id: a
+        text: Delivery by text message and mobile push
+        why: Text and push reach customers on more channels, but each customer still gets every kind of update.
+      - id: b
+        text: Separate topics that customers sign up to
+        correct: true
+        why: With a topic per kind of update, each customer subscribes only to the ones they want.
+      - id: c
+        text: Lambda functions as message subscribers
+        why: Lambda functions can receive SNS messages, but that does not let customers pick which updates they get.
+      - id: d
+        text: Messages kept in a queue until they are read
+        why: Keeping messages until they are read is how SQS works, and SNS does not park messages for later.
+    evidence:
+      - "**Product updates example**: one email on every topic left customers unhappy and disengaged, so the company split updates into topics for new products, offers and events, and customers subscribe only to what they want."
+      - "Customers want only some kinds of updates: separate Amazon SNS topics."
+    takeaway: Separate SNS topics let each subscriber receive only the kinds of messages they choose.
+    history: []
+    verified:
+      keyHash: 9cfe34aff685
+      fullHash: cc0bb9133abc
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
