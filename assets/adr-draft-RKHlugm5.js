@@ -1,0 +1,2 @@
+import{t as e}from"./project-view-BjH7srJ2.js";function t(e){return{v:1,context:e.join(`
+`),options:``,decision:``,why:``,tradeoffs:``,cost:``,ticks:[]}}function n(t){if(typeof t!=`object`||!t||Array.isArray(t))return null;let n=t;return n.v!==1||!Array.isArray(n.ticks)||!n.ticks.every(e=>typeof e==`string`)||!e.every(e=>typeof n[e]==`string`)?null:{v:1,...Object.fromEntries(e.map(e=>[e,n[e]])),ticks:[...n.ticks]}}export{t as n,n as t};

@@ -1,0 +1,1 @@
+var e=[`Context`,`Options considered`,`Decision`,`Why`,`Trade-offs and mitigation`,`Cost note`],t=[`context`,`options`,`decision`,`why`,`tradeoffs`,`cost`];export{e as n,t};
