@@ -352,3 +352,39 @@ questions:
     review:
       attempts: 3
       lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 restates the standard CloudWatch metric definition (data points over time), while options 2 and 4 are plainly false as general claims about metrics.)"
+  - id: q-5davqn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: monitoring-metrics
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe has the CPU use of its Amazon EC2 instance recorded every few minutes, from opening until closing.
+      What does keeping this metric let the cafe do?
+    options:
+      - id: a
+        text: See which user last stopped the instance
+        why: Who stopped the instance is an API record kept in an audit trail, not something a CPU reading over time reveals.
+      - id: b
+        text: Follow how its load rises and falls
+        correct: true
+        why: CPU use tracked over time shows the instance's load climbing and easing, so the cafe can judge it and act.
+      - id: c
+        text: Check its settings against set rules
+        why: Comparing settings with rules is a configuration check, and a CPU reading says nothing about how the instance is set up.
+      - id: d
+        text: Limit which staff may restart it
+        why: Limiting who may restart the instance is a permissions job, and recording CPU use grants or denies nothing.
+    evidence:
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+      - "The loop: watch, gather metrics, judge them over time, then act."
+    takeaway: A metric earns its keep through its history, since a reading such as CPU use tracked over time shows how load changes.
+    history: []
+    verified:
+      keyHash: 3ed630477094
+      fullHash: b82aee8f9bd0
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
