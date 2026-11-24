@@ -502,3 +502,147 @@ questions:
       fullHash: 6ad4457658c8
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-4xdtgq
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-config
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe passed its security review last spring, and the owner asks why the team still keeps AWS Config running all year.
+      What is the reason?
+    options:
+      - id: a
+        text: Config reports on settings, not API calls
+        why: This is true, since CloudTrail is the log of API calls, but it says what Config tracks rather than why it must stay on after the review passed.
+      - id: b
+        text: Config lets the team write its own rules
+        why: Custom rules are possible, yet that explains what Config can check, not why the team keeps it running all year.
+      - id: c
+        text: Config does not supply AWS's audit reports
+        why: This is true, since AWS's audit reports come from AWS Artifact, but it gives the owner no reason to keep Config on.
+      - id: d
+        text: Config re-checks settings that may drift
+        correct: true
+        why: Compliance is ongoing, and Config keeps watching so settings that passed last spring stay that way.
+    evidence:
+      - It reports pass and fail and keeps watching so settings stay put, as compliance is ongoing.
+    takeaway: AWS Config keeps checking resource settings because compliance is ongoing, not a one-time pass.
+    history: []
+    verified:
+      keyHash: 71d2028569a2
+      fullHash: 7301a3fe065b
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-zxc5b9
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: config-rules
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's cloud lead is turning the cafe's requirements into AWS tools.
+      Which requirement would she write as an AWS Config rule?
+    options:
+      - id: a
+        text: The manager gets a text when CPU runs high
+        why: A text on a busy CPU comes from a CloudWatch alarm on a metric, not from a Config rule.
+      - id: b
+        text: Every EBS volume must have encryption on
+        correct: true
+        why: A Config rule is a standard for resource settings, and Config checks every volume against it.
+      - id: c
+        text: Each API call is kept on file for auditors
+        why: Keeping every API call on file is CloudTrail's job, not a standard for resource settings.
+      - id: d
+        text: New accounts are built from one template
+        why: Building accounts from one template is Control Tower's Account Factory, not a Config rule.
+    evidence:
+      - "**Config rule**: a standard Config checks resources against."
+      - Firms set configuration rules per resource and must audit against them.
+    takeaway: A Config rule states how a resource should be configured, such as encryption turned on, and Config checks resources against it.
+    history: []
+    verified:
+      keyHash: dcf10a832c7d
+      fullHash: 73496752d992
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-jrgd1p
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: automated-remediation
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      Overnight, a setting on one of the cafe's receipts buckets is changed so that it breaks a Config rule.
+      The cafe has set up automated remediation for that rule.
+      Which result comes from the remediation itself?
+    options:
+      - id: a
+        text: The call that changed it is kept in a trail
+        why: Recording the call that made the change is CloudTrail's work, which happens with or without remediation.
+      - id: b
+        text: The bucket shows as failing in a Config report
+        why: Reporting pass and fail is how Config flags the bucket; it does not fix anything on its own.
+      - id: c
+        text: The setting returns to its compliant value
+        correct: true
+        why: Remediation is the fix itself, putting the setting back so the bucket meets the rule again.
+      - id: d
+        text: The change shows up in the bucket's history
+        why: Config tracks configuration changes as history, but tracking a change does not undo it.
+    evidence:
+      - It alerts you to noncompliant resources and can fix them automatically.
+      - "**Automated remediation**: fixes that restore compliance."
+    takeaway: Automated remediation goes beyond flagging and recording a change, by putting the resource back into compliance.
+    history: []
+    verified:
+      keyHash: 4ef19e133d33
+      fullHash: fdb15ab3ee21
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-9nxvkf
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: audit-manager-frameworks
+    note: m10/auditing-aws-resources-for-compliance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's sister bakery must show auditors that it meets a data-protection regulation.
+      Because AWS Audit Manager offers prebuilt frameworks, which job can the bakery's team skip?
+    options:
+      - id: a
+        text: Signing its agreements with AWS online
+        why: Agreements with AWS are signed in AWS Artifact, and a framework does nothing about them.
+      - id: b
+        text: Recording the API calls made in the account
+        why: API calls are recorded by CloudTrail, which a framework neither replaces nor removes.
+      - id: c
+        text: Checking resource settings against rules
+        why: Evaluating settings against rules is AWS Config's job, which frameworks do not take over.
+      - id: d
+        text: Mapping each resource to the rules by hand
+        correct: true
+        why: A prebuilt framework already maps resources to the standard, so the team need not build that map.
+    evidence:
+      - Prebuilt frameworks map your resources to standards and regulations.
+      - "**Framework**: prebuilt mapping of resources to a standard."
+    takeaway: Audit Manager's prebuilt frameworks save you from mapping resources to a standard or regulation yourself.
+    history: []
+    verified:
+      keyHash: 6aa3c5992f25
+      fullHash: fde62cd20b16
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

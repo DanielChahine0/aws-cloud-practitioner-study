@@ -457,3 +457,221 @@ questions:
       fullHash: 73b878c5ba07
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-b07k1v
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-organizations
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe has grown from one AWS account to separate ones for production, testing and each developer.
+      The owner is struggling to keep them all in step.
+      What does AWS Organizations give her?
+    options:
+      - id: a
+        text: Spotting of unusual API calls in each account
+        why: Flagging unusual API activity is a job for CloudTrail Insights, not for bringing accounts together.
+      - id: b
+        text: Central control over all the accounts
+        correct: true
+        why: Managing many accounts one by one breaks down, and Organizations brings them under central control.
+      - id: c
+        text: Tracking of setting changes in each account
+        why: Following how resource settings change is AWS Config's work, not managing the accounts as a group.
+      - id: d
+        text: AWS's audit reports for each account
+        why: AWS's own audit reports come from AWS Artifact, not from Organizations.
+    evidence:
+      - One account suits early tests, but growing firms add accounts for production, non-production, developers or infrastructure.
+      - Managing them by hand fails, so AWS Organizations centralizes it.
+    takeaway: AWS Organizations replaces managing each account by hand with central control once a firm runs many accounts.
+    history: []
+    verified:
+      keyHash: dda654b8c628
+      fullHash: 3856a09f1844
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-8x9d74
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: service-control-policies
+    note: m10/aws-organizations
+    task: "2.3"
+    level: 2
+    stem: >-
+      The cafe attaches an SCP that permits Amazon S3 to its developer OU.
+      A new developer in one of those accounts has been given no IAM permissions yet, and she is refused when she opens a bucket.
+      Why is she still refused even though the SCP permits S3?
+    options:
+      - id: a
+        text: An SCP can be attached to a whole OU at once
+        why: Attaching to an OU explains how the SCP reaches her account, not why she is refused.
+      - id: b
+        text: An SCP reaches the users and roles of an account
+        why: The SCP does apply to her, but a cap on her permissions cannot by itself give her any.
+      - id: c
+        text: An SCP sets a ceiling and grants no access
+        correct: true
+        why: An SCP only caps what users and roles may do, so she still needs permissions granted to her.
+      - id: d
+        text: An SCP can name single API actions to limit
+        why: Limiting single API actions is a feature of SCPs, but this SCP permits S3 and still she is refused.
+    evidence:
+      - SCPs cap permissions and attach only to OUs or member accounts.
+      - "**Service control policy (SCP)**: a permission cap for an OU or member account."
+    takeaway: An SCP is only a cap on permissions; users and roles still need permissions granted to them within that cap.
+    history: []
+    verified:
+      keyHash: dde1d5fbb93b
+      fullHash: 13cfab71dd26
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-8fmrw0
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: management-account
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's payroll account should be able to use only a short list of approved services, under a limit its own admin cannot lift.
+      Whose admin decides which services go on that list?
+    options:
+      - id: a
+        text: The payroll account's admin
+        why: The payroll account is the one being limited, so its own admin cannot be the one who sets a limit it cannot lift.
+      - id: b
+        text: The management account's admin
+        correct: true
+        why: The admin of the parent account that governs the organization picks the services each account gets.
+      - id: c
+        text: A branch account's admin
+        why: A branch account is a member like payroll, so its admin has no say over the services another account may use.
+      - id: d
+        text: The developer OU's admin
+        why: An OU only groups accounts and has no admin of its own, while the choice is made by the parent account's admin.
+    evidence:
+      - "**Limits**: the parent account's admin picks the services and API actions each account gets."
+      - "**Management account**: the owner account that sets up the organization and has final control."
+    takeaway: The management account's admin decides which services and API actions each account in the organization may use.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 2 is the odd one out, the only account that is not a member account.)"
+  - id: q-f1b7xt
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: organization-root
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's owner is drawing her organization as a tree.
+      The payments OU, the developer OU and a catering account outside both OUs all hang from one piece at the very top.
+      Which piece is that?
+    options:
+      - id: a
+        text: The management account
+        why: The management account owns and governs the organization, but it is an account, not the container on top.
+      - id: b
+        text: A parent OU
+        why: An OU could hold other OUs, but the catering account sits in no OU, so the piece above it is not an OU.
+      - id: c
+        text: A service control policy
+        why: An SCP is a permission cap attached to an OU or account, not a place in the tree.
+      - id: d
+        text: The organization root
+        correct: true
+        why: The root is the top container, made with the organization, that holds every OU and account.
+    evidence:
+      - Top container, made with the organization
+      - Holds all OUs and accounts
+      - "An account that fits no OU: directly under the root."
+    takeaway: The root is the top container of an organization, holding every OU and any account that sits outside an OU.
+    history: []
+    verified:
+      keyHash: 8ee1d91ae5d7
+      fullHash: 543a355efae1
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-p8w5ns
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: member-accounts
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's organization creates a new AWS account for its bakery from a script.
+      Once it exists, what is the bakery account within the organization?
+    options:
+      - id: a
+        text: An organizational unit
+        why: An OU is a group that holds accounts, not an account in its own right.
+      - id: b
+        text: The organization root
+        why: The root is the top container made with the organization, not a newly created account.
+      - id: c
+        text: A member account
+        correct: true
+        why: Every account besides the owner is a member account, billed through the management account.
+      - id: d
+        text: The management account
+        why: The management account already exists as the owner that created the organization.
+    evidence:
+      - "**Automation**: programmatic account creation, cost control across accounts, tooling for security teams."
+      - "**Member account**: a child account billed through the management account."
+    takeaway: Any account the organization adds, by script or otherwise, is a member account billed through the management account.
+    history: []
+    verified:
+      keyHash: 57f04a656967
+      fullHash: 991f0333ed11
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-jj1hbh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: management-account
+    note: m10/aws-organizations
+    task: "2.2"
+    level: 1
+    stem: >-
+      The cafe's new IT hire learns that the account the owner signs in to is the organization's management account.
+      What does that tell the hire about this account?
+    options:
+      - id: a
+        text: It holds every OU and account in the organization
+        why: Holding every OU and account is the job of the root, the top container, not of the owner account.
+      - id: b
+        text: It groups accounts and can hold nested OUs
+        why: Grouping accounts, with OUs nested inside, describes an organizational unit rather than an account.
+      - id: c
+        text: It is billed through the owner of the organization
+        why: Being billed through the owner describes a member account, while this account is the owner itself.
+      - id: d
+        text: It created the organization and has final control
+        correct: true
+        why: The management account sets up the organization and keeps final control over it, as the owner.
+    evidence:
+      - "**Management account**: the owner account that sets up the organization and has final control."
+      - "Careful: one assessment explanation calls the root the creating account, but the lesson keeps root (container) and management account (owner) apart."
+    takeaway: The management account is the owner that creates the organization and keeps final control, distinct from the root container.
+    history: []
+    verified:
+      keyHash: a0f12b59d129
+      fullHash: b6b54bb99726
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

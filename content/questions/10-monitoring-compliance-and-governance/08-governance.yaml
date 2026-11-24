@@ -644,3 +644,259 @@ questions:
       fullHash: d31cea1ebe9a
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-1a58jn
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-control-tower
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's owner runs many branch accounts under AWS Control Tower.
+      Each Monday she wants one ongoing visual summary of the accounts that were set up, the controls in place and how compliant everything is.
+      Which part of Control Tower should she open?
+    options:
+      - id: a
+        text: Account Factory
+        why: Account Factory creates new accounts from a template; it does not give a running summary of them.
+      - id: b
+        text: Landing zone
+        why: The landing zone is the governed boundary that holds the accounts, not a view of their status.
+      - id: c
+        text: Dashboard
+        correct: true
+        why: The Control Tower dashboard is an ongoing visual summary of accounts, controls and compliance status.
+      - id: d
+        text: Controls
+        why: Controls are the rules that block and fix noncompliant deployments, not a view that reports on them.
+    evidence:
+      - "**Dashboard**: an ongoing visual summary of provisioned accounts, controls and compliance status."
+    takeaway: The Control Tower dashboard gives an ongoing visual summary of provisioned accounts, controls and compliance status.
+    history: []
+    verified:
+      keyHash: dc13e946d9d2
+      fullHash: 91af405a5e0e
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-b3aaa7
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-landing-zone
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe set up AWS Control Tower, but an older test account was left out when it did.
+      Why do the cafe's compliance rules miss that account?
+    options:
+      - id: a
+        text: Rules reach only accounts Account Factory made
+        why: How an account was made is not what matters; an older account can come under the rules once it sits in the right place.
+      - id: b
+        text: Rules reach only accounts the dashboard lists
+        why: The dashboard reports on what is already under the rules, but listing an account does not put it there.
+      - id: c
+        text: Rules reach only the management account itself
+        why: Control Tower's rules apply across every account placed under them, not only the management account.
+      - id: d
+        text: Rules reach only what the landing zone holds
+        correct: true
+        why: The landing zone holds everything meant to be under the rules, so a test account left outside it is missed.
+    evidence:
+      - "**Landing zone**: the outer, best-practice multi-account boundary; every OU, account, user and resource you want under compliance rules lives inside it."
+    takeaway: Control Tower's rules reach only what sits inside the landing zone, its outer governed boundary.
+    history: []
+    verified:
+      keyHash: e15ea9acef77
+      fullHash: 731dc46e5f25
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-6fdsaj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-account-factory
+    note: m10/governance
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe's cloud lead already offers staff a curated set of approved resources they can launch inside their accounts.
+      Now she also wants each brand-new account itself to start from the same baseline, whatever is later launched in it.
+      Which should she use?
+    options:
+      - id: a
+        text: AWS Service Catalog
+        why: Service Catalog governs which resources staff launch, while account creation is governed by Control Tower.
+      - id: b
+        text: AWS Control Tower
+        correct: true
+        why: Control Tower's Account Factory stamps out every new account from one configurable template.
+      - id: c
+        text: AWS Config
+        why: Config checks the settings of resources that already exist; it does not create accounts from a template.
+      - id: d
+        text: AWS Organizations
+        why: Organizations groups and caps accounts, but the single template for new accounts is Control Tower's Account Factory.
+    evidence:
+      - "**Account Factory**: stamps out each new account from one configurable template."
+      - It governs resources, while Control Tower governs account creation.
+    takeaway: Account Factory governs how new accounts are created, while Service Catalog governs the resources launched inside them.
+    history: []
+    verified:
+      keyHash: c046e8c762fb
+      fullHash: c3d5904858a4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-dqrcph
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: control-tower-controls
+    note: m10/governance
+    task: "2.2"
+    level: 1
+    stem: >-
+      Rather than writing its own rules, the cafe turns on Control Tower's preconfigured controls for all of its branch accounts.
+      Which benefits does this bring?
+    options:
+      - id: a
+        text: Quicker setup of many accounts
+        correct: true
+        why: Preconfigured controls speed up setting up the branch accounts as one environment, saving the cafe time.
+      - id: b
+        text: Lower bills for compute in each branch
+        why: Controls set rules for the branch accounts, but they do nothing to cut what the cafe pays for compute.
+      - id: c
+        text: Governance that runs without manual work
+        correct: true
+        why: Preconfigured controls automate governance, so the rules hold across the branches without manual effort.
+      - id: d
+        text: Rules tailored by hand to each branch
+        why: Preconfigured controls are ready-made, so turning them on replaces hand-written rules for each branch rather than providing them.
+      - id: e
+        text: One combined bill for all branch accounts
+        why: Combining the branches' bills is consolidated billing in AWS Organizations, not something turning on the controls brings.
+    evidence:
+      - Preconfigured controls speed multi-account setup, automate governance and integrate third-party software, saving time and adding control.
+    takeaway: Control Tower's preconfigured controls speed multi-account setup and automate governance.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 4 share an automation theme, and option 2 is the by-hand opposite of option 4.)"
+  - id: q-8wc1xh
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-service-catalog
+    note: m10/governance
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's cloud lead is filling AWS Service Catalog with items that staff can launch on their own.
+      Which item belongs in it?
+    options:
+      - id: a
+        text: A rule that flags any volume left unencrypted
+        why: A rule that flags settings belongs in AWS Config, not in a catalog of resources to launch.
+      - id: b
+        text: A trail that records every API call
+        why: Recording API calls is set up in AWS CloudTrail, and it is not a resource for staff to launch.
+      - id: c
+        text: A vetted network setup for new accounts
+        correct: true
+        why: Service Catalog holds approved resources, such as baseline networking for new accounts, for staff to launch.
+      - id: d
+        text: A cap on how many licenses can run
+        why: Caps on license use are set in AWS License Manager, not offered as a catalog item.
+    evidence:
+      - It lets you build, share and organize a curated catalog of approved resources, such as baseline networking and security tools for new accounts, for consistent governance.
+    takeaway: AWS Service Catalog holds approved, ready-to-launch resources, such as baseline networking and security tools.
+    history: []
+    verified:
+      keyHash: 6f7815a42b37
+      fullHash: 8186b87381a9
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-838dhz
+    version: 1
+    status: live
+    type: multi
+    select: 2
+    pool: practice
+    concept: bring-your-own-license
+    note: m10/governance
+    task: "1.4"
+    level: 1
+    stem: >-
+      The cafe moves its back-office apps to AWS and wants to keep using the Microsoft licenses it already bought from the vendor.
+      Where can it use those licenses under BYOL?
+    options:
+      - id: a
+        text: Amazon WorkSpaces
+        correct: true
+        why: BYOL lets vendor-bought licenses be reused on Amazon WorkSpaces virtual desktops.
+      - id: b
+        text: AWS Lambda
+        why: Lambda runs short functions without servers to license, so it is not where BYOL licenses go.
+      - id: c
+        text: Amazon Lightsail
+        why: Lightsail offers simple bundled servers, but it is not one of the places named for reusing vendor-bought licenses.
+      - id: d
+        text: EC2 Dedicated Hosts
+        correct: true
+        why: Dedicated Hosts give the cafe whole physical servers where its vendor-bought licenses can be reused.
+      - id: e
+        text: AWS Fargate
+        why: Fargate runs containers without servers for the cafe to manage, so it is not where BYOL licenses go.
+    evidence:
+      - BYOL reuses vendor-bought licenses (Microsoft, say) on EC2 Dedicated Hosts or Amazon WorkSpaces, flexibly and often far cheaper than AWS-bought ones.
+    takeaway: Under BYOL, licenses bought from a vendor can be reused on EC2 Dedicated Hosts or Amazon WorkSpaces.
+    history: []
+    verified:
+      keyHash: a5957e379b81
+      fullHash: d8cf46cfbace
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-n7ypdc
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: control-tower-controls
+    note: m10/governance
+    task: "2.2"
+    level: 3
+    stem: >-
+      Across all its branch accounts, the cafe wants governance that stops a nonconforming deployment before it goes live and also finds and fixes resources that have already drifted out of line.
+      Which one meets both needs?
+    options:
+      - id: a
+        text: Service control policies
+        why: An SCP caps what an account's users and roles may do, but it does not find and fix resources already out of line.
+      - id: b
+        text: AWS Config rules
+        why: Config rules flag and can fix drifted resources, but they check settings after the fact rather than stop a deployment.
+      - id: c
+        text: AWS Control Tower controls
+        correct: true
+        why: Control Tower controls block nonconforming deployments and also catch and fix noncompliant accounts and resources.
+      - id: d
+        text: IAM permission policies
+        why: An IAM policy allows or denies actions for one identity, and it does not find or fix drifted resources.
+    evidence:
+      - "**Controls (guardrails)**: high-level rules, like road crash barriers, that block nonconforming deployments and catch and fix noncompliant accounts and resources."
+    takeaway: Control Tower controls both prevent nonconforming deployments and detect and fix drift, which SCPs or Config rules alone do not.
+    history: []
+    verified:
+      keyHash: 43b4e2f44ee0
+      fullHash: 071b519c35f5
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

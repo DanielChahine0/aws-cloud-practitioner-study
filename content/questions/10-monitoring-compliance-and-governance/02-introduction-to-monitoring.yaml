@@ -250,3 +250,105 @@ questions:
       fullHash: a7826ced328c
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-g7gpjv
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: monitoring-metrics
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe runs its ordering site on one Amazon EC2 instance and wants to see how hard that instance works as the morning rush builds.
+      Which item about the instance is a metric the cafe can track?
+    options:
+      - id: a
+        text: The alarm set on its load
+        why: An alarm watches a value and raises a warning when it crosses a line, so it is not itself the value tracked over the rush.
+      - id: b
+        text: The log lines it writes
+        why: Log lines are text records of events on the instance, not a single value that rises and falls with the rush.
+      - id: c
+        text: The CPU load it carries
+        correct: true
+        why: CPU use is a value that rises and falls with the load, so tracking it over time makes it a metric.
+      - id: d
+        text: The dashboard that charts it
+        why: A dashboard is a screen that displays tracked values, so it shows metrics rather than being one.
+    evidence:
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+    takeaway: A metric is a value that changes over time, such as an EC2 instance's CPU use, not a fixed setting like a tag or subnet.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Option 4 is the only raw measurement; the others are tools built on top of it, and 'load' repeats from option 1.)"
+  - id: q-gqy0xy
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: monitoring-alerts
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe sets up its monitoring to send a message to the manager's phone whenever the loyalty app starts to misbehave.
+      What does the cafe gain from this alert?
+    options:
+      - id: a
+        text: Each user gets only the access they need
+        why: Granting only needed access is least privilege, which a message about a misbehaving app does not provide.
+      - id: b
+        text: Records show which user changed a setting
+        why: A record of who changed what is an audit trail, not a warning that the app is in trouble.
+      - id: c
+        text: Problems surface early for staff to act on
+        correct: true
+        why: An alert pushes trouble to a person straight away, giving the early warning that monitoring aims for.
+      - id: d
+        text: Reports prove the cafe meets the card rules
+        why: Reports that prove rules are met support compliance, not a quick response to an app problem.
+    evidence:
+      - Its goal is peak performance and early warning of problems.
+      - It can trigger automatic actions or alert people.
+    takeaway: Monitoring alerts give early warning, so people can respond to a problem before it grows.
+    history: []
+    verified:
+      keyHash: 2053ff17cbfc
+      fullHash: df1cc0e935f4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-s2cmng
+    version: 1
+    status: draft
+    type: single
+    pool: practice
+    concept: monitoring-metrics
+    note: m10/introduction-to-monitoring
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe follows two numbers through the day: the CPU use of the Amazon EC2 instance behind its ordering site, and the coffees sold at the counter.
+      What makes both of them metrics, even though only one comes from AWS?
+    options:
+      - id: a
+        text: Each is a value AWS gathers for you
+        why: AWS gathers the instance's CPU use, but the coffees sold come from the counter, so this does not hold for both numbers.
+      - id: b
+        text: Each is a value staff count by hand
+        why: Staff can count coffees at the counter, but nobody counts the instance's CPU use by hand, so this does not hold for both numbers.
+      - id: c
+        text: Each is a value tracked over time
+        correct: true
+        why: A metric is any value followed over time for a resource or a process, which covers a server and a counter alike.
+      - id: d
+        text: Each is a value describing a server
+        why: CPU use describes the instance, but coffees sold describe the counter's trade, so this does not hold for both numbers.
+    evidence:
+      - "**Metric**: a value tracked over time for a resource or process, such as EC2 CPU use or coffees sold."
+    takeaway: A metric is any value followed over time, whether it describes an AWS resource or a business process like sales.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (knowledge: Option 1 restates the standard CloudWatch metric definition (data points over time), while options 2 and 4 are plainly false as general claims about metrics.)"

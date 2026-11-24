@@ -322,3 +322,106 @@ questions:
       fullHash: 319db374dd2c
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-rhxktd
+    version: 1
+    status: live
+    type: match
+    pool: practice
+    concept: aws-trusted-advisor
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 1
+    stem: >-
+      Trusted Advisor marks each of the cafe's check results with a status color.
+      Match each color to what it tells the cafe.
+    pairs:
+      - left: Red
+        right: Action recommended
+        why: A red result means Trusted Advisor recommends that the cafe take action on the finding.
+      - left: Orange
+        right: Investigation recommended
+        why: An orange result asks the cafe to look into the finding before deciding what to do.
+      - left: Green
+        right: No problem found
+        why: A green result means the check found nothing that needs the cafe's attention.
+    evidence:
+      - "Status colors: red for action recommended, orange for investigation recommended, green for no problem found."
+    takeaway: Trusted Advisor uses red for action recommended, orange for investigation recommended and green for no problem found.
+    history: []
+    verified:
+      keyHash: 0d1d38066276
+      fullHash: ef7a82194c48
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-kdgc55
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: trusted-advisor-check-categories
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 2
+    stem: >-
+      Trusted Advisor warns that one of the cafe's EBS volumes is held back from its full speed by the throughput of the EC2 instance it is attached to.
+      Which check category raised this warning?
+    options:
+      - id: a
+        text: Fault tolerance
+        why: Fault tolerance checks cover backups and spreading across Availability Zones, not a slowed volume.
+      - id: b
+        text: Performance
+        correct: true
+        why: A volume held back by its instance's throughput is a speed problem, which the performance category flags.
+      - id: c
+        text: Service limits
+        why: Service limits checks look at usage near a cap, not at how fast one volume runs.
+      - id: d
+        text: Cost optimization
+        why: Cost optimization flags idle or underused resources to cut spend, not a volume held back in speed.
+    evidence:
+      - EBS volumes held back by their EC2 instance's throughput
+      - "Its checks fall into five categories: security, cost optimization, performance, service limits and fault tolerance."
+    takeaway: An EBS volume slowed by its EC2 instance's throughput is a Trusted Advisor performance finding.
+    history: []
+    verified:
+      keyHash: d51eed14fee1
+      fullHash: 369c7fdbc168
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-8nxfvs
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: service-limits
+    note: m10/aws-trusted-advisor
+    task: "4.3"
+    level: 2
+    stem: >-
+      As the cafe opens new branches, a Trusted Advisor check shows its use of one service has reached a soft limit.
+      Where does the cafe go to have that limit raised?
+    options:
+      - id: a
+        text: The AWS Health Dashboard
+        why: The Health Dashboard reports AWS events affecting the account; it does not raise limits.
+      - id: b
+        text: The AWS Artifact portal
+        why: Artifact hands out AWS's audit reports and agreements, not increases to service limits.
+      - id: c
+        text: The Service Quota console
+        correct: true
+        why: Soft limits are raised through the Service Quota console, which lets the cafe ask for more.
+      - id: d
+        text: The AWS Budgets dashboard
+        why: Budgets tracks spending against a plan, and a budget change does not lift a service limit.
+    evidence:
+      - Many are soft limits, raised through the Service Quota console
+      - Usage near or at a limit
+    takeaway: When Trusted Advisor shows usage at a soft limit, ask for more through the Service Quota console.
+    history: []
+    verified:
+      keyHash: 68f2c4176d78
+      fullHash: 3ad57ba49282
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24

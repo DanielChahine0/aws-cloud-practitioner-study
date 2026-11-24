@@ -401,3 +401,187 @@ questions:
       fullHash: 4d82b51f675e
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-z8w4xt
+    version: 1
+    status: draft
+    type: multi
+    select: 2
+    pool: practice
+    concept: amazon-cloudwatch
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      The cafe's IT lead is making the case for Amazon CloudWatch to watch the ordering app and the back-office server.
+      Which benefits can the lead promise the owner?
+    options:
+      - id: a
+        text: One view in place of siloed tools
+        correct: true
+        why: CloudWatch pulls monitoring of the app and the server into one integrated view, replacing tools that each watch a single part.
+      - id: b
+        text: Faster page loads for distant customers
+        why: Speeding up delivery to faraway customers is a content delivery job, not something watching the app gives.
+      - id: c
+        text: Shorter time to find and fix faults
+        correct: true
+        why: With metrics, alarms and logs in one place, the team finds and fixes faults faster, lowering MTTR.
+      - id: d
+        text: Cached copies of pages near customers
+        why: Keeping copies of pages close to customers is a content delivery job, while CloudWatch only watches how the app and server run.
+      - id: e
+        text: Sharper forecasts of what customers buy
+        why: Predicting purchases belongs to other AWS services, while CloudWatch watches how the app and server run.
+    evidence:
+      - One integrated view replaces siloed monitoring.
+      - Faster fixes (lower MTTR) and better TCO free developers for business work.
+      - Content delivery, purchase prediction and architecture design are other services' jobs, not CloudWatch's.
+    takeaway: CloudWatch replaces siloed monitoring with one view and speeds up fixes, but it does not deliver content or design architectures.
+    history: []
+    review:
+      attempts: 3
+      lastFailure: "critic: the cue round found the key from the options alone (tell: Options 3 and 5 are the only pair of outcomes on one theme; option 1 is a mechanism, which leaves option 2 without a partner.)"
+  - id: q-yaptc6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-metrics
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe wants Amazon CloudWatch to track how many shots each espresso machine pulls, a number no AWS service measures for it.
+      How can the cafe get this value into CloudWatch?
+    options:
+      - id: a
+        text: Track the shots with built-in EC2 metrics
+        why: EC2's built-in metrics, such as CPU use, are measured automatically but say nothing about espresso shots.
+      - id: b
+        text: Show the shots on a CloudWatch dashboard
+        why: A dashboard only displays metrics that already exist, so the shot numbers must reach CloudWatch first.
+      - id: c
+        text: Publish the shots as a custom metric
+        correct: true
+        why: CloudWatch accepts custom metrics, so the cafe can publish its own shot numbers alongside built-in ones.
+      - id: d
+        text: Watch the shots with a CloudWatch alarm
+        why: An alarm reacts to a metric that is already tracked, so it cannot be the way the shot numbers get in.
+    evidence:
+      - "Machines due for cleaning: a custom metric plus an alarm."
+      - Metrics measure, alarms react, dashboards display, Logs keeps searchable detail.
+    takeaway: When AWS does not measure a value for you, publish it to CloudWatch as a custom metric.
+    history: []
+    verified:
+      keyHash: 2db01cd7bbc7
+      fullHash: 6b44b34c1fe4
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-2vazq0
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-alarms
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 1
+    stem: >-
+      What sets off an Amazon CloudWatch alarm?
+    options:
+      - id: a
+        text: A user making a call to an AWS API
+        why: API calls are recorded by CloudTrail, while an alarm watches the value of a metric.
+      - id: b
+        text: A metric value crossing a set threshold
+        correct: true
+        why: An alarm is a threshold on a metric, and it acts once the metric crosses that line.
+      - id: c
+        text: A resource setting breaking a Config rule
+        why: A broken Config rule is flagged by AWS Config, not by a CloudWatch alarm.
+      - id: d
+        text: An AWS event posted to the Health Dashboard
+        why: Service events reach the AWS Health Dashboard, which is separate from CloudWatch alarms.
+    evidence:
+      - "**CloudWatch alarm**: a metric threshold that triggers an action."
+    takeaway: A CloudWatch alarm fires when a metric crosses the threshold you set, then notifies or acts.
+    history: []
+    verified:
+      keyHash: e4cbac33ce8f
+      fullHash: 3c2822e94dc2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-mzvt3r
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: cloudwatch-dashboards
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 2
+    stem: >-
+      The cafe's shift lead wants to watch espresso shot counts, while the owner wants to watch the ordering app's CPU use and errors.
+      Each of them wants a console page laid out for their own job.
+      What should the cafe set up in Amazon CloudWatch?
+    options:
+      - id: a
+        text: A custom dashboard for each person
+        correct: true
+        why: Dashboards are custom console pages, so each person can get a page with just the metrics they need.
+      - id: b
+        text: An alarm on each person's metric
+        why: An alarm acts when a value crosses a line, but it gives no page for watching the numbers.
+      - id: c
+        text: A Logs query for each person
+        why: A Logs search digs through stored log files, not a standing page of chosen metrics.
+      - id: d
+        text: A custom metric for each person
+        why: Custom metrics feed data in, but someone still needs a page that lays the numbers out.
+    evidence:
+      - "**CloudWatch dashboard**: a self-refreshing console page of metrics."
+      - Metrics measure, alarms react, dashboards display, Logs keeps searchable detail.
+    takeaway: CloudWatch dashboards are custom console pages, so each role can have its own view of the metrics it needs.
+    history: []
+    verified:
+      keyHash: 5b3ec1971db6
+      fullHash: 24dd66137799
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-7q44pj
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: amazon-cloudwatch
+    note: m10/amazon-cloudwatch
+    task: "2.2"
+    level: 3
+    stem: >-
+      The cafe runs its ordering app on many Amazon EC2 instances across its branches.
+      The owner wants their usage pooled so she can see how the whole fleet is used, rather than checking one instance at a time.
+      Which service fits?
+    options:
+      - id: a
+        text: AWS CloudTrail
+        why: CloudTrail records who called which API and when, not how heavily the instances are being used.
+      - id: b
+        text: AWS Health Dashboard
+        why: The Health Dashboard reports AWS events that affect the cafe's resources, not usage figures across a fleet.
+      - id: c
+        text: AWS Config
+        why: Config records how resource settings change and checks them against rules, not how much the instances work.
+      - id: d
+        text: Amazon CloudWatch
+        correct: true
+        why: CloudWatch gathers usage data from every instance in one place, so the owner can read usage across the whole fleet.
+    evidence:
+      - Pooled data yields insight, such as fleet-wide EC2 usage.
+      - It shows resource usage, app performance and operational health system-wide.
+    takeaway: CloudWatch pools usage data from many resources, giving a fleet-wide view that single-instance checks cannot.
+    history: []
+    verified:
+      keyHash: 27dda34dcdc6
+      fullHash: 1937f7c4a5de
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
