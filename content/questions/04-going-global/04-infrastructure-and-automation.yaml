@@ -361,3 +361,75 @@ questions:
       fullHash: ede278647112
       checks: [ solve-closed@1, solve-notes@1, critic@1 ]
       on: 2026-10-09
+  - id: q-qrfe6g
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: aws-cloudformation
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe's owner has drawn up a list of goals for next year and is weighing whether to adopt AWS CloudFormation.
+      Which goal would CloudFormation help the cafe reach?
+    options:
+      - id: a
+        text: Faster menu photo loads for guests far away
+        why: Speeding up photos for distant guests is the job of edge locations, and CloudFormation is not a content cache.
+      - id: b
+        text: More developer hours for new app features
+        correct: true
+        why: CloudFormation sets up resources from code, so developers spend less time on setup and more on the cafe's apps.
+      - id: c
+        text: A lower bill from flagging costly resources
+        why: Flagging costly resources is the work of a cost optimizer, and CloudFormation does not analyze the cafe's spending.
+      - id: d
+        text: A click-by-click screen for building servers
+        why: CloudFormation builds the whole setup from code, so it gives the owner no click-by-click visual builder.
+    evidence:
+      - CloudFormation models and sets up AWS resources from code, freeing time for apps.
+      - It is not a click-by-click visual tool, a content cache (edge locations do that) or a cost optimizer.
+    takeaway: CloudFormation builds resources from code, so a team spends less time on setup and more on its apps.
+    history: []
+    verified:
+      keyHash: f07aba77a2dd
+      fullHash: 9f0fbe7dfec6
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
+  - id: q-bqz7c6
+    version: 1
+    status: live
+    type: single
+    pool: practice
+    concept: programmatic-access
+    note: m04/infrastructure-and-automation
+    task: "3.1"
+    level: 2
+    stem: >-
+      The cafe is deciding how each member of its staff should reach AWS.
+      For which person is programmatic access the best fit?
+    options:
+      - id: a
+        text: The owner, new to the cloud, checking monthly bills
+        why: A cloud newcomer checking bills suits the console, which offers billing dashboards and simple workflows.
+      - id: b
+        text: The developer who writes code for the loyalty app
+        correct: true
+        why: Programmatic access means using AWS through the CLI or SDKs, which suits a developer who writes code.
+      - id: c
+        text: The analyst exploring sales in graphical dashboards
+        why: Graphical services and dashboards suit the console, where the analyst can explore without writing code.
+      - id: d
+        text: The shift lead searching for a service to try out
+        why: Searching for services suits the console, which is built for newcomers working through simple workflows.
+    evidence:
+      - Programmatic access suits developers, the console newcomers, and IaC repeatable work at scale.
+      - "**Programmatic access**: Using AWS through code, with the AWS CLI or SDKs."
+    takeaway: Programmatic access through the CLI or SDKs fits developers who write code, while cloud newcomers fit the console.
+    history: []
+    verified:
+      keyHash: 7b124b360ef4
+      fullHash: 9fd0db67e1f2
+      checks: [ solve-closed@1, solve-notes@1, critic@1 ]
+      on: 2026-11-24
