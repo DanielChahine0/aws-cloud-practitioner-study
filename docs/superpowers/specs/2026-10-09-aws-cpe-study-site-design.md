@@ -133,7 +133,7 @@ The repository is local only, a pre-commit hook runs the fast checks, and hostin
   4. **Prune:** hashed files that belong to neither this build nor the previous one are deleted, using a `deploys.json` manifest kept in the bucket, so a browser still holding the previous `index.html` can load its chunks.
 - Deploy refuses to run on a failing tree or with uncommitted changes.
 - NOTE: since 2026-11-14 the site is live on GitHub Pages at https://danielchahine0.github.io/aws-cloud-practitioner-study/, published by `.github/workflows/pages.yml` after `pnpm verify` passes on every push to `master`, and the CloudFront stack above stays as a second host that `pnpm site:deploy` still serves (hosting).
-- NOTE: GitHub Pages cannot send headers, so the build writes the CSP of `scripts/csp.ts` into `index.html` as a `<meta>` tag without `frame-ancestors`, and HSTS, `nosniff` and the cache headers above apply on CloudFront only (hosting).
+- NOTE: GitHub Pages cannot send headers, so the build writes the CSP of `scripts/csp.ts` into `index.html` as a `<meta>` tag without `frame-ancestors`; Pages sends HSTS itself but no `nosniff`, and it caches every file for 10 minutes (`max-age=600`), so `nosniff` and the per-file cache headers above apply on CloudFront only (hosting).
 
 ## 2 Content pipeline
 
