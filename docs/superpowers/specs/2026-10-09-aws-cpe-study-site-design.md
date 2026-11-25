@@ -20,7 +20,7 @@ Decisions:
 7. **Git:** a local repository only (on `master`, already holding the notes commit, no remote yet), and no validator rule compares against a remote branch.
 8. **Course data:** lives in `~/Library/Application Support/ccp-study/` and never enters the repo; committed one-way fingerprints keep the originality check running in CI.
 9. **Notes:** `resources/` holds own-words notes for every content lesson, written by a separate notes workflow in the format of `resources/README.md`, and the build counts them.
-10. **Hosting:** a private S3 bucket behind CloudFront with Origin Access Control, in CloudFormation, deployed by Dani as Mission 1 on the default CloudFront domain.
+10. **Hosting:** a private S3 bucket behind CloudFront with Origin Access Control, in CloudFormation, deployed by Dani as Mission 1 on the default CloudFront domain; since 2026-11-14 the primary host is GitHub Pages and this stack is a second host (1.4).
 
 Simplifications (removed from the synthesized design):
 
@@ -132,6 +132,8 @@ The repository is local only, a pre-commit hook runs the fast checks, and hostin
   3. **Invalidation:** `/index.html`, `/` and `/sw.js`.
   4. **Prune:** hashed files that belong to neither this build nor the previous one are deleted, using a `deploys.json` manifest kept in the bucket, so a browser still holding the previous `index.html` can load its chunks.
 - Deploy refuses to run on a failing tree or with uncommitted changes.
+- NOTE: since 2026-11-14 the site is live on GitHub Pages at https://danielchahine0.github.io/aws-cloud-practitioner-study/, published by `.github/workflows/pages.yml` after `pnpm verify` passes on every push to `master`, and the CloudFront stack above stays as a second host that `pnpm site:deploy` still serves (hosting).
+- NOTE: GitHub Pages cannot send headers, so the build writes the CSP of `scripts/csp.ts` into `index.html` as a `<meta>` tag without `frame-ancestors`, and HSTS, `nosniff` and the cache headers above apply on CloudFront only (hosting).
 
 ## 2 Content pipeline
 
